@@ -1,8 +1,8 @@
 # DUIThink
 A powerful UI library with an editor
-DUIThink is more than just a UI library with an interface editor
+1.DUIThink is more than just a UI library with an interface editor
 2. At the same time, it is a PC platform providing various SDK interfaces for rapid prototyping of projects
-3, it is an ecology, users can customize the development of controls in the DUIThink editor quickly call, more can be uploaded to the DUIThink platform to form a public all users can use free control, control author can obtain user sponsorship.
+3.it is an ecology, users can customize the development of controls in the DUIThink editor quickly call, more can be uploaded to the DUIThink platform to form a public all users can use free control, control author can obtain user sponsorship.
 Website: http://www.DUIThink.com/
 Video tutorial: https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1
 
