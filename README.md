@@ -19,3 +19,5 @@ Video tutorial: https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7
 
 官网：http://www.DUIThink.com/
 视频教程：https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1
+
+![QQ图片20210920011324](https://user-images.githubusercontent.com/39479952/133938485-79851db0-f67e-418a-9d4f-251a5783edec.png)
