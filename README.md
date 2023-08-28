@@ -70,6 +70,7 @@ QQ群：885314879
 使用：
 
         开发工具：VS2017以上，低版本VS暂未支持
+        准备工作：先编译ThirdDepend下的Build.bat
         启动设计器：编译Release_Design模式DUIThink模块，编译Release_Unicode模式DUIPreview模块，把DUIPreview.exe、DUIThink_Design.dll、DUIThink.dll、MMHelper.dll拷贝到设计器运行目录即可
         使用设计器：视频教程https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1
         QQ群、官网也有视频介绍
@@ -217,7 +218,7 @@ Use:
 
 
 Development tools: VS2017 and above, the lower version of VS is not supported
-
+Preparation: Compile Build.bat under ThirdDepend first
 Start Designer: Compile the Release_Design mode DUIThink module, compile the Release_Unicode mode DUIPreview module, Copy DUIPreview.exe, DUIThink_Design.dll, DUIThink.dll, and MMHelper.dll to the designer run directory
 
 Designer: video tutorial at https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1
