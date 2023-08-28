@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<DesignDefine>
+    <NormalCtrl>
+        <Node ClassName="Normal" CtrlIcon="Control.ico" />
+        <Node ClassName="Point" CtrlIcon="Pointer.ico" />
+        <Node ClassName="CDUIControlBase" CtrlIcon="Control.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIStaticCtrl" CtrlIcon="Static.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIButtonCtrl" CtrlIcon="Button.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUICheckBoxCtrl" CtrlIcon="CheckBox.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIRadioBoxCtrl" CtrlIcon="RadioBox.ico"AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg" />
+        <Node ClassName="CDUIEditCtrl" CtrlIcon="Edit.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIRichEditCtrl" CtrlIcon="Edit.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIThinkEditCtrl" CtrlIcon="ThinkEdit.png" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIProgressCtrl" CtrlIcon="Progress.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUISliderCtrl" CtrlIcon="Slider.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIComboxCtrl" CtrlIcon="Combo.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIAnimateCtrl" CtrlIcon="Animate.png" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIWkeBrowserCtrl" CtrlIcon="Wke.png" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIHotKeyCtrl" CtrlIcon="HotKey.png" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUISpinCtrl" CtrlIcon="Spin.bmp" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+    </NormalCtrl>
+    <LayoutCtrl>
+        <Node ClassName="CDUIContainerCtrl" CtrlIcon="Container.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIHorizontalLayoutCtrl" CtrlIcon="HorizontalLayout.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIVerticalLayoutCtrl" CtrlIcon="VerticalLayout.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUITabLayoutCtrl" CtrlIcon="TabLayout.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUIListViewCtrl" CtrlIcon="ListView.ico" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUITreeViewCtrl" CtrlIcon="TreeView.png" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+    </LayoutCtrl>
+    <ExtendCtrl>
+        <Node ClassName="CDUIIPAddressCtrl" CtrlIcon="IPAddress.jpg" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUICalendarCtrl" CtrlIcon="Calendar.jpg" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+        <Node ClassName="CDUI3DRotateMenuCtrl" CtrlIcon="3DRotateMenu.png" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>
+    </ExtendCtrl>
+    <CustomCtrl>
+        <!--<Node DllNameDesign="CustomCtrl_DD.dll" DllNamePublish="CustomCtrlD.dll" ClassName="CDUIThinkEditCtrl" CtrlIcon="HotKey.png" AuthorName="城南花已开" AuthorQuickMark="城南花已开.jpg"/>-->
+    </CustomCtrl>
+</DesignDefine>

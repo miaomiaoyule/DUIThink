@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDUIAttributeObject>
+    <a ValueID="1562268894" Name="ItemImageSelNormal"/>
+    <a ValueID="3082782014" Name="WndInfo"/>
+    <a ValueID="1899292753" Name="AutoSelAll"/>
+    <a ValueID="3310741939" Name="UseScaleItem"/>
+    <a ValueID="3366520549" Name="HScrollBarPushItemRange"/>
+    <a ValueID="2603345339" Name="Animation"/>
+    <a ValueID="2586145869" Name="WndResizeTrack"/>
+    <a ValueID="2335748026" Name="ActiveUrl"/>
+    <a ValueID="3346323001" Name="WndCaptionHeight"/>
+    <a ValueID="2867269405" Name="WndRoundCorner"/>
+    <a ValueID="2216167159" Name="MouseThrough"/>
+    <a ValueID="3201664855" Name="WndInitSize"/>
+    <a ValueID="156713040" Name="ColorFocusBorder"/>
+    <a ValueID="2494150159" Name="WndMinSize"/>
+    <a ValueID="1622402275" Name="AnimationType"/>
+    <a ValueID="2521333858" Name="GdiplusRenderText"/>
+    <a ValueID="3442560775" Name="ImageSelPushed"/>
+    <a ValueID="2091422593" Name="WndMaxSize"/>
+    <a ValueID="1850352994" Name="WndLayered"/>
+    <a ValueID="2293282031" Name="TextStyle"/>
+    <a ValueID="1214686012" Name="WndAlpha"/>
+    <a ValueID="3920212713" Name="MaxChar"/>
+    <a ValueID="1335560700" Name="Enable"/>
+    <a ValueID="1751457334" Name="LineColor"/>
+    <a ValueID="1622832114" Name="RenderText"/>
+    <a ValueID="1877431087" Name="GdiplusRenderType"/>
+    <a ValueID="959863038" Name="AnimationFrame"/>
+    <a ValueID="722973517" Name="AnimationElapse"/>
+    <a ValueID="455031563" Name="VScrollBarPushItemRange"/>
+    <a ValueID="1308014568" Name="ChildPaddingV"/>
+    <a ValueID="1690286845" Name="IsColorHSL"/>
+    <a ValueID="2981364566" Name="CustomData"/>
+    <a ValueID="3418341620" Name="ColorYearHot"/>
+    <a ValueID="4070960940" Name="ColorYearNormal"/>
+    <a ValueID="829793926" Name="UserTag"/>
+    <a ValueID="86153144" Name="AutoCalcHeight"/>
+    <a ValueID="2650537223" Name="ControlBase"/>
+    <a ValueID="1723539081" Name="BorderRect"/>
+    <a ValueID="1494443624" Name="ID"/>
+    <a ValueID="1254935209" Name="DpiPadding"/>
+    <a ValueID="4101480478" Name="MaxHeight"/>
+    <a ValueID="3686892259" Name="Visible"/>
+    <a ValueID="2716310092" Name="ItemImageHot"/>
+    <a ValueID="3465918460" Name="UserData"/>
+    <a ValueID="1299694894" Name="ItemColorNormal"/>
+    <a ValueID="1733426185" Name="ItemTextStyleHot"/>
+    <a ValueID="4253584108" Name="MultiSelect"/>
+    <a ValueID="3325254836" Name="WinDragEnable"/>
+    <a ValueID="3415312965" Name="WinDropEnable"/>
+    <a ValueID="2204219396" Name="Position"/>
+    <a ValueID="4065887736" Name="ThumbVertInsetLeft"/>
+    <a ValueID="1219441033" Name="MinWidth"/>
+    <a ValueID="404125566" Name="UpDownBtnVertFixedHeight"/>
+    <a ValueID="3442938720" Name="ToolTip"/>
+    <a ValueID="1581935127" Name="MaxWidth"/>
+    <a ValueID="706931591" Name="SwitchListItemHeight"/>
+    <a ValueID="2995763632" Name="MinHeight"/>
+    <a ValueID="2889517934" Name="Back"/>
+    <a ValueID="1718533353" Name="ColorBk"/>
+    <a ValueID="1946296364" Name="ImageFore"/>
+    <a ValueID="1407487721" Name="ImageBack"/>
+    <a ValueID="468533267" Name="ReadOnly"/>
+    <a ValueID="2596345713" Name="Border"/>
+    <a ValueID="1403668076" Name="RotateClockWise"/>
+    <a ValueID="1260035270" Name="AnimateSelSwitchType"/>
+    <a ValueID="2512295936" Name="ImageSelDisabled"/>
+    <a ValueID="263501462" Name="BorderStyle"/>
+    <a ValueID="2719741112" Name="Scroll"/>
+    <a ValueID="888955372" Name="ColorBorder"/>
+    <a ValueID="2118409610" Name="AutoCalcChildPaddingV"/>
+    <a ValueID="3564977014" Name="BorderRoundSize"/>
+    <a ValueID="4147702782" Name="ChildPadding"/>
+    <a ValueID="3549313089" Name="ContextMenu"/>
+    <a ValueID="4158556915" Name="LeftRightBtnSize"/>
+    <a ValueID="3076868397" Name="ExpandIconSelPushed"/>
+    <a ValueID="3278547748" Name="ItemImageNormal"/>
+    <a ValueID="2727639017" Name="ClickTransmit"/>
+    <a ValueID="3324297333" Name="ImagePushed"/>
+    <a ValueID="1001943700" Name="Mouse"/>
+    <a ValueID="1977116604" Name="TextStyleNormal"/>
+    <a ValueID="1072697150" Name="ToolTipWidth"/>
+    <a ValueID="2033145691" Name="IconExpandRPadding"/>
+    <a ValueID="2774869240" Name="ControlCursor"/>
+    <a ValueID="374562364" Name="ToolTipBkColor"/>
+    <a ValueID="3438510196" Name="ComboxView"/>
+    <a ValueID="2179379800" Name="ToolTipTextColor"/>
+    <a ValueID="2815667433" Name="ExpandIconSelHot"/>
+    <a ValueID="159619629" Name="ColorGrooveHot"/>
+    <a ValueID="1359056443" Name="AnimateWater"/>
+    <a ValueID="3752630788" Name="UpDownBtnHoriz"/>
+    <a ValueID="2004871229" Name="ItemText"/>
+    <a ValueID="567243614" Name="AnimateDrag"/>
+    <a ValueID="1755541041" Name="ScrollBarSpeedModel"/>
+    <a ValueID="2991916924" Name="UseHorizScrollBar"/>
+    <a ValueID="702564252" Name="Friday"/>
+    <a ValueID="1425733087" Name="UseVertScrollBar"/>
+    <a ValueID="1305214978" Name="UpDownBtnHorizInsetTop"/>
+    <a ValueID="2405712143" Name="RangeInset"/>
+    <a ValueID="1203792897" Name="AutoCalcWidth"/>
+    <a ValueID="1188922545" Name="NumberMinLimit"/>
+    <a ValueID="1645832614" Name="ChildPaddingH"/>
+    <a ValueID="105104680" Name="IconExpand"/>
+    <a ValueID="973985924" Name="AutoCalcChildPaddingH"/>
+    <a ValueID="2005978194" Name="ListView"/>
+    <a ValueID="2089988886" Name="Tuesday"/>
+    <a ValueID="2861888627" Name="UseListHeader"/>
+    <a ValueID="353547694" Name="IsSelected"/>
+    <a ValueID="631143898" Name="ListViewType"/>
+    <a ValueID="729007824" Name="ScrollSelect"/>
+    <a ValueID="1192647177" Name="Combox"/>
+    <a ValueID="4226636527" Name="ItemModel"/>
+    <a ValueID="3135764606" Name="ItemModelInitCount"/>
+    <a ValueID="1425710943" Name="NumberMaxLimit"/>
+    <a ValueID="750574505" Name="ImageMouseDragSel"/>
+    <a ValueID="2512882039" Name="ListType"/>
+    <a ValueID="2936014705" Name="ExpandIconFixedHeight"/>
+    <a ValueID="3113504464" Name="SelectIconVisible"/>
+    <a ValueID="2688595173" Name="SelectDbClick"/>
+    <a ValueID="3968007366" Name="TreeExpandIcon"/>
+    <a ValueID="1558195428" Name="SelectIconLeftPadding"/>
+    <a ValueID="962913047" Name="SelectIconFixedHeight"/>
+    <a ValueID="281035142" Name="SelectIconFixedWidth"/>
+    <a ValueID="3445297835" Name="DesktopEdit"/>
+    <a ValueID="1119955899" Name="TreeNode"/>
+    <a ValueID="3987153997" Name="SelectIconNormal"/>
+    <a ValueID="2866314829" Name="SelectIconHot"/>
+    <a ValueID="3578797870" Name="WeekStyle"/>
+    <a ValueID="1909138281" Name="ItemTextStyleNormal"/>
+    <a ValueID="2804621609" Name="SelectIconPushed"/>
+    <a ValueID="2321446639" Name="SelectIconSelNormal"/>
+    <a ValueID="246882623" Name="SelectIconSelHot"/>
+    <a ValueID="3986528544" Name="3DRotateMenu"/>
+    <a ValueID="1932406091" Name="SelectIconSelPushed"/>
+    <a ValueID="1718039917" Name="ColorGrooveNormal"/>
+    <a ValueID="1044572729" Name="TileType"/>
+    <a ValueID="2580848617" Name="ItemSizeMax"/>
+    <a ValueID="904156404" Name="AngleStart"/>
+    <a ValueID="1723369924" Name="AutoCalcItemWidth"/>
+    <a ValueID="696372805" Name="AutoCalcItemHeight"/>
+    <a ValueID="1272299471" Name="LeftFromRange"/>
+    <a ValueID="2145860318" Name="TextStyleSelHot"/>
+    <a ValueID="3164255727" Name="TopFromRange"/>
+    <a ValueID="189400591" Name="BindTabCtrlID"/>
+    <a ValueID="2246850513" Name="TextStyleSelFocus"/>
+    <a ValueID="132720835" Name="SwitchTileItemSize"/>
+    <a ValueID="3353812708" Name="ItemTextPadding"/>
+    <a ValueID="3790068587" Name="ItemTextStyleSelNormal"/>
+    <a ValueID="2954905243" Name="ItemTextStyleSelHot"/>
+    <a ValueID="2549170266" Name="ItemTextStyleDisabled"/>
+    <a ValueID="284494279" Name="ImageDownBtnPushed"/>
+    <a ValueID="429095716" Name="ItemStatus"/>
+    <a ValueID="3532243014" Name="ItemColorHot"/>
+    <a ValueID="3741398122" Name="ColorSelDisabled"/>
+    <a ValueID="754018692" Name="ItemColorSelNormal"/>
+    <a ValueID="1827950572" Name="ItemColorSelHot"/>
+    <a ValueID="1656064637" Name="ItemColorDisabled"/>
+    <a ValueID="2061077558" Name="ItemImageSelHot"/>
+    <a ValueID="890313559" Name="ItemImageDisabled"/>
+    <a ValueID="3882991163" Name="Line"/>
+    <a ValueID="1728987606" Name="ColorLine"/>
+    <a ValueID="1415130338" Name="ShowRowLine"/>
+    <a ValueID="2468958774" Name="ShowColumnLine"/>
+    <a ValueID="2172261055" Name="GroupID"/>
+    <a ValueID="3968762704" Name="Text"/>
+    <a ValueID="3010605281" Name="ImageRightBtnNormal"/>
+    <a ValueID="3773614027" Name="Shadow"/>
+    <a ValueID="3364524344" Name="RichText"/>
+    <a ValueID="1104787808" Name="EditEnable"/>
+    <a ValueID="2893759913" Name="Edit"/>
+    <a ValueID="1819271306" Name="RichTextLineSpace"/>
+    <a ValueID="1012701937" Name="TextPadding"/>
+    <a ValueID="3332400408" Name="ProgressType"/>
+    <a ValueID="4040424860" Name="MoveType"/>
+    <a ValueID="1804536179" Name="ProgressValue"/>
+    <a ValueID="540625834" Name="MaxValue"/>
+    <a ValueID="941882107" Name="Transparent"/>
+    <a ValueID="2214337866" Name="CurValue"/>
+    <a ValueID="759529727" Name="ExpandIconPushed"/>
+    <a ValueID="4074711451" Name="ExpandIconNormal"/>
+    <a ValueID="3863049091" Name="Groove"/>
+    <a ValueID="2855220295" Name="ImageGrooveNormal"/>
+    <a ValueID="2881586551" Name="ImageGrooveHot"/>
+    <a ValueID="1545882272" Name="Saturday"/>
+    <a ValueID="2269161860" Name="TextStyleHot"/>
+    <a ValueID="3719105321" Name="GrooveInsetToBorder"/>
+    <a ValueID="1721815347" Name="Slip"/>
+    <a ValueID="941015503" Name="ColorPushed"/>
+    <a ValueID="1460721325" Name="ColorSlipNormal"/>
+    <a ValueID="3518044079" Name="UpDownBtnVert"/>
+    <a ValueID="2708546029" Name="ColorSlipHot"/>
+    <a ValueID="4224544729" Name="HotKey"/>
+    <a ValueID="1835427015" Name="ImageSlipNormal"/>
+    <a ValueID="3689634295" Name="ImageSlipHot"/>
+    <a ValueID="2538090971" Name="SlipInsetToGroove"/>
+    <a ValueID="1456646046" Name="ThumbVert"/>
+    <a ValueID="554639627" Name="ThumbVertInsetRight"/>
+    <a ValueID="2173295662" Name="AllowBeep"/>
+    <a ValueID="2770656695" Name="ThumbVertFixedHeight"/>
+    <a ValueID="524138477" Name="ThumbHoriz"/>
+    <a ValueID="897332187" Name="ThumbHorizInsetTop"/>
+    <a ValueID="2680069547" Name="TextStyleYearNormal"/>
+    <a ValueID="1593441695" Name="ThumbHorizInsetBottom"/>
+    <a ValueID="3795418709" Name="ThumbHorizFixedWidth"/>
+    <a ValueID="4147920319" Name="ThumbStatus"/>
+    <a ValueID="3031159413" Name="ColorThumbNormal"/>
+    <a ValueID="954825237" Name="ColorThumbHot"/>
+    <a ValueID="2519767457" Name="ColorThumbPushed"/>
+    <a ValueID="811014879" Name="ImageThumbNormal"/>
+    <a ValueID="2366519471" Name="ImageThumbHot"/>
+    <a ValueID="43247758" Name="ImageFocus"/>
+    <a ValueID="3336759419" Name="ImageThumbPushed"/>
+    <a ValueID="4031544620" Name="ComboxSize"/>
+    <a ValueID="1419808995" Name="ExpandDbClick"/>
+    <a ValueID="3709180973" Name="ScrollMinSpeed"/>
+    <a ValueID="1702528961" Name="UpDownBtnVertInsetLeft"/>
+    <a ValueID="4088157969" Name="ExpandViewDuiName"/>
+    <a ValueID="3238865033" Name="ExpandIconSelNormal"/>
+    <a ValueID="1217392378" Name="UpDownBtnVertInsetRight"/>
+    <a ValueID="1481462606" Name="UpDownBtnHorizInsetBottom"/>
+    <a ValueID="1083288300" Name="UpDownBtnHorizFixedWidth"/>
+    <a ValueID="1582518964" Name="UpBtnStatus"/>
+    <a ValueID="969962749" Name="Select"/>
+    <a ValueID="3319217182" Name="ColorUpBtnNormal"/>
+    <a ValueID="3942732790" Name="ColorSelFocus"/>
+    <a ValueID="2179434486" Name="ColorUpBtnHot"/>
+    <a ValueID="864961386" Name="ColorUpBtnPushed"/>
+    <a ValueID="2915516148" Name="ImageUpBtnNormal"/>
+    <a ValueID="895583555" Name="DownBtnStatus"/>
+    <a ValueID="24118108" Name="ImageUpBtnHot"/>
+    <a ValueID="3410354762" Name="PasswordChar"/>
+    <a ValueID="528471489" Name="ImageNormal"/>
+    <a ValueID="4131205488" Name="ImageUpBtnPushed"/>
+    <a ValueID="4191158892" Name="TextStyleMonthNormal"/>
+    <a ValueID="226849529" Name="ColorDownBtnNormal"/>
+    <a ValueID="3701753049" Name="ColorDownBtnHot"/>
+    <a ValueID="2154100381" Name="ColorDownBtnPushed"/>
+    <a ValueID="230184151" Name="TextStyleOtherMonthDay"/>
+    <a ValueID="2304075667" Name="ImageDownBtnNormal"/>
+    <a ValueID="4115973795" Name="ImageDownBtnHot"/>
+    <a ValueID="2591226392" Name="ColorDisabled"/>
+    <a ValueID="3054593410" Name="Header"/>
+    <a ValueID="7515601" Name="ItemInitCount"/>
+    <a ValueID="1241218982" Name="TextStyleSelNormal"/>
+    <a ValueID="2973533981" Name="Separation"/>
+    <a ValueID="104566201" Name="ColorSelNormal"/>
+    <a ValueID="2732594542" Name="SepColor"/>
+    <a ValueID="2222147537" Name="PasswordMode"/>
+    <a ValueID="1133562293" Name="SepWidth"/>
+    <a ValueID="3442627739" Name="SepScale"/>
+    <a ValueID="4293683104" Name="ColorLeftRightBtnHot"/>
+    <a ValueID="115543876" Name="SepImage"/>
+    <a ValueID="2660822745" Name="Status"/>
+    <a ValueID="4293325286" Name="ColorHotDayBk"/>
+    <a ValueID="240975275" Name="ColorNormal"/>
+    <a ValueID="3567101531" Name="ColorHot"/>
+    <a ValueID="929225012" Name="ColorFocus"/>
+    <a ValueID="3145700481" Name="ImageHot"/>
+    <a ValueID="3504014736" Name="GdiplusRenderImage"/>
+    <a ValueID="1525998706" Name="ImageDisabled"/>
+    <a ValueID="948073447" Name="AngleFinish"/>
+    <a ValueID="3058516296" Name="TextStylePushed"/>
+    <a ValueID="407727115" Name="TextStyleFocus"/>
+    <a ValueID="354988239" Name="TextStyleDisabled"/>
+    <a ValueID="1669632540" Name="ImageTodayBk"/>
+    <a ValueID="525613808" Name="SelectedStatus"/>
+    <a ValueID="2682257945" Name="ColorSelHot"/>
+    <a ValueID="2031817053" Name="ColorSelPushed"/>
+    <a ValueID="1068630995" Name="ImageSelNormal"/>
+    <a ValueID="4268241251" Name="ImageSelHot"/>
+    <a ValueID="2851914516" Name="IconCheckedLPadding"/>
+    <a ValueID="1245487980" Name="ImageSelFocus"/>
+    <a ValueID="2242355170" Name="TextStyleSelPushed"/>
+    <a ValueID="583520677" Name="IconNormal"/>
+    <a ValueID="1011815964" Name="ImageHotDayBk"/>
+    <a ValueID="1488248981" Name="TextStyleSelDisabled"/>
+    <a ValueID="1386558658" Name="ExpandEnable"/>
+    <a ValueID="2458228886" Name="ExpandIconVisible"/>
+    <a ValueID="2213229631" Name="SelectSingle"/>
+    <a ValueID="3560440610" Name="ExpandIconLeftPadding"/>
+    <a ValueID="769055984" Name="ExpandIconFixedWidth"/>
+    <a ValueID="423824075" Name="ExpandIconHot"/>
+    <a ValueID="2198759042" Name="NumberOnly"/>
+    <a ValueID="1534191365" Name="TipText"/>
+    <a ValueID="1560491724" Name="TextStyleTipTextNormal"/>
+    <a ValueID="2291533848" Name="AngleSpace"/>
+    <a ValueID="64622580" Name="Radio"/>
+    <a ValueID="4293292655" Name="WaveHeight"/>
+    <a ValueID="1957798085" Name="GroupName"/>
+    <a ValueID="4016953780" Name="BindTabCtrlIndex"/>
+    <a ValueID="2533105219" Name="SelectIndex"/>
+    <a ValueID="2900642705" Name="RichEdit"/>
+    <a ValueID="1861705740" Name="SaveSelection"/>
+    <a ValueID="1905203064" Name="ColorLeftRightBtnNormal"/>
+    <a ValueID="2957535060" Name="TextStyleTipTextHot"/>
+    <a ValueID="2580437616" Name="ColorSelect"/>
+    <a ValueID="313708474" Name="ImageSelect"/>
+    <a ValueID="3419369444" Name="EditTextType"/>
+    <a ValueID="1376900667" Name="WantReturn"/>
+    <a ValueID="3646604713" Name="ImageAnimate"/>
+    <a ValueID="3391297402" Name="SequenceFrameSize"/>
+    <a ValueID="3215896032" Name="SequenceFrameSpeed"/>
+    <a ValueID="1150052358" Name="AutoPlay"/>
+    <a ValueID="2850572913" Name="Spin"/>
+    <a ValueID="2764103981" Name="EditTextPadding"/>
+    <a ValueID="2018838331" Name="UpDownBtnRightPadding"/>
+    <a ValueID="264191722" Name="UpDownBtnFixedWidth"/>
+    <a ValueID="958813594" Name="ImageLeftBtnHot"/>
+    <a ValueID="1509392691" Name="ChildIndent"/>
+    <a ValueID="1077108295" Name="ItemSizeMin"/>
+    <a ValueID="1490720074" Name="AngleSpaceMin"/>
+    <a ValueID="3789300566" Name="Menu"/>
+    <a ValueID="3301540328" Name="LineMenu"/>
+    <a ValueID="3105960201" Name="IconChecked"/>
+    <a ValueID="3828897272" Name="IconNormalLPadding"/>
+    <a ValueID="1567699858" Name="HasExpandMenu"/>
+    <a ValueID="3001047751" Name="RotateMenu"/>
+    <a ValueID="1051148224" Name="RenderImage"/>
+    <a ValueID="3852786540" Name="HeaderVisible"/>
+    <a ValueID="1537209853" Name="HeaderHeight"/>
+    <a ValueID="1404323419" Name="TextStyleYearHot"/>
+    <a ValueID="4091660724" Name="TextStyleMonthHot"/>
+    <a ValueID="51365347" Name="ColorMonthNormal"/>
+    <a ValueID="1288689843" Name="ColorMonthHot"/>
+    <a ValueID="575841218" Name="ImageLeftBtnNormal"/>
+    <a ValueID="4114930785" Name="ImageRightBtnHot"/>
+    <a ValueID="71321594" Name="Days"/>
+    <a ValueID="496404337" Name="Sunday"/>
+    <a ValueID="4187213415" Name="Wednesday"/>
+    <a ValueID="3943650118" Name="WeekHeight"/>
+    <a ValueID="2619478223" Name="ColorSelDayBk"/>
+    <a ValueID="3411839462" Name="ColorTodayBk"/>
+    <a ValueID="2016743765" Name="ImageSelDayBk"/>
+    <a ValueID="311735907" Name="TextStyleWeek"/>
+    <a ValueID="3705467127" Name="TextStyleCurMonthDay"/>
+    <a ValueID="4030001272" Name="TextStyleHotMonthDay"/>
+    <a ValueID="4238086040" Name="TextStyleToday"/>
+    <a ValueID="1465087397" Name="Monday"/>
+    <a ValueID="112109689" Name="Thursday"/>
+</CDUIAttributeObject>
+
+<CDUIAttributeRichText>
+    <a ValueID="1541274" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff000000;&quot; Text=&quot;富文本&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff00ff00;&quot; Text=&quot;DUIThink&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0000ff;&quot; Text=&quot;斜体、换行、垂直居中&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="40980" LineLimit="-1"/>
+    <a ValueID="941783235" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff000000;&quot; Text=&quot;富文本&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff00ff00;&quot; Text=&quot;DUIThink&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0000ff;&quot; Text=&quot;斜体、单行、水平靠左&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="32800" LineLimit="-1"/>
+    <a ValueID="1706700612" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff000000;&quot; Text=&quot;富文本&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff00ff00;&quot; Text=&quot;DUIThink&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0000ff;&quot; Text=&quot;斜体、换行、垂直靠上&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="40976" LineLimit="-1"/>
+    <a ValueID="1520408440" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff000000;&quot; Text=&quot;富文本&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff00ff00;&quot; Text=&quot;DUIThink&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0000ff;&quot; Text=&quot;斜体、单行、水平居中&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="32801" LineLimit="-1"/>
+    <a ValueID="1839172946" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff000000;&quot; Text=&quot;富文本&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff00ff00;&quot; Text=&quot;DUIThink&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0000ff;&quot; Text=&quot;斜体、单行、水平靠右&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="32802" LineLimit="-1"/>
+    <a ValueID="1621326052" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff000000;&quot; Text=&quot;富文本&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff00ff00;&quot; Text=&quot;DUIThink&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0000ff;&quot; Text=&quot;斜体、换行、垂直靠下&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="40984" LineLimit="-1"/>
+</CDUIAttributeRichText>
+
+<CDUIAttributeText>
+    <a ValueID="2691475092" Text="ComboxItem"/>
+    <a ValueID="2498519413" Text="DUIThink界面演示程序"/>
+    <a ValueID="2548402096" Text="项4"/>
+    <a ValueID="3819596197" Text="首页"/>
+    <a ValueID="2795834209" Text="普通按钮"/>
+    <a ValueID="365235614" Text="DUIThink界面库介绍"/>
+    <a ValueID="2816118553" Text="TabMain"/>
+    <a ValueID="1127466432" Text="3、更是一个生态，用户可自定义开发控件在DUIThink编辑器快速调用，更可上传到DUIThink平台形成一个公共的所有使用者都可以免费使用的控件，控件作者可以获得使用者赞助"/>
+    <a ValueID="2715004334" Text="DlgAnimateBottom"/>
+    <a ValueID="388345029" Text="功能演示"/>
+    <a ValueID="85336375" Text="DlgAnimateRightDiffuse"/>
+    <a ValueID="3006609734" Text="http://www.duithink.com/"/>
+    <a ValueID="589041668" Text="基础控件"/>
+    <a ValueID="957591647" Text="名称"/>
+    <a ValueID="3096197392" Text="360演示"/>
+    <a ValueID="2886769345" Text="ThinkEdit"/>
+    <a ValueID="2153797763" Text="邮件"/>
+    <a ValueID="599684475" Text="NC_PROGRAM"/>
+    <a ValueID="4294689941" Text="扩展控件"/>
+    <a ValueID="3835520719" Text="28"/>
+    <a ValueID="2642423244" Text="浏览器"/>
+    <a ValueID="908075794" Text="点击打开链接"/>
+    <a ValueID="3168806953" Text="PC管家演示"/>
+    <a ValueID="1781521450" Text="单选框靠左"/>
+    <a ValueID="1809446497" Text="QQ聊天"/>
+    <a ValueID="4236449669" Text="Static"/>
+    <a ValueID="3993577289" Text="普通文字、换行、水平靠左、垂直居中"/>
+    <a ValueID="744626997" Text="ggdfgdfgfdgfdgggdfgdfgfdgfdgggdfgdfgfdgfdgggdfgdfgfdgfdgggdfgdfgfdgfdgggdfgdfgfdgfdg"/>
+    <a ValueID="1045357136" Text="星期二"/>
+    <a ValueID="1741550475" Text="普通文字、单行、水平居中、垂直靠上"/>
+    <a ValueID="2278465878" Text="DirectUI技术一般是指将所有的界面控件绘制在一个窗口上，这些控件的逻辑和绘图方式都必须自己进行编写和封装，而不是使用Windows控件，所以这些控件都是无句柄的"/>
+    <a ValueID="2000174511" Text="普通文字、换行、水平靠左、垂直靠下"/>
+    <a ValueID="4272692475" Text="1、DUIThink不仅是一款带界面编辑器的UI库 "/>
+    <a ValueID="89799844" Text="2、同时是一款提供各种SDK接口使项目快速成型的一个PC端平台"/>
+    <a ValueID="936112928" Text="官网：http://www.duithink.com/"/>
+    <a ValueID="2785085400" Text="删除线"/>
+    <a ValueID="3292746102" Text="DlgAnimateLeftRightCombin"/>
+    <a ValueID="3488290725" Text="DUIThink"/>
+    <a ValueID="4050006400" Text="Slider"/>
+    <a ValueID="991392314" Text="https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1"/>
+    <a ValueID="1192647177" Text="Combox"/>
+    <a ValueID="3372983966" Text="CheckBox"/>
+    <a ValueID="2979692850" Text="视频教程：https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1"/>
+    <a ValueID="3588529919" Text="13"/>
+    <a ValueID="168039444" Text="选中靠右"/>
+    <a ValueID="1080763372" Text="DlgAnimateLeftDiffuse"/>
+    <a ValueID="2892870016" Text="ControlPreview"/>
+    <a ValueID="114389687" Text="图片按钮1"/>
+    <a ValueID="158962123" Text="Button"/>
+    <a ValueID="4267331180" Text="斜体"/>
+    <a ValueID="401289729" Text="一键换肤"/>
+    <a ValueID="146458289" Text="RadioBox"/>
+    <a ValueID="4042956080" Text="2023年"/>
+    <a ValueID="2893759913" Text="Edit"/>
+    <a ValueID="4224721575" Text="选中靠左"/>
+    <a ValueID="3252725261" Text="RadioCtrl"/>
+    <a ValueID="1298590118" Text="带tip、换行的Edit控件"/>
+    <a ValueID="2900642705" Text="RichEdit"/>
+    <a ValueID="793331191" Text="一键卸载"/>
+    <a ValueID="2089918384" Text="Progress"/>
+    <a ValueID="322408934" Text="Animate"/>
+    <a ValueID="1863812566" Text="DlgAnimate3DRoundReplaceTB"/>
+    <a ValueID="2005978194" Text="ListView"/>
+    <a ValueID="3536982251" Text="www.DUIThink.com"/>
+    <a ValueID="823950930" Text="禁用按钮"/>
+    <a ValueID="3945861580" Text="DlgAnimate3DRotateLeftRight"/>
+    <a ValueID="1628072297" Text="普通文字、单行、水平靠左、垂直靠上"/>
+    <a ValueID="1429588370" Text="普通文字、换行、水平靠左、垂直靠上"/>
+    <a ValueID="4106925624" Text="这是ThinkEdit，比微软Edit、RichEdit功能更强大，带透明通道，可做TextEditor，可插入图片"/>
+    <a ValueID="4224544729" Text="HotKey"/>
+    <a ValueID="1715005191" Text="PDF文件"/>
+    <a ValueID="2850572913" Text="Spin"/>
+    <a ValueID="2964920979" Text="下划线阴影"/>
+    <a ValueID="3768650134" Text="TreeView"/>
+    <a ValueID="224480369" Text="带tip、单行的Edit控件"/>
+    <a ValueID="24491506" Text="11mb"/>
+    <a ValueID="3001047751" Text="RotateMenu"/>
+    <a ValueID="878634333" Text="单选框靠右"/>
+    <a ValueID="2336268887" Text="Calendar"/>
+    <a ValueID="3739958374" Text="普通文字、单行、水平靠右、垂直靠上"/>
+    <a ValueID="688260679" Text="QT22018-801-32F"/>
+    <a ValueID="985290721" Text="下划线"/>
+    <a ValueID="3423281098" Text="斜体阴影"/>
+    <a ValueID="1037743451" Text="17"/>
+    <a ValueID="996410958" Text="删除线阴影"/>
+    <a ValueID="591857741" Text="文字按钮"/>
+    <a ValueID="2496267132" Text="图片按钮2"/>
+    <a ValueID="1125031834" Text="TreeNode1"/>
+    <a ValueID="3133963749" Text="图片按钮3"/>
+    <a ValueID="1220873898" Text="图片按钮4"/>
+    <a ValueID="4226854055" Text="请输入你的账号"/>
+    <a ValueID="3760824904" Text="TreeNode3_1_1"/>
+    <a ValueID="968630962" Text="请输入你的密码"/>
+    <a ValueID="1297234141" Text="Gif"/>
+    <a ValueID="3816077983" Text="SequenceFrame"/>
+    <a ValueID="1506883355" Text="DlgAnimate3DRotateTopBottom"/>
+    <a ValueID="2512882039" Text="ListType"/>
+    <a ValueID="3472945591" Text="ListGrid"/>
+    <a ValueID="135135833" Text="TileTypeH"/>
+    <a ValueID="689696419" Text="星期四"/>
+    <a ValueID="3457105932" Text="TreeNode2_2"/>
+    <a ValueID="3154709895" Text="TileTypeV"/>
+    <a ValueID="2193612638" Text="固定项高度的列表"/>
+    <a ValueID="333594729" Text="启动项"/>
+    <a ValueID="659046262" Text="最新：1.0.0.1"/>
+    <a ValueID="1768502775" Text="英特尔显卡接口程序"/>
+    <a ValueID="3982058493" Text="设置"/>
+    <a ValueID="3175357205" Text="查看详情"/>
+    <a ValueID="2313136685" Text="11"/>
+    <a ValueID="1598861573" Text="腾讯云"/>
+    <a ValueID="1641517406" Text="苹果BootCamp"/>
+    <a ValueID="3324395409" Text="不定项高度的列表"/>
+    <a ValueID="1063802492" Text="硬盘只能加速"/>
+    <a ValueID="2401584624" Text="通过优化硬盘传输效率，整理磁盘碎片等方法"/>
+    <a ValueID="1339166410" Text="360安全卫士"/>
+    <a ValueID="602439760" Text="已装：1.0.0.1"/>
+    <a ValueID="3714097037" Text="最新：2.0.0.1"/>
+    <a ValueID="2929426938" Text="DlgAnimateSizeDiffuse"/>
+    <a ValueID="2636933355" Text="10mb"/>
+    <a ValueID="605128041" Text="QT22018-801-32"/>
+    <a ValueID="561013920" Text="Notepad++"/>
+    <a ValueID="4289096779" Text="已装：2.0.0.1"/>
+    <a ValueID="3871699748" Text="最新：3.0.0.1"/>
+    <a ValueID="2191576007" Text="一键安装"/>
+    <a ValueID="1074703578" Text="电脑管家"/>
+    <a ValueID="520739496" Text="20mb"/>
+    <a ValueID="3433456945" Text="Email"/>
+    <a ValueID="3640521255" Text="一键下载"/>
+    <a ValueID="3141985166" Text="应用名称"/>
+    <a ValueID="475955498" Text="版本"/>
+    <a ValueID="2113044559" Text="2"/>
+    <a ValueID="4250419662" Text="大小"/>
+    <a ValueID="438470528" Text="状态"/>
+    <a ValueID="487335217" Text="TreeNode2"/>
+    <a ValueID="4030990943" Text="时间"/>
+    <a ValueID="3966818778" Text="Excel"/>
+    <a ValueID="1212561760" Text="360"/>
+    <a ValueID="1325534601" Text="IM"/>
+    <a ValueID="75338949" Text="Movie"/>
+    <a ValueID="278748388" Text="Ctrl + Alt + Q"/>
+    <a ValueID="1012522780" Text="TreeHeader"/>
+    <a ValueID="1473856531" Text="TreeSelect"/>
+    <a ValueID="4244098677" Text="TreeExpand"/>
+    <a ValueID="2539324679" Text="工序导航器-程序顺序"/>
+    <a ValueID="3911129795" Text="未使用"/>
+    <a ValueID="3839864233" Text="CAVITY_C"/>
+    <a ValueID="2013353282" Text="RD10L50_F"/>
+    <a ValueID="3287837828" Text="本地搜索"/>
+    <a ValueID="199954708" Text="1"/>
+    <a ValueID="3454965027" Text="DlgAnimateTopBottomExpand"/>
+    <a ValueID="74925381" Text="00:00:00"/>
+    <a ValueID="1019840300" Text="换刀"/>
+    <a ValueID="2165962191" Text="DlgAnimate3DRoundLeft"/>
+    <a ValueID="4268519974" Text="刀轨"/>
+    <a ValueID="3223334979" Text="刀具"/>
+    <a ValueID="4040247453" Text="刀具号"/>
+    <a ValueID="1116582241" Text="TreeNode2_2_2"/>
+    <a ValueID="228233308" Text="TreeNode1_1"/>
+    <a ValueID="1522458394" Text="TreeNode1_1_1"/>
+    <a ValueID="1075228487" Text="TreeNode2_1"/>
+    <a ValueID="4108495249" Text="TreeNode2_1_1"/>
+    <a ValueID="1754278858" Text="TreeNode2_2_1"/>
+    <a ValueID="4144605896" Text="TreeNode3"/>
+    <a ValueID="3295239182" Text="TreeNode3_1"/>
+    <a ValueID="2657542565" Text="TreeNode3_2"/>
+    <a ValueID="333641139" Text="TreeNode3_2_1"/>
+    <a ValueID="1453643274" Text="25"/>
+    <a ValueID="2715518584" Text="TreeNode3_2_2"/>
+    <a ValueID="2019845948" Text="TreeNode3_3"/>
+    <a ValueID="1003955936" Text="电子邮件"/>
+    <a ValueID="2091339891" Text="24"/>
+    <a ValueID="2739234490" Text="TreeNode3_3_1"/>
+    <a ValueID="2101537873" Text="TreeNode3_3_2"/>
+    <a ValueID="1463841256" Text="TreeNode3_3_3"/>
+    <a ValueID="1441917885" Text="项1"/>
+    <a ValueID="2079614502" Text="项2"/>
+    <a ValueID="2717311119" Text="项3"/>
+    <a ValueID="779108187" Text="7月"/>
+    <a ValueID="1023877236" Text="星期一"/>
+    <a ValueID="4280162345" Text="星期三"/>
+    <a ValueID="4267836744" Text="星期五"/>
+    <a ValueID="553730400" Text="星期六"/>
+    <a ValueID="812418092" Text="星期天"/>
+    <a ValueID="815946657" Text="26"/>
+    <a ValueID="178250040" Text="27"/>
+    <a ValueID="3197824102" Text="29"/>
+    <a ValueID="1139171526" Text="30"/>
+    <a ValueID="1475347942" Text="3"/>
+    <a ValueID="2581832153" Text="4"/>
+    <a ValueID="1944135536" Text="5"/>
+    <a ValueID="2354385931" Text="ListItemCtrl"/>
+    <a ValueID="3857225387" Text="6"/>
+    <a ValueID="3219528770" Text="7"/>
+    <a ValueID="1644256965" Text="8"/>
+    <a ValueID="1006560348" Text="9"/>
+    <a ValueID="276588123" Text="关闭"/>
+    <a ValueID="1675440068" Text="10"/>
+    <a ValueID="2950833302" Text="12"/>
+    <a ValueID="3419620896" Text="14"/>
+    <a ValueID="4057317513" Text="15"/>
+    <a ValueID="400046834" Text="16"/>
+    <a ValueID="2482045708" Text="18"/>
+    <a ValueID="3119742325" Text="19"/>
+    <a ValueID="347159063" Text="20"/>
+    <a ValueID="4004429742" Text="21"/>
+    <a ValueID="3366733125" Text="22"/>
+    <a ValueID="2729036508" Text="23"/>
+    <a ValueID="1776868143" Text="31"/>
+    <a ValueID="2000544103" Text="Dpi窗体"/>
+    <a ValueID="3713098910" Text="RadioDisplay"/>
+    <a ValueID="999755692" Text="发送"/>
+    <a ValueID="2428959006" Text="Svg图片"/>
+    <a ValueID="3267464694" Text="窗体特效"/>
+    <a ValueID="3142588216" Text="弹窗"/>
+    <a ValueID="2491238328" Text="缩放比例："/>
+    <a ValueID="1990070244" Text="DlgAnimate3DRoundRight"/>
+    <a ValueID="4135252756" Text="100"/>
+    <a ValueID="3919511782" Text="300"/>
+    <a ValueID="4207623754" Text="拖拽Svg图片到此"/>
+    <a ValueID="2255789794" Text="DlgAnimateLeft"/>
+    <a ValueID="455455441" Text="DlgAnimateRight"/>
+    <a ValueID="2277798818" Text="DlgAnimateTop"/>
+    <a ValueID="1714775084" Text="DlgAnimateTopDiffuse"/>
+    <a ValueID="2912824832" Text="DlgAnimateBottomDiffuse"/>
+    <a ValueID="1985526189" Text="ggdfgdfgfdgfdg"/>
+    <a ValueID="1923478980" Text="DlgAnimateSize"/>
+    <a ValueID="1707432101" Text="DlgAnimateSizeSpring"/>
+    <a ValueID="3083613132" Text="DlgAnimateCenterDiffuse"/>
+    <a ValueID="226927972" Text="DlgAnimateLeftRightDiffuse"/>
+    <a ValueID="2595438116" Text="DlgAnimateLeftRightExpand"/>
+    <a ValueID="2941712837" Text="DlgAnimateLeftRightExpandSpring"/>
+    <a ValueID="378894987" Text="DlgAnimateTopBottomDiffuse"/>
+    <a ValueID="4189332674" Text="DlgAnimateTopBottomExpandSpring"/>
+    <a ValueID="2811322593" Text="DlgAnimateTopBottomCombin"/>
+    <a ValueID="1771134359" Text="DlgAnimate3DRoundTop"/>
+    <a ValueID="3261015283" Text="DlgAnimate3DRoundBottom"/>
+    <a ValueID="3247882045" Text="DlgAnimate3DRotateReplaceLR"/>
+    <a ValueID="3826140597" Text="DlgAnimate3DRotateReplaceTB"/>
+    <a ValueID="2446890078" Text="DlgAnimate3DRoundReplaceLR"/>
+    <a ValueID="2355212771" Text="QQChat"/>
+    <a ValueID="1348946066" Text="PDF类型文件"/>
+    <a ValueID="3370103814" Text="电子表格"/>
+    <a ValueID="1979569200" Text="百度搜索"/>
+    <a ValueID="557841434" Text="DlgDUIThink"/>
+    <a ValueID="3297362600" Text="确定"/>
+    <a ValueID="4230377357" Text="取消"/>
+    <a ValueID="3846715846" Text="换肤"/>
+    <a ValueID="1294235587" Text="城南花已开(284168136)"/>
+    <a ValueID="2842599350" Text="如果没有如果..."/>
+</CDUIAttributeText>
+
+<CDUIAttributeTextStyle>
+    <a ValueID="2483650666" FontRes="微软雅黑-字号:14-粗细:400-斜体-无下划线-无删除线;" ColorRes="" Style="40976"/>
+    <a ValueID="3638535105" FontRes="微软雅黑-字号:16-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xff0000ff;" Style="40980"/>
+    <a ValueID="991306760" FontRes="微软雅黑-字号:16-粗细:700-非斜体-无下划线-无删除线;" ColorRes="" Style="32805"/>
+    <a ValueID="1777373730" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff808080;" Style="32804"/>
+    <a ValueID="775528875" FontRes="微软雅黑-字号:18-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xffff8000;" Style="32804"/>
+    <a ValueID="4057751282" FontRes="微软雅黑-字号:14-粗细:400-非斜体-下划线-无删除线;" ColorRes="0xffffffff;" Style="40976"/>
+    <a ValueID="1997801235" FontRes="微软雅黑-字号:18-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xffffffff;" Style="32804"/>
+    <a ValueID="143946609" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xffffffff;" Style="32809"/>
+    <a ValueID="2090228656" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff7d7d7d;" Style="32805"/>
+    <a ValueID="4277555753" FontRes="微软雅黑-字号:16-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xff808080;" Style="40980"/>
+    <a ValueID="4109190772" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff808000;" Style="32804"/>
+    <a ValueID="946073871" FontRes="" ColorRes="0xff0066cc;" Style="32806"/>
+    <a ValueID="1340531" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="" Style="40976"/>
+    <a ValueID="3889172435" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xffff8000;" Style="40976"/>
+    <a ValueID="4177468427" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff00ff00;" Style="40976"/>
+    <a ValueID="4098536777" FontRes="微软雅黑-字号:16-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xff0000ff;" Style="32804"/>
+    <a ValueID="1958492293" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;" ColorRes="" Style="32805"/>
+    <a ValueID="3951600019" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff0000ff;" Style="32805"/>
+    <a ValueID="3109756097" FontRes="微软雅黑-字号:16-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xff808080;" Style="32804"/>
+    <a ValueID="222004861" FontRes="" ColorRes="0xffffffff;0xff000000;" Style="32804"/>
+    <a ValueID="1280403068" FontRes="微软雅黑-字号:16-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xff804000;" Style="32805"/>
+    <a ValueID="355867744" FontRes="" ColorRes="" Style="32801"/>
+    <a ValueID="310886567" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="" Style="32809"/>
+    <a ValueID="2268957595" FontRes="" ColorRes="" Style="32802"/>
+    <a ValueID="3707165480" FontRes="微软雅黑-字号:16-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xffff8000;" Style="32805"/>
+    <a ValueID="3085230700" FontRes="" ColorRes="" Style="40976"/>
+    <a ValueID="2605842277" FontRes="" ColorRes="" Style="40980"/>
+    <a ValueID="55055809" FontRes="" ColorRes="" Style="40984"/>
+    <a ValueID="3879275540" FontRes="" ColorRes="0xffffffff;0xff000000;" Style="32805"/>
+    <a ValueID="3869936298" FontRes="微软雅黑-字号:14-粗细:400-非斜体-下划线-无删除线;" ColorRes="" Style="40976"/>
+    <a ValueID="1320795676" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;" ColorRes="" Style="32804"/>
+    <a ValueID="2752699362" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-删除线;" ColorRes="" Style="40976"/>
+    <a ValueID="2806687642" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-删除线;" ColorRes="0xffffffff;" Style="40976"/>
+    <a ValueID="1417289778" FontRes="微软雅黑-字号:14-粗细:400-斜体-无下划线-无删除线;" ColorRes="0xffffffff;" Style="40976"/>
+    <a ValueID="1248461755" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="" Style="32805"/>
+    <a ValueID="1959342799" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff804000;" Style="32805"/>
+    <a ValueID="722083640" FontRes="微软雅黑-字号:16-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xffffffff;0xff000000;" Style="32805"/>
+    <a ValueID="524776767" FontRes="" ColorRes="" Style="32806"/>
+    <a ValueID="3544350829" FontRes="" ColorRes="" Style="32804"/>
+    <a ValueID="610765138" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="" Style="32804"/>
+    <a ValueID="3161551606" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="" Style="32800"/>
+    <a ValueID="33192902" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff808080;" Style="32800"/>
+    <a ValueID="2073447115" FontRes="微软雅黑-字号:18-粗细:700-非斜体-无下划线-无删除线;" ColorRes="" Style="32804"/>
+    <a ValueID="2477832259" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff808080;" Style="40976"/>
+    <a ValueID="1726201703" FontRes="微软雅黑-字号:14-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xff0000ff;" Style="32804"/>
+    <a ValueID="1737235168" FontRes="微软雅黑-字号:16-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xffff0000;" Style="32805"/>
+    <a ValueID="2906654212" FontRes="" ColorRes="" Style="32805"/>
+    <a ValueID="1629003377" FontRes="微软雅黑-字号:16-粗细:700-非斜体-无下划线-无删除线;" ColorRes="" Style="32804"/>
+    <a ValueID="1931697092" FontRes="" ColorRes="" Style="37"/>
+    <a ValueID="4093354057" FontRes="" ColorRes="0xffa481c3;" Style="32804"/>
+    <a ValueID="2592699284" FontRes="" ColorRes="0xffcccccc;" Style="32805"/>
+    <a ValueID="2401424032" FontRes="微软雅黑-字号:16-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xff00ff00;" Style="32805"/>
+    <a ValueID="1360104618" FontRes="微软雅黑-字号:18-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xffffffff;" Style="32805"/>
+    <a ValueID="1250430820" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xffffffff;" Style="32804"/>
+    <a ValueID="900385704" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff804000;" Style="32804"/>
+    <a ValueID="3676984383" FontRes="微软雅黑-字号:14-粗细:700-非斜体-无下划线-无删除线;" ColorRes="" Style="32804"/>
+    <a ValueID="2059880944" FontRes="微软雅黑-字号:14-粗细:700-非斜体-下划线-无删除线;" ColorRes="" Style="32804"/>
+</CDUIAttributeTextStyle>
+
+<CDUIAttributeColorSwitch>
+    <a ValueID="2017651963" ColorRes="0xffe5f3ff;"/>
+    <a ValueID="2365708054" ColorRes="0xff000000;"/>
+    <a ValueID="3574593318" ColorRes="0xffffffff;"/>
+    <a ValueID="2190632076" ColorRes="0xffcde8ff;"/>
+    <a ValueID="3132787290" ColorRes="0xff804000;"/>
+    <a ValueID="1223263664" ColorRes="0xfff0f0f0;"/>
+    <a ValueID="197427090" ColorRes="0xfffff5dc;"/>
+    <a ValueID="688688498" ColorRes="0xff0078d7;"/>
+    <a ValueID="1728746897" ColorRes="0xff1ea0d6;"/>
+    <a ValueID="838912894" ColorRes="0xffcccccc;"/>
+</CDUIAttributeColorSwitch>
+
+<CDUIAttributeCombox>
+    <a ValueID="1098946459" Item0="[0]" Item100320="[100320]IDC_TabViewListView" Item100107="[100107]IDC_TabViewControls" Item100396="[100396]IDC_TabViewDisplay" Item100016="[100016]IDC_TabViewMain"/>
+    <a ValueID="4034821388" Item0="[0]" Item100320="[100320]IDC_TabViewListView" Item100513="[100513]IDC_TabViewTreeView1" Item100107="[100107]IDC_TabViewControls" Item100396="[100396]IDC_TabViewDisplay" Item100016="[100016]IDC_TabViewMain"/>
+    <a ValueID="1257600903" Item0="[0]" Item100320="[100320]IDC_TabViewListView" Item100107="[100107]IDC_TabViewControls" Item100016="[100016]IDC_TabViewMain"/>
+    <a ValueID="2343682084" Item0="[0]" Item1="[1]ComboxView1" Item2="[2]ComboxView2" Item3="[3]ComboxView3"/>
+    <a ValueID="3247982410" Item0="[0]List" Item1="[1]TileH" Item2="[2]TileV"/>
+    <a ValueID="973493392" Item0="[0]" Item1="[1]ComboxViewItem2" Item2="[2]ComboxViewItem1" Item3="[3]ListItem1"/>
+    <a ValueID="4154788287" Item0="[0]" Item1="[1]ComboxViewItem2" Item2="[2]ComboxViewItem1" Item3="[3]ListItem1" Item4="[4]QQChatItem"/>
+    <a ValueID="1884515023" Item0="[0]ProgressHoriz" Item1="[1]ProgressVert"/>
+    <a ValueID="2648091639" Item0="[0]MovePositive" Item1="[1]MoveReverse"/>
+    <a ValueID="1488323796" Item5="[5]Null" Item0="[0]Solid" Item1="[1]Dash" Item2="[2]Dot" Item3="[3]DashDot" Item4="[4]DashDotDot"/>
+    <a ValueID="1300015722" Item0="[0]None" Item1="[1]Number" Item2="[2]NumberInt" Item3="[3]NumberDouble"/>
+    <a ValueID="392420501" Item0="[0]" Item1="[1]ComboxViewItem2" Item2="[2]ComboxViewItem1"/>
+</CDUIAttributeCombox>
+
+<CDUIAttributePosition>
+    <a ValueID="1090906519" Position="0-1-0-0-20-12-0-0-20"/>
+    <a ValueID="3145727642" Position="0-0-94-0-119-10-25-0-27"/>
+    <a ValueID="3937013671" Position="0-0-2-2-0-10-122-2-0"/>
+    <a ValueID="1779101774" Position="0-0-0-0-318-10-0-0-0"/>
+    <a ValueID="341804161" Position="0-0-5-0-30-10-0-0-30"/>
+    <a ValueID="3588651087" Position="0-0-0-0-0-10-0-0-30"/>
+    <a ValueID="2723119140" Position="0-0-0-0-532-10-10-0-63"/>
+    <a ValueID="3340092449" Position="0-0-5-0-257-10-0-0-0"/>
+    <a ValueID="3992459912" Position="0-0-0-0-84-10-0-0-0"/>
+    <a ValueID="1433700260" Position="0-0-0-0-0-10-50-0-72"/>
+    <a ValueID="3877914494" Position="0-0-0-0-200-10-0-0-0"/>
+    <a ValueID="3730086434" Position="0-1-5-0-24-12-0-0-24"/>
+    <a ValueID="3819726716" Position="0-0-15-0-84-10-0-0-0"/>
+    <a ValueID="3409602188" Position="0-0-0-0-0-10-0-0-0"/>
+    <a ValueID="2225129659" Position="0-0-17-0-0-10-0-0-180"/>
+    <a ValueID="3576734155" Position="0-0-24-0-366-10-30-0-10"/>
+    <a ValueID="726496018" Position="0-0-0-0-700-10-10-0-44"/>
+    <a ValueID="1316017887" Position="0-0-7-0-381-10-91-0-226"/>
+    <a ValueID="774085929" Position="0-0-0-0-195-10-0-0-0"/>
+    <a ValueID="3175883963" Position="0-2-0-0-129-10-50-0-129"/>
+    <a ValueID="3526796614" Position="1-0-166-0-320-10-14-0-24"/>
+    <a ValueID="2631451412" Position="0-0-0-0-0-10-26-0-37"/>
+    <a ValueID="1508013798" Position="0-0-98-0-295-10-10-0-26"/>
+    <a ValueID="521448618" Position="0-0-79-0-250-10-50-0-28"/>
+    <a ValueID="3191648590" Position="0-0-0-0-532-10-20-0-73"/>
+    <a ValueID="1167352921" Position="0-0-98-0-323-10-20-0-26"/>
+    <a ValueID="4010790901" Position="0-0-98-0-323-10-35-0-26"/>
+    <a ValueID="607677646" Position="0-0-0-28-0-10-0-0-80"/>
+    <a ValueID="761230841" Position="0-0-0-0-532-10-20-0-21"/>
+    <a ValueID="776082162" Position="0-0-0-0-532-10-10-0-21"/>
+    <a ValueID="162071040" Position="0-0-98-0-284-10-43-0-26"/>
+    <a ValueID="3328404376" Position="0-0-2-0-389-10-357-0-115"/>
+    <a ValueID="3566870650" Position="0-0-0-0-422-10-30-0-23"/>
+    <a ValueID="1552254477" Position="0-0-0-0-98-10-0-0-0"/>
+    <a ValueID="2179170932" Position="0-0-0-0-0-10-0-0-110"/>
+    <a ValueID="345432523" Position="0-0-0-0-0-10-0-0-70"/>
+    <a ValueID="209548608" Position="0-2-0-0-560-10-0-0-85"/>
+    <a ValueID="2199024046" Position="0-0-0-0-0-11-0-0-30"/>
+    <a ValueID="3221534916" Position="0-1-0-0-9-10-0-0-0"/>
+    <a ValueID="664130166" Position="0-0-0-0-30-12-0-0-30"/>
+    <a ValueID="32951794" Position="0-0-98-0-323-10-10-0-26"/>
+    <a ValueID="2131639425" Position="0-0-0-0-151-10-0-0-0"/>
+    <a ValueID="2486201753" Position="0-0-5-0-0-10-0-0-0"/>
+    <a ValueID="526303550" Position="0-0-0-0-0-10-20-0-0"/>
+    <a ValueID="557804698" Position="0-0-0-0-386-10-321-0-30"/>
+    <a ValueID="3609526852" Position="0-0-13-0-38-12-0-0-38"/>
+    <a ValueID="2697084518" Position="0-2-0-0-560-10-143-0-85"/>
+    <a ValueID="1081564863" Position="0-0-0-0-30-10-0-0-0"/>
+    <a ValueID="475896047" Position="0-0-0-0-0-10-14-0-17"/>
+    <a ValueID="3387535826" Position="0-0-27-0-19-10-33-30-0"/>
+    <a ValueID="28110056" Position="1-0-392-0-150-10-216-0-150"/>
+    <a ValueID="3232767372" Position="0-0-0-0-0-10-0-0-123"/>
+    <a ValueID="870824258" Position="0-0-0-0-0-12-0-0-51"/>
+    <a ValueID="3464700414" Position="0-0-0-0-0-12-0-0-0"/>
+    <a ValueID="430924478" Position="0-0-98-0-284-10-10-0-26"/>
+    <a ValueID="3273673315" Position="0-0-0-0-0-10-14-0-20"/>
+    <a ValueID="3312118814" Position="0-0-0-0-0-10-0-0-20"/>
+    <a ValueID="525092640" Position="0-0-83-0-148-10-50-0-43"/>
+    <a ValueID="1542647742" Position="0-0-24-0-10-10-24-30-0"/>
+    <a ValueID="478970650" Position="1-0-282-0-148-10-50-0-43"/>
+    <a ValueID="2233941641" Position="0-0-66-0-84-10-0-0-23"/>
+    <a ValueID="2763571363" Position="0-0-0-0-285-10-0-0-0"/>
+    <a ValueID="2173338846" Position="1-0-294-0-119-10-118-0-27"/>
+    <a ValueID="3431206152" Position="0-0-0-0-0-10-59-0-123"/>
+    <a ValueID="461251717" Position="0-0-27-0-352-10-33-0-19"/>
+    <a ValueID="575331526" Position="0-1-0-10-16-12-0-0-16"/>
+    <a ValueID="1807610958" Position="0-0-83-0-100-10-18-0-100"/>
+    <a ValueID="3467553829" Position="0-0-0-0-100-10-18-0-100"/>
+    <a ValueID="335697735" Position="0-0-66-0-24-10-30-0-24"/>
+    <a ValueID="4282152068" Position="0-0-13-0-30-12-0-0-30"/>
+    <a ValueID="2631969411" Position="0-0-17-0-0-10-0-0-90"/>
+    <a ValueID="2796199595" Position="0-0-98-0-159-10-20-0-81"/>
+    <a ValueID="228856998" Position="0-0-100-0-20-10-30-0-20"/>
+    <a ValueID="2387639665" Position="0-0-100-0-80-10-20-0-24"/>
+    <a ValueID="1249491333" Position="0-0-98-0-284-10-20-0-26"/>
+    <a ValueID="2151438566" Position="0-0-98-0-179-10-20-0-71"/>
+    <a ValueID="3906133184" Position="0-0-41-0-180-10-0-0-80"/>
+    <a ValueID="4276260349" Position="1-0-0-0-0-10-0-0-0"/>
+    <a ValueID="3374515546" Position="0-0-98-0-295-10-27-0-26"/>
+    <a ValueID="3432199985" Position="1-1-0-5-28-10-0-0-28"/>
+    <a ValueID="597848845" Position="0-0-98-0-295-10-20-0-26"/>
+    <a ValueID="2567635321" Position="0-0-98-0-179-10-20-0-81"/>
+    <a ValueID="2063663944" Position="1-1-0-10-480-10-0-10-0"/>
+    <a ValueID="1740418119" Position="0-0-0-0-416-10-0-0-0"/>
+    <a ValueID="2683807742" Position="0-0-0-0-406-10-0-0-0"/>
+    <a ValueID="1133423413" Position="0-0-79-0-250-10-20-0-28"/>
+    <a ValueID="332435974" Position="0-0-79-0-40-10-20-0-28"/>
+    <a ValueID="3226910260" Position="0-2-0-0-235-10-23-0-34"/>
+    <a ValueID="3735828513" Position="0-2-0-0-353-10-45-0-209"/>
+    <a ValueID="1341137227" Position="0-0-0-0-160-10-0-0-0"/>
+    <a ValueID="1719598206" Position="0-2-0-0-16-10-8-0-16"/>
+    <a ValueID="100236338" Position="0-2-0-0-102-10-15-0-102"/>
+    <a ValueID="121454462" Position="0-0-0-0-0-10-18-0-30"/>
+    <a ValueID="2626202182" Position="0-0-5-0-171-10-0-0-0"/>
+    <a ValueID="3835425224" Position="0-0-50-0-100-10-0-0-0"/>
+    <a ValueID="44920829" Position="0-0-0-0-100-10-0-0-0"/>
+    <a ValueID="3176306744" Position="0-2-0-0-185-10-21-0-23"/>
+    <a ValueID="2073986349" Position="0-0-0-0-0-10-10-0-0"/>
+    <a ValueID="2869680438" Position="0-0-0-0-17-12-0-0-17"/>
+    <a ValueID="3452338835" Position="0-0-5-0-21-12-0-0-21"/>
+    <a ValueID="677968274" Position="0-1-5-0-21-12-0-0-21"/>
+    <a ValueID="1554047313" Position="0-1-0-20-60-10-0-0-0"/>
+    <a ValueID="3885827834" Position="0-0-0-0-17-10-0-0-0"/>
+    <a ValueID="165171673" Position="1-0-627-0-75-10-52-0-75"/>
+    <a ValueID="2132506518" Position="0-0-20-0-0-10-0-0-0"/>
+    <a ValueID="68900250" Position="0-0-0-0-0-10-0-0-60"/>
+    <a ValueID="3573548405" Position="0-0-0-0-90-10-10-0-90"/>
+    <a ValueID="28187250" Position="0-0-5-0-21-10-3-0-21"/>
+    <a ValueID="1211174533" Position="0-0-0-0-283-10-0-0-0"/>
+    <a ValueID="1440526705" Position="0-0-0-0-131-12-0-0-15"/>
+    <a ValueID="4220649203" Position="0-0-5-0-48-12-0-0-48"/>
+    <a ValueID="389541462" Position="0-0-0-0-387-10-42-0-44"/>
+    <a ValueID="104103088" Position="0-0-0-0-150-10-0-0-0"/>
+    <a ValueID="2319213697" Position="0-0-0-0-386-10-0-0-0"/>
+    <a ValueID="2195955786" Position="1-2-0-0-126-10-0-0-0"/>
+    <a ValueID="4106756326" Position="0-0-0-0-21-12-0-0-21"/>
+    <a ValueID="216463328" Position="0-0-5-0-100-12-0-0-28"/>
+    <a ValueID="984949131" Position="1-2-0-0-105-10-0-0-0"/>
+    <a ValueID="2471594980" Position="1-2-0-0-131-10-0-0-0"/>
+    <a ValueID="2829354335" Position="0-0-0-0-300-10-0-0-0"/>
+    <a ValueID="3062189494" Position="0-0-0-0-20-12-0-0-20"/>
+    <a ValueID="1512902934" Position="0-0-0-0-20-10-0-0-0"/>
+    <a ValueID="3140852276" Position="0-0-0-0-0-11-0-0-9"/>
+    <a ValueID="2021200749" Position="0-1-0-20-16-12-0-0-16"/>
+    <a ValueID="386858106" Position="0-0-181-0-228-10-87-0-67"/>
+    <a ValueID="501676673" Position="0-0-161-0-150-10-92-0-40"/>
+    <a ValueID="3483109039" Position="0-1-0-0-20-10-0-0-0"/>
+    <a ValueID="1014690203" Position="0-0-48-0-329-10-24-0-27"/>
+    <a ValueID="2838726619" Position="0-0-0-0-40-12-0-0-18"/>
+    <a ValueID="1304196349" Position="0-0-48-0-694-10-5-0-245"/>
+    <a ValueID="331417389" Position="0-0-0-0-0-10-0-0-180"/>
+    <a ValueID="2525075559" Position="0-0-0-0-0-10-0-0-245"/>
+    <a ValueID="543492792" Position="0-0-25-0-0-10-0-0-30"/>
+    <a ValueID="811908292" Position="0-0-0-0-176-10-0-0-0"/>
+    <a ValueID="3216299158" Position="0-0-0-0-16-12-0-0-16"/>
+    <a ValueID="2131510066" Position="0-0-25-0-0-10-0-0-90"/>
+    <a ValueID="850283996" Position="0-0-0-0-99-10-0-0-0"/>
+    <a ValueID="688026935" Position="0-0-10-0-16-12-0-0-16"/>
+    <a ValueID="567328718" Position="0-0-1-1-0-10-1-0-30"/>
+    <a ValueID="743289402" Position="0-0-0-0-767-10-0-0-0"/>
+    <a ValueID="784215868" Position="0-0-17-0-0-10-0-0-60"/>
+    <a ValueID="2112496873" Position="0-0-17-0-0-10-0-0-30"/>
+    <a ValueID="2576837397" Position="0-0-0-0-36-10-10-0-36"/>
+    <a ValueID="3125446401" Position="0-0-17-0-0-10-0-0-300"/>
+    <a ValueID="3817139281" Position="0-0-17-0-0-10-0-0-120"/>
+    <a ValueID="596935346" Position="1-0-791-0-112-10-154-0-112"/>
+    <a ValueID="3635632892" Position="1-0-32-0-112-10-154-0-112"/>
+    <a ValueID="2165393431" Position="1-0-234-0-75-10-52-0-75"/>
+    <a ValueID="1324589748" Position="0-0-181-0-566-10-22-0-306"/>
+    <a ValueID="1115644647" Position="0-0-15-15-0-10-0-0-30"/>
+    <a ValueID="3110556671" Position="0-0-0-0-19-12-0-0-18"/>
+    <a ValueID="388355817" Position="0-0-78-0-161-10-49-0-32"/>
+    <a ValueID="601945735" Position="0-0-71-0-90-10-21-0-34"/>
+    <a ValueID="1644794042" Position="1-0-162-0-39-10-46-0-28"/>
+    <a ValueID="3123692034" Position="1-0-450-0-42-10-46-0-28"/>
+    <a ValueID="1399028963" Position="0-0-0-0-0-10-0-0-25"/>
+    <a ValueID="3086879907" Position="0-0-5-0-24-12-0-0-24"/>
+    <a ValueID="3997192333" Position="0-0-10-0-0-10-0-0-0"/>
+    <a ValueID="2072351438" Position="0-0-10-0-267-10-0-0-0"/>
+    <a ValueID="4197572799" Position="0-0-25-0-408-10-0-0-0"/>
+    <a ValueID="133320556" Position="0-0-14-14-0-10-14-14-0"/>
+    <a ValueID="714073187" Position="0-1-0-100-100-11-0-0-34"/>
+    <a ValueID="902258474" Position="0-1-0-0-100-11-0-0-34"/>
+    <a ValueID="1594287295" Position="0-0-38-0-157-10-30-0-0"/>
+    <a ValueID="1542582807" Position="0-0-0-0-0-10-0-0-300"/>
+    <a ValueID="2806444616" Position="0-0-0-0-128-10-62-0-128"/>
+    <a ValueID="3974983729" Position="0-0-0-0-100-10-10-0-36"/>
+    <a ValueID="2458997639" Position="1-0-313-0-119-10-351-0-36"/>
+    <a ValueID="605168792" Position="0-0-0-0-0-10-0-0-40"/>
+    <a ValueID="1240214291" Position="0-0-5-0-28-12-0-0-28"/>
+    <a ValueID="1432358159" Position="0-0-10-0-244-10-0-0-0"/>
+    <a ValueID="861488440" Position="0-1-5-0-28-10-0-0-20"/>
+    <a ValueID="2624477552" Position="1-0-233-0-70-10-480-0-26"/>
+    <a ValueID="2709167158" Position="0-0-0-0-38-12-0-0-38"/>
+    <a ValueID="1380027825" Position="0-0-5-0-28-10-0-0-28"/>
+    <a ValueID="2719827622" Position="0-0-8-0-406-10-0-0-0"/>
+    <a ValueID="474059936" Position="0-1-0-5-28-10-0-0-28"/>
+    <a ValueID="1379310041" Position="1-0-319-0-70-10-480-0-26"/>
+    <a ValueID="404209888" Position="1-0-5-0-28-10-0-0-28"/>
+    <a ValueID="1031934502" Position="0-0-28-0-0-10-0-0-80"/>
+    <a ValueID="2147713465" Position="0-1-0-41-180-10-0-0-80"/>
+</CDUIAttributePosition>
+
+<CDUIAttributeRect>
+    <a ValueID="1625066746" Value="0,0,20,0"/>
+    <a ValueID="1302268026" Value="20,0,0,0"/>
+    <a ValueID="1926287568" Value="1,1,1,1"/>
+    <a ValueID="1936688922" Value="22,2,0,0"/>
+    <a ValueID="696146713" Value="0,0,0,1"/>
+    <a ValueID="144109009" Value="0,0,0,10"/>
+    <a ValueID="374663057" Value="22,2,2,1"/>
+    <a ValueID="58450096" Value="0,0,0,0"/>
+    <a ValueID="823624299" Value="2,2,2,1"/>
+    <a ValueID="3955206083" Value="2,2,20,1"/>
+    <a ValueID="3246933181" Value="0,0,0,5"/>
+    <a ValueID="2445966800" Value="2,2,0,0"/>
+    <a ValueID="3317509466" Value="2,2,20,0"/>
+    <a ValueID="3205501744" Value="2,2,2,2"/>
+    <a ValueID="1012359674" Value="22,2,2,2"/>
+    <a ValueID="616508794" Value="4,4,24,4"/>
+    <a ValueID="4256298800" Value="24,4,24,4"/>
+    <a ValueID="3687796601" Value="0,1,0,0"/>
+    <a ValueID="2524638653" Value="50,0,0,0"/>
+    <a ValueID="148177465" Value="10,0,0,0"/>
+    <a ValueID="0" Value="0,0,0,0"/>
+    <a ValueID="155018971" Value="3,0,0,0"/>
+    <a ValueID="3927769933" Value="5,0,0,0"/>
+    <a ValueID="3995599070" Value="24,0,0,0"/>
+    <a ValueID="4021215398" Value="35,0,0,0"/>
+    <a ValueID="2707128496" Value="6,6,6,6"/>
+</CDUIAttributeRect>
+
+<CDUIAttriImageSection>
+    <a ValueID="2731990189" ImageRes="{328E1955-BA65-4F32-9FD0-A6183785595B};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="4" Source="0,0,0,0" Alpha="255" Mask="0" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2604470405" ImageRes="黑_BtnRestore;白_BtnRestore;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1595298799" ImageRes="QQ图片20160125155954;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,960,540" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="539074046" ImageRes="{11F140C1-5089-416A-AFC8-FAF0BC31DCFC};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="24,0,48,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="729585536" ImageRes="{54D213E5-B49F-4A54-A5AC-7B3EE84ABE6C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="48,0,72,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2887336780" ImageRes="ico_PluginCleaner;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3477275045" ImageRes="{1BB8AA78-A0FE-48B6-8807-2890C92B994E};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1292897714" ImageRes="CHECK_BOX;" HAlign="2" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="2" Source="17,0,34,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2832315133" ImageRes="{54D213E5-B49F-4A54-A5AC-7B3EE84ABE6C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1433937739" ImageRes="btn_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="3" Source="40,0,60,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1130785711" ImageRes="{E3B96193-7CF7-4D67-BB8A-99961F2A6DAA};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4140497700" ImageRes="{11F140C1-5089-416A-AFC8-FAF0BC31DCFC};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="48,0,72,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1424535609" ImageRes="{11F140C1-5089-416A-AFC8-FAF0BC31DCFC};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3690577752" ImageRes="88630140;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="2" PartType="0" PartAll="1" PartSel="1" Source="28,0,210,180" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1026697754" ImageRes="{54D213E5-B49F-4A54-A5AC-7B3EE84ABE6C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="24,0,48,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2961078220" ImageRes="{E3B96193-7CF7-4D67-BB8A-99961F2A6DAA};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2426046156" ImageRes="ProgressVertBk;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="1" PartSel="1" Source="0,0,70,10" Alpha="255" Mask="4278190080" Corner="0,10,0,10" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2011327852" ImageRes="logo_360;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3080695053" ImageRes="{E3B96193-7CF7-4D67-BB8A-99961F2A6DAA};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3830236619" ImageRes="{66EB709C-5356-4559-894B-CE733B57AFB3};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3248570317" ImageRes="{A07E93B2-3D41-41DC-A03A-5E56339BAD2C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="2" PartType="0" PartAll="1" PartSel="1" Source="18,0,27,20" Alpha="255" Mask="0" Corner="0,5,0,5" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="336632938" ImageRes="{982B9EAD-50CE-49C7-9332-896DC826A32E};" HAlign="2" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3858881075" ImageRes="softmgr;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1918542249" ImageRes="{66EB709C-5356-4559-894B-CE733B57AFB3};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3210423504" ImageRes="sendsms;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,28,28" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1872129747" ImageRes="aio_toolbar_highligh;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="2" Source="0,0,26,24" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1018637642" ImageRes="{66EB709C-5356-4559-894B-CE733B57AFB3};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="571540284" ImageRes="ico_Tools;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2849436968" ImageRes="btn_normal;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,69,22" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1855329370" ImageRes="toolbar_hover;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="2" PartSel="2" Source="0,0,80,75" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1163977601" ImageRes="qq;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,28,28" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="856824813" ImageRes="48X48;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4116930997" ImageRes="btn_highlight;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="2" Source="0,0,69,22" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="616634934" ImageRes="btn_normal;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="1" Source="0,0,84,34" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1137061137" ImageRes="{6327FE22-6CD6-4104-B0C5-75CA625F71C9};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,0,0" Alpha="255" Mask="0" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="101378856" ImageRes="EDIT;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,30,26" Alpha="255" Mask="4278190080" Corner="8,8,8,8" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2630991673" ImageRes="toolbar_hover;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="2" PartSel="1" Source="0,0,80,75" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="89770548" ImageRes="{3901AB19-D453-4EE1-A2B2-0EE5701B9A9A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="4" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1552735333" ImageRes="{E8FC09D1-2B03-4308-88E2-8542A6E9A23F};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3785304117" ImageRes="toolbar_hover;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="2" PartSel="2" Source="80,0,160,75" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4139787893" ImageRes="{982B9EAD-50CE-49C7-9332-896DC826A32E};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="4" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1862048204" ImageRes="Synchstep;" HAlign="3" VAlign="3" HOffset="0" VOffset="-12" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1650529466" ImageRes="ProgressSlipVertBk;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="1" PartSel="1" Source="0,0,70,10" Alpha="255" Mask="4278190080" Corner="0,10,0,10" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3689204358" ImageRes="iSplit;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="357520808" ImageRes="ico_navigate;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1133711105" ImageRes="{A07E93B2-3D41-41DC-A03A-5E56339BAD2C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="2" PartType="0" PartAll="1" PartSel="1" Source="9,0,18,20" Alpha="255" Mask="0" Corner="0,5,0,5" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="948962422" ImageRes="QQLogo;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4117299626" ImageRes="{6327FE22-6CD6-4104-B0C5-75CA625F71C9};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="830209091" ImageRes="20200804183359_TxJdV;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,200,200" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2904691768" ImageRes="{6327FE22-6CD6-4104-B0C5-75CA625F71C9};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1326419095" ImageRes="btn_restore_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="3" Source="48,0,72,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1278096198" ImageRes="btn_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="2" Source="20,0,40,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2903803827" ImageRes="btn_restore_normal;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="834387963" ImageRes="{88D041B7-27A9-4819-9986-BF3A631B2A36};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="2" PartType="0" PartAll="1" PartSel="1" Source="0,0,9,20" Alpha="255" Mask="0" Corner="0,5,0,5" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2977053044" ImageRes="{95A0A73A-4E45-4D47-A9AB-5FC7E0F3A641};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2093527046" ImageRes="RepairMovie01;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,1734,102" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2910614432" ImageRes="{A07E93B2-3D41-41DC-A03A-5E56339BAD2C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="2" PartType="0" PartAll="1" PartSel="1" Source="0,0,9,20" Alpha="255" Mask="0" Corner="0,5,0,5" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2369436105" ImageRes="btn_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="630613704" ImageRes="btn_normal;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3439918648" ImageRes="{6327FE22-6CD6-4104-B0C5-75CA625F71C9};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2198396893" ImageRes="btn_normal;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="1" Source="0,0,69,22" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3194601982" ImageRes="btn_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="3" Source="0,0,69,22" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1915833271" ImageRes="{F1127AB2-0950-430F-A490-E90A40C394CD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="6" Source="0,0,102,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="672036987" ImageRes="BT_DEFAULT;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="4" Source="252,0,336,34" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="428397721" ImageRes="btn_highlight;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="2" Source="84,0,168,34" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3952938219" ImageRes="btn_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="3" Source="168,0,252,34" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2627546773" ImageRes="IM;" HAlign="3" VAlign="3" HOffset="0" VOffset="-12" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1553195583" ImageRes="SMBPrefs;" HAlign="3" VAlign="3" HOffset="0" VOffset="-12" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="609020591" ImageRes="Connect;" HAlign="3" VAlign="3" HOffset="0" VOffset="-12" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,49" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4129170065" ImageRes="{6327FE22-6CD6-4104-B0C5-75CA625F71C9};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="929339522" ImageRes="{F1127AB2-0950-430F-A490-E90A40C394CD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1883139125" ImageRes="CHECK_BOX;" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="1" Source="0,0,17,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4147309991" ImageRes="{6327FE22-6CD6-4104-B0C5-75CA625F71C9};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="4" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2349798719" ImageRes="{95A0A73A-4E45-4D47-A9AB-5FC7E0F3A641};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="940149414" ImageRes="{95A0A73A-4E45-4D47-A9AB-5FC7E0F3A641};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3139106217" ImageRes="{95A0A73A-4E45-4D47-A9AB-5FC7E0F3A641};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="4" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2686807599" ImageRes="{D1C016EE-350C-4335-8573-D9156841952A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="3" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="5,0,5,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3767828329" ImageRes="CHECK_BOX;" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="2" Source="17,0,34,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2015760186" ImageRes="CHECK_BOX;" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="3" Source="34,0,51,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3663969732" ImageRes="CHECK_BOX;" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="5" Source="68,0,85,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="328692489" ImageRes="CHECK_BOX;" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="1" Source="40,0,60,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1347642497" ImageRes="{982B9EAD-50CE-49C7-9332-896DC826A32E};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3383884406" ImageRes="CHECK_BOX;" HAlign="2" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="1" Source="0,0,17,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3300002643" ImageRes="{3901AB19-D453-4EE1-A2B2-0EE5701B9A9A};" HAlign="2" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2838722433" ImageRes="CHECK_BOX;" HAlign="2" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="3" Source="34,0,51,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="135436639" ImageRes="CHECK_BOX;" HAlign="2" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="5" Source="68,0,85,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2008371211" ImageRes="{3901AB19-D453-4EE1-A2B2-0EE5701B9A9A};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1841650624" ImageRes="{3901AB19-D453-4EE1-A2B2-0EE5701B9A9A};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3988157136" ImageRes="{26A1CF3B-F758-458F-B25C-22E16D3D6439};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="661228249" ImageRes="{3901AB19-D453-4EE1-A2B2-0EE5701B9A9A};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2464470221" ImageRes="{328E1955-BA65-4F32-9FD0-A6183785595B};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,336,34" Alpha="255" Mask="4278190080" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3219511254" ImageRes="{3901AB19-D453-4EE1-A2B2-0EE5701B9A9A};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="4" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="988279770" ImageRes="{982B9EAD-50CE-49C7-9332-896DC826A32E};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="34275401" ImageRes="{982B9EAD-50CE-49C7-9332-896DC826A32E};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="40,0,60,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="598253783" ImageRes="{982B9EAD-50CE-49C7-9332-896DC826A32E};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="4" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1895402588" ImageRes="{3901AB19-D453-4EE1-A2B2-0EE5701B9A9A};" HAlign="2" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="20,0,40,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1347431612" ImageRes="btn_mini_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="3" Source="48,0,72,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3642106463" ImageRes="PDFViewer;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4143575681" ImageRes="{3901AB19-D453-4EE1-A2B2-0EE5701B9A9A};" HAlign="2" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="40,0,60,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="349200656" ImageRes="BT_KEY_BOARD;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,84,34" Alpha="255" Mask="4278190080" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2851485133" ImageRes="{982B9EAD-50CE-49C7-9332-896DC826A32E};" HAlign="2" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="20,0,40,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1574361234" ImageRes="{982B9EAD-50CE-49C7-9332-896DC826A32E};" HAlign="2" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="40,0,60,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="411185899" ImageRes="EDIT;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,120,26" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2048343327" ImageRes="EDIT;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="60,0,90,26" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="172837860" ImageRes="BT_KEY_BOARD;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="84,0,168,34" Alpha="255" Mask="4278190080" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="278943805" ImageRes="{D1C016EE-350C-4335-8573-D9156841952A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="3" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="5,0,5,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1687928324" ImageRes="BT_KEY_BOARD;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="168,0,252,34" Alpha="255" Mask="4278190080" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1398694148" ImageRes="computer;" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3507855196" ImageRes="password;" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2606128128" ImageRes="EDIT;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,120,26" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="146713157" ImageRes="progress_background_icon;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="1" PartSel="1" Source="0,0,403,6" Alpha="255" Mask="4278190080" Corner="10,0,10,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="33154600" ImageRes="progress_foreground_icon;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="1" PartSel="1" Source="0,0,403,6" Alpha="255" Mask="4278190080" Corner="10,0,10,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1157485399" ImageRes="{AE3A1229-31BA-480A-9B1B-F98A92D797AD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="4294902015" Corner="10,0,10,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1170719113" ImageRes="{F8B7DCBC-923C-4E60-A2FA-1032B9BBFDEE};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="10,0,10,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2278189929" ImageRes="SliderVertBk;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="1" PartSel="1" Source="0,0,124,19" Alpha="255" Mask="4294902015" Corner="0,10,0,10" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2068144718" ImageRes="{27B6E60D-8BF0-4080-8E69-8C32E4BA3634};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2268013766" ImageRes="SliderThumbVertBk;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="1" PartSel="1" Source="0,0,12,19" Alpha="255" Mask="4278190080" Corner="10,0,10,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3122850567" ImageRes="{6115C34A-A7D3-4C3F-8222-3BBBAE1ECE38};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="3" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="4,4,24,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1773877380" ImageRes="{6115C34A-A7D3-4C3F-8222-3BBBAE1ECE38};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="3" PartSel="2" Source="0,0,0,0" Alpha="255" Mask="0" Corner="4,4,24,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1825103845" ImageRes="{6115C34A-A7D3-4C3F-8222-3BBBAE1ECE38};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="3" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="4,4,24,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4022557747" ImageRes="BtnSearchLogoCommon;" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2648125609" ImageRes="{F1127AB2-0950-430F-A490-E90A40C394CD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="2" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="638807539" ImageRes="a56ac6283ef7fc17aae731d982c21ed8;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,350,198" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3828126719" ImageRes="scan_animate;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,16,16" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4074393302" ImageRes="SkanMovie01;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,102,102" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="725488955" ImageRes="8eaf45b9c77071c244f85cab7b491b3f;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,1734,102" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3023418693" ImageRes="{19B40436-9EB4-4F5C-8A3B-37C5A1266C4A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="724391095" ImageRes="7077e6a49ae713bc6434c184bb71c73a;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,492,315" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="335216050" ImageRes="CHECK_BOX;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="1" Source="0,0,102,17" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2746922204" ImageRes="{27B6E60D-8BF0-4080-8E69-8C32E4BA3634};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1276942784" ImageRes="CHECK_BOX;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="3" Source="0,0,102,17" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2486555426" ImageRes="icon_warning_21;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,21,21" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3848995134" ImageRes="icon_check_21;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,21,21" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3696419801" ImageRes="CHECK_BOX;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="2" Source="0,0,102,17" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3499732190" ImageRes="logo_360;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3274921377" ImageRes="softmgr;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1177001151" ImageRes="48X48;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3089783289" ImageRes="Progress;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="2" PartSel="1" Source="0,0,5,17" Alpha="255" Mask="4278190080" Corner="2,2,2,2" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="458184312" ImageRes="Progress;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="2" PartSel="2" Source="0,0,70,10" Alpha="255" Mask="4278190080" Corner="2,2,2,2" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2734949283" ImageRes="btn_highlight;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,69,22" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1708133545" ImageRes="btn_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,69,22" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3017489194" ImageRes="{6327FE22-6CD6-4104-B0C5-75CA625F71C9};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="691277560" ImageRes="黑-设置36-100;白-设置36-100;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,128,128" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1674194676" ImageRes="{95A0A73A-4E45-4D47-A9AB-5FC7E0F3A641};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3030283001" ImageRes="ico_report;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3225403985" ImageRes="IM;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3605687606" ImageRes="Movies;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="751922317" ImageRes="PDFViewer;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1387904204" ImageRes="ico_message;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="277565266" ImageRes="{689FF69E-A8B1-453C-A1FE-58D234E97A06};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,9" Alpha="255" Mask="4278190080" Corner="5,0,5,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1797935460" ImageRes="{D1C016EE-350C-4335-8573-D9156841952A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="3" PartSel="1" Source="0,0,20,27" Alpha="255" Mask="4278190080" Corner="5,0,5,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2716805863" ImageRes="{D1C016EE-350C-4335-8573-D9156841952A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="3" PartSel="2" Source="0,0,20,27" Alpha="255" Mask="4278190080" Corner="5,0,5,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1899217894" ImageRes="{D1C016EE-350C-4335-8573-D9156841952A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="3" PartSel="3" Source="0,0,20,27" Alpha="255" Mask="4278190080" Corner="5,0,5,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="811445045" ImageRes="{27B6E60D-8BF0-4080-8E69-8C32E4BA3634};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2939656823" ImageRes="{19B40436-9EB4-4F5C-8A3B-37C5A1266C4A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1508920053" ImageRes="黑-最小化100;白-最小化100;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3082690028" ImageRes="{19B40436-9EB4-4F5C-8A3B-37C5A1266C4A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="320697715" ImageRes="{6327FE22-6CD6-4104-B0C5-75CA625F71C9};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,80,20" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="535182800" ImageRes="{6327FE22-6CD6-4104-B0C5-75CA625F71C9};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,80,20" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2917029745" ImageRes="{6327FE22-6CD6-4104-B0C5-75CA625F71C9};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,80,20" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1781770445" ImageRes="{95A0A73A-4E45-4D47-A9AB-5FC7E0F3A641};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,80,20" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2142843822" ImageRes="{95A0A73A-4E45-4D47-A9AB-5FC7E0F3A641};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,80,20" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3611398223" ImageRes="{95A0A73A-4E45-4D47-A9AB-5FC7E0F3A641};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,80,20" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3128556424" ImageRes="{F1127AB2-0950-430F-A490-E90A40C394CD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="1" Source="0,0,102,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2547049544" ImageRes="COMBO_ITEM_CLOSE;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="168,0,252,34" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1788965779" ImageRes="{F1127AB2-0950-430F-A490-E90A40C394CD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="2" Source="0,0,102,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="170986490" ImageRes="{F1127AB2-0950-430F-A490-E90A40C394CD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="3" Source="0,0,102,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="587617157" ImageRes="{F1127AB2-0950-430F-A490-E90A40C394CD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="4" Source="0,0,102,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1244252964" ImageRes="{D1C016EE-350C-4335-8573-D9156841952A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="3" PartSel="2" Source="0,0,0,0" Alpha="255" Mask="0" Corner="5,0,5,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="449168806" ImageRes="{F1127AB2-0950-430F-A490-E90A40C394CD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="5" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4289344428" ImageRes="{F1127AB2-0950-430F-A490-E90A40C394CD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="5" Source="0,0,102,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2844874499" ImageRes="explorer_hc;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,16,16" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2674561531" ImageRes="拒绝;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,16,16" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1021705335" ImageRes="formedit_hc;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="14" PartSel="1" Source="0,0,16,16" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="115054088" ImageRes="formedit_hc;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="14" PartSel="5" Source="0,0,224,16" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="424256209" ImageRes="叉;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="14" PartSel="5" Source="64,0,80,16" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="435057380" ImageRes="正确;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,16,16" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2732698476" ImageRes="icon_face;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3351342672" ImageRes="{F1127AB2-0950-430F-A490-E90A40C394CD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1858818111" ImageRes="{F1127AB2-0950-430F-A490-E90A40C394CD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="4" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3105167053" ImageRes="{F1127AB2-0950-430F-A490-E90A40C394CD};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="6" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1629096764" ImageRes="{DA2C36A7-1758-4716-8BCD-BDB208AAC65C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1324627678" ImageRes="{B94A4083-6E90-424E-B35C-CB03DB4EE881};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3867467332" ImageRes="{3FA79189-52BE-413F-B120-A2A5CDAB1B56};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1238034157" ImageRes="0;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1877010117" ImageRes="{3ED746FD-6AA5-4D94-B5C0-0804750E786A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="4" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3509425694" ImageRes="{3ED746FD-6AA5-4D94-B5C0-0804750E786A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="4" PartSel="2" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3304345846" ImageRes="{0EC922B7-6ECE-48F9-B65E-0317A4CF2BA6};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="4" PartSel="4" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="786348921" ImageRes="{0EC922B7-6ECE-48F9-B65E-0317A4CF2BA6};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="4" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2653081276" ImageRes="{3ED746FD-6AA5-4D94-B5C0-0804750E786A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="4" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="378993431" ImageRes="{3ED746FD-6AA5-4D94-B5C0-0804750E786A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="4" PartSel="2" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="49227759" ImageRes="{0EC922B7-6ECE-48F9-B65E-0317A4CF2BA6};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="4" PartSel="4" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1718778000" ImageRes="{0EC922B7-6ECE-48F9-B65E-0317A4CF2BA6};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="4" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3201304060" ImageRes="btn_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="1" Source="0,0,69,22" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3216718303" ImageRes="btn_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="2" Source="0,0,69,22" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1575599583" ImageRes="黑-搜索主按钮100;白-搜索主按钮100;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,110,36" Alpha="255" Mask="4278190080" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3968288628" ImageRes="btn_normal;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="1" Source="0,0,17,22" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2499609609" ImageRes="{689FF69E-A8B1-453C-A1FE-58D234E97A06};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="5,0,5,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3089030350" ImageRes="mac;" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,22,22" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1941766140" ImageRes="COMBO_ITEM_CLOSE;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,84,34" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3487211192" ImageRes="COMBO_ITEM_CLOSE;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="84,0,168,34" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4217764855" ImageRes="黑-搜索主按钮100;白-搜索主按钮100;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="168,0,252,34" Alpha="255" Mask="4278190080" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="644034494" ImageRes="ico_message;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2761116555" ImageRes="ico_report;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3482410926" ImageRes="BtnSearchBaidu;" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2878541146" ImageRes="BkImageBlack;BkImageWhite;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,548,400" Alpha="255" Mask="4278190080" Corner="14,14,14,14" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2232451042" ImageRes="黑-最小化100;白-最小化100;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="24,0,48,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1659700072" ImageRes="黑-最小化100;白-最小化100;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="48,0,72,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4144542605" ImageRes="黑_BtnMax;白_BtnMax;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="290471114" ImageRes="黑_BtnMax;白_BtnMax;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="24,0,48,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="301338460" ImageRes="btn_mini_highlight;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="2" Source="24,0,48,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1342578352" ImageRes="黑_BtnMax;白_BtnMax;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="48,0,72,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2133612498" ImageRes="黑_BtnRestore;白_BtnRestore;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="24,0,48,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1117902296" ImageRes="黑_BtnRestore;白_BtnRestore;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="48,0,72,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1949780875" ImageRes="btn_max_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="3" Source="48,0,72,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3882900321" ImageRes="黑-关闭100;白-关闭100;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3129765142" ImageRes="黑-关闭100;白-关闭100;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="24,0,48,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2183784156" ImageRes="黑-关闭100;白-关闭100;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="48,0,72,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="568252095" ImageRes="{328E1955-BA65-4F32-9FD0-A6183785595B};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,336,34" Alpha="255" Mask="4278190080" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4163398676" ImageRes="{328E1955-BA65-4F32-9FD0-A6183785595B};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,336,34" Alpha="255" Mask="4278190080" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1642573832" ImageRes="通用-本地搜索logo200;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,128,128" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3791138838" ImageRes="黑-搜索服务100;白-搜索服务100;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,36,35" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="127823151" ImageRes="黑-搜索主按钮100;白-搜索主按钮100;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="84,0,168,34" Alpha="255" Mask="4278190080" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2761823303" ImageRes="bg0;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,540,510" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="860490813" ImageRes="aio_head_normal;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,28,28" Alpha="255" Mask="4278190080" Corner="6,6,6,6" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2432519439" ImageRes="icon_pic;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1948953024" ImageRes="btn_mini_normal;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="917176063" ImageRes="btn_max_normal;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2270927427" ImageRes="btn_max_highlight;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="2" Source="24,0,48,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2597659791" ImageRes="btn_restore_highlight;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="2" Source="24,0,48,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="335416813" ImageRes="btn_close_normal;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4198602833" ImageRes="btn_close_highlight;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="2" Source="24,0,48,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2311692892" ImageRes="btn_close_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="3" Source="18,0,27,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="311074384" ImageRes="video;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,28,28" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2109785810" ImageRes="aio_toolbar_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="3" Source="168,0,252,34" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3870351895" ImageRes="audio;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,28,28" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3886003739" ImageRes="sendfile;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,28,28" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="580588737" ImageRes="app1;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,28,28" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2599635564" ImageRes="remote_assistance;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,28,28" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2329304502" ImageRes="ChatBk;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="6,6,6,6" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3389752222" ImageRes="icon_font;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,28,28" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2186569246" ImageRes="icon_shark;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2402821426" ImageRes="icon_screenshots;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="931731490" ImageRes="ChatBkSelf;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="6,6,6,6" Hole="0" TiledX="0" TiledY="0"/>
+</CDUIAttriImageSection>

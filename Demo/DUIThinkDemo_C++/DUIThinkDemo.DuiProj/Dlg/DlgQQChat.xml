@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDUIWndManager>
+    <WndCaptionHeight Descr="" NameID="3346323001" Visible="1" Modified="1" ValueID="0" Value="60"/>
+    <WndInitSize Descr="" NameID="3201664855" Visible="1" Modified="1" ValueID="0" Value="540,510"/>
+    <WndRoundCorner Descr="" NameID="2867269405" Visible="1" Modified="1" ValueID="0" Value="4,4"/>
+    <WndLayered Descr="" NameID="1850352994" Visible="1" Modified="1" ValueID="0" Value="1"/>
+    <GdiplusRenderText Descr="" NameID="2521333858" Visible="1" Modified="1" ValueID="0" Value="1"/>
+    <GdiplusRenderType Descr="" NameID="1877431087" Visible="1" Modified="1" ValueID="3789843824" Cur="5"/>
+    <CDUIContainerCtrl>
+        <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="10"/>
+        <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="2166136261"/>
+        <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2761823303"/>
+        <CDUIHorizontalLayoutCtrl>
+            <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="11"/>
+            <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="605168792"/>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100443"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1240214291"/>
+                <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="860490813"/>
+                <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="1163977601"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="2210783967"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3607385607"/>
+                <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+            </CDUIButtonCtrl>
+            <CDUIVerticalLayoutCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100448"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1432358159"/>
+                <CDUIButtonCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100449"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3409602188"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="1294235587"/>
+                    <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="3676984383"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="3803015612"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3607385607"/>
+                    <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+                    <TextStyleHot Descr="" NameID="2269161860" Visible="1" Modified="1" ValueID="2059880944"/>
+                </CDUIButtonCtrl>
+                <CDUIButtonCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100450"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3409602188"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2842599350"/>
+                    <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="3676984383"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="3803015612"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3607385607"/>
+                    <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+                    <TextStyleHot Descr="" NameID="2269161860" Visible="1" Modified="1" ValueID="1726201703"/>
+                </CDUIButtonCtrl>
+            </CDUIVerticalLayoutCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="3"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="861488440"/>
+                <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2166136261"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1948953024"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="301338460"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="1347431612"/>
+            </CDUIButtonCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="5"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="861488440"/>
+                <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2166136261"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="917176063"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="2270927427"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="1949780875"/>
+            </CDUIButtonCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="4"/>
+                <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="861488440"/>
+                <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2166136261"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="2903803827"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="2597659791"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="1326419095"/>
+            </CDUIButtonCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="2"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="861488440"/>
+                <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2166136261"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="335416813"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="4198602833"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="2311692892"/>
+            </CDUIButtonCtrl>
+        </CDUIHorizontalLayoutCtrl>
+        <CDUIButtonCtrl>
+            <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="7"/>
+            <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2624477552"/>
+            <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+            <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+            <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="276588123"/>
+            <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
+            <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="616634934"/>
+            <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="428397721"/>
+            <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3952938219"/>
+        </CDUIButtonCtrl>
+        <CDUIHorizontalLayoutCtrl>
+            <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100451"/>
+            <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="389541462"/>
+            <ChildPaddingH Descr="" NameID="1645832614" Visible="1" Modified="1" ValueID="0" Value="7"/>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100452"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3609526852"/>
+                <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="311074384"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1872129747"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="2109785810"/>
+                <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+            </CDUIButtonCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100453"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2709167158"/>
+                <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="3870351895"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1872129747"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="2109785810"/>
+                <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+            </CDUIButtonCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100454"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3609526852"/>
+                <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="3886003739"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1872129747"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="2109785810"/>
+                <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+            </CDUIButtonCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100455"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3609526852"/>
+                <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="3210423504"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1872129747"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="2109785810"/>
+                <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+            </CDUIButtonCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100456"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3609526852"/>
+                <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="580588737"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1872129747"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="2109785810"/>
+                <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+            </CDUIButtonCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100457"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3609526852"/>
+                <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2599635564"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1872129747"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="2109785810"/>
+                <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+            </CDUIButtonCtrl>
+        </CDUIHorizontalLayoutCtrl>
+        <CDUIListViewCtrl>
+            <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100458"/>
+            <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1316017887"/>
+            <ChildPaddingV Descr="" NameID="1308014568" Visible="1" Modified="1" ValueID="0" Value="1"/>
+            <ItemModel Descr="" NameID="4226636527" Visible="1" Modified="1" ValueID="4154788287" Cur="4"/>
+            <ItemModelInitCount Descr="" NameID="3135764606" Visible="1" Modified="1" ValueID="0" Value="10"/>
+            <SelectIconFixedWidth Descr="" NameID="281035142" Visible="1" Modified="1" ValueID="0" Value="20"/>
+            <SelectIconFixedHeight Descr="" NameID="962913047" Visible="1" Modified="1" ValueID="0" Value="20"/>
+            <SelectIconNormal Descr="" NameID="3987153997" Visible="1" Modified="1" ValueID="3017489194"/>
+            <SelectIconHot Descr="" NameID="2866314829" Visible="1" Modified="1" ValueID="1137061137"/>
+            <SelectIconPushed Descr="" NameID="2804621609" Visible="1" Modified="1" ValueID="3439918648"/>
+            <SelectIconSelNormal Descr="" NameID="2321446639" Visible="1" Modified="1" ValueID="1674194676"/>
+            <ItemColorHot Descr="" NameID="3532243014" Visible="1" Modified="1" ValueID="2166136261"/>
+            <ItemColorSelHot Descr="" NameID="1827950572" Visible="1" Modified="1" ValueID="2166136261"/>
+            <CDUIScrollBarCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100459"/>
+                <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3140852276"/>
+                <MaxValue Descr="" NameID="540625834" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                <ImageGrooveHot Descr="" NameID="2881586551" Visible="1" Modified="1" ValueID="2499609609"/>
+                <ThumbHorizFixedWidth Descr="" NameID="3795418709" Visible="0" Modified="1" ValueID="0" Value="381"/>
+                <ImageThumbNormal Descr="" NameID="811014879" Visible="1" Modified="1" ValueID="2686807599"/>
+                <ImageThumbHot Descr="" NameID="2366519471" Visible="1" Modified="1" ValueID="1244252964"/>
+                <ImageThumbPushed Descr="" NameID="3336759419" Visible="1" Modified="1" ValueID="278943805"/>
+                <UpDownBtnHorizFixedWidth Descr="" NameID="1083288300" Visible="1" Modified="1" ValueID="0" Value="0"/>
+            </CDUIScrollBarCtrl>
+            <CDUIScrollBarCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100460"/>
+                <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="1"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3221534916"/>
+                <ProgressType Descr="" NameID="3332400408" Visible="1" Modified="1" ValueID="1884515023" Cur="1"/>
+                <MoveType Descr="" NameID="4040424860" Visible="1" Modified="1" ValueID="2648091639" Cur="1"/>
+                <MaxValue Descr="" NameID="540625834" Visible="1" Modified="1" ValueID="0" Value="83"/>
+                <ImageGrooveHot Descr="" NameID="2881586551" Visible="1" Modified="1" ValueID="834387963"/>
+                <ThumbVertFixedHeight Descr="" NameID="2770656695" Visible="0" Modified="1" ValueID="0" Value="143"/>
+                <ImageThumbNormal Descr="" NameID="811014879" Visible="1" Modified="1" ValueID="2910614432"/>
+                <ImageThumbHot Descr="" NameID="2366519471" Visible="1" Modified="1" ValueID="1133711105"/>
+                <ImageThumbPushed Descr="" NameID="3336759419" Visible="1" Modified="1" ValueID="3248570317"/>
+                <UpDownBtnVertFixedHeight Descr="" NameID="404125566" Visible="1" Modified="1" ValueID="0" Value="0"/>
+            </CDUIScrollBarCtrl>
+            <CDUIListItemCtrl>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3588651087"/>
+                <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="2166136261"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2354385931"/>
+                <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
+                <CDUICheckBoxCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="30"/>
+                    <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3062189494"/>
+                    <MouseThrough Descr="" NameID="2216167159" Visible="1" Modified="1" ValueID="0" Value="1"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="3017489194"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1137061137"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3439918648"/>
+                    <ImageSelNormal Descr="" NameID="1068630995" Visible="1" Modified="1" ValueID="1674194676"/>
+                </CDUICheckBoxCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100470"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1380027825"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+                <CDUIThinkEditCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100471"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2719827622"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2329304502"/>
+                    <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                    <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="1985526189"/>
+                    <TextPadding Descr="" NameID="1012701937" Visible="1" Modified="1" ValueID="2707128496"/>
+                </CDUIThinkEditCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100472"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="474059936"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+            </CDUIListItemCtrl>
+            <CDUIListItemCtrl>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3588651087"/>
+                <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="2166136261"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2354385931"/>
+                <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
+                <CDUICheckBoxCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="30"/>
+                    <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3062189494"/>
+                    <MouseThrough Descr="" NameID="2216167159" Visible="1" Modified="1" ValueID="0" Value="1"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="3017489194"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1137061137"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3439918648"/>
+                    <ImageSelNormal Descr="" NameID="1068630995" Visible="1" Modified="1" ValueID="1674194676"/>
+                </CDUICheckBoxCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100470"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1380027825"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+                <CDUIThinkEditCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100471"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2719827622"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2329304502"/>
+                    <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                    <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="1985526189"/>
+                    <TextPadding Descr="" NameID="1012701937" Visible="1" Modified="1" ValueID="2707128496"/>
+                </CDUIThinkEditCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100472"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="474059936"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+            </CDUIListItemCtrl>
+            <CDUIListItemCtrl>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3588651087"/>
+                <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="2166136261"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2354385931"/>
+                <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
+                <CDUICheckBoxCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="30"/>
+                    <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3062189494"/>
+                    <MouseThrough Descr="" NameID="2216167159" Visible="1" Modified="1" ValueID="0" Value="1"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="3017489194"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1137061137"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3439918648"/>
+                    <ImageSelNormal Descr="" NameID="1068630995" Visible="1" Modified="1" ValueID="1674194676"/>
+                </CDUICheckBoxCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100470"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1380027825"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+                <CDUIThinkEditCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100471"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2719827622"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2329304502"/>
+                    <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                    <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="1985526189"/>
+                    <TextPadding Descr="" NameID="1012701937" Visible="1" Modified="1" ValueID="2707128496"/>
+                </CDUIThinkEditCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100472"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="474059936"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+            </CDUIListItemCtrl>
+            <CDUIListItemCtrl>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3588651087"/>
+                <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="2166136261"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2354385931"/>
+                <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
+                <CDUICheckBoxCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="30"/>
+                    <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3062189494"/>
+                    <MouseThrough Descr="" NameID="2216167159" Visible="1" Modified="1" ValueID="0" Value="1"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="3017489194"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1137061137"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3439918648"/>
+                    <ImageSelNormal Descr="" NameID="1068630995" Visible="1" Modified="1" ValueID="1674194676"/>
+                </CDUICheckBoxCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100470"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1380027825"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+                <CDUIThinkEditCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100471"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2719827622"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2329304502"/>
+                    <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                    <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="1985526189"/>
+                    <TextPadding Descr="" NameID="1012701937" Visible="1" Modified="1" ValueID="2707128496"/>
+                </CDUIThinkEditCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100472"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="474059936"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+            </CDUIListItemCtrl>
+            <CDUIListItemCtrl>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3588651087"/>
+                <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="2166136261"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2354385931"/>
+                <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
+                <CDUICheckBoxCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="30"/>
+                    <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3062189494"/>
+                    <MouseThrough Descr="" NameID="2216167159" Visible="1" Modified="1" ValueID="0" Value="1"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="3017489194"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1137061137"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3439918648"/>
+                    <ImageSelNormal Descr="" NameID="1068630995" Visible="1" Modified="1" ValueID="1674194676"/>
+                </CDUICheckBoxCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100470"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1380027825"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+                <CDUIThinkEditCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100471"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2719827622"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2329304502"/>
+                    <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                    <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="1985526189"/>
+                    <TextPadding Descr="" NameID="1012701937" Visible="1" Modified="1" ValueID="2707128496"/>
+                </CDUIThinkEditCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100472"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="474059936"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+            </CDUIListItemCtrl>
+            <CDUIListItemCtrl>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3588651087"/>
+                <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="2166136261"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2354385931"/>
+                <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
+                <CDUICheckBoxCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="30"/>
+                    <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3062189494"/>
+                    <MouseThrough Descr="" NameID="2216167159" Visible="1" Modified="1" ValueID="0" Value="1"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="3017489194"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1137061137"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3439918648"/>
+                    <ImageSelNormal Descr="" NameID="1068630995" Visible="1" Modified="1" ValueID="1674194676"/>
+                </CDUICheckBoxCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100470"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1380027825"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+                <CDUIThinkEditCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100471"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2719827622"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2329304502"/>
+                    <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                    <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="1985526189"/>
+                    <TextPadding Descr="" NameID="1012701937" Visible="1" Modified="1" ValueID="2707128496"/>
+                </CDUIThinkEditCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100472"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="474059936"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+            </CDUIListItemCtrl>
+            <CDUIListItemCtrl>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3588651087"/>
+                <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="2166136261"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2354385931"/>
+                <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
+                <CDUICheckBoxCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="30"/>
+                    <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3062189494"/>
+                    <MouseThrough Descr="" NameID="2216167159" Visible="1" Modified="1" ValueID="0" Value="1"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="3017489194"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1137061137"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3439918648"/>
+                    <ImageSelNormal Descr="" NameID="1068630995" Visible="1" Modified="1" ValueID="1674194676"/>
+                </CDUICheckBoxCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100470"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1380027825"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+                <CDUIThinkEditCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100471"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2719827622"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2329304502"/>
+                    <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                    <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="1985526189"/>
+                    <TextPadding Descr="" NameID="1012701937" Visible="1" Modified="1" ValueID="2707128496"/>
+                </CDUIThinkEditCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100472"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="474059936"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+            </CDUIListItemCtrl>
+            <CDUIListItemCtrl>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3588651087"/>
+                <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="2166136261"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2354385931"/>
+                <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
+                <CDUICheckBoxCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="30"/>
+                    <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3062189494"/>
+                    <MouseThrough Descr="" NameID="2216167159" Visible="1" Modified="1" ValueID="0" Value="1"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="3017489194"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1137061137"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3439918648"/>
+                    <ImageSelNormal Descr="" NameID="1068630995" Visible="1" Modified="1" ValueID="1674194676"/>
+                </CDUICheckBoxCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100470"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1380027825"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+                <CDUIThinkEditCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100471"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2719827622"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2329304502"/>
+                    <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                    <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="1985526189"/>
+                    <TextPadding Descr="" NameID="1012701937" Visible="1" Modified="1" ValueID="2707128496"/>
+                </CDUIThinkEditCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100472"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="474059936"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+            </CDUIListItemCtrl>
+            <CDUIListItemCtrl>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3588651087"/>
+                <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="2166136261"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2354385931"/>
+                <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
+                <CDUICheckBoxCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="30"/>
+                    <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3062189494"/>
+                    <MouseThrough Descr="" NameID="2216167159" Visible="1" Modified="1" ValueID="0" Value="1"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="3017489194"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1137061137"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3439918648"/>
+                    <ImageSelNormal Descr="" NameID="1068630995" Visible="1" Modified="1" ValueID="1674194676"/>
+                </CDUICheckBoxCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100470"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1380027825"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+                <CDUIThinkEditCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100471"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2719827622"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2329304502"/>
+                    <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                    <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="1985526189"/>
+                    <TextPadding Descr="" NameID="1012701937" Visible="1" Modified="1" ValueID="2707128496"/>
+                </CDUIThinkEditCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100472"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="474059936"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+            </CDUIListItemCtrl>
+            <CDUIListItemCtrl>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3588651087"/>
+                <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="2166136261"/>
+                <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2354385931"/>
+                <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
+                <CDUICheckBoxCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="30"/>
+                    <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3062189494"/>
+                    <MouseThrough Descr="" NameID="2216167159" Visible="1" Modified="1" ValueID="0" Value="1"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="3017489194"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1137061137"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3439918648"/>
+                    <ImageSelNormal Descr="" NameID="1068630995" Visible="1" Modified="1" ValueID="1674194676"/>
+                </CDUICheckBoxCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100470"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1380027825"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+                <CDUIThinkEditCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100471"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2719827622"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2329304502"/>
+                    <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+                    <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="1985526189"/>
+                    <TextPadding Descr="" NameID="1012701937" Visible="1" Modified="1" ValueID="2707128496"/>
+                </CDUIThinkEditCtrl>
+                <CDUIControlBase>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100472"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="474059936"/>
+                    <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="1163977601"/>
+                </CDUIControlBase>
+            </CDUIListItemCtrl>
+            <CDUIListHeaderCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100461"/>
+                <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3588651087"/>
+                <CDUIListHeaderItemCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="31"/>
+                    <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1512902934"/>
+                    <SepWidth Descr="separator width" NameID="1133562293" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                </CDUIListHeaderItemCtrl>
+            </CDUIListHeaderCtrl>
+        </CDUIListViewCtrl>
+        <CDUIHorizontalLayoutCtrl>
+            <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100462"/>
+            <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="557804698"/>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100463"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="4282152068"/>
+                <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="3389752222"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1872129747"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="2109785810"/>
+                <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+            </CDUIButtonCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100464"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="4282152068"/>
+                <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2732698476"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1872129747"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="2109785810"/>
+                <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+            </CDUIButtonCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100465"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="4282152068"/>
+                <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2432519439"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1872129747"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="2109785810"/>
+                <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+            </CDUIButtonCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100466"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="4282152068"/>
+                <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2186569246"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1872129747"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="2109785810"/>
+                <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+            </CDUIButtonCtrl>
+            <CDUIButtonCtrl>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100467"/>
+                <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="4282152068"/>
+                <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="2402821426"/>
+                <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="1219653771"/>
+                <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="1872129747"/>
+                <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="2109785810"/>
+                <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+            </CDUIButtonCtrl>
+        </CDUIHorizontalLayoutCtrl>
+        <CDUIThinkEditCtrl>
+            <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100468"/>
+            <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3328404376"/>
+            <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2166136261"/>
+            <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+            <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2166136261"/>
+            <TextStyleNormal Descr="" NameID="1977116604" Visible="1" Modified="1" ValueID="2483650666"/>
+            <WantReturn Descr="" NameID="1376900667" Visible="1" Modified="1" ValueID="0" Value="1"/>
+        </CDUIThinkEditCtrl>
+        <CDUIButtonCtrl>
+            <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100469"/>
+            <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1379310041"/>
+            <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="999755692"/>
+            <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
+            <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="616634934"/>
+            <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="428397721"/>
+            <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="3952938219"/>
+            <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
+        </CDUIButtonCtrl>
+    </CDUIContainerCtrl>
+</CDUIWndManager>

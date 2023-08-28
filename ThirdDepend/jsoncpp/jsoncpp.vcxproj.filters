@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="src\json_tool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json\allocator.h">
+      <Filter>Public API</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json\assertions.h">
+      <Filter>Public API</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json\autolink.h">
+      <Filter>Public API</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json\config.h">
+      <Filter>Public API</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json\forwards.h">
+      <Filter>Public API</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json\json.h">
+      <Filter>Public API</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json\json_features.h">
+      <Filter>Public API</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json\reader.h">
+      <Filter>Public API</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json\value.h">
+      <Filter>Public API</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json\version.h">
+      <Filter>Public API</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json\writer.h">
+      <Filter>Public API</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{75F749EC-C654-393B-A2C1-32E3EF246C6E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public API">
+      <UniqueIdentifier>{6D9EB204-C732-3B48-ACA6-38BEC5BCBB4C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7DF8E7B9-4207-38E7-AA42-49EAF09C297B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\json_valueiterator.inl">
+      <Filter>Header Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\json_reader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\json_value.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\json_writer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

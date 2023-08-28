@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{49358577-7F0B-4DE8-9F4D-9E49E80B0D27}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>DUIThinkDemoC</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <PreBuildEvent>
+      <Command>if exist "../../../bin\MMHelperD.dll" copy "../../../bin\MMHelperD.dll" "../Debug"
+if exist "../../../bin\DirectUID.dll" copy "../../../bin\DirectUID.dll" "../Debug"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="BaseControl\AnimateView\AnimateView.h" />
+    <ClInclude Include="BaseControl\ButtonView\ButtonView.h" />
+    <ClInclude Include="BaseControl\CheckBoxView\CheckBoxView.h" />
+    <ClInclude Include="BaseControl\ComboxView\ComboxView.h" />
+    <ClInclude Include="BaseControl\EditView\EditView.h" />
+    <ClInclude Include="BaseControl\ProgressView\ProgressView.h" />
+    <ClInclude Include="BaseControl\RadioBoxView\RadioBoxView.h" />
+    <ClInclude Include="BaseControl\RichEditView\RichEditView.h" />
+    <ClInclude Include="BaseControl\SliderView\SliderView.h" />
+    <ClInclude Include="BaseControl\StaticView\StaticView.h" />
+    <ClInclude Include="Define.h" />
+    <ClInclude Include="DlgDemo.h" />
+    <ClInclude Include="DlgDpi.h" />
+    <ClInclude Include="DUIThinkDemo_C++.h" />
+    <ClInclude Include="QQ\DlgQQChat.h" />
+    <ClInclude Include="QQ\DlgQQFace.h" />
+    <ClInclude Include="QQ\QQView.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Usage\AnimateDlg\AnimateDlgView.h" />
+    <ClInclude Include="Usage\DpiDlg\DpiDlgView.h" />
+    <ClInclude Include="Usage\SvgImage\SvgImageView.h" />
+    <ClInclude Include="Usage\SwitchSkin\SwitchSkinView.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BaseControl\AnimateView\AnimateView.cpp" />
+    <ClCompile Include="BaseControl\ButtonView\ButtonView.cpp" />
+    <ClCompile Include="BaseControl\CheckBoxView\CheckBoxView.cpp" />
+    <ClCompile Include="BaseControl\ComboxView\ComboxView.cpp" />
+    <ClCompile Include="BaseControl\EditView\EditView.cpp" />
+    <ClCompile Include="BaseControl\ProgressView\ProgressView.cpp" />
+    <ClCompile Include="BaseControl\RadioBoxView\RadioBoxView.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="BaseControl\RichEditView\RichEditView.cpp" />
+    <ClCompile Include="BaseControl\SliderView\SliderView.cpp" />
+    <ClCompile Include="BaseControl\StaticView\StaticView.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="DlgDemo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="DlgDpi.cpp" />
+    <ClCompile Include="DUIThinkDemo_C++.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="QQ\DlgQQChat.cpp" />
+    <ClCompile Include="QQ\DlgQQFace.cpp" />
+    <ClCompile Include="QQ\QQView.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Usage\AnimateDlg\AnimateDlgView.cpp" />
+    <ClCompile Include="Usage\DpiDlg\DpiDlgView.cpp" />
+    <ClCompile Include="Usage\SvgImage\SvgImageView.cpp" />
+    <ClCompile Include="Usage\SwitchSkin\SwitchSkinView.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DUIThinkDemo_C++.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="DUIThinkDemo_C++.ico" />
+    <Image Include="small.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

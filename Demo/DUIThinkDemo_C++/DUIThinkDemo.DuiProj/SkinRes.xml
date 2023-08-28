@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDUIImageBase ResName="0" Path="0.gif"/>
+
+<CDUIImageBase ResName="1" Path="1.gif"/>
+
+<CDUIImageBase ResName="2" Path="2.gif"/>
+
+<CDUIImageBase ResName="3" Path="3.gif"/>
+
+<CDUIImageBase ResName="4" Path="4.gif"/>
+
+<CDUIImageBase ResName="5" Path="5.gif"/>
+
+<CDUIImageBase ResName="5fa2e367e9c4962de0702cc75456f121" Path="5fa2e367e9c4962de0702cc75456f121.gif"/>
+
+<CDUIImageBase ResName="6" Path="6.gif"/>
+
+<CDUIImageBase ResName="7" Path="7.gif"/>
+
+<CDUIImageBase ResName="8" Path="8.gif"/>
+
+<CDUIImageBase ResName="8eaf45b9c77071c244f85cab7b491b3f" Path="8eaf45b9c77071c244f85cab7b491b3f.jpeg"/>
+
+<CDUIImageBase ResName="9" Path="9.gif"/>
+
+<CDUIImageBase ResName="10" Path="10.gif"/>
+
+<CDUIImageBase ResName="11" Path="11.gif"/>
+
+<CDUIImageBase ResName="12" Path="12.gif"/>
+
+<CDUIImageBase ResName="13" Path="13.gif"/>
+
+<CDUIImageBase ResName="14" Path="14.gif"/>
+
+<CDUIImageBase ResName="15" Path="15.gif"/>
+
+<CDUIImageBase ResName="16" Path="16.gif"/>
+
+<CDUIImageBase ResName="17" Path="17.gif"/>
+
+<CDUIImageBase ResName="18" Path="18.gif"/>
+
+<CDUIImageBase ResName="19" Path="19.gif"/>
+
+<CDUIImageBase ResName="20" Path="20.gif"/>
+
+<CDUIImageBase ResName="21" Path="21.gif"/>
+
+<CDUIImageBase ResName="22" Path="22.gif"/>
+
+<CDUIImageBase ResName="22c02528f1a39fedcd9c9b7c53d8badd" Path="22c02528f1a39fedcd9c9b7c53d8badd.jpeg"/>
+
+<CDUIImageBase ResName="23" Path="23.gif"/>
+
+<CDUIImageBase ResName="24" Path="24.gif"/>
+
+<CDUIImageBase ResName="25" Path="25.gif"/>
+
+<CDUIImageBase ResName="26" Path="26.gif"/>
+
+<CDUIImageBase ResName="27" Path="27.gif"/>
+
+<CDUIImageBase ResName="28" Path="28.gif"/>
+
+<CDUIImageBase ResName="29" Path="29.gif"/>
+
+<CDUIImageBase ResName="30" Path="30.gif"/>
+
+<CDUIImageBase ResName="31" Path="31.gif"/>
+
+<CDUIImageBase ResName="32" Path="32.gif"/>
+
+<CDUIImageBase ResName="32X32" Path="32X32.png"/>
+
+<CDUIImageBase ResName="33" Path="33.gif"/>
+
+<CDUIImageBase ResName="34" Path="34.gif"/>
+
+<CDUIImageBase ResName="35" Path="35.gif"/>
+
+<CDUIImageBase ResName="36" Path="36.gif"/>
+
+<CDUIImageBase ResName="37" Path="37.gif"/>
+
+<CDUIImageBase ResName="38" Path="38.gif"/>
+
+<CDUIImageBase ResName="39" Path="39.gif"/>
+
+<CDUIImageBase ResName="40" Path="40.gif"/>
+
+<CDUIImageBase ResName="41" Path="41.gif"/>
+
+<CDUIImageBase ResName="42" Path="42.gif"/>
+
+<CDUIImageBase ResName="43" Path="43.gif"/>
+
+<CDUIImageBase ResName="44" Path="44.gif"/>
+
+<CDUIImageBase ResName="45" Path="45.gif"/>
+
+<CDUIImageBase ResName="46" Path="46.gif"/>
+
+<CDUIImageBase ResName="47" Path="47.gif"/>
+
+<CDUIImageBase ResName="48" Path="48.gif"/>
+
+<CDUIImageBase ResName="48X48" Path="48X48.png"/>
+
+<CDUIImageBase ResName="49" Path="49.gif"/>
+
+<CDUIImageBase ResName="50" Path="50.gif"/>
+
+<CDUIImageBase ResName="51" Path="51.gif"/>
+
+<CDUIImageBase ResName="52" Path="52.gif"/>
+
+<CDUIImageBase ResName="53" Path="53.gif"/>
+
+<CDUIImageBase ResName="54" Path="54.gif"/>
+
+<CDUIImageBase ResName="55" Path="55.gif"/>
+
+<CDUIImageBase ResName="56" Path="56.gif"/>
+
+<CDUIImageBase ResName="57" Path="57.gif"/>
+
+<CDUIImageBase ResName="58" Path="58.gif"/>
+
+<CDUIImageBase ResName="59" Path="59.gif"/>
+
+<CDUIImageBase ResName="60" Path="60.gif"/>
+
+<CDUIImageBase ResName="61" Path="61.gif"/>
+
+<CDUIImageBase ResName="62" Path="62.gif"/>
+
+<CDUIImageBase ResName="63" Path="63.gif"/>
+
+<CDUIImageBase ResName="64" Path="64.gif"/>
+
+<CDUIImageBase ResName="65" Path="65.gif"/>
+
+<CDUIImageBase ResName="66" Path="66.gif"/>
+
+<CDUIImageBase ResName="67" Path="67.gif"/>
+
+<CDUIImageBase ResName="68" Path="68.gif"/>
+
+<CDUIImageBase ResName="69" Path="69.gif"/>
+
+<CDUIImageBase ResName="70" Path="70.gif"/>
+
+<CDUIImageBase ResName="71" Path="71.gif"/>
+
+<CDUIImageBase ResName="72" Path="72.gif"/>
+
+<CDUIImageBase ResName="73" Path="73.gif"/>
+
+<CDUIImageBase ResName="74" Path="74.gif"/>
+
+<CDUIImageBase ResName="75" Path="75.gif"/>
+
+<CDUIImageBase ResName="76" Path="76.gif"/>
+
+<CDUIImageBase ResName="77" Path="77.gif"/>
+
+<CDUIImageBase ResName="78" Path="78.gif"/>
+
+<CDUIImageBase ResName="79" Path="79.gif"/>
+
+<CDUIImageBase ResName="80" Path="80.gif"/>
+
+<CDUIImageBase ResName="81" Path="81.gif"/>
+
+<CDUIImageBase ResName="82" Path="82.gif"/>
+
+<CDUIImageBase ResName="83" Path="83.gif"/>
+
+<CDUIImageBase ResName="84" Path="84.gif"/>
+
+<CDUIImageBase ResName="85" Path="85.gif"/>
+
+<CDUIImageBase ResName="86" Path="86.gif"/>
+
+<CDUIImageBase ResName="87" Path="87.gif"/>
+
+<CDUIImageBase ResName="88" Path="88.gif"/>
+
+<CDUIImageBase ResName="89" Path="89.gif"/>
+
+<CDUIImageBase ResName="90" Path="90.gif"/>
+
+<CDUIImageBase ResName="91" Path="91.gif"/>
+
+<CDUIImageBase ResName="92" Path="92.gif"/>
+
+<CDUIImageBase ResName="93" Path="93.gif"/>
+
+<CDUIImageBase ResName="94" Path="94.gif"/>
+
+<CDUIImageBase ResName="95" Path="95.gif"/>
+
+<CDUIImageBase ResName="96" Path="96.gif"/>
+
+<CDUIImageBase ResName="97" Path="97.gif"/>
+
+<CDUIImageBase ResName="98" Path="98.gif"/>
+
+<CDUIImageBase ResName="99" Path="99.gif"/>
+
+<CDUIImageBase ResName="100" Path="100.gif"/>
+
+<CDUIImageBase ResName="101" Path="101.gif"/>
+
+<CDUIImageBase ResName="102" Path="102.gif"/>
+
+<CDUIImageBase ResName="103" Path="103.gif"/>
+
+<CDUIImageBase ResName="104" Path="104.gif"/>
+
+<CDUIImageBase ResName="105" Path="105.gif"/>
+
+<CDUIImageBase ResName="106" Path="106.gif"/>
+
+<CDUIImageBase ResName="107" Path="107.gif"/>
+
+<CDUIImageBase ResName="108" Path="108.gif"/>
+
+<CDUIImageBase ResName="109" Path="109.gif"/>
+
+<CDUIImageBase ResName="110" Path="110.gif"/>
+
+<CDUIImageBase ResName="111" Path="111.gif"/>
+
+<CDUIImageBase ResName="112" Path="112.gif"/>
+
+<CDUIImageBase ResName="113" Path="113.gif"/>
+
+<CDUIImageBase ResName="114" Path="114.gif"/>
+
+<CDUIImageBase ResName="115" Path="115.gif"/>
+
+<CDUIImageBase ResName="116" Path="116.gif"/>
+
+<CDUIImageBase ResName="117" Path="117.gif"/>
+
+<CDUIImageBase ResName="118" Path="118.gif"/>
+
+<CDUIImageBase ResName="119" Path="119.gif"/>
+
+<CDUIImageBase ResName="120" Path="120.gif"/>
+
+<CDUIImageBase ResName="121" Path="121.gif"/>
+
+<CDUIImageBase ResName="122" Path="122.gif"/>
+
+<CDUIImageBase ResName="123" Path="123.gif"/>
+
+<CDUIImageBase ResName="124" Path="124.gif"/>
+
+<CDUIImageBase ResName="124_old" Path="124_old.gif"/>
+
+<CDUIImageBase ResName="125" Path="125.gif"/>
+
+<CDUIImageBase ResName="126" Path="126.gif"/>
+
+<CDUIImageBase ResName="127" Path="127.gif"/>
+
+<CDUIImageBase ResName="128" Path="128.gif"/>
+
+<CDUIImageBase ResName="129" Path="129.gif"/>
+
+<CDUIImageBase ResName="130" Path="130.gif"/>
+
+<CDUIImageBase ResName="131" Path="131.gif"/>
+
+<CDUIImageBase ResName="132" Path="132.gif"/>
+
+<CDUIImageBase ResName="133" Path="133.gif"/>
+
+<CDUIImageBase ResName="134" Path="134.gif"/>
+
+<CDUIImageBase ResName="7077e6a49ae713bc6434c184bb71c73a" Path="7077e6a49ae713bc6434c184bb71c73a.jpeg"/>
+
+<CDUIImageBase ResName="88630140" Path="88630140.png"/>
+
+<CDUIImageBase ResName="20200804183359_TxJdV" Path="20200804183359_TxJdV.png"/>
+
+<CDUIImageBase ResName="a56ac6283ef7fc17aae731d982c21ed8" Path="a56ac6283ef7fc17aae731d982c21ed8.gif"/>
+
+<CDUIImageBase ResName="aio_head_normal" Path="aio_head_normal.png"/>
+
+<CDUIImageBase ResName="aio_toolbar_down" Path="aio_toolbar_down.png"/>
+
+<CDUIImageBase ResName="aio_toolbar_highligh" Path="aio_toolbar_highligh.png"/>
+
+<CDUIImageBase ResName="app" Path="app.png"/>
+
+<CDUIImageBase ResName="app1" Path="app1.png"/>
+
+<CDUIImageBase ResName="audio" Path="audio.png"/>
+
+<CDUIImageBase ResName="bg0" Path="bg0.png"/>
+
+<CDUIImageBase ResName="BkImageBlack" Path="BkImageBlack.png"/>
+
+<CDUIImageBase ResName="BkImageWhite" Path="BkImageWhite.png"/>
+
+<CDUIImageBase ResName="BlackBtnClose" Path="BlackBtnClose.svg"/>
+
+<CDUIImageBase ResName="Bold" Path="Bold.png"/>
+
+<CDUIImageBase ResName="BT_DEFAULT" Path="BT_DEFAULT.png"/>
+
+<CDUIImageBase ResName="BT_DROP_DOWN" Path="BT_DROP_DOWN.png"/>
+
+<CDUIImageBase ResName="BT_KEY_BOARD" Path="BT_KEY_BOARD.png"/>
+
+<CDUIImageBase ResName="btn_close_down" Path="btn_close_down.png"/>
+
+<CDUIImageBase ResName="btn_close_highlight" Path="btn_close_highlight.png"/>
+
+<CDUIImageBase ResName="btn_close_normal" Path="btn_close_normal.png"/>
+
+<CDUIImageBase ResName="btn_down" Path="btn_down.png"/>
+
+<CDUIImageBase ResName="btn_focus" Path="btn_focus.png"/>
+
+<CDUIImageBase ResName="btn_highlight" Path="btn_highlight.png"/>
+
+<CDUIImageBase ResName="btn_max_down" Path="btn_max_down.png"/>
+
+<CDUIImageBase ResName="btn_max_highlight" Path="btn_max_highlight.png"/>
+
+<CDUIImageBase ResName="btn_max_normal" Path="btn_max_normal.png"/>
+
+<CDUIImageBase ResName="btn_mini_down" Path="btn_mini_down.png"/>
+
+<CDUIImageBase ResName="btn_mini_highlight" Path="btn_mini_highlight.png"/>
+
+<CDUIImageBase ResName="btn_mini_normal" Path="btn_mini_normal.png"/>
+
+<CDUIImageBase ResName="btn_normal" Path="btn_normal.png"/>
+
+<CDUIImageBase ResName="btn_restore_down" Path="btn_restore_down.png"/>
+
+<CDUIImageBase ResName="btn_restore_highlight" Path="btn_restore_highlight.png"/>
+
+<CDUIImageBase ResName="btn_restore_normal" Path="btn_restore_normal.png"/>
+
+<CDUIImageBase ResName="BtnAddUrlOk" Path="BtnAddUrlOk.png"/>
+
+<CDUIImageBase ResName="BtnMin" Path="BtnMin.png"/>
+
+<CDUIImageBase ResName="BtnSearchBaidu" Path="BtnSearchBaidu.png"/>
+
+<CDUIImageBase ResName="BtnSearchLogoCommon" Path="BtnSearchLogoCommon.png"/>
+
+<CDUIImageBase ResName="ChatBk" Path="ChatBk.png"/>
+
+<CDUIImageBase ResName="ChatBkSelf" Path="ChatBkSelf.png"/>
+
+<CDUIImageBase ResName="CHECK_BOX" Path="CHECK_BOX.png"/>
+
+<CDUIImageBase ResName="color" Path="color.png"/>
+
+<CDUIImageBase ResName="combo" Path="combo.png"/>
+
+<CDUIImageBase ResName="COMBO_ITEM_CLOSE" Path="COMBO_ITEM_CLOSE.png"/>
+
+<CDUIImageBase ResName="computer" Path="computer.png"/>
+
+<CDUIImageBase ResName="Connect" Path="Connect.png"/>
+
+<CDUIImageBase ResName="EDIT" Path="EDIT.png"/>
+
+<CDUIImageBase ResName="emotionEdit_20" Path="emotionEdit_20.png"/>
+
+<CDUIImageBase ResName="face_add" Path="face_add.png"/>
+
+<CDUIImageBase ResName="FaceEditTipBtn_selected" Path="FaceEditTipBtn_selected.png"/>
+
+<CDUIImageBase ResName="font_bk" Path="font_bk.bmp"/>
+
+<CDUIImageBase ResName="FontBarBg" Path="FontBarBg.png"/>
+
+<CDUIImageBase ResName="HScrollBk" Path="HScrollBk.png"/>
+
+<CDUIImageBase ResName="HScrollThumb" Path="HScrollThumb.png"/>
+
+<CDUIImageBase ResName="ico_message" Path="ico_message.png"/>
+
+<CDUIImageBase ResName="ico_navigate" Path="ico_navigate.png"/>
+
+<CDUIImageBase ResName="ico_PluginCleaner" Path="ico_PluginCleaner.png"/>
+
+<CDUIImageBase ResName="ico_report" Path="ico_report.png"/>
+
+<CDUIImageBase ResName="ico_Tools" Path="ico_Tools.png"/>
+
+<CDUIImageBase ResName="icon_check" Path="icon_check.png"/>
+
+<CDUIImageBase ResName="icon_check_21" Path="icon_check_21.png"/>
+
+<CDUIImageBase ResName="icon_error" Path="icon_error.png"/>
+
+<CDUIImageBase ResName="icon_face" Path="icon_face.png"/>
+
+<CDUIImageBase ResName="icon_font" Path="icon_font.png"/>
+
+<CDUIImageBase ResName="icon_info" Path="icon_info.png"/>
+
+<CDUIImageBase ResName="icon_info_21" Path="icon_info_21.png"/>
+
+<CDUIImageBase ResName="icon_pic" Path="icon_pic.png"/>
+
+<CDUIImageBase ResName="icon_question" Path="icon_question.png"/>
+
+<CDUIImageBase ResName="icon_question_21" Path="icon_question_21.png"/>
+
+<CDUIImageBase ResName="icon_screenshots" Path="icon_screenshots.png"/>
+
+<CDUIImageBase ResName="icon_shark" Path="icon_shark.png"/>
+
+<CDUIImageBase ResName="icon_user" Path="icon_user.png"/>
+
+<CDUIImageBase ResName="icon_warning" Path="icon_warning.png"/>
+
+<CDUIImageBase ResName="icon_warning_21" Path="icon_warning_21.png"/>
+
+<CDUIImageBase ResName="IM" Path="IM.png"/>
+
+<CDUIImageBase ResName="iSplit" Path="iSplit.png"/>
+
+<CDUIImageBase ResName="Italic" Path="Italic.png"/>
+
+<CDUIImageBase ResName="logo_360" Path="logo_360.png"/>
+
+<CDUIImageBase ResName="mac" Path="mac.png"/>
+
+<CDUIImageBase ResName="menu_arrow" Path="menu_arrow.png"/>
+
+<CDUIImageBase ResName="menu_bk" Path="menu_bk.png"/>
+
+<CDUIImageBase ResName="menu_check" Path="menu_check.png"/>
+
+<CDUIImageBase ResName="menu_selected" Path="menu_selected.png"/>
+
+<CDUIImageBase ResName="menu_separtor" Path="menu_separtor.png"/>
+
+<CDUIImageBase ResName="MidToolBarBg" Path="MidToolBarBg.png"/>
+
+<CDUIImageBase ResName="Movies" Path="Movies.png"/>
+
+<CDUIImageBase ResName="password" Path="password.png"/>
+
+<CDUIImageBase ResName="PDFViewer" Path="PDFViewer.png"/>
+
+<CDUIImageBase ResName="Progress" Path="Progress.png"/>
+
+<CDUIImageBase ResName="progress_background_icon" Path="progress_background_icon.png"/>
+
+<CDUIImageBase ResName="progress_foreground_icon" Path="progress_foreground_icon.png"/>
+
+<CDUIImageBase ResName="ProgressSlipVertBk" Path="ProgressSlipVertBk.png"/>
+
+<CDUIImageBase ResName="ProgressVertBk" Path="ProgressVertBk.png"/>
+
+<CDUIImageBase ResName="qq" Path="qq.png"/>
+
+<CDUIImageBase ResName="QQLogo" Path="QQLogo.png"/>
+
+<CDUIImageBase ResName="QQ图片20160125155954" Path="QQ图片20160125155954.jpg"/>
+
+<CDUIImageBase ResName="qzonewb" Path="qzonewb.png"/>
+
+<CDUIImageBase ResName="radio" Path="radio.png"/>
+
+<CDUIImageBase ResName="remote_assistance" Path="remote_assistance.png"/>
+
+<CDUIImageBase ResName="RepairMovie01" Path="RepairMovie01.png"/>
+
+<CDUIImageBase ResName="save_16" Path="save_16.png"/>
+
+<CDUIImageBase ResName="scan_animate" Path="scan_animate.png"/>
+
+<CDUIImageBase ResName="scrollbar_arrowup_down" Path="scrollbar_arrowup_down.png"/>
+
+<CDUIImageBase ResName="scrollbar_arrowup_highlight" Path="scrollbar_arrowup_highlight.png"/>
+
+<CDUIImageBase ResName="scrollbar_arrowup_normal" Path="scrollbar_arrowup_normal.png"/>
+
+<CDUIImageBase ResName="scrollbar_bar_down" Path="scrollbar_bar_down.png"/>
+
+<CDUIImageBase ResName="scrollbar_bar_highlight" Path="scrollbar_bar_highlight.png"/>
+
+<CDUIImageBase ResName="scrollbar_bar_normal" Path="scrollbar_bar_normal.png"/>
+
+<CDUIImageBase ResName="scrollbar_bkg" Path="scrollbar_bkg.png"/>
+
+<CDUIImageBase ResName="scrollbar_down_down" Path="scrollbar_down_down.png"/>
+
+<CDUIImageBase ResName="scrollbar_down_highlight" Path="scrollbar_down_highlight.png"/>
+
+<CDUIImageBase ResName="scrollbar_down_normal" Path="scrollbar_down_normal.png"/>
+
+<CDUIImageBase ResName="search" Path="search.png"/>
+
+<CDUIImageBase ResName="sendfile" Path="sendfile.png"/>
+
+<CDUIImageBase ResName="sendsms" Path="sendsms.png"/>
+
+<CDUIImageBase ResName="SkanMovie01" Path="SkanMovie01.png"/>
+
+<CDUIImageBase ResName="SliderBar_BK" Path="SliderBar_BK.bmp"/>
+
+<CDUIImageBase ResName="SliderBar_Thumb" Path="SliderBar_Thumb.png"/>
+
+<CDUIImageBase ResName="SliderThumbVertBk" Path="SliderThumbVertBk.png"/>
+
+<CDUIImageBase ResName="SliderVertBk" Path="SliderVertBk.bmp"/>
+
+<CDUIImageBase ResName="SMBPrefs" Path="SMBPrefs.png"/>
+
+<CDUIImageBase ResName="softmgr" Path="softmgr.png"/>
+
+<CDUIImageBase ResName="softtastmgr_btn_refresh" Path="softtastmgr_btn_refresh.png"/>
+
+<CDUIImageBase ResName="Synchstep" Path="Synchstep.png"/>
+
+<CDUIImageBase ResName="Tab_seperator_v" Path="Tab_seperator_v.png"/>
+
+<CDUIImageBase ResName="toolbar_back" Path="toolbar_back.png"/>
+
+<CDUIImageBase ResName="toolbar_hover" Path="toolbar_hover.png"/>
+
+<CDUIImageBase ResName="tree_toggle" Path="tree_toggle.png"/>
+
+<CDUIImageBase ResName="underline" Path="underline.png"/>
+
+<CDUIImageBase ResName="video" Path="video.png"/>
+
+<CDUIImageBase ResName="VScrollBk" Path="VScrollBk.png"/>
+
+<CDUIImageBase ResName="VScrollThumb" Path="VScrollThumb.png"/>
+
+<CDUIImageBase ResName="白-关闭100" Path="白-关闭100.svg"/>
+
+<CDUIImageBase ResName="白-加载中100" Path="白-加载中100.svg"/>
+
+<CDUIImageBase ResName="白-设置36-100" Path="白-设置36-100.svg"/>
+
+<CDUIImageBase ResName="白-搜索服务100" Path="白-搜索服务100.svg"/>
+
+<CDUIImageBase ResName="白-搜索主按钮100" Path="白-搜索主按钮100.svg"/>
+
+<CDUIImageBase ResName="白-同步无内容100" Path="白-同步无内容100.svg"/>
+
+<CDUIImageBase ResName="白-最小化100" Path="白-最小化100.svg"/>
+
+<CDUIImageBase ResName="黑-关闭100" Path="黑-关闭100.svg"/>
+
+<CDUIImageBase ResName="黑-加载中100" Path="黑-加载中100.svg"/>
+
+<CDUIImageBase ResName="黑-设置36-100" Path="黑-设置36-100.svg"/>
+
+<CDUIImageBase ResName="黑-搜索服务100" Path="黑-搜索服务100.svg"/>
+
+<CDUIImageBase ResName="黑-搜索主按钮100" Path="黑-搜索主按钮100.svg"/>
+
+<CDUIImageBase ResName="黑-同步无内容100" Path="黑-同步无内容100.svg"/>
+
+<CDUIImageBase ResName="黑-最小化100" Path="黑-最小化100.svg"/>
+
+<CDUIImageBase ResName="通用-本地搜索logo200" Path="通用-本地搜索logo200.svg"/>
+
+<CDUIImageBase ResName="黑_BtnMax" Path="黑_BtnMax.png"/>
+
+<CDUIImageBase ResName="黑_BtnRestore" Path="黑_BtnRestore.png"/>
+
+<CDUIImageBase ResName="白_BtnMax" Path="白_BtnMax.png"/>
+
+<CDUIImageBase ResName="白_BtnRestore" Path="白_BtnRestore.png"/>
+
+<CDUIImageBase ResName="explorer_hc" Path="explorer_hc.bmp"/>
+
+<CDUIImageBase ResName="formedit_hc" Path="formedit_hc.bmp"/>
+
+<CDUIImageBase ResName="rb_history.2s.white" Path="rb_history.2s.white.png"/>
+
+<CDUIImageBase ResName="Wrong" Path="Wrong.png"/>
+
+<CDUIImageBase ResName="叉" Path="叉.png"/>
+
+<CDUIImageBase ResName="拒绝" Path="拒绝.png"/>
+
+<CDUIImageBase ResName="正确" Path="正确.png"/>
+
+<CDUIImageBase ResName="btn_down_hover" Path="btn_down_hover.png"/>
+
+<CDUIImageBase ResName="btn_down_normal" Path="btn_down_normal.png"/>
+
+<CDUIImageBase ResName="btn_up_hover" Path="btn_up_hover.png"/>
+
+<CDUIImageBase ResName="btn_up_normal" Path="btn_up_normal.png"/>
+
+<CDUIImageBase ResName="checkbox_dashed_brightgreencheck.2s.black" Path="checkbox_dashed_brightgreencheck.2s.black.png"/>
+
+<CDUIImageBase ResName="CheckExpandSelect" Path="CheckExpandSelect.png"/>
+
+<CDUIImageBase ResName="CheckExpandUnSelect" Path="CheckExpandUnSelect.png"/>
+
+<CDUIImageBase ResName="Close" Path="Close.png"/>
+
+<CDUIImageBase ResName="卡牌大师2" Path="卡牌大师2.png"/>
+
+<CDUIImageBase ResName="卡牌大师3" Path="卡牌大师3.png"/>
+
+<CDUIImageBase ResName="卡牌大师4" Path="卡牌大师4.png"/>
+
+<CDUIImageBase ResName="卡牌大师5" Path="卡牌大师5.png"/>
+
+<CDUIImageBase ResName="卡牌大师6" Path="卡牌大师6.png"/>
+
+<CDUIImageBase ResName="卡牌大师7" Path="卡牌大师7.png"/>
+
+<CDUIImageBase ResName="卡牌大师8" Path="卡牌大师8.png"/>
+
+<CDUIImageBase ResName="卡牌大师1" Path="卡牌大师1.jpg"/>
+
+<CDUIImageBase ResName="BkViewNewVersion" Path="BkViewNewVersion.png"/>

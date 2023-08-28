@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="BaseControl">
+      <UniqueIdentifier>{4c5ad343-e33a-43cb-9850-b8b606b37128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ExtendControl">
+      <UniqueIdentifier>{68ec40ed-2b2a-4862-ab77-3eeebd751a0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Usage">
+      <UniqueIdentifier>{8d32a1dd-ef9a-488f-9a42-127574bcd20a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseControl\ButtonView">
+      <UniqueIdentifier>{1f2aa9e0-ce00-495d-9d54-740c5f486f93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseControl\CheckBoxView">
+      <UniqueIdentifier>{7ea2cc62-84db-4829-ac8f-daf052b0e757}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseControl\EditView">
+      <UniqueIdentifier>{38d734ab-5308-483e-a453-30d5c3bcf5cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseControl\SliderView">
+      <UniqueIdentifier>{4abe4815-f6c9-4d92-a6c9-d3a382f8fdb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseControl\ProgressView">
+      <UniqueIdentifier>{ca480a13-1b58-41d5-95cb-65441fa04588}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseControl\RichEditView">
+      <UniqueIdentifier>{07f2f47d-9f8a-4bc1-9e22-88f1c395a901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseControl\RadioBoxView">
+      <UniqueIdentifier>{a6ec6b84-5b7e-4014-9ff7-00b0f5186943}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseControl\StaticView">
+      <UniqueIdentifier>{d266ea7c-0efd-44bc-989c-935922993909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseControl\ComboxView">
+      <UniqueIdentifier>{245dd036-89cd-412d-b1ae-d4bea9e95ca9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseControl\AnimateView">
+      <UniqueIdentifier>{f16d2ddb-e54b-4cd8-a89c-08196ff1635d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseControl\ListView">
+      <UniqueIdentifier>{3641f26b-ba4c-4dc7-88d9-7bdf2cb78376}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Usage\DpiDlg">
+      <UniqueIdentifier>{50c7e667-a2aa-464e-9fca-060a2c7bac1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Usage\SvgImage">
+      <UniqueIdentifier>{aeb5f2a4-14d9-4fcb-b815-da177e073f2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Usage\SwitchSkin">
+      <UniqueIdentifier>{af01e373-1748-4008-9f4d-b7c8d4097d90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Usage\AnimateDlg">
+      <UniqueIdentifier>{4ee41a71-d7f7-46a6-bad1-9267d810d371}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QQ">
+      <UniqueIdentifier>{3458786e-d615-45ca-b06b-420537eec8c3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DUIThinkDemo_C++.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseControl\StaticView\StaticView.h">
+      <Filter>BaseControl\StaticView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseControl\ButtonView\ButtonView.h">
+      <Filter>BaseControl\ButtonView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseControl\CheckBoxView\CheckBoxView.h">
+      <Filter>BaseControl\CheckBoxView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseControl\EditView\EditView.h">
+      <Filter>BaseControl\EditView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseControl\ComboxView\ComboxView.h">
+      <Filter>BaseControl\ComboxView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseControl\AnimateView\AnimateView.h">
+      <Filter>BaseControl\AnimateView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseControl\SliderView\SliderView.h">
+      <Filter>BaseControl\SliderView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseControl\ProgressView\ProgressView.h">
+      <Filter>BaseControl\ProgressView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseControl\RichEditView\RichEditView.h">
+      <Filter>BaseControl\RichEditView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseControl\RadioBoxView\RadioBoxView.h">
+      <Filter>BaseControl\RadioBoxView</Filter>
+    </ClInclude>
+    <ClInclude Include="StdAfx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgDemo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Usage\DpiDlg\DpiDlgView.h">
+      <Filter>Usage\DpiDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgDpi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Usage\SvgImage\SvgImageView.h">
+      <Filter>Usage\SvgImage</Filter>
+    </ClInclude>
+    <ClInclude Include="Usage\SwitchSkin\SwitchSkinView.h">
+      <Filter>Usage\SwitchSkin</Filter>
+    </ClInclude>
+    <ClInclude Include="Usage\AnimateDlg\AnimateDlgView.h">
+      <Filter>Usage\AnimateDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="QQ\DlgQQChat.h">
+      <Filter>QQ</Filter>
+    </ClInclude>
+    <ClInclude Include="QQ\QQView.h">
+      <Filter>QQ</Filter>
+    </ClInclude>
+    <ClInclude Include="QQ\DlgQQFace.h">
+      <Filter>QQ</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DUIThinkDemo_C++.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseControl\StaticView\StaticView.cpp">
+      <Filter>BaseControl\StaticView</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseControl\EditView\EditView.cpp">
+      <Filter>BaseControl\EditView</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseControl\ComboxView\ComboxView.cpp">
+      <Filter>BaseControl\ComboxView</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseControl\AnimateView\AnimateView.cpp">
+      <Filter>BaseControl\AnimateView</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseControl\SliderView\SliderView.cpp">
+      <Filter>BaseControl\SliderView</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseControl\ProgressView\ProgressView.cpp">
+      <Filter>BaseControl\ProgressView</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseControl\RichEditView\RichEditView.cpp">
+      <Filter>BaseControl\RichEditView</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseControl\RadioBoxView\RadioBoxView.cpp">
+      <Filter>BaseControl\RadioBoxView</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseControl\ButtonView\ButtonView.cpp">
+      <Filter>BaseControl\ButtonView</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseControl\CheckBoxView\CheckBoxView.cpp">
+      <Filter>BaseControl\CheckBoxView</Filter>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgDemo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Usage\DpiDlg\DpiDlgView.cpp">
+      <Filter>Usage\DpiDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgDpi.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Usage\SvgImage\SvgImageView.cpp">
+      <Filter>Usage\SvgImage</Filter>
+    </ClCompile>
+    <ClCompile Include="Usage\SwitchSkin\SwitchSkinView.cpp">
+      <Filter>Usage\SwitchSkin</Filter>
+    </ClCompile>
+    <ClCompile Include="Usage\AnimateDlg\AnimateDlgView.cpp">
+      <Filter>Usage\AnimateDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="QQ\DlgQQChat.cpp">
+      <Filter>QQ</Filter>
+    </ClCompile>
+    <ClCompile Include="QQ\QQView.cpp">
+      <Filter>QQ</Filter>
+    </ClCompile>
+    <ClCompile Include="QQ\DlgQQFace.cpp">
+      <Filter>QQ</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DUIThinkDemo_C++.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="DUIThinkDemo_C++.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

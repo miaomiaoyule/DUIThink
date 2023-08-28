@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDUIColorBase ResName="0xff000000" Color="4278190080"/>
+
+<CDUIColorBase ResName="0xffffffff" Color="4294967295"/>
+
+<CDUIColorBase ResName="0xffff0000" Color="4294901760"/>
+
+<CDUIColorBase ResName="0xff00ff00" Color="4278255360"/>
+
+<CDUIColorBase ResName="0xff0000ff" Color="4278190335"/>
+
+<CDUIColorBase ResName="0xffcccccc" Color="4291611852"/>
+
+<CDUIColorBase ResName="0xffff8000" Color="4294934528"/>
+
+<CDUIColorBase ResName="0xffffff00" Color="4294967040"/>
+
+<CDUIColorBase ResName="0xffc0c0c0" Color="4290822336"/>
+
+<CDUIColorBase ResName="0xff80a7c8" Color="4286621640"/>
+
+<CDUIColorBase ResName="0xff808080" Color="4286611584"/>
+
+<CDUIColorBase ResName="0xff804000" Color="4286595072"/>
+
+<CDUIColorBase ResName="0xff7d7d7d" Color="4286414205"/>
+
+<CDUIColorBase ResName="0xff1ea0d6" Color="4280197334"/>
+
+<CDUIColorBase ResName="0xff808000" Color="4286611456"/>
+
+<CDUIColorBase ResName="0x10000000" Color="268435456"/>
+
+<CDUIColorBase ResName="0xfff0f0f0" Color="4293980400"/>
+
+<CDUIColorBase ResName="0xff0078d7" Color="4278221015"/>
+
+<CDUIColorBase ResName="0xfffff5dc" Color="4294964700"/>
+
+<CDUIColorBase ResName="0xffa481c3" Color="4288971203"/>
+
+<CDUIColorBase ResName="0xff0066cc" Color="4278216396"/>
+
+<CDUIColorBase ResName="0xffe5f3ff" Color="4293260287"/>
+
+<CDUIColorBase ResName="0xffcde8ff" Color="4291684607"/>
