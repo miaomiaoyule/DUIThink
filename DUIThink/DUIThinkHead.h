@@ -17,15 +17,15 @@
 #ifndef DUITHINK_DLL_NAME
 	#ifdef _DLL
 		#ifdef _DEBUG
-			#define DUITHINK_DLL_NAME			_T("DirectUID.dll")		
+			#define DUITHINK_DLL_NAME			_T("DUIThinkD.dll")		
 		#else
-			#define DUITHINK_DLL_NAME			_T("DirectUI.dll")		
+			#define DUITHINK_DLL_NAME			_T("DUIThink.dll")		
 		#endif
 	#else
 		#ifdef _DEBUG
-			#define DUITHINK_DLL_NAME			_T("DirectUI_MT_D.dll")		
+			#define DUITHINK_DLL_NAME			_T("DUIThink_MT_D.dll")		
 		#else
-			#define DUITHINK_DLL_NAME			_T("DirectUI_MT.dll")		
+			#define DUITHINK_DLL_NAME			_T("DUIThink_MT.dll")		
 		#endif
 	#endif
 #endif

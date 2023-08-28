@@ -68,7 +68,7 @@
     </Manifest>
     <PreBuildEvent>
       <Command>if exist "../../../bin\MMHelperD.dll" copy "../../../bin\MMHelperD.dll" "../Debug"
-if exist "../../../bin\DirectUID.dll" copy "../../../bin\DirectUID.dll" "../Debug"</Command>
+if exist "../../../bin\DUIThinkD.dll" copy "../../../bin\DUIThinkD.dll" "../Debug"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

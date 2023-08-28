@@ -16,25 +16,15 @@
 #include <CommDlg.h>
 
 //////////////////////////////////////////////////////////////////////////
-#include "../../../DirectUI/DirectUIInner.h"
+#include "../../../DUIThink/DUIThinkHead.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "../../../lib/MMHelperD.lib")
-#pragma comment(lib, "../../../lib/DirectUID.lib")
+#pragma comment(lib, "../../../lib/DUIThinkD.lib")
 #else
 #pragma comment(lib, "../../../lib/MMHelper.lib")
-#pragma comment(lib, "../../../lib/DirectUI.lib")
+#pragma comment(lib, "../../../lib/DUIThink.lib")
 #endif
-
-//#include "../SDK/Include/DirectUI/DirectUI.h"
-//
-//#ifdef _DEBUG
-//	#pragma comment(lib, "../SDK/lib/Debug/MMHelperD.lib")
-//	#pragma comment(lib, "../SDK/lib/Debug/DirectUID.lib")
-//#else
-//	#pragma comment(lib, "../SDK/lib/Release/MMHelper.lib")
-//	#pragma comment(lib, "../SDK/lib/Release/DirectUI.lib")
-//#endif
 
 //////////////////////////////////////////////////////////////////////////
 #include "../DUIThinkDemo.DuiProj/ResourceCtrlID.h"
