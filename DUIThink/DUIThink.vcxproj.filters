@@ -165,9 +165,6 @@
     <ClInclude Include="DUIResource\DUIColorBase.h">
       <Filter>DUIResource</Filter>
     </ClInclude>
-    <ClInclude Include="DUIControl\DUIColorPalette.h">
-      <Filter>DUIControl</Filter>
-    </ClInclude>
     <ClInclude Include="Interface.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -194,9 +191,6 @@
     </ClInclude>
     <ClInclude Include="Define\DefineWndManager.h">
       <Filter>Define</Filter>
-    </ClInclude>
-    <ClInclude Include="DUIThinkInner.h">
-      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="DUIUtils\DUIPoint.h">
       <Filter>DUIUtils</Filter>
@@ -239,9 +233,6 @@
     </ClInclude>
     <ClInclude Include="DUIControl\DUIWkeBrowserCtrl.h">
       <Filter>DUIControl</Filter>
-    </ClInclude>
-    <ClInclude Include="DUIThink.h">
-      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="DUIExport\IDUIFactory.h">
       <Filter>DUIExport</Filter>
@@ -332,6 +323,9 @@
     </ClInclude>
     <ClInclude Include="DUIUtils\XUnzip.h">
       <Filter>DUIUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="DUIThinkHead.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -445,9 +439,6 @@
     </ClCompile>
     <ClCompile Include="DUIResource\DUIColorBase.cpp">
       <Filter>DUIResource</Filter>
-    </ClCompile>
-    <ClCompile Include="DUIControl\DUIColorPalette.cpp">
-      <Filter>DUIControl</Filter>
     </ClCompile>
     <ClCompile Include="DUICore\DUIAnimation.cpp">
       <Filter>DUICore</Filter>

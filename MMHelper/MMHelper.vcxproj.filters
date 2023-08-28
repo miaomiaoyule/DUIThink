@@ -54,9 +54,6 @@
     <ClInclude Include="MMService.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MMHelperHead.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="MMCommandLine.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -141,7 +138,7 @@
     <ClInclude Include="MMEncrypt.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MMHelperHeadInner.h">
+    <ClInclude Include="MMHelperHead.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="MMHash.h">

@@ -16,28 +16,28 @@
 #endif
 
 #ifndef MMHELPER_DLL_NAME
-#ifdef _DLL
-#ifdef _DEBUG
-	#define MMHELPER_DLL_NAME			_T("MMHelperD.dll")			
-#else		
-	#define MMHELPER_DLL_NAME			_T("MMHelper.dll")			
-#endif
-#else
-#ifdef _DEBUG
-	#define MMHELPER_DLL_NAME			_T("MMHelper_MT_D.dll")			
-#else		
-	#define MMHELPER_DLL_NAME			_T("MMHelper_MT.dll")			
-#endif
-#endif
+	#ifdef _DLL
+		#ifdef _DEBUG
+			#define MMHELPER_DLL_NAME			_T("MMHelperD.dll")			
+		#else		
+			#define MMHELPER_DLL_NAME			_T("MMHelper.dll")			
+		#endif
+	#else
+		#ifdef _DEBUG
+			#define MMHELPER_DLL_NAME			_T("MMHelper_MT_D.dll")			
+		#else		
+			#define MMHELPER_DLL_NAME			_T("MMHelper_MT.dll")			
+		#endif
+	#endif
 #endif 
 
 #ifdef _DEBUG
 	#ifndef MMTRACE
-		#define MMTRACE MMTrace
+	#define MMTRACE MMTrace
 	#endif
 #else
 	#ifndef MMTRACE
-		#define MMTRACE
+	#define MMTRACE
 	#endif
 #endif
 
@@ -75,6 +75,13 @@
 #include <ShellAPI.h>
 using namespace std;
 
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "winmm.lib")
+#pragma comment(lib, "wldap32.lib")
+#pragma comment(lib, "Bcrypt.lib")
+#pragma comment(lib, "Userenv.lib")
+#pragma comment(lib, "version.lib")
+
 //////////////////////////////////////////////////////////////////////////////////
 //string
 typedef CAtlStringW CMMStringW;
@@ -87,6 +94,7 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 
 //////////////////////////////////////////////////////////////////////////
 #include "../include/log/BaseLog.h"
+#include "../include/svg/svg.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 //导出文件
@@ -108,6 +116,7 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMSvg.h"
 #include "MMDisplayer.h"
 #include "MMTrayIcon.h"
+#include "MMEncrypt.h"
 #include "MMServiceModel/MMServiceMsg.h"
 #include "MMServiceModel/MMServiceItem.h"
 #include "MMServiceModel/MMTimerPower.h"
@@ -122,6 +131,11 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMDragDrop/MMDropSource.h"
 #include "MMDragDrop/MMDataObject.h"
 #include "MMDragDrop/MMDragDrop.h"
+#include "MMSocket/SocketClient/Define.h"
+#include "MMSocket/SocketClient/MMTCPSocketClient.h"
+#include "MMSocket/SocketServer/Define.h"
+#include "MMSocket/SocketServer/MMSocketClientItem.h"
+#include "MMSocket/SocketServer/MMTCPSocketServer.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 

@@ -13,21 +13,9 @@
 #include <sys/timeb.h>
 #include <time.h>
 
-#include "MMHelperHeadInner.h"
-#include "MMSocket/SocketClient/Define.h"
-#include "MMSocket/SocketClient/MMTCPSocketClient.h"
-#include "MMSocket/SocketServer/Define.h"
-#include "MMSocket/SocketServer/MMSocketClientItem.h"
-#include "MMSocket/SocketServer/MMTCPSocketServer.h"
+#include "MMHelperHead.h"
 
 //////////////////////////////////////////////////////////////////////////
-#pragma comment(lib, "ws2_32.lib")
-#pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "wldap32.lib")
-#pragma comment(lib, "Bcrypt.lib")
-#pragma comment(lib, "Userenv.lib")
-#pragma comment(lib, "version.lib")
-
 #ifdef _DEBUG
 	#ifdef _DLL
 	#ifdef _WIN64

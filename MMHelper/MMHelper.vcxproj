@@ -679,10 +679,9 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClInclude Include="MMFileMonitor\MMFileMonitor.h" />
     <ClInclude Include="MMDefine.h" />
     <ClInclude Include="MMHash.h" />
-    <ClInclude Include="MMHelperHeadInner.h" />
+    <ClInclude Include="MMHelperHead.h" />
     <ClInclude Include="MMMiniDumper.h" />
     <ClInclude Include="MMCommandLine.h" />
-    <ClInclude Include="MMHelperHead.h" />
     <ClInclude Include="MMMD5CheckSum.h" />
     <ClInclude Include="MMModule.h" />
     <ClInclude Include="MMProcess.h" />

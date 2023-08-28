@@ -15,7 +15,7 @@
 #include <tchar.h>
 
 #include "../Global/Define.h"
-#include "../DirectUI/DirectUIInner.h"
+#include "../DUIThink/DUIThinkHead.h"
 
 //////////////////////////////////////////////////////////////////////////
 #include "resource.h"

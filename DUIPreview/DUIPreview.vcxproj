@@ -1124,7 +1124,7 @@ copy $(Configuration)\$(TargetFileName) "../bin"</Command>
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DirectUI\DirectUI.vcxproj">
+    <ProjectReference Include="..\DUIThink\DUIThink.vcxproj">
       <Project>{9540dc14-c8f1-4cd5-b25e-afbf9567e11e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\MMHelper\MMHelper.vcxproj">

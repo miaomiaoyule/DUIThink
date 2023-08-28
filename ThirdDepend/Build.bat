@@ -1,10 +1,9 @@
 REM /////////////////////////////////////////////////////////////
 REM
-REM ϵͳ���̱��봦��
+REM 
 REM
 REM /////////////////////////////////////////////////////////////
 
-DEL ������־.txt
 Set DEVINSTALL=
 for /F "tokens=1,2*" %%i in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VS7" /v "15.0"') DO (
 	if "%%i"=="15.0" (
@@ -13,6 +12,7 @@ for /F "tokens=1,2*" %%i in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node
 )
 
 Set DevenvPath=%DEVINSTALL%Common7\IDE\devenv.exe
+if not exist "%DevenvPath%" set DevenvPath=C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe
 set JsoncppPath=%~dp0jsoncpp\jsoncpp.sln
 set LibcurlPath=%~dp0libcurl\libcurl.sln
 set TinyxmlPath=%~dp0tinyxml\tinyxml.sln

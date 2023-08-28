@@ -1493,8 +1493,6 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="Define\DefineProp.h" />
     <ClInclude Include="Define\DefineResource.h" />
     <ClInclude Include="Define\DefineWndManager.h" />
-    <ClInclude Include="DUIThink.h" />
-    <ClInclude Include="DUIThinkInner.h" />
     <ClInclude Include="DUIAttribute\DUIAttributeBool.h" />
     <ClInclude Include="DUIAttribute\DUIAttributeColor.h" />
     <ClInclude Include="DUIAttribute\DUIAttributeColorSwitch.h" />
@@ -1521,7 +1519,6 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIControl\DUIButtonCtrl.h" />
     <ClInclude Include="DUIControl\DUICalendarCtrl.h" />
     <ClInclude Include="DUIControl\DUICheckBoxCtrl.h" />
-    <ClInclude Include="DUIControl\DUIColorPalette.h" />
     <ClInclude Include="DUIControl\DUIComboxCtrl.h" />
     <ClInclude Include="DUIControl\DUIContainerCtrl.h" />
     <ClInclude Include="DUIControl\DUIControlBase.h" />
@@ -1571,6 +1568,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIResource\DUIImageBase.h" />
     <ClInclude Include="DUIResource\DUIResourceBase.h" />
     <ClInclude Include="DUIStruct.h" />
+    <ClInclude Include="DUIThinkHead.h" />
     <ClInclude Include="DUIUtils\DUIPoint.h" />
     <ClInclude Include="DUIUtils\DUIRect.h" />
     <ClInclude Include="DUIUtils\DUISize.h" />
@@ -1609,7 +1607,6 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUIControl\DUIButtonCtrl.cpp" />
     <ClCompile Include="DUIControl\DUICalendarCtrl.cpp" />
     <ClCompile Include="DUIControl\DUICheckBoxCtrl.cpp" />
-    <ClCompile Include="DUIControl\DUIColorPalette.cpp" />
     <ClCompile Include="DUIControl\DUIComboxCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIContainerCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIControlBase.cpp" />
