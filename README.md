@@ -11,6 +11,8 @@ QQ群：885314879
 
 视频教程：https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1
 
+源码：https://github.com/miaomiaoyule/DUIThink
+
 初衷：
   
         之前使用duilib做项目，都要手写xml，相比MFC开发绚丽的UI确实提升了不少效率，但是手写xml还是效率低下且让你痛苦至极，且没有形成你个完美的生态圈。
@@ -74,6 +76,7 @@ QQ群：885314879
         启动设计器：编译Release_Design模式DUIThink模块，编译Release_Unicode模式DUIPreview模块，把DUIPreview.exe、DUIThink_Design.dll、DUIThink.dll、MMHelper.dll拷贝到设计器运行目录即可
         使用设计器：视频教程https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1
         QQ群、官网也有视频介绍
+        问题解决：请提供问题Demo以及问题描述，描述可写在CSDN，发我邮箱284168136@qq.com，我会定期解决，你也可以发到QQ群里讨论
 
 # English introduction DUIThink
 
@@ -95,7 +98,7 @@ Official website: http://www.DUIThink.com/
 
 QQ group: 885314879
 
-
+SourceCode：https://github.com/miaomiaoyule/DUIThink
 
 Video tutorial: https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1
 
@@ -224,3 +227,4 @@ Start Designer: Compile the Release_Design mode DUIThink module, compile the Rel
 Designer: video tutorial at https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1
 
 QQ group, official website also has video introduction
+Problem solving: Please provide Demo and description of the problem, which can be written in CSDN and sent to my email 284168136@qq.com, I will solve it regularly, you can also send it to QQ group to discuss
