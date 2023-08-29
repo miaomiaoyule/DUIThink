@@ -50,37 +50,29 @@
 #ifdef _DEBUG
 	#ifdef _DLL
 	#ifdef _WIN64
-		#pragma comment(lib, "../lib/jsoncpp64D.lib")
 		#pragma comment(lib, "../lib/tinyxml264D.lib")
 	#else
-		#pragma comment(lib, "../lib/jsoncppD.lib")
 		#pragma comment(lib, "../lib/tinyxml2D.lib")
 		#pragma comment(lib, "../lib/tinyxmlD.lib")
 	#endif
 	#else
 	#ifdef _WIN64
-		#pragma comment(lib, "../lib/jsoncpp64_MT_D.lib")	
 		#pragma comment(lib, "../lib/tinyxml264_MT_D.lib")
 	#else
-		#pragma comment(lib, "../lib/jsoncpp_MT_D.lib")	
 		#pragma comment(lib, "../lib/tinyxml2_MT_D.lib")
 	#endif
 	#endif	
 #else
 	#ifdef _DLL
 	#ifdef _WIN64
-		#pragma comment(lib, "../lib/jsoncpp64.lib")
 		#pragma comment(lib, "../lib/tinyxml264.lib")
 	#else
-		#pragma comment(lib, "../lib/jsoncpp.lib")
 		#pragma comment(lib, "../lib/tinyxml2.lib")
 	#endif
 	#else
-	#ifdef _WIN64
-		#pragma comment(lib, "../lib/jsoncpp64_MT.lib")	
+	#ifdef _WIN64	
 		#pragma comment(lib, "../lib/tinyxml264_MT.lib")
-	#else
-		#pragma comment(lib, "../lib/jsoncpp_MT.lib")	
+	#else	
 		#pragma comment(lib, "../lib/tinyxml2_MT.lib")
 	#endif
 	#endif

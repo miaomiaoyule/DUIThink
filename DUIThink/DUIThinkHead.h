@@ -78,7 +78,6 @@ using namespace std;
 
 #include "../include/wke/wke.h"
 #include "../include/tinyxml2/tinyxml2.h"
-#include "../include/jsoncpp/json.h"
 #include "../include/tinyxml/tinyxml.h"
 #include <olectl.h>
 using namespace tinyxml2;

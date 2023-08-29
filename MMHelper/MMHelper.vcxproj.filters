@@ -16,9 +16,6 @@
     <Filter Include="MMFileMonitor">
       <UniqueIdentifier>{1106962b-ff64-49d9-89a4-58ab2ea9d515}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MMDownLoad">
-      <UniqueIdentifier>{51657c13-1899-43fa-9b30-7449e5ed933e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MMServiceModel">
       <UniqueIdentifier>{df72520c-91ec-460a-9028-68f592144c46}</UniqueIdentifier>
     </Filter>
@@ -93,14 +90,8 @@
     <ClInclude Include="MMFileMonitor\MMFileMonitor.h">
       <Filter>MMFileMonitor</Filter>
     </ClInclude>
-    <ClInclude Include="MMDownLoad\MMDownLoad.h">
-      <Filter>MMDownLoad</Filter>
-    </ClInclude>
     <ClInclude Include="MMProcess.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="MMDownLoad\Define.h">
-      <Filter>MMDownLoad</Filter>
     </ClInclude>
     <ClInclude Include="MMFileMonitor\Define.h">
       <Filter>MMFileMonitor</Filter>
@@ -229,9 +220,6 @@
     </ClCompile>
     <ClCompile Include="MMFileMonitor\MMFileMonitor.cpp">
       <Filter>MMFileMonitor</Filter>
-    </ClCompile>
-    <ClCompile Include="MMDownLoad\MMDownLoad.cpp">
-      <Filter>MMDownLoad</Filter>
     </ClCompile>
     <ClCompile Include="MMProcess.cpp">
       <Filter>源文件</Filter>

@@ -123,7 +123,6 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMServiceModel/MMThreadPool.h"
 #include "MMShellExecute/MMShellExecute.h"
 #include "MMFileMonitor/MMFileMonitor.h"
-#include "MMDownLoad/MMDownLoad.h"
 #include "MMSocket/Define.h"
 #include "MMSocket/SocketClient/IMMTCPSocketClient.h"
 #include "MMSocket/SocketServer/IMMTCPSocketServer.h"

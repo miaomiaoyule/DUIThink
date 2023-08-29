@@ -666,8 +666,6 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
   <ItemGroup>
     <ClInclude Include="MMAsyncObject.h" />
     <ClInclude Include="MMDisplayer.h" />
-    <ClInclude Include="MMDownLoad\Define.h" />
-    <ClInclude Include="MMDownLoad\MMDownLoad.h" />
     <ClInclude Include="MMDpi.h" />
     <ClInclude Include="MMDragDrop\Define.h" />
     <ClInclude Include="MMDragDrop\MMDataObject.h" />
@@ -764,7 +762,6 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MMDisplayer.cpp" />
-    <ClCompile Include="MMDownLoad\MMDownLoad.cpp" />
     <ClCompile Include="MMDpi.cpp" />
     <ClCompile Include="MMDragDrop\MMDataObject.cpp" />
     <ClCompile Include="MMDragDrop\MMDragDrop.cpp" />
