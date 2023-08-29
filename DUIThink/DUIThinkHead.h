@@ -83,6 +83,7 @@ using namespace std;
 #include <olectl.h>
 using namespace tinyxml2;
 
+#include "../Global/Global.h"
 #include "DUIStruct.h"
 #include "Define/DefineBase.h"
 #include "Define/DefineControl.h"
