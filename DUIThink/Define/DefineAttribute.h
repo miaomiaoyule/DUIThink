@@ -94,6 +94,15 @@
 	} while (false); \
 }
 
+#define DuiAttriReadValue(ID, MapRead, MapValue) \
+{ \
+	auto FindIt = MapValue.find(ID); \
+	if (FindIt != MapValue.end()) \
+	{ \
+		MapRead[ID] = FindIt->second; \
+	} \
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif

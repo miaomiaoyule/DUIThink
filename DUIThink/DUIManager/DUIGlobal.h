@@ -323,7 +323,7 @@ protected:
 	bool SetAttriPosition(tinyxml2::XMLElement *pNode);
 	bool SaveAttriPosition(tinyxml2::XMLElement *pNode);
 	CDUIRect GetAttriRect(uint32_t uValueID);
-	uint32_t SetAttriRect(const RECT &rect);
+	uint32_t SetAttriRect(const CDUIRect &rect);
 	bool SetAttriRect(tinyxml2::XMLElement *pNode);
 	bool SaveAttriRect(tinyxml2::XMLElement *pNode);
 	tagDuiImageSection GetAttriImageSection(uint32_t uValueID);

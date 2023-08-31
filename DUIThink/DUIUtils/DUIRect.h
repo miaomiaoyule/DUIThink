@@ -19,6 +19,7 @@ public:
 
 	int GetWidth() const;
 	int GetHeight() const;
+	uint32_t GetID() const;
 
 	//²Ã¼ô
 	CDUIRect RectClip(const CDUIRect& rcModal, const CDUIRect& rect);

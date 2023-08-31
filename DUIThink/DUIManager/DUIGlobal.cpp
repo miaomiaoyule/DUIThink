@@ -1790,6 +1790,14 @@ bool CDUIGlobal::SaveAttriName(tinyxml2::XMLElement *pNode)
 		auto &strName = NameItem.second;
 		if (strName.IsEmpty()) continue;
 
+		uint32_t uID = CMMHash::GetHash(strName);
+		if (uID != NameItem.first)
+		{
+			assert(false);
+			
+			continue;
+		}
+
 		tinyxml2::XMLElement *pValue = pNode->GetDocument()->NewElement("a");
 		if (NULL == pValue)
 		{
@@ -1885,6 +1893,16 @@ bool CDUIGlobal::SaveAttriRichText(tinyxml2::XMLElement *pNode)
 		tagDuiRichText &RichText = RichTextItem.second;
 		if (RichText.vecRichTextItem.empty()) continue;
 
+		//verify
+		uint32_t uID = RichText.GetID();
+		if (uID != RichTextItem.first)
+		{
+			assert(false);
+
+			continue;
+		}
+
+		//node
 		tinyxml2::XMLElement *pValue = pNode->GetDocument()->NewElement("a");
 		if (NULL == pValue)
 		{
@@ -2029,6 +2047,15 @@ bool CDUIGlobal::SaveAttriText(tinyxml2::XMLElement *pNode)
 		CMMString &strText = TextItem.second;
 		if (strText.IsEmpty()) continue;
 
+		//verify
+		uint32_t uID = CMMHash::GetHash(strText);
+		if (uID != TextItem.first)
+		{
+			assert(false);
+
+			continue;
+		}
+
 		tinyxml2::XMLElement *pValue = pNode->GetDocument()->NewElement("a");
 		if (NULL == pValue)
 		{
@@ -2137,6 +2164,16 @@ bool CDUIGlobal::SaveAttriTextStyle(tinyxml2::XMLElement *pNode)
 	{
 		tagDuiTextStyle &TextStyle = TextStyleItem.second;
 
+		//verify
+		uint32_t uID = TextStyle.GetID();
+		if (uID != TextStyleItem.first)
+		{
+			assert(false);
+
+			continue;
+		}
+
+		//node
 		tinyxml2::XMLElement *pValue = pNode->GetDocument()->NewElement("a");
 		if (NULL == pValue)
 		{
@@ -2185,16 +2222,8 @@ vector<CMMString> CDUIGlobal::GetAttriColorResSwitch(uint32_t uValueID)
 
 uint32_t CDUIGlobal::SetAttriColorResSwitch(const vector<CMMString> &vecColorRes)
 {
-	//value
-	CMMString strText;
-	for (auto &strResName : vecColorRes)
-	{
-		strText += strResName;
-		strText += _T(';');
-	}
-
 	//id
-	uint32_t uID = CMMHash::GetHash(strText);
+	uint32_t uID = CMMHash::GetHash(vecColorRes);
 	DuiAttriModifyValue(vecColorRes, m_mapAttriColorResValue, uID);
 
 	return uID;
@@ -2247,6 +2276,16 @@ bool CDUIGlobal::SaveAttriColorResSwitch(tinyxml2::XMLElement *pNode)
 		auto &vecColorRes = ColorResItem.second;
 		if (vecColorRes.empty()) continue;
 
+		//verify
+		uint32_t uID = CMMHash::GetHash(vecColorRes);
+		if (uID != ColorResItem.first)
+		{
+			assert(false);
+
+			continue;
+		}
+
+		//node
 		tinyxml2::XMLElement *pValue = pNode->GetDocument()->NewElement("a");
 		if (NULL == pValue)
 		{
@@ -2340,6 +2379,16 @@ bool CDUIGlobal::SaveAttriCombox(tinyxml2::XMLElement *pNode)
 		auto &AttriCombox = AttriComboxItem.second;
 		if (AttriCombox.vecItem.empty()) continue;
 
+		//verify
+		uint32_t uID = AttriCombox.GetID();
+		if (uID != AttriComboxItem.first)
+		{
+			assert(false);
+
+			continue;
+		}
+
+		//node
 		tinyxml2::XMLElement *pValue = pNode->GetDocument()->NewElement("a");
 		if (NULL == pValue)
 		{
@@ -2432,6 +2481,17 @@ bool CDUIGlobal::SaveAttriPosition(tinyxml2::XMLElement *pNode)
 	for (auto &PositionItem : m_mapAttriPositionSave)
 	{
 		auto &Position = PositionItem.second;
+
+		//verify
+		uint32_t uID = Position.GetID();
+		if (uID != PositionItem.first)
+		{
+			assert(false);
+
+			continue;
+		}
+
+		//node
 		tinyxml2::XMLElement *pValue = pNode->GetDocument()->NewElement("a");
 		if (NULL == pValue)
 		{
@@ -2470,10 +2530,9 @@ CDUIRect CDUIGlobal::GetAttriRect(uint32_t uValueID)
 	return FindIt == m_mapAttriRectValue.end() ? RECT{} : FindIt->second;
 }
 
-uint32_t CDUIGlobal::SetAttriRect(const RECT &rect)
+uint32_t CDUIGlobal::SetAttriRect(const CDUIRect &rect)
 {
-	CMMString strInfo = CMMStrHelp::Format(_T("%d-%d-%d-%d"), rect.left, rect.top, rect.right, rect.bottom);
-	uint32_t uID = CMMHash().GetHash(strInfo);
+	uint32_t uID = rect.GetID();
 	DuiAttriModifyValue(rect, m_mapAttriRectValue, uID);
 
 	return uID;
@@ -2528,6 +2587,17 @@ bool CDUIGlobal::SaveAttriRect(tinyxml2::XMLElement *pNode)
 	for (auto &RectItem : m_mapAttriRectSave)
 	{
 		auto &rcItem = RectItem.second;
+
+		//verify
+		uint32_t uID = rcItem.GetID();
+		if (uID != RectItem.first)
+		{
+			assert(false);
+
+			continue;
+		}
+
+		//node
 		tinyxml2::XMLElement *pValue = pNode->GetDocument()->NewElement("a");
 		if (NULL == pValue)
 		{
@@ -2729,6 +2799,16 @@ bool CDUIGlobal::SaveAttriImageSection(tinyxml2::XMLElement *pNode)
 		auto &ImageSection = ImageSectionItem.second;
 		if (ImageSection.vecImageResSwitch.empty()) continue;
 
+		//verify
+		uint32_t uID = ImageSection.GetID();
+		if (uID != ImageSectionItem.first)
+		{
+			assert(false);
+
+			continue;
+		}
+
+		//node
 		tinyxml2::XMLElement *pValue = pNode->GetDocument()->NewElement("a");
 		if (NULL == pValue)
 		{
@@ -2795,25 +2875,25 @@ void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t uID)
 	{
 		case DuiAttribute_RichText:
 		{
-			m_mapAttriRichTextSave[uID] = m_mapAttriRichTextValue[uID];
+			DuiAttriReadValue(uID, m_mapAttriRichTextSave, m_mapAttriRichTextValue);
 
 			break;
 		}
 		case DuiAttribute_Text:
 		{
-			m_mapAttriTextSave[uID] = m_mapAttriTextValue[uID];
+			DuiAttriReadValue(uID, m_mapAttriTextSave, m_mapAttriTextValue);
 
 			break;
 		}
 		case DuiAttribute_TextStyle:
 		{
-			m_mapAttriTextStyleSave[uID] = m_mapAttriTextStyleValue[uID];
+			DuiAttriReadValue(uID, m_mapAttriTextStyleSave, m_mapAttriTextStyleValue);
 
 			break;
 		}
 		case DuiAttribute_ColorSwitch:
 		{
-			m_mapAttriColorResSave[uID] = m_mapAttriColorResValue[uID];
+			DuiAttriReadValue(uID, m_mapAttriColorResSave, m_mapAttriColorResValue);
 
 			break;
 		}
@@ -2822,25 +2902,25 @@ void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t uID)
 		case DuiAttribute_ViewSelect:
 		case DuiAttribute_TabSelect:
 		{
-			m_mapAttriComboxSave[uID] = m_mapAttriComboxValue[uID];
+			DuiAttriReadValue(uID, m_mapAttriComboxSave, m_mapAttriComboxValue);
 
 			break;
 		}
 		case DuiAttribute_Position:
 		{
-			m_mapAttriPositionSave[uID] = m_mapAttriPositionValue[uID];
+			DuiAttriReadValue(uID, m_mapAttriPositionSave, m_mapAttriPositionValue);
 
 			break;
 		}
 		case DuiAttribute_Rect:
 		{
-			m_mapAttriRectSave[uID] = m_mapAttriRectValue[uID];
+			DuiAttriReadValue(uID, m_mapAttriRectSave, m_mapAttriRectValue);
 
 			break;
 		}
 		case DuiAttribute_ImageSection:
 		{
-			m_mapAttriImageSectionSave[uID] = m_mapAttriImageSectionValue[uID];
+			DuiAttriReadValue(uID, m_mapAttriImageSectionSave, m_mapAttriImageSectionValue);
 
 			break;
 		}
@@ -2851,6 +2931,8 @@ void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t uID)
 
 bool CDUIGlobal::SaveAttriValue(tinyxml2::XMLDocument &xmlDoc)
 {
+	if (m_bAttriWaitSave) return true;
+
 	//release pre
 	m_bAttriWaitSave = true;
 
@@ -2868,6 +2950,18 @@ bool CDUIGlobal::SaveAttriValue(tinyxml2::XMLDocument &xmlDoc)
 
 		MMSafeDelete(pControl);
 	}
+
+	//load dialog
+	CMMString strFileModel = CMMString(Dui_FolderUIModel) + _T("\\") + Dui_FileModelDlgXml;
+	strFileModel = CMMService::GetWorkDirectory() + _T("\\") + strFileModel;
+	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, NULL));
+	MMSafeDelete(pRootCtrl);
+
+	//load view
+	strFileModel = CMMString(Dui_FolderUIModel) + _T("\\") + Dui_FileModelViewXml;
+	strFileModel = CMMService::GetWorkDirectory() + _T("\\") + strFileModel;
+	pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, NULL));
+	MMSafeDelete(pRootCtrl);
 
 	m_bAttriWaitSave = false;
 

@@ -65,7 +65,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Design|Win32'">
-    <LocalDebuggerCommand>../Demo/DUIThinkDemo_C++/Debug/DUIThinkDemo_C++.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>../../DTDesigner/bin/DTDesignerD.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Design|x64'">

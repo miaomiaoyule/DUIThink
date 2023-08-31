@@ -26,6 +26,7 @@ public:
 	static uint32_t GetHash(CMMString &str) noexcept;
 	static uint32_t GetHash(LPCSTR lpszStr) noexcept;
 	static uint32_t GetHash(LPCTSTR lpszStr) noexcept;
+	static uint32_t GetHash(const std::vector<CMMString> &vecStr) noexcept;
 };
 
 //////////////////////////////////////////////////////////////////////////

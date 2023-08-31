@@ -61,6 +61,13 @@ int CDUIRect::GetHeight() const
 	return bottom - top;
 }
 
+uint32_t CDUIRect::GetID() const
+{
+	CMMString strInfo = CMMStrHelp::Format(_T("%d-%d-%d-%d"), left, top, right, bottom);
+	
+	return CMMHash().GetHash(strInfo);
+}
+
 CDUIRect CDUIRect::RectClip(const CDUIRect& rcModal, const CDUIRect& rect)
 {
 	CDUIRect rcResult;
