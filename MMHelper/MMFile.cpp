@@ -376,7 +376,10 @@ bool CMMFile::ParseFilePathName(LPCTSTR lpszFileFull, CMMString &strPath, CMMStr
 
 enMMFileEncode CMMFile::GetFileEncode(FILE *pFile)
 {
-	if (NULL == pFile || ftell(pFile) < 2) return FileEncode_Null;
+	if (NULL == pFile) return FileEncode_Null;
+
+	fseek(pFile, 0, SEEK_END);
+	if (ftell(pFile) < 2) return FileEncode_Null;
 
 	fseek(pFile, 0, SEEK_SET);
 	unsigned char ch;

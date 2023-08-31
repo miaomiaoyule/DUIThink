@@ -340,7 +340,8 @@
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-if exist "../Demo/DUIThinkDemo_C++/Debug" copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Command>
+if exist "../Demo/DUIThinkDemo_C++/Debug" copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"
+if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigner\bin"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|x64'">

@@ -907,8 +907,8 @@ copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Comman
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-if exist "../bin\$(TargetFileName)" copy "../bin\$(TargetFileName)" "../../DTDesigner\bin"
-if exist "../bin\DUIThinkD.dll" copy "../bin\DUIThinkD.dll" "../../DTDesigner\bin"</Command>
+if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigner\bin"
+if exist "../../DTDesigner\bin" copy "../bin\DUIThinkD.dll" "../../DTDesigner\bin"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Design|x64'">
