@@ -280,17 +280,18 @@ public:
 
 		return -1;
 	}
-	int ReverseFind(LPCTSTR lpszFind) const
+	int ReverseFind(LPCTSTR lpszFind, int nPosFrom = -1) const
 	{
 		if (MMInvalidString(lpszFind)) return -1;
 
 		CMMString strTemp = *this;
 		int nLenFind = lstrlen(lpszFind);
-		if (nLenFind > strTemp.GetLength()) return -1;
+		-1 == nPosFrom ? nPosFrom = strTemp.GetLength() : nPosFrom;
+		if (nLenFind > nPosFrom) return -1;
 
-		for (int nSub = strTemp.GetLength() - nLenFind; nSub >= 0; nSub--)
+		for (int nSub = nPosFrom - nLenFind; nSub >= 0; nSub--)
 		{
-			if (nSub + nLenFind < strTemp.GetLength())
+			if (nSub + nLenFind < nPosFrom)
 			{
 				strTemp.SetAt(nSub + nLenFind, 0);
 			}
