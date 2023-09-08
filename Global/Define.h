@@ -44,6 +44,11 @@
 #define Name_ImageCardMaster3			_T("{E8FC09D1-2B03-4308-88E2-8542A6E9A23F}")
 #define Name_ImageCardMaster4			_T("{B94A4083-6E90-424E-B35C-CB03DB4EE881}")
 #define Name_ImageCardMaster5			_T("{3FA79189-52BE-413F-B120-A2A5CDAB1B56}")
+#define Name_ImageClockDial				_T("{55B3D83B-F683-4D24-932E-B6B8593E8A21}")
+#define Name_ImageClockHour				_T("{C3D2A82D-D4C7-4ECF-8825-89CE3D514115}")
+#define Name_ImageClockMinute			_T("{3C3FD836-F084-48C8-B756-1A6A51F356EE}")
+#define Name_ImageClockSecond			_T("{61E627E2-3B62-4654-BC49-5496DC2B810C}")
+#define Name_ImageClockCenterDot		_T("{C6CBA3A4-0E50-4AC8-BDC3-847E1FEDE1A1}")
 
 //////////////////////////////////////////////////////////////////////////
 #define Len_Account						(32)
@@ -97,6 +102,11 @@ static TCHAR g_szPublicImage[][MAX_PATH][MAX_PATH]
 	{ Name_ImageCardMaster3, _T("SkinDesign/CardMaster3.png") },
 	{ Name_ImageCardMaster4, _T("SkinDesign/CardMaster4.png") },
 	{ Name_ImageCardMaster5, _T("SkinDesign/CardMaster5.png") },
+	{ Name_ImageClockDial, _T("SkinDesign/ClockDial.png") },
+	{ Name_ImageClockHour, _T("SkinDesign/ClockHour.png") },
+	{ Name_ImageClockMinute, _T("SkinDesign/ClockMinute.png") },
+	{ Name_ImageClockSecond, _T("SkinDesign/ClockSecond.png") },
+	{ Name_ImageClockCenterDot, _T("SkinDesign/ClockCenterDot.png") },
 };
 
 //////////////////////////////////////////////////////////////////////////

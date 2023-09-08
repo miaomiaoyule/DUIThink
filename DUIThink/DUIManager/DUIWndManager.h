@@ -4,7 +4,7 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
-class CDUIThinkDoc;
+class CDTDesignerDoc;
 
 typedef struct tagDuiTimerInfo
 {
@@ -36,8 +36,8 @@ class DUITHINK_API CDUIWndManager
 	friend class CDUIWnd;
 	friend class CDUIGlobal;
 	friend class CDUIXmlPack;
-	friend class CDUIThinkDoc;
-	friend class CDUIThinkView;
+	friend class CDTDesignerDoc;
+	friend class CDTDesignerView;
 	friend class CControlView;
 	friend class CDUILayoutView;
 	friend class CDUIContainerCtrl;

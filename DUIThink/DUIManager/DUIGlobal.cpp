@@ -2840,8 +2840,11 @@ bool CDUIGlobal::SaveAttriImageSection(tinyxml2::XMLElement *pNode)
 		pValue->SetAttribute(Dui_Key_AttriImageSecSourcePartAll, CMMStrHelp::FormatA("%d", (int)ImageSection.cbPartAll).c_str());
 		pValue->SetAttribute(Dui_Key_AttriImageSecSourcePartSel, CMMStrHelp::FormatA("%d", (int)ImageSection.cbPartSel).c_str());
 
-		CDUIRect rcSource = ImageSection.mapSourceCustomScale[100];
-		pValue->SetAttribute(Dui_Key_AttriImageSecSourceCustom, CMMStrHelp::FormatA("%d,%d,%d,%d", rcSource.left, rcSource.top, rcSource.right, rcSource.bottom).c_str());
+		if (ImageSection.mapSourceCustomScale.find(100) != ImageSection.mapSourceCustomScale.end())
+		{
+			CDUIRect rcSource = ImageSection.mapSourceCustomScale[100];
+			pValue->SetAttribute(Dui_Key_AttriImageSecSourceCustom, CMMStrHelp::FormatA("%d,%d,%d,%d", rcSource.left, rcSource.top, rcSource.right, rcSource.bottom).c_str());
+		}
 
 		//Alpha
 		pValue->SetAttribute(Dui_Key_AttriImageSecAlpha, ImageSection.cbAlpha);

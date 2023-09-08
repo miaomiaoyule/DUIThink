@@ -44,6 +44,7 @@
 #define Dui_Ctrl_RotateMenuItem						(_T("RotateMenuItemCtrl"))
 #define Dui_Ctrl_RotateMenu							(_T("RotateMenuCtrl"))
 #define Dui_Ctrl_Instrument							(_T("InstrumentCtrl"))
+#define Dui_Ctrl_Clock								(_T("ClockCtrl"))
 #define Dui_Ctrl_DateTime							(_T("DateTimeCtrl"))
 #define Dui_Ctrl_TreeView							(_T("TreeViewCtrl"))
 #define Dui_Ctrl_TreeNode							(_T("TreeNodeCtrl"))

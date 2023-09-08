@@ -12,11 +12,11 @@ LPCTSTR DUITHINK_API DUI__TraceMsg(UINT uMsg);
 
 //////////////////////////////////////////////////////////////////////////
 class CDUIOperatorHistory;
-class CDUIThinkView;
+class CDTDesignerView;
 class CProjectView;
 class CPropertiesView;
 class CDlgDefaultAttribList;
-class CDUIThinkDoc;
+class CDTDesignerDoc;
 class CDUIWndImageList;
 class CImageResView;
 class CFontResView;
@@ -38,11 +38,11 @@ class DUITHINK_API CDUIGlobal
 	friend class CDUIXmlPack;
 	friend class CDUIOperatorHistory;
 	friend class CUICommandElement;
-	friend class CDUIThinkView;
+	friend class CDTDesignerView;
 	friend class CProjectView;
 	friend class CPropertiesView;
 	friend class CDlgDefaultAttribList;
-	friend class CDUIThinkDoc;
+	friend class CDTDesignerDoc;
 	friend class CImageResView;
 	friend class CFontResView;
 	friend class CColorResView;
@@ -365,7 +365,6 @@ public:
 	static void PerformNotifyChildAdd(CDUIPropertyObject *pPropertyObj, CDUIControlBase *pChild);
 	static void PerformNotifyChildRemove(CDUIPropertyObject *pPropertyObj, CDUIControlBase *pChild);
 	static void PerformNotifyVisibleChange(CDUIPropertyObject *pPropertyObj);
-	static void PerformNotifyRefreshView(CDUIPropertyObject *pPropertyObj);
 	static void PerformResourceDelete(CDUIControlBase *pControl, CDUIResourceBase *pResourceObj);
 	static void PerformResourceSwitch(CDUIControlBase *pControl, int nIndexRes);
 	static bool PerformAddAttributeBuffer(CDUIPropertyObject *pPropertyObj, tinyxml2::XMLElement *pNodeXml);

@@ -21,7 +21,7 @@ class DUITHINK_API CDUIAttributeObject
 	friend class CDUIPropertyObject;
 	friend class CDUIAttributeGroup;
 	friend class CDlgImageSection;
-	friend class CDUIThinkView;
+	friend class CDTDesignerView;
 	friend class CPropertiesView;
 	friend class CUICommandElement;
 

@@ -261,24 +261,6 @@ void CDUIGlobal::PerformNotifyVisibleChange(CDUIPropertyObject *pPropertyObj)
 	return;
 }
 
-void CDUIGlobal::PerformNotifyRefreshView(CDUIPropertyObject *pPropertyObj)
-{
-	if (NULL == pPropertyObj) return;
-
-	auto vecIControlListen = pPropertyObj->GetControlListen();
-	if (vecIControlListen.empty()) return;
-
-	for (auto pInterface : vecIControlListen)
-	{
-		MMInterfaceHelper(IControlListen, pInterface, pIControlListen);
-		if (NULL == pIControlListen) continue;
-
-		pIControlListen->OnRefreshView(pPropertyObj);
-	}
-
-	return;
-}
-
 void CDUIGlobal::PerformResourceDelete(CDUIControlBase *pControl, CDUIResourceBase *pResourceObj)
 {
 	if (NULL == pResourceObj) return;

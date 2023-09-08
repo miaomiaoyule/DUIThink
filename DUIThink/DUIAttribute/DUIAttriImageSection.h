@@ -38,6 +38,8 @@ public:
 	virtual tagDuiImageSection GetImageSection();
 	virtual void SetImageSection(const tagDuiImageSection &ImageSection);
 	virtual CDUIImageBase * GetCurImageBase();
+	virtual int GetCurImageWidth();
+	virtual int GetCurImageHeight();
 	virtual void SetImageResSwitch(const vector<CMMString> &vecImageResSwitch);
 	virtual void SetImageResSwitch(const CMMString &strImageResSwitch);
 	virtual vector<CMMString> GetImageResSwitch();

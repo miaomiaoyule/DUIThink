@@ -1703,7 +1703,10 @@ bool CDUIWndManager::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESU
 			}
 
 			//design refresh
-			CDUIGlobal::PerformNotifyRefreshView(this);
+			if (g_pIDuiWndNotify)
+			{
+				g_pIDuiWndNotify->OnDuiWndPaint(this);
+			}
 
 			return true;
 		}

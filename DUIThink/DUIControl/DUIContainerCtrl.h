@@ -5,7 +5,7 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-class CDUIThinkDoc;
+class CDTDesignerDoc;
 class CDUIGlobal;
 
 //////////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ class DUITHINK_API CDUIContainerCtrl
 	friend class CDUIWndManager;
 	friend class CDUIListHeaderCtrl;
 	friend class CDUIListViewCtrl;
-	friend class CDUIThinkDoc;
+	friend class CDTDesignerDoc;
 	friend class CDUIWnd;
 	friend class CDUILayoutView;
 	friend class CDUITreeNodeCtrl;

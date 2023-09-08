@@ -171,6 +171,7 @@ using namespace tinyxml2;
 #include "DUIControl/DUICalendarCtrl.h"
 #include "DUIControl/DUIRotateMenuCtrl.h"
 #include "DUIControl/DUIInstrumentCtrl.h"
+#include "DUIControl/DUIClockCtrl.h"
 
 #include "DUIExport/IDUIGlobal.h"
 #include "DUIExport/IDUIFactory.h"

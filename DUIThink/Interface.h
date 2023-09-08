@@ -17,7 +17,6 @@ interface DUITHINK_API IControlListen : public IDUIInterface
 	virtual void OnChildRemove(CDUIContainerCtrl *pParent, CDUIControlBase *pChild) {}
 	virtual void OnVisibleChange(CDUIControlBase *pControl) {}
 	virtual void OnAttributeChange(CDUIPropertyObject *pProp, CDUIAttributeObject *pAttribute) {}
-	virtual void OnRefreshView(CDUIPropertyObject *pProp) {}
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -29,6 +28,7 @@ interface DUITHINK_API IDUIWndNotify : public IDUIInterface
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
 	virtual void OnDuiWndCreate(CDUIWndManager *pWndManager) = NULL;
 	virtual void OnDuiWndClose(CDUIWndManager *pWndManager) = NULL;
+	virtual void OnDuiWndPaint(CDUIWndManager *pWndManager) {}
 };
 
 //////////////////////////////////////////////////////////////////////////

@@ -1516,6 +1516,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIAttribute\DUIText\DUIAttributeRichText.h" />
     <ClInclude Include="DUIAttribute\DUIText\DUIAttributeText.h" />
     <ClInclude Include="DUIAttribute\DUIText\DUIAttributeTextStyle.h" />
+    <ClInclude Include="DUIControl\DUIClockCtrl.h" />
     <ClInclude Include="DUIControl\DUIInstrumentCtrl.h" />
     <ClInclude Include="DUIControl\DUIRotateMenuCtrl.h" />
     <ClInclude Include="DUIControl\DUIButtonCtrl.h" />
@@ -1604,6 +1605,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUIAttribute\DUIText\DUIAttributeRichText.cpp" />
     <ClCompile Include="DUIAttribute\DUIText\DUIAttributeText.cpp" />
     <ClCompile Include="DUIAttribute\DUIText\DUIAttributeTextStyle.cpp" />
+    <ClCompile Include="DUIControl\DUIClockCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIInstrumentCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIRotateMenuCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIButtonCtrl.cpp" />

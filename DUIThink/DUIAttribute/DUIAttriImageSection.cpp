@@ -185,6 +185,20 @@ CDUIImageBase * CDUIAttriImageSection::GetCurImageBase()
 	return NULL;
 }
 
+int CDUIAttriImageSection::GetCurImageWidth()
+{
+	CDUIImageBase *pImageBase = GetCurImageBase();
+
+	return pImageBase ? pImageBase->GetWidth() : 0;
+}
+
+int CDUIAttriImageSection::GetCurImageHeight()
+{
+	CDUIImageBase *pImageBase = GetCurImageBase();
+
+	return pImageBase ? pImageBase->GetHeight() : 0;
+}
+
 void CDUIAttriImageSection::SetImageResSwitch(const vector<CMMString> &vecImageResSwitch)
 {
 	tagDuiImageSection ImageSection = GetImageSection();
@@ -277,17 +291,13 @@ CDUIRect CDUIAttriImageSection::GetSource(tagDuiImageSection ImageSection)
 		}
 		case ImageSource_Custom:
 		{
-			if (false == bScale)
-			{
-				rcSource = ImageSection.mapSourceCustomScale[100];
-			}
-			else if (ImageSection.mapSourceCustomScale.find(GetScale()) != ImageSection.mapSourceCustomScale.end())
+			if (ImageSection.mapSourceCustomScale.find(GetScale()) != ImageSection.mapSourceCustomScale.end())
 			{
 				rcSource = ImageSection.mapSourceCustomScale[GetScale()];
 			}
 			else
 			{
-				rcSource = DuiDpiScaleAttri(ImageSection.mapSourceCustomScale[100]);
+				rcSource = DuiDpiScaleAttri(CDUIRect());
 			}
 
 			break;

@@ -327,6 +327,9 @@
     <ClInclude Include="DUIThinkHead.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DUIControl\DUIClockCtrl.h">
+      <Filter>DUIControl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -550,6 +553,9 @@
     </ClCompile>
     <ClCompile Include="DUIUtils\XUnzip.cpp">
       <Filter>DUIUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="DUIControl\DUIClockCtrl.cpp">
+      <Filter>DUIControl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
