@@ -178,8 +178,8 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 				Point(pImageBase->GetWidth(), 0),
 				Point(0, pImageBase->GetHeight())
 			};
-			matrixH.Rotate(SystemTime.wHour * 30 + SystemTime.wMinute * 1.0 / 2.0 - 180);
-			matrixH.Translate(-pImageBase->GetWidth() / 2, -pImageBase->GetHeight() / 6);
+			matrixH.Rotate(SystemTime.wHour * 30 + SystemTime.wMinute * 1.0 / 2.0);
+			matrixH.Translate(-pImageBase->GetWidth() / 2, -pImageBase->GetHeight() / 2);
 			matrixH.TransformPoints(pointsH, 3);
 			Gp.DrawImage(pBitmap, pointsH, 3);
 		}
@@ -199,8 +199,8 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 				Point(pImageBase->GetWidth(),0),
 				Point(0, pImageBase->GetHeight())
 			};
-			matrixM.Rotate(SystemTime.wMinute * 6 - 180);
-			matrixM.Translate(-pImageBase->GetWidth() / 2, -pImageBase->GetHeight() / 6);
+			matrixM.Rotate(SystemTime.wMinute * 6);
+			matrixM.Translate(-pImageBase->GetWidth() / 2, -pImageBase->GetHeight() / 2);
 			matrixM.TransformPoints(pointsM, 3);
 			Gp.DrawImage(pBitmap, pointsM, 3);
 		}
@@ -220,8 +220,8 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 				Point(pImageBase->GetWidth(), 0),
 				Point(0, pImageBase->GetHeight())
 			};
-			matrixS.Rotate(SystemTime.wSecond * 6 - 180);
-			matrixS.Translate(-pImageBase->GetWidth() / 2, -pImageBase->GetHeight() / 7);
+			matrixS.Rotate(SystemTime.wSecond * 6);
+			matrixS.Translate(-pImageBase->GetWidth() / 2, -pImageBase->GetHeight() / 2);
 			matrixS.TransformPoints(pointsS, 3);
 			Gp.DrawImage(pBitmap, pointsS, 3);
 		}
