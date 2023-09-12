@@ -1469,6 +1469,9 @@ bool CDUIGlobal::RenameFontResource(const CMMString &strNameOld, const CMMString
 	if (NULL == pFontBaseOld || pFontBaseNew) return false;
 	if (false == pFontBaseOld->SetResourceName(strNameNew)) return false;
 
+	m_mapResourceFont.erase(strNameOld);
+	m_mapResourceFont[strNameNew] = pFontBaseOld;
+
 	//default
 	if (m_strFontResDefault == strNameOld)
 	{
@@ -1487,6 +1490,9 @@ bool CDUIGlobal::RenameImageResource(const CMMString &strNameOld, const CMMStrin
 	if (NULL == pImageBaseOld || pImageBaseNew) return false;
 	if (false == pImageBaseOld->SetResourceName(strNameNew)) return false;
 
+	m_mapResourceImage.erase(strNameOld);
+	m_mapResourceImage[strNameNew] = pImageBaseOld;
+
 	return true;
 }
 
@@ -1499,6 +1505,9 @@ bool CDUIGlobal::RenameColorResource(const CMMString &strNameOld, const CMMStrin
 
 	if (NULL == pColorBaseOld || pColorBaseNew) return false;
 	if (false == pColorBaseOld->SetResourceName(strNameNew)) return false;
+
+	m_mapResourceColor.erase(strNameOld);
+	m_mapResourceColor[strNameNew] = pColorBaseOld;
 
 	return true;
 }
