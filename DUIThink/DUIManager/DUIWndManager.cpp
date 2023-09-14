@@ -1930,6 +1930,7 @@ LRESULT CDUIWndManager::OnDraw(CDUIRect rcPaint)
 	DWORD dwStyle = ::GetWindowLong(m_hWndAttach, GWL_EXSTYLE);
 	DWORD dwNewStyle = IsWndLayered() ? (dwStyle | WS_EX_LAYERED) : (dwStyle & ~WS_EX_LAYERED);
 	if (dwStyle != dwNewStyle) ::SetWindowLong(m_hWndAttach, GWL_EXSTYLE, dwNewStyle);
+	dwStyle = ::GetWindowLong(m_hWndAttach, GWL_EXSTYLE);
 
 	//Should we paint?
 	CDUIRect rcClient;
@@ -1950,7 +1951,7 @@ LRESULT CDUIWndManager::OnDraw(CDUIRect rcPaint)
 		ReleasePaintScene();
 
 		//create
-		IsWndLayered() ? rcPaint = rcClient : rcPaint;
+		(dwStyle & WS_EX_LAYERED) ? rcPaint = rcClient : rcPaint;
 		m_hMemDcBackground = ::CreateCompatibleDC(m_hDCPaint);
 		m_hBmpBackground = CDUIRenderEngine::CreateARGB32Bitmap(m_hDCPaint, rcClient.GetWidth(), rcClient.GetHeight(), &m_pBmpBackgroundBits);
 
@@ -1975,7 +1976,7 @@ LRESULT CDUIWndManager::OnDraw(CDUIRect rcPaint)
 	::RestoreDC(m_hMemDcBackground, iSaveDC);
 
 	//update
-	if (IsWndLayered())
+	if (dwStyle & WS_EX_LAYERED)
 	{
 		RECT rcWnd = {};
 		::GetWindowRect(m_hWndAttach, &rcWnd);
