@@ -836,33 +836,33 @@ void CDUIMenuItemCtrl::CalcItemRect()
 	m_rcLineMenu.top = m_rcLineMenu.top + m_rcLineMenu.GetHeight() / 2 - 1;
 	m_rcLineMenu.bottom = m_rcLineMenu.top + 1;
 
-	CDUIImageBase *pImageIconChecked = m_AttributeIconChecked.GetCurImageBase();
-	CDUIImageBase *pImageIconNormal = m_AttributeIconNormal.GetCurImageBase();
-	CDUIImageBase *pImageIconExpand = m_AttributeIconExpand.GetCurImageBase();
-	if (pImageIconChecked)
+	CDUIRect rcSourceChecked = m_AttributeIconChecked.GetSource();
+	CDUIRect rcSourceNormal = m_AttributeIconNormal.GetSource();
+	CDUIRect rcSourceExpand = m_AttributeIconExpand.GetSource();
+	if (false == rcSourceChecked.IsEmpty())
 	{
 		m_rcIconChecked = GetAbsoluteRect();
 		m_rcIconChecked.left += GetIconCheckedLeftPadding();
-		m_rcIconChecked.right = m_rcIconChecked.left + pImageIconChecked->GetWidth();
-		m_rcIconChecked.top += (m_rcIconChecked.GetHeight() - pImageIconChecked->GetHeight()) / 2;
-		m_rcIconChecked.bottom = m_rcIconChecked.top + pImageIconChecked->GetHeight();
+		m_rcIconChecked.right = m_rcIconChecked.left + rcSourceChecked.GetWidth();
+		m_rcIconChecked.top += (m_rcIconChecked.GetHeight() - rcSourceChecked.GetHeight()) / 2;
+		m_rcIconChecked.bottom = m_rcIconChecked.top + rcSourceChecked.GetHeight();
 	}
-	if (pImageIconNormal)
+	if (false == rcSourceNormal.IsEmpty())
 	{
 		m_rcIconNormal = GetAbsoluteRect();
 		false == m_rcIconChecked.IsEmpty() ? m_rcIconNormal.left = m_rcIconChecked.right : 0;
 		m_rcIconNormal.left += GetIconNormalLeftPadding();
-		m_rcIconNormal.right = m_rcIconNormal.left + pImageIconNormal->GetWidth();
-		m_rcIconNormal.top += (m_rcIconNormal.GetHeight() - pImageIconNormal->GetHeight()) / 2;
-		m_rcIconNormal.bottom = m_rcIconNormal.top + pImageIconNormal->GetHeight();
+		m_rcIconNormal.right = m_rcIconNormal.left + rcSourceNormal.GetWidth();
+		m_rcIconNormal.top += (m_rcIconNormal.GetHeight() - rcSourceNormal.GetHeight()) / 2;
+		m_rcIconNormal.bottom = m_rcIconNormal.top + rcSourceNormal.GetHeight();
 	}
-	if (pImageIconExpand)
+	if (false == rcSourceExpand.IsEmpty())
 	{
 		m_rcIconExpand = GetAbsoluteRect();
 		m_rcIconExpand.right -= GetIconExpandRightPadding();
-		m_rcIconExpand.left = m_rcIconExpand.right - pImageIconExpand->GetWidth();
-		m_rcIconExpand.top += (m_rcIconExpand.GetHeight() - pImageIconExpand->GetHeight()) / 2;
-		m_rcIconExpand.bottom = m_rcIconExpand.top + pImageIconExpand->GetHeight();
+		m_rcIconExpand.left = m_rcIconExpand.right - rcSourceExpand.GetWidth();
+		m_rcIconExpand.top += (m_rcIconExpand.GetHeight() - rcSourceExpand.GetHeight()) / 2;
+		m_rcIconExpand.bottom = m_rcIconExpand.top + rcSourceExpand.GetHeight();
 	}
 
 	m_rcItemText = GetAbsoluteRect();
