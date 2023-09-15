@@ -135,16 +135,33 @@ LRESULT CDUIThinkEditCtrl::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lPar
 			HIMC hImc = ::ImmGetContext(m_pWndManager->GetWndHandle());
 			if (hImc)
 			{
-				//Set composition window position near caret position
+				//pos
 				POINT ptCaret;
 				::GetCaretPos(&ptCaret);
-
 				COMPOSITIONFORM Composition;
 				Composition.dwStyle = CFS_POINT;
 				Composition.ptCurrentPos.x = ptCaret.x;
 				Composition.ptCurrentPos.y = ptCaret.y;
 				ImmSetCompositionWindow(hImc, &Composition);
 
+				//font
+				do
+				{
+					CDUIAttributeTextStyle *pTextStyle = GetAttributeTextStyleActive();
+					if (NULL == pTextStyle) break;
+
+					CDUIFontBase *pFontBase = pTextStyle->GetFontBaseCur();
+					if (NULL == pFontBase) break;
+
+					HFONT hFont = pFontBase->GetHandle();
+					if (NULL == hFont) break;
+
+					LOGFONT LogFont = {};
+					GetObject(hFont, sizeof(LogFont), &LogFont);
+					ImmSetCompositionFont(hImc, &LogFont);
+
+				} while (false);
+				
 				ImmReleaseContext(m_pWndManager->GetWndHandle(), hImc);
 			}
 

@@ -331,7 +331,7 @@ void CDUIWnd::CenterWindow()
 	else if (xLeft + DlgWidth > rcArea.right) xLeft = rcArea.right - DlgWidth;
 	if (yTop < rcArea.top) yTop = rcArea.top;
 	else if (yTop + DlgHeight > rcArea.bottom) yTop = rcArea.bottom - DlgHeight;
-	::SetWindowPos(m_hWnd, NULL, xLeft, yTop, -1, -1, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+	::SetWindowPos(m_hWnd, NULL, xLeft, yTop, -1, -1, SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE);
 
 	return;
 }
@@ -375,7 +375,40 @@ void CDUIWnd::ResizeWnd(int cx /*= -1*/, int cy /*= -1*/)
 	if (cx != -1) rcWnd.right = rcWnd.left + cx;
 	if (cy != -1) rcWnd.bottom = rcWnd.top + cy;
 	if (!::AdjustWindowRectEx(&rcWnd, GetWindowStyle(m_hWnd), (!(GetWindowStyle(m_hWnd) & WS_CHILD) && (::GetMenu(m_hWnd) != NULL)), GetWindowExStyle(m_hWnd))) return;
-	::SetWindowPos(m_hWnd, NULL, 0, 0, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
+	::SetWindowPos(m_hWnd, NULL, 0, 0, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
+
+	return;
+}
+
+void CDUIWnd::AdjustWnd()
+{
+	if (false == IsWindow(m_hWnd)) return;
+
+	CDUIRect rcWnd;
+	GetWindowRect(m_hWnd, &rcWnd);
+
+	MONITORINFO oMonitor = {};
+	oMonitor.cbSize = sizeof(oMonitor);
+	::GetMonitorInfo(::MonitorFromWindow(GetHWND(), MONITOR_DEFAULTTOPRIMARY), &oMonitor);
+	CDUIRect rcWork = oMonitor.rcWork;
+	if (rcWnd.left < rcWork.left)
+	{
+		rcWnd.Offset(rcWork.left - rcWnd.left, 0);
+	}
+	if (rcWnd.right > rcWork.right)
+	{
+		rcWnd.Offset(rcWork.right - rcWnd.right, 0);
+	}
+	if (rcWnd.top < rcWork.top)
+	{
+		rcWnd.Offset(0, rcWork.top - rcWnd.top);
+	}
+	if (rcWnd.bottom > rcWork.bottom)
+	{
+		rcWnd.Offset(0, rcWork.bottom - rcWnd.bottom);
+	}
+
+	MoveWindow(m_hWnd, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), TRUE);
 
 	return;
 }
@@ -681,7 +714,6 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam, bool &bHandled)
 	lStyle &= ~WS_CAPTION;
 	//lStyle &= ~WS_SYSMENU;
 	::SetWindowLong(m_hWnd, GWL_STYLE, lStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
-	::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER);
 
 	//root
 	CDUIContainerCtrl *pRootCtrl = dynamic_cast<CDUIContainerCtrl*>(CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), m_pWndManager));

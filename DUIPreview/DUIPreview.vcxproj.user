@@ -38,7 +38,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
     <LocalDebuggerCommand>../bin/$(TargetFileName)</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>/PreviewProject ..\Demo\DUIThinkDemo_C++\DUIThinkDemo.DuiProj\DUIThinkDemo.DuiProj /PreviewDuiName DlgDpi /PreviewFrameWnd true</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>/PreviewProject ..\Demo\DUIThinkDemo_C++\DUIThinkDemo.DuiProj\DUIThinkDemo.DuiProj /PreviewDuiName DlgMain /PreviewFrameWnd true</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">
     <LocalDebuggerCommand>../bin/$(TargetFileName)</LocalDebuggerCommand>

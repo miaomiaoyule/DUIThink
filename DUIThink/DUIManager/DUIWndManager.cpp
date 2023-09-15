@@ -2734,7 +2734,7 @@ void CDUIWndManager::OnDpiChanged(int nScalePre)
 		CDUIRect rcWnd = GetWindowRect();
 		rcWnd.right = rcWnd.left + (rcWnd.GetWidth()) * (GetScale() * 1.0f / nScalePre);
 		rcWnd.bottom = rcWnd.top + (rcWnd.GetHeight()) * (GetScale() * 1.0f / nScalePre);
-		SetWindowPos(GetWndHandle(), NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
+		SetWindowPos(GetWndHandle(), NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
 	}
 
 	//refresh
@@ -2781,7 +2781,7 @@ void CDUIWndManager::AdjustWndSize()
 		szWndInit.cy = szWndMax.cy > 0 ? min(szWndInit.cy, szWndMax.cy) : szWndInit.cy;
 		szWndInit.cx = max(szWndInit.cx, szWndMin.cx);
 		szWndInit.cy = max(szWndInit.cy, szWndMin.cy);
-		::SetWindowPos(m_hWndAttach, NULL, 0, 0, szWndInit.cx, szWndInit.cy, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
+		::SetWindowPos(m_hWndAttach, NULL, 0, 0, szWndInit.cx, szWndInit.cy, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 	}
 
 	return;

@@ -59,6 +59,7 @@ public:
 	virtual LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0L);
 	virtual LRESULT PostMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0L);
 	virtual void ResizeWnd(int cx = -1, int cy = -1);
+	virtual void AdjustWnd();
 	virtual LPCTSTR GetSuperClassName() const;
 
 protected:	virtual void OnInitDialog() {}

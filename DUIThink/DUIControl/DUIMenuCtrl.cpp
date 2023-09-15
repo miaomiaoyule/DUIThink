@@ -65,13 +65,9 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 		m_pWndManagerOwner = static_cast<CDUIWndManager*>(m_pOwner->GetWndManager());
 	}
 
-	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE | WS_EX_TOPMOST, m_ptTrack.x, m_ptTrack.y);
-
-	// HACK: Don't deselect the parent's caption
-	hWndParent = m_hWnd;
-	while (::GetParent(hWndParent)) hWndParent = ::GetParent(hWndParent);
-	::SendMessage(hWndParent, WM_NCACTIVATE, TRUE, 0L);
-
+	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP, WS_EX_TOOLWINDOW, m_ptTrack.x, m_ptTrack.y);
+	::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
+	
 	//focus
 	m_pShowMenuView->SetFocus();
 
@@ -240,7 +236,7 @@ LRESULT CDUIMenuWnd::OnWMDuiResizeMenu(WPARAM wParam, LPARAM lParam)
 	if (rcWnd.GetWidth() != szRange.cx
 		|| rcWnd.GetHeight() != szRange.cy)
 	{
-		SetWindowPos(m_pWndManager->GetWndHandle(), NULL, 0, 0, szRange.cx, szRange.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+		SetWindowPos(m_pWndManager->GetWndHandle(), NULL, 0, 0, szRange.cx, szRange.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOOWNERZORDER);
 	}
 
 	//wnd pos
@@ -291,7 +287,6 @@ void CDUIMenuWnd::ResizeMenu()
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(rcWork.right - rcWnd.right, 0);
 	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight());
 
-	SetForegroundWindow(m_hWnd);
 	MoveWindow(m_hWnd, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), FALSE);
 
 	return;
