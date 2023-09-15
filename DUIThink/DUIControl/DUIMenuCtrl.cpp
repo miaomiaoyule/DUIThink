@@ -65,7 +65,7 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 		m_pWndManagerOwner = static_cast<CDUIWndManager*>(m_pOwner->GetWndManager());
 	}
 
-	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP, WS_EX_TOOLWINDOW, m_ptTrack.x, m_ptTrack.y);
+	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, m_ptTrack.x, m_ptTrack.y);
 	::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
 	
 	//focus
