@@ -4,16 +4,22 @@
 /////////////////////////////////////////////////////////////////////////////////////
 CDUIRenderClip::~CDUIRenderClip()
 {
+	if (NULL == hDC) return;
+
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	ASSERT(::GetObjectType(hRgn) == OBJ_REGION);
 	ASSERT(::GetObjectType(hOldRgn) == OBJ_REGION);
 	::SelectClipRgn(hDC, hOldRgn);
 	MMSafeDeleteObject(hOldRgn);
 	MMSafeDeleteObject(hRgn);
+
+	return;
 }
 
-void CDUIRenderClip::GenerateClip(HDC hDC, RECT rc, CDUIRenderClip &clip)
+void CDUIRenderClip::GenerateClip(HDC hDC, RECT rc, CDUIRenderClip &clip, bool bBorderRound)
 {
+	if (bBorderRound) return;
+
 	RECT rcClip = {};
 	::GetClipBox(hDC, &rcClip);
 	clip.hOldRgn = ::CreateRectRgnIndirect(&rcClip);
@@ -21,6 +27,8 @@ void CDUIRenderClip::GenerateClip(HDC hDC, RECT rc, CDUIRenderClip &clip)
 	::ExtSelectClipRgn(hDC, clip.hRgn, RGN_AND);
 	clip.hDC = hDC;
 	clip.rcItem = rc;
+
+	return;
 }
 
 void CDUIRenderClip::GenerateRoundClip(HDC hDC, RECT rc, RECT rcItem, int width, int height, CDUIRenderClip &clip)
@@ -844,14 +852,14 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRoun
 
 		//left top right bottom
 		Gdiplus::GraphicsPath Path;
-		Path.AddLine(rcItem.left, rcItem.top + nYRound, rcItem.left, rcItem.bottom - nYRound);
-		Path.AddArc(rcItem.left, rcItem.top, nXRound * 2, nYRound * 2, 180, 90); // ◊Û…œ‘≤Ω«
-		Path.AddLine(rcItem.left + nXRound, rcItem.top, rcItem.right - nXRound, rcItem.top);
-		Path.AddArc(rcItem.right - nXRound * 2 - nSize, rcItem.top, nXRound * 2, nYRound * 2, 270, 90); // ”“…œ‘≤Ω«
-		Path.AddLine(rcItem.right - nSize, rcItem.top + nYRound, rcItem.right - nSize, rcItem.bottom - nYRound);
-		Path.AddArc(rcItem.right - nXRound * 2 - nSize, rcItem.bottom - nYRound * 2 - nSize, nXRound * 2, nYRound * 2, 0, 90); // ”“œ¬‘≤Ω«
-		Path.AddLine(rcItem.left + nXRound, rcItem.bottom - nSize, rcItem.right - nXRound, rcItem.bottom - nSize);
-		Path.AddArc(rcItem.left, rcItem.bottom - nYRound * 2 - nSize, nXRound * 2, nYRound * 2, 90, 90); // ◊Ûœ¬‘≤Ω«
+		Path.AddLine(rcItem.left + nXRound, rcItem.top, rcItem.right - nXRound, rcItem.top); //∂•≤ø∫·œﬂ
+		Path.AddArc(rcItem.right - nXRound * 2, rcItem.top, nXRound * 2, nYRound * 2, 270, 90); //”“…œ‘≤Ω«
+		Path.AddLine(rcItem.right, rcItem.top + nYRound, rcItem.right, rcItem.bottom - nYRound); //”“≤‡ ˙œﬂ
+		Path.AddArc(rcItem.right - nXRound * 2, rcItem.bottom - nYRound * 2, nXRound * 2, nYRound * 2, 0, 90); //”“œ¬‘≤Ω«
+		Path.AddLine(rcItem.right - nXRound, rcItem.bottom, rcItem.left + nXRound, rcItem.bottom); //µ◊≤ø∫·œﬂ
+		Path.AddArc(rcItem.left, rcItem.bottom - nYRound * 2, nXRound * 2, nYRound * 2, 90, 90); //◊Ûœ¬‘≤Ω«
+		Path.AddLine(rcItem.left, rcItem.bottom - nYRound, rcItem.left, rcItem.top + nYRound); //◊Û≤‡ ˙œﬂ
+		Path.AddArc(rcItem.left, rcItem.top, nXRound * 2, nYRound * 2, 180, 90); //◊Û…œ‘≤Ω«
 
 		Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nSize);
 		Gp.DrawPath(&Pen, &Path);
@@ -977,18 +985,15 @@ void CDUIRenderEngine::FillRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRoun
 
 	//left top right bottom
 	Gdiplus::GraphicsPath Path;
-	Path.AddLine(rcItem.left, rcItem.top + nYRound, rcItem.left, rcItem.bottom - nYRound);
-	Path.AddArc(rcItem.left, rcItem.top, nXRound * 2, nYRound * 2, 180, 90); // ◊Û…œ‘≤Ω«
+	Path.AddLine(rcItem.left + nXRound, rcItem.top, rcItem.right - nXRound, rcItem.top); //∂•≤ø∫·œﬂ
+	Path.AddArc(rcItem.right - nXRound * 2, rcItem.top, nXRound * 2, nYRound * 2, 270, 90); //”“…œ‘≤Ω«
+	Path.AddLine(rcItem.right, rcItem.top + nYRound, rcItem.right, rcItem.bottom - nYRound); //”“≤‡ ˙œﬂ
+	Path.AddArc(rcItem.right - nXRound * 2, rcItem.bottom - nYRound * 2, nXRound * 2, nYRound * 2, 0, 90); //”“œ¬‘≤Ω«
+	Path.AddLine(rcItem.right - nXRound, rcItem.bottom, rcItem.left + nXRound, rcItem.bottom); //µ◊≤ø∫·œﬂ
+	Path.AddArc(rcItem.left, rcItem.bottom - nYRound * 2, nXRound * 2, nYRound * 2, 90, 90); //◊Ûœ¬‘≤Ω«
+	Path.AddLine(rcItem.left, rcItem.bottom - nYRound, rcItem.left, rcItem.top + nYRound); //◊Û≤‡ ˙œﬂ
+	Path.AddArc(rcItem.left, rcItem.top, nXRound * 2, nYRound * 2, 180, 90); //◊Û…œ‘≤Ω«
 
-	Path.AddLine(rcItem.left + nXRound, rcItem.top, rcItem.right - nXRound, rcItem.top);
-	Path.AddArc(rcItem.right - nXRound * 2 - 1, rcItem.top, nXRound * 2, nYRound * 2, 270, 90); // ”“…œ‘≤Ω«
-
-	Path.AddLine(rcItem.right, rcItem.top + nYRound, rcItem.right, rcItem.bottom - nYRound);
-	Path.AddArc(rcItem.right - nXRound * 2 - 1, rcItem.bottom - nYRound * 2 - 1, nXRound * 2, nYRound * 2, 0, 90); // ”“œ¬‘≤Ω«
-
-	Path.AddLine(rcItem.left + nXRound, rcItem.bottom, rcItem.right - nXRound, rcItem.bottom);
-	Path.AddArc(rcItem.left, rcItem.bottom - nYRound * 2 - 1, nXRound * 2, nYRound * 2, 90, 90); // ◊Ûœ¬‘≤Ω«
-	
 	Gdiplus::SolidBrush Brush(dwColor);
 	Gp.FillPath(&Brush, &Path);
 

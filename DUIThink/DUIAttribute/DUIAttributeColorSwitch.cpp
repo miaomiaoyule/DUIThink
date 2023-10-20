@@ -73,7 +73,7 @@ bool CDUIAttributeColorSwitch::DrawRound(HDC hDC, const CDUIRect &rcPaint, int n
 bool CDUIAttributeColorSwitch::DrawRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nXRound, int nYRound, bool bHSLAdjust)
 {
 	if (nBorderSize <= 0
-		|| false == (nXRound > 0 || nYRound > 0)) return false;
+		|| false == (nXRound > 0 && nYRound > 0)) return false;
 
 	DWORD dwColor = GetColorValue();
 	if (0 == dwColor) return false;

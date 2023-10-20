@@ -1120,8 +1120,9 @@ bool CDUIControlBase::OnDraw(HDC hDC, const RECT &rcPaint, bool bGenerateBmp)
 {
 	if (false == ::IntersectRect(&m_rcPaint, &rcPaint, &m_rcAbsolute)) return false;
 
+	CDUISize szBorderRound = GetBorderRound();
 	CDUIRenderClip Clip;
-	CDUIRenderClip::GenerateClip(hDC, m_rcPaint, Clip);
+	CDUIRenderClip::GenerateClip(hDC, m_rcPaint, Clip, szBorderRound.cx > 0 && szBorderRound.cy > 0);
 
 	DoPaint(hDC, bGenerateBmp);
 
@@ -1931,43 +1932,29 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	int nSize = max(rcBorder.left, rcBorder.top);
 	nSize = max(nSize, rcBorder.right);
 	nSize = max(nSize, rcBorder.bottom);
-	bool bDrawRound = pAttribute->DrawRound(hDC, m_rcAbsolute, nSize, szBorderRound.cx, szBorderRound.cy, IsColorHSL());
-	
+	if (nSize > 0 && szBorderRound.cx > 0 && szBorderRound.cy > 0)
+	{
+		pAttribute->DrawRoundRect(hDC, m_rcAbsolute, nSize, szBorderRound.cx, szBorderRound.cy, IsColorHSL());
+
+		return;
+	}
 	if (rcBorder.left > 0)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
 		rcBorderDraw.right = rcBorderDraw.left;
-		if (bDrawRound)
-		{
-			rcBorderDraw.top += szBorderRound.cy;
-			rcBorderDraw.bottom -= szBorderRound.cy;
-		}
-
-		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.left, GetBorderStyle(), IsColorHSL());
+		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.left + 2, GetBorderStyle(), IsColorHSL());
 	}
 	if (rcBorder.top > 0)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
 		rcBorderDraw.bottom = rcBorderDraw.top;
-		if (bDrawRound)
-		{
-			rcBorderDraw.left += szBorderRound.cx;
-			rcBorderDraw.right -= szBorderRound.cx;
-		}
-
-		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.top, GetBorderStyle(), IsColorHSL());
+		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.top + 2, GetBorderStyle(), IsColorHSL());
 	}
 	if (rcBorder.right > 0)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
 		rcBorderDraw.left = rcBorderDraw.right - rcBorder.right;
 		rcBorderDraw.right = rcBorderDraw.left;
-		if (bDrawRound)
-		{
-			rcBorderDraw.top += szBorderRound.cy;
-			rcBorderDraw.bottom -= szBorderRound.cy;
-		}
-
 		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.right, GetBorderStyle(), IsColorHSL());
 	}
 	if (rcBorder.bottom > 0)
@@ -1975,12 +1962,6 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 		CDUIRect rcBorderDraw = m_rcAbsolute;
 		rcBorderDraw.top = rcBorderDraw.bottom - rcBorder.bottom;
 		rcBorderDraw.bottom = rcBorderDraw.top;
-		if (bDrawRound)
-		{
-			rcBorderDraw.left += szBorderRound.cx;
-			rcBorderDraw.right -= szBorderRound.cx;
-		}
-
 		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.bottom, GetBorderStyle(), IsColorHSL());
 	}
 

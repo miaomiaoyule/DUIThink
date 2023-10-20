@@ -531,7 +531,9 @@
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../bin" mkdir "../bin"
-copy $(Configuration)\$(TargetFileName) "../bin"</Command>
+copy $(Configuration)\$(TargetFileName) "../bin"
+if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigner\bin"
+if exist "../../DTDesigner\bin" copy "../bin\DUIThinkD.dll" "../../DTDesigner\bin"</Command>
     </PostBuildEvent>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
