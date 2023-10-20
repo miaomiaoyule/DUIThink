@@ -16,10 +16,8 @@ CDUIRenderClip::~CDUIRenderClip()
 	return;
 }
 
-void CDUIRenderClip::GenerateClip(HDC hDC, RECT rc, CDUIRenderClip &clip, bool bBorderRound)
+void CDUIRenderClip::GenerateClip(HDC hDC, RECT rc, CDUIRenderClip &clip)
 {
-	if (bBorderRound) return;
-
 	RECT rcClip = {};
 	::GetClipBox(hDC, &rcClip);
 	clip.hOldRgn = ::CreateRectRgnIndirect(&rcClip);

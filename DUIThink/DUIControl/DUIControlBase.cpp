@@ -1122,7 +1122,7 @@ bool CDUIControlBase::OnDraw(HDC hDC, const RECT &rcPaint, bool bGenerateBmp)
 
 	CDUISize szBorderRound = GetBorderRound();
 	CDUIRenderClip Clip;
-	CDUIRenderClip::GenerateClip(hDC, m_rcPaint, Clip, szBorderRound.cx > 0 && szBorderRound.cy > 0);
+	CDUIRenderClip::GenerateClip(hDC, m_rcPaint, Clip);
 
 	DoPaint(hDC, bGenerateBmp);
 

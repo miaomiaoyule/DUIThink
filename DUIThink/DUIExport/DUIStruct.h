@@ -1,5 +1,5 @@
-#ifndef __DUISTRUCT_H__
-#define __DUISTRUCT_H__
+#ifndef __DUITHINKSTRUCT_H__
+#define __DUITHINKSTRUCT_H__
 
 #pragma once
 #pragma pack(1)

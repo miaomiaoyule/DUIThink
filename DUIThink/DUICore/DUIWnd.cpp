@@ -4,12 +4,12 @@
 DuiBaseBegin_Message_Map(CDUINotifyPump)
 DuiEnd_Message_Map()
 
-static const DUI_MSGMAP_ENTRY * DuiFindMessageEntry(const DUI_MSGMAP_ENTRY *lpEntry, const DuiNotify &Notify)
+static const Dui_MsgMapEntry * DuiFindMessageEntry(const Dui_MsgMapEntry *lpEntry, const DuiNotify &Notify)
 {
 	if (NULL == Notify.pNotifyCtrl) return NULL;
 
 	UINT uCtrlID = Notify.pNotifyCtrl->GetCtrlID();
-	const DUI_MSGMAP_ENTRY *pNotifyEntry = NULL;
+	const Dui_MsgMapEntry *pNotifyEntry = NULL;
 	while (lpEntry->nSig != DuiSig_end)
 	{
 		if (lpEntry->Notify == Notify.NotifyType)
@@ -32,8 +32,8 @@ static const DUI_MSGMAP_ENTRY * DuiFindMessageEntry(const DUI_MSGMAP_ENTRY *lpEn
 
 void CDUINotifyPump::OnNotify(const DuiNotify &Notify)
 {
-	const DUI_MSGMAP_ENTRY *lpEntry = NULL;
-	const DUI_MSGMAP *pMessageMap = NULL;
+	const Dui_MsgMapEntry *lpEntry = NULL;
+	const Dui_MsgMap *pMessageMap = NULL;
 
 #ifndef DUI_LIB
 	for (pMessageMap = GetDUIMessageMap(); pMessageMap != NULL; pMessageMap = (*pMessageMap->pfnGetBaseMap)())
