@@ -5,38 +5,6 @@
 #pragma pack(1)
 
 /////////////////////////////////////////////////////////////////////////////////////
-struct TITEM
-{
-	CMMString							Key;
-	void *								Data;
-	struct TITEM *						pPrev;
-	struct TITEM *						pNext;
-};
-
-class DUITHINK_API CStdStringPtrMap
-{
-public:
-	CStdStringPtrMap(int nSize = 83);
-	~CStdStringPtrMap();
-
-	void Resize(int nSize = 83);
-	void * Find(LPCTSTR key, bool optimize = true) const;
-	bool Insert(LPCTSTR key, void* pData);
-	void * Set(LPCTSTR key, void* pData);
-	bool Remove(LPCTSTR key);
-	void RemoveAll();
-	int GetSize() const;
-	std::vector<CMMString> ExtractKey();
-	LPCTSTR GetAt(int nIndex) const;
-	LPCTSTR operator[] (int nIndex) const;
-
-protected:
-	TITEM **							m_aT;
-	int									m_nBuckets;
-	int									m_nCount;
-};
-
-/////////////////////////////////////////////////////////////////////////////////////
 class DUITHINK_API CDUIRenderHelp
 {
 public:

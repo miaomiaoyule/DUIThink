@@ -134,7 +134,7 @@ private:
 	UINT								m_uMaxResourceIndex = 0;
 
 	//zipres
-	HZIP								m_hResourceZip = NULL;
+	HZIPDT								m_hResourceZip = NULL;
 	std::vector<BYTE>					m_vecZipData;
 
 	//hsl
@@ -221,7 +221,7 @@ public:
 	HINSTANCE GetInstanceHandle() override;
 	CMMString GetInstancePath() override;
 	HINSTANCE GetResourceDll() override;
-	HZIP GetResourceZipHandle() override;
+	HZIPDT GetResourceZipHandle() override;
 	enDuiFileResType GetDuiFileResType() override;
 	
 	//hsl
@@ -355,7 +355,9 @@ public:
 
 	//static help
 public:
+#ifdef DUITHINKWKE
 	static jsValue JS_CALL JsToNative(jsExecState es);
+#endif
 	static void RegisterWndNotify(IDUIWndNotify *pIDuiWndNotify);
 	static void UnRegisterWndNotify(IDUIWndNotify *pIDuiWndNotify);
 	static int IsEmoji(TCHAR ch);

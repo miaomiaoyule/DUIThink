@@ -6,7 +6,7 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hDCMonitor, LPRECT lprcMoni
 {
 	if (NULL == hMonitor) return false;
 
-	tagFindMonitor &FindMonitor = *(tagFindMonitor*)dwData;
+	tagMMFindMonitor &FindMonitor = *(tagMMFindMonitor*)dwData;
 
 	MONITORINFOEX MonitorInfo = {};
 	MonitorInfo.cbSize = sizeof(MONITORINFOEX);
@@ -307,7 +307,7 @@ int CMMDisplayer::GetTaskbarDockType(HMONITOR hMonitor)
 	return ABE_BOTTOM;
 }
 
-bool CMMDisplayer::GetComputerMonitor(tagFindMonitor &ComputerMonitor)
+bool CMMDisplayer::GetComputerMonitor(tagMMFindMonitor &ComputerMonitor)
 {
 	::EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, (LPARAM)&ComputerMonitor);
 	if (NULL == ComputerMonitor.hMonitorFarLeft
@@ -338,7 +338,7 @@ MONITORINFOEX CMMDisplayer::GetMonitorFromPoint(const POINT &pt)
 
 MONITORINFOEX CMMDisplayer::GetPrimaryMonitor()
 {
-	tagFindMonitor FindMonitor = {};
+	tagMMFindMonitor FindMonitor = {};
 	::EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, (LPARAM)&FindMonitor);
 
 	return FindMonitor.MonitorInfoPrimary;
@@ -351,7 +351,7 @@ bool CMMDisplayer::MonitorRelToMonitorAbs(IN CMMRectF rcRelOfMonitor,
 	IN OUT CMMRectF &rcAbsOfMonitor,
 	IN OUT CMMRectF &rcMonitorLast)
 {
-	tagFindMonitor FindMonitor = {};
+	tagMMFindMonitor FindMonitor = {};
 	FindMonitor.strName = strMonitorName;
 	::EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, (LPARAM)&FindMonitor);
 
@@ -436,7 +436,7 @@ bool CMMDisplayer::MonitorAbsToMonitorRel(IN CMMRectF rcAbsOfMonitor,
 	IN OUT CMMRectF &rcRelOfWork,
 	IN OUT CMMRectF &rcMonitorLast)
 {
-	tagFindMonitor FindMonitor = {};
+	tagMMFindMonitor FindMonitor = {};
 	::EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, (LPARAM)&FindMonitor);
 	if (NULL == FindMonitor.hMonitorFarLeft || NULL == FindMonitor.hMonitorFarTop) return false;
 
@@ -511,7 +511,7 @@ bool CMMDisplayer::MonitorAbsToMonitorRel(IN CMMRectF rcAbsOfMonitor,
 
 CMMRectF CMMDisplayer::MonitorAbsToScreenAbs(CMMRectF rcAbsolute)
 {
-	tagFindMonitor FindMonitor = {};
+	tagMMFindMonitor FindMonitor = {};
 	::EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, (LPARAM)&FindMonitor);
 	POINT ptLT = { rcAbsolute.left, rcAbsolute.top };
 	POINT ptRB = { rcAbsolute.right, rcAbsolute.bottom };
@@ -544,7 +544,7 @@ CMMRectF CMMDisplayer::MonitorAbsToScreenAbs(CMMRectF rcAbsolute)
 
 CMMRectF CMMDisplayer::ScreenAbsToMonitorAbs(CMMRectF rcAbsolute)
 {
-	tagFindMonitor FindMonitor = {};
+	tagMMFindMonitor FindMonitor = {};
 	::EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, (LPARAM)&FindMonitor);
 	if (NULL == FindMonitor.hMonitorFarLeft || NULL == FindMonitor.hMonitorFarTop) return rcAbsolute;
 
@@ -562,7 +562,7 @@ CMMRectF CMMDisplayer::ScreenAbsToMonitorAbs(CMMRectF rcAbsolute)
 
 void CMMDisplayer::GetScreenInfo(OUT CMMRectF &rcScreenWork, OUT CMMRectF &rcScreenDisplay, OUT CMMRectF &rcPrimary, std::vector<MONITORINFOEX> &vecMonitor)
 {
-	tagFindMonitor FindMonitor = {};
+	tagMMFindMonitor FindMonitor = {};
 	::EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, (LPARAM)&FindMonitor);
 	if (NULL == FindMonitor.hMonitorFarLeft 
 		|| NULL == FindMonitor.hMonitorFarTop

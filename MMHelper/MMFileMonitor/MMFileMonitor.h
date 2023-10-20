@@ -16,7 +16,7 @@ protected:
 	std::recursive_mutex				m_MonitorLock;
 	UINT								m_uMsgRegister = 0;
 	VecMonitorTask						m_vecMonitorTask;
-	VecMonitorFile						m_vecMonitorFile;
+	VecMMMonitorFile					m_vecMonitorFile;
 
 public:
 	static CMMFileMonitor * GetInstance();

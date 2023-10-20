@@ -10,7 +10,8 @@ CMMRegMonitor::CMMRegMonitor(HKEY hKeyMain, CMMString strKeySub)
 	auto lRes = RegOpenKeyEx(m_hKeyMain, m_strKeySub, 0, KEY_NOTIFY, &m_hKeyMonitor);
 	if (ERROR_SUCCESS != lRes || NULL == m_hKeyMonitor)
 	{
-		ERRORLOG("MonitorReg Error {}-{}-Res:{}", (int)m_hKeyMain, (LPCSTR)CT2CA(m_strKeySub), lRes);
+		assert(false);
+		//ERRORLOG("MonitorReg Error {}-{}-Res:{}", (int)m_hKeyMain, (LPCSTR)CT2CA(m_strKeySub), lRes);
 	}
 
 	return;

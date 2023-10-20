@@ -178,7 +178,7 @@ LRESULT CMMFileMonitor::OnWMShellChange(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		std::lock_guard<std::recursive_mutex> Lock(m_MonitorLock);
 
-		auto FindIt = find_if(m_vecMonitorFile.begin(), m_vecMonitorFile.end(), [&](tagMonitorFile &MonitorFile)
+		auto FindIt = find_if(m_vecMonitorFile.begin(), m_vecMonitorFile.end(), [&](tagMMMonitorFile &MonitorFile)
 		{
 			return MonitorFile.uMsg == uMsg;
 		});
@@ -204,7 +204,7 @@ LRESULT CMMFileMonitor::OnWMShellChange(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				std::lock_guard<std::recursive_mutex> Lock(m_MonitorLock);
 
-				auto FindIt = find_if(m_vecMonitorFile.begin(), m_vecMonitorFile.end(), [&](tagMonitorFile &MonitorFile)
+				auto FindIt = find_if(m_vecMonitorFile.begin(), m_vecMonitorFile.end(), [&](tagMMMonitorFile &MonitorFile)
 				{
 					return MonitorFile.uMsg == uMsg;
 				});
@@ -265,7 +265,7 @@ void CMMFileMonitor::MonitorRegister(std::shared_ptr<tagMonitorTask> pRecvData)
 	{
 		std::lock_guard<std::recursive_mutex> Lock(m_MonitorLock);
 
-		m_vecMonitorFile.push_back(tagMonitorFile());
+		m_vecMonitorFile.push_back(tagMMMonitorFile());
 		m_vecMonitorFile.back().pPCIDL = pRecvData->pPCIDL;
 		m_vecMonitorFile.back().uHanlde = lRet;
 		m_vecMonitorFile.back().uMsg = m_uMsgRegister;
@@ -285,7 +285,7 @@ void CMMFileMonitor::MonitorUnRegister(std::shared_ptr<tagMonitorTask> pRecvData
 	//pcid
 	if (pRecvData->pPCIDL)
 	{
-		auto FindIt = std::find_if(m_vecMonitorFile.begin(), m_vecMonitorFile.end(), [&](tagMonitorFile &MonitorFile)
+		auto FindIt = std::find_if(m_vecMonitorFile.begin(), m_vecMonitorFile.end(), [&](tagMMMonitorFile &MonitorFile)
 		{
 			return (MonitorFile.pPCIDL == pRecvData->pPCIDL || ::ILIsEqual(MonitorFile.pPCIDL, pRecvData->pPCIDL))
 				&& MonitorFile.bRecursive == pRecvData->bRecursive;

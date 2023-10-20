@@ -2,14 +2,14 @@
 #include "MMDpi.h"
 
 //////////////////////////////////////////////////////////////////////////
-typedef HRESULT(WINAPI *LPSetProcessDpiAwareness)(_In_ enPROCESS_DPI_AWARENESS value);
-typedef HRESULT(WINAPI *LPGetProcessDpiAwareness)(_In_  HANDLE hprocess, _Out_ enPROCESS_DPI_AWARENESS *value);
-typedef HRESULT(WINAPI *LPGetDpiForMonitor)(_In_ HMONITOR hmonitor, _In_ enMONITOR_DPI_TYPE dpiType, _Out_ UINT *dpiX, _Out_ UINT *dpiY);
+typedef HRESULT(WINAPI *LPSetProcessDpiAwareness)(_In_ enMMPROCESS_DPI_AWARENESS value);
+typedef HRESULT(WINAPI *LPGetProcessDpiAwareness)(_In_  HANDLE hprocess, _Out_ enMMPROCESS_DPI_AWARENESS *value);
+typedef HRESULT(WINAPI *LPGetDpiForMonitor)(_In_ HMONITOR hmonitor, _In_ enMMMONITOR_DPI_TYPE dpiType, _Out_ UINT *dpiX, _Out_ UINT *dpiY);
 
 //////////////////////////////////////////////////////////////////////////
 int CMMDpi::m_nScaleFactor = 0;
 int CMMDpi::m_nScaleFactorSDA = 0;
-enPROCESS_DPI_AWARENESS CMMDpi::m_ProcessDPIAwareness = PROCESS_PER_MONITOR_DPI_AWARE;
+enMMPROCESS_DPI_AWARENESS CMMDpi::m_ProcessDPIAwareness = MMPROCESS_PER_MONITOR_DPI_AWARE;
 
 CMMDpi::CMMDpi()
 {
@@ -36,7 +36,7 @@ int CMMDpi::GetDpiOfMonitor(HMONITOR hMonitor)
 		LPGetDpiForMonitor GetDpiForMonitor = (LPGetDpiForMonitor)GetProcAddress(hModule, "GetDpiForMonitor");
 		if (GetDpiForMonitor)
 		{
-			hr = GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpix, &dpiy);
+			hr = GetDpiForMonitor(hMonitor, MMMDT_EFFECTIVE_DPI, &dpix, &dpiy);
 
 			if (S_OK != hr)
 			{
@@ -67,7 +67,7 @@ int CMMDpi::GetDpiOfMonitorNearestToPoint(POINT pt)
 	return GetDpiOfMonitor(hMonitor);
 }
 
-enPROCESS_DPI_AWARENESS CMMDpi::GetProcessDPIAwareness()
+enMMPROCESS_DPI_AWARENESS CMMDpi::GetProcessDPIAwareness()
 {
 	HMODULE hModule = ::LoadLibrary(_T("Shcore.dll"));
 	if (hModule)
@@ -88,7 +88,7 @@ enPROCESS_DPI_AWARENESS CMMDpi::GetProcessDPIAwareness()
 	return m_ProcessDPIAwareness;
 }
 
-bool CMMDpi::SetProcessDPIAwareness(enPROCESS_DPI_AWARENESS Awareness)
+bool CMMDpi::SetProcessDPIAwareness(enMMPROCESS_DPI_AWARENESS Awareness)
 {
 	HMODULE hModule = ::LoadLibrary(_T("Shcore.dll"));
 	if (hModule)
@@ -109,11 +109,11 @@ bool CMMDpi::SetProcessDPIAwareness(enPROCESS_DPI_AWARENESS Awareness)
 
 int CMMDpi::GetScale() const
 {
-	if (PROCESS_DPI_UNAWARE == m_ProcessDPIAwareness)
+	if (MMPROCESS_DPI_UNAWARE == m_ProcessDPIAwareness)
 	{
 		return 100;
 	}
-	if (PROCESS_SYSTEM_DPI_AWARE == m_ProcessDPIAwareness)
+	if (MMPROCESS_SYSTEM_DPI_AWARE == m_ProcessDPIAwareness)
 	{
 		return m_nScaleFactorSDA;
 	}
@@ -135,11 +135,11 @@ void CMMDpi::SetScale(int nScale)
 
 UINT CMMDpi::GetDpi() const
 {
-	if (PROCESS_DPI_UNAWARE == m_ProcessDPIAwareness)
+	if (MMPROCESS_DPI_UNAWARE == m_ProcessDPIAwareness)
 	{
 		return 96;
 	}
-	if (PROCESS_SYSTEM_DPI_AWARE == m_ProcessDPIAwareness)
+	if (MMPROCESS_SYSTEM_DPI_AWARE == m_ProcessDPIAwareness)
 	{
 		return MulDiv(m_nScaleFactorSDA, 96, 100);
 	}
@@ -161,11 +161,11 @@ void CMMDpi::SetDpi(int nDpi)
 
 int CMMDpi::Scale(int nValue) const
 {
-	if (PROCESS_DPI_UNAWARE == m_ProcessDPIAwareness)
+	if (MMPROCESS_DPI_UNAWARE == m_ProcessDPIAwareness)
 	{
 		return nValue;
 	}
-	if (PROCESS_SYSTEM_DPI_AWARE == m_ProcessDPIAwareness)
+	if (MMPROCESS_SYSTEM_DPI_AWARE == m_ProcessDPIAwareness)
 	{
 		return MulDiv(nValue, m_nScaleFactorSDA, 100);
 	}
@@ -206,11 +206,11 @@ RECT CMMDpi::Scale(RECT rcRect) const
 
 int CMMDpi::ScaleBack(int nValue) const
 {
-	if (PROCESS_DPI_UNAWARE == m_ProcessDPIAwareness)
+	if (MMPROCESS_DPI_UNAWARE == m_ProcessDPIAwareness)
 	{
 		return nValue;
 	}
-	if (PROCESS_SYSTEM_DPI_AWARE == m_ProcessDPIAwareness)
+	if (MMPROCESS_SYSTEM_DPI_AWARE == m_ProcessDPIAwareness)
 	{
 		return MulDiv(nValue, 100, m_nScaleFactorSDA);
 	}

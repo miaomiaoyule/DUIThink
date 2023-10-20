@@ -8,7 +8,7 @@
 #define RESOLUTION_VERT					(1040)
 
 //////////////////////////////////////////////////////////////////////////
-struct tagFindMonitor
+struct tagMMFindMonitor
 {
 	CMMString							strName;
 	HMONITOR							hMonitor = NULL;
@@ -148,7 +148,7 @@ public:
 	/*
 	* 遍历获取系统显示器
 	*/
-	bool GetComputerMonitor(tagFindMonitor &ComputerMonitor);
+	bool GetComputerMonitor(tagMMFindMonitor &ComputerMonitor);
 
 	/*
 	* 获取当前屏幕的个数

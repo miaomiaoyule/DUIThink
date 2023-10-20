@@ -84,7 +84,9 @@ extern CDUIMenuWnd *				g_pDuiMenuWndRoot;
 
 extern tagDuiCalendarCmd			g_DuiCalendarCmd;
 extern CDUICalendarWnd *			g_pDuiCalendarWnd;
+#ifdef DUITHINKWKE
 extern std::map<wkeWebView, CDUIWkeBrowserCtrl*> g_mapWkeBrowserCtrl;
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 //global ptr

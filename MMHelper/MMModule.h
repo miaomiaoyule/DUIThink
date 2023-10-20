@@ -81,7 +81,7 @@ bool MMHELPER_API InterfaceVersionCompare(DWORD dwQueryVer, DWORD dwInterfaceVer
 	((pObject==NULL)?NULL:((Interface *)pObject->QueryInterface(IID_##Interface,VER_##Interface)))
 
 //////////////////////////////////////////////////////////////////////////////////
-typedef VOID * (ModuleCreateProc)(REFGUID Gudi, DWORD dwInterfaceVer);
+typedef VOID * (MMModuleCreateProc)(REFGUID Gudi, DWORD dwInterfaceVer);
 template <typename IMMModelInterface> class CMMTempldateHelper
 {
 public:
@@ -147,7 +147,7 @@ bool CMMTempldateHelper<IMMModelInterface>::CreateInstance()
 			m_strDescribe.Format(_T("“%s”模块加载失败，转当前模块"), m_strModuleDllName);
 		}
 
-		ModuleCreateProc *CreateProc = (ModuleCreateProc*)GetProcAddress(m_hDllInstance, m_strCreateProc.c_str());
+		MMModuleCreateProc *CreateProc = (MMModuleCreateProc*)GetProcAddress(m_hDllInstance, m_strCreateProc.c_str());
 		if (NULL == CreateProc)
 		{
 			m_strDescribe.Format(_T("找不到组件创建函数“%s”"), (LPCTSTR)CA2CT(m_strCreateProc.c_str()));

@@ -4145,7 +4145,7 @@ typedef struct
 	TUnzip *unz;
 } TUnzipHandleData;
 
-HZIP OpenZipU(void *z, unsigned int len, DWORD flags, const LPCTSTR pPassword)
+HZIPDT OpenZipU(void *z, unsigned int len, DWORD flags, const LPCTSTR pPassword)
 {
 #ifdef _UNICODE
 	//载入密码读资源
@@ -4172,10 +4172,10 @@ HZIP OpenZipU(void *z, unsigned int len, DWORD flags, const LPCTSTR pPassword)
 	TUnzipHandleData *han = new TUnzipHandleData;
 	han->flag = 1;
 	han->unz = unz;
-	return (HZIP)han;
+	return (HZIPDT)han;
 }
 
-ZRESULT GetZipItemA(HZIP hz, int index, ZIPENTRYA *ze)
+ZRESULT GetZipItemA(HZIPDT hz, int index, ZIPENTRYA *ze)
 {
 	if (hz == 0)
 	{
@@ -4193,7 +4193,7 @@ ZRESULT GetZipItemA(HZIP hz, int index, ZIPENTRYA *ze)
 	return lasterrorU;
 }
 
-ZRESULT GetZipItemW(HZIP hz, int index, ZIPENTRYW *zew)
+ZRESULT GetZipItemW(HZIPDT hz, int index, ZIPENTRYW *zew)
 {
 	if (hz == 0)
 	{
@@ -4227,7 +4227,7 @@ ZRESULT GetZipItemW(HZIP hz, int index, ZIPENTRYW *zew)
 	return lasterrorU;
 }
 
-ZRESULT FindZipItemA(HZIP hz, const TCHAR *name, bool ic, int *index, ZIPENTRYA *ze)
+ZRESULT FindZipItemA(HZIPDT hz, const TCHAR *name, bool ic, int *index, ZIPENTRYA *ze)
 {
 	if (hz == 0)
 	{
@@ -4245,7 +4245,7 @@ ZRESULT FindZipItemA(HZIP hz, const TCHAR *name, bool ic, int *index, ZIPENTRYA 
 	return lasterrorU;
 }
 
-ZRESULT FindZipItemW(HZIP hz, const TCHAR *name, bool ic, int *index, ZIPENTRYW *zew)
+ZRESULT FindZipItemW(HZIPDT hz, const TCHAR *name, bool ic, int *index, ZIPENTRYW *zew)
 {
 	if (hz == 0)
 	{
@@ -4280,7 +4280,7 @@ ZRESULT FindZipItemW(HZIP hz, const TCHAR *name, bool ic, int *index, ZIPENTRYW 
 	return lasterrorU;
 }
 
-ZRESULT UnzipItem(HZIP hz, int index, void *dst, unsigned int len, DWORD flags)
+ZRESULT UnzipItem(HZIPDT hz, int index, void *dst, unsigned int len, DWORD flags)
 {
 	if (hz == 0)
 	{
@@ -4298,7 +4298,7 @@ ZRESULT UnzipItem(HZIP hz, int index, void *dst, unsigned int len, DWORD flags)
 	return lasterrorU;
 }
 
-ZRESULT CloseZipU(HZIP hz)
+ZRESULT CloseZipU(HZIPDT hz)
 {
 	if (hz == 0) { lasterrorU = ZR_ARGS; return ZR_ARGS; }
 	TUnzipHandleData *han = (TUnzipHandleData*)hz;
@@ -4310,7 +4310,7 @@ ZRESULT CloseZipU(HZIP hz)
 	return lasterrorU;
 }
 
-bool IsZipHandleU(HZIP hz)
+bool IsZipHandleU(HZIPDT hz)
 {
 	if (hz == 0) return true;
 	TUnzipHandleData *han = (TUnzipHandleData*)hz;

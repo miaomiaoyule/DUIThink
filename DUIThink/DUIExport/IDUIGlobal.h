@@ -69,7 +69,7 @@ public:
 	virtual HINSTANCE GetInstanceHandle() = NULL;
 	virtual CMMString GetInstancePath() = NULL;
 	virtual HINSTANCE GetResourceDll() = NULL;
-	virtual HZIP GetResourceZipHandle() = NULL;
+	virtual HZIPDT GetResourceZipHandle() = NULL;
 	virtual enDuiFileResType GetDuiFileResType() = NULL;
 
 	virtual void GetHSL(short* H, short* S, short* L) = NULL;

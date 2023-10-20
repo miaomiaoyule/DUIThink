@@ -205,7 +205,7 @@ void zfree(void *buf)
 }
 */
 
-DECLARE_HANDLE(HZIP);	// An HZIP identifies a zip file that has been opened
+DECLARE_HANDLE(HZIPDT);	// An HZIPDT identifies a zip file that has been opened
 
 typedef DWORD ZRESULT;
 // return codes from any of the zip functions. Listed later.
@@ -235,9 +235,9 @@ typedef struct
 } ZIPENTRYW;
 
 #ifdef _UNICODE
-typedef ZIPENTRYW ZIPENTRY;
+typedef ZIPENTRYW ZIPENTRYDT;
 #else
-typedef ZIPENTRYA ZIPENTRY;
+typedef ZIPENTRYA ZIPENTRYDT;
 #endif
 
 // These are the result codes:

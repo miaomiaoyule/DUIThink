@@ -4,19 +4,19 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
-enum enPROCESS_DPI_AWARENESS 
+enum enMMPROCESS_DPI_AWARENESS 
 {
-	PROCESS_DPI_UNAWARE = 0,
-	PROCESS_SYSTEM_DPI_AWARE = 1,
-	PROCESS_PER_MONITOR_DPI_AWARE = 2
+	MMPROCESS_DPI_UNAWARE = 0,
+	MMPROCESS_SYSTEM_DPI_AWARE = 1,
+	MMPROCESS_PER_MONITOR_DPI_AWARE = 2
 };
 
-enum enMONITOR_DPI_TYPE 
+enum enMMMONITOR_DPI_TYPE 
 {
-	MDT_EFFECTIVE_DPI = 0,
-	MDT_ANGULAR_DPI = 1,
-	MDT_RAW_DPI = 2,
-	MDT_DEFAULT = MDT_EFFECTIVE_DPI
+	MMMDT_EFFECTIVE_DPI = 0,
+	MMMDT_ANGULAR_DPI = 1,
+	MMMDT_RAW_DPI = 2,
+	MMMDT_DEFAULT = MMMDT_EFFECTIVE_DPI
 };
 
 class MMHELPER_API CMMDpi
@@ -28,15 +28,15 @@ public:
 private:
 	static int							m_nScaleFactor;
 	static int							m_nScaleFactorSDA;
-	static enPROCESS_DPI_AWARENESS		m_ProcessDPIAwareness;
+	static enMMPROCESS_DPI_AWARENESS		m_ProcessDPIAwareness;
 
 	//method
 public:
 	static int GetDpiOfMainMonitor();
 	static int GetDpiOfMonitor(HMONITOR hMonitor);
 	static int GetDpiOfMonitorNearestToPoint(POINT pt);
-	static enPROCESS_DPI_AWARENESS GetProcessDPIAwareness();
-	static bool SetProcessDPIAwareness(enPROCESS_DPI_AWARENESS Awareness);
+	static enMMPROCESS_DPI_AWARENESS GetProcessDPIAwareness();
+	static bool SetProcessDPIAwareness(enMMPROCESS_DPI_AWARENESS Awareness);
 
 	//method
 public:

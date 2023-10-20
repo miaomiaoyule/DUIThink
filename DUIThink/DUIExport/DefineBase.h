@@ -110,8 +110,8 @@ class CDUIComboxCtrl;
 ///////////////////////////////////////////////////////////////////////////////////////
 #define OpenZip OpenZipU
 #define CloseZip(hz) CloseZipU(hz)
-extern HZIP OpenZipU(void *z, unsigned int len, DWORD flags, const LPCTSTR pPassword);
-extern ZRESULT CloseZipU(HZIP hz);
+extern HZIPDT OpenZipU(void *z, unsigned int len, DWORD flags, const LPCTSTR pPassword);
+extern ZRESULT CloseZipU(HZIPDT hz);
 #ifdef _UNICODE
 #define GetZipItem GetZipItemW
 #define FindZipItem FindZipItemW
@@ -119,11 +119,11 @@ extern ZRESULT CloseZipU(HZIP hz);
 #define GetZipItem GetZipItemA
 #define FindZipItem FindZipItemA
 #endif
-extern ZRESULT GetZipItemA(HZIP hz, int index, ZIPENTRYA *ze);
-extern ZRESULT GetZipItemW(HZIP hz, int index, ZIPENTRYW *ze);
-extern ZRESULT FindZipItemA(HZIP hz, const TCHAR *name, bool ic, int *index, ZIPENTRYA *ze);
-extern ZRESULT FindZipItemW(HZIP hz, const TCHAR *name, bool ic, int *index, ZIPENTRYW *ze);
-extern ZRESULT UnzipItem(HZIP hz, int index, void *dst, unsigned int len, DWORD flags);
+extern ZRESULT GetZipItemA(HZIPDT hz, int index, ZIPENTRYA *ze);
+extern ZRESULT GetZipItemW(HZIPDT hz, int index, ZIPENTRYW *ze);
+extern ZRESULT FindZipItemA(HZIPDT hz, const TCHAR *name, bool ic, int *index, ZIPENTRYA *ze);
+extern ZRESULT FindZipItemW(HZIPDT hz, const TCHAR *name, bool ic, int *index, ZIPENTRYW *ze);
+extern ZRESULT UnzipItem(HZIPDT hz, int index, void *dst, unsigned int len, DWORD flags);
 
 /////////////////////////////////////////////////////////////////////////////////////
 //register create control

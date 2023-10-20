@@ -590,7 +590,7 @@ HINSTANCE CDUIGlobal::GetResourceDll()
 	return m_hInstanceResource ? m_hInstanceResource : m_hInstance;
 }
 
-HZIP CDUIGlobal::GetResourceZipHandle()
+HZIPDT CDUIGlobal::GetResourceZipHandle()
 {
 	return m_hResourceZip;
 }
@@ -1125,10 +1125,10 @@ bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
 	if (DuiFileResType_Zip == GetDuiFileResType()
 		|| DuiFileResType_ResZip == GetDuiFileResType())
 	{
-		HZIP hz = (HZIP)GetResourceZipHandle();
+		HZIPDT hz = (HZIPDT)GetResourceZipHandle();
 		if (NULL == hz) return false;
 
-		ZIPENTRY ze = {};
+		ZIPENTRYDT ze = {};
 		int i = 0;
 
 		strFile.Replace(_T("\\"), _T("/"));
@@ -3269,6 +3269,7 @@ bool CDUIGlobal::TranslateMessage(const LPMSG pMsg)
 	return false;
 }
 
+#ifdef DUITHINKWKE
 jsValue JS_CALL CDUIGlobal::JsToNative(jsExecState es)
 {
 #ifdef DUITHINKWKE
@@ -3327,6 +3328,7 @@ jsValue JS_CALL CDUIGlobal::JsToNative(jsExecState es)
 
 	return 0;
 }
+#endif
 
 void CDUIGlobal::RegisterWndNotify(IDUIWndNotify *pIDuiWndNotify)
 {

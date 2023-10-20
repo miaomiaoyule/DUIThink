@@ -76,7 +76,9 @@ using namespace std;
 //////////////////////////////////////////////////////////////////////////
 #include "../MMHelper/MMHelperHead.h"
 
+#ifdef DUITHINKWKE
 #include "../include/wke/wke.h"
+#endif
 #include "../include/tinyxml2/tinyxml2.h"
 #include "../include/tinyxml/tinyxml.h"
 #include <olectl.h>

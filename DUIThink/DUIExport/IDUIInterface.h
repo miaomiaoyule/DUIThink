@@ -61,6 +61,7 @@ interface IDUIControlCallBack
 typedef std::vector<IDUIControlCallBack*> VecIDUIControlCallBack;
 
 //////////////////////////////////////////////////////////////////////////
+#ifdef DUITHINKWKE
 interface IDUIWkeCallback
 {
 	virtual void OnWkeTitleChanged(CDUIWkeBrowserCtrl *pWebView, LPCTSTR title) {}
@@ -72,6 +73,7 @@ interface IDUIWkeCallback
 	virtual void OnWkeLoadingFinish(CDUIWkeBrowserCtrl *pWebView, const LPCTSTR url, wkeLoadingResult result, LPCTSTR failedReason) {}
 	virtual LPCTSTR OnJS2Native(CDUIWkeBrowserCtrl *pWebView, LPCTSTR lpMethod, LPCTSTR lpContent, void *pListenObj) { return NULL; }
 };
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 

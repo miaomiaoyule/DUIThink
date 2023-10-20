@@ -10,7 +10,7 @@ static const Dui_MsgMapEntry * DuiFindMessageEntry(const Dui_MsgMapEntry *lpEntr
 
 	UINT uCtrlID = Notify.pNotifyCtrl->GetCtrlID();
 	const Dui_MsgMapEntry *pNotifyEntry = NULL;
-	while (lpEntry->nSig != DuiSig_end)
+	while (lpEntry->nSig != DuiSign_end)
 	{
 		if (lpEntry->Notify == Notify.NotifyType)
 		{
@@ -60,13 +60,13 @@ Dispatch:
 	bool bRes = false;
 	switch (lpEntry->nSig)
 	{
-		case DuiSig_l_w_l:
+		case DuiSign_l_w_l:
 		{
 			(this->*mmf.pfn_Notify_l_w_l)(Notify.wParam, Notify.lParam);
 			bRes = true;
 			break;
 		}
-		case DuiSig_v_n:
+		case DuiSign_v_n:
 		{
 			(this->*mmf.pfn_Notify_v_n)(Notify);
 			bRes = true;

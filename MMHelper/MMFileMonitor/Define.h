@@ -21,7 +21,7 @@ struct tagMonitorTask
 	IMMFileMonitorAttemperSink *		pIAttemperSink = NULL;
 };
 
-struct tagMonitorFile
+struct tagMMMonitorFile
 {
 	PCIDLIST_ABSOLUTE					pPCIDL = NULL;
 	UINT								uHanlde = NULL;
@@ -31,7 +31,7 @@ struct tagMonitorFile
 };
 
 typedef std::vector<std::shared_ptr<tagMonitorTask>> VecMonitorTask;
-typedef std::vector<tagMonitorFile> VecMonitorFile;
+typedef std::vector<tagMMMonitorFile> VecMMMonitorFile;
 
 //////////////////////////////////////////////////////////////////////////
 //outer

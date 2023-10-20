@@ -95,9 +95,9 @@ enum enDuiNotifyType
 //notify sig
 enum DuiSig
 {
-	DuiSig_end = 0,										//[marks end of message map]
-	DuiSig_l_w_l,										//LRESULT (WPARAM, LPARAM)
-	DuiSig_v_n,											//void (DuiNotify)
+	DuiSign_end = 0,									//[marks end of message map]
+	DuiSign_l_w_l,										//LRESULT (WPARAM, LPARAM)
+	DuiSign_v_n,										//void (DuiNotify)
 };
 
 //message struct
@@ -229,27 +229,27 @@ protected:                                                                \
 {                                                                     \
 
 #define DuiEnd_Message_Map()                                             \
-{ DuiNotify_Invalid, 0, DuiSig_end, (Dui_PMsg)0 }                           \
+{ DuiNotify_Invalid, 0, DuiSign_end, (Dui_PMsg)0 }                           \
 };   
                                                                
 //////////////////////////////////////////////////////////////////////////
 #define Dui_On_Notify(NotifyCode, memberFxn)                                \
-{ NotifyCode, 0, DuiSig_v_n, (Dui_PMsg)&memberFxn},                  \
+{ NotifyCode, 0, DuiSign_v_n, (Dui_PMsg)&memberFxn},                  \
 
 #define Dui_On_Notify_Ctrl(NotifyCode, CtrlID, memberFxn)                 \
-{ NotifyCode, CtrlID, DuiSig_v_n, (Dui_PMsg)&memberFxn },                \
+{ NotifyCode, CtrlID, DuiSign_v_n, (Dui_PMsg)&memberFxn },                \
 
 #define Dui_On_Click_Ctrl(CtrlID, memberFxn)                           \
-{ DuiNotify_Click, CtrlID, DuiSig_v_n, (Dui_PMsg)&memberFxn },      \
+{ DuiNotify_Click, CtrlID, DuiSign_v_n, (Dui_PMsg)&memberFxn },      \
 
 #define Dui_On_SelectChanged_Ctrl(CtrlID, memberFxn)                   \
-{ DuiNotify_SelectChanged, CtrlID, DuiSig_v_n,(Dui_PMsg)&memberFxn }, \
+{ DuiNotify_SelectChanged, CtrlID, DuiSign_v_n,(Dui_PMsg)&memberFxn }, \
 
 #define Dui_On_KillFocus_Ctrl(CtrlID, memberFxn)                       \
-{ DuiNotify_KillFocus, CtrlID, DuiSig_v_n, (Dui_PMsg)&memberFxn },     \
+{ DuiNotify_KillFocus, CtrlID, DuiSign_v_n, (Dui_PMsg)&memberFxn },     \
 
 #define Dui_On_Timer()                                                    \
-{ DuiNotify_Timer, 0, DuiSig_v_n, (Dui_PMsg)&OnDuiTimer },          \
+{ DuiNotify_Timer, 0, DuiSign_v_n, (Dui_PMsg)&OnDuiTimer },          \
 
 //////////////////////////////////////////////////////////////////////////
 
