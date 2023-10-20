@@ -758,7 +758,7 @@ bool CDUIAnimationDrag::IsDragingCtrl(CDUIControlBase *pControl)
 {
 	if (NULL == pControl) return false;
 
-	if (find_if(m_vecDragCtrl.begin(), m_vecDragCtrl.end(), [&](tagDragCtrl &DragCtrl)
+	if (find_if(m_vecDragCtrl.begin(), m_vecDragCtrl.end(), [&](tagDuiDragCtrl &DragCtrl)
 	{
 		return DragCtrl.pControl == pControl;
 	}) != m_vecDragCtrl.end()) return true;

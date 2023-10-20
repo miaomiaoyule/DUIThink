@@ -94,7 +94,7 @@ struct tagDragMove
 	SIZE								szOffsetMove = {};
 };
 
-struct tagDragCtrl
+struct tagDuiDragCtrl
 {
 	CDUIControlBase *					pControl = NULL;
 	int									nIndex = -1;
@@ -118,7 +118,7 @@ protected:
 	CDUIContainerCtrl *					m_pBindContainerCtrl = NULL;
 	enDuiAnimateDragType				m_DragType = DragType_H;
 	CDUIControlBase *					m_pDragingCtrl = NULL;
-	vector<tagDragCtrl>					m_vecDragCtrl;
+	vector<tagDuiDragCtrl>				m_vecDragCtrl;
 	vector<CDUIRect>					m_vecDragPre;
 	vector<tagDragMove>					m_vecPosDest;
 	POINT								m_ptMouseLast = {};
