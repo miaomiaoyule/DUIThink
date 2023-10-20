@@ -40,7 +40,7 @@ public:
 	virtual bool DrawRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nXRound, int nYRound, bool bHSLAdjust = false);
 	virtual bool DrawLine(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nStyle = PS_SOLID, bool bHSLAdjust = false);
 	virtual bool FillRect(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust = false);
-	virtual bool FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nXRound, int nYRound, bool bHSLAdjust = false);
+	virtual bool FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nXRound, int nYRound, bool bHSLAdjust = false);
 
 	//color
 	virtual bool IsEmpty();

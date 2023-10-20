@@ -126,7 +126,7 @@ bool CDUIAttributeColorSwitch::FillRect(HDC hDC, const CDUIRect &rcPaint, bool b
 	return true;
 }
 
-bool CDUIAttributeColorSwitch::FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nXRound, int nYRound, bool bHSLAdjust)
+bool CDUIAttributeColorSwitch::FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nXRound, int nYRound, bool bHSLAdjust)
 {
 	DWORD dwColor = GetColorValue();
 	if (0 == dwColor) return false;
@@ -138,7 +138,7 @@ bool CDUIAttributeColorSwitch::FillRoundRect(HDC hDC, const CDUIRect &rcPaint, i
 		dwColor = CDUIRenderEngine::AdjustColor(dwColor, H, S, L);
 	}
 
-	CDUIRenderEngine::FillRoundRect(hDC, rcPaint, nXRound, nYRound, dwColor);
+	CDUIRenderEngine::FillRoundRect(hDC, rcPaint, nXRound, nYRound, nBorderSize, dwColor);
 
 	return true;
 }

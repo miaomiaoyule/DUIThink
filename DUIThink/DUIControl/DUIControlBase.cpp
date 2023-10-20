@@ -1798,7 +1798,12 @@ void CDUIControlBase::PaintBkColor(HDC hDC)
 	CDUISize szBorderRound = GetBorderRound();
 	if (szBorderRound.cx > 0 && szBorderRound.cy > 0)
 	{
-		m_AttributeColorBk.FillRoundRect(hDC, m_rcAbsolute, szBorderRound.cx, szBorderRound.cy, IsColorHSL());
+		CDUIRect rcBorder = GetBorderRect();
+		int nSize = max(rcBorder.left, rcBorder.top);
+		nSize = max(nSize, rcBorder.right);
+		nSize = max(nSize, rcBorder.bottom);
+
+		m_AttributeColorBk.FillRoundRect(hDC, m_rcAbsolute, nSize, szBorderRound.cx, szBorderRound.cy, IsColorHSL());
 	
 		return;
 	}
