@@ -72,6 +72,9 @@ void CDUIFontBase::SetFontName(LPCTSTR lpszName)
 //×ÖºÅ´óÐ¡
 int CDUIFontBase::GetSize()
 {
+	//pre gethandle m_nScale is 0
+	GetHandle();
+
 	return MulDiv(m_nSize, m_nScale, 100);
 }
 

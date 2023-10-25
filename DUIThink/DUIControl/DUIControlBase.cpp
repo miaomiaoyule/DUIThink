@@ -1729,6 +1729,7 @@ void CDUIControlBase::InitAttriValue()
 	DuiInitAttriValue(m_AttributeMaxWidth, 99999);
 	DuiInitAttriValue(m_AttributeMinHeight, 0);
 	DuiInitAttriValue(m_AttributeMaxHeight, 99999);
+	DuiInitAttriValue(m_AttributeDpiPadding, true);
 
 	DuiInitAttriValue(m_AttributeIsColorHSL, false);
 

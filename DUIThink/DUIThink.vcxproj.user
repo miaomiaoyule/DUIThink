@@ -33,7 +33,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
-    <LocalDebuggerCommand>../Demo/DUIThinkDemo_C++/Debug/DUIThinkDemo_C++.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>D:\小智桌面Git\XZWallPaperAlone\XZWallPaperAlone\Debug\XZWallpaper.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|x64'">
