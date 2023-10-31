@@ -32,7 +32,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	g_DuiGlobal.CreateInstance();
 	g_DuiGlobal->Init(hInstance);
 	g_DuiGlobal->LoadProjectFromFile(_T("../DUIThinkDemo.DuiProj/DUIThinkDemo.DuiProj"));
-	CMMDpi::SetProcessDPIAwareness(enPROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE);
+	CMMDpi::SetProcessDPIAwareness(enMMPROCESS_DPI_AWARENESS::MMPROCESS_PER_MONITOR_DPI_AWARE);
 
 	//cmd line
 	CMMCommandLine CmdLine(lpCmdLine);
