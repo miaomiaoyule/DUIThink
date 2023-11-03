@@ -25,9 +25,16 @@ bool CDUIStaticCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 
 		return true;
 	}
+	if (pAttributeObj == &m_AttributeText)
+	{
+		SetText(GetText());
+
+		NeedMeasureSize();
+
+		return true;
+	}
 	if (pAttributeObj == &m_AttributeAutoCalcWidth
 		|| pAttributeObj == &m_AttributeAutoCalcHeight
-		|| pAttributeObj == &m_AttributeText
 		|| pAttributeObj == &m_AttributeTextStyle
 		|| pAttributeObj == &m_AttributeTextPadding)
 	{

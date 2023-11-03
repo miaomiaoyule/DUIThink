@@ -865,6 +865,22 @@ void CDUIControlBase::SetForeImageSection(const tagDuiImageSection &ImageSection
 	return;
 }
 
+SIZE CDUIControlBase::GetRoundSize()
+{
+	return m_AttributeRoundSize.GetValue();
+}
+
+void CDUIControlBase::SetRoundSize(SIZE cxyRound)
+{
+	if (cxyRound == GetRoundSize()) return;
+
+	m_AttributeRoundSize.SetValue(cxyRound);
+
+	Invalidate();
+
+	return;
+}
+
 Gdiplus::Bitmap * CDUIControlBase::GetCustomBmpBack() const
 {
 	return m_pBmpCustomBack;
@@ -950,22 +966,6 @@ void CDUIControlBase::SetBorderRect(RECT rcBorder)
 	if (rcBorder == GetBorderRect()) return;
 
 	m_AttributeBorderRect.SetValue(rcBorder);
-
-	Invalidate();
-
-	return;
-}
-
-SIZE CDUIControlBase::GetBorderRound()
-{
-	return m_AttributeBorderRoundSize.GetValue();
-}
-
-void CDUIControlBase::SetBorderRound(SIZE cxyRound)
-{
-	if (cxyRound == GetBorderRound()) return;
-
-	m_AttributeBorderRoundSize.SetValue(cxyRound);
 
 	Invalidate();
 
@@ -1120,7 +1120,7 @@ bool CDUIControlBase::OnDraw(HDC hDC, const RECT &rcPaint, bool bGenerateBmp)
 {
 	if (false == ::IntersectRect(&m_rcPaint, &rcPaint, &m_rcAbsolute)) return false;
 
-	CDUISize szBorderRound = GetBorderRound();
+	CDUISize szBorderRound = GetRoundSize();
 	CDUIRenderClip Clip;
 	CDUIRenderClip::GenerateClip(hDC, m_rcPaint, Clip);
 
@@ -1687,6 +1687,7 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeIsColorHSL, _T("IsColorHSL"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeImageBack, _T("ImageBack"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeImageFore, _T("ImageFore"), _T(""), m_AttributeGroupBk);
+	DuiCreateAttribute(m_AttributeRoundSize, _T("RoundSize"), _T(""), m_AttributeGroupBk);
 
 	//±ß¿òÏà¹Ø
 	DuiCreateGroupAttribute(m_AttributeGroupBorder, _T("Border"));
@@ -1694,7 +1695,6 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeColorBorder, _T("ColorBorder"), _T(""), m_AttributeGroupBorder);
 	DuiCreateAttribute(m_AttributeColorBorderFocus, _T("ColorFocusBorder"), _T(""), m_AttributeGroupBorder);
 	DuiCreateAttribute(m_AttributeBorderRect, _T("BorderRect"), _T(""), m_AttributeGroupBorder);
-	DuiCreateAttribute(m_AttributeBorderRoundSize, _T("BorderRoundSize"), _T(""), m_AttributeGroupBorder);
 
 	DuiCreateGroupAttribute(m_AttributeGroupMouse, _T("Mouse"));
 	DuiCreateAttribute(m_AttributeMouseThrough, _T("MouseThrough"), _T(""), m_AttributeGroupMouse);
@@ -1796,7 +1796,7 @@ void CDUIControlBase::InitComplete()
 
 void CDUIControlBase::PaintBkColor(HDC hDC)
 {
-	CDUISize szBorderRound = GetBorderRound();
+	CDUISize szBorderRound = GetRoundSize();
 	if (szBorderRound.cx > 0 && szBorderRound.cy > 0)
 	{
 		CDUIRect rcBorder = GetBorderRect();
@@ -1934,7 +1934,7 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	if (NULL == pAttribute) return;
 
 	CDUIRect rcBorder = GetBorderRect();
-	CDUISize szBorderRound = GetBorderRound();
+	CDUISize szBorderRound = GetRoundSize();
 	int nSize = max(rcBorder.left, rcBorder.top);
 	nSize = max(nSize, rcBorder.right);
 	nSize = max(nSize, rcBorder.bottom);
@@ -1948,13 +1948,13 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
 		rcBorderDraw.right = rcBorderDraw.left;
-		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.left + 2, GetBorderStyle(), IsColorHSL());
+		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.left, GetBorderStyle(), IsColorHSL());
 	}
 	if (rcBorder.top > 0)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
 		rcBorderDraw.bottom = rcBorderDraw.top;
-		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.top + 2, GetBorderStyle(), IsColorHSL());
+		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.top, GetBorderStyle(), IsColorHSL());
 	}
 	if (rcBorder.right > 0)
 	{

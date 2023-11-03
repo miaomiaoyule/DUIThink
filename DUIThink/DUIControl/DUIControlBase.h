@@ -64,6 +64,7 @@ protected:
 	CDUIAttributeBool					m_AttributeIsColorHSL;
 	CDUIAttriImageSection				m_AttributeImageBack;
 	CDUIAttriImageSection				m_AttributeImageFore;
+	CDUIAttributeSize					m_AttributeRoundSize;
 
 	//border
 	CDUIAttributeGroup					m_AttributeGroupBorder;
@@ -71,7 +72,6 @@ protected:
 	CDUIAttributeColorSwitch			m_AttributeColorBorderFocus;
 	CDUIAttributeRect					m_AttributeBorderRect;
 	CDUIAttributeCombox					m_AttributeBorderStyle;
-	CDUIAttributeSize					m_AttributeBorderRoundSize;
 
 	//mouse
 	CDUIAttributeGroup					m_AttributeGroupMouse;
@@ -240,6 +240,8 @@ public:
 	virtual void SetBkImage(std::vector<CMMString> vecImageRes);
 	virtual tagDuiImageSection GetForeImageSection();
 	virtual void SetForeImageSection(const tagDuiImageSection &ImageSection);
+	virtual SIZE GetRoundSize();
+	virtual void SetRoundSize(SIZE cxyRound);
 	virtual Gdiplus::Bitmap * GetCustomBmpBack() const;
 	virtual void SetCustomBmpBack(Gdiplus::Bitmap *pBmp, int nAlign = CustomBack_ScaleSuitable | CustomBack_Center | CustomBack_VCenter);
 	virtual void SetCustomBmpBack(HBITMAP hBimap, int nAlign = CustomBack_ScaleSuitable | CustomBack_Center | CustomBack_VCenter);
@@ -253,8 +255,6 @@ public:
 	virtual void SetFocusBorderColor(const vector<CMMString> &vecResSwitch);
 	virtual CDUIRect GetBorderRect();
 	virtual void SetBorderRect(RECT rcBorder);
-	virtual SIZE GetBorderRound();
-	virtual void SetBorderRound(SIZE cxyRound);
 
 	//tip
 	virtual CMMString GetToolTip();
