@@ -142,7 +142,7 @@ namespace std
 {
 	template<> struct hash<CMMString>
 	{
-		inline uint32_t operator()(const CMMString &str) const noexcept
+		inline uint32_t operator()(const CMMString &str) const
 		{
 			return CMMHash::GetHash(str);
 		}

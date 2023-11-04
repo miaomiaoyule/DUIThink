@@ -208,6 +208,9 @@ void CDUICalendarWnd::AdjustCalendar()
 }
 
 //////////////////////////////////////////////////////////////////////////
+LPCTSTR CDUICalendarCtrl::m_szWeekDayAttriName[Dui_Count_WeekDay] = { _T("Monday"), _T("Tuesday"), _T("Wednesday"), _T("Thursday"), _T("Friday"), _T("Saturday"), _T("Sunday"), };
+LPCTSTR CDUICalendarCtrl::m_szWeekDayInitText[Dui_Count_WeekDay] = { _T("星期一"), _T("星期二"), _T("星期三"), _T("星期四"), _T("星期五"), _T("星期六"), _T("星期天"), };
+
 DuiImplement_CreateControl(CDUICalendarCtrl)
 MMImplement_ClassName(CDUICalendarCtrl)
 

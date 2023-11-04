@@ -10,6 +10,15 @@ struct tagTimerNode
 	uint32_t							uElapse = 0;
 	FuncTimer							pCallBack = NULL;
 
+	tagTimerNode(void *pOwner, uint32_t uTimeID, uint32_t uTimeTarget, uint32_t uElapse, FuncTimer pCallBack)
+		: pOwner(pOwner)
+		, uTimeID(uTimeID)
+		, uTimeTarget(uTimeTarget)
+		, uElapse(uElapse)
+		, pCallBack(pCallBack)
+	{
+
+	}
 	bool operator < (const tagTimerNode &NodeComp) const
 	{
 		return uTimeTarget < NodeComp.uTimeTarget;

@@ -27,6 +27,13 @@ struct tagMMFindMonitor
 
 typedef struct tagSIZEF
 {
+	tagSIZEF(float cx, float cy)
+		: cx(cx)
+		, cy(cy)
+	{
+
+	}
+
 	float								cx = 0;
 	float								cy = 0;
 } SIZEF;

@@ -5,8 +5,8 @@ REM
 REM /////////////////////////////////////////////////////////////
 
 Set DEVINSTALL=
-for /F "tokens=1,2*" %%i in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VS7" /v "15.0"') DO (
-	if "%%i"=="15.0" (
+for /F "tokens=1,2*" %%i in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VS7" /v "12.0"') DO (
+	if "%%i"=="12.0" (
 		SET DEVINSTALL=%%k
 	)
 )

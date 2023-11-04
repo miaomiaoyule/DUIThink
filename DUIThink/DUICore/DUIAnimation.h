@@ -96,6 +96,13 @@ struct tagDragMove
 
 struct tagDuiDragCtrl
 {
+	tagDuiDragCtrl(CDUIControlBase *pControl, int nIndex)
+		: pControl(pControl)
+		, nIndex(nIndex)
+	{
+
+	}
+
 	CDUIControlBase *					pControl = NULL;
 	int									nIndex = -1;
 };

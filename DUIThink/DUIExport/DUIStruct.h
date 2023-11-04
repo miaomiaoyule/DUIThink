@@ -40,7 +40,7 @@ struct tagDuiTextStyle
 
 template<> struct hash<tagDuiTextStyle>
 {
-	inline uint32_t operator()(const tagDuiTextStyle &TextStyle) const noexcept
+	inline uint32_t operator()(const tagDuiTextStyle &TextStyle) const
 	{
 		CMMString strInfo;
 		for (auto &strFontRes : TextStyle.vecFontResSwitch)
@@ -153,7 +153,7 @@ struct tagDuiRichText
 
 template<> struct hash<tagDuiRichText>
 {
-	inline uint32_t operator()(const tagDuiRichText &RichText) const noexcept
+	inline uint32_t operator()(const tagDuiRichText &RichText) const
 	{
 		CMMString strInfo;
 		for (auto &RichTextItem : RichText.vecRichTextItem)
@@ -260,7 +260,7 @@ struct tagDuiImageSection
 
 template<> struct hash<tagDuiImageSection>
 {
-	inline uint32_t operator()(const tagDuiImageSection &ImageSection) const noexcept
+	inline uint32_t operator()(const tagDuiImageSection &ImageSection) const
 	{
 		CMMString strInfo;
 		for (auto &strImageRes : ImageSection.vecImageResSwitch)
@@ -300,6 +300,13 @@ inline uint32_t tagDuiImageSection::GetID() const
 //////////////////////////////////////////////////////////////////////////
 struct tagDuiComboxItem
 {
+	tagDuiComboxItem(int nItem = 0, CMMString strDescribe = _T(""))
+		: nItem(nItem)
+		, strDescribe(strDescribe)
+	{
+
+	}
+
 	int									nItem = 0;
 	CMMString							strDescribe;
 };
@@ -315,7 +322,7 @@ struct tagDuiCombox
 
 template<> struct hash<tagDuiCombox>
 {
-	inline uint32_t operator()(const tagDuiCombox &AttriCombox) const noexcept
+	inline uint32_t operator()(const tagDuiCombox &AttriCombox) const
 	{
 		CMMString strInfo;
 		for (auto &Item : AttriCombox.vecItem)
@@ -363,7 +370,7 @@ struct tagDuiPosition
 
 template<> struct hash<tagDuiPosition>
 {
-	inline uint32_t operator()(const tagDuiPosition &Position) const noexcept
+	inline uint32_t operator()(const tagDuiPosition &Position) const
 	{
 		CMMString strInfo;
 		strInfo += CMMStrHelp::Format(_T("%d"), Position.bFloat);

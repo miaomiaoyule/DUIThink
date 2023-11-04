@@ -432,7 +432,7 @@ CDUIImageBase * CDUIGlobal::GetImageResource(int nIndex)
 
 CDUIImageBase * CDUIGlobal::GetImageResourceByFile(const CMMString &strFileFull)
 {
-	auto FindRes = find_if(m_mapResourceImage.begin(), m_mapResourceImage.end(), [&](auto &ResourceImageItem)
+	auto FindRes = find_if(m_mapResourceImage.begin(), m_mapResourceImage.end(), [&](const std::pair<CMMString, CDUIImageBase*> &ResourceImageItem)
 	{
 		return 0 == ResourceImageItem.second->GetImageFileFull().CompareNoCase(strFileFull);
 	});
@@ -3060,7 +3060,7 @@ void CDUIGlobal::RenameWndManager(const CMMString &strNameOld, const CMMString &
 {
 	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-	auto FindIt = find_if(m_mapWndManager.begin(), m_mapWndManager.end(), [&](auto &WndManager)
+	auto FindIt = find_if(m_mapWndManager.begin(), m_mapWndManager.end(), [&](const std::pair<CDUIWndManager*, tagDuiFile> &WndManager)
 	{
 		return WndManager.second.strName == strNameOld;
 	});

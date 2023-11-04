@@ -41,6 +41,26 @@
 	#endif
 #endif
 
+// P0607R0 Inline Variables For The STL
+#if _HAS_CXX17
+#define _INLINE_VAR	inline
+#else /* _HAS_CXX17 */
+#define _INLINE_VAR
+#endif /* _HAS_CXX17 */
+
+// [[nodiscard]] attributes on STL functions
+#ifndef _HAS_NODISCARD
+#define _HAS_NODISCARD	_HAS_CXX17
+#endif /* _HAS_NODISCARD */
+
+#if _HAS_NODISCARD
+#define _NODISCARD [[nodiscard]]
+#define _NODISCARD_PERF
+#else /* ^^^ CAN HAZ [[nodiscard]] ^^^ // vvv NO CAN HAZ [[nodiscard]] vvv */
+#define _NODISCARD
+#define _NODISCARD_PERF
+#endif /* _HAS_NODISCARD */
+
 //////////////////////////////////////////////////////////////////////////////////
 //°üº¬ÎÄ¼þ
 #include <stdio.h>

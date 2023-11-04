@@ -134,24 +134,24 @@ typedef struct tagDuiNotify
 	union tagDuiNotifyExtend
 	{
 		enDuiNotifyExtendType			Type = DuiNotifyExtend_None;
-		struct tagDuiNotifyCombox
+		struct
 		{
-			CDUIComboxCtrl *			pComboxCtrl = NULL;
-			int							nIndexItem = -1;
+			CDUIComboxCtrl *			pComboxCtrl;
+			int							nIndexItem;
 		}Combox;
 		struct tagDuiNotifyListView
 		{
-			int							nIndexItem = -1;
+			int							nIndexItem;
 		}ListView;
 		struct tagDuiNotifyTreeView
 		{
-			CDUITreeNodeCtrl *			pTreeNode = NULL;
-			CDUITreeNodeCtrl *			pRootNode = NULL;
-			CDUITreeViewCtrl *			pRootView = NULL;
+			CDUITreeNodeCtrl *			pTreeNode;
+			CDUITreeNodeCtrl *			pRootNode;
+			CDUITreeViewCtrl *			pRootView;
 		}TreeView;
 		struct tagDuiNotifyWndAnimate
 		{
-			bool						bShow = false;
+			bool						bShow;
 		}WndAnimate;
 	}DUINotifyExtend = {};
 }DuiNotify;

@@ -54,7 +54,7 @@ protected:
 	CDUIAttributeTextStyle				m_AttributeTextStyleCurMonthDay;
 	CDUIAttributeTextStyle				m_AttributeTextStyleHotMonthDay;
 	CDUIAttributeTextStyle				m_AttributeTextStyleToday;
-	CDUIAttributeText					m_AttributeTextWeekDay[Dui_Count_WeekDay] = {};
+	CDUIAttributeText					m_AttributeTextWeekDay[Dui_Count_WeekDay];
 
 	//variant
 protected:
@@ -72,10 +72,10 @@ protected:
 	CDUIListViewCtrl *					m_pListDayCtrl1 = NULL;
 	CDUIListViewCtrl *					m_pListDayCtrl2 = NULL;
 
-	TCHAR								m_szWeekDayAttriName[Dui_Count_WeekDay][32] = { _T("Monday"),_T("Tuesday"), _T("Wednesday"), _T("Thursday"), _T("Friday"), _T("Saturday"), _T("Sunday"), };
-	TCHAR								m_szWeekDayInitText[Dui_Count_WeekDay][32] = { _T("星期一"),_T("星期二"), _T("星期三"), _T("星期四"), _T("星期五"), _T("星期六"), _T("星期天"), };
-
 	tagDuiCalendarCmd					m_CalendarCmd;
+
+	static LPCTSTR						m_szWeekDayAttriName[Dui_Count_WeekDay];
+	static LPCTSTR						m_szWeekDayInitText[Dui_Count_WeekDay];
 
 	//override
 protected:

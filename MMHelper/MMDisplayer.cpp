@@ -580,7 +580,7 @@ void CMMDisplayer::GetScreenInfo(OUT CMMRectF &rcScreenWork, OUT CMMRectF &rcScr
 	rcScreenDisplay.right = FindMonitor.MonitorInfoFarRight.rcMonitor.right;
 	rcScreenDisplay.bottom = FindMonitor.MonitorInfoFarBottom.rcMonitor.bottom;
 
-	rcPrimary = FindMonitor.MonitorInfoPrimary.rcMonitor;
+	rcPrimary = CMMRectF(FindMonitor.MonitorInfoPrimary.rcMonitor);
 
 	vecMonitor = FindMonitor.vecMonitor;
 

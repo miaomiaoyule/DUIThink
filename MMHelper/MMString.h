@@ -94,7 +94,7 @@
 //{
 //	template<> struct hash<CMMString>
 //	{
-//		std::size_t operator()(const CMMString &str) const noexcept
+//		std::size_t operator()(const CMMString &str) const
 //		{
 //			return _Fnv1a_append_bytes(_FNV_offset_basis, (const unsigned char*)str.GetBuffer(0), sizeof(TCHAR) * str.GetLength());
 //		}
