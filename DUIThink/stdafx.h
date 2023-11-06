@@ -53,7 +53,6 @@
 		#pragma comment(lib, "../lib/tinyxml264D.lib")
 	#else
 		#pragma comment(lib, "../lib/tinyxml2D.lib")
-		#pragma comment(lib, "../lib/tinyxmlD.lib")
 	#endif
 	#else
 	#ifdef _WIN64

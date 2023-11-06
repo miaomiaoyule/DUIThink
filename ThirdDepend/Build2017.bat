@@ -18,56 +18,56 @@ set Tinyxml2Path=%~dp0tinyxml2\vs\tinyxml2.sln
 if not exist "BuildLog\" mkdir "BuildLog\"
 
 REM /////////////////////////////////////////////////////////////
-echo "build tinyxml" 
-"%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Debug_Unicode|Win32" /out BuildLog\tinyxml.log
-if %ERRORLEVEL% NEQ 0 (
-	echo Build tinyxml Failed!
-	type %~dp0BuildLog\tinyxml.log
-	pause & exit
-)
-"%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Debug_Unicode_MT|Win32" /out BuildLog\tinyxml.log
-if %ERRORLEVEL% NEQ 0 (
-	echo Build tinyxml Failed!
-	type %~dp0BuildLog\tinyxml.log
-	pause & exit
-)
-"%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Release_Unicode|Win32" /out BuildLog\tinyxml.log
-if %ERRORLEVEL% NEQ 0 (
-	echo Build tinyxml Failed!
-	type %~dp0BuildLog\tinyxml.log
-	pause & exit
-)
-"%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Release_Unicode_MT|Win32" /out BuildLog\tinyxml.log
-if %ERRORLEVEL% NEQ 0 (
-	echo Build tinyxml Failed!
-	type %~dp0BuildLog\tinyxml.log
-	pause & exit
-)
-
-"%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Debug_Unicode|x64" /out BuildLog\tinyxml.log
-if %ERRORLEVEL% NEQ 0 (
-	echo Build tinyxml Failed!
-	type %~dp0BuildLog\tinyxml.log
-	pause & exit
-)
-"%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Debug_Unicode_MT|x64" /out BuildLog\tinyxml.log
-if %ERRORLEVEL% NEQ 0 (
-	echo Build tinyxml Failed!
-	type %~dp0BuildLog\tinyxml.log
-	pause & exit
-)
-"%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Release_Unicode|x64" /out BuildLog\tinyxml.log
-if %ERRORLEVEL% NEQ 0 (
-	echo Build tinyxml Failed!
-	type %~dp0BuildLog\tinyxml.log
-	pause & exit
-)
-"%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Release_Unicode_MT|x64" /out BuildLog\tinyxml.log
-if %ERRORLEVEL% NEQ 0 (
-	echo Build tinyxml Failed!
-	type %~dp0BuildLog\tinyxml.log
-	pause & exit
-)
+REM echo "build tinyxml" 
+REM "%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Debug_Unicode|Win32" /out BuildLog\tinyxml.log
+REM if %ERRORLEVEL% NEQ 0 (
+REM 	echo Build tinyxml Failed!
+REM 	type %~dp0BuildLog\tinyxml.log
+REM 	pause & exit
+REM )
+REM "%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Debug_Unicode_MT|Win32" /out BuildLog\tinyxml.log
+REM if %ERRORLEVEL% NEQ 0 (
+REM 	echo Build tinyxml Failed!
+REM 	type %~dp0BuildLog\tinyxml.log
+REM 	pause & exit
+REM )
+REM "%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Release_Unicode|Win32" /out BuildLog\tinyxml.log
+REM if %ERRORLEVEL% NEQ 0 (
+REM 	echo Build tinyxml Failed!
+REM 	type %~dp0BuildLog\tinyxml.log
+REM 	pause & exit
+REM )
+REM "%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Release_Unicode_MT|Win32" /out BuildLog\tinyxml.log
+REM if %ERRORLEVEL% NEQ 0 (
+REM 	echo Build tinyxml Failed!
+REM 	type %~dp0BuildLog\tinyxml.log
+REM 	pause & exit
+REM )
+REM 
+REM "%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Debug_Unicode|x64" /out BuildLog\tinyxml.log
+REM if %ERRORLEVEL% NEQ 0 (
+REM 	echo Build tinyxml Failed!
+REM 	type %~dp0BuildLog\tinyxml.log
+REM 	pause & exit
+REM )
+REM "%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Debug_Unicode_MT|x64" /out BuildLog\tinyxml.log
+REM if %ERRORLEVEL% NEQ 0 (
+REM 	echo Build tinyxml Failed!
+REM 	type %~dp0BuildLog\tinyxml.log
+REM 	pause & exit
+REM )
+REM "%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Release_Unicode|x64" /out BuildLog\tinyxml.log
+REM if %ERRORLEVEL% NEQ 0 (
+REM 	echo Build tinyxml Failed!
+REM 	type %~dp0BuildLog\tinyxml.log
+REM 	pause & exit
+REM )
+REM "%DevenvPath%" "%TinyxmlPath%" /Project "tinyxml" /Build "Release_Unicode_MT|x64" /out BuildLog\tinyxml.log
+REM if %ERRORLEVEL% NEQ 0 (
+REM 	echo Build tinyxml Failed!
+REM 	type %~dp0BuildLog\tinyxml.log
+REM 	pause & exit
+REM )
 
 REM /////////////////////////////////////////////////////////////
 echo "build tinyxml2" 
