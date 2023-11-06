@@ -43,52 +43,52 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MT|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MT|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MT|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MT|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -171,7 +171,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;TINYXML2_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -179,17 +179,15 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist "../../../bin" mkdir "../../../bin"
-copy $(Configuration)\$(TargetFileName) "../../../bin"
-if not exist "../../../lib" mkdir "../../../lib"
-if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).lib "../../../lib"</Command>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Configuration)\$(TargetFileName) "../../../lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MT|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;TINYXML2_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -198,10 +196,8 @@ if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist "../../../bin" mkdir "../../../bin"
-copy $(Configuration)\$(TargetFileName) "../../../bin"
-if not exist "../../../lib" mkdir "../../../lib"
-if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).lib "../../../lib"</Command>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Configuration)\$(TargetFileName) "../../../lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -210,7 +206,7 @@ if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;TINYXML2_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
     </ClCompile>
     <Link>
@@ -220,10 +216,8 @@ if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist "../../../bin" mkdir "../../../bin"
-copy $(Configuration)\$(TargetFileName) "../../../bin"
-if not exist "../../../lib" mkdir "../../../lib"
-if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).lib "../../../lib"</Command>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Configuration)\$(TargetFileName) "../../../lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_MT|Win32'">
@@ -232,7 +226,7 @@ if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;TINYXML2_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -243,17 +237,15 @@ if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist "../../../bin" mkdir "../../../bin"
-copy $(Configuration)\$(TargetFileName) "../../../bin"
-if not exist "../../../lib" mkdir "../../../lib"
-if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).lib "../../../lib"</Command>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Configuration)\$(TargetFileName) "../../../lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;TINYXML2_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -261,17 +253,15 @@ if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist "../../../bin" mkdir "../../../bin"
-copy $(Configuration)\$(TargetFileName) "../../../bin"
-if not exist "../../../lib" mkdir "../../../lib"
-if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).lib "../../../lib"</Command>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Configuration)\$(TargetFileName) "../../../lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MT|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;TINYXML2_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -280,10 +270,8 @@ if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist "../../../bin" mkdir "../../../bin"
-copy $(Configuration)\$(TargetFileName) "../../../bin"
-if not exist "../../../lib" mkdir "../../../lib"
-if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).lib "../../../lib"</Command>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Configuration)\$(TargetFileName) "../../../lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -292,7 +280,7 @@ if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;TINYXML2_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -302,10 +290,8 @@ if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist "../../../bin" mkdir "../../../bin"
-copy $(Configuration)\$(TargetFileName) "../../../bin"
-if not exist "../../../lib" mkdir "../../../lib"
-if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).lib "../../../lib"</Command>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Configuration)\$(TargetFileName) "../../../lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_MT|x64'">
@@ -314,7 +300,7 @@ if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;TINYXML2_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -325,10 +311,8 @@ if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist "../../../bin" mkdir "../../../bin"
-copy $(Configuration)\$(TargetFileName) "../../../bin"
-if not exist "../../../lib" mkdir "../../../lib"
-if exist $(Configuration)\$(TargetName).lib copy $(Configuration)\$(TargetName).lib "../../../lib"</Command>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Configuration)\$(TargetFileName) "../../../lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
