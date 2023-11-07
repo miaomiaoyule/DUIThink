@@ -1765,6 +1765,9 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ProjectReference Include="..\MMHelper\MMHelper.vcxproj">
       <Project>{d64ee06c-987d-493c-969a-cf1d8f4390a9}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\ThirdDepend\tinyxml2\vs\tinyxml2.vcxproj">
+      <Project>{7c72653a-e6f8-4584-b553-de3a0aee4356}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
