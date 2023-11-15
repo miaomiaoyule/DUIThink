@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="MMFileMonitor">
+      <UniqueIdentifier>{1106962b-ff64-49d9-89a4-58ab2ea9d515}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MMServiceModel">
+      <UniqueIdentifier>{df72520c-91ec-460a-9028-68f592144c46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MMSocket">
+      <UniqueIdentifier>{6954574c-4c9e-4b1a-ba9a-a0e35053f53a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MMSocket\SocketServer">
+      <UniqueIdentifier>{eac533bb-46c5-4ca8-b578-150c4f53cc1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MMSocket\SocketClient">
+      <UniqueIdentifier>{bc29088a-4caa-4139-aeba-532ef8c2b9be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MMSocket\SocketServer\WebSocket">
+      <UniqueIdentifier>{78470081-1643-43b6-abf3-f20325f65194}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MMShellExecute">
+      <UniqueIdentifier>{5d6ab039-22ae-45e2-8cb6-845e25ec5263}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MMDragDrop">
+      <UniqueIdentifier>{634f8bdf-a662-42b4-8c26-f49b59f1ad2c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMService.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMCommandLine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMMD5CheckSum.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMDefine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMModule.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMMiniDumper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMFile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMStrHelp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMAsyncObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMServiceModel\MMServiceItem.h">
+      <Filter>MMServiceModel</Filter>
+    </ClInclude>
+    <ClInclude Include="MMServiceModel\MMServiceMsg.h">
+      <Filter>MMServiceModel</Filter>
+    </ClInclude>
+    <ClInclude Include="MMServiceModel\MMThreadPool.h">
+      <Filter>MMServiceModel</Filter>
+    </ClInclude>
+    <ClInclude Include="MMServiceModel\MMTimerPower.h">
+      <Filter>MMServiceModel</Filter>
+    </ClInclude>
+    <ClInclude Include="MMFileMonitor\MMFileMonitor.h">
+      <Filter>MMFileMonitor</Filter>
+    </ClInclude>
+    <ClInclude Include="MMProcess.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMFileMonitor\Define.h">
+      <Filter>MMFileMonitor</Filter>
+    </ClInclude>
+    <ClInclude Include="MMSocket\SocketClient\Define.h">
+      <Filter>MMSocket\SocketClient</Filter>
+    </ClInclude>
+    <ClInclude Include="MMSocket\SocketClient\MMTCPSocketClient.h">
+      <Filter>MMSocket\SocketClient</Filter>
+    </ClInclude>
+    <ClInclude Include="MMSocket\SocketClient\IMMTCPSocketClient.h">
+      <Filter>MMSocket\SocketClient</Filter>
+    </ClInclude>
+    <ClInclude Include="MMSocket\Define.h">
+      <Filter>MMSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="MMSocket\SocketServer\MMSocketClientItem.h">
+      <Filter>MMSocket\SocketServer</Filter>
+    </ClInclude>
+    <ClInclude Include="MMSocket\SocketServer\WebSocket\SHA1.h">
+      <Filter>MMSocket\SocketServer\WebSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="MMSocket\SocketServer\Define.h">
+      <Filter>MMSocket\SocketServer</Filter>
+    </ClInclude>
+    <ClInclude Include="MMSocket\SocketServer\IMMTCPSocketServer.h">
+      <Filter>MMSocket\SocketServer</Filter>
+    </ClInclude>
+    <ClInclude Include="MMSocket\SocketServer\MMTCPSocketServer.h">
+      <Filter>MMSocket\SocketServer</Filter>
+    </ClInclude>
+    <ClInclude Include="MMDpi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMEncrypt.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMHelperHead.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMHash.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMSvg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMShellExecute\MMShellExecute.h">
+      <Filter>MMShellExecute</Filter>
+    </ClInclude>
+    <ClInclude Include="MMShellExecute\Define.h">
+      <Filter>MMShellExecute</Filter>
+    </ClInclude>
+    <ClInclude Include="MMReDirection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMVersion.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMDisplayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMRegMonitor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMDragDrop\MMDragDrop.h">
+      <Filter>MMDragDrop</Filter>
+    </ClInclude>
+    <ClInclude Include="MMDragDrop\MMDataObject.h">
+      <Filter>MMDragDrop</Filter>
+    </ClInclude>
+    <ClInclude Include="MMDragDrop\MMDropSource.h">
+      <Filter>MMDragDrop</Filter>
+    </ClInclude>
+    <ClInclude Include="MMDragDrop\Define.h">
+      <Filter>MMDragDrop</Filter>
+    </ClInclude>
+    <ClInclude Include="MMTrayIcon.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMString.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMService.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMCommandLine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMMD5CheckSum.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMMiniDumper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMModule.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMFile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMStrHelp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMAsyncObject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMServiceModel\MMServiceItem.cpp">
+      <Filter>MMServiceModel</Filter>
+    </ClCompile>
+    <ClCompile Include="MMServiceModel\MMThreadPool.cpp">
+      <Filter>MMServiceModel</Filter>
+    </ClCompile>
+    <ClCompile Include="MMServiceModel\MMTimerPower.cpp">
+      <Filter>MMServiceModel</Filter>
+    </ClCompile>
+    <ClCompile Include="MMFileMonitor\MMFileMonitor.cpp">
+      <Filter>MMFileMonitor</Filter>
+    </ClCompile>
+    <ClCompile Include="MMProcess.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMSocket\SocketClient\MMTCPSocketClient.cpp">
+      <Filter>MMSocket\SocketClient</Filter>
+    </ClCompile>
+    <ClCompile Include="MMSocket\SocketServer\MMSocketClientItem.cpp">
+      <Filter>MMSocket\SocketServer</Filter>
+    </ClCompile>
+    <ClCompile Include="MMSocket\SocketServer\WebSocket\SHA1.cpp">
+      <Filter>MMSocket\SocketServer\WebSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="MMSocket\SocketServer\MMTCPSocketServer.cpp">
+      <Filter>MMSocket\SocketServer</Filter>
+    </ClCompile>
+    <ClCompile Include="MMDpi.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMEncrypt.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMHash.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMSvg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMShellExecute\MMShellExecute.cpp">
+      <Filter>MMShellExecute</Filter>
+    </ClCompile>
+    <ClCompile Include="MMReDirection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMVersion.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMDisplayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMRegMonitor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMDragDrop\MMDragDrop.cpp">
+      <Filter>MMDragDrop</Filter>
+    </ClCompile>
+    <ClCompile Include="MMDragDrop\MMDataObject.cpp">
+      <Filter>MMDragDrop</Filter>
+    </ClCompile>
+    <ClCompile Include="MMDragDrop\MMDropSource.cpp">
+      <Filter>MMDragDrop</Filter>
+    </ClCompile>
+    <ClCompile Include="MMTrayIcon.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMString.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
