@@ -47,36 +47,6 @@
 #endif
 #endif
 
-#ifdef _DEBUG
-	#ifdef _DLL
-	#ifdef _WIN64
-		#pragma comment(lib, "../lib/tinyxml264D.lib")
-	#else
-		#pragma comment(lib, "../lib/tinyxml2D.lib")
-	#endif
-	#else
-	#ifdef _WIN64
-		#pragma comment(lib, "../lib/tinyxml264_MT_D.lib")
-	#else
-		#pragma comment(lib, "../lib/tinyxml2_MT_D.lib")
-	#endif
-	#endif	
-#else
-	#ifdef _DLL
-	#ifdef _WIN64
-		#pragma comment(lib, "../lib/tinyxml264.lib")
-	#else
-		#pragma comment(lib, "../lib/tinyxml2.lib")
-	#endif
-	#else
-	#ifdef _WIN64	
-		#pragma comment(lib, "../lib/tinyxml264_MT.lib")
-	#else	
-		#pragma comment(lib, "../lib/tinyxml2_MT.lib")
-	#endif
-	#endif
-#endif
-
 //////////////////////////////////////////////////////////////////////////
 extern tagDuiMenuCmd				g_DuiMenuCmd;
 extern CDUIMenuWnd *				g_pDuiMenuWndRoot;

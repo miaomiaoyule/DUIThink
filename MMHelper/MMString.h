@@ -164,6 +164,19 @@ public:
 	{
 		return CAtlString::Mid(iFirst, nCount).GetBuffer();
 	}
+	CMMString & MakeLower()
+	{
+		PXSTR pszBuffer = GetBuffer();
+		for (int n = 0; n < GetLength(); n++)
+		{
+			if (_T('A') <= pszBuffer[n] && pszBuffer[n] <= _T('Z'))
+			{
+				pszBuffer[n] = pszBuffer[n] + (_T('a') - _T('A'));
+			}
+		}
+
+		return *this;
+	}
 	_Ret_notnull_ _Post_writable_size_(nLength + 1) PXSTR GetBufferSetLength(_In_ int nLength)
 	{
 		int nLenOld = GetLength();

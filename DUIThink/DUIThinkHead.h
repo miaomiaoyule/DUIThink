@@ -64,6 +64,7 @@
 #include <assert.h>
 #include <atlstr.h>
 #include <RichOle.h>
+#include <ShlDisp.h>
 
 using namespace Gdiplus;
 using namespace std;
@@ -77,13 +78,53 @@ using namespace std;
 #include "../MMHelper/MMHelperHead.h"
 
 #ifdef DUITHINKWKE
-#include "../include/wke/wke.h"
+#include "../ThirdDepend/wke/Include/wke.h"
 #endif
-#include "../include/tinyxml2/tinyxml2.h"
-#include "../include/tinyxml/tinyxml.h"
+#include "../ThirdDepend/tinyxml2/tinyxml2.h"
 #include <olectl.h>
 using namespace tinyxml2;
 
+#if _MSC_VER < 1900
+#ifdef _DEBUG
+	#ifdef _DLL
+		#ifdef _WIN64
+		#pragma comment(lib, "../lib/tinyxml2.201364D.lib")
+		#pragma comment(lib, "../lib/MMHelper.201364D.lib")
+		#else
+		#pragma comment(lib, "../lib/tinyxml2.2013D.lib")
+		#pragma comment(lib, "../lib/MMHelper.2013D.lib")
+		#endif
+	#else
+		#ifdef _WIN64
+		#pragma comment(lib, "../lib/tinyxml2.201364_MT_D.lib")
+		#pragma comment(lib, "../lib/MMHelper.201364_MT_D.lib")
+		#else
+		#pragma comment(lib, "../lib/tinyxml2.2013_MT_D.lib")
+		#pragma comment(lib, "../lib/MMHelper.2013_MT_D.lib")
+		#endif
+	#endif	
+#else
+	#ifdef _DLL
+		#ifdef _WIN64
+		#pragma comment(lib, "../lib/tinyxml2.201364.lib")
+		#pragma comment(lib, "../lib/MMHelper.201364.lib")
+		#else
+		#pragma comment(lib, "../lib/tinyxml2.2013.lib")
+		#pragma comment(lib, "../lib/MMHelper.2013.lib")
+		#endif
+	#else
+		#ifdef _WIN64	
+		#pragma comment(lib, "../lib/tinyxml2.201364_MT.lib")
+		#pragma comment(lib, "../lib/MMHelper.201364_MT.lib")
+		#else	
+		#pragma comment(lib, "../lib/tinyxml2.2013_MT.lib")
+		#pragma comment(lib, "../lib/MMHelper.2013_MT.lib")
+		#endif
+	#endif
+#endif
+#endif
+
+//////
 #include "../Global/Global.h"
 #include "DUIStruct.h"
 #include "Define/DefineBase.h"

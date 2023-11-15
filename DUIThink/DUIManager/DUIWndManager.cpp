@@ -323,7 +323,13 @@ void CDUIWndManager::OnWinDrop(IDataObject *pIDataObject, POINTL pt, DWORD *pdwE
 	//从外部拖拽时查询数据对象是否支持异步操作
 	if (m_DropData.pDragDropFrom != this)
 	{
-		IAsyncOperation * pac = NULL;
+		//0x602 win7 
+#if (_WIN32_WINNT >= 0x602)
+		IDataObjectAsyncCapability *pac = NULL; 
+#else
+		IAsyncOperation *pac = NULL;
+#endif
+
 		BOOL bAsyncSupported = FALSE;
 		/* Does the drop source support asynchronous copy */
 		HRESULT hr = pIDataObject->QueryInterface(IID_PPV_ARGS(&pac));
