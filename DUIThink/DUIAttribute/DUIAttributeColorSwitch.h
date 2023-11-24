@@ -36,8 +36,9 @@ public:
 	CMMString FormatInfo() override;
 
 	//draw
+	virtual bool DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nBorderSize);
 	virtual bool DrawRound(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nXRound, int nYRound, bool bHSLAdjust = false);
-	virtual bool DrawRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nXRound, int nYRound, bool bHSLAdjust = false);
+	virtual bool DrawRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nXRound, int nYRound, bool bHSLAdjust = false, CDUISize szBreakTop = {});
 	virtual bool DrawLine(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nStyle = PS_SOLID, bool bHSLAdjust = false);
 	virtual bool FillRect(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust = false);
 	virtual bool FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nXRound, int nYRound, bool bHSLAdjust = false);

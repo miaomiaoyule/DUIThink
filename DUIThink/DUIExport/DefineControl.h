@@ -13,6 +13,7 @@ typedef CDUIControlBase* (CALLBACK* FindControlProc)(CDUIControlBase*, LPVOID pD
 #define Dui_Count_WeekDay							(7)
 #define Dui_ScrollSpeed_Normal						(8)
 #define Dui_Max_ListColumn							(32)
+#define Dui_Offset_GroupBorderTopBreak				(10)
 
 //////////////////////////////////////////////////////////////////////////
 #define DuiCreateGroupAttribute(Variant, Name) \
@@ -34,6 +35,7 @@ typedef CDUIControlBase* (CALLBACK* FindControlProc)(CDUIControlBase*, LPVOID pD
 #define DuiInitAttriVAlignCenter(Attri, bCenter) { if(false == Attri.IsModified()) Attri.SetVAlignCenter(bCenter); }
 #define DuiInitAttriVAlignBottom(Attri, bBottom) { if(false == Attri.IsModified()) Attri.SetVAlignBottom(bBottom); }
 #define DuiSwapAttriIndex(AttriFirst, AttriNext) { if(AttriFirst.GetGroup()) AttriFirst.GetGroup()->SwapAttribute(&AttriFirst, &AttriNext); }
+#define DuiCompatibleAttriName(NameOld, NameNew) { Dui_ResVersionMax != CDUIGlobal::GetInstance()->GetResVersion() ? NameOld : NameNew }
 
 //////////////////////////////////////////////////////////////////////////
 //timer

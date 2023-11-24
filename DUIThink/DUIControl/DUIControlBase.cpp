@@ -956,16 +956,16 @@ void CDUIControlBase::SetFocusBorderColor(const vector<CMMString> &vecResSwitch)
 	return;
 }
 
-CDUIRect CDUIControlBase::GetBorderRect()
+CDUIRect CDUIControlBase::GetBorderLine()
 {
-	return m_AttributeBorderRect.GetValue();
+	return m_AttributeBorderLine.GetValue();
 }
 
-void CDUIControlBase::SetBorderRect(RECT rcBorder)
+void CDUIControlBase::SetBorderLine(RECT rcBorder)
 {
-	if (rcBorder == GetBorderRect()) return;
+	if (rcBorder == GetBorderLine()) return;
 
-	m_AttributeBorderRect.SetValue(rcBorder);
+	m_AttributeBorderLine.SetValue(rcBorder);
 
 	Invalidate();
 
@@ -1694,7 +1694,7 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeBorderStyle, _T("BorderStyle"), _T(""), m_AttributeGroupBorder);
 	DuiCreateAttribute(m_AttributeColorBorder, _T("ColorBorder"), _T(""), m_AttributeGroupBorder);
 	DuiCreateAttribute(m_AttributeColorBorderFocus, _T("ColorFocusBorder"), _T(""), m_AttributeGroupBorder);
-	DuiCreateAttribute(m_AttributeBorderRect, _T("BorderRect"), _T(""), m_AttributeGroupBorder);
+	DuiCreateAttribute(m_AttributeBorderLine, DuiCompatibleAttriName(_T("BorderRect"), _T("BorderLine")), _T(""), m_AttributeGroupBorder);
 
 	DuiCreateGroupAttribute(m_AttributeGroupMouse, _T("Mouse"));
 	DuiCreateAttribute(m_AttributeMouseThrough, _T("MouseThrough"), _T(""), m_AttributeGroupMouse);
@@ -1799,12 +1799,12 @@ void CDUIControlBase::PaintBkColor(HDC hDC)
 	CDUISize szBorderRound = GetRoundSize();
 	if (szBorderRound.cx > 0 && szBorderRound.cy > 0)
 	{
-		CDUIRect rcBorder = GetBorderRect();
+		CDUIRect rcBorder = GetBorderLine();
 		int nSize = max(rcBorder.left, rcBorder.top);
 		nSize = max(nSize, rcBorder.right);
 		nSize = max(nSize, rcBorder.bottom);
 
-		m_AttributeColorBk.FillRoundRect(hDC, m_rcAbsolute, nSize, szBorderRound.cx, szBorderRound.cy, IsColorHSL());
+		m_AttributeColorBk.FillRoundRect(hDC, GetBorderRect(), nSize, szBorderRound.cx, szBorderRound.cy, IsColorHSL());
 	
 		return;
 	}
@@ -1933,42 +1933,43 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeColorBorder : NULL;
 	if (NULL == pAttribute) return;
 
-	CDUIRect rcBorder = GetBorderRect();
+	CDUIRect rcBorderLine = GetBorderLine();
 	CDUISize szBorderRound = GetRoundSize();
-	int nSize = max(rcBorder.left, rcBorder.top);
-	nSize = max(nSize, rcBorder.right);
-	nSize = max(nSize, rcBorder.bottom);
+	CDUISize szBreakTop = GetBorderBreakTop();
+	int nSize = max(rcBorderLine.left, rcBorderLine.top);
+	nSize = max(nSize, rcBorderLine.right);
+	nSize = max(nSize, rcBorderLine.bottom);
 	if (nSize > 0 && szBorderRound.cx > 0 && szBorderRound.cy > 0)
 	{
-		pAttribute->DrawRoundRect(hDC, m_rcAbsolute, nSize, szBorderRound.cx, szBorderRound.cy, IsColorHSL());
+		pAttribute->DrawRoundRect(hDC, GetBorderRect(), nSize, szBorderRound.cx, szBorderRound.cy, IsColorHSL(), szBreakTop);
 
 		return;
 	}
-	if (rcBorder.left > 0)
+	if (rcBorderLine.left > 0)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
 		rcBorderDraw.right = rcBorderDraw.left;
-		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.left, GetBorderStyle(), IsColorHSL());
+		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.left, GetBorderStyle(), IsColorHSL());
 	}
-	if (rcBorder.top > 0)
+	if (rcBorderLine.top > 0)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
 		rcBorderDraw.bottom = rcBorderDraw.top;
-		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.top, GetBorderStyle(), IsColorHSL());
+		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.top, GetBorderStyle(), IsColorHSL());
 	}
-	if (rcBorder.right > 0)
+	if (rcBorderLine.right > 0)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
-		rcBorderDraw.left = rcBorderDraw.right - rcBorder.right;
+		rcBorderDraw.left = rcBorderDraw.right - rcBorderLine.right;
 		rcBorderDraw.right = rcBorderDraw.left;
-		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.right, GetBorderStyle(), IsColorHSL());
+		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.right, GetBorderStyle(), IsColorHSL());
 	}
-	if (rcBorder.bottom > 0)
+	if (rcBorderLine.bottom > 0)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
-		rcBorderDraw.top = rcBorderDraw.bottom - rcBorder.bottom;
+		rcBorderDraw.top = rcBorderDraw.bottom - rcBorderLine.bottom;
 		rcBorderDraw.bottom = rcBorderDraw.top;
-		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorder.bottom, GetBorderStyle(), IsColorHSL());
+		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.bottom, GetBorderStyle(), IsColorHSL());
 	}
 
 	return;
@@ -2094,6 +2095,16 @@ CDUIAttributeColorSwitch * CDUIControlBase::GetAttributeStatusColor()
 CDUIAttriImageSection * CDUIControlBase::GetAttributeStatusImage()
 {
 	return NULL;
+}
+
+CDUIRect CDUIControlBase::GetBorderRect()
+{
+	return m_rcAbsolute;
+}
+
+CDUISize CDUIControlBase::GetBorderBreakTop()
+{
+	return {};
 }
 
 void CDUIControlBase::InitWater()

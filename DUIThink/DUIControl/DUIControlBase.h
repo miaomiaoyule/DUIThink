@@ -70,7 +70,7 @@ protected:
 	CDUIAttributeGroup					m_AttributeGroupBorder;
 	CDUIAttributeColorSwitch			m_AttributeColorBorder;
 	CDUIAttributeColorSwitch			m_AttributeColorBorderFocus;
-	CDUIAttributeRect					m_AttributeBorderRect;
+	CDUIAttributeRect					m_AttributeBorderLine;
 	CDUIAttributeCombox					m_AttributeBorderStyle;
 
 	//mouse
@@ -253,8 +253,8 @@ public:
 	virtual void SetBorderColor(const vector<CMMString> &vecResSwitch);
 	virtual ARGB GetFocusBorderColor();
 	virtual void SetFocusBorderColor(const vector<CMMString> &vecResSwitch);
-	virtual CDUIRect GetBorderRect();
-	virtual void SetBorderRect(RECT rcBorder);
+	virtual CDUIRect GetBorderLine();
+	virtual void SetBorderLine(RECT rcBorder);
 
 	//tip
 	virtual CMMString GetToolTip();
@@ -363,6 +363,8 @@ protected:
 	virtual void ReapControl();
 	virtual CDUIAttributeColorSwitch * GetAttributeStatusColor();
 	virtual CDUIAttriImageSection * GetAttributeStatusImage();
+	virtual CDUIRect GetBorderRect();
+	virtual CDUISize GetBorderBreakTop();
 
 	//water help
 private:

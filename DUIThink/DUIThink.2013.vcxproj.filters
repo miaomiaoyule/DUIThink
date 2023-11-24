@@ -330,6 +330,9 @@
     <ClInclude Include="DUIControl\DUIClockCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>
+    <ClInclude Include="DUIControl\DUIGroupCtrl.h">
+      <Filter>DUIControl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -555,6 +558,9 @@
       <Filter>DUIUtils</Filter>
     </ClCompile>
     <ClCompile Include="DUIControl\DUIClockCtrl.cpp">
+      <Filter>DUIControl</Filter>
+    </ClCompile>
+    <ClCompile Include="DUIControl\DUIGroupCtrl.cpp">
       <Filter>DUIControl</Filter>
     </ClCompile>
   </ItemGroup>

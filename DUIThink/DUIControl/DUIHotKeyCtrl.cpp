@@ -66,7 +66,7 @@ void CDUIHotKeyWnd::Init()
 
 	//wndstyle
 	UINT uWndStyle = 0;
-	CDUIRect rcBorder = m_pOwner->GetBorderRect();
+	CDUIRect rcBorderLine = m_pOwner->GetBorderLine();
 	CDUIAttributeTextStyle *pAttribute = m_pOwner->GetAttributeTextStyleActive();
 	tagDuiTextStyle TextStyle = pAttribute ? pAttribute->GetTextStyle() : tagDuiTextStyle();
 

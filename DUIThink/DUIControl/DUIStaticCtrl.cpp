@@ -281,6 +281,8 @@ void CDUIStaticCtrl::SetShadowText(bool bShadow)
 
 	m_AttribuetShadow.SetValue(bShadow);
 
+	Invalidate();
+
 	return;
 }
 

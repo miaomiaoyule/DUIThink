@@ -818,6 +818,26 @@ void CDUIRenderEngine::DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, 
 	return;
 }
 
+void CDUIRenderEngine::DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nLineSize, DWORD dwPenColor)
+{
+	Gdiplus::Graphics Gp(hDC);
+	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
+	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+
+	//path
+	Gdiplus::GraphicsPath Path;
+	for (int n = 1; n < vecPtList.size(); n++)
+	{
+		Path.AddLine(vecPtList[n - 1].x, vecPtList[n - 1].y, vecPtList[n].x, vecPtList[n].y);
+	}
+
+	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
+	Gp.DrawPath(&Pen, &Path);
+
+	return;
+}
+
 void CDUIRenderEngine::DrawRound(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwPenColor)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
@@ -837,7 +857,7 @@ void CDUIRenderEngine::DrawRound(HDC hDC, const CDUIRect &rcItem, int nXRound, i
 	return;
 }
 
-void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwPenColor)
+void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 
@@ -855,7 +875,19 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRoun
 
 		//path
 		Gdiplus::GraphicsPath Path;
-		Path.AddLine(rcDraw.left + nXRound, rcDraw.top, rcDraw.right - nXRound, rcDraw.top); //¶¥²¿ºáÏß
+
+		//top break
+		if (szBreakTop.cx > 0 || szBreakTop.cy > 0)
+		{
+			int nLeft = rcDraw.left + nXRound + szBreakTop.cx + szBreakTop.cy;
+			nLeft = min(nLeft, rcDraw.right - nXRound);
+			Path.AddLine(nLeft, rcDraw.top, rcDraw.right - nXRound, rcDraw.top);
+		}
+		else
+		{
+			Path.AddLine(rcDraw.left + nXRound, rcDraw.top, rcDraw.right - nXRound, rcDraw.top);
+		}
+		
 		Path.AddArc(rcDraw.right - nXRound * 2 - nLineSize, rcDraw.top, nXRound * 2, nYRound * 2, 270, 90); //ÓÒÉÏÔ²½Ç
 		Path.AddLine(rcDraw.right - nLineSize, rcDraw.top + nYRound, rcDraw.right - nLineSize, rcDraw.bottom - nYRound); //ÓÒ²àÊúÏß
 		Path.AddArc(rcDraw.right - nXRound * 2 - nLineSize, rcDraw.bottom - nYRound * 2 - nLineSize, nXRound * 2, nYRound * 2, 0, 90); //ÓÒÏÂÔ²½Ç
@@ -863,6 +895,12 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRoun
 		Path.AddArc(rcDraw.left, rcDraw.bottom - nYRound * 2 - nLineSize, nXRound * 2, nYRound * 2, 90, 90); //×óÏÂÔ²½Ç
 		Path.AddLine(rcDraw.left, rcDraw.bottom - nYRound, rcDraw.left, rcDraw.top + nYRound); //×ó²àÊúÏß
 		Path.AddArc(rcDraw.left, rcDraw.top, nXRound * 2, nYRound * 2, 180, 90); //×óÉÏÔ²½Ç
+
+		//top break
+		if (szBreakTop.cx > 0 || szBreakTop.cy > 0)
+		{
+			Path.AddLine(rcDraw.left + nXRound, rcDraw.top, rcDraw.left + nXRound + szBreakTop.cy, rcDraw.top);
+		}
 
 		Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
 		Gp.DrawPath(&Pen, &Path);

@@ -1302,7 +1302,7 @@ void CDUITreeNodeCtrl::ConstructTreeView()
 
 	m_pTreeViewCtrl->SetFloat(false);
 	m_pTreeViewCtrl->SetPadding(0, 0, 0, 0);
-	m_pTreeViewCtrl->SetBorderRect({ 0,0,0,0 });
+	m_pTreeViewCtrl->SetBorderLine({ 0,0,0,0 });
 	m_pTreeViewCtrl->SetUseListHeader(false);
 	m_pTreeViewCtrl->SetCtrlID(Dui_CtrlIDInner_TreeNodeView);
 	m_pTreeViewCtrl->SetOwnerNode(this);

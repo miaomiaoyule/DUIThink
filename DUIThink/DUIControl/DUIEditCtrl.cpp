@@ -85,13 +85,13 @@ void CDUIEditWnd::Init()
 
 	//wndstyle
 	UINT uWndStyle = 0;
-	CDUIRect rcBorder = m_pOwner->GetBorderRect();
+	CDUIRect rcBorderLine = m_pOwner->GetBorderLine();
 	CDUIAttributeTextStyle *pAttribute = m_pOwner->GetAttributeTextStyleActive();
 	tagDuiTextStyle TextStyle = pAttribute ? pAttribute->GetTextStyle() : tagDuiTextStyle();
 
 	uWndStyle = WS_CHILD | ES_AUTOHSCROLL | WS_VISIBLE;
 	m_pWndManagerOwner->IsWndLayered() || m_pOwner->IsDesktopEdit() ? uWndStyle |= WS_POPUP : NULL;
-	rcBorder.left || rcBorder.top || rcBorder.right || rcBorder.bottom ? uWndStyle |= WS_BORDER : NULL;
+	rcBorderLine.left || rcBorderLine.top || rcBorderLine.right || rcBorderLine.bottom ? uWndStyle |= WS_BORDER : NULL;
 	if (TextStyle.IsWordBreak())
 	{
 		uWndStyle |= (ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN);

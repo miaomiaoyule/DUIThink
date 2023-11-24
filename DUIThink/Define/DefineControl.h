@@ -32,6 +32,7 @@
 #define Dui_Ctrl_HotKey								(_T("HotKeyCtrl"))
 
 #define Dui_Ctrl_Container							(_T("ContainerCtrl"))
+#define Dui_Ctrl_Group								(_T("GroupCtrl"))
 #define Dui_Ctrl_HorizontalLayout					(_T("HorizontalLayoutCtrl"))
 #define Dui_Ctrl_VerticalLayout						(_T("VerticalLayoutCtrl"))
 #define Dui_Ctrl_ListHeaderItem						(_T("ListHeaderItemCtrl"))
