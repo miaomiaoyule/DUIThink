@@ -38,6 +38,7 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateControl(CDUIThinkEditCtrl);
 	DUIInner_RegisterCreateControl(CDUISpinCtrl);
 	DUIInner_RegisterCreateControl(CDUIClockCtrl);
+	DUIInner_RegisterCreateControl(CDUIGroupCtrl);
 #ifdef DUITHINKWKE
 	DUIInner_RegisterCreateControl(CDUIWkeBrowserCtrl);
 #endif

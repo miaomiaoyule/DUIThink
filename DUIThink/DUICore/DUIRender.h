@@ -33,7 +33,7 @@ public:
 		BYTE cbAlpha = 255, bool bAlpha = false, bool bHole = false, bool bTiledX = false, bool bTiledY = false);
 	static void DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, const CDUIRect &rcItem, int nFrameCur);
 	static void DrawLine(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, int nStyle = PS_SOLID);
-	static void DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor);
+	static void DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop = {});
 	static void DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nLineSize, DWORD dwPenColor);
 	static void DrawRound(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwPenColor);
 	static void DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop = {});

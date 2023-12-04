@@ -1945,6 +1945,12 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 
 		return;
 	}
+	if (szBreakTop.cx > 0 || szBreakTop.cy > 0)
+	{
+		pAttribute->DrawRect(hDC, GetBorderRect(), nSize, szBreakTop);
+
+		return;
+	}
 	if (rcBorderLine.left > 0)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;

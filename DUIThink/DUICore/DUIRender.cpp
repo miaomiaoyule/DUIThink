@@ -792,13 +792,36 @@ void CDUIRenderEngine::DrawLine(HDC hDC, const CDUIRect &rcItem, int nLineSize, 
 	return;
 }
 
-void CDUIRenderEngine::DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor)
+void CDUIRenderEngine::DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 
 	//gdi+
 	//if (bGdiplusRender)
 	{
+		//topbreak
+		if (szBreakTop.cx > 0 || szBreakTop.cy > 0)
+		{
+			//adjust
+			CDUIRect rcDraw = rcItem;
+			//rcDraw.top += nLineSize;
+			//rcDraw.left += nLineSize;
+			rcDraw.right -= nLineSize;
+			rcDraw.bottom -= nLineSize;
+
+			std::vector<CDUIPoint> vecPtList;
+			vecPtList.push_back({ rcDraw.left + szBreakTop.cx + szBreakTop.cy, rcDraw.top });
+			vecPtList.push_back({ rcDraw.right, rcDraw.top });
+			vecPtList.push_back({ rcDraw.right, rcDraw.bottom });
+			vecPtList.push_back({ rcDraw.left, rcDraw.bottom });
+			vecPtList.push_back({ rcDraw.left, rcDraw.top });
+			vecPtList.push_back({ rcDraw.left + szBreakTop.cx, rcDraw.top });
+			DrawPath(hDC, vecPtList, nLineSize, dwPenColor);
+
+			return;
+		}
+
+		//rect
 		Gdiplus::Graphics Gp(hDC);
 		Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), (Gdiplus::REAL)nLineSize);
 		Pen.SetAlignment(Gdiplus::PenAlignmentInset);
@@ -833,6 +856,7 @@ void CDUIRenderEngine::DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList
 	}
 
 	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
+	Pen.SetAlignment(Gdiplus::PenAlignmentInset);
 	Gp.DrawPath(&Pen, &Path);
 
 	return;
@@ -849,6 +873,7 @@ void CDUIRenderEngine::DrawRound(HDC hDC, const CDUIRect &rcItem, int nXRound, i
 
 	//left top right bottom
 	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
+	Pen.SetAlignment(Gdiplus::PenAlignmentInset);
 	Gp.DrawArc(&Pen, rcItem.left, rcItem.top, nXRound * 2, nYRound * 2, 180, 90); // вСиот╡╫г
 	Gp.DrawArc(&Pen, rcItem.right - nXRound * 2 - nLineSize, rcItem.top, nXRound * 2, nYRound * 2, 270, 90); // сриот╡╫г
 	Gp.DrawArc(&Pen, rcItem.right - nXRound * 2 - nLineSize, rcItem.bottom - nYRound * 2 - nLineSize, nXRound * 2, nYRound * 2, 0, 90); // сробт╡╫г
@@ -903,6 +928,7 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRoun
 		}
 
 		Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
+		Pen.SetAlignment(Gdiplus::PenAlignmentInset);
 		Gp.DrawPath(&Pen, &Path);
 
 		return;

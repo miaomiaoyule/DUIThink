@@ -151,7 +151,7 @@ void CDUIGroupCtrl::PaintText(HDC hDC)
 CDUIRect CDUIGroupCtrl::GetBorderRect()
 {
 	CDUIRect rcBorder = __super::GetBorderRect();
-	rcBorder.Offset(0, Dui_Offset_GroupBorderTopBreak);
+	rcBorder.top += Dui_Offset_GroupBorderTopBreak;
 
 	return rcBorder;
 }

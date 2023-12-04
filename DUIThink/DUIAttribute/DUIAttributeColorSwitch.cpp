@@ -50,6 +50,18 @@ CMMString CDUIAttributeColorSwitch::FormatInfo()
 	return strFormat;
 }
 
+bool CDUIAttributeColorSwitch::DrawRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, CDUISize szBreakTop)
+{
+	if (nBorderSize <= 0) return false;
+
+	DWORD dwColor = GetColorValue();
+	if (0 == dwColor) return false;
+
+	CDUIRenderEngine::DrawRect(hDC, rcPaint, nBorderSize, dwColor, szBreakTop);
+
+	return true;
+}
+
 bool CDUIAttributeColorSwitch::DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nBorderSize)
 {
 	if (nBorderSize <= 0) return false;
