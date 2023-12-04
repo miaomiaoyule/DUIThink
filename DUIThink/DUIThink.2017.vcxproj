@@ -1561,8 +1561,6 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIExport\DefineMessage.h" />
     <ClInclude Include="DUIExport\DefineResource.h" />
     <ClInclude Include="DUIExport\DUIStruct.h" />
-    <ClInclude Include="DUIExport\IDUIFactory.h" />
-    <ClInclude Include="DUIExport\IDUIGlobal.h" />
     <ClInclude Include="DUIExport\IDUIInterface.h" />
     <ClInclude Include="DUIManager\DUIFactory.h" />
     <ClInclude Include="DUIManager\DUIGlobal.h" />

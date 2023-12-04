@@ -79,13 +79,6 @@ CDUIFactory::~CDUIFactory()
 {
 }
 
-LPVOID CDUIFactory::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
-{
-	QUERYINTERFACE(IDUIFactory, Guid, dwQueryVer);
-
-	return __super::QueryInterface(Guid, dwQueryVer);
-}
-
 CDUIFactory * CDUIFactory::GetInstance()
 {
 	static CDUIFactory Obj;
@@ -148,7 +141,5 @@ void CDUIFactory::RegistWndManagerClass(LPCSTR lpszClassName, DUICreateWndManage
 {
 	m_mapWndManagerClass.insert(MapDuiCreateWndManager::value_type(lpszClassName, pFunc));
 }
-
-Implement_MMStaticModule(DUIFactory)
 
 //////////////////////////////////////////////////////////////////////////

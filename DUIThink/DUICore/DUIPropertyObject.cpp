@@ -337,7 +337,7 @@ VecDuiRichTextItem CDUIGlobal::ParseVecRichTextItem(LPCSTR lpszValue)
 				{
 					switch (CDUIGlobal::GetInstance()->GetResVersion())
 					{
-						case Dui_ResVersion0:
+						case DuiResVersion_0:
 						{
 							RichTextItem.vecFontResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), (";"));
 
@@ -363,7 +363,7 @@ VecDuiRichTextItem CDUIGlobal::ParseVecRichTextItem(LPCSTR lpszValue)
 				{
 					switch (CDUIGlobal::GetInstance()->GetResVersion())
 					{
-						case Dui_ResVersion0:
+						case DuiResVersion_0:
 						{
 							RichTextItem.strText = pNodeAttribute->Value();
 

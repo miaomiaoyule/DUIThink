@@ -23,7 +23,7 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 
 	//version node
 	tinyxml2::XMLElement* pXmlVersionRes = xmlDoc.NewElement(Dui_Resource_Version);
-	pXmlVersionRes->SetAttribute(Dui_Resource_Key_Version, Dui_ResVersionMax);
+	pXmlVersionRes->SetAttribute(Dui_Resource_Key_Version, DuiResVersion_Max);
 	xmlDoc.LinkEndChild(pXmlVersionRes);
 
 	//ImageResNode
@@ -156,7 +156,7 @@ bool CDUIXmlPack::LoadProject(LPCTSTR lpszProject)
 		{
 			int nResVersion = strtol(pXmlElement->Attribute(Dui_Resource_Key_Version), NULL, 10);
 	
-			CDUIGlobal::GetInstance()->SetResVersion(nResVersion);
+			CDUIGlobal::GetInstance()->SetResVersion((enDuiResVersion)nResVersion);
 
 			continue;
 		}

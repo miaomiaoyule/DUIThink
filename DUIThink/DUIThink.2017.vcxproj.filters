@@ -225,17 +225,11 @@
     <ClInclude Include="DUICore\DUIWnd.h">
       <Filter>DUICore</Filter>
     </ClInclude>
-    <ClInclude Include="DUIExport\IDUIGlobal.h">
-      <Filter>DUIExport</Filter>
-    </ClInclude>
     <ClInclude Include="DUIExport\DefineResource.h">
       <Filter>DUIExport</Filter>
     </ClInclude>
     <ClInclude Include="DUIControl\DUIWkeBrowserCtrl.h">
       <Filter>DUIControl</Filter>
-    </ClInclude>
-    <ClInclude Include="DUIExport\IDUIFactory.h">
-      <Filter>DUIExport</Filter>
     </ClInclude>
     <ClInclude Include="Define\DefineBase.h">
       <Filter>Define</Filter>

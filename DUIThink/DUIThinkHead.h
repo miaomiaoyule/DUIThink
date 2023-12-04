@@ -217,9 +217,6 @@ using namespace tinyxml2;
 #include "DUIControl/DUIClockCtrl.h"
 #include "DUIControl/DUIGroupCtrl.h"
 
-#include "DUIExport/IDUIGlobal.h"
-#include "DUIExport/IDUIFactory.h"
-
 #include "Interface.h"
 #include "DUIUtils/Utils.h"
 
@@ -228,9 +225,5 @@ using namespace tinyxml2;
 #include "DUIManager/DUIGlobal.h"
 
 #include "DUIXmlPack/DUIXmlPack.h"
-
-//////////////////////////////////////////////////////////////////////////
-Declare_MMModuleHelper(DUIGlobal, DUITHINK_DLL_NAME, CreateDUIGlobal)
-Declare_MMModuleHelper(DUIFactory, DUITHINK_DLL_NAME, CreateDUIFactory)
 
 //////////////////////////////////////////////////////////////////////////

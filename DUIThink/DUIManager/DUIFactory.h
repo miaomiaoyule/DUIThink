@@ -15,7 +15,7 @@ typedef std::unordered_map<std::string, DUICreateAttributeObj> MapDuiCreateAttri
 typedef std::unordered_map<std::string, DUICreateWndManagerObj> MapDuiCreateWndManager;
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIFactory : public IDUIFactory
+class DUITHINK_API CDUIFactory
 {
 private:
 	CDUIFactory();
@@ -26,10 +26,6 @@ private:
 	MapDuiCreateResource				m_mapResourceClass;
 	MapDuiCreateAttribute				m_mapAttributeClass;
 	MapDuiCreateWndManager				m_mapWndManagerClass;
-
-	//method
-public:
-	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
 
 public:
 	static CDUIFactory * GetInstance();

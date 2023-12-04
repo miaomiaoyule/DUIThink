@@ -35,7 +35,7 @@ typedef CDUIControlBase* (CALLBACK* FindControlProc)(CDUIControlBase*, LPVOID pD
 #define DuiInitAttriVAlignCenter(Attri, bCenter) { if(false == Attri.IsModified()) Attri.SetVAlignCenter(bCenter); }
 #define DuiInitAttriVAlignBottom(Attri, bBottom) { if(false == Attri.IsModified()) Attri.SetVAlignBottom(bBottom); }
 #define DuiSwapAttriIndex(AttriFirst, AttriNext) { if(AttriFirst.GetGroup()) AttriFirst.GetGroup()->SwapAttribute(&AttriFirst, &AttriNext); }
-#define DuiCompatibleAttriName(NameOld, NameNew) { Dui_ResVersionMax != CDUIGlobal::GetInstance()->GetResVersion() ? NameOld : NameNew }
+#define DuiCompatibleAttriName(NameOld, NameNew) { DuiResVersion_Max != CDUIGlobal::GetInstance()->GetResVersion() ? NameOld : NameNew }
 
 //////////////////////////////////////////////////////////////////////////
 //timer

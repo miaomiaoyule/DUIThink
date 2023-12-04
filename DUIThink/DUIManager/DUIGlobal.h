@@ -24,8 +24,7 @@ class CColorGridWnd;
 
 //////////////////////////////////////////////////////////////////////////
 class DUITHINK_API CDUIGlobal 
-	: public IDUIGlobal
-	, public CMMAsyncObject
+	: public CMMAsyncObject
 	, public CMMServiceItem
 {
 	friend class CDUIControlBase;
@@ -128,8 +127,8 @@ private:
 	HINSTANCE							m_hInstance = NULL;
 	HINSTANCE							m_hInstanceResource = NULL;
 	enDuiFileResType					m_DuiFileResType = DuiFileResType_File;
+	enDuiResVersion						m_DuiResVersion = DuiResVersion_0;
 	int									m_nIndexSwitchRes = 0;
-	int									m_nResVersion = Dui_ResVersion0;
 	UINT								m_uMaxControlID = Dui_CtrlIDInner_Finish;
 	UINT								m_uMaxResourceIndex = 0;
 
@@ -157,80 +156,78 @@ protected:
 
 	//method
 public:
-	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
-
 	static CDUIGlobal * GetInstance();
-	bool Init(HINSTANCE hInstance) override;
+	bool Init(HINSTANCE hInstance);
 	bool UnInit() override;
-	bool IsLoadProject() override;
-	void InitializeWebkit() override;
-	void UninitializeWebkit() override;
-	bool LoadProjectFromFile(LPCTSTR lpszProjFile) override;
-	bool LoadProjectFromZip(LPCTSTR lpszZipFile, LPCTSTR lpszPassword, LPCTSTR lpszProjName) override;
-	bool LoadProjectFromZip(void *pData, UINT uDataLen, LPCTSTR lpszPassword, LPCTSTR lpszProjName) override;
-	bool LoadProjectFromResZip(HINSTANCE hResModule, LPCTSTR lpszZipName, LPCTSTR lpszPassword, LPCTSTR lpszProjName, LPCTSTR lpszResType = _T("ZIP")) override;
-	CMMString GetDuiLastError() override;
-	void SetDuiLastError(CMMString strError) override;
-	int GetResVersion() override { return m_nResVersion; }
+	bool IsLoadProject();
+	void InitializeWebkit();
+	void UninitializeWebkit();
+	bool LoadProjectFromFile(LPCTSTR lpszProjFile);
+	bool LoadProjectFromZip(LPCTSTR lpszZipFile, LPCTSTR lpszPassword, LPCTSTR lpszProjName);
+	bool LoadProjectFromZip(void *pData, UINT uDataLen, LPCTSTR lpszPassword, LPCTSTR lpszProjName);
+	bool LoadProjectFromResZip(HINSTANCE hResModule, LPCTSTR lpszZipName, LPCTSTR lpszPassword, LPCTSTR lpszProjName, LPCTSTR lpszResType = _T("ZIP"));
+	CMMString GetDuiLastError();
+	void SetDuiLastError(CMMString strError);
+	enDuiResVersion GetResVersion() { return m_DuiResVersion; }
 
 	//switch skin
-	void PerformSwitchRes(int nIndexRes) override;
-	int GetSwitchResIndex() override;
+	void PerformSwitchRes(int nIndexRes);
+	int GetSwitchResIndex();
 
 	//info
-	const CMMDpi & GetDpiObj() override;
-	int GetDpi() override;
-	bool SetDpi(int nDpi) override;
-	int GetScale() override;
-	bool SetScale(int nScale) override;
+	const CMMDpi & GetDpiObj();
+	int GetDpi();
+	bool SetDpi(int nDpi);
+	int GetScale();
+	bool SetScale(int nScale);
 
 	//method resource
 public:
-	bool AddResource(CDUIResourceBase *pResourceObj) override;
+	bool AddResource(CDUIResourceBase *pResourceObj);
 
-	int GetFontResourceCount() override;
-	CDUIFontBase * GetFontResource(const CMMString &strName) override;
-	CDUIFontBase * GetFontResource(int nIndex) override;
-	CDUIFontBase * GetFontResDefault() override;
+	int GetFontResourceCount();
+	CDUIFontBase * GetFontResource(const CMMString &strName);
+	CDUIFontBase * GetFontResource(int nIndex);
+	CDUIFontBase * GetFontResDefault();
 
-	int GetColorResourceCount() override;
-	CDUIColorBase * GetColorResource(const CMMString &strName) override;
-	CDUIColorBase * GetColorResource(int nIndex) override;
-	CDUIColorBase * GetColorResource(ARGB dwColor) override;
+	int GetColorResourceCount();
+	CDUIColorBase * GetColorResource(const CMMString &strName);
+	CDUIColorBase * GetColorResource(int nIndex);
+	CDUIColorBase * GetColorResource(ARGB dwColor);
 
-	int GetImageResourceCount() override;
-	CDUIImageBase * GetImageResource(const CMMString &strName) override;
-	CDUIImageBase * GetImageResource(int nIndex) override;
-	CDUIImageBase * GetImageResourceByFile(const CMMString &strFileFull) override;
+	int GetImageResourceCount();
+	CDUIImageBase * GetImageResource(const CMMString &strName);
+	CDUIImageBase * GetImageResource(int nIndex);
+	CDUIImageBase * GetImageResourceByFile(const CMMString &strFileFull);
 
-	int GetDuiCount(enDuiType DuiType) override;
-	CMMString GetDuiName(int nIndex, enDuiType DuiType) override;
-	enDuiType GetDuiType(const CMMString &strName) override;
-	CMMString GetDuiFile(int nIndex, enDuiType DuiType) override;
-	CMMString GetDuiFile(const CMMString &strName) override;
-	CMMString GetDuiFileFull(const CMMString &strName) override;
+	int GetDuiCount(enDuiType DuiType);
+	CMMString GetDuiName(int nIndex, enDuiType DuiType);
+	enDuiType GetDuiType(const CMMString &strName);
+	CMMString GetDuiFile(int nIndex, enDuiType DuiType);
+	CMMString GetDuiFile(const CMMString &strName);
+	CMMString GetDuiFileFull(const CMMString &strName);
 
 	//path
-	CMMString GetProjectPath() override;
-	CMMString GetProjectName() override;
-	CMMString GetProjectFileFull() override;
-	CMMString GetSkinPath() override;
-	CMMString GetDuiPath(enDuiType DuiType) override;
+	CMMString GetProjectPath();
+	CMMString GetProjectName();
+	CMMString GetProjectFileFull();
+	CMMString GetSkinPath();
+	CMMString GetDuiPath(enDuiType DuiType);
 
 	//resource
-	HINSTANCE GetInstanceHandle() override;
-	CMMString GetInstancePath() override;
-	HINSTANCE GetResourceDll() override;
-	HZIPDT GetResourceZipHandle() override;
-	enDuiFileResType GetDuiFileResType() override;
+	HINSTANCE GetInstanceHandle();
+	CMMString GetInstancePath();
+	HINSTANCE GetResourceDll();
+	HZIPDT GetResourceZipHandle();
+	enDuiFileResType GetDuiFileResType();
 	
 	//hsl
-	void GetHSL(short *H, short *S, short *L) override;
-	void SetHSL(bool bUseHSL, short H, short S, short L) override; // H:0~360, S:0~200, L:0~200 
+	void GetHSL(short *H, short *S, short *L);
+	void SetHSL(bool bUseHSL, short H, short S, short L); // H:0~360, S:0~200, L:0~200 
 
 	//dui
 public:
-	CDUIControlBase * LoadDui(const CMMString &strName, CDUIWndManager *pWndManager = NULL) override;
+	CDUIControlBase * LoadDui(const CMMString &strName, CDUIWndManager *pWndManager = NULL);
 
 	//ui manager
 protected:
@@ -273,7 +270,7 @@ protected:
 	void LoadConfigCtrl(const CMMString &strConfigFile);
 	bool SetProjectPath(LPCTSTR lpszPath);
 	bool SetProjectName(LPCTSTR lpszName);
-	bool SetResVersion(int nResVersion);
+	bool SetResVersion(enDuiResVersion ResVersion);
 	
 	//resource
 	bool AddFontResource(CDUIFontBase *pResourceObj);
@@ -351,6 +348,7 @@ protected:
 
 	//static
 public:
+	static void MessageLoop();
 	static bool TranslateMessage(const LPMSG pMsg);
 
 	//static help

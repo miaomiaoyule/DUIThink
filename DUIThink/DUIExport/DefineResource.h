@@ -4,10 +4,6 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
-#define Dui_ResVersion0					(0)
-#define Dui_ResVersion1					(1)
-#define Dui_ResVersionMax				(Dui_ResVersion1)
-
 #define Name_ColorNone					_T("0x00000000")
 #define Name_OneAlpha					_T("0x10000000")
 #define Name_ColorBlack					_T("0xff000000")
@@ -39,6 +35,14 @@ static TCHAR g_szPublicColor[][MAX_PATH] =
 };
 
 //////////////////////////////////////////////////////////////////////////
+enum enDuiResVersion
+{
+	DuiResVersion_0 = 0,
+	DuiResVersion_1,
+	DuiResVersion_2,
+	DuiResVersion_Max,
+};
+
 enum enDuiResType
 {
 	DuiResType_None = -1,

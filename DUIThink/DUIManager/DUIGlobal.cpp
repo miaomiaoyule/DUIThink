@@ -36,13 +36,6 @@ void CDUIGlobal::OnMessage(PtrMMServiceMsg pMessage)
 	return;
 }
 
-LPVOID CDUIGlobal::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
-{
-	QUERYINTERFACE(IDUIGlobal, Guid, dwQueryVer);
-
-	return __super::QueryInterface(Guid, dwQueryVer);
-}
-
 CDUIGlobal * CDUIGlobal::GetInstance()
 {
 	static CDUIGlobal Obj;
@@ -1344,9 +1337,9 @@ bool CDUIGlobal::SetProjectName(LPCTSTR lpszName)
 	return true;
 }
 
-bool CDUIGlobal::SetResVersion(int nResVersion)
+bool CDUIGlobal::SetResVersion(enDuiResVersion ResVersion)
 {
-	m_nResVersion = nResVersion;
+	m_DuiResVersion = ResVersion;
 
 	return true;
 }
@@ -1771,9 +1764,9 @@ bool CDUIGlobal::SetAttriName(tinyxml2::XMLElement *pNode)
 
 	if (NULL == lpszName || uValueID <= 0) return true;
 
-	switch (m_nResVersion)
+	switch (m_DuiResVersion)
 	{
-		case Dui_ResVersion0:
+		case DuiResVersion_0:
 		{
 			m_mapAttriNameValue[uValueID] = lpszName;
 
@@ -2028,9 +2021,9 @@ bool CDUIGlobal::SetAttriText(tinyxml2::XMLElement *pNode)
 
 	if (NULL == lpszText || uValueID <= 0) return true;
 
-	switch (m_nResVersion)
+	switch (m_DuiResVersion)
 	{
-		case Dui_ResVersion0:
+		case DuiResVersion_0:
 		{
 			m_mapAttriTextValue[uValueID] = lpszText;
 
@@ -2123,9 +2116,9 @@ bool CDUIGlobal::SetAttriTextStyle(tinyxml2::XMLElement *pNode)
 			}
 			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriTextStyleFontRes))
 			{
-				switch (m_nResVersion)
+				switch (m_DuiResVersion)
 				{
-					case Dui_ResVersion0:
+					case DuiResVersion_0:
 					{
 						TextStyle.vecFontResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), ";");
 
@@ -2665,9 +2658,9 @@ bool CDUIGlobal::SetAttriImageSection(tinyxml2::XMLElement *pNode)
 			}
 			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriImageSecImageRes))
 			{
-				switch (m_nResVersion)
+				switch (m_DuiResVersion)
 				{
-					case Dui_ResVersion0:
+					case DuiResVersion_0:
 					{
 						ImageSection.vecImageResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), ";");
 
@@ -3213,7 +3206,7 @@ void CDUIGlobal::ReleaseDui()
 	return;
 }
 
-void IDUIGlobal::MessageLoop()
+void CDUIGlobal::MessageLoop()
 {
 	BOOL bRet = 0;
 	MSG Msg = {};
@@ -3366,8 +3359,6 @@ int CDUIGlobal::IsEmoji(TCHAR ch)
 
 	return 0;
 }
-
-Implement_MMStaticModule(DUIGlobal)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 LPCTSTR DUI__TraceMsg(UINT uMsg)
