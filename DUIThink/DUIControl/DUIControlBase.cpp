@@ -1695,6 +1695,7 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeColorBorder, _T("ColorBorder"), _T(""), m_AttributeGroupBorder);
 	DuiCreateAttribute(m_AttributeColorBorderFocus, _T("ColorFocusBorder"), _T(""), m_AttributeGroupBorder);
 	DuiCreateAttribute(m_AttributeBorderLine, DuiCompatibleAttriName(_T("BorderRect"), _T("BorderLine")), _T(""), m_AttributeGroupBorder);
+	DuiModifyAttriName(m_AttributeBorderLine, _T("BorderLine"));
 
 	DuiCreateGroupAttribute(m_AttributeGroupMouse, _T("Mouse"));
 	DuiCreateAttribute(m_AttributeMouseThrough, _T("MouseThrough"), _T(""), m_AttributeGroupMouse);

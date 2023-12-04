@@ -24,6 +24,7 @@ class DUITHINK_API CDUIAttributeObject
 	friend class CDTDesignerView;
 	friend class CPropertiesView;
 	friend class CUICommandElement;
+	friend class CDUIControlBase;
 
 	DuiDeclare_CreateAttribute(CDUIAttributeObject)
 	MMDeclare_ClassName(CDUIAttributeObject)
