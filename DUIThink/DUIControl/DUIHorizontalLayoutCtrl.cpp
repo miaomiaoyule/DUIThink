@@ -181,10 +181,10 @@ void CDUIHorizontalLayoutCtrl::RefreshView()
 					nDynamicSurplus += nDynamicWidth - pChild->GetMaxWidth();
 				}
 			}
-
-			int nDynamicSurplusOld = nDynamicSurplus;
-			do
+			while (nDynamicSurplus > 0)
 			{
+				int nDynamicSurplusOld = nDynamicSurplus;
+
 				for (auto &DynamicCtrl : mapDynamicCtrl)
 				{
 					CDUIControlBase *pChild = DynamicCtrl.first;
@@ -192,11 +192,14 @@ void CDUIHorizontalLayoutCtrl::RefreshView()
 
 					DynamicCtrl.second++;
 					nDynamicSurplus--;
+
+					if (nDynamicSurplus <= 0) break;
 				}
-
-				nDynamicSurplusOld = nDynamicSurplus;
-
-			} while (nDynamicSurplusOld != nDynamicSurplus && nDynamicSurplus > 0);
+				if (nDynamicSurplusOld == nDynamicSurplus)
+				{
+					break;
+				}
+			}
 		}
 	}
 
