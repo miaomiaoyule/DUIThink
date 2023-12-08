@@ -122,7 +122,8 @@ void CDUIHorizontalLayoutCtrl::RefreshView()
 		}
 
 		//right
-		if (HorizAlign_Right == pChild->GetHorizAlignType())
+		enDuiHorizAlignType HorizAlignType = pChild->GetHorizAlignType();
+		if (HorizAlign_Right == HorizAlignType)
 		{
 			vecControlRight.insert(vecControlRight.begin(), pChild);
 		}
@@ -137,7 +138,8 @@ void CDUIHorizontalLayoutCtrl::RefreshView()
 		nFixedWidthTotal += rcPadding.left;
 		nFixedWidthTotal += rcPadding.right;
 
-		if (vecControlLeft.size() > 1 || vecControlRight.size() > 1)
+		if ((HorizAlign_Right == HorizAlignType && vecControlRight.size() > 1)
+			|| (HorizAlign_Right != HorizAlignType && vecControlLeft.size() > 1))
 		{
 			nFixedWidthTotal += nChildPaddingH;
 		}

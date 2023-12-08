@@ -127,7 +127,8 @@ void CDUIVerticalLayoutCtrl::RefreshView()
 		}
 
 		//bottom
-		if (VertAlign_Bottom == pChild->GetVertAlignType())
+		enDuiVertAlignType VertAlignType = pChild->GetVertAlignType();
+		if (VertAlign_Bottom == VertAlignType)
 		{
 			vecControlBottom.insert(vecControlBottom.begin(), pChild);
 		}
@@ -141,7 +142,8 @@ void CDUIVerticalLayoutCtrl::RefreshView()
 		nFixedHeightTotal += rcPadding.top;
 		nFixedHeightTotal += rcPadding.bottom;
 
-		if (vecControlTop.size() > 1 || vecControlBottom.size() > 1)
+		if ((VertAlign_Bottom == VertAlignType && vecControlBottom.size() > 1)
+			|| (VertAlign_Bottom != VertAlignType && vecControlTop.size() > 1))
 		{
 			nFixedHeightTotal += nChildPaddingV;
 		}
