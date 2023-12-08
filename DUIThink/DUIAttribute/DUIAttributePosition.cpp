@@ -343,6 +343,16 @@ CDUIRect CDUIAttributePosition::GetAbsoluteRect(const CDUIRect &rcParentAbs)
 
 	//layout
 	tagDuiPosition Position = GetPosition();
+	int nLeftAlignValue = m_pOwnerCtrl->IsDpiPadding() ? DuiDpiScaleAttri(Position.HorizPosition.nLeftAlignValue) : Position.HorizPosition.nLeftAlignValue;
+	int nRightAlignValue = m_pOwnerCtrl->IsDpiPadding() ? DuiDpiScaleAttri(Position.HorizPosition.nRightAlignValue) : Position.HorizPosition.nRightAlignValue;
+	int nTopAlignValue = m_pOwnerCtrl->IsDpiPadding() ? DuiDpiScaleAttri(Position.VertPosition.nTopAlignValue) : Position.VertPosition.nTopAlignValue;
+	int nBottomAlignValue = m_pOwnerCtrl->IsDpiPadding() ? DuiDpiScaleAttri(Position.VertPosition.nBottomAlignValue) : Position.VertPosition.nBottomAlignValue;
+	int nFixedWidth = DuiDpiScaleAttri(Position.HorizPosition.nFixedWidth);
+	nFixedWidth = min(m_pOwnerCtrl->GetMaxWidth(), nFixedWidth);
+	nFixedWidth = max(m_pOwnerCtrl->GetMinWidth(), nFixedWidth);
+	int nFixedHeight = DuiDpiScaleAttri(Position.VertPosition.nFixedHeight);
+	nFixedHeight = min(m_pOwnerCtrl->GetMaxHeight(), nFixedHeight);
+	nFixedHeight = max(m_pOwnerCtrl->GetMinHeight(), nFixedHeight);
 	CDUIRect rcRelative;
 
 	//left
@@ -350,25 +360,25 @@ CDUIRect CDUIAttributePosition::GetAbsoluteRect(const CDUIRect &rcParentAbs)
 	{
 		case HorizAlign_Left:
 		{
-			rcRelative.left = GetLeftAlignValue();
+			rcRelative.left = nLeftAlignValue;
 
 			break;
 		}
 		case HorizAlign_Right:
 		{
-			rcRelative.left = GetFixedWidth() > 0 ? rcParentAbs.GetWidth() - GetRightAlignValue() - GetFixedWidth() : 0;
+			rcRelative.left = nFixedWidth > 0 ? rcParentAbs.GetWidth() - nRightAlignValue - nFixedWidth : 0;
 
 			break;
 		}
 		case HorizAlign_Center:
 		{
-			if (GetFixedWidth() > 0)
+			if (nFixedWidth > 0)
 			{
-				rcRelative.left = rcParentAbs.GetWidth() / 2 - GetFixedWidth() / 2 + GetLeftAlignValue();
+				rcRelative.left = rcParentAbs.GetWidth() / 2 - nFixedWidth / 2 + nLeftAlignValue;
 			}
 			else
 			{
-				rcRelative.left = rcParentAbs.GetWidth() / 2 + GetLeftAlignValue();
+				rcRelative.left = rcParentAbs.GetWidth() / 2 + nLeftAlignValue;
 			}
 
 			break;
@@ -380,13 +390,13 @@ CDUIRect CDUIAttributePosition::GetAbsoluteRect(const CDUIRect &rcParentAbs)
 	}
 
 	//right
-	if (GetFixedWidth() <= 0)
+	if (nFixedWidth <= 0)
 	{
-		rcRelative.right = rcParentAbs.GetWidth() - GetRightAlignValue();
+		rcRelative.right = rcParentAbs.GetWidth() - nRightAlignValue;
 	}
 	else
 	{
-		rcRelative.right = rcRelative.left + GetFixedWidth();
+		rcRelative.right = rcRelative.left + nFixedWidth;
 	}
 
 	//top
@@ -394,25 +404,25 @@ CDUIRect CDUIAttributePosition::GetAbsoluteRect(const CDUIRect &rcParentAbs)
 	{
 		case VertAlign_Top:
 		{
-			rcRelative.top = GetTopAlignValue();
+			rcRelative.top = nTopAlignValue;
 
 			break;
 		}
 		case VertAlign_Bottom:
 		{
-			rcRelative.top = GetFixedHeight() ? rcParentAbs.GetHeight() - GetBottomAlignValue() - GetFixedHeight() : 0;
+			rcRelative.top = nFixedHeight ? rcParentAbs.GetHeight() - nBottomAlignValue - nFixedHeight : 0;
 
 			break;
 		}
 		case VertAlign_Middle:
 		{
-			if (GetFixedHeight() > 0)
+			if (nFixedHeight > 0)
 			{
-				rcRelative.top = rcParentAbs.GetHeight() / 2 - GetFixedHeight() / 2 + GetTopAlignValue();
+				rcRelative.top = rcParentAbs.GetHeight() / 2 - nFixedHeight / 2 + nTopAlignValue;
 			}
 			else
 			{
-				rcRelative.top = rcParentAbs.GetHeight() / 2 + GetTopAlignValue();
+				rcRelative.top = rcParentAbs.GetHeight() / 2 + nTopAlignValue;
 			}
 
 			break;
@@ -424,13 +434,13 @@ CDUIRect CDUIAttributePosition::GetAbsoluteRect(const CDUIRect &rcParentAbs)
 	}
 
 	//bottom
-	if (GetFixedHeight() <= 0)
+	if (nFixedHeight <= 0)
 	{
-		rcRelative.bottom = rcParentAbs.GetHeight() - GetBottomAlignValue();
+		rcRelative.bottom = rcParentAbs.GetHeight() - nBottomAlignValue;
 	}
 	else
 	{
-		rcRelative.bottom = rcRelative.top + GetFixedHeight();
+		rcRelative.bottom = rcRelative.top + nFixedHeight;
 	}
 
 	rcRelative.CheckRect();

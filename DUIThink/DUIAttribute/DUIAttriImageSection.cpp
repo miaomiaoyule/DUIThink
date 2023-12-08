@@ -26,7 +26,7 @@ LPVOID CDUIAttriImageSection::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 	return __super::QueryInterface(Guid, dwQueryVer);
 }
 
-void CDUIAttriImageSection::Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint)
+void CDUIAttriImageSection::Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled)
 {
 	CDUIImageBase *pImageBaseCur = GetCurImageBase();
 	if (NULL == pImageBaseCur || NULL == m_pOwner) return;
@@ -34,12 +34,12 @@ void CDUIAttriImageSection::Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect
 	//info
 	tagDuiImageSection ImageSection = GetImageSection();
 	
-	Draw(pImageBaseCur, ImageSection, hDC, rcItem, rcPaint);
+	Draw(pImageBaseCur, ImageSection, hDC, rcItem, rcPaint, bDisabled);
 
 	return;
 }
 
-void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint)
+void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled)
 {
 	if (NULL == pImageBase) return;
 
@@ -74,14 +74,14 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 			Gdiplus::Bitmap *pBmp = CDUIRenderEngine::GetAlphaBitmap(hBitmap);
 			
 			CDUIRenderEngine::DrawImage(hDC, pBmp, rcDest, rcPaint, rcSource,
-				rcCorner, ImageSection.cbAlpha, true, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
+				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, true, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
 			
 			MMSafeDelete(pBmp);
 		}
 		else
 		{
 			CDUIRenderEngine::DrawImage(hDC, hBitmap, rcDest, rcPaint, rcSource,
-				rcCorner, ImageSection.cbAlpha, true, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
+				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, true, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
 		}
 
 		MMSafeDeleteObject(hBitmap);
@@ -93,12 +93,12 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 	if (pWndManager->IsGdiplusRenderImage())
 	{
 		CDUIRenderEngine::DrawImage(hDC, pImageBase->GetBitmap(), rcDest, rcPaint, rcSource,
-			rcCorner, ImageSection.cbAlpha, bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
+			rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
 	}
 	else
 	{
 		CDUIRenderEngine::DrawImage(hDC, hBitmap, rcDest, rcPaint, rcSource,
-			rcCorner, ImageSection.cbAlpha, bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
+			rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
 	}
 
 	return;

@@ -103,9 +103,9 @@ void CDUIHorizontalLayoutCtrl::RefreshView()
 
 	//variant
 	int nChildPaddingH = GetChildPaddingH();
-	int nDynamicCount = 0;
 	int nFixedWidthTotal = 0;
 	VecDuiControlBase vecControlLeft, vecControlRight;
+	std::unordered_map<CDUIControlBase*, int> mapDynamicCtrl;
 
 	//adjust
 	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
@@ -137,29 +137,73 @@ void CDUIHorizontalLayoutCtrl::RefreshView()
 		nFixedWidthTotal += rcPadding.left;
 		nFixedWidthTotal += rcPadding.right;
 
-		if (nIndex > 0)
+		if (vecControlLeft.size() > 1 || vecControlRight.size() > 1)
 		{
 			nFixedWidthTotal += nChildPaddingH;
 		}
 
 		int nFixedWidth = pChild->GetFixedWidth();
+		nFixedWidth = max(pChild->GetMinWidth(), nFixedWidth);
+		nFixedWidth = min(pChild->GetMaxWidth(), nFixedWidth);
 		if (nFixedWidth <= 0)
 		{
-			nDynamicCount++;
+			mapDynamicCtrl[pChild] = 0;
 			continue;
 		}
 
 		nFixedWidthTotal += nFixedWidth;
 	}
 
-	//dynamicwidth
-	int nDynamicWidth = 0, nDynamicSurplus = 0;
-	if (nDynamicCount > 0)
+	//dynamic width
+	int nDynamicWidth = 0;
+	int nDynamicSurplus = rcRangeLayout.GetWidth() - nFixedWidthTotal;
+	nDynamicSurplus = max(nDynamicSurplus, 0);
+	if (mapDynamicCtrl.size() > 0)
 	{
 		int nDynamicWidthTotal = rcRangeLayout.GetWidth() - nFixedWidthTotal;
 		nDynamicWidthTotal = max(nDynamicWidthTotal, 0);
-		nDynamicWidth = nDynamicWidthTotal / nDynamicCount;
-		nDynamicSurplus = nDynamicWidthTotal % nDynamicCount;
+		nDynamicWidth = nDynamicWidthTotal / mapDynamicCtrl.size();
+		nDynamicSurplus = nDynamicWidthTotal % mapDynamicCtrl.size();
+
+		if (nDynamicWidth > 0)
+		{
+			for (auto &DynamicCtrl : mapDynamicCtrl)
+			{
+				CDUIControlBase *pChild = DynamicCtrl.first;
+				if (NULL == pChild) continue;
+
+				DynamicCtrl.second = min(nDynamicWidth, pChild->GetMaxWidth());
+
+				if (nDynamicWidth > pChild->GetMaxWidth())
+				{
+					nDynamicSurplus += nDynamicWidth - pChild->GetMaxWidth();
+				}
+			}
+
+			int nDynamicSurplusOld = nDynamicSurplus;
+			do
+			{
+				for (auto &DynamicCtrl : mapDynamicCtrl)
+				{
+					CDUIControlBase *pChild = DynamicCtrl.first;
+					if (NULL == pChild || pChild->GetMaxWidth() <= DynamicCtrl.second) continue;
+
+					DynamicCtrl.second++;
+					nDynamicSurplus--;
+				}
+
+				nDynamicSurplusOld = nDynamicSurplus;
+
+			} while (nDynamicSurplusOld != nDynamicSurplus && nDynamicSurplus > 0);
+		}
+	}
+
+	//auto child padding
+	int nDynamicChildPaddingH = 0;
+	if (IsAutoCalcChildPaddingH() && vecControlLeft.size() + vecControlRight.size() - 1 > 0)
+	{
+		nDynamicChildPaddingH = nDynamicSurplus / (vecControlLeft.size() + vecControlRight.size() - 1);
+		nDynamicSurplus = nDynamicSurplus % (vecControlLeft.size() + vecControlRight.size() - 1);
 	}
 
 	//adjust layout
@@ -180,28 +224,24 @@ void CDUIHorizontalLayoutCtrl::RefreshView()
 		{
 			nTileX += nChildPaddingH;
 		}
-
-		int nFixedWidth = pChild->GetFixedWidth();
-		if (nFixedWidth <= 0)
+		if (IsAutoCalcChildPaddingH())
 		{
-			rcModal = CDUIRect(nTileX, rcRangeLayout.top, nTileX, rcRangeLayout.bottom);
-			nTileX += nDynamicWidth + pChild->GetPadding().left + pChild->GetPadding().right;
-
-			if (nDynamicSurplus > 0 && IsAutoCalcChildPaddingH())
+			nTileX += nDynamicChildPaddingH;
+		
+			if (nDynamicSurplus > 0)
 			{
 				nTileX++;
-				rcModal.Offset(1, 0);
 				nDynamicSurplus--;
 			}
+		}
 
-			rcModal.right = nTileX;
-		}
-		else
-		{
-			rcModal = CDUIRect(nTileX, rcRangeLayout.top, nTileX, rcRangeLayout.bottom);
-			nTileX += nFixedWidth + pChild->GetPadding().left + pChild->GetPadding().right;
-			rcModal.right = nTileX;
-		}
+		int nFixedWidth = pChild->GetFixedWidth();
+		nFixedWidth = max(pChild->GetMinWidth(), nFixedWidth);
+		nFixedWidth = min(pChild->GetMaxWidth(), nFixedWidth);
+		rcModal = CDUIRect(nTileX, rcRangeLayout.top, nTileX, rcRangeLayout.bottom);
+		nTileX += pChild->GetPadding().left + pChild->GetPadding().right;
+		nTileX += nFixedWidth <= 0 ? mapDynamicCtrl[pChild] : nFixedWidth;
+		rcModal.right = nTileX;
 		
 		pChild->OnDuiSize(rcModal);
 
@@ -223,28 +263,24 @@ void CDUIHorizontalLayoutCtrl::RefreshView()
 		{
 			nTileX -= nChildPaddingH;
 		}
-
-		int nFixedWidth = pChild->GetFixedWidth();
-		if (nFixedWidth <= 0)
+		if (IsAutoCalcChildPaddingH())
 		{
-			rcModal = CDUIRect(nTileX, rcRangeLayout.top, nTileX, rcRangeLayout.bottom);
-			nTileX -= nDynamicWidth + pChild->GetPadding().left + pChild->GetPadding().right;
+			nTileX -= nDynamicChildPaddingH;
 
-			if (nDynamicSurplus > 0 && IsAutoCalcChildPaddingH())
+			if (nDynamicSurplus > 0)
 			{
 				nTileX--;
-				rcModal.Offset(-1, 0);
 				nDynamicSurplus--;
 			}
+		}
 
-			rcModal.left = nTileX;
-		}
-		else
-		{
-			rcModal = CDUIRect(nTileX, rcRangeLayout.top, nTileX, rcRangeLayout.bottom);
-			nTileX -= nFixedWidth + pChild->GetPadding().left + pChild->GetPadding().right;
-			rcModal.left = nTileX;
-		}
+		int nFixedWidth = pChild->GetFixedWidth();
+		nFixedWidth = max(pChild->GetMinWidth(), nFixedWidth);
+		nFixedWidth = min(pChild->GetMaxWidth(), nFixedWidth);
+		rcModal = CDUIRect(nTileX, rcRangeLayout.top, nTileX, rcRangeLayout.bottom);
+		nTileX -= pChild->GetPadding().left + pChild->GetPadding().right;
+		nTileX -= nFixedWidth <= 0 ? mapDynamicCtrl[pChild] : nFixedWidth;
+		rcModal.left = nTileX;
 
 		pChild->OnDuiSize(rcModal);
 

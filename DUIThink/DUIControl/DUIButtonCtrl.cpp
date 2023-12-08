@@ -434,7 +434,7 @@ void CDUIButtonCtrl::PaintStatusImage(HDC hDC)
 	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeImageNormal : pAttribute;
 	if (NULL == pAttribute) return;
 
-	pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint);
+	pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint, false == IsEnabled() && pAttribute != &m_AttributeImageDisabled);
 
 	return;
 }

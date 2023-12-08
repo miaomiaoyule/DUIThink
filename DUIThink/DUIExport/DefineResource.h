@@ -17,6 +17,9 @@
 #define Name_Colorff0066cc				_T("0xff0066cc")
 #define Name_Colorffe5f3ff				_T("0xffe5f3ff")
 #define Name_Colorffcde8ff				_T("0xffcde8ff")
+#define Name_Colorff252429				_T("0xff252429")
+#define Name_Colorff727176				_T("0xff727176")
+#define Name_Colorffbababf				_T("0xffbababf")
 
 static TCHAR g_szPublicColor[][MAX_PATH] = 
 {
@@ -32,6 +35,9 @@ static TCHAR g_szPublicColor[][MAX_PATH] =
 	Name_Colorff0066cc,
 	Name_Colorffe5f3ff,
 	Name_Colorffcde8ff,
+	Name_Colorff252429,
+	Name_Colorff727176,
+	Name_Colorffbababf,
 };
 
 //////////////////////////////////////////////////////////////////////////

@@ -108,9 +108,9 @@ void CDUIVerticalLayoutCtrl::RefreshView()
 
 	//variant
 	int nChildPaddingV = GetChildPaddingV();
-	int nDynamicCount = 0;
 	int nFixedHeightTotal = 0;
 	VecDuiControlBase vecControlTop, vecControlBottom;
+	std::unordered_map<CDUIControlBase*, int> mapDynamicCtrl;
 
 	//adjust
 	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
@@ -141,15 +141,17 @@ void CDUIVerticalLayoutCtrl::RefreshView()
 		nFixedHeightTotal += rcPadding.top;
 		nFixedHeightTotal += rcPadding.bottom;
 
-		if (nIndex > 0)
+		if (vecControlTop.size() > 1 || vecControlBottom.size() > 1)
 		{
 			nFixedHeightTotal += nChildPaddingV;
 		}
 
 		int nFixedHeight = pChild->GetFixedHeight();
+		nFixedHeight = max(pChild->GetMinHeight(), nFixedHeight);
+		nFixedHeight = min(pChild->GetMaxHeight(), nFixedHeight);
 		if (nFixedHeight <= 0)
 		{
-			nDynamicCount++;
+			mapDynamicCtrl[pChild] = 0;
 			continue;
 		}
 
@@ -157,13 +159,55 @@ void CDUIVerticalLayoutCtrl::RefreshView()
 	}
 
 	//dynamicheight
-	int nDynamicHeight = 0, nDynamicSurplus = 0;
-	if (nDynamicCount > 0)
+	int nDynamicHeight = 0;
+	int nDynamicSurplus = rcRangeLayout.GetHeight() - nFixedHeightTotal;
+	nDynamicSurplus = max(nDynamicSurplus, 0);
+	if (mapDynamicCtrl.size() > 0)
 	{
 		int nDynamicHeightTotal = rcRangeLayout.GetHeight() - nFixedHeightTotal;
 		nDynamicHeightTotal = max(nDynamicHeightTotal, 0);
-		nDynamicHeight = nDynamicHeightTotal / nDynamicCount;
-		nDynamicSurplus = nDynamicHeightTotal % nDynamicCount;
+		nDynamicHeight = nDynamicHeightTotal / mapDynamicCtrl.size();
+		nDynamicSurplus = nDynamicHeightTotal % mapDynamicCtrl.size();
+
+		if (nDynamicHeight > 0)
+		{
+			for (auto &DynamicCtrl : mapDynamicCtrl)
+			{
+				CDUIControlBase *pChild = DynamicCtrl.first;
+				if (NULL == pChild) continue;
+
+				DynamicCtrl.second = min(nDynamicHeight, pChild->GetMaxHeight());
+
+				if (nDynamicHeight > pChild->GetMaxHeight())
+				{
+					nDynamicSurplus += nDynamicHeight - pChild->GetMaxHeight();
+				}
+			}
+
+			int nDynamicSurplusOld = nDynamicSurplus;
+			do
+			{
+				for (auto &DynamicCtrl : mapDynamicCtrl)
+				{
+					CDUIControlBase *pChild = DynamicCtrl.first;
+					if (NULL == pChild || pChild->GetMaxHeight() <= DynamicCtrl.second) continue;
+
+					DynamicCtrl.second++;
+					nDynamicSurplus--;
+				}
+
+				nDynamicSurplusOld = nDynamicSurplus;
+
+			} while (nDynamicSurplusOld != nDynamicSurplus && nDynamicSurplus > 0);
+		}
+	}
+
+	//auto child padding
+	int nDynamicChildPaddingV = 0;
+	if (IsAutoCalcChildPaddingV() && vecControlTop.size() + vecControlBottom.size() - 1 > 0)
+	{
+		nDynamicChildPaddingV = nDynamicSurplus / (vecControlTop.size() + vecControlBottom.size() - 1);
+		nDynamicSurplus = nDynamicSurplus % (vecControlTop.size() + vecControlBottom.size() - 1);
 	}
 
 	//adjust layout
@@ -184,28 +228,24 @@ void CDUIVerticalLayoutCtrl::RefreshView()
 		{
 			nTileY += nChildPaddingV;
 		}
-
-		int nFixedHeight = pChild->GetFixedHeight();
-		if (nFixedHeight <= 0)
+		if (IsAutoCalcChildPaddingV())
 		{
-			rcModal = CDUIRect(rcRangeLayout.left, nTileY, rcRangeLayout.right, nTileY);
-			nTileY += nDynamicHeight + pChild->GetPadding().top + pChild->GetPadding().bottom;
+			nTileY += nDynamicChildPaddingV;
 
-			if (nDynamicSurplus > 0 && IsAutoCalcChildPaddingV())
+			if (nDynamicSurplus > 0)
 			{
 				nTileY++;
-				rcModal.Offset(0, 1);
 				nDynamicSurplus--;
 			}
+		}
 
-			rcModal.bottom = nTileY;
-		}
-		else
-		{
-			rcModal = CDUIRect(rcRangeLayout.left, nTileY, rcRangeLayout.right, nTileY);
-			nTileY += nFixedHeight + pChild->GetPadding().top + pChild->GetPadding().bottom;
-			rcModal.bottom = nTileY;
-		}
+		int nFixedHeight = pChild->GetFixedHeight();
+		nFixedHeight = max(pChild->GetMinHeight(), nFixedHeight);
+		nFixedHeight = min(pChild->GetMaxHeight(), nFixedHeight);
+		rcModal = CDUIRect(rcRangeLayout.left, nTileY, rcRangeLayout.right, nTileY);
+		nTileY += pChild->GetPadding().top + pChild->GetPadding().bottom;
+		nTileY += nFixedHeight <= 0 ? mapDynamicCtrl[pChild] : nFixedHeight;
+		rcModal.bottom = nTileY;
 
 		pChild->OnDuiSize(rcModal);
 
@@ -227,28 +267,24 @@ void CDUIVerticalLayoutCtrl::RefreshView()
 		{
 			nTileY -= nChildPaddingV;
 		}
-
-		int nFixedHeight = pChild->GetFixedHeight();
-		if (nFixedHeight <= 0)
+		if (IsAutoCalcChildPaddingV())
 		{
-			rcModal = CDUIRect(rcRangeLayout.left, nTileY, rcRangeLayout.right, nTileY);
-			nTileY -= nDynamicHeight + pChild->GetPadding().top + pChild->GetPadding().bottom;
+			nTileY -= nDynamicChildPaddingV;
 
-			if (nDynamicSurplus > 0 && IsAutoCalcChildPaddingV())
+			if (nDynamicSurplus > 0)
 			{
 				nTileY--;
-				rcModal.Offset(0, -1);
 				nDynamicSurplus--;
 			}
+		}
 
-			rcModal.top = nTileY;
-		}
-		else
-		{
-			rcModal = CDUIRect(rcRangeLayout.left, nTileY, rcRangeLayout.right, nTileY);
-			nTileY -= nFixedHeight + pChild->GetPadding().top + pChild->GetPadding().bottom;
-			rcModal.top = nTileY;
-		}
+		int nFixedHeight = pChild->GetFixedHeight();
+		nFixedHeight = max(pChild->GetMinHeight(), nFixedHeight);
+		nFixedHeight = min(pChild->GetMaxHeight(), nFixedHeight);
+		rcModal = CDUIRect(rcRangeLayout.left, nTileY, rcRangeLayout.right, nTileY);
+		nTileY -= pChild->GetPadding().top + pChild->GetPadding().bottom;
+		nTileY -= nFixedHeight <= 0 ? mapDynamicCtrl[pChild] : nFixedHeight;
+		rcModal.top = nTileY;
 
 		pChild->OnDuiSize(rcModal);
 
