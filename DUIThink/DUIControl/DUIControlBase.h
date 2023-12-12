@@ -133,7 +133,7 @@ public:
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
 	virtual CMMString GetDescribe() const override;
 	virtual UINT GetControlFlags() ;
-	virtual CDUIControlBase * Clone(bool bIncludeChild = true);
+	virtual CDUIControlBase * Clone(bool bIncludeChild = true, bool bRefreshCtrlID = true);
 	virtual int GetScale() override;
 	virtual int GetControlCallBackCount();
 	virtual IDUIControlCallBack * GetControlCallBack(int nIndex);

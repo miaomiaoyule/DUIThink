@@ -161,9 +161,9 @@ CMMString CDUIContainerCtrl::GetDescribe() const
 	return Dui_Ctrl_Container;
 }
 
-CDUIContainerCtrl * CDUIContainerCtrl::Clone(bool bIncludeChild/* = true*/)
+CDUIContainerCtrl * CDUIContainerCtrl::Clone(bool bIncludeChild/* = true*/, bool bRefreshCtrlID)
 {
-	MMInterfaceHelper(CDUIContainerCtrl, __super::Clone(bIncludeChild), pCloneContainer);
+	MMInterfaceHelper(CDUIContainerCtrl, __super::Clone(bIncludeChild, bRefreshCtrlID), pCloneContainer);
 	if (NULL == pCloneContainer) return NULL;
 
 	//scrollbar
@@ -189,7 +189,7 @@ CDUIContainerCtrl * CDUIContainerCtrl::Clone(bool bIncludeChild/* = true*/)
 		CDUIControlBase *pChild = GetChildAt(nIndex);
 		if (NULL == pChild) continue;
 
-		pCloneContainer->InsertChild(pChild->Clone());
+		pCloneContainer->InsertChild(pChild->Clone(bIncludeChild, bRefreshCtrlID));
 	}
 
 	pCloneContainer->InitComplete();

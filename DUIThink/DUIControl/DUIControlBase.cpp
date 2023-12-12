@@ -83,7 +83,7 @@ UINT CDUIControlBase::GetControlFlags()
 	return DUIFLAG_SETCURSOR;
 }
 
-CDUIControlBase * CDUIControlBase::Clone(bool bIncludeChild)
+CDUIControlBase * CDUIControlBase::Clone(bool bIncludeChild, bool bRefreshCtrlID)
 {
 	CDUIControlBase *pControlClone = CDUIFactory::GetInstance()->CreateControlObj((LPCSTR)CT2CA(GetClass()));
 	if (NULL == pControlClone) return NULL;
@@ -110,7 +110,8 @@ CDUIControlBase * CDUIControlBase::Clone(bool bIncludeChild)
 	}
 
 	//ctrl id
-	if (NULL == MMInterfaceHelper(CDUIListItemCtrl, this)
+	if (bRefreshCtrlID
+		&& NULL == MMInterfaceHelper(CDUIListItemCtrl, this)
 		&& NULL == GetOwnerModelCtrl()
 		&& GetCtrlID() > Dui_CtrlIDInner_Finish 
 		&& GetCtrlID() == pControlClone->GetCtrlID())
