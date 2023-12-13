@@ -374,11 +374,11 @@ CDUIRect CDUIAttributePosition::GetAbsoluteRect(const CDUIRect &rcParentAbs)
 		{
 			if (nFixedWidth > 0)
 			{
-				rcRelative.left = rcParentAbs.GetWidth() / 2 - nFixedWidth / 2 + nLeftAlignValue;
+				rcRelative.left = (rcParentAbs.GetWidth() - nRightAlignValue) / 2 - nFixedWidth / 2 + nLeftAlignValue;
 			}
 			else
 			{
-				rcRelative.left = rcParentAbs.GetWidth() / 2 + nLeftAlignValue;
+				rcRelative.left = (rcParentAbs.GetWidth() - nRightAlignValue) / 2 + nLeftAlignValue;
 			}
 
 			break;
@@ -418,11 +418,11 @@ CDUIRect CDUIAttributePosition::GetAbsoluteRect(const CDUIRect &rcParentAbs)
 		{
 			if (nFixedHeight > 0)
 			{
-				rcRelative.top = rcParentAbs.GetHeight() / 2 - nFixedHeight / 2 + nTopAlignValue;
+				rcRelative.top = (rcParentAbs.GetHeight() - nBottomAlignValue) / 2 - nFixedHeight / 2 + nTopAlignValue;
 			}
 			else
 			{
-				rcRelative.top = rcParentAbs.GetHeight() / 2 + nTopAlignValue;
+				rcRelative.top = (rcParentAbs.GetHeight() - nBottomAlignValue) / 2 + nTopAlignValue;
 			}
 
 			break;

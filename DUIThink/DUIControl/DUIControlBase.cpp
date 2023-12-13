@@ -573,21 +573,24 @@ void CDUIControlBase::SetVertAlignType(enDuiVertAlignType AlignType)
 
 CDUIRect CDUIControlBase::GetPadding()
 {
+	tagDuiPosition Position = m_AttributePosition.GetPosition();
+
 	CDUIRect rcPadding;
-	rcPadding.left = m_AttributePosition.GetLeftAlignValue();
-	rcPadding.top = m_AttributePosition.GetTopAlignValue();
-	rcPadding.right = m_AttributePosition.GetRightAlignValue();
-	rcPadding.bottom = m_AttributePosition.GetBottomAlignValue();
+	rcPadding.left = IsDpiPadding() ? DuiDpiScaleCtrl(Position.HorizPosition.nLeftAlignValue) : Position.HorizPosition.nLeftAlignValue;
+	rcPadding.top = IsDpiPadding() ? DuiDpiScaleCtrl(Position.VertPosition.nTopAlignValue) : Position.VertPosition.nTopAlignValue;
+	rcPadding.right = IsDpiPadding() ? DuiDpiScaleCtrl(Position.HorizPosition.nRightAlignValue) : Position.HorizPosition.nRightAlignValue;
+	rcPadding.bottom = IsDpiPadding() ? DuiDpiScaleCtrl(Position.VertPosition.nBottomAlignValue) : Position.VertPosition.nBottomAlignValue;
 
 	return rcPadding;
 }
 
 void CDUIControlBase::SetPadding(long lLeft, long lTop, long lRight, long lBottom)
 {
-	if (lLeft == m_AttributePosition.GetLeftAlignValue()
-		&& lTop == m_AttributePosition.GetTopAlignValue()
-		&& lRight == m_AttributePosition.GetRightAlignValue()
-		&& lBottom == m_AttributePosition.GetBottomAlignValue()) return;
+	CDUIRect rcPadding = GetPadding();
+	if (lLeft == rcPadding.left
+		&& lTop == rcPadding.top
+		&& lRight == rcPadding.right
+		&& lBottom == rcPadding.bottom) return;
 
 	m_AttributePosition.SetLeftAlignValue(lLeft);
 	m_AttributePosition.SetTopAlignValue(lTop);

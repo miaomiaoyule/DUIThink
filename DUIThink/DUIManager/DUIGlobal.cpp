@@ -1114,30 +1114,37 @@ CMMString CDUIGlobal::SaveDui(CDUIPropertyObject *pProp, bool bIncludeChild)
 
 bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
 {
-	//zip
-	if (DuiFileResType_Zip == GetDuiFileResType()
-		|| DuiFileResType_ResZip == GetDuiFileResType())
+	do
 	{
-		HZIPDT hz = (HZIPDT)GetResourceZipHandle();
-		if (NULL == hz) return false;
+		//full path
+		if (strFile.GetLength() >= 2 && strFile[1] == _T(':')) break;
 
-		ZIPENTRYDT ze = {};
-		int i = 0;
-
-		strFile.Replace(_T("\\"), _T("/"));
-		if (0 != FindZipItem(hz, strFile, true, &i, &ze)) return false;
-
-		DWORD dwSize = ze.unc_size;
-		if (0 == dwSize) return false;
-
-		vecData.resize(dwSize);
-		int res = UnzipItem(hz, i, vecData.data(), dwSize, 3);
-		if (0x00000000 != res && 0x00000600 != res)
+		//zip
+		if (DuiFileResType_Zip == GetDuiFileResType()
+			|| DuiFileResType_ResZip == GetDuiFileResType())
 		{
-			vecData.clear();
-			return false;
+			HZIPDT hz = (HZIPDT)GetResourceZipHandle();
+			if (NULL == hz) break;
+
+			ZIPENTRYDT ze = {};
+			int i = 0;
+
+			strFile.Replace(_T("\\"), _T("/"));
+			if (0 != FindZipItem(hz, strFile, true, &i, &ze)) break;
+
+			DWORD dwSize = ze.unc_size;
+			if (0 == dwSize) return false;
+
+			vecData.resize(dwSize);
+			int res = UnzipItem(hz, i, vecData.data(), dwSize, 3);
+			if (0x00000000 != res && 0x00000600 != res)
+			{
+				vecData.clear();
+				return false;
+			}
 		}
-	}
+
+	} while (false);
 
 	//file
 	if (DuiFileResType_File == GetDuiFileResType() || vecData.empty())

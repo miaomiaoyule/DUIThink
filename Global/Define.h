@@ -49,6 +49,8 @@
 #define Name_ImageClockMinute			_T("{3C3FD836-F084-48C8-B756-1A6A51F356EE}")
 #define Name_ImageClockSecond			_T("{61E627E2-3B62-4654-BC49-5496DC2B810C}")
 #define Name_ImageClockCenterDot		_T("{C6CBA3A4-0E50-4AC8-BDC3-847E1FEDE1A1}")
+#define Name_ImageGif					_T("{FA94D6A6-40B8-41CB-83FA-B886716BE3C3}")
+#define Name_ImageSequenceFrame			_T("{3482C09B-88D0-4A30-B854-9DBC23B83587}")
 
 //////////////////////////////////////////////////////////////////////////
 #define Len_Account						(32)
@@ -107,6 +109,8 @@ static TCHAR g_szPublicImage[][MAX_PATH][MAX_PATH]
 	{ Name_ImageClockMinute, _T("SkinDesign/ClockMinute.png") },
 	{ Name_ImageClockSecond, _T("SkinDesign/ClockSecond.png") },
 	{ Name_ImageClockCenterDot, _T("SkinDesign/ClockCenterDot.png") },
+	{ Name_ImageGif, _T("SkinDesign/Face.gif") },
+	{ Name_ImageSequenceFrame, _T("SkinDesign/SequenceFrame.jpeg") },
 };
 
 //////////////////////////////////////////////////////////////////////////

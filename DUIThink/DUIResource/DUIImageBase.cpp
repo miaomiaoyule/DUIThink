@@ -227,18 +227,7 @@ void CDUIImageBase::ConstructResource(int nScale)
 
 	//file
 	vector<BYTE> vecData;
-	CMMString strFile;
-	enDuiFileResType DuiFileResType = CDUIGlobal::GetInstance()->GetDuiFileResType();
-	if (DuiFileResType_File == DuiFileResType
-		|| (m_strImageFile.GetLength() >= 2 && _T(':') == m_strImageFile[1]))
-	{
-		strFile = GetImageFileFull();
-	}
-	else
-	{
-		strFile = strFile + Dui_Resource_ImageRes + _T('//');
-		strFile += GetImageFile();
-	}
+	CMMString strFile = GetImageFileFull();
 
 	//scale
 	CMMString strScale;
