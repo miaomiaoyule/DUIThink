@@ -1180,7 +1180,7 @@ CDUIRect CDUITreeNodeCtrl::GetTextRange()
 
 CDUIControlBase * CDUITreeNodeCtrl::FindControl(FindControlProc Proc, LPVOID pData, UINT uFlags)
 {
-	if (uFlags & DUIFIND_THISVIEW)
+	if (uFlags & DuiFind_ThisView)
 	{
 		CDUIControlBase *pControl = m_pHorizContainerCtrl ? m_pHorizContainerCtrl->FindControl(Proc, pData, uFlags) : NULL;
 

@@ -365,6 +365,8 @@ protected:
 	virtual CDUIAttriImageSection * GetAttributeStatusImage();
 	virtual CDUIRect GetBorderRect();
 	virtual CDUISize GetBorderBreakTop();
+	virtual CDUIScrollBarCtrl * GetHorizScrollBar() const { return NULL; }
+	virtual CDUIScrollBarCtrl * GetVertScrollBar() const { return NULL; }
 
 	//water help
 private:

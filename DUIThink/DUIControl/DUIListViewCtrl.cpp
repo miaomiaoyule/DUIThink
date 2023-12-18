@@ -2394,20 +2394,20 @@ CDUIControlBase * CDUIListViewCtrl::FindControl(FindControlProc Proc, LPVOID pDa
 	{
 		CDUIControlBase *pResult = m_pListHeader->FindControl(Proc, pData, uFlags);
 
-		if (pResult && 0 == (uFlags & DUIFIND_UPDATETEST)) return pResult;
+		if (pResult && 0 == (uFlags & DuiFind_UpdateTest)) return pResult;
 	}
 
 	//hittest
-	if (uFlags & DUIFIND_HITTEST)
+	if (uFlags & DuiFind_HitTest)
 	{
-		if ((uFlags & DUIFIND_VISIBLE) && false == IsVisible()) return NULL;
-		if ((uFlags & DUIFIND_ENABLED) && false == IsEnabled()) return NULL;
+		if ((uFlags & DuiFind_Visible) && false == IsVisible()) return NULL;
+		if ((uFlags & DuiFind_Enabled) && false == IsEnabled()) return NULL;
 		if (!::PtInRect(&m_rcAbsolute, *static_cast<LPPOINT>(pData))) return NULL;
 
 		CDUIControlBase *pResult = NULL;
 
 		//mefirst
-		if ((uFlags & DUIFIND_ME_FIRST) != 0)
+		if ((uFlags & DuiFind_MeFirst) != 0)
 		{
 			pResult = __super::FindControl(Proc, pData, uFlags);
 		}
@@ -2418,13 +2418,13 @@ CDUIControlBase * CDUIListViewCtrl::FindControl(FindControlProc Proc, LPVOID pDa
 		{
 			pResult = m_pVertScrollBarCtrl->FindControl(Proc, pData, uFlags);
 
-			if (pResult && 0 == (uFlags & DUIFIND_UPDATETEST)) return pResult;
+			if (pResult && 0 == (uFlags & DuiFind_UpdateTest)) return pResult;
 		}
 		if (m_pHorizScrollBarCtrl)
 		{
 			pResult = m_pHorizScrollBarCtrl->FindControl(Proc, pData, uFlags);
 
-			if (pResult && 0 == (uFlags & DUIFIND_UPDATETEST)) return pResult;
+			if (pResult && 0 == (uFlags & DuiFind_UpdateTest)) return pResult;
 		}
 
 		//focus
@@ -2444,7 +2444,7 @@ CDUIControlBase * CDUIListViewCtrl::FindControl(FindControlProc Proc, LPVOID pDa
 		}
 
 		//child
-		if ((uFlags & DUIFIND_TOP_FIRST) != 0)
+		if ((uFlags & DuiFind_TopFirst) != 0)
 		{
 			for (int n = GetChildCount() - 1; n >= 0; n--)
 			{
@@ -3371,7 +3371,7 @@ int CDUIListViewCtrl::FindSelectableOnTileTypeV(WORD wKey)
 		{
 			bool bPositive = VK_DOWN == wKey ? true : false;
 			1 == nFindCount ? bPositive = !bPositive : bPositive;
-			int nIndex = FindNextIndex(nCurSel, bPositive, DUIFIND_VISIBLE | DUIFIND_ENABLED, 3 == nFindCount ? 1 : GetRowCount());
+			int nIndex = FindNextIndex(nCurSel, bPositive, DuiFind_Visible | DuiFind_Enabled, 3 == nFindCount ? 1 : GetRowCount());
 			if (-1 == nIndex)
 			{
 				nFindCount--;
@@ -3393,7 +3393,7 @@ int CDUIListViewCtrl::FindSelectableOnTileTypeV(WORD wKey)
 	}
 	if (VK_LEFT == wKey || VK_RIGHT == wKey)
 	{
-		int nIndex = FindNextIndex(nCurSel, VK_RIGHT == wKey ? true : false, DUIFIND_VISIBLE | DUIFIND_ENABLED, GetRowCount());
+		int nIndex = FindNextIndex(nCurSel, VK_RIGHT == wKey ? true : false, DuiFind_Visible | DuiFind_Enabled, GetRowCount());
 		CDUIListItemCtrl *pItemNext = GetChildAt(nIndex);
 		if (pItemNext) return nIndex;
 

@@ -137,8 +137,8 @@ public:
 	virtual void HomeLeft();
 	virtual void EndRight();
 	virtual void EnableScrollBar(bool bEnableHorizontal = true, bool bEnableVertical = true);
-	virtual CDUIScrollBarCtrl * GetHorizScrollBar() const;
-	virtual CDUIScrollBarCtrl * GetVertScrollBar() const;
+	virtual CDUIScrollBarCtrl * GetHorizScrollBar() const override;
+	virtual CDUIScrollBarCtrl * GetVertScrollBar() const override;
 
 	//child
 	virtual int GetChildCount() const;
@@ -165,7 +165,7 @@ public:
 	virtual int TranslateIndex(CDUIPoint pt);
 	CDUIControlBase * FindSubControl(UINT uCtrlID);
 	CDUIControlBase * FindSubControlThisView(UINT uCtrlID);
-	int FindNextIndex(int nIndexCur, bool bPositive = true, UINT uFlags = DUIFIND_VISIBLE | DUIFIND_ENABLED, int nNextCount = 1) const;
+	int FindNextIndex(int nIndexCur, bool bPositive = true, UINT uFlags = DuiFind_Visible | DuiFind_Enabled, int nNextCount = 1) const;
 
 	//refresh	 
 	void RefreshView() override;

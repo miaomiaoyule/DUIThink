@@ -607,7 +607,7 @@ bool CDUIWndManager::InitControls(CDUIControlBase *pControl)
 	ASSERT(pControl);
 	if (NULL == pControl) return false;
 	pControl->SetWndManager(this);
-	pControl->FindControl(__FindControlFromIDHash, this, DUIFIND_ALL);
+	pControl->FindControl(__FindControlFromIDHash, this, DuiFind_All);
 
 	return true;
 }
@@ -1312,7 +1312,7 @@ CDUIControlBase * CDUIWndManager::FindControl(POINT pt) const
 {
 	if (NULL == m_pRootCtrl) return NULL;
 
-	return m_pRootCtrl->FindControl(__FindControlFromPoint, &pt, DUIFIND_VISIBLE | DUIFIND_HITTEST | DUIFIND_TOP_FIRST);
+	return m_pRootCtrl->FindControl(__FindControlFromPoint, &pt, DuiFind_Visible | DuiFind_HitTest | DuiFind_TopFirst);
 }
 
 CDUIControlBase * CDUIWndManager::FindControl(UINT uCtrlID) const
@@ -1328,7 +1328,7 @@ CDUIControlBase * CDUIWndManager::FindControlByShortCut(TCHAR chChar) const
 	DUIFindShortCut FindShortCut = {};
 	FindShortCut.chChar = toupper((int)chChar);
 
-	UINT uFlag = DUIFIND_ENABLED | DUIFIND_ME_FIRST | DUIFIND_TOP_FIRST | DUIFIND_VISIBLE;
+	UINT uFlag = DuiFind_Enabled | DuiFind_MeFirst | DuiFind_TopFirst | DuiFind_Visible;
 	return m_pRootCtrl->FindControl(__FindControlFromShortcut, &FindShortCut, uFlag);
 }
 
@@ -1336,7 +1336,14 @@ CDUIControlBase * CDUIWndManager::FindControlByDrop(POINT pt) const
 {
 	if (NULL == m_pRootCtrl) return NULL;
 
-	return m_pRootCtrl->FindControl(__FindControlFromDrop, &pt, DUIFIND_VISIBLE | DUIFIND_HITTEST | DUIFIND_TOP_FIRST);
+	return m_pRootCtrl->FindControl(__FindControlFromDrop, &pt, DuiFind_Visible | DuiFind_HitTest | DuiFind_TopFirst);
+}
+
+CDUIControlBase * CDUIWndManager::FindControlByWheel(POINT pt, int nWheelDelta/* = WHEEL_DELTA*/) const
+{
+	if (NULL == m_pRootCtrl) return NULL;
+
+	return m_pRootCtrl->FindControl(__FindControlFromWheel, &pt, DuiFind_Visible | DuiFind_HitTest | DuiFind_TopFirst | (WHEEL_DELTA == nWheelDelta ? DuiFind_WheelUp : DuiFind_WheelDown));
 }
 
 CDUIControlBase * CDUIWndManager::FindSubControlByPoint(CDUIContainerCtrl *pParent, POINT pt)
@@ -1344,7 +1351,7 @@ CDUIControlBase * CDUIWndManager::FindSubControlByPoint(CDUIContainerCtrl *pPare
 	if (NULL == pParent) pParent = GetRootCtrl();
 	if (NULL == pParent) return NULL;
 
-	return pParent->FindControl(__FindControlFromPoint, &pt, DUIFIND_VISIBLE | DUIFIND_HITTEST | DUIFIND_TOP_FIRST);
+	return pParent->FindControl(__FindControlFromPoint, &pt, DuiFind_Visible | DuiFind_HitTest | DuiFind_TopFirst);
 }
 
 CDUIControlBase * CDUIWndManager::FindSubControlByID(CDUIContainerCtrl *pParent, UINT uCtrlID)
@@ -1352,7 +1359,7 @@ CDUIControlBase * CDUIWndManager::FindSubControlByID(CDUIContainerCtrl *pParent,
 	if (NULL == pParent) pParent = GetRootCtrl();
 	if (NULL == pParent) return NULL;
 
-	return pParent->FindControl(__FindControlFromID, (LPVOID)uCtrlID, DUIFIND_ALL);
+	return pParent->FindControl(__FindControlFromID, (LPVOID)uCtrlID, DuiFind_All);
 }
 
 VecDuiControlBase CDUIWndManager::FindSubControlsByClass(CDUIContainerCtrl *pParent, LPCTSTR pstrClass)
@@ -1361,7 +1368,7 @@ VecDuiControlBase CDUIWndManager::FindSubControlsByClass(CDUIContainerCtrl *pPar
 	if (NULL == pParent) return {};
 
 	m_vecFoundControls.clear();
-	pParent->FindControl(__FindControlsFromClass, (LPVOID)pstrClass, DUIFIND_ALL);
+	pParent->FindControl(__FindControlsFromClass, (LPVOID)pstrClass, DuiFind_All);
 
 	return m_vecFoundControls;
 }
@@ -2404,10 +2411,11 @@ LRESULT CDUIWndManager::OnDuiMouseWheel(WPARAM wParam, LPARAM lParam)
 	DuiMsg.ptMouse = pt;
 	DuiMsg.wParam = wParam;
 
+	//find
 	CDUIControlBase *pControl = NULL;
 	NULL == pControl && m_pCaptureCtrl ? pControl = m_pCaptureCtrl : NULL;
-	NULL == pControl && m_pHoverCtrl ? pControl = m_pHoverCtrl : NULL;
-	NULL == pControl ? pControl = FindSubControlByPoint(m_pRootCtrl, pt) : NULL;
+	NULL == pControl ? pControl = FindControlByWheel(pt, (int)(short)HIWORD(wParam)) : NULL;
+	
 	if (pControl)
 	{
 		DuiMsg.pMsgCtrl = pControl;
@@ -2834,7 +2842,7 @@ void CDUIWndManager::RefreshLayout()
 	else
 	{
 		m_vecFoundControls.clear();
-		m_pRootCtrl->FindControl(__FindControlsFromUpdate, nullptr, DUIFIND_VISIBLE | DUIFIND_ME_FIRST | DUIFIND_UPDATETEST);
+		m_pRootCtrl->FindControl(__FindControlsFromUpdate, nullptr, DuiFind_Visible | DuiFind_MeFirst | DuiFind_UpdateTest);
 		for (auto pControl : m_vecFoundControls)
 		{
 			pControl->OnDuiSize(pControl->GetModalParentRect());
@@ -2983,6 +2991,12 @@ CDUIControlBase * CALLBACK CDUIWndManager::__FindControlFromID(CDUIControlBase *
 	UINT uCtrlID = pThis->GetCtrlID();
 
 	return (uFindID == uCtrlID) ? pThis : NULL;
+}
+
+CDUIControlBase * CALLBACK CDUIWndManager::__FindControlFromWheel(CDUIControlBase *pThis, LPVOID pData)
+{
+	LPPOINT pPoint = static_cast<LPPOINT>(pData);
+	return ::PtInRect(&pThis->GetAbsoluteRect(), *pPoint) ? pThis : NULL;
 }
 
 CDUIControlBase * CALLBACK CDUIWndManager::__FindControlsFromClass(CDUIControlBase *pThis, LPVOID pData)

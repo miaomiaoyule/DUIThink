@@ -2081,11 +2081,47 @@ void CDUIControlBase::SetInternVisible(bool bVisible)
 
 CDUIControlBase * CDUIControlBase::FindControl(FindControlProc Proc, LPVOID pData, UINT uFlags)
 {
-	if ((uFlags & DUIFIND_VISIBLE) && false == IsVisible()) return NULL;
-	if ((uFlags & DUIFIND_ENABLED) && false == IsEnabled()) return NULL;
-	if ((uFlags & DUIFIND_HITTEST) && (IsMouseThrough() || !::PtInRect(&m_rcAbsolute, *static_cast<LPPOINT>(pData)))) return NULL;
+	if ((uFlags & DuiFind_Visible) && false == IsVisible()) return NULL;
+	if ((uFlags & DuiFind_Enabled) && false == IsEnabled()) return NULL;
+	if ((uFlags & DuiFind_HitTest) && (IsMouseThrough() || !::PtInRect(&m_rcAbsolute, *static_cast<LPPOINT>(pData)))) return NULL;
 
-	return Proc(this, pData);
+	CDUIControlBase *pControl = Proc(this, pData);;
+
+	//wheel
+	if (0 == (uFlags & DuiFind_WheelUp) && 0 == (uFlags & DuiFind_WheelDown))
+	{
+		return pControl;
+	}
+	if ((uFlags & DuiFind_WheelUp)
+		&& GetVertScrollBar()
+		&& GetVertScrollBar()->IsVisible()
+		&& GetVertScrollBar()->GetCurValue() > 0)
+	{
+		return pControl;
+	}
+	if ((uFlags & DuiFind_WheelUp)
+		&& GetHorizScrollBar()
+		&& GetHorizScrollBar()->IsVisible()
+		&& GetHorizScrollBar()->GetCurValue() > 0)
+	{
+		return pControl;
+	}
+	if ((uFlags & DuiFind_WheelDown)
+		&& GetVertScrollBar()
+		&& GetVertScrollBar()->IsVisible()
+		&& GetVertScrollBar()->GetCurValue() < GetVertScrollBar()->GetMaxValue())
+	{
+		return pControl;
+	}
+	if ((uFlags & DuiFind_WheelDown)
+		&& GetHorizScrollBar()
+		&& GetHorizScrollBar()->IsVisible()
+		&& GetHorizScrollBar()->GetCurValue() < GetHorizScrollBar()->GetMaxValue())
+	{
+		return pControl;
+	}
+
+	return NULL;
 }
 
 void CDUIControlBase::ReapControl()

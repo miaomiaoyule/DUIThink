@@ -1571,7 +1571,6 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIResource\DUIFontBase.h" />
     <ClInclude Include="DUIResource\DUIImageBase.h" />
     <ClInclude Include="DUIResource\DUIResourceBase.h" />
-    <ClInclude Include="DUIStruct.h" />
     <ClInclude Include="DUIThinkHead.h" />
     <ClInclude Include="DUIUtils\DUIPoint.h" />
     <ClInclude Include="DUIUtils\DUIRect.h" />

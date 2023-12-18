@@ -957,7 +957,7 @@ CDUIControlBase * CDUIComboxCtrl::FindControl(FindControlProc Proc, LPVOID pData
 	{
 		CDUIControlBase *pResult = m_pEditCtrl->FindControl(Proc, pData, uFlags);
 
-		if (pResult && 0 == (uFlags & DUIFIND_UPDATETEST)) return pResult;
+		if (pResult && 0 == (uFlags & DuiFind_UpdateTest)) return pResult;
 	}
 #endif
 

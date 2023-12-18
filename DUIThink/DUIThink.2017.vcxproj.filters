@@ -234,9 +234,6 @@
     <ClInclude Include="Define\DefineBase.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="DUIStruct.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="DUIControl\DUIAnimateCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>

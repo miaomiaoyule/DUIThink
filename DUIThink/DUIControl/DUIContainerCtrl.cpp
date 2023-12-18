@@ -1162,12 +1162,12 @@ int CDUIContainerCtrl::TranslateIndex(CDUIPoint pt)
 
 CDUIControlBase * CDUIContainerCtrl::FindSubControl(UINT uCtrlID)
 {
-	return FindControl(CDUIWndManager::__FindControlFromID, (LPVOID)&uCtrlID, DUIFIND_ALL);
+	return FindControl(CDUIWndManager::__FindControlFromID, (LPVOID)&uCtrlID, DuiFind_All);
 }
 
 CDUIControlBase * CDUIContainerCtrl::FindSubControlThisView(UINT uCtrlID)
 {
-	return FindControl(CDUIWndManager::__FindControlFromID, (LPVOID)&uCtrlID, DUIFIND_ALL | DUIFIND_THISVIEW);
+	return FindControl(CDUIWndManager::__FindControlFromID, (LPVOID)&uCtrlID, DuiFind_All | DuiFind_ThisView);
 }
 
 int CDUIContainerCtrl::FindNextIndex(int nIndexCur, bool bPositive, UINT uFlags, int nNextCount) const
@@ -1178,8 +1178,8 @@ int CDUIContainerCtrl::FindNextIndex(int nIndexCur, bool bPositive, UINT uFlags,
 		{
 			CDUIControlBase *pChild = GetChildAt(nIndex);
 			if (NULL == pChild
-				|| ((DUIFIND_VISIBLE & uFlags) && false == pChild->IsVisible())
-				|| ((DUIFIND_ENABLED & uFlags) && false == pChild->IsEnabled())) continue;
+				|| ((DuiFind_Visible & uFlags) && false == pChild->IsVisible())
+				|| ((DuiFind_Enabled & uFlags) && false == pChild->IsEnabled())) continue;
 			if (--nNextCount <= 0)
 			{
 				return nIndex;
@@ -1193,8 +1193,8 @@ int CDUIContainerCtrl::FindNextIndex(int nIndexCur, bool bPositive, UINT uFlags,
 	{
 		CDUIControlBase *pChild = GetChildAt(nIndex);
 		if (NULL == pChild
-			|| ((DUIFIND_VISIBLE & uFlags) && false == pChild->IsVisible())
-			|| ((DUIFIND_ENABLED & uFlags) && false == pChild->IsEnabled())) continue;
+			|| ((DuiFind_Visible & uFlags) && false == pChild->IsVisible())
+			|| ((DuiFind_Enabled & uFlags) && false == pChild->IsEnabled())) continue;
 		if (--nNextCount <= 0)
 		{
 			return nIndex;
@@ -1509,14 +1509,14 @@ void CDUIContainerCtrl::SetInternVisible(bool bVisible)
 
 CDUIControlBase * CDUIContainerCtrl::FindControl(FindControlProc Proc, LPVOID pData, UINT uFlags)
 {
-	if ((uFlags & DUIFIND_VISIBLE) && false == IsVisible()) return NULL;
-	if ((uFlags & DUIFIND_ENABLED) && false == IsEnabled()) return NULL;
-	if ((uFlags & DUIFIND_HITTEST) && !::PtInRect(&m_rcAbsolute, *static_cast<LPPOINT>(pData))) return NULL;
+	if ((uFlags & DuiFind_Visible) && false == IsVisible()) return NULL;
+	if ((uFlags & DuiFind_Enabled) && false == IsEnabled()) return NULL;
+	if ((uFlags & DuiFind_HitTest) && !::PtInRect(&m_rcAbsolute, *static_cast<LPPOINT>(pData))) return NULL;
 
 	CDUIControlBase *pResult = NULL;
 
 	//mefirst
-	if ((uFlags & DUIFIND_ME_FIRST))
+	if ((uFlags & DuiFind_MeFirst))
 	{
 		pResult = __super::FindControl(Proc, pData, uFlags);
 	}
@@ -1527,23 +1527,23 @@ CDUIControlBase * CDUIContainerCtrl::FindControl(FindControlProc Proc, LPVOID pD
 	{
 		pResult = m_pVertScrollBarCtrl->FindControl(Proc, pData, uFlags);
 
-		if (pResult && 0 == (uFlags & DUIFIND_UPDATETEST)) return pResult;
+		if (pResult && 0 == (uFlags & DuiFind_UpdateTest)) return pResult;
 	}
 	if (m_pHorizScrollBarCtrl)
 	{
 		pResult = m_pHorizScrollBarCtrl->FindControl(Proc, pData, uFlags);
 
-		if (pResult && 0 == (uFlags & DUIFIND_UPDATETEST)) return pResult;
+		if (pResult && 0 == (uFlags & DuiFind_UpdateTest)) return pResult;
 	}
 
-	if ((uFlags & DUIFIND_TOP_FIRST))
+	if ((uFlags & DuiFind_TopFirst))
 	{
 		for (int it = GetChildCount() - 1; it >= 0; it--)
 		{
 			CDUIControlBase *pChild = GetChildAt(it);
 			if (NULL == pChild) continue;
 
-			if (DUIFIND_THISVIEW & uFlags)
+			if (DuiFind_ThisView & uFlags)
 			{
 				pResult = pChild->CDUIControlBase::FindControl(Proc, pData, uFlags);
 			}
@@ -1551,7 +1551,7 @@ CDUIControlBase * CDUIContainerCtrl::FindControl(FindControlProc Proc, LPVOID pD
 			{
 				pResult = pChild->FindControl(Proc, pData, uFlags);
 			}
-			if (pResult && 0 == (uFlags & DUIFIND_UPDATETEST))
+			if (pResult && 0 == (uFlags & DuiFind_UpdateTest))
 			{
 				return pResult;
 			}
@@ -1564,7 +1564,7 @@ CDUIControlBase * CDUIContainerCtrl::FindControl(FindControlProc Proc, LPVOID pD
 			CDUIControlBase *pChild = GetChildAt(it);
 			if (NULL == pChild) continue;
 
-			if (DUIFIND_THISVIEW & uFlags)
+			if (DuiFind_ThisView & uFlags)
 			{
 				pResult = pChild->CDUIControlBase::FindControl(Proc, pData, uFlags);
 			}
@@ -1572,7 +1572,7 @@ CDUIControlBase * CDUIContainerCtrl::FindControl(FindControlProc Proc, LPVOID pD
 			{
 				pResult = pChild->FindControl(Proc, pData, uFlags);
 			}
-			if (pResult && 0 == (uFlags & DUIFIND_UPDATETEST))
+			if (pResult && 0 == (uFlags & DuiFind_UpdateTest))
 			{
 				return pResult;
 			}

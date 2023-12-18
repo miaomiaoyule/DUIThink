@@ -32,6 +32,7 @@ class CDUITreeNodeCtrl;
 class CDUITreeViewCtrl;
 class CDUIWkeBrowserCtrl;
 class CDUIComboxCtrl;
+class CDUIScrollBarCtrl;
 
 //////////////////////////////////////////////////////////////////////////
 #define DUI_WNDSTYLE_CONTAINER			(0)
@@ -66,14 +67,16 @@ class CDUIComboxCtrl;
 #define DUIFLAG_SETCURSOR				0x00000001
 
 //Flags for FindControl()
-#define DUIFIND_ALL						0x00000000
-#define DUIFIND_VISIBLE					0x00000001
-#define DUIFIND_ENABLED					0x00000002
-#define DUIFIND_HITTEST					0x00000004
-#define DUIFIND_UPDATETEST				0x00000008
-#define DUIFIND_TOP_FIRST				0x00000010
-#define DUIFIND_THISVIEW				0x00000020
-#define DUIFIND_ME_FIRST				0x80000000
+#define DuiFind_All						0x00000000
+#define DuiFind_Visible					0x00000001
+#define DuiFind_Enabled					0x00000002
+#define DuiFind_HitTest					0x00000004
+#define DuiFind_UpdateTest				0x00000008
+#define DuiFind_TopFirst				0x00000010
+#define DuiFind_ThisView				0x00000020
+#define DuiFind_MeFirst					0x00000040
+#define DuiFind_WheelUp					0x00000080
+#define DuiFind_WheelDown				0x00000100
 
 //////////////////////////////////////////////////////////////////////////
 #define DuiDpiScaleCtrl(x)				(m_pWndManager ? m_pWndManager->GetDpiObj().Scale(x) : (x))
