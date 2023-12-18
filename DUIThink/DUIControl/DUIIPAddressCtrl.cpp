@@ -22,13 +22,20 @@ CDUIIPAddressCtrl::~CDUIIPAddressCtrl(void)
 
 bool CDUIIPAddressCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 {
+	if (__super::OnAttributeChange(pAttributeObj)) return true;
+
+	if (pAttributeObj == &m_AttributeIP)
+	{
+		SetIPAddress(GetIPAddress());
+
+		return true;
+	}
 	if (pAttributeObj == &m_AttributeTextStyle)
 	{
 		RefreshEditTextStyle();
+
+		return true;
 	}
-
-	if (__super::OnAttributeChange(pAttributeObj)) return true;
-
 	if (pAttributeObj == &m_AttributeTextStyleIPDot)
 	{
 		RefreshIPDotWidth();
@@ -64,11 +71,26 @@ void CDUIIPAddressCtrl::RefreshView()
 
 		CDUIRect rcEdit = pEditCtrl->GetAbsoluteRect();
 		CDUIRect rcNext = pEditNextCtrl->GetAbsoluteRect();
-		CDUIRect rcDot = { rcEdit.right + 2, rcEdit.top, rcNext.left, rcEdit.bottom };
+		CDUIRect rcDot = { rcEdit.right, rcEdit.top, rcNext.left, rcEdit.bottom };
 		m_vecIPDot.push_back(rcDot);
 	}
 
 	return;
+}
+
+HFONT CDUIIPAddressCtrl::GetFont()
+{
+	return m_AttributeTextStyle.GetFont();
+}
+
+ARGB CDUIIPAddressCtrl::GetTextColor()
+{
+	return m_AttributeTextStyle.GetTextColor();
+}
+
+tagDuiTextStyle CDUIIPAddressCtrl::GetTextStyle()
+{
+	return m_AttributeTextStyle.GetTextStyle();
 }
 
 void CDUIIPAddressCtrl::SetTextStyle(const tagDuiTextStyle &TextStyle)
@@ -84,7 +106,9 @@ void CDUIIPAddressCtrl::SetTextStyle(const tagDuiTextStyle &TextStyle)
 
 bool CDUIIPAddressCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 {
-	return false;
+	if (GetChildCount() >= COUNT_IPVALUE || NULL == MMInterfaceHelper(CDUIThinkEditCtrl, pChild)) return false;
+
+	return __super::InsertChild(pChild, nPos);
 }
 
 CDUIThinkEditCtrl * CDUIIPAddressCtrl::GetChildAt(int nIndex) const
@@ -94,21 +118,21 @@ CDUIThinkEditCtrl * CDUIIPAddressCtrl::GetChildAt(int nIndex) const
 
 DWORD CDUIIPAddressCtrl::GetIPAddrValue()
 {
-	return m_dwIPAddr;
+	return CMMService::StringToIPAddr(GetIPAddress());
 }
 
 void CDUIIPAddressCtrl::SetIPAddrValue(DWORD dwIPAddr)
 {
+#ifndef DUI_DESIGN
 	if (dwIPAddr == GetIPAddrValue()) return;
-
-	m_dwIPAddr = dwIPAddr;
+#endif
 
 	for (int n = 0; n < GetChildCount(); n++)
 	{
 		CDUIThinkEditCtrl *pEditCtrl = GetChildAt(n);
 		if (NULL == pEditCtrl) continue;
 
-		pEditCtrl->SetText(CMMStrHelp::FormatW(_T("%d"), (LPBYTE)&m_dwIPAddr + n).c_str());
+		pEditCtrl->SetText(CMMStrHelp::FormatW(_T("%d"), *((LPBYTE)&dwIPAddr + n)).c_str());
 	}
 
 	Invalidate();
@@ -118,12 +142,14 @@ void CDUIIPAddressCtrl::SetIPAddrValue(DWORD dwIPAddr)
 
 CMMString CDUIIPAddressCtrl::GetIPAddress()
 {
-	return CMMService::IPAddrToString(m_dwIPAddr);
+	return m_AttributeIP.GetValue();
 }
 
 void CDUIIPAddressCtrl::SetIPAddress(CMMString strIPAddr)
 {
+#ifndef DUI_DESIGN
 	if (strIPAddr == GetIPAddress()) return;
+#endif
 
 	return SetIPAddrValue(CMMService::StringToIPAddr(strIPAddr));
 }
@@ -132,6 +158,7 @@ void CDUIIPAddressCtrl::OnDuiWndManagerAttach()
 {
 	__super::OnDuiWndManagerAttach();
 
+	RefreshIPDotWidth();
 	RefreshEditTextStyle();
 
 	return;
@@ -139,27 +166,23 @@ void CDUIIPAddressCtrl::OnDuiWndManagerAttach()
 
 void CDUIIPAddressCtrl::InitProperty()
 {
-	//ip edit
-	if (GetChildCount() <= 0)
-	{
-		for (int n = 0; n < COUNT_IPVALUE; n++)
-		{
-			__super::InsertChild(new CDUIThinkEditCtrl());
-		}
-	}
-
 	__super::InitProperty();
 
-	DuiCreateGroupAttribute(m_AttributeGroupText, _T("Text"));
-	DuiCreateAttribute(m_AttributeTextStyle, _T("TextStyle"), _T(""), m_AttributeGroupText);
-	DuiCreateAttribute(m_AttributeTextStyleIPDot, _T("TextStyleIPDot"), _T(""), m_AttributeGroupText);
+	DuiCreateGroupAttribute(m_AttributeGroupIP, _T("IP"));
+	DuiCreateAttribute(m_AttributeIP, _T("IP"), _T(""), m_AttributeGroupIP);
+	DuiCreateAttribute(m_AttributeTextStyle, _T("TextStyle"), _T(""), m_AttributeGroupIP);
+	DuiCreateAttribute(m_AttributeTextStyleIPDot, _T("TextStyleIPDot"), _T(""), m_AttributeGroupIP);
 
 	return;
 }
 
 void CDUIIPAddressCtrl::InitAttriValue()
 {
-	return __super::InitAttriValue();
+	__super::InitAttriValue();
+
+	DuiInitAttriValue(m_AttributeIP, _T("192.168.1.1"));
+
+	return;
 }
 
 void CDUIIPAddressCtrl::InitComplete()
@@ -172,14 +195,18 @@ void CDUIIPAddressCtrl::InitComplete()
 	DuiInitAttriVisible(m_AttributeGroupScroll, false);
 	DuiInitAttriVisible(m_AttributeGroupChild, false);
 
-	for (int n = 0; n < GetChildCount(); n++)
+	if (GetChildCount() <= 0)
 	{
-		CDUIThinkEditCtrl *pEditCtrl = GetChildAt(n);
-		if (NULL == pEditCtrl) continue;
+		for (int n = 0; n < COUNT_IPVALUE; n++)
+		{
+			CDUIThinkEditCtrl *pEditCtrl = new CDUIThinkEditCtrl();
+			pEditCtrl->Init();
+			pEditCtrl->SetEditTextType(EditText_NumberInt);
+			pEditCtrl->SetNumberMinLimit(0);
+			pEditCtrl->SetNumberMaxLimit(255);
 
-		pEditCtrl->SetEditTextType(EditText_NumberInt);
-		pEditCtrl->SetNumberMinLimit(0);
-		pEditCtrl->SetNumberMaxLimit(255);
+			InsertChild(pEditCtrl);
+		}
 	}
 
 	EnableScrollBar(false, false);
@@ -217,8 +244,7 @@ void CDUIIPAddressCtrl::RefreshEditTextStyle()
 		pEditCtrl->SetTextStyleHot(m_AttributeTextStyle.GetTextStyle());
 		pEditCtrl->SetTextStylePushed(m_AttributeTextStyle.GetTextStyle());
 		pEditCtrl->SetTextStyleFocus(m_AttributeTextStyle.GetTextStyle());
-		pEditCtrl->SetVertAlignType(VertAlign_Bottom);
-		pEditCtrl->SetPaddingB(szMeasure.cy);
+		pEditCtrl->SetVertAlignType(VertAlign_Middle);
 		pEditCtrl->SetFixedHeight(szMeasure.cy);
 	}
 

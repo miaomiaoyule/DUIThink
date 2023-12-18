@@ -19,13 +19,13 @@ public:
 
 	//attribute
 protected:
-	CDUIAttributeGroup					m_AttributeGroupText;
+	CDUIAttributeGroup					m_AttributeGroupIP;
+	CDUIAttributeText					m_AttributeIP;
 	CDUIAttributeTextStyle				m_AttributeTextStyle;
 	CDUIAttributeTextStyle				m_AttributeTextStyleIPDot;
 
 	//variant
 protected:
-	DWORD								m_dwIPAddr;
 	vector<CDUIRect>					m_vecIPDot;
 
 	//override
@@ -41,16 +41,19 @@ public:
 	void RefreshView() override;
 
 	//text
-	void SetTextStyle(const tagDuiTextStyle &TextStyle);
+	virtual HFONT GetFont();
+	virtual ARGB GetTextColor();
+	virtual tagDuiTextStyle GetTextStyle();
+	virtual void SetTextStyle(const tagDuiTextStyle &TextStyle);
 
 	//child
 	bool InsertChild(CDUIControlBase *pChild, int nPos = -1) override;
 	CDUIThinkEditCtrl * GetChildAt(int nIndex) const override;
 
-	DWORD GetIPAddrValue();
-	void SetIPAddrValue(DWORD dwIPAddr);
-	CMMString GetIPAddress();
-	void SetIPAddress(CMMString strIPAddr);
+	virtual DWORD GetIPAddrValue();
+	virtual void SetIPAddrValue(DWORD dwIPAddr);
+	virtual CMMString GetIPAddress();
+	virtual void SetIPAddress(CMMString strIPAddr);
 
 	//message
 protected:
