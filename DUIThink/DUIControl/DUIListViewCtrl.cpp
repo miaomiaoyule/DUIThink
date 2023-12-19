@@ -2122,6 +2122,10 @@ void CDUIListViewCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeColorLine, _T("ColorLine"), _T(""), m_AttributeGroupLine);
 	DuiCreateAttribute(m_AttributeShowRowLine, _T("ShowRowLine"), _T(""), m_AttributeGroupLine);
 	DuiCreateAttribute(m_AttributeShowColumnLine, _T("ShowColumnLine"), _T(""), m_AttributeGroupLine);
+	
+	//swap index
+	DuiSwapAttriIndex(m_AttributeChildPaddingH, m_AttributeChildPaddingV);
+	DuiSwapAttriIndex(m_AttributeAutoCalcChildPaddingH, m_AttributeAutoCalcChildPaddingV);
 
 	return;
 }
@@ -2165,9 +2169,7 @@ void CDUIListViewCtrl::InitComplete()
 	DuiInitAttriVisible(m_AttributeAutoCalcHeight, true);
 	DuiInitAttriVisible(m_AttributeAutoCalcChildPaddingH, true);
 	DuiInitAttriVisible(m_AttributeAutoCalcChildPaddingV, true);
-	DuiSwapAttriIndex(m_AttributeChildPaddingH, m_AttributeChildPaddingV);
-	DuiSwapAttriIndex(m_AttributeAutoCalcChildPaddingH, m_AttributeAutoCalcChildPaddingV);
-
+	
 	//header
 	if (NULL == m_pListHeader)
 	{
