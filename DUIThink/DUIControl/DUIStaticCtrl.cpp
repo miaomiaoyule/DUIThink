@@ -324,7 +324,7 @@ void CDUIStaticCtrl::SetTextStyle(const tagDuiTextStyle &TextStyle)
 
 int CDUIStaticCtrl::GetRichTextLineSpace()
 {
-	return m_AttributeRichTextLineSpace.GetValue();
+	return DuiDpiScaleCtrl(m_AttributeRichTextLineSpace.GetValue());
 }
 
 void CDUIStaticCtrl::SetRichTextLineSpace(int nLineSpace)
