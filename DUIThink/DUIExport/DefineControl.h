@@ -74,6 +74,7 @@ typedef CDUIControlBase* (CALLBACK* FindControlProc)(CDUIControlBase*, LPVOID pD
 #define Dui_CtrlIDInner_DragTmp						(20)
 #define Dui_CtrlIDInner_ListItemSelect				(30)
 #define Dui_CtrlIDInner_HeaderItemSelect			(31)
+#define Dui_CtrlIDInner_HeaderItemCheck				(32)
 #define Dui_CtrlIDInner_TreeNodeVertContainer		(40)
 #define Dui_CtrlIDInner_TreeNodeHorizContainer		(41)
 #define Dui_CtrlIDInner_TreeNodeExpand				(42)

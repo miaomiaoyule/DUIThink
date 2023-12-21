@@ -73,6 +73,9 @@ public:
 
 	//child
 	bool InsertChild(CDUIControlBase *pChild, int nPos = -1) override;
+	bool Remove(CDUIControlBase *pControl) override;
+	bool RemoveAt(int nIndex) override;
+	void RemoveAll() override;
 
 	//refresh
 	void RefreshView() override;

@@ -126,6 +126,7 @@ protected:
 public:
 	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
 	CMMString GetDescribe() const override;
+	CDUIListViewCtrl * Clone(bool bIncludeChild = true, bool bRefreshCtrlID = true) override;
 
 	//basic
 	UINT InitCtrlID() override;

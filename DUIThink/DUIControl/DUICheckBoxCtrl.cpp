@@ -264,6 +264,53 @@ void CDUICheckBoxCtrl::InitAttriValue()
 	return;
 }
 
+void CDUICheckBoxCtrl::InitNormalSkin()
+{
+	auto pImageBaseCheckBoxUnSelect = CDUIGlobal::GetInstance()->GetImageResource(Name_ImageCheckBoxUnSelect);
+	auto pImageBaseCheckBoxSelect = CDUIGlobal::GetInstance()->GetImageResource(Name_ImageCheckBoxSelect);
+
+	tagDuiImageSection ImageSection;
+	ImageSection.ImageSourceType = ImageSource_Part;
+	ImageSection.vecImageResSwitch.push_back(pImageBaseCheckBoxUnSelect->GetResourceName());
+	ImageSection.HorizImageAlign = HorizImageAlign_Left;
+	ImageSection.VertImageAlign = VertImageAlign_Center;
+	ImageSection.cbPartAll = 4;
+	ImageSection.cbPartSel = 1;
+	SetImageSectionNormal(ImageSection);
+
+	ImageSection.cbPartSel = 2;
+	SetImageSectionHot(ImageSection);
+
+	ImageSection.cbPartSel = 3;
+	SetImageSectionPushed(ImageSection);
+
+	ImageSection.cbPartSel = 4;
+	SetImageSectionDisabled(ImageSection);
+
+	ImageSection.vecImageResSwitch.clear();
+	ImageSection.vecImageResSwitch.push_back(pImageBaseCheckBoxSelect->GetResourceName());
+	ImageSection.cbPartSel = 1;
+	SetImageSectionSelNormal(ImageSection);
+
+	ImageSection.cbPartSel = 2;
+	SetImageSectionSelHot(ImageSection);
+
+	ImageSection.cbPartSel = 3;
+	SetImageSectionSelPushed(ImageSection);
+
+	ImageSection.cbPartSel = 4;
+	SetImageSectionSelDisabled(ImageSection);
+
+	CMMString strText = _T("∏¥—°øÚ");
+	tagDuiTextStyle TextStyle;
+	TextStyle.dwTextStyle |= DT_VCENTER;
+	SetText(strText);
+	SetTextPadding({ pImageBaseCheckBoxUnSelect->GetWidth() / 4, 0, 0, 0 });
+	CDUIStaticCtrl::SetTextStyle(TextStyle);
+
+	return;
+}
+
 //ªÊ÷∆
 void CDUICheckBoxCtrl::PaintStatusColor(HDC hDC)
 {

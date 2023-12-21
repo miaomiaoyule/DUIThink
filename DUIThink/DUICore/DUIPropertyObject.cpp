@@ -108,9 +108,16 @@ bool CDUIPropertyObject::Init()
 {
 	if (IsInitComplete()) return true;
 
+	bool bFromXml = false == m_mapAttributeBuffer.empty();
+	
 	InitProperty();
 	InitAttriValue();
 	InitComplete();
+
+	if (false == bFromXml)
+	{
+		InitNormalSkin();
+	}
 
 	return true;
 }
@@ -136,6 +143,11 @@ void CDUIPropertyObject::InitComplete()
 
 	m_mapAttributeBuffer.clear();
 
+	return;
+}
+
+void CDUIPropertyObject::InitNormalSkin()
+{
 	return;
 }
 

@@ -113,6 +113,34 @@ bool CDUIListHeaderItemCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 	return true;
 }
 
+bool CDUIListHeaderItemCtrl::Remove(CDUIControlBase *pControl)
+{
+	if (NULL == pControl || Dui_CtrlIDInner_HeaderItemCheck == pControl->GetCtrlID()) return false;
+
+	return __super::Remove(pControl);
+}
+
+bool CDUIListHeaderItemCtrl::RemoveAt(int nIndex)
+{
+	CDUIControlBase *pControl = GetChildAt(nIndex);
+	if (NULL == pControl || Dui_CtrlIDInner_HeaderItemCheck == pControl->GetCtrlID()) return false;
+
+	return __super::RemoveAt(nIndex);
+}
+
+void CDUIListHeaderItemCtrl::RemoveAll()
+{
+	for (int n = GetChildCount() - 1; n >= 0; n--)
+	{
+		CDUIControlBase *pControl = GetChildAt(n);
+		if (NULL == pControl || Dui_CtrlIDInner_HeaderItemCheck == pControl->GetCtrlID()) continue;
+
+		RemoveAt(n);
+	}
+
+	return;
+}
+
 void CDUIListHeaderItemCtrl::RefreshView()
 {
 	__super::RefreshView();

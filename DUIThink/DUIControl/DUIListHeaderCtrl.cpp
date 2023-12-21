@@ -16,8 +16,13 @@ CDUIListHeaderCtrl::~CDUIListHeaderCtrl(void)
 	{
 		m_pHeaderItemSelectCtrl->UnRegisterControlCallBack(this);
 	}
+	if (m_pCheckSelectCtrl)
+	{
+		m_pCheckSelectCtrl->UnRegisterControlCallBack(this);
+	}
 
 	m_pHeaderItemSelectCtrl = NULL;
+	m_pCheckSelectCtrl = NULL;
 	m_pOwner = NULL;
 
 	return;
@@ -53,7 +58,36 @@ void CDUIListHeaderCtrl::OnNotify(CDUIControlBase *pControl, const DuiNotify &No
 				break;
 			}
 			default:
+			{
 				break;
+			}
+		}
+
+		return;
+	}
+	if (pControl == m_pCheckSelectCtrl)
+	{
+		switch (Notify.NotifyType)
+		{
+			case DuiNotify_SelectChanged:
+			{
+				if (NULL == GetOwner()) break;
+				
+				if (m_pCheckSelectCtrl->IsSelected())
+				{
+					GetOwner()->SelectAllItems();
+
+					break;
+				}
+
+				GetOwner()->UnSelectAllItems();
+
+				break;
+			}
+			default:
+			{
+				break;
+			}
 		}
 
 		return;
@@ -68,7 +102,7 @@ void CDUIListHeaderCtrl::OnSize(CDUIControlBase *pControl)
 
 	if (pControl == m_pHeaderItemSelectCtrl)
 	{
-		int nWidth = GetOwner()->GetSelectIconLeftPadding() + GetOwner()->GetSelectIconFixedWidth();
+		int nWidth = GetOwner()->GetSelectIconLeftPadding() * 2 + GetOwner()->GetSelectIconFixedWidth();
 		m_pHeaderItemSelectCtrl->SetFixedWidth(nWidth);
 
 		return;
@@ -112,7 +146,7 @@ void CDUIListHeaderCtrl::SetOwner(CDUIListViewCtrl *pOwner)
 
 	if (NULL == GetOwner() || NULL == m_pHeaderItemSelectCtrl) return;
 
-	int nWidth = GetOwner()->GetSelectIconLeftPadding() + GetOwner()->GetSelectIconFixedWidth();
+	int nWidth = GetOwner()->GetSelectIconLeftPadding() * 2 + GetOwner()->GetSelectIconFixedWidth();
 	m_pHeaderItemSelectCtrl->SetFixedWidth(nWidth);
 
 	return;
@@ -279,11 +313,20 @@ void CDUIListHeaderCtrl::RefreshView()
 	return;
 }
 
-void CDUIListHeaderCtrl::OnVisibleChangedSelect()
+void CDUIListHeaderCtrl::OnVisibleChangedSelectIcon()
 {
 	if (NULL == GetOwner() || NULL == m_pHeaderItemSelectCtrl) return;
 
 	m_pHeaderItemSelectCtrl->SetVisible(GetOwner()->IsSelectIconVisible());
+
+	return;
+}
+
+void CDUIListHeaderCtrl::OnSelectChangedListItem()
+{
+	if (NULL == GetOwner() || NULL == m_pCheckSelectCtrl) return;
+
+	m_pCheckSelectCtrl->Select(GetOwner()->GetSelectItemCount() == GetOwner()->GetChildCount(), false);
 
 	return;
 }
@@ -320,20 +363,46 @@ void CDUIListHeaderCtrl::InitComplete()
 		do
 		{
 			m_pHeaderItemSelectCtrl = MMInterfaceHelper(CDUIListHeaderItemCtrl, FindSubControlThisView(Dui_CtrlIDInner_HeaderItemSelect));
-			if (m_pHeaderItemSelectCtrl) break;
+			if (NULL == m_pHeaderItemSelectCtrl)
+			{
+				m_pHeaderItemSelectCtrl = new CDUIListHeaderItemCtrl;
+				m_pHeaderItemSelectCtrl->Init();
+				m_pHeaderItemSelectCtrl->SetCtrlID(Dui_CtrlIDInner_HeaderItemSelect);
+				m_pHeaderItemSelectCtrl->SetVisible(GetOwner() && GetOwner()->IsSelectIconVisible());
+				m_pHeaderItemSelectCtrl->SetSepWidth(0);
+				InsertChild(m_pHeaderItemSelectCtrl, 0);
+			}
 
-			m_pHeaderItemSelectCtrl = new CDUIListHeaderItemCtrl;
-			m_pHeaderItemSelectCtrl->Init();
-			m_pHeaderItemSelectCtrl->SetCtrlID(Dui_CtrlIDInner_HeaderItemSelect);
-			m_pHeaderItemSelectCtrl->SetVisible(GetOwner() && GetOwner()->IsSelectIconVisible());
-			m_pHeaderItemSelectCtrl->SetSepWidth(0);
-			InsertChild(m_pHeaderItemSelectCtrl, 0);
+			m_pCheckSelectCtrl = MMInterfaceHelper(CDUICheckBoxCtrl, m_pHeaderItemSelectCtrl->FindSubControlThisView(Dui_CtrlIDInner_HeaderItemCheck));
+			if (NULL == m_pCheckSelectCtrl)
+			{
+				m_pCheckSelectCtrl = new CDUICheckBoxCtrl();
+				m_pCheckSelectCtrl->Init();
+				m_pCheckSelectCtrl->SetCtrlID(Dui_CtrlIDInner_HeaderItemCheck);
+				m_pCheckSelectCtrl->SetFloat(true);
+				m_pCheckSelectCtrl->SetHorizAlignType(enDuiHorizAlignType::HorizAlign_Center);
+				m_pCheckSelectCtrl->SetVertAlignType(enDuiVertAlignType::VertAlign_Middle);
+
+				tagDuiImageSection ImageSection = m_pCheckSelectCtrl->GetImageSectionNormal();
+				if (ImageSection.vecImageResSwitch.empty()) break;
+
+				auto pImageBaseCheckBoxUnSelect = CDUIGlobal::GetInstance()->GetImageResource(ImageSection.vecImageResSwitch[0]);
+				if (NULL == pImageBaseCheckBoxUnSelect) break;
+
+				m_pCheckSelectCtrl->SetFixedWidth(pImageBaseCheckBoxUnSelect->GetWidth() / ImageSection.cbPartAll);
+				m_pCheckSelectCtrl->SetFixedHeight(pImageBaseCheckBoxUnSelect->GetHeight());
+				m_pHeaderItemSelectCtrl->InsertChild(m_pCheckSelectCtrl);
+			}
 
 		} while (false);
 	}
 	if (m_pHeaderItemSelectCtrl)
 	{
 		m_pHeaderItemSelectCtrl->RegisterControlCallBack(this);
+	}
+	if (m_pCheckSelectCtrl)
+	{
+		m_pCheckSelectCtrl->RegisterControlCallBack(this);
 	}
 
 	//no scrollbar

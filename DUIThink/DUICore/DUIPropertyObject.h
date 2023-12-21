@@ -70,6 +70,7 @@ protected:
 	virtual void InitProperty();
 	virtual void InitAttriValue();
 	virtual void InitComplete();
+	virtual void InitNormalSkin();
 				 
 	//attribute 
 	//** you forbid override **//

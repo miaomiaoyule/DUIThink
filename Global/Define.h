@@ -51,6 +51,28 @@
 #define Name_ImageClockCenterDot		_T("{C6CBA3A4-0E50-4AC8-BDC3-847E1FEDE1A1}")
 #define Name_ImageGif					_T("{FA94D6A6-40B8-41CB-83FA-B886716BE3C3}")
 #define Name_ImageSequenceFrame			_T("{3482C09B-88D0-4A30-B854-9DBC23B83587}")
+#define Name_Imagebtn_normal			_T("{5D038E0C-9B44-4CCA-AAF3-9B14175FEF27}")
+#define Name_Imagebtn_highlight			_T("{EB778ACD-B963-4648-AF85-FE14195C1770}")
+#define Name_Imagebtn_down				_T("{C59429A4-D032-4517-B0A5-54D1647C3370}")
+#define Name_ImageExpandToolsArrow		_T("{792618B7-4B73-47BE-ABBE-6C21591B5D9B}")
+#define Name_Imageformedit				_T("{B5379AF9-FE2E-459A-8CC2-9EC5BF12FA14}")
+#define Name_Imagegray					_T("{D54E16B0-2812-4B19-B9C6-441D844BA704}")
+#define Name_ImageIconColorRes			_T("{83BEF7C1-D440-406D-A5A4-77E1E8C4037F}")
+#define Name_ImageIconControl			_T("{A30FFCCA-CFEA-42DF-86B7-E1EFBE0AE219}")
+#define Name_ImageIconControlNotify		_T("{66FF3484-BE2C-41EA-A27A-565778027E00}")
+#define Name_ImageIconFontRes			_T("{650168FA-7169-4037-8667-291EE9F19118}")
+#define Name_ImageIconImageRes			_T("{55646323-DF1C-4EF6-AC93-786667C950D7}")
+#define Name_ImageIconProject			_T("{B6B52D37-64B0-41EA-B111-53F174BF4DC2}")
+#define Name_ImageIconProperty			_T("{3090CABA-9F7A-4957-A9DD-FA7813A6917A}")
+#define Name_ImageIconToolbox			_T("{EAEB909F-534F-41CB-8F5E-0946B6002CC0}")
+#define Name_ImagelineH					_T("{A03CB0C8-889D-4A66-9494-F56A941DCB22}")
+#define Name_ImagelineV					_T("{77AAB5A7-1532-4B9B-ACD0-BE8D03C5F182}")
+#define Name_ImageRadioTabSelected		_T("{8DD32057-468D-463C-8924-8176E523453F}")
+#define Name_ImageRadioTabUnSelected	_T("{DEA66482-38D5-48D8-86C3-2CE1460ECE78}")
+#define Name_Imagetoolbar				_T("{5C53E3DE-0C5F-4C40-946E-A8C4E1C3101D}")
+#define Name_Imagetoolbar_hot			_T("{7CE29BDE-A3D3-48D0-8713-538071001FFF}")
+#define Name_Imagetoolbar_pushed		_T("{A2FECBAC-B787-48C9-9894-A548FFFFAEE8}")
+#define Name_Imagetoolbar_disabled		_T("{CCE21DB5-F9E7-4FAE-954E-CC0D4C82E60D}")
 
 //////////////////////////////////////////////////////////////////////////
 #define Len_Account						(32)
@@ -111,6 +133,28 @@ static TCHAR g_szPublicImage[][MAX_PATH][MAX_PATH]
 	{ Name_ImageClockCenterDot, _T("SkinDesign/ClockCenterDot.png") },
 	{ Name_ImageGif, _T("SkinDesign/Face.gif") },
 	{ Name_ImageSequenceFrame, _T("SkinDesign/SequenceFrame.jpeg") },
+	{ Name_Imagebtn_normal, _T("SkinDesign/btn_normal.png") },
+	{ Name_Imagebtn_highlight, _T("SkinDesign/btn_highlight.png") },
+	{ Name_Imagebtn_down, _T("SkinDesign/btn_down.png") },
+	{ Name_ImageExpandToolsArrow, _T("SkinDesign/ExpandToolsArrow.svg") },
+	{ Name_Imageformedit, _T("SkinDesign/formedit.bmp") },
+	{ Name_Imagegray, _T("SkinDesign/gray.png") },
+	{ Name_ImageIconColorRes, _T("SkinDesign/IconColorRes.png") },
+	{ Name_ImageIconControl, _T("SkinDesign/IconControl.png") },
+	{ Name_ImageIconControlNotify, _T("SkinDesign/IconControlNotify.png") },
+	{ Name_ImageIconFontRes, _T("SkinDesign/IconFontRes.png") },
+	{ Name_ImageIconImageRes, _T("SkinDesign/IconImageRes.png") },
+	{ Name_ImageIconProject, _T("SkinDesign/IconProject.png") },
+	{ Name_ImageIconProperty, _T("SkinDesign/IconProperty.png") },
+	{ Name_ImageIconToolbox, _T("SkinDesign/IconToolbox.png") },
+	{ Name_ImagelineH, _T("SkinDesign/lineH.png") },
+	{ Name_ImagelineV, _T("SkinDesign/lineV.png") },
+	{ Name_ImageRadioTabSelected, _T("SkinDesign/RadioTabSelected.png") },
+	{ Name_ImageRadioTabUnSelected, _T("SkinDesign/RadioTabUnSelected.png") },
+	{ Name_Imagetoolbar, _T("SkinDesign/toolbar.png") },
+	{ Name_Imagetoolbar_hot, _T("SkinDesign/toolbar_hot.png") },
+	{ Name_Imagetoolbar_pushed, _T("SkinDesign/toolbar_pushed.png") },
+	{ Name_Imagetoolbar_disabled, _T("SkinDesign/toolbar_disabled.png") },
 };
 
 //////////////////////////////////////////////////////////////////////////

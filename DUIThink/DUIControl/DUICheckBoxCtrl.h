@@ -80,6 +80,7 @@ public:
 protected:
 	void InitProperty() override;
 	void InitAttriValue() override;
+	void InitNormalSkin() override;
 
 	//paint
 protected:

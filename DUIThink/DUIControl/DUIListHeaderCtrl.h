@@ -33,6 +33,7 @@ protected:
 protected:
 	CDUIListViewCtrl *					m_pOwner = NULL;
 	CDUIListHeaderItemCtrl *			m_pHeaderItemSelectCtrl = NULL;
+	CDUICheckBoxCtrl *					m_pCheckSelectCtrl = NULL;
 	int									m_nColumn = 0;
 	CDUIRect							m_rcColumn[Dui_Max_ListColumn];
 
@@ -81,7 +82,8 @@ protected:
 
 	//listview change
 protected:
-	void OnVisibleChangedSelect();
+	void OnVisibleChangedSelectIcon();
+	void OnSelectChangedListItem();
 
 	//property
 protected:

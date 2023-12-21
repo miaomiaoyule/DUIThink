@@ -172,6 +172,21 @@ CMMString CDUIListViewCtrl::GetDescribe() const
 	return Dui_Ctrl_ListView;
 }
 
+CDUIListViewCtrl * CDUIListViewCtrl::Clone(bool bIncludeChild, bool bRefreshCtrlID)
+{
+	MMInterfaceHelper(CDUIListViewCtrl, __super::Clone(bIncludeChild, bRefreshCtrlID), pListViewClone);
+	if (NULL == pListViewClone) return NULL;
+
+	MMSafeDelete(pListViewClone->m_pListHeader);
+
+	if (m_pListHeader)
+	{
+		pListViewClone->InsertChild(m_pListHeader->Clone(true, bRefreshCtrlID));
+	}
+
+	return pListViewClone;
+}
+
 UINT CDUIListViewCtrl::InitCtrlID()
 {
 	__super::InitCtrlID();
@@ -495,7 +510,7 @@ void CDUIListViewCtrl::SetSelectIconVisible(bool bVisible)
 	//header
 	if (m_pListHeader)
 	{
-		m_pListHeader->OnVisibleChangedSelect();
+		m_pListHeader->OnVisibleChangedSelectIcon();
 	}
 
 	return;
@@ -820,10 +835,7 @@ void CDUIListViewCtrl::SetMultiSelect(bool bMultiSel)
 
 int CDUIListViewCtrl::GetSelectItemCount()
 {
-	if (IsMultiSelect()) return m_vecSelItem.size();
-	else if (m_nCurSel >= 0) return 1;
-
-	return 0;
+	return m_vecSelItem.size();
 }
 
 int CDUIListViewCtrl::GetCurSel() const
@@ -894,7 +906,7 @@ bool CDUIListViewCtrl::SelectItem(int nIndex, bool bTakeFocus)
 	if (IsSelected(nIndex)) return true;
 
 	//single
-	if (false == IsMultiSelect())
+	if (false == IsMultiSelect() && 0 == (CDUIWndManager::MapKeyState() & MK_CONTROL))
 	{
 		UnSelectItem(nIndex, true);
 	}
@@ -910,6 +922,14 @@ bool CDUIListViewCtrl::SelectItem(int nIndex, bool bTakeFocus)
 	if (bTakeFocus)
 	{
 		pItem->SetFocus();
+	}
+
+	//head select
+	if (IsUseListHeader()
+		&& IsSelectIconVisible()
+		&& m_pListHeader)
+	{
+		m_pListHeader->OnSelectChangedListItem();
 	}
 
 	return true;
@@ -993,21 +1013,24 @@ bool CDUIListViewCtrl::UnSelectItem(int nIndex, bool bOthers)
 		m_nCurSel = GetMaxSelItemIndex();
 	}
 
+	//head select
+	if (IsUseListHeader()
+		&& IsSelectIconVisible()
+		&& m_pListHeader)
+	{
+		m_pListHeader->OnSelectChangedListItem();
+	}
+
 	return true;
 }
 
 void CDUIListViewCtrl::SelectAllItems()
 {
-	if (false == IsMultiSelect()) return;
-
 	for (int i = 0; i < GetChildCount(); ++i)
 	{
 		CDUIListItemCtrl *pItem = GetChildAt(i);
 		if (NULL == pItem) continue;
 		if (false == pItem->Select(true)) continue;
-
-		m_vecSelItem.push_back(pItem);
-		m_nCurSel = i;
 	}
 
 	return;

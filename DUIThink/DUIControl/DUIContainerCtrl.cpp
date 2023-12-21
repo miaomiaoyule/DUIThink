@@ -163,25 +163,25 @@ CMMString CDUIContainerCtrl::GetDescribe() const
 
 CDUIContainerCtrl * CDUIContainerCtrl::Clone(bool bIncludeChild/* = true*/, bool bRefreshCtrlID)
 {
-	MMInterfaceHelper(CDUIContainerCtrl, __super::Clone(bIncludeChild, bRefreshCtrlID), pCloneContainer);
-	if (NULL == pCloneContainer) return NULL;
+	MMInterfaceHelper(CDUIContainerCtrl, __super::Clone(bIncludeChild, bRefreshCtrlID), pContainerClone);
+	if (NULL == pContainerClone) return NULL;
 
 	//scrollbar
 	if (m_pHorizScrollBarCtrl)
 	{
-		pCloneContainer->InsertChild(m_pHorizScrollBarCtrl->Clone());
+		pContainerClone->InsertChild(m_pHorizScrollBarCtrl->Clone());
 	}
 	if (m_pVertScrollBarCtrl)
 	{
-		pCloneContainer->InsertChild(m_pVertScrollBarCtrl->Clone());
+		pContainerClone->InsertChild(m_pVertScrollBarCtrl->Clone());
 	}
 
 	//child
 	if (false == bIncludeChild)
 	{
-		pCloneContainer->InitComplete();
+		pContainerClone->InitComplete();
 
-		return pCloneContainer;
+		return pContainerClone;
 	}
 
 	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
@@ -189,12 +189,12 @@ CDUIContainerCtrl * CDUIContainerCtrl::Clone(bool bIncludeChild/* = true*/, bool
 		CDUIControlBase *pChild = GetChildAt(nIndex);
 		if (NULL == pChild) continue;
 
-		pCloneContainer->InsertChild(pChild->Clone(bIncludeChild, bRefreshCtrlID));
+		pContainerClone->InsertChild(pChild->Clone(bIncludeChild, bRefreshCtrlID));
 	}
 
-	pCloneContainer->InitComplete();
+	pContainerClone->InitComplete();
 
-	return pCloneContainer;
+	return pContainerClone;
 }
 
 UINT CDUIContainerCtrl::InitCtrlID()

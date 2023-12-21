@@ -530,11 +530,10 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	//info
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+	//Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+	//Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 
 	//draw
-	bool bAlphaBlend = (bAlpha || cbAlpha < 255);
-	BLENDFUNCTION bf = { AC_SRC_OVER, 0, cbAlpha, AC_SRC_ALPHA };
-
 	if (rcItem.GetWidth() == rcBmpPart.GetWidth() \
 		&& rcItem.GetHeight() == rcBmpPart.GetHeight() \
 		&& rcCorner.left == 0 && rcCorner.right == 0 && rcCorner.top == 0 && rcCorner.bottom == 0)
