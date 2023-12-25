@@ -254,11 +254,12 @@ void CDUIListViewCtrl::NeedRefreshView()
 
 void CDUIListViewCtrl::RefreshView()
 {
-	if (ListView_List == GetListViewType())
+	enDuiListViewType ListViewType = GetListViewType();
+	if (ListView_List == ListViewType)
 	{
 		RefreshViewOnListType();
 	}
-	else if (ListView_TileH == GetListViewType())
+	else if (ListView_TileH == ListViewType)
 	{
 		RefreshViewOnTileTypeH();
 	}
@@ -405,9 +406,12 @@ enDuiListViewType CDUIListViewCtrl::GetListViewType()
 void CDUIListViewCtrl::SwitchListViewType(enDuiListViewType ListViewType)
 {
 	m_AttributeListViewType.SelectItem(ListViewType);
+	ListViewType = GetListViewType();
+	DuiInitAttriVisible(m_AttributeAutoCalcWidth, ListView_TileV == ListViewType);
+	DuiInitAttriVisible(m_AttributeAutoCalcHeight, ListView_List == ListViewType || ListView_TileH == ListViewType);
 
 	//tile
-	if (ListView_List != GetListViewType())
+	if (ListView_List != ListViewType)
 	{
 		SetUseListHeader(false);
 
@@ -422,7 +426,7 @@ void CDUIListViewCtrl::SwitchListViewType(enDuiListViewType ListViewType)
 	}
 
 	//list
-	if (ListView_List == GetListViewType())
+	if (ListView_List == ListViewType)
 	{
 		for (int n = 0; n < GetChildCount(); n++)
 		{
@@ -436,7 +440,7 @@ void CDUIListViewCtrl::SwitchListViewType(enDuiListViewType ListViewType)
 	//init
 	if (m_pAnimateDrag)
 	{
-		m_pAnimateDrag->SetDragType(ListView_List == GetListViewType() ? DragType_V : DragType_HV);
+		m_pAnimateDrag->SetDragType(ListView_List == ListViewType ? DragType_V : DragType_HV);
 	}
 
 	//notify
@@ -1052,7 +1056,8 @@ void CDUIListViewCtrl::UnSelectAllItems()
 
 int CDUIListViewCtrl::FindSelectable(WORD wKey)
 {
-	if (ListView_List == GetListViewType())
+	enDuiListViewType ListViewType = GetListViewType();
+	if (ListView_List == ListViewType)
 	{
 		if (VK_UP == wKey)
 		{
@@ -1065,11 +1070,11 @@ int CDUIListViewCtrl::FindSelectable(WORD wKey)
 
 		return -1;
 	}
-	if (ListView_TileH == GetListViewType())
+	if (ListView_TileH == ListViewType)
 	{
 		return FindSelectableOnTileTypeH(wKey);
 	}
-	if (ListView_TileV == GetListViewType())
+	if (ListView_TileV == ListViewType)
 	{
 		return FindSelectableOnTileTypeV(wKey);
 	}
@@ -1135,11 +1140,12 @@ bool CDUIListViewCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 		if (false == __super::InsertChild(pChild, nPos)) return false;
 
 		//sub insert
-		if (ListView_List == GetListViewType())
+		enDuiListViewType ListViewType = GetListViewType();
+		if (ListView_List == ListViewType)
 		{
 			InsertChildOnListType(pItem);
 		}
-		else if (ListView_TileH == GetListViewType())
+		else if (ListView_TileH == ListViewType)
 		{
 			InsertChildOnTileTypeH(pItem);
 		}
@@ -1151,7 +1157,7 @@ bool CDUIListViewCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 		{
 			if (false == IsInitComplete()) break;
 
-			pItem->SetSelectIconVisible(ListView_List == GetListViewType() && IsSelectIconVisible());
+			pItem->SetSelectIconVisible(ListView_List == ListViewType && IsSelectIconVisible());
 			pItem->SetSelectIconLeftPadding(GetSelectIconLeftPadding());
 			pItem->SetSelectIconFixedWidth(GetSelectIconFixedWidth());
 			pItem->SetSelectIconFixedHeight(GetSelectIconFixedHeight());
@@ -1731,9 +1737,10 @@ void CDUIListViewCtrl::EnsureVisible(int nIndex, bool bCenter)
 	CDUISize szScrollPos = GetScrollPos();
 	CDUISize szScrollRange = GetScrollRange();
 	CDUIRect rcItemRange = GetLayoutRangeOfItem();
+	enDuiListViewType ListViewType = GetListViewType();
 	if (bCenter)
 	{
-		switch (GetListViewType())
+		switch (ListViewType)
 		{
 			case ListView_List:
 			{
@@ -1781,7 +1788,7 @@ void CDUIListViewCtrl::EnsureVisible(int nIndex, bool bCenter)
 	szScrollPos.cy = 0;
 
 	//list
-	if (ListView_List == GetListViewType())
+	if (ListView_List == ListViewType)
 	{
 		for (int n = 0; n < nIndex; n++)
 		{
@@ -1795,7 +1802,7 @@ void CDUIListViewCtrl::EnsureVisible(int nIndex, bool bCenter)
 		}
 	}
 	//tileh
-	else if (ListView_TileH == GetListViewType() && GetColumnCount() > 0)
+	else if (ListView_TileH == ListViewType && GetColumnCount() > 0)
 	{
 		int nRow = (nIndex + GetColumnCount() - 1) / GetColumnCount();
 		for (int n = 0; n < nRow; n++)
@@ -1804,7 +1811,7 @@ void CDUIListViewCtrl::EnsureVisible(int nIndex, bool bCenter)
 			szScrollPos.cy += GetChildPaddingV();
 		}
 	}
-	if (ListView_List == GetListViewType() || ListView_TileH == GetListViewType())
+	if (ListView_List == ListViewType || ListView_TileH == ListViewType)
 	{
 		szScrollPos.cy = max(0, szScrollPos.cy - rcItemRange.GetHeight());
 		szScrollPos.cy = bCenter ? min(szScrollRange.cy, szScrollPos.cy + rcItemRange.GetHeight() / 2) : szScrollPos.cy;
@@ -2189,8 +2196,6 @@ void CDUIListViewCtrl::InitComplete()
 	__super::InitComplete();
 
 	DuiInitAttriVisible(m_AttributeChildPaddingH, true);
-	DuiInitAttriVisible(m_AttributeAutoCalcWidth, true);
-	DuiInitAttriVisible(m_AttributeAutoCalcHeight, true);
 	DuiInitAttriVisible(m_AttributeAutoCalcChildPaddingH, true);
 	DuiInitAttriVisible(m_AttributeAutoCalcChildPaddingV, true);
 	
@@ -3055,6 +3060,7 @@ void CDUIListViewCtrl::CalcTileTypeInfo()
 {
 	CDUIRect rcItemRange = GetLayoutRangeOfItem();
 	SIZE szItem = GetSwitchTileItemSize();
+	enDuiListViewType ListViewType = GetListViewType();
 
 	int nChildPaddingH = IsAutoCalcChildPaddingH() ? 1 : GetChildPaddingH();
 	int nChildPaddingV = IsAutoCalcChildPaddingV() ? 1 : GetChildPaddingV();
@@ -3064,14 +3070,14 @@ void CDUIListViewCtrl::CalcTileTypeInfo()
 	m_nHeightRow = max(1, m_nHeightRow);
 
 	//row column
-	if (ListView_TileH == GetListViewType())
+	if (ListView_TileH == ListViewType)
 	{
 		m_nColumn = rcItemRange.GetWidth() / m_nWidthColumn;
 		m_nColumn = max(1, m_nColumn);
 		m_nRow = (m_nVisibleCount + m_nColumn - 1) / m_nColumn;
 		m_nRow = max(1, m_nRow);
 	}
-	if (ListView_TileV == GetListViewType())
+	if (ListView_TileV == ListViewType)
 	{
 		m_nRow = rcItemRange.GetHeight() / m_nHeightRow;
 		m_nRow = max(1, m_nRow);
