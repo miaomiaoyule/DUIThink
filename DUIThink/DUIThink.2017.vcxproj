@@ -687,6 +687,7 @@
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
+copy $(Configuration)\$(TargetName).pdb "../lib"
 if exist "../Demo/DUIThinkDemo_C++/Debug" copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"
 if exist "../../DTDesigner\bin" copy $(Configuration)\$(TargetFileName) "../../DTDesigner\bin"</Command>
     </PostBuildEvent>
@@ -1207,6 +1208,7 @@ if exist "../Demo/DUIThinkDemo_C++/Release" copy $(Configuration)\$(TargetFileNa
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
+copy $(Configuration)\$(TargetName).pdb "../lib"
 copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

@@ -1654,6 +1654,9 @@ void CDUIGlobal::SetFontResDefault(const CMMString &strName)
 
 void CDUIGlobal::OnDpiChanged(int nScalePre)
 {
+	//has load project
+	if (false == IsLoadProject()) return;
+
 	//manager
 	{
 		std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
