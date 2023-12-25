@@ -427,9 +427,8 @@ void CDUIListViewCtrl::SwitchListViewType(enDuiListViewType ListViewType)
 		for (int n = 0; n < GetChildCount(); n++)
 		{
 			CDUIListItemCtrl *pItem = GetChildAt(n);
-			if (NULL == pItem || pItem->GetFixedHeight() > 0) continue;
+			if (NULL == pItem) continue;
 
-			pItem->SetFixedHeight(GetSwitchListItemHeight());
 			pItem->SetSelectIconVisible(IsSelectIconVisible());
 		}
 	}
@@ -1789,7 +1788,9 @@ void CDUIListViewCtrl::EnsureVisible(int nIndex, bool bCenter)
 			CDUIListItemCtrl *pItem = GetChildAt(n);
 			if (NULL == pItem || false == pItem->IsVisible()) continue;
 
-			szScrollPos.cy += pItem->GetFixedHeight();
+			int nFixedHeight = pItem->GetFixedHeight();
+			nFixedHeight = (nFixedHeight <= 0 ? GetSwitchListItemHeight() : nFixedHeight);
+			szScrollPos.cy += nFixedHeight;
 			szScrollPos.cy += GetChildPaddingV();
 		}
 	}
@@ -2583,11 +2584,6 @@ void CDUIListViewCtrl::InsertChildOnListType(CDUIListItemCtrl *pItem)
 {
 	if (NULL == pItem) return;
 
-	if (pItem->GetFixedHeight() <= 0)
-	{
-		pItem->SetFixedHeight(GetSwitchListItemHeight());
-	}
-
 	return;
 }
 
@@ -2635,18 +2631,20 @@ void CDUIListViewCtrl::CalcShowItemOnListType()
 			continue;
 		}
 
-		szScrollPos.cy -= pControl->GetFixedHeight();
+		int nFixedHeight = pControl->GetFixedHeight();
+		nFixedHeight = (nFixedHeight <= 0 ? GetSwitchListItemHeight() : nFixedHeight);
+		szScrollPos.cy -= nFixedHeight;
 		szScrollPos.cy -= GetChildPaddingV();
 		if (szScrollPos.cy <= 0)
 		{
-			szScrollPos.cy += pControl->GetFixedHeight();
+			szScrollPos.cy += nFixedHeight;
 			szScrollPos.cy += GetChildPaddingV();
 			break;
 		}
 
 		m_szTotalRange.cx = max(m_szTotalRange.cx, pControl->GetFixedWidth());
 		m_szTotalRange.cy += m_szTotalRange.cy > 0 ? GetChildPaddingV() : 0;
-		m_szTotalRange.cy += pControl->GetFixedHeight();
+		m_szTotalRange.cy += nFixedHeight;
 	}
 
 	//position
@@ -2667,9 +2665,11 @@ void CDUIListViewCtrl::CalcShowItemOnListType()
 			continue;
 		}
 
+		int nFixedHeight = pItem->GetFixedHeight();
+		nFixedHeight = (nFixedHeight <= 0 ? GetSwitchListItemHeight() : nFixedHeight);
 		m_szTotalRange.cx = max(m_szTotalRange.cx, pItem->GetFixedWidth());
 		m_szTotalRange.cy += m_szTotalRange.cy > 0 ? GetChildPaddingV() : 0;
-		m_szTotalRange.cy += pItem->GetFixedHeight();
+		m_szTotalRange.cy += nFixedHeight;
 
 		if (bFindLast)
 		{
@@ -2677,7 +2677,7 @@ void CDUIListViewCtrl::CalcShowItemOnListType()
 			CDUIRect rcModal = rcItemRange;
 			rcModal.Offset(CDUISize(-szScrollPos.cx, 0));
 			rcModal.top += nYTop;
-			rcModal.bottom = rcModal.top + pItem->GetFixedHeight();
+			rcModal.bottom = rcModal.top + nFixedHeight;
 
 			pItem->OnDuiSize(rcModal);
 
@@ -2689,7 +2689,7 @@ void CDUIListViewCtrl::CalcShowItemOnListType()
 				bFindLast = false;
 			}
 
-			nYTop += pItem->GetFixedHeight();
+			nYTop += rcItem.GetHeight();
 			nYTop += GetChildPaddingV();
 		}
 	}
@@ -2733,10 +2733,13 @@ void CDUIListViewCtrl::ScrollChildsUpOnListType(CDUISize szScroll)
 		}
 		else if (pItemLast)
 		{
+			int nFixedHeight = pItem->GetFixedHeight();
+			nFixedHeight = (nFixedHeight <= 0 ? GetSwitchListItemHeight() : nFixedHeight);
+
 			CDUIRect rcModal = pItemLast->GetModalParentRect();
 			rcModal.Offset(CDUISize(rcItemRange.left - szScrollPos.cx - rcModal.left, GetChildPaddingV()));
 			rcModal.top = rcModal.bottom;
-			rcModal.bottom = rcModal.top + pItem->GetFixedHeight();
+			rcModal.bottom = rcModal.top + nFixedHeight;
 
 			pItem->OnDuiSize(rcModal);
 			pItemLast = pItem;
@@ -2786,10 +2789,13 @@ void CDUIListViewCtrl::ScrollChildsDownOnListType(CDUISize szScroll)
 		}
 		else if (pItemLast)
 		{
+			int nFixedHeight = pItem->GetFixedHeight();
+			nFixedHeight = (nFixedHeight <= 0 ? GetSwitchListItemHeight() : nFixedHeight);
+
 			CDUIRect rcModal = pItemLast->GetModalParentRect();
 			rcModal.Offset(CDUISize(rcItemRange.left - szScrollPos.cx - rcModal.left, -GetChildPaddingV()));
 			rcModal.bottom = rcModal.top;
-			rcModal.top = rcModal.bottom - pItem->GetFixedHeight();
+			rcModal.top = rcModal.bottom - nFixedHeight;
 
 			pItem->OnDuiSize(rcModal);
 			pItemLast = pItem;
