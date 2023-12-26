@@ -886,6 +886,8 @@ void CDUITreeViewCtrl::InitComplete()
 
 	DuiInitAttriVisible(m_AttributeListViewType, false);
 	DuiInitAttriVisible(m_AttributeGroupTileType, false);
+	DuiInitAttriVisible(m_AttributeUseHorizScrollBar, false);
+	DuiInitAttriVisible(m_AttributeUseVertScrollBar, false);
 
 	RegisterControlCallBack(this);
 
