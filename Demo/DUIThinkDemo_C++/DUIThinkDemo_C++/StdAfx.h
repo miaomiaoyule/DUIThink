@@ -19,11 +19,11 @@
 #include "../../../DUIThink/DUIThinkHead.h"
 
 #ifdef _DEBUG
-#pragma comment(lib, "../../../lib/MMHelperD.lib")
-#pragma comment(lib, "../../../lib/DUIThinkD.lib")
+#pragma comment(lib, "../../../lib/MMHelper.2017D.lib")
+#pragma comment(lib, "../../../lib/DUIThink.2017D.lib")
 #else
-#pragma comment(lib, "../../../lib/MMHelper.lib")
-#pragma comment(lib, "../../../lib/DUIThink.lib")
+#pragma comment(lib, "../../../lib/MMHelper.2017.lib")
+#pragma comment(lib, "../../../lib/DUIThink.2017.lib")
 #endif
 
 //////////////////////////////////////////////////////////////////////////
@@ -45,4 +45,3 @@
 #include "DlgDemo.h"
 
 //////////////////////////////////////////////////////////////////////////
-extern CDUIGlobalHelper g_DuiGlobal;

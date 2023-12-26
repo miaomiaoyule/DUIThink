@@ -33,7 +33,10 @@ LRESULT CDlgQQFace::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_KILLFOCUS:
 		{
-			Close();
+			if (m_hWnd != (HWND)wParam)
+			{
+				Close();
+			}
 
 			break;
 		}

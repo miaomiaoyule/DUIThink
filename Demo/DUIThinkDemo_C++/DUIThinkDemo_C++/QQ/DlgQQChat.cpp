@@ -86,7 +86,7 @@ void CDlgQQChat::OnDuiClickBtnSend(const DuiNotify &Notify)
 
 	//other
 	{
-		CDUIListItemCtrl *pItem = MMInterfaceHelper(CDUIListItemCtrl, g_DuiGlobal->LoadDui(_T("QQChatItem")));
+		CDUIListItemCtrl *pItem = MMInterfaceHelper(CDUIListItemCtrl, CDUIGlobal::GetInstance()->LoadDui(_T("QQChatItem")));
 		if (NULL == pItem) return;
 
 		ConstructMessageItem(pItem, vecRichTextItem, true);
@@ -96,7 +96,7 @@ void CDlgQQChat::OnDuiClickBtnSend(const DuiNotify &Notify)
 
 	//self
 	{
-		CDUIListItemCtrl *pItem = MMInterfaceHelper(CDUIListItemCtrl, g_DuiGlobal->LoadDui(_T("QQChatItem")));
+		CDUIListItemCtrl *pItem = MMInterfaceHelper(CDUIListItemCtrl, CDUIGlobal::GetInstance()->LoadDui(_T("QQChatItem")));
 		if (NULL == pItem) return;
 
 		ConstructMessageItem(pItem, vecRichTextItem, false);
@@ -134,7 +134,7 @@ void CDlgQQChat::OnDuiClickFont(const DuiNotify& Notify)
 	if (ChooseFont(&FontInfo))
 	{
 		CDUIFontBase *pFontBase = new CDUIFontBase(CMMService::ProductGUID(), LogFont.lfFaceName, FontInfo.iPointSize / 10, LogFont.lfWeight, LogFont.lfItalic, LogFont.lfUnderline, LogFont.lfStrikeOut);
-		if (false == g_DuiGlobal->AddResource(pFontBase))
+		if (false == CDUIGlobal::GetInstance()->AddResource(pFontBase))
 		{
 			MMSafeDelete(pFontBase);
 

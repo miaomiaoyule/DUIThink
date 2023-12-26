@@ -84,15 +84,15 @@ void CDlgDpi::OnDuiTimer(const DuiNotify &Notify)
 
 void CDlgDpi::OnDuiClickBtnSwitchSkin(const DuiNotify &Notify)
 {
-	int nSkin = (g_DuiGlobal->GetSwitchResIndex() + 1) % 2;
-	g_DuiGlobal->PerformSwitchRes(nSkin);
+	int nSkin = (CDUIGlobal::GetInstance()->GetSwitchResIndex() + 1) % 2;
+	CDUIGlobal::GetInstance()->PerformSwitchRes(nSkin);
 
 	return;
 }
 
 void CDlgDpi::OnWMDemoDpiScale(WPARAM wParam, LPARAM lParam)
 {
-	g_DuiGlobal->SetScale((int)wParam);
+	CDUIGlobal::GetInstance()->SetScale((int)wParam);
 
 	return;
 }

@@ -3,22 +3,21 @@
     <CDUIListViewCtrl>
         <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100265"/>
         <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3409602188"/>
-        <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="3574593318" ColorTip="0"/>
-        <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="1728746897" ColorTip="0"/>
-        <BorderRect Descr="" NameID="1723539081" Visible="1" Modified="1" ValueID="1926287568"/>
+        <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="3574593318"/>
+        <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="1728746897"/>
         <ChildPaddingV Descr="" NameID="1308014568" Visible="1" Modified="1" ValueID="0" Value="1"/>
         <ItemModel Descr="" NameID="4226636527" Visible="1" Modified="1" ValueID="392420501" Cur="2"/>
         <ItemModelInitCount Descr="" NameID="3135764606" Visible="1" Modified="1" ValueID="0" Value="20"/>
-        <ItemColorNormal Descr="" NameID="1299694894" Visible="1" Modified="1" ValueID="2166136261" ColorTip="0"/>
-        <ItemColorHot Descr="" NameID="3532243014" Visible="1" Modified="1" ValueID="1728746897" ColorTip="0"/>
-        <ColorLine Descr="" NameID="1728987606" Visible="1" Modified="1" ValueID="2365708054" ColorTip="0"/>
+        <ItemColorNormal Descr="" NameID="1299694894" Visible="1" Modified="1" ValueID="2166136261"/>
+        <ItemColorHot Descr="" NameID="3532243014" Visible="1" Modified="1" ValueID="1728746897"/>
+        <ColorLine Descr="" NameID="1728987606" Visible="1" Modified="1" ValueID="2365708054"/>
         <ShowRowLine Descr="" NameID="1415130338" Visible="1" Modified="1" ValueID="0" Value="1"/>
         <CDUIScrollBarCtrl>
             <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100266"/>
             <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="2199024046"/>
             <MaxValue Descr="" NameID="540625834" Visible="1" Modified="1" ValueID="0" Value="0"/>
-            <ThumbHorizFixedWidth Descr="" NameID="3795418709" Visible="1" Modified="1" ValueID="0" Value="243"/>
+            <ThumbHorizFixedWidth Descr="" NameID="3795418709" Visible="0" Modified="1" ValueID="0" Value="243"/>
         </CDUIScrollBarCtrl>
         <CDUIScrollBarCtrl>
             <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100267"/>
@@ -36,7 +35,7 @@
         </CDUIScrollBarCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -49,7 +48,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -62,7 +61,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -75,7 +74,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -88,7 +87,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -101,7 +100,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -114,7 +113,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -127,7 +126,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -140,7 +139,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -153,7 +152,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -166,7 +165,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -179,7 +178,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -192,7 +191,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -205,7 +204,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -218,7 +217,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -231,7 +230,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -244,7 +243,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -257,7 +256,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -270,7 +269,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -283,7 +282,7 @@
         </CDUIListItemCtrl>
         <CDUIListItemCtrl>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1399028963"/>
-            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0" ColorTip="4290822336"/>
+            <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="0"/>
             <ImageFore Descr="" NameID="1946296364" Visible="1" Modified="1" ValueID="3089030350"/>
             <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="2691475092"/>
             <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="2906654212"/>
@@ -303,6 +302,21 @@
                 <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
                 <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1081564863"/>
                 <SepWidth Descr="separator width" NameID="1133562293" Visible="1" Modified="1" ValueID="0" Value="0"/>
+                <CDUICheckBoxCtrl>
+                    <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="32"/>
+                    <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1634917189"/>
+                    <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="1364087604"/>
+                    <TextStyle Descr="" NameID="2293282031" Visible="1" Modified="1" ValueID="3544350829"/>
+                    <TextPadding Descr="" NameID="1012701937" Visible="1" Modified="1" ValueID="1302268026"/>
+                    <ImageNormal Descr="" NameID="528471489" Visible="1" Modified="1" ValueID="3103006696"/>
+                    <ImageHot Descr="" NameID="3145700481" Visible="1" Modified="1" ValueID="656784499"/>
+                    <ImagePushed Descr="" NameID="3324297333" Visible="1" Modified="1" ValueID="1503851930"/>
+                    <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="4232723429"/>
+                    <ImageSelNormal Descr="" NameID="1068630995" Visible="1" Modified="1" ValueID="142834742"/>
+                    <ImageSelHot Descr="" NameID="4268241251" Visible="1" Modified="1" ValueID="1327762653"/>
+                    <ImageSelPushed Descr="" NameID="3442560775" Visible="1" Modified="1" ValueID="2019929796"/>
+                    <ImageSelDisabled Descr="" NameID="2512295936" Visible="1" Modified="1" ValueID="1664970091"/>
+                </CDUICheckBoxCtrl>
             </CDUIListHeaderItemCtrl>
         </CDUIListHeaderCtrl>
     </CDUIListViewCtrl>

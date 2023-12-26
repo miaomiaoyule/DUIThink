@@ -12,9 +12,6 @@ WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名
 
 //////////////////////////////////////////////////////////////////////////
-CDUIGlobalHelper g_DuiGlobal;
-
-//////////////////////////////////////////////////////////////////////////
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,
@@ -29,9 +26,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadStringW(hInstance, IDC_DUITHINKDEMOC, szWindowClass, MAX_LOADSTRING);
 
-	g_DuiGlobal.CreateInstance();
-	g_DuiGlobal->Init(hInstance);
-	g_DuiGlobal->LoadProjectFromFile(_T("../DUIThinkDemo.DuiProj/DUIThinkDemo.DuiProj"));
+	CDUIGlobal::GetInstance()->Init(hInstance);
+	CDUIGlobal::GetInstance()->LoadProjectFromFile(_T("../DUIThinkDemo.DuiProj/DUIThinkDemo.DuiProj"));
 	CMMDpi::SetProcessDPIAwareness(enMMPROCESS_DPI_AWARENESS::MMPROCESS_PER_MONITOR_DPI_AWARE);
 
 	//cmd line
@@ -68,8 +64,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	} while (false);
 
-	g_DuiGlobal->UnInit();
-	g_DuiGlobal.CloseInstance();
+	CDUIGlobal::GetInstance()->UnInit();
 
 	return 0;
 }
