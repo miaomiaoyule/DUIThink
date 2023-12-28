@@ -1178,6 +1178,21 @@ CDUIRect CDUITreeNodeCtrl::GetTextRange()
 	return rcRange;
 }
 
+CDUIRect CDUITreeNodeCtrl::GetBackRange()
+{
+	if (NULL == m_pHorizContainerCtrl) return __super::GetBackRange();
+
+	return m_pHorizContainerCtrl->GetAbsoluteRect();
+}
+
+tagDuiListInfo CDUITreeNodeCtrl::GetItemStyleInfo()
+{
+	CDUITreeViewCtrl *pRootView = GetRootView();
+	if (NULL == pRootView) return __super::GetItemStyleInfo();
+
+	return pRootView->GetListInfo();
+}
+
 CDUIControlBase * CDUITreeNodeCtrl::FindControl(FindControlProc Proc, LPVOID pData, UINT uFlags)
 {
 	if (uFlags & DuiFind_ThisView)
@@ -1276,6 +1291,8 @@ void CDUITreeNodeCtrl::CalcNodeHeight()
 		|| NULL == m_pCheckExpandCtrl) return;
 
 	int nHeight = m_pOwner->GetSwitchListItemHeight();
+	nHeight = min(nHeight, GetMaxHeight());
+	nHeight = max(nHeight, GetMinHeight());
 	m_pHorizContainerCtrl->SetFixedHeight(DuiDpiScaleVerifyCtrl(nHeight, DuiDpiScaleBackCtrl(nHeight)));
 
 	if (m_pTreeViewCtrl && m_pCheckExpandCtrl->IsSelected())

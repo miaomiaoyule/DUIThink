@@ -150,6 +150,8 @@ protected:
 	//help
 protected:
 	CDUIRect GetTextRange() override;
+	CDUIRect GetBackRange() override;
+	tagDuiListInfo GetItemStyleInfo() override;
 	CDUIControlBase * FindControl(FindControlProc Proc, LPVOID pData, UINT uFlags) override;
 	void SendNotify(enDuiNotifyType NotifyType, WPARAM wParam = 0, LPARAM lParam = 0) override;
 	virtual bool SelectTreeNode(CDUITreeNodeCtrl *pFromNode, CDUITreeNodeCtrl *pStopNode, bool &bFindFrom);

@@ -153,6 +153,8 @@ protected:
 	virtual void SendNotify(enDuiNotifyType NotifyType, WPARAM wParam = 0, LPARAM lParam = 0);
 	virtual void PerformItemMouseDown(bool bLeft);
 	virtual CDUIRect GetTextRange();
+	virtual CDUIRect GetBackRange();
+	virtual tagDuiListInfo GetItemStyleInfo();
 };
 
 typedef std::vector<CDUIListItemCtrl*> VecDUIListItemCtrl;

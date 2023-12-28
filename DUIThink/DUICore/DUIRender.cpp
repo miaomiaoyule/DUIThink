@@ -923,7 +923,7 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRoun
 		//top break
 		if (szBreakTop.cx > 0 || szBreakTop.cy > 0)
 		{
-			Path.AddLine(rcDraw.left + nXRound, rcDraw.top, rcDraw.left + nXRound + szBreakTop.cy, rcDraw.top);
+			Path.AddLine(rcDraw.left + nXRound, rcDraw.top, rcDraw.left + nXRound + szBreakTop.cx, rcDraw.top);
 		}
 
 		Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);

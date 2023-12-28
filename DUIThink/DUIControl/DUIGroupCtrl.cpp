@@ -135,6 +135,8 @@ void CDUIGroupCtrl::PaintText(HDC hDC)
 
 	//range
 	CDUIRect rcRange = GetAbsoluteRect();
+	rcRange.left += GetBorderLine().left;
+	rcRange.left += GetRoundSize().cx;
 	rcRange.left += Dui_Offset_GroupBorderTopBreak;
 	rcRange.right = rcRange.left + m_szText.cx;
 	rcRange.bottom = rcRange.top + m_szText.cy;
@@ -151,12 +153,12 @@ void CDUIGroupCtrl::PaintText(HDC hDC)
 CDUIRect CDUIGroupCtrl::GetBorderRect()
 {
 	CDUIRect rcBorder = __super::GetBorderRect();
-	rcBorder.top += Dui_Offset_GroupBorderTopBreak;
+	rcBorder.top += m_szText.cy / 2;
 
 	return rcBorder;
 }
 
 CDUISize CDUIGroupCtrl::GetBorderBreakTop()
 {
-	return{ Dui_Offset_GroupBorderTopBreak, m_szText.cx };
+	return { Dui_Offset_GroupBorderTopBreak, m_szText.cx };
 }

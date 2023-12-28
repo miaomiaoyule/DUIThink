@@ -770,7 +770,7 @@ void CDUIListItemCtrl::PaintText(HDC hDC)
 	if (strText.IsEmpty()) return;
 
 	//list info
-	auto ListInfo = m_pOwner ? m_pOwner->GetListInfo() : tagDuiListInfo();
+	auto ListInfo = GetItemStyleInfo();
 	CDUIAttributeTextStyle *pAttribute = NULL;
 
 	if (false == IsEnabled())
@@ -830,7 +830,7 @@ void CDUIListItemCtrl::PaintText(HDC hDC)
 
 void CDUIListItemCtrl::PaintItemColor(HDC hDC)
 {
-	auto ListInfo = m_pOwner ? m_pOwner->GetListInfo() : tagDuiListInfo();
+	auto ListInfo = GetItemStyleInfo();
 	CDUIAttributeColorSwitch *pAttribute = NULL;
 
 	if (false == IsEnabled())
@@ -862,14 +862,14 @@ void CDUIListItemCtrl::PaintItemColor(HDC hDC)
 
 	if (NULL == pAttribute) return;
 
-	pAttribute->FillRect(hDC, m_rcAbsolute, IsColorHSL());
+	pAttribute->FillRect(hDC, GetBackRange(), IsColorHSL());
 
 	return;
 }
 
 void CDUIListItemCtrl::PaintItemImage(HDC hDC)
 {
-	auto ListInfo = m_pOwner ? m_pOwner->GetListInfo() : tagDuiListInfo();
+	auto ListInfo = GetItemStyleInfo();
 	CDUIAttriImageSection *pAttribute = NULL;
 
 	if (false == IsEnabled())
@@ -915,7 +915,7 @@ void CDUIListItemCtrl::PaintItemImage(HDC hDC)
 	}
 	if (NULL == pAttribute) return;
 
-	pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint);
+	pAttribute->Draw(hDC, GetBackRange(), m_rcPaint);
 
 	return;
 }
@@ -936,7 +936,7 @@ void CDUIListItemCtrl::PaintLineOnListType(HDC hDC)
 {
 	if (NULL == m_pOwner) return;
 
-	tagDuiListInfo ListInfo = m_pOwner->GetListInfo();
+	tagDuiListInfo ListInfo = GetItemStyleInfo();
 	if (NULL == ListInfo.pAttributeColorLine) return;
 
 	//row line
@@ -971,7 +971,7 @@ void CDUIListItemCtrl::PaintLineOnTileType(HDC hDC)
 {
 	if (NULL == m_pOwner) return;
 
-	tagDuiListInfo ListInfo = m_pOwner->GetListInfo();
+	tagDuiListInfo ListInfo = GetItemStyleInfo();
 	if (NULL == ListInfo.pAttributeColorLine) return;
 	if (false == m_pOwner->IsShowRowLine() && false == m_pOwner->IsShowColumnLine()) return;
 
@@ -1069,4 +1069,14 @@ CDUIRect CDUIListItemCtrl::GetTextRange()
 	rcRange.CheckRect();
 
 	return rcRange;
+}
+
+CDUIRect CDUIListItemCtrl::GetBackRange()
+{
+	return m_rcAbsolute;
+}
+
+tagDuiListInfo CDUIListItemCtrl::GetItemStyleInfo()
+{
+	return m_pOwner ? m_pOwner->GetListInfo() : tagDuiListInfo();
 }
