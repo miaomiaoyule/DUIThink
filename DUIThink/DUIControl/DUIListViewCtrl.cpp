@@ -1190,6 +1190,12 @@ bool CDUIListViewCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 			if (m_nCurSel >= nPos) m_nCurSel += 1;
 		}
 
+		//select
+		if (pItem->IsSelected())
+		{
+			m_vecSelItem.push_back(pItem);
+		}
+
 		pItem->SetOwner(this);
 
 		return true;
@@ -1498,6 +1504,31 @@ ARGB CDUIListViewCtrl::GetItemTextColorDisabled()
 	return m_AttributeItemTextStyleDisabled.GetTextColor();
 }
 
+tagDuiTextStyle CDUIListViewCtrl::GetItemTextStyleNormal()
+{
+	return m_AttributeItemTextStyleNormal.GetTextStyle();
+}
+
+tagDuiTextStyle CDUIListViewCtrl::GetItemTextStyleHot()
+{
+	return m_AttributeItemTextStyleHot.GetTextStyle();
+}
+
+tagDuiTextStyle CDUIListViewCtrl::GetItemTextStyleSelNormal()
+{
+	return m_AttributeItemTextStyleSelNormal.GetTextStyle();
+}
+
+tagDuiTextStyle CDUIListViewCtrl::GetItemTextStyleSelHot()
+{
+	return m_AttributeItemTextStyleSelHot.GetTextStyle();
+}
+
+tagDuiTextStyle CDUIListViewCtrl::GetItemTextStyleDisabled()
+{
+	return m_AttributeItemTextStyleDisabled.GetTextStyle();
+}
+
 ARGB CDUIListViewCtrl::GetItemStatusColorNormal()
 {
 	return m_AttributeColorItemStatusNormal.GetColorValue();
@@ -1521,6 +1552,56 @@ ARGB CDUIListViewCtrl::GetItemStatusColorSelHot()
 ARGB CDUIListViewCtrl::GetItemStatusColorDisabled()
 {
 	return m_AttributeColorItemStatusDisabled.GetColorValue();
+}
+
+vector<CMMString> CDUIListViewCtrl::GetItemStatusColorResSwitchNormal()
+{
+	return m_AttributeColorItemStatusNormal.GetColorResSwitch();
+}
+
+vector<CMMString> CDUIListViewCtrl::GetItemStatusColorResSwitchHot()
+{
+	return m_AttributeColorItemStatusHot.GetColorResSwitch();
+}
+
+vector<CMMString> CDUIListViewCtrl::GetItemStatusColorResSwitchSelNormal()
+{
+	return m_AttributeColorItemStatusSelNormal.GetColorResSwitch();
+}
+
+vector<CMMString> CDUIListViewCtrl::GetItemStatusColorResSwitchSelHot()
+{
+	return m_AttributeColorItemStatusSelHot.GetColorResSwitch();
+}
+
+vector<CMMString> CDUIListViewCtrl::GetItemStatusColorResSwitchDisabled()
+{
+	return m_AttributeColorItemStatusDisabled.GetColorResSwitch();
+}
+
+tagDuiImageSection CDUIListViewCtrl::GetItemStatusImageSectionNormal()
+{
+	return m_AttributeImageItemStatusNormal.GetImageSection();
+}
+
+tagDuiImageSection CDUIListViewCtrl::GetItemStatusImageSectionHot()
+{
+	return m_AttributeImageItemStatusHot.GetImageSection();
+}
+
+tagDuiImageSection CDUIListViewCtrl::GetItemStatusImageSectionSelNormal()
+{
+	return m_AttributeImageItemStatusSelNormal.GetImageSection();
+}
+
+tagDuiImageSection CDUIListViewCtrl::GetItemStatusImageSectionSelHot()
+{
+	return m_AttributeImageItemStatusSelHot.GetImageSection();
+}
+
+tagDuiImageSection CDUIListViewCtrl::GetItemStatusImageSectionDisabled()
+{
+	return m_AttributeImageItemStatusDisabled.GetImageSection();
 }
 
 void CDUIListViewCtrl::SetItemTextPadding(RECT rcPadding)
@@ -2214,6 +2295,16 @@ void CDUIListViewCtrl::InitComplete()
 		m_pAnimateDrag->SetDragType(ListView_List == GetListViewType() ? DragType_V : DragType_HV);
 	}
 
+	//select
+	for (int n = 0; n < GetChildCount(); n++)
+	{
+		CDUIListItemCtrl *pItem = GetChildAt(n);
+		if (NULL == pItem || false == pItem->IsSelected()) continue;
+
+		m_nCurSel = n;
+		m_vecSelItem.push_back(pItem);
+	}
+
 	SetUseListHeader(IsUseListHeader());
 	SwitchListViewType(GetListViewType());
 
@@ -2431,9 +2522,9 @@ CDUIControlBase * CDUIListViewCtrl::FindControl(FindControlProc Proc, LPVOID pDa
 	//hittest
 	if (uFlags & DuiFind_HitTest)
 	{
+		if (false == IsEnabled()) return NULL;
 		if ((uFlags & DuiFind_Visible) && false == IsVisible()) return NULL;
-		if ((uFlags & DuiFind_Enabled) && false == IsEnabled()) return NULL;
-		if (!::PtInRect(&m_rcAbsolute, *static_cast<LPPOINT>(pData))) return NULL;
+		if (false == ::PtInRect(&m_rcAbsolute, *static_cast<LPPOINT>(pData))) return NULL;
 
 		CDUIControlBase *pResult = NULL;
 

@@ -2083,7 +2083,7 @@ CDUIControlBase * CDUIControlBase::FindControl(FindControlProc Proc, LPVOID pDat
 {
 	if ((uFlags & DuiFind_Visible) && false == IsVisible()) return NULL;
 	if ((uFlags & DuiFind_Enabled) && false == IsEnabled()) return NULL;
-	if ((uFlags & DuiFind_HitTest) && (IsMouseThrough() || !::PtInRect(&m_rcAbsolute, *static_cast<LPPOINT>(pData)))) return NULL;
+	if ((uFlags & DuiFind_HitTest) && (false == IsEnabled() || IsMouseThrough() || false == ::PtInRect(&m_rcAbsolute, *static_cast<LPPOINT>(pData)))) return NULL;
 
 	CDUIControlBase *pControl = Proc(this, pData);;
 

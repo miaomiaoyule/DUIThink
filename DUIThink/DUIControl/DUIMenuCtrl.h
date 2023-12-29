@@ -193,6 +193,10 @@ protected:
 	//variant
 protected:
 
+	//override
+protected:
+	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
+
 	//method
 public:
 	//override

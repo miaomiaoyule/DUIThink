@@ -1806,18 +1806,15 @@ CDUIMemDC::CDUIMemDC(HDC hDC, const CDUIRect rcDest, bool bCopyBitmap)
 
 CDUIMemDC::~CDUIMemDC(void)
 {
-	if (m_bCopyBitmap)
+	if (false == m_bFromStart)
 	{
-		if (false == m_bFromStart)
-		{
-			::BitBlt(m_hDC, m_rcDest.left, m_rcDest.top, m_rcDest.GetWidth(), m_rcDest.GetHeight(),
-				m_hMemDC, m_rcDest.left, m_rcDest.top, SRCCOPY);
-		}
-		else
-		{
-			::BitBlt(m_hDC, m_rcDest.left, m_rcDest.top, m_rcDest.GetWidth(), m_rcDest.GetHeight(),
-				m_hMemDC, 0, 0, SRCCOPY);
-		}
+		::BitBlt(m_hDC, m_rcDest.left, m_rcDest.top, m_rcDest.GetWidth(), m_rcDest.GetHeight(),
+			m_hMemDC, m_rcDest.left, m_rcDest.top, SRCCOPY);
+	}
+	else
+	{
+		::BitBlt(m_hDC, m_rcDest.left, m_rcDest.top, m_rcDest.GetWidth(), m_rcDest.GetHeight(),
+			m_hMemDC, 0, 0, SRCCOPY);
 	}
 
 	SelectObject(m_hMemDC, m_hOldBitmap);

@@ -56,7 +56,7 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 	if (IsWindow(m_hWnd) || NULL == m_pShowMenuView) return;
 
 	//init view
-	if (m_pShowMenuView && NULL == MMInterfaceHelper(CDUIRotateMenuCtrl, static_cast<CDUIControlBase*>(m_pShowMenuView)))
+	if (m_pShowMenuView && NULL == MMInterfaceHelper(CDUIRotateMenuCtrl, m_pShowMenuView))
 	{
 		m_pShowMenuView->UnSelectAllItems();
 	}
@@ -279,6 +279,7 @@ void CDUIMenuWnd::ResizeMenu()
 		CDUIRect rcWndParent;
 		GetWindowRect(::GetParent(m_hWnd), &rcWndParent);
 
+		if (rcWndParent.IsEmpty()) rcWndParent = rcWork;
 		m_ptTrack.x = rcWndParent.left + rcWndParent.GetWidth() / 2 - rcWnd.GetWidth() / 2;
 		m_ptTrack.y = rcWndParent.top + rcWndParent.GetHeight() / 2 - rcWnd.GetHeight() / 2;
 	}
@@ -297,6 +298,7 @@ void CDUIMenuWnd::ResizeSubMenu()
 	if (NULL == m_pShowMenuView) return;
 
 	CDUIRect rcWnd;
+	GetWindowRect(m_hWnd, &rcWnd);
 
 	MONITORINFO oMonitor = {};
 	oMonitor.cbSize = sizeof(oMonitor);
@@ -342,6 +344,12 @@ bool CDUIMenuItemCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 	if (pAttributeObj == &m_AttributeHasExpandMenu)
 	{
 		InitExpandMenu(true);
+
+		return true;
+	}
+	if (pAttributeObj == &m_AttributeLineMenu)
+	{
+		SetLineMenu(IsLineMenu());
 
 		return true;
 	}
@@ -483,7 +491,9 @@ bool CDUIMenuItemCtrl::IsLineMenu()
 
 void CDUIMenuItemCtrl::SetLineMenu(bool bLineMenu)
 {
-	if (bLineMenu == m_AttributeLineMenu.GetValue()) return;
+#ifndef DUI_DESIGN
+	if (bLineMenu == IsLineMenu()) return;
+#endif
 
 	m_AttributeLineMenu.SetValue(bLineMenu);
 
@@ -902,6 +912,38 @@ CDUIMenuCtrl::~CDUIMenuCtrl(void)
 {
 }
 
+bool CDUIMenuCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
+{
+	if (pAttributeObj == &m_AttributeColorItemStatusNormal)
+	{
+		SetItemStatusColorResSwitchSelNormal(GetItemStatusColorResSwitchNormal());
+	}
+	else if (pAttributeObj == &m_AttributeColorItemStatusHot)
+	{
+		SetItemStatusColorResSwitchSelHot(GetItemStatusColorResSwitchHot());
+	}
+	else if (pAttributeObj == &m_AttributeImageItemStatusNormal)
+	{
+		SetItemStatusImageSectionSelNormal(GetItemStatusImageSectionNormal());
+	}
+	else if (pAttributeObj == &m_AttributeImageItemStatusHot)
+	{
+		SetItemStatusImageSectionSelHot(GetItemStatusImageSectionHot());
+	}
+	else if (pAttributeObj == &m_AttributeItemTextStyleNormal)
+	{
+		SetItemTextStyleSelNormal(GetItemTextStyleNormal());
+	}
+	else if (pAttributeObj == &m_AttributeItemTextStyleHot)
+	{
+		SetItemTextStyleSelHot(GetItemTextStyleHot());
+	}
+
+	if (__super::OnAttributeChange(pAttributeObj)) return true;
+
+	return false;
+}
+
 LPVOID CDUIMenuCtrl::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
 	QUERYINTERFACE(CDUIMenuCtrl, Guid, dwQueryVer);
@@ -991,6 +1033,24 @@ void CDUIMenuCtrl::InitComplete()
 	DuiInitAttriVisible(m_AttributeItemModel, false);
 	DuiInitAttriVisible(m_AttributeGroupTileType, false);
 	DuiInitAttriVisible(m_AttributeGroupLine, false);
+	DuiInitAttriVisible(m_AttributeColorItemStatusSelNormal, false);
+	DuiInitAttriVisible(m_AttributeColorItemStatusSelHot, false);
+	DuiInitAttriVisible(m_AttributeImageItemStatusSelNormal, false);
+	DuiInitAttriVisible(m_AttributeImageItemStatusSelHot, false);
+	DuiInitAttriVisible(m_AttributeItemTextStyleSelNormal, false);
+	DuiInitAttriVisible(m_AttributeItemTextStyleSelHot, false);
+	DuiInitAttriVisible(m_AttributeImageMouseDragSel, false);
+	DuiInitAttriVisible(m_AttributeSelectIconVisible, false);
+	DuiInitAttriVisible(m_AttributeSelectDbClick, false);
+	DuiInitAttriVisible(m_AttributeSelectIconLeftPadding, false);
+	DuiInitAttriVisible(m_AttributeSelectIconFixedWidth, false);
+	DuiInitAttriVisible(m_AttributeSelectIconFixedHeight, false);
+	DuiInitAttriVisible(m_AttributeImageSelectIconNormal, false);
+	DuiInitAttriVisible(m_AttributeImageSelectIconHot, false);
+	DuiInitAttriVisible(m_AttributeImageSelectIconPushed, false);
+	DuiInitAttriVisible(m_AttributeImageSelectIconSelNormal, false);
+	DuiInitAttriVisible(m_AttributeImageSelectIconSelHot, false);
+	DuiInitAttriVisible(m_AttributeImageSelectIconSelPushed, false);
 	DuiModifyAttriDescribe(m_AttributeItemTextPadding, _T("Item Text Padding"));
 	DuiModifyAttriDescribe(m_AttributeItemTextStyleNormal, _T("Item Text Style"));
 	DuiModifyAttriDescribe(m_AttributeItemTextStyleHot, _T("Item Text Style"));

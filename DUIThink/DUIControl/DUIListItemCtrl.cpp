@@ -859,7 +859,19 @@ void CDUIListItemCtrl::PaintItemColor(HDC hDC)
 			pAttribute = ListInfo.pAttributeItemStatusColorNormal;
 		}
 	}
-
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
+		&& true == IsSelected()
+		&& ListInfo.pAttributeItemStatusColorSelNormal
+		&& false == ListInfo.pAttributeItemStatusColorSelNormal->IsEmpty())
+	{
+		pAttribute = ListInfo.pAttributeItemStatusColorSelNormal;
+	}
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
+		&& ListInfo.pAttributeItemStatusColorNormal
+		&& false == ListInfo.pAttributeItemStatusColorNormal->IsEmpty())
+	{
+		pAttribute = ListInfo.pAttributeItemStatusColorNormal;
+	}
 	if (NULL == pAttribute) return;
 
 	pAttribute->FillRect(hDC, GetBackRange(), IsColorHSL());
@@ -898,7 +910,6 @@ void CDUIListItemCtrl::PaintItemImage(HDC hDC)
 			pAttribute = ListInfo.pAttributeItemStatusImageNormal;
 		}
 	}
-
 	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& true == IsSelected()
 		&& ListInfo.pAttributeItemStatusImageSelNormal
@@ -907,7 +918,6 @@ void CDUIListItemCtrl::PaintItemImage(HDC hDC)
 		pAttribute = ListInfo.pAttributeItemStatusImageSelNormal;
 	}
 	if ((NULL == pAttribute || pAttribute->IsEmpty())
-		&& false == IsSelected()
 		&& ListInfo.pAttributeItemStatusImageNormal
 		&& false == ListInfo.pAttributeItemStatusImageNormal->IsEmpty())
 	{

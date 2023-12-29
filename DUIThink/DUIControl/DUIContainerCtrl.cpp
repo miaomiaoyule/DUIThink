@@ -1511,7 +1511,7 @@ CDUIControlBase * CDUIContainerCtrl::FindControl(FindControlProc Proc, LPVOID pD
 {
 	if ((uFlags & DuiFind_Visible) && false == IsVisible()) return NULL;
 	if ((uFlags & DuiFind_Enabled) && false == IsEnabled()) return NULL;
-	if ((uFlags & DuiFind_HitTest) && !::PtInRect(&m_rcAbsolute, *static_cast<LPPOINT>(pData))) return NULL;
+	if ((uFlags & DuiFind_HitTest) && (false == IsEnabled() || false == ::PtInRect(&m_rcAbsolute, *static_cast<LPPOINT>(pData)))) return NULL;
 
 	CDUIControlBase *pResult = NULL;
 

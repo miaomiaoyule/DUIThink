@@ -245,11 +245,26 @@ public:
 	virtual ARGB GetItemTextColorSelNormal();
 	virtual ARGB GetItemTextColorSelHot();
 	virtual ARGB GetItemTextColorDisabled();
+	virtual tagDuiTextStyle GetItemTextStyleNormal();
+	virtual tagDuiTextStyle GetItemTextStyleHot();
+	virtual tagDuiTextStyle GetItemTextStyleSelNormal();
+	virtual tagDuiTextStyle GetItemTextStyleSelHot();
+	virtual tagDuiTextStyle GetItemTextStyleDisabled();
 	virtual ARGB GetItemStatusColorNormal();
 	virtual ARGB GetItemStatusColorHot();
 	virtual ARGB GetItemStatusColorSelNormal();
 	virtual ARGB GetItemStatusColorSelHot();
 	virtual ARGB GetItemStatusColorDisabled();
+	virtual vector<CMMString> GetItemStatusColorResSwitchNormal();
+	virtual vector<CMMString> GetItemStatusColorResSwitchHot();
+	virtual vector<CMMString> GetItemStatusColorResSwitchSelNormal();
+	virtual vector<CMMString> GetItemStatusColorResSwitchSelHot();
+	virtual vector<CMMString> GetItemStatusColorResSwitchDisabled();
+	virtual tagDuiImageSection GetItemStatusImageSectionNormal();
+	virtual tagDuiImageSection GetItemStatusImageSectionHot();
+	virtual tagDuiImageSection GetItemStatusImageSectionSelNormal();
+	virtual tagDuiImageSection GetItemStatusImageSectionSelHot();
+	virtual tagDuiImageSection GetItemStatusImageSectionDisabled();
 
 	virtual void SetItemTextPadding(RECT rcPadding);
 	virtual void SetItemTextStyleAll(const tagDuiTextStyle &TextStyle);
@@ -258,7 +273,6 @@ public:
 	virtual void SetItemTextStyleSelNormal(const tagDuiTextStyle &TextStyle);
 	virtual void SetItemTextStyleSelHot(const tagDuiTextStyle &TextStyle);
 	virtual void SetItemTextStyleDisabled(const tagDuiTextStyle &TextStyle);
-
 	virtual void SetItemStatusColorResSwitchNormal(const vector<CMMString> &vecResSwitch);
 	virtual void SetItemStatusColorResSwitchHot(const vector<CMMString> &vecResSwitch);
 	virtual void SetItemStatusColorResSwitchSelNormal(const vector<CMMString> &vecResSwitch);
