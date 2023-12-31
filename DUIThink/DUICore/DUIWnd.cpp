@@ -742,8 +742,8 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam, bool &bHandled)
 	}
 
 	//init func
-	OnInitDialog();
 	OnFindControl();
+	OnInitDialog();
 
 	//call func
 	if (g_pIDuiWndNotify)
