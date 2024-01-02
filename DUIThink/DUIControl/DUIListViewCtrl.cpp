@@ -1194,6 +1194,8 @@ bool CDUIListViewCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 		if (pItem->IsSelected())
 		{
 			m_vecSelItem.push_back(pItem);
+
+			if (-1 == m_nCurSel) m_nCurSel = pItem->GetIndex();
 		}
 
 		pItem->SetOwner(this);
@@ -2293,16 +2295,6 @@ void CDUIListViewCtrl::InitComplete()
 	if (m_pAnimateDrag)
 	{
 		m_pAnimateDrag->SetDragType(ListView_List == GetListViewType() ? DragType_V : DragType_HV);
-	}
-
-	//select
-	for (int n = 0; n < GetChildCount(); n++)
-	{
-		CDUIListItemCtrl *pItem = GetChildAt(n);
-		if (NULL == pItem || false == pItem->IsSelected()) continue;
-
-		m_nCurSel = n;
-		m_vecSelItem.push_back(pItem);
 	}
 
 	SetUseListHeader(IsUseListHeader());
