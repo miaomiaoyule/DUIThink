@@ -72,6 +72,7 @@ typedef CDUIControlBase* (CALLBACK* FindControlProc)(CDUIControlBase*, LPVOID pD
 #define Dui_CtrlIDInner_DlgLogo						(12)
 #define Dui_CtrlIDInner_DlgTitle					(13)
 #define Dui_CtrlIDInner_DragTmp						(20)
+#define Dui_CtrlIDInner_ListItemEdit				(29)
 #define Dui_CtrlIDInner_ListItemSelect				(30)
 #define Dui_CtrlIDInner_HeaderItemSelect			(31)
 #define Dui_CtrlIDInner_HeaderItemCheck				(32)

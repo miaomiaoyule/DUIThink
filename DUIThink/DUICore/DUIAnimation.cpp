@@ -1105,8 +1105,8 @@ void CDUIAnimationWnd::StartAnimationWnd(bool bShow/* = true*/)
 	DuiNotify Notify;
 	Notify.NotifyType = DuiNotify_WndAnimateStart;
 	Notify.pNotifyCtrl = pRootCtrl;
-	Notify.DUINotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_WndAnimate;
-	Notify.DUINotifyExtend.WndAnimate.bShow = m_bShow;
+	Notify.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_WndAnimate;
+	Notify.DuiNotifyExtend.WndAnimate.bShow = m_bShow;
 	pWndManager->SendNotify(Notify);
 
 	return;
@@ -1150,8 +1150,8 @@ void CDUIAnimationWnd::StopAnimationWnd()
 	DuiNotify Notify;
 	Notify.NotifyType = DuiNotify_WndAnimateFinish;
 	Notify.pNotifyCtrl = GetRootCtrl();
-	Notify.DUINotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_WndAnimate;
-	Notify.DUINotifyExtend.WndAnimate.bShow = m_bShow;
+	Notify.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_WndAnimate;
+	Notify.DuiNotifyExtend.WndAnimate.bShow = m_bShow;
 	pWndManager->SendNotify(Notify);
 
 	return;

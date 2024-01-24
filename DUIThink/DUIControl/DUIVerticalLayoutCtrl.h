@@ -19,6 +19,9 @@ public:
 
 	//attribute
 protected:
+	//animate
+	CDUIAttributeGroup					m_AttributeGroupAnimation;
+	CDUIAttributeBool					m_AttributeAnimateDrag;
 
 	//variant
 protected:
@@ -31,6 +34,7 @@ public:
 	UINT GetControlFlags() ;
 
 	//basic
+	bool IsAnimateDrag();
 	void SetAnimateDrag(bool bAnimateDrag) override;
 	bool IsAnimateDraging() override;
 	void OnDragMoveBegin(CDUIControlBase *pDragCtrl) override;

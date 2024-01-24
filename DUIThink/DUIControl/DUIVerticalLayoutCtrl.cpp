@@ -37,9 +37,16 @@ UINT CDUIVerticalLayoutCtrl::GetControlFlags()
 	return __super::GetControlFlags();
 }
 
+bool CDUIVerticalLayoutCtrl::IsAnimateDrag()
+{
+	return m_AttributeAnimateDrag.GetValue();
+}
+
 void CDUIVerticalLayoutCtrl::SetAnimateDrag(bool bAnimateDrag)
 {
-	__super::SetAnimateDrag(bAnimateDrag);
+	if (bAnimateDrag == IsAnimateDrag()) return;
+
+	m_AttributeAnimateDrag.SetValue(bAnimateDrag);
 
 	if (IsAnimateDrag() && NULL == m_pAnimateDrag)
 	{
@@ -331,6 +338,10 @@ bool CDUIVerticalLayoutCtrl::DoPaint(HDC hDC, bool bGenerateBmp /* = false */)
 void CDUIVerticalLayoutCtrl::InitProperty()
 {
 	__super::InitProperty();
+
+	//animate
+	DuiCreateGroupAttribute(m_AttributeGroupAnimation, _T("Animation"));
+	DuiCreateAttribute(m_AttributeAnimateDrag, _T("AnimateDrag"), _T(""), m_AttributeGroupAnimation);
 
 	//pos
 	DuiCreateAttribute(m_AttributeAutoCalcHeight, _T("AutoCalcHeight"), _T(""), m_AttributeGroupPosition);

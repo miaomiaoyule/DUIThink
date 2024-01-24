@@ -88,10 +88,6 @@ protected:
 	CDUIAttributeColor					m_AttributeToolTipBkColor;
 	CDUIAttributeColor					m_AttributeToolTipTextColor;
 
-	//animate
-	CDUIAttributeGroup					m_AttributeGroupAnimation;
-	CDUIAttributeBool					m_AttributeAnimateWater;
-
 	//variant
 protected:
 	CDUIContainerCtrl *					m_pParent = NULL;
@@ -145,6 +141,7 @@ public:
 	virtual UINT GetCtrlID();
 	virtual bool SetCtrlID(UINT uID);
 	virtual void RefreshCtrlID();
+	virtual HWND GetWndHandle();
 	virtual bool SetWndManager(CDUIWndManager *pWndManager);
 	virtual CDUIWndManager * GetWndManager() override;
 	virtual void SetParent(CDUIContainerCtrl *pParent);
@@ -281,10 +278,6 @@ public:
 	virtual bool OnDraw(HDC hDC, const RECT &rcPaint, bool bGenerateBmp = false);
 	virtual bool DoPaint(HDC hDC, bool bGenerateBmp = false);
 
-	//animation
-	virtual bool IsAnimateWater();
-	virtual void SetAnimateWater(bool bAnimateWater);
-
 	//window dragdrop
 	virtual bool IsWinDragEnabled();
 	virtual void SetWinDragEnabled(bool bDragEnabled);
@@ -353,7 +346,6 @@ protected:
 	virtual void PaintStatusImage(HDC hDC);
 	virtual void PaintText(HDC hDC);
 	virtual void PaintBorder(HDC hDC);
-	virtual void PaintWater(HDC hDC);
 
 	//help
 	//** you can override if you need, but you'd better not do that **//
@@ -367,13 +359,6 @@ protected:
 	virtual CDUISize GetBorderBreakTop();
 	virtual CDUIScrollBarCtrl * GetHorizScrollBar() const { return NULL; }
 	virtual CDUIScrollBarCtrl * GetVertScrollBar() const { return NULL; }
-
-	//water help
-private:
-	void InitWater();
-	void UnInitWater();
-	void RippleSpread();
-	void DropStone(int nX, int nY);
 };
 
 DUITHINK_API bool operator == (IDUIInterface *pLeft, const CDUIControlBase &pControl);

@@ -215,6 +215,7 @@ using namespace tinyxml2;
 #include "DUIControl/DUIInstrumentCtrl.h"
 #include "DUIControl/DUIClockCtrl.h"
 #include "DUIControl/DUIGroupCtrl.h"
+#include "DUIControl/DUIWaterCtrl.h"
 
 #include "Interface.h"
 #include "DUIUtils/Utils.h"

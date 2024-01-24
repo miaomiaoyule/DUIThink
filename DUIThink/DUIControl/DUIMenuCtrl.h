@@ -207,6 +207,7 @@ public:
 	virtual int GetMenuItemCount() const;
 	virtual bool InsertMenuItem(CDUIMenuItemCtrl *pMenuItem, int nPos = -1);
 	virtual CDUIMenuItemCtrl * GetMenuItem(int nIndex) const;
+	virtual CDUIMenuItemCtrl * FindMenuItem(UINT uCtrlID);
 	virtual void CheckMenu(int nIndex);
 
 	//refresh
@@ -243,7 +244,7 @@ public:
 	virtual void LoadMenu(LPCTSTR lpszMenu);
 	virtual void DestroyMenu();
 	virtual CDUIMenuCtrl * GetRootMenu();
-	virtual tagDuiMenuCmd TrackPopupMenu(HWND hWndParent, CDUIPoint pt);
+	virtual tagDuiMenuCmd TrackPopupMenu(HWND hWndParent, CDUIPoint pt = {});
 };
 
 //////////////////////////////////////////////////////////////////////////

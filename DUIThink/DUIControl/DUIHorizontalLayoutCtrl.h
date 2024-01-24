@@ -19,7 +19,10 @@ public:
 
 	//attribute
 protected:
-	
+	//animate
+	CDUIAttributeGroup					m_AttributeGroupAnimation;
+	CDUIAttributeBool					m_AttributeAnimateDrag;
+
 	//variant
 protected:
 	CDUIAnimationDrag *					m_pAnimateDrag = NULL;
@@ -30,6 +33,7 @@ public:
 	CMMString GetDescribe() const override;
 
 	//basic
+	bool IsAnimateDrag() override;
 	void SetAnimateDrag(bool bAnimateDrag) override;
 	bool IsAnimateDraging() override;
 	void OnDragMoveBegin(CDUIControlBase *pDragCtrl) override;

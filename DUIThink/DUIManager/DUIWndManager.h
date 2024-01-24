@@ -37,9 +37,9 @@ class DUITHINK_API CDUIWndManager
 	friend class CDUIGlobal;
 	friend class CDUIXmlPack;
 	friend class CDTDesignerDoc;
-	friend class CDTDesignerView;
+	friend class CDesignerView;
 	friend class CControlView;
-	friend class CDUILayoutView;
+	friend class CDuiLayoutView;
 	friend class CDUIContainerCtrl;
 	friend class CDlgLogon;
 

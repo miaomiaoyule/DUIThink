@@ -563,7 +563,6 @@ void CDUIHotKeyCtrl::InitComplete()
 {
 	__super::InitComplete();
 
-	DuiInitAttriVisible(m_AttributeGroupAnimation, false);
 	DuiInitAttriVisible(m_AttributeGroupText, false);
 
 	return;

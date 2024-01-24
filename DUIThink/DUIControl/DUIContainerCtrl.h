@@ -39,9 +39,6 @@ protected:
 	CDUIAttributeBool					m_AttributeAutoCalcWidth;
 	CDUIAttributeBool					m_AttributeAutoCalcHeight;
 
-	//drag
-	CDUIAttributeBool					m_AttributeAnimateDrag;
-
 	//scrollbar
 	CDUIAttributeGroup					m_AttributeGroupScroll;
 	CDUIAttributeBool					m_AttributeScrollBarSpeedModel;

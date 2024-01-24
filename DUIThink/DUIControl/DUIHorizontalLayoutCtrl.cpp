@@ -32,9 +32,16 @@ CMMString CDUIHorizontalLayoutCtrl::GetDescribe() const
 	return Dui_Ctrl_HorizontalLayout;
 }
 
+bool CDUIHorizontalLayoutCtrl::IsAnimateDrag()
+{
+	return m_AttributeAnimateDrag.GetValue();
+}
+
 void CDUIHorizontalLayoutCtrl::SetAnimateDrag(bool bAnimateDrag)
 {
-	__super::SetAnimateDrag(bAnimateDrag);
+	if (bAnimateDrag == IsAnimateDrag()) return;
+
+	m_AttributeAnimateDrag.SetValue(bAnimateDrag);
 
 	if (IsAnimateDrag() && NULL == m_pAnimateDrag)
 	{
@@ -328,6 +335,10 @@ bool CDUIHorizontalLayoutCtrl::DoPaint(HDC hDC, bool bGenerateBmp /* = false */)
 void CDUIHorizontalLayoutCtrl::InitProperty()
 {
 	__super::InitProperty();
+
+	//animate
+	DuiCreateGroupAttribute(m_AttributeGroupAnimation, _T("Animation"));
+	DuiCreateAttribute(m_AttributeAnimateDrag, _T("AnimateDrag"), _T(""), m_AttributeGroupAnimation);
 
 	//pos
 	DuiCreateAttribute(m_AttributeAutoCalcWidth, _T("AutoCalcWidth"), _T(""), m_AttributeGroupPosition);

@@ -223,6 +223,24 @@ void CDUITreeNodeCtrl::NeedParentRefreshView()
 	return __super::NeedParentRefreshView();
 }
 
+CDUITreeNodeCtrl * CDUITreeNodeCtrl::GetPrevSiblingCtrl()
+{
+	CDUITreeNodeCtrl *pParentNode = GetParentNode();
+	if (NULL == pParentNode) return NULL;
+
+	CDUITreeNodeCtrl *pTreeNode = pParentNode->GetChildNode(pParentNode->GetChildNodeIndex(this) - 1);
+	return pTreeNode ? pTreeNode : pParentNode;
+}
+
+CDUITreeNodeCtrl * CDUITreeNodeCtrl::GetNextSiblingCtrl()
+{
+	CDUITreeNodeCtrl *pParentNode = GetParentNode();
+	if (NULL == pParentNode) return NULL;
+
+	CDUITreeNodeCtrl *pTreeNode = pParentNode->GetChildNode(pParentNode->GetChildNodeIndex(this) + 1);
+	return pTreeNode ? pTreeNode : pParentNode->GetNextSiblingCtrl();
+}
+
 bool CDUITreeNodeCtrl::InsertChild(CDUIControlBase *pChild, int nPos /*= -1*/)
 {
 	//vert container
@@ -479,6 +497,47 @@ void CDUITreeNodeCtrl::SetImageSectionSelIconSelPushed(const tagDuiImageSection 
 	m_pTreeViewCtrl->SetImageSectionSelIconSelPushed(GetImageSectionSelIconSelPushed());
 
 	return;
+}
+
+void CDUITreeNodeCtrl::PerformEditText()
+{
+	//create
+	if (NULL == m_pEditTextCtrl && m_pHorizContainerCtrl)
+	{
+		do
+		{
+			//same parent
+			CDUITreeNodeCtrl *pParentNode = GetParentNode();
+			if (pParentNode)
+			{
+				CDUIThinkEditCtrl *pEditTextCtrl = pParentNode->GetEditTextCtrl();
+				if (NULL == pEditTextCtrl) break;
+
+				m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, pEditTextCtrl->Clone());
+				if (NULL == m_pEditTextCtrl) break;
+
+				m_pHorizContainerCtrl->InsertChild(m_pEditTextCtrl);
+
+				break;
+			}
+
+			//new
+			m_pEditTextCtrl = new CDUIThinkEditCtrl;
+			m_pEditTextCtrl->Init();
+			m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
+			m_pEditTextCtrl->SetVisible(false);
+			m_pHorizContainerCtrl->InsertChild(m_pEditTextCtrl);
+
+		} while (false);
+	}
+	if (NULL == m_pEditTextCtrl)
+	{
+		return;
+	}
+
+	m_pEditTextCtrl->RegisterControlCallBack(this);
+
+	return __super::PerformEditText();
 }
 
 bool CDUITreeNodeCtrl::IsExpandEnable()
@@ -763,6 +822,11 @@ CDUICheckBoxCtrl * CDUITreeNodeCtrl::GetExpandIconCtrl()
 	return m_pCheckExpandCtrl;
 }
 
+int CDUITreeNodeCtrl::GetChildNodeIndex(CDUITreeNodeCtrl *pTreeNode)
+{
+	return m_pTreeViewCtrl ? m_pTreeViewCtrl->GetChildIndex(pTreeNode) : -1;
+}
+
 int CDUITreeNodeCtrl::GetChildNodeCount()
 {
 	return m_pTreeViewCtrl ? m_pTreeViewCtrl->GetChildCount() : 0;
@@ -945,6 +1009,16 @@ bool CDUITreeNodeCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &M
 	return true;
 }
 
+bool CDUITreeNodeCtrl::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	CDUITreeViewCtrl *pOwnerView = GetOwnerView();
+	if (NULL == pOwnerView
+		|| NULL == m_pHorizContainerCtrl
+		|| false == m_pHorizContainerCtrl->GetAbsoluteRect().PtInRect(pt)) return true;
+
+	return __super::OnDuiLButtonDlk(pt, Msg);
+}
+
 bool CDUITreeNodeCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	__super::OnDuiMouseWheel(pt, Msg);
@@ -976,6 +1050,10 @@ void CDUITreeNodeCtrl::InitComplete()
 	if (NULL == m_pCheckSelectCtrl && m_pHorizContainerCtrl)
 	{
 		m_pCheckSelectCtrl = MMInterfaceHelper(CDUICheckBoxCtrl, m_pHorizContainerCtrl->FindSubControlThisView(Dui_CtrlIDInner_ListItemSelect));
+	}
+	if (NULL == m_pEditTextCtrl && m_pHorizContainerCtrl)
+	{
+		m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, m_pHorizContainerCtrl->FindSubControlThisView(Dui_CtrlIDInner_ListItemEdit));
 	}
 
 	//create
@@ -1060,6 +1138,10 @@ void CDUITreeNodeCtrl::InitComplete()
 	{
 		m_pCheckSelectCtrl->SetClickTransmit(false);
 		m_pCheckSelectCtrl->RegisterControlCallBack(this);
+	}
+	if (m_pEditTextCtrl)
+	{
+		m_pEditTextCtrl->RegisterControlCallBack(this);
 	}
 	if (m_pHorizContainerCtrl)
 	{
@@ -1208,7 +1290,7 @@ CDUIControlBase * CDUITreeNodeCtrl::FindControl(FindControlProc Proc, LPVOID pDa
 	return __super::FindControl(Proc, pData, uFlags);
 }
 
-void CDUITreeNodeCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam/* = 0*/, LPARAM lParam/* = 0*/)
+void CDUITreeNodeCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPARAM lParam, CMMString strTextOld)
 {
 	if (NULL == m_pWndManager) return;
 
@@ -1220,10 +1302,11 @@ void CDUITreeNodeCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam/* = 
 	Notify.pNotifyCtrl = pRootView;
 	Notify.wParam = wParam;
 	Notify.lParam = lParam;
-	Notify.DUINotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_TreeView;
-	Notify.DUINotifyExtend.TreeView.pTreeNode = this;
-	Notify.DUINotifyExtend.TreeView.pRootNode = pRootNode;
-	Notify.DUINotifyExtend.TreeView.pRootView = pRootView;
+	Notify.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_TreeView;
+	Notify.DuiNotifyExtend.TreeView.pTreeNode = this;
+	Notify.DuiNotifyExtend.TreeView.pRootNode = pRootNode;
+	Notify.DuiNotifyExtend.TreeView.pRootView = pRootView;
+	Notify.DuiNotifyExtend.TreeView.strTextOld = strTextOld;
 
 	m_pWndManager->SendNotify(Notify);
 

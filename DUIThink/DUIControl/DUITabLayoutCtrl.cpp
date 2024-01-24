@@ -257,10 +257,9 @@ void CDUITabLayoutCtrl::InitProperty()
 {
 	__super::InitProperty();
 
-	DuiCreateAttribute(m_AttributeAnimateSelSwitchType, _T("AnimateSelSwitchType"), _T(""), m_AttributeGroupAnimation);
-
 	DuiCreateGroupAttribute(m_AttributeGroupSelect, _T("Select"));
 	DuiCreateAttribute(m_AttributeSelectIndex, _T("SelectIndex"), _T(""), m_AttributeGroupSelect);
+	DuiCreateAttribute(m_AttributeAnimateSelSwitchType, _T("AnimateSelSwitchType"), _T(""), m_AttributeGroupSelect);
 
 	return;
 }

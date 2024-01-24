@@ -19,6 +19,7 @@ public:
 
 	//attribute
 protected:
+	CDUIAttributeGroup					m_AttributeGroupAnimation;
 	CDUIAttriImageSection				m_AttributeImageAnimate;
 	CDUIAttributeSize					m_AttributeSequenceFrameSize;
 	CDUIAttributeLong					m_AttributeSequenceFrameSpeed;

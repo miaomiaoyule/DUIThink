@@ -3117,6 +3117,7 @@ void CDUIGlobal::ReleaseResource()
 	ReleaseImageResource();
 	ReleaseColorResource();
 
+#ifndef DUI_DESIGN
 	m_mapAttriNameValue.clear();
 	m_mapAttriRichTextValue.clear();
 	m_mapAttriTextValue.clear();
@@ -3126,11 +3127,10 @@ void CDUIGlobal::ReleaseResource()
 	m_mapAttriPositionValue.clear();
 	m_mapAttriRectValue.clear();
 	m_mapAttriImageSectionValue.clear();
+#endif
 
 	m_uMaxControlID = Dui_CtrlIDInner_Finish;
 	m_mapControlID.clear();
-	
-	m_bProjectExist = false;
 
 	return;
 }
@@ -3210,8 +3210,6 @@ void CDUIGlobal::ReleaseDui()
 		MMSafeDelete(ModelStoreItem.second);
 	}
 	m_mapModelStore.clear();
-
-	m_bProjectExist = false;
 
 	return;
 }

@@ -70,6 +70,7 @@ public:
 	bool InsertChild(CDUIControlBase *pChild, int nPos = -1) override;
 	bool InsertChild(int nItemModelCount, int nPos = -1) override;
 	CDUITreeNodeCtrl * GetChildAt(int nIndex) const override;
+	bool Remove(CDUIControlBase *pControl) override;
 	bool RemoveAt(int nIndex) override;
 	void RemoveAll() override;
 	void NeedRefreshView() override;

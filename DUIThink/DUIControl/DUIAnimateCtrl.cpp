@@ -238,6 +238,7 @@ void CDUIAnimateCtrl::InitProperty()
 {
 	__super::InitProperty();
 
+	DuiCreateGroupAttribute(m_AttributeGroupAnimation, _T("Animation"));
 	DuiCreateAttribute(m_AttributeImageAnimate, _T("ImageAnimate"), _T(""), m_AttributeGroupAnimation);
 	DuiCreateAttribute(m_AttributeSequenceFrameSize, _T("SequenceFrameSize"), _T(""), m_AttributeGroupAnimation);
 	DuiCreateAttribute(m_AttributeSequenceFrameSpeed, _T("SequenceFrameSpeed"), _T(""), m_AttributeGroupAnimation);

@@ -645,9 +645,9 @@ void CDUIWndManager::ReapControl(CDUIControlBase *pControl)
 	{
 		DuiNotify &Notify = m_vecAsynNotify[i];
 		if (Notify.pNotifyCtrl == pControl
-			|| Notify.DUINotifyExtend.TreeView.pTreeNode == pControl
-			|| Notify.DUINotifyExtend.TreeView.pRootNode == pControl
-			|| Notify.DUINotifyExtend.TreeView.pRootView == pControl)
+			|| Notify.DuiNotifyExtend.TreeView.pTreeNode == pControl
+			|| Notify.DuiNotifyExtend.TreeView.pRootNode == pControl
+			|| Notify.DuiNotifyExtend.TreeView.pRootView == pControl)
 		{
 			m_vecAsynNotify.erase(m_vecAsynNotify.begin() + i);
 		}
@@ -1286,7 +1286,7 @@ void CDUIWndManager::PostNotify(DuiNotify &Notify)
 	Notify.ptMouse = m_ptMousePosLast;
 	Notify.wKeyState = MapKeyState();
 	Notify.dwTimestamp = ::GetTickCount();
-	Notify.DUINotifyExtend = Notify.DUINotifyExtend;
+	Notify.DuiNotifyExtend = Notify.DuiNotifyExtend;
 	m_vecAsynNotify.push_back(Notify);
 
 	PostAppMsg();

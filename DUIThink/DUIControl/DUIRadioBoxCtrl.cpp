@@ -111,7 +111,7 @@ void CDUIRadioBoxCtrl::SetBindTabCtrl(CDUITabLayoutCtrl *pTabCtrl)
 {
 	if (NULL == pTabCtrl || pTabCtrl == GetBindTabCtrl()) return;
 
-	SetBindTabCtrlName(pTabCtrl->GetCtrlID());
+	SetBindTabCtrlID(pTabCtrl->GetCtrlID());
 
 	return;
 }
@@ -121,7 +121,7 @@ UINT CDUIRadioBoxCtrl::GetBindTabCtrlID()
 	return m_AttributeBindTabCtrlID.GetCurSelItem();
 }
 
-void CDUIRadioBoxCtrl::SetBindTabCtrlName(UINT uCtrlID)
+void CDUIRadioBoxCtrl::SetBindTabCtrlID(UINT uCtrlID)
 {
 	m_AttributeBindTabCtrlID.SelectItem(uCtrlID);
 

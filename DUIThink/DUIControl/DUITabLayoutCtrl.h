@@ -20,10 +20,9 @@ public:
 
 	//attribute
 protected:
-	CDUIAttributeCombox					m_AttributeAnimateSelSwitchType;
-
 	CDUIAttributeGroup					m_AttributeGroupSelect;
 	CDUIAttributeLong					m_AttributeSelectIndex;
+	CDUIAttributeCombox					m_AttributeAnimateSelSwitchType;
 
 	//variant
 protected:

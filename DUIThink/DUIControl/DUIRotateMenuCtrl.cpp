@@ -522,7 +522,7 @@ void CDUIRotateMenuCtrl::OnDuiItemMouseMove(const DuiNotify &Notify)
 {
 	if (Notify.pNotifyCtrl != this || NULL == m_pWndManager) return;
 
-	DuiNotify::tagDuiNotifyExtend NotifyExtend = Notify.DUINotifyExtend;
+	DuiNotify::tagDuiNotifyExtend NotifyExtend = Notify.DuiNotifyExtend;
 	int nIndex = NotifyExtend.ListView.nIndexItem;
 
 	CDUIListItemCtrl *pListItem = GetChildAt(nIndex);

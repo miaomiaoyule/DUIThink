@@ -18,7 +18,7 @@ class DUITHINK_API CDUIResourceBase
 	friend class CDUIWndImageList;
 	friend class CDUIWndFontList;
 	friend class CDUIWndColorList;
-	friend class CDUIWndResList;
+	friend class CResourceListBase;
 	friend class CProjectView;
 	friend class CDUIPreview;
 

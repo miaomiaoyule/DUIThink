@@ -490,7 +490,7 @@ void CDUIWnd::OnDuiClick(const DuiNotify &Notify)
 
 void CDUIWnd::OnDuiWndAnimateFinish(const DuiNotify &Notify)
 {
-	if (false == Notify.DUINotifyExtend.WndAnimate.bShow)
+	if (false == Notify.DuiNotifyExtend.WndAnimate.bShow)
 	{
 		ShowWindow(false);
 

@@ -324,6 +324,9 @@
     <ClInclude Include="DUIControl\DUIGroupCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>
+    <ClInclude Include="DUIControl\DUIWaterCtrl.h">
+      <Filter>DUIControl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -552,6 +555,9 @@
       <Filter>DUIControl</Filter>
     </ClCompile>
     <ClCompile Include="DUIControl\DUIGroupCtrl.cpp">
+      <Filter>DUIControl</Filter>
+    </ClCompile>
+    <ClCompile Include="DUIControl\DUIWaterCtrl.cpp">
       <Filter>DUIControl</Filter>
     </ClCompile>
   </ItemGroup>

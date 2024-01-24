@@ -201,7 +201,7 @@ void CDUIComboxWnd::OnDuiItemClick(const DuiNotify &Notify)
 		|| NULL == m_pOwner
 		|| m_pComboxView != Notify.pNotifyCtrl) return;
 
-	CDUIListItemCtrl *pItem = m_pComboxView->GetChildAt(Notify.DUINotifyExtend.ListView.nIndexItem);
+	CDUIListItemCtrl *pItem = m_pComboxView->GetChildAt(Notify.DuiNotifyExtend.ListView.nIndexItem);
 	if (NULL == pItem) return;
 
 	if (false == pItem->GetText().IsEmpty())
@@ -219,7 +219,7 @@ void CDUIComboxWnd::OnDuiItemMouseEnter(const DuiNotify &Notify)
 	if (NULL == m_pOwner || m_pOwner->GetWaveHeight() <= 0) return;
 	if (NULL == m_pComboxView || m_pComboxView != Notify.pNotifyCtrl) return;
 
-	DuiNotify::tagDuiNotifyExtend NotifyExtend = Notify.DUINotifyExtend;
+	DuiNotify::tagDuiNotifyExtend NotifyExtend = Notify.DuiNotifyExtend;
 	int nIndex = NotifyExtend.ListView.nIndexItem;
 
 	if (m_nItemToWave == nIndex) return;
@@ -323,9 +323,9 @@ void CDUIComboxWnd::OnNotify(const DuiNotify &Notify)
 		&& (Notify.pNotifyCtrl == m_pComboxView || m_pComboxView->VerifyChild(Notify.pNotifyCtrl)))
 	{
 		DuiNotify NotifyOwner = Notify;
-		NotifyOwner.DUINotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_Combox;
-		NotifyOwner.DUINotifyExtend.Combox.pComboxCtrl = m_pOwner;
-		NotifyOwner.DUINotifyExtend.Combox.nIndexItem = Notify.DUINotifyExtend.ListView.nIndexItem;
+		NotifyOwner.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_Combox;
+		NotifyOwner.DuiNotifyExtend.Combox.pComboxCtrl = m_pOwner;
+		NotifyOwner.DuiNotifyExtend.Combox.nIndexItem = Notify.DuiNotifyExtend.ListView.nIndexItem;
 		NotifyOwner.pNotifyCtrl = Notify.pNotifyCtrl == m_pComboxView ? m_pOwner : NotifyOwner.pNotifyCtrl;
 		m_pWndManagerOwner->SendNotify(NotifyOwner);
 	}
@@ -781,8 +781,8 @@ bool CDUIComboxCtrl::Active()
 
 	DuiNotify Notify = {};
 	Notify.NotifyType = DuiNotify_ComboxExpand;
-	Notify.DUINotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_Combox;
-	Notify.DUINotifyExtend.Combox.pComboxCtrl = this;
+	Notify.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_Combox;
+	Notify.DuiNotifyExtend.Combox.pComboxCtrl = this;
 	Notify.pNotifyCtrl = this;
 	m_pWndManager->SendNotify(Notify);
 

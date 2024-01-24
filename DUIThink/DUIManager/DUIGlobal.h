@@ -35,13 +35,13 @@ class DUITHINK_API CDUIGlobal
 	friend class CDUIRotateMenuCtrl;
 	friend class CDUICalendarWnd;
 	friend class CDUIXmlPack;
-	friend class CDUIOperatorHistory;
+	friend class CDuiOperatorHistory;
 	friend class CUICommandElement;
-	friend class CDTDesignerView;
+	friend class CDesignerView;
 	friend class CProjectView;
 	friend class CPropertiesView;
 	friend class CDlgDefaultAttribList;
-	friend class CDTDesignerDoc;
+	friend class CDesignerTitle;
 	friend class CImageResView;
 	friend class CFontResView;
 	friend class CColorResView;
@@ -62,7 +62,7 @@ class DUITHINK_API CDUIGlobal
 	friend class CDUIPropertyObject;
 	friend class CDUIImageBase;
 	friend class CDUIPreview;
-	friend class CDUIWndControlViewTree;
+	friend class CControlView;
 	friend class CVSManager;
 	friend class CDlgWizardVariant;
 	friend class CDlgWizardNotify;

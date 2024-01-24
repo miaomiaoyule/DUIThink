@@ -369,15 +369,11 @@ bool CDUIContainerCtrl::KillTimer()
 
 bool CDUIContainerCtrl::IsAnimateDrag()
 {
-	return m_AttributeAnimateDrag.GetValue();
+	return false;
 }
 
 void CDUIContainerCtrl::SetAnimateDrag(bool bAnimateDrag)
 {
-	if (bAnimateDrag == IsAnimateDrag()) return;
-
-	m_AttributeAnimateDrag.SetValue(bAnimateDrag);
-
 	return;
 }
 
@@ -1263,8 +1259,6 @@ void CDUIContainerCtrl::InitProperty()
 {
 	__super::InitProperty();
 
-	DuiCreateAttribute(m_AttributeAnimateDrag, _T("AnimateDrag"), _T(""), m_AttributeGroupAnimation);
-
 	DuiCreateGroupAttribute(m_AttributeGroupScroll, _T("Scroll"));
 	DuiCreateAttribute(m_AttributeScrollBarSpeedModel, _T("ScrollBarSpeedModel"), _T(""), m_AttributeGroupScroll);
 	DuiCreateAttribute(m_AttributeUseHorizScrollBar, _T("UseHorizScrollBar"), _T(""), m_AttributeGroupScroll);
@@ -1282,7 +1276,6 @@ void CDUIContainerCtrl::InitAttriValue()
 {
 	__super::InitAttriValue();
 
-	DuiInitAttriValue(m_AttributeAnimateDrag, false);
 	DuiInitAttriValue(m_AttributeScrollBarSpeedModel, true);
 	DuiInitAttriValue(m_AttributeUseHorizScrollBar, false);
 	DuiInitAttriValue(m_AttributeUseVertScrollBar, false);
@@ -1296,7 +1289,6 @@ void CDUIContainerCtrl::InitComplete()
 {
 	__super::InitComplete();
 
-	DuiInitAttriVisible(m_AttributeAnimateDrag, false);
 	DuiInitAttriVisible(m_AttributeGroupChild, false);
 
 	EnableScrollBar(IsUseHorizScrollBar(), IsUseVertScrollBar());

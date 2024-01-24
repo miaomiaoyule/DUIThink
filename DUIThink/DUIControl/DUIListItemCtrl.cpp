@@ -15,14 +15,39 @@ CDUIListItemCtrl::~CDUIListItemCtrl(void)
 	{
 		m_pCheckSelectCtrl->UnRegisterControlCallBack(this);
 	}
+	if (m_pEditTextCtrl)
+	{
+		m_pEditTextCtrl->UnRegisterControlCallBack(this);
+	}
 
 	m_pCheckSelectCtrl = NULL;
+	m_pEditTextCtrl = NULL;
 
 	return;
 }
 
 void CDUIListItemCtrl::OnNotify(CDUIControlBase *pControl, const DuiNotify &Notify)
 {
+	if (pControl == m_pEditTextCtrl)
+	{
+		switch (Notify.NotifyType)
+		{
+			case DuiNotify_KillFocus:
+			{
+				CMMString strTextOld = GetText();
+
+				SetText(m_pEditTextCtrl->GetText());
+				m_pEditTextCtrl->SetVisible(false);
+
+				SendNotify(DuiNotify_ItemEditFinish, 0, 0, strTextOld);
+
+				break;
+			}
+		}
+
+		return;
+	}
+
 	return;
 }
 
@@ -32,6 +57,15 @@ void CDUIListItemCtrl::OnRelease(CDUIControlBase *pControl)
 	{
 		m_pCheckSelectCtrl->UnRegisterControlCallBack(this);
 		m_pCheckSelectCtrl = NULL;
+
+		return;
+	}
+	if (pControl == m_pEditTextCtrl)
+	{
+		m_pEditTextCtrl->UnRegisterControlCallBack(this);
+		m_pEditTextCtrl = NULL;
+
+		return;
 	}
 
 	return;
@@ -357,7 +391,7 @@ bool CDUIListItemCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 
 bool CDUIListItemCtrl::Remove(CDUIControlBase *pControl)
 {
-	if (pControl == m_pCheckSelectCtrl) return false;
+	if (pControl == m_pCheckSelectCtrl || pControl == m_pEditTextCtrl) return false;
 
 	return __super::Remove(pControl);
 }
@@ -374,7 +408,7 @@ void CDUIListItemCtrl::RemoveAll()
 	for (int n = GetChildCount() - 1; n >= 0; n--)
 	{
 		CDUIControlBase *pControl = GetChildAt(n);
-		if (pControl == m_pCheckSelectCtrl) continue;
+		if (pControl == m_pCheckSelectCtrl || pControl == m_pEditTextCtrl) continue;
 
 		RemoveAt(n);
 	}
@@ -511,6 +545,53 @@ void CDUIListItemCtrl::SetTextPadding(RECT rcPadding)
 	return;
 }
 
+void CDUIListItemCtrl::PerformEditText()
+{
+	//create
+	if (NULL == m_pEditTextCtrl)
+	{
+		do
+		{
+			m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, FindSubControlThisView(Dui_CtrlIDInner_ListItemEdit));
+			if (m_pEditTextCtrl) break;
+
+			m_pEditTextCtrl = new CDUIThinkEditCtrl;
+			m_pEditTextCtrl->Init();
+			m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
+			m_pEditTextCtrl->SetVisible(false);
+			InsertChild(m_pEditTextCtrl, 1);
+
+		} while (false);
+	}
+	if (NULL == m_pEditTextCtrl)
+	{
+		return;
+	}
+
+	m_pEditTextCtrl->RegisterControlCallBack(this);
+
+	//edit
+	CDUIAttributeTextStyle *pAttribute = GetAttributeTextStyleCur();
+	if (NULL == pAttribute) return;
+
+	m_pEditTextCtrl->SetText(GetText());
+	m_pEditTextCtrl->SetTextStyle(pAttribute->GetTextStyle());
+	m_pEditTextCtrl->SetFloat(true);
+	m_pEditTextCtrl->SetPadding(GetTextPadding());
+	m_pEditTextCtrl->SetVisible(true);
+
+	RefreshView();
+
+	m_pEditTextCtrl->SetFocus();
+
+	return;
+}
+
+CDUIThinkEditCtrl * CDUIListItemCtrl::GetEditTextCtrl()
+{
+	return m_pEditTextCtrl;
+}
+
 bool CDUIListItemCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	__super::OnDuiLButtonDown(pt, Msg);
@@ -552,6 +633,9 @@ bool CDUIListItemCtrl::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Ms
 	SendNotify(DuiNotify_ItemDbClick);
 
 	Active();
+
+	//edit
+	PerformEditText();
 
 	return true;
 }
@@ -675,6 +759,8 @@ LRESULT CDUIListItemCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 {
 	__super::OnDuiKeyDown(Msg);
 
+	SendNotify(DuiNotify_ItemKeyDown);
+
 	if (Msg.chKey == VK_RETURN)
 	{
 		Active();
@@ -693,6 +779,8 @@ LRESULT CDUIListItemCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 LRESULT CDUIListItemCtrl::OnDuiKeyUp(const DuiMessage &Msg)
 {
 	__super::OnDuiKeyUp(Msg);
+
+	SendNotify(DuiNotify_ItemKeyUp);
 
 	if (m_pOwner)
 	{
@@ -751,11 +839,23 @@ void CDUIListItemCtrl::InitComplete()
 
 		} while (false);
 	}
+	if (NULL == m_pEditTextCtrl)
+	{
+		do
+		{
+			m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, FindSubControlThisView(Dui_CtrlIDInner_ListItemEdit));
+
+		} while (false);
+	}
 	if (m_pCheckSelectCtrl)
 	{
 		m_pCheckSelectCtrl->SetPaddingVertCenter();
 		m_pCheckSelectCtrl->SetMouseThrough(true);
 		m_pCheckSelectCtrl->RegisterControlCallBack(this);
+	}
+	if (m_pEditTextCtrl)
+	{
+		m_pEditTextCtrl->RegisterControlCallBack(this);
 	}
 
 	return;
@@ -769,56 +869,8 @@ void CDUIListItemCtrl::PaintText(HDC hDC)
 	CMMString strText = GetText();
 	if (strText.IsEmpty()) return;
 
-	//list info
-	auto ListInfo = GetItemStyleInfo();
-	CDUIAttributeTextStyle *pAttribute = NULL;
-
-	if (false == IsEnabled())
-	{
-		pAttribute = ListInfo.pAttributeItemTextStyleDisabled;
-	}
-	else if (IsSelected())
-	{
-		if (m_nControlStatus & ControlStatus_Hot)
-		{
-			pAttribute = ListInfo.pAttributeItemTextStyleSelHot;
-		}
-		else
-		{
-			pAttribute = ListInfo.pAttributeItemTextStyleSelNormal;
-		}
-	}
-	else
-	{
-		if (m_nControlStatus & ControlStatus_Hot)
-		{
-			pAttribute = ListInfo.pAttributeItemTextStyleHot;
-		}
-		else
-		{
-			pAttribute = ListInfo.pAttributeItemTextStyleNormal;
-		}
-	}
-	if ((NULL == pAttribute || pAttribute->IsEmpty())
-		&& true == IsSelected()
-		&& ListInfo.pAttributeItemTextStyleSelNormal
-		&& false == ListInfo.pAttributeItemTextStyleSelNormal->IsEmpty())
-	{
-		pAttribute = ListInfo.pAttributeItemTextStyleSelNormal;
-	}
-	if ((NULL == pAttribute || pAttribute->IsEmpty())
-		&& false == IsSelected()
-		&& ListInfo.pAttributeItemTextStyleNormal
-		&& false == ListInfo.pAttributeItemTextStyleNormal->IsEmpty())
-	{
-		pAttribute = ListInfo.pAttributeItemTextStyleNormal;
-	}
-	if (false == m_AttributeTextStyle.IsEmpty()
-		&& (0 == (m_nControlStatus & ControlStatus_Hot) || NULL == ListInfo.pAttributeItemTextStyleHot || ListInfo.pAttributeItemTextStyleHot->IsEmpty()))
-	{
-		pAttribute = &m_AttributeTextStyle;
-	}
-
+	//textstyle
+	CDUIAttributeTextStyle *pAttribute = GetAttributeTextStyleCur();
 	if (NULL == pAttribute) return;
 
 	CDUIRect rcRange = GetTextRange();
@@ -1000,7 +1052,7 @@ void CDUIListItemCtrl::PaintLineOnTileType(HDC hDC)
 	return;
 }
 
-void CDUIListItemCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPARAM lParam)
+void CDUIListItemCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPARAM lParam, CMMString strTextOld)
 {
 	if (NULL == m_pWndManager) return;
 
@@ -1009,8 +1061,9 @@ void CDUIListItemCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPA
 	Notify.pNotifyCtrl = m_pOwner;
 	Notify.wParam = wParam;
 	Notify.lParam = lParam;
-	Notify.DUINotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_ListView;
-	Notify.DUINotifyExtend.ListView.nIndexItem = GetIndex();
+	Notify.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_ListView;
+	Notify.DuiNotifyExtend.ListView.nIndexItem = GetIndex();
+	Notify.DuiNotifyExtend.ListView.strTextOld = strTextOld;
 
 	m_pWndManager->SendNotify(Notify);
 
@@ -1089,4 +1142,58 @@ CDUIRect CDUIListItemCtrl::GetBackRange()
 tagDuiListInfo CDUIListItemCtrl::GetItemStyleInfo()
 {
 	return m_pOwner ? m_pOwner->GetListInfo() : tagDuiListInfo();
+}
+
+CDUIAttributeTextStyle * CDUIListItemCtrl::GetAttributeTextStyleCur()
+{
+	CDUIAttributeTextStyle *pAttribute = NULL;
+	auto ListInfo = GetItemStyleInfo();
+
+	if (false == IsEnabled())
+	{
+		pAttribute = ListInfo.pAttributeItemTextStyleDisabled;
+	}
+	else if (IsSelected())
+	{
+		if (m_nControlStatus & ControlStatus_Hot)
+		{
+			pAttribute = ListInfo.pAttributeItemTextStyleSelHot;
+		}
+		else
+		{
+			pAttribute = ListInfo.pAttributeItemTextStyleSelNormal;
+		}
+	}
+	else
+	{
+		if (m_nControlStatus & ControlStatus_Hot)
+		{
+			pAttribute = ListInfo.pAttributeItemTextStyleHot;
+		}
+		else
+		{
+			pAttribute = ListInfo.pAttributeItemTextStyleNormal;
+		}
+	}
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
+		&& true == IsSelected()
+		&& ListInfo.pAttributeItemTextStyleSelNormal
+		&& false == ListInfo.pAttributeItemTextStyleSelNormal->IsEmpty())
+	{
+		pAttribute = ListInfo.pAttributeItemTextStyleSelNormal;
+	}
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
+		&& false == IsSelected()
+		&& ListInfo.pAttributeItemTextStyleNormal
+		&& false == ListInfo.pAttributeItemTextStyleNormal->IsEmpty())
+	{
+		pAttribute = ListInfo.pAttributeItemTextStyleNormal;
+	}
+	if (false == m_AttributeTextStyle.IsEmpty()
+		&& (0 == (m_nControlStatus & ControlStatus_Hot) || NULL == ListInfo.pAttributeItemTextStyleHot || ListInfo.pAttributeItemTextStyleHot->IsEmpty()))
+	{
+		pAttribute = &m_AttributeTextStyle;
+	}
+
+	return pAttribute;
 }

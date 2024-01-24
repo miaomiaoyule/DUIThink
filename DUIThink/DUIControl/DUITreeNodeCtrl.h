@@ -58,6 +58,8 @@ public:
 	void NeedParentRefreshView() override;
 
 	//override
+	CDUITreeNodeCtrl * GetPrevSiblingCtrl() override;
+	CDUITreeNodeCtrl * GetNextSiblingCtrl() override;
 	bool InsertChild(CDUIControlBase *pChild, int nPos = -1) override;
 	bool Remove(CDUIControlBase *pControl) override;
 	bool RemoveAt(int nIndex) override;
@@ -79,6 +81,7 @@ public:
 	void SetImageSectionSelIconSelNormal(const tagDuiImageSection &ImageSection) override;
 	void SetImageSectionSelIconSelHot(const tagDuiImageSection &ImageSection) override;
 	void SetImageSectionSelIconSelPushed(const tagDuiImageSection &ImageSection) override;
+	void PerformEditText() override;
 
 	//treenode property
 	virtual bool IsExpandEnable();
@@ -115,6 +118,7 @@ public:
 	virtual bool IsExpanded() const;
 	virtual bool Expand(bool bExpand = true);
 	virtual CDUICheckBoxCtrl * GetExpandIconCtrl();
+	virtual int GetChildNodeIndex(CDUITreeNodeCtrl *pTreeNode);
 	virtual int GetChildNodeCount();
 	virtual int GetSelectNodeCount();
 	virtual bool InsertChildNode(int nItemModelCount, int nPos = -1);
@@ -136,6 +140,7 @@ public:
 	//message
 protected:
 	bool OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	bool OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg) override;
 	bool OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg) override;
 
 	//property
@@ -153,7 +158,7 @@ protected:
 	CDUIRect GetBackRange() override;
 	tagDuiListInfo GetItemStyleInfo() override;
 	CDUIControlBase * FindControl(FindControlProc Proc, LPVOID pData, UINT uFlags) override;
-	void SendNotify(enDuiNotifyType NotifyType, WPARAM wParam = 0, LPARAM lParam = 0) override;
+	void SendNotify(enDuiNotifyType NotifyType, WPARAM wParam = 0, LPARAM lParam = 0, CMMString strTextOld = _T("")) override;
 	virtual bool SelectTreeNode(CDUITreeNodeCtrl *pFromNode, CDUITreeNodeCtrl *pStopNode, bool &bFindFrom);
 	virtual void SelectTreeNodeAll(bool bSelect);
 	virtual void OnSelectChangedNode(bool bSelect);

@@ -54,6 +54,7 @@ enum enDuiNotifyType
 	DuiNotify_MouseMove = 162,
 	DuiNotify_MouseLeave = 163,
 	DuiNotify_MouseWheel = 164,
+	DuiNotify_SetCursor = 165,
 	DuiNotify_KeyDown = 200,
 	DuiNotify_KeyUp = 201,
 	DuiNotify_Char = 202,
@@ -80,8 +81,11 @@ enum enDuiNotifyType
 	DuiNotify_ItemSelected = 331,
 	DuiNotify_ItemUnSelected = 332,
 	DuiNotify_ItemTextChange = 333,
+	DuiNotify_ItemEditFinish = 334,
 	DuiNotify_ItemExpand = 340,
 	DuiNotify_ItemUnExpand = 341,
+	DuiNotify_ItemKeyDown = 350,
+	DuiNotify_ItemKeyUp = 351,
 	DuiNotify_WinDragStart = 400,
 	DuiNotify_WinDragCreateObj = 401,
 	DuiNotify_WinDragCreateBmp = 402,
@@ -131,7 +135,7 @@ typedef struct tagDuiNotify
 	WPARAM								wParam = 0;
 	LPARAM								lParam = 0;
 
-	union tagDuiNotifyExtend
+	struct tagDuiNotifyExtend
 	{
 		enDuiNotifyExtendType			Type = DuiNotifyExtend_None;
 		struct
@@ -142,18 +146,20 @@ typedef struct tagDuiNotify
 		struct tagDuiNotifyListView
 		{
 			int							nIndexItem;
+			CMMString					strTextOld;
 		}ListView;
 		struct tagDuiNotifyTreeView
 		{
 			CDUITreeNodeCtrl *			pTreeNode;
 			CDUITreeNodeCtrl *			pRootNode;
 			CDUITreeViewCtrl *			pRootView;
+			CMMString					strTextOld;
 		}TreeView;
 		struct tagDuiNotifyWndAnimate
 		{
 			bool						bShow;
 		}WndAnimate;
-	}DUINotifyExtend = {};
+	}DuiNotifyExtend = {};
 }DuiNotify;
 
 typedef struct tagDuiMenuCmd

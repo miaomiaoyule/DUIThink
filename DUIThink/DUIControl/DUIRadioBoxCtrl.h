@@ -53,7 +53,7 @@ public:
 	virtual CDUITabLayoutCtrl * GetBindTabCtrl();
 	virtual void SetBindTabCtrl(CDUITabLayoutCtrl *pTabCtrl);
 	virtual UINT GetBindTabCtrlID();
-	virtual void SetBindTabCtrlName(UINT uCtrlID);
+	virtual void SetBindTabCtrlID(UINT uCtrlID);
 	virtual long GetBindTabCtrlIndex();
 	virtual void SetBindTabCtrlIndex(int nIndex);
 

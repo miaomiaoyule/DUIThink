@@ -32,6 +32,7 @@ protected:
 protected:
 	CDUIListViewCtrl *					m_pOwner = NULL;
 	CDUICheckBoxCtrl *					m_pCheckSelectCtrl = NULL;
+	CDUIThinkEditCtrl *					m_pEditTextCtrl = NULL;
 	int									m_nIndex = -1;
 
 	//override
@@ -46,7 +47,7 @@ public:
 	CMMString GetDescribe() const override;
 	UINT GetControlFlags()  override;
 
-	//override
+	//item
 	bool Active() override;
 	virtual void EnsureVisible(bool bCenter = false);
 	virtual int GetIndex() const;
@@ -107,6 +108,8 @@ public:
 	virtual void SetTextStyle(const tagDuiTextStyle &TextStyle);
 	virtual RECT GetTextPadding();
 	virtual void SetTextPadding(RECT rcPadding);
+	virtual void PerformEditText();
+	virtual CDUIThinkEditCtrl * GetEditTextCtrl();
 
 	//message
 protected:
@@ -150,11 +153,12 @@ protected:
 
 	//help
 protected:
-	virtual void SendNotify(enDuiNotifyType NotifyType, WPARAM wParam = 0, LPARAM lParam = 0);
+	virtual void SendNotify(enDuiNotifyType NotifyType, WPARAM wParam = 0, LPARAM lParam = 0, CMMString strTextOld = _T(""));
 	virtual void PerformItemMouseDown(bool bLeft);
 	virtual CDUIRect GetTextRange();
 	virtual CDUIRect GetBackRange();
 	virtual tagDuiListInfo GetItemStyleInfo();
+	virtual CDUIAttributeTextStyle * GetAttributeTextStyleCur();
 };
 
 typedef std::vector<CDUIListItemCtrl*> VecDUIListItemCtrl;

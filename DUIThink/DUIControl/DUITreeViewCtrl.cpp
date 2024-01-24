@@ -112,19 +112,19 @@ void CDUITreeViewCtrl::OnNotify(CDUIControlBase *pControl, const DuiNotify &Noti
 	//view
 	if (pControl == this)
 	{
-		if (DuiNotify::DuiNotifyExtend_None == Notify.DUINotifyExtend.Type) return;
+		if (DuiNotify::DuiNotifyExtend_None == Notify.DuiNotifyExtend.Type) return;
 
 		switch (Notify.NotifyType)
 		{
 			case DuiNotify_ItemClick:
 			{
-				OnClickNode(Notify.DUINotifyExtend.TreeView.pTreeNode);
+				OnClickNode(Notify.DuiNotifyExtend.TreeView.pTreeNode);
 
 				break;
 			}
 			case DuiNotify_ItemDbClick:
 			{
-				OnDbClickNode(Notify.DUINotifyExtend.TreeView.pTreeNode);
+				OnDbClickNode(Notify.DuiNotifyExtend.TreeView.pTreeNode);
 
 				break;
 			}
@@ -256,6 +256,21 @@ bool CDUITreeViewCtrl::InsertChild(int nItemModelCount, int nPos/* = -1*/)
 CDUITreeNodeCtrl * CDUITreeViewCtrl::GetChildAt(int nIndex) const
 {
 	return static_cast<CDUITreeNodeCtrl*>(CDUIContainerCtrl::GetChildAt(nIndex));
+}
+
+bool CDUITreeViewCtrl::Remove(CDUIControlBase *pControl)
+{
+	if (__super::Remove(pControl)) return true;
+
+	MMInterfaceHelper(CDUITreeNodeCtrl, pControl, pTreeNode);
+	if (pTreeNode)
+	{
+		CDUITreeNodeCtrl *pParentNode = pTreeNode->GetParentNode();
+
+		return pParentNode ? pParentNode->RemoveChildNode(pTreeNode) : false;
+	}
+
+	return false;
 }
 
 bool CDUITreeViewCtrl::RemoveAt(int nIndex)

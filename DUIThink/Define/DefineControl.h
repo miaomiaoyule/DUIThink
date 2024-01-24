@@ -47,6 +47,7 @@
 #define Dui_Ctrl_Instrument							(_T("InstrumentCtrl"))
 #define Dui_Ctrl_Clock								(_T("ClockCtrl"))
 #define Dui_Ctrl_DateTime							(_T("DateTimeCtrl"))
+#define Dui_Ctrl_Water								(_T("WaterCtrl"))
 #define Dui_Ctrl_TreeView							(_T("TreeViewCtrl"))
 #define Dui_Ctrl_TreeNode							(_T("TreeNodeCtrl"))
 #define Dui_Ctrl_TabLayout							(_T("TabLayoutCtrl"))

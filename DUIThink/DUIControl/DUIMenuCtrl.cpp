@@ -285,10 +285,10 @@ void CDUIMenuWnd::ResizeMenu()
 	}
 
 	rcWnd.Offset(m_ptTrack.x - rcWnd.left, m_ptTrack.y - rcWnd.top);
-	if (rcWnd.right > rcWork.right) rcWnd.Offset(rcWork.right - rcWnd.right, 0);
+	if (rcWnd.right > rcWork.right) rcWnd.Offset(-rcWnd.GetWidth(), 0);
 	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight());
 
-	MoveWindow(m_hWnd, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), FALSE);
+	SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
 	return;
 }
@@ -316,7 +316,7 @@ void CDUIMenuWnd::ResizeSubMenu()
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(-(rcWndOwner.GetWidth() + rcWnd.GetWidth()), 0);
 	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight());
 	
-	MoveWindow(m_hWnd, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), FALSE);
+	SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
 	return;
 }
@@ -971,6 +971,11 @@ CDUIMenuItemCtrl * CDUIMenuCtrl::GetMenuItem(int nIndex) const
 	return GetChildAt(nIndex);
 }
 
+CDUIMenuItemCtrl * CDUIMenuCtrl::FindMenuItem(UINT uCtrlID)
+{
+	return MMInterfaceHelper(CDUIMenuItemCtrl, FindSubControl(uCtrlID));
+}
+
 void CDUIMenuCtrl::CheckMenu(int nIndex)
 {
 	CDUIMenuItemCtrl *pMenuItem = GetChildAt(nIndex);
@@ -1109,6 +1114,7 @@ tagDuiMenuCmd CDUIMenu::TrackPopupMenu(HWND hWndParent, CDUIPoint pt)
 	g_DuiMenuCmd = {};
 
 	if (NULL == g_pDuiMenuWndRoot) return g_DuiMenuCmd;
+	if (0 == pt.x && 0 == pt.y) GetCursorPos(&pt);
 
 	g_pDuiMenuWndRoot->Init(hWndParent, pt);
 	g_pDuiMenuWndRoot->DoBlock();
