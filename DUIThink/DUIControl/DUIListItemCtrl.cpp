@@ -635,7 +635,7 @@ bool CDUIListItemCtrl::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Ms
 	Active();
 
 	//edit
-	PerformEditText();
+	//PerformEditText();
 
 	return true;
 }

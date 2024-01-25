@@ -2257,7 +2257,7 @@ LRESULT CDUIWndManager::OnDuiMouseMove(WPARAM wParam, LPARAM lParam)
 		tme.dwFlags = TME_HOVER | TME_LEAVE;
 		tme.hwndTrack = m_hWndAttach;
 		tme.dwHoverTime = NULL == m_hWndTooltip ? m_nToolTipHoverTime : (DWORD)::SendMessage(m_hWndTooltip, TTM_GETDELAYTIME, TTDT_INITIAL, 0L);
-		_TrackMouseEvent(&tme);
+		BOOL bRes = _TrackMouseEvent(&tme);
 		m_bMouseTracking = true;
 	}
 

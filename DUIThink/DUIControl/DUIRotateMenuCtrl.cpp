@@ -58,6 +58,12 @@ CDUIRotateMenuCtrl::CDUIRotateMenuCtrl(void)
 
 CDUIRotateMenuCtrl::~CDUIRotateMenuCtrl(void)
 {
+	if (m_pWndManager)
+	{
+		m_pWndManager->RemoveINotify(this);
+	}
+
+	return;
 }
 
 bool CDUIRotateMenuCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
