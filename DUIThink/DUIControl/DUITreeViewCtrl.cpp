@@ -177,6 +177,8 @@ bool CDUITreeViewCtrl::InsertChild(CDUIControlBase *pChild, int nPos/* = -1*/)
 	MMInterfaceHelper(CDUITreeNodeCtrl, pChild, pTreeNode);
 	if (pTreeNode)
 	{
+		if (false == __super::InsertChild(pChild, nPos)) return false;
+		
 		do
 		{
 			if (false == IsInitComplete()) break;
@@ -204,15 +206,12 @@ bool CDUITreeViewCtrl::InsertChild(CDUIControlBase *pChild, int nPos/* = -1*/)
 			}
 
 		} while (false);
-
-		bool bRes = __super::InsertChild(pChild, nPos);
-		
 		if (m_pOwnerNodeCtrl)
 		{
 			m_pOwnerNodeCtrl->OnChildNodeChanged(true);
 		}
 
-		return bRes;
+		return true;
 	}
 	if ((NULL == m_pHorizScrollBarCtrl || NULL == m_pVertScrollBarCtrl)
 		&& MMInterfaceHelper(CDUIScrollBarCtrl, pChild))

@@ -20,6 +20,10 @@
 #define Name_Colorff252429				_T("0xff252429")
 #define Name_Colorff727176				_T("0xff727176")
 #define Name_Colorffbababf				_T("0xffbababf")
+#define Name_Colorff2f6693				_T("0xff2f6693")
+#define Name_Colorff0a0a0a				_T("0xff0a0a0a")
+#define Name_Colorff333237				_T("0xff333237")
+#define Name_Colorff414143				_T("0xff414143")
 
 static TCHAR g_szPublicColor[][MAX_PATH] = 
 {
@@ -38,6 +42,17 @@ static TCHAR g_szPublicColor[][MAX_PATH] =
 	Name_Colorff252429,
 	Name_Colorff727176,
 	Name_Colorffbababf,
+	Name_Colorff2f6693,
+	Name_Colorff0a0a0a,
+	Name_Colorff333237,
+	Name_Colorff414143,
+};
+
+static LOGFONT g_PublicFont[] =
+{
+	{ 12, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
+	{ 14, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
+	{ 16, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") }
 };
 
 //////////////////////////////////////////////////////////////////////////

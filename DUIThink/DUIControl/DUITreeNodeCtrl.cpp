@@ -670,8 +670,10 @@ int CDUITreeNodeCtrl::GetChildIndent()
 
 void CDUITreeNodeCtrl::SetChildIndent(int nIndent)
 {
-	SetPaddingL(nIndent);
-
+	if (GetParentNode())
+	{
+		SetPaddingL(nIndent);
+	}
 	if (m_pTreeViewCtrl)
 	{
 		m_pTreeViewCtrl->SetChildIndent(nIndent);

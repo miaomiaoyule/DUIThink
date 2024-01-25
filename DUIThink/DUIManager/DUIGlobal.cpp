@@ -1188,19 +1188,29 @@ CMMThreadPool * CDUIGlobal::GetThreadPool()
 
 void CDUIGlobal::LoadPublicResource()
 {
-	//color
-	for (auto lpszColor : g_szPublicColor)
-	{
-		auto pColorBase = new CDUIColorBase(lpszColor, _tcstoul(lpszColor, NULL, 16));
-		CDUIGlobal::GetInstance()->AddResource(pColorBase);
-	}
-
 	//image
 	for (auto lpszImage : g_szPublicImage)
 	{
 		auto pImageBase = new CDUIImageBase(lpszImage[0], lpszImage[1]);
 		pImageBase->SetDesign(true);
 		CDUIGlobal::GetInstance()->AddResource(pImageBase);
+	}
+
+	//color
+	for (auto lpszColor : g_szPublicColor)
+	{
+		auto pColorBase = new CDUIColorBase(lpszColor, _tcstoul(lpszColor, NULL, 16));
+		pColorBase->SetDesign(true);
+		CDUIGlobal::GetInstance()->AddResource(pColorBase);
+	}
+
+	//font
+	for (auto lgFont : g_PublicFont)
+	{
+		CMMString strName = CDUIFontBase::FormatFontDescribe(lgFont.lfFaceName, lgFont.lfHeight, lgFont.lfWeight, lgFont.lfItalic, lgFont.lfUnderline, lgFont.lfStrikeOut);
+		auto pFontBase = new CDUIFontBase(strName, lgFont.lfFaceName, lgFont.lfHeight, lgFont.lfWeight, lgFont.lfItalic, lgFont.lfUnderline, lgFont.lfStrikeOut);
+		pFontBase->SetDesign(true);
+		CDUIGlobal::GetInstance()->AddResource(pFontBase);
 	}
 
 	//ctrlid
@@ -1216,6 +1226,7 @@ void CDUIGlobal::LoadPublicResource()
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_DlgTitle);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_ListItemSelect);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_HeaderItemSelect);
+	DuiInitCtrlIDItem(Dui_CtrlIDInner_HeaderItemCheck);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_TreeNodeVertContainer);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_TreeNodeHorizContainer);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_TreeNodeExpand);
