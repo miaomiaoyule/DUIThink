@@ -1193,7 +1193,10 @@ void CDUIGlobal::LoadPublicResource()
 	{
 		auto pImageBase = new CDUIImageBase(lpszImage[0], lpszImage[1]);
 		pImageBase->SetDesign(true);
-		CDUIGlobal::GetInstance()->AddResource(pImageBase);
+		if (false == CDUIGlobal::GetInstance()->AddResource(pImageBase))
+		{
+			MMSafeDelete(pImageBase);
+		}
 	}
 
 	//color
@@ -1201,7 +1204,10 @@ void CDUIGlobal::LoadPublicResource()
 	{
 		auto pColorBase = new CDUIColorBase(lpszColor, _tcstoul(lpszColor, NULL, 16));
 		pColorBase->SetDesign(true);
-		CDUIGlobal::GetInstance()->AddResource(pColorBase);
+		if (false == CDUIGlobal::GetInstance()->AddResource(pColorBase))
+		{
+			MMSafeDelete(pColorBase);
+		}
 	}
 
 	//font
@@ -1210,7 +1216,10 @@ void CDUIGlobal::LoadPublicResource()
 		CMMString strName = CDUIFontBase::FormatFontDescribe(lgFont.lfFaceName, lgFont.lfHeight, lgFont.lfWeight, lgFont.lfItalic, lgFont.lfUnderline, lgFont.lfStrikeOut);
 		auto pFontBase = new CDUIFontBase(strName, lgFont.lfFaceName, lgFont.lfHeight, lgFont.lfWeight, lgFont.lfItalic, lgFont.lfUnderline, lgFont.lfStrikeOut);
 		pFontBase->SetDesign(true);
-		CDUIGlobal::GetInstance()->AddResource(pFontBase);
+		if (false == CDUIGlobal::GetInstance()->AddResource(pFontBase))
+		{
+			MMSafeDelete(pFontBase);
+		}
 	}
 
 	//ctrlid

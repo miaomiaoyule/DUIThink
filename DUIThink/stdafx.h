@@ -5,6 +5,10 @@
 
 #pragma once
 
+#ifdef _DEBUG
+#include <vld.h>
+#endif
+
 #include "targetver.h"
 
 #define _CRT_SECURE_NO_DEPRECATE
