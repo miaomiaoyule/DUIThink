@@ -188,6 +188,14 @@ bool CDUITreeViewCtrl::InsertChild(CDUIControlBase *pChild, int nPos/* = -1*/)
 			{
 				pTreeView->SetChildPadding(GetChildPadding().cx, GetChildPadding().cy);
 				pTreeView->SetSwitchListItemHeight(GetSwitchListItemHeight());
+				pTreeView->SetItemStatusColorResSwitchNormal(GetItemStatusColorResSwitchNormal());
+				pTreeView->SetItemStatusColorResSwitchHot(GetItemStatusColorResSwitchHot());
+				pTreeView->SetItemStatusColorResSwitchSelNormal(GetItemStatusColorResSwitchSelNormal());
+				pTreeView->SetItemStatusColorResSwitchSelHot(GetItemStatusColorResSwitchSelHot());
+				pTreeView->SetItemStatusImageSectionNormal(GetItemStatusImageSectionNormal());
+				pTreeView->SetItemStatusImageSectionHot(GetItemStatusImageSectionHot());
+				pTreeView->SetItemStatusImageSectionSelNormal(GetItemStatusImageSectionSelNormal());
+				pTreeView->SetItemStatusImageSectionSelHot(GetItemStatusImageSectionSelHot());
 			}
 			{
 				pTreeNode->SetExpandEnable(IsExpandEnable());
