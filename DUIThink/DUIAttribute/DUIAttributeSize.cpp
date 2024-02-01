@@ -63,6 +63,16 @@ void CDUIAttributeSize::SetValue(const SIZE &szXY)
 	return;
 }
 
+void CDUIAttributeSize::SetCx(long lCx)
+{
+	return SetValue(lCx, cy);
+}
+
+void CDUIAttributeSize::SetCy(long lCy)
+{
+	return SetValue(cx, lCy);
+}
+
 bool CDUIAttributeSize::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 {
 	if (__super::SetAttribute(lpszName, lpszValue)) return true;

@@ -438,6 +438,19 @@ CMMString CDUIComboxCtrl::GetDescribe() const
 	return Dui_Ctrl_Combox;
 }
 
+CDUIComboxCtrl * CDUIComboxCtrl::Clone(bool bIncludeChild, bool bRefreshCtrlID)
+{
+	MMInterfaceHelper(CDUIComboxCtrl, __super::Clone(bIncludeChild, bRefreshCtrlID), pComboxClone);
+	if (NULL == pComboxClone) return NULL;
+
+	if (m_pShowListView && NULL == pComboxClone->m_pShowListView)
+	{
+		pComboxClone->m_pShowListView = m_pShowListView->Clone();
+	}
+
+	return pComboxClone;
+}
+
 UINT CDUIComboxCtrl::InitCtrlID()
 {
 	__super::InitCtrlID();
@@ -737,6 +750,15 @@ int CDUIComboxCtrl::GetChildCount() const
 bool CDUIComboxCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 {
 	return m_pShowListView ? m_pShowListView->InsertChild(pChild, nPos) : false;
+}
+
+bool CDUIComboxCtrl::InsertChild(CMMString strText, int nPos)
+{
+	CDUIListItemCtrl *pItem = new CDUIListItemCtrl();
+	pItem->Init();
+	pItem->SetText(strText);
+
+	return InsertChild(pItem, nPos);
 }
 
 CDUIControlBase * CDUIComboxCtrl::GetChildAt(int nIndex)

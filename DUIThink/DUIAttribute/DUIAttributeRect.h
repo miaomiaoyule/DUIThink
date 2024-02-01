@@ -33,6 +33,10 @@ public:
 	virtual CDUIRect GetValue();
 	virtual void SetValue(long lLeft, long lTop, long lRight, long lBottom);
 	virtual void SetValue(const RECT &rect);
+	virtual void SetLeft(long lLeft);
+	virtual void SetTop(long lTop);
+	virtual void SetRight(long lRight);
+	virtual void SetBottom(long lBottom);
 
 	//attribute
 protected:

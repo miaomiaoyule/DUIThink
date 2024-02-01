@@ -53,10 +53,8 @@ protected:
 	CDUIAttributeGroup					m_AttributeGroupPosition;
 	CDUIAttributePosition				m_AttributePosition;
 	CDUIAttributeBool					m_AttributeDpiPadding;
-	CDUIAttributeLong					m_AttributeMinWidth;
-	CDUIAttributeLong					m_AttributeMaxWidth;
-	CDUIAttributeLong					m_AttributeMinHeight;
-	CDUIAttributeLong					m_AttributeMaxHeight;
+	CDUIAttributeSize					m_AttributeMinSize;
+	CDUIAttributeSize					m_AttributeMaxSize;
 
 	//back
 	CDUIAttributeGroup					m_AttributeGroupBk;

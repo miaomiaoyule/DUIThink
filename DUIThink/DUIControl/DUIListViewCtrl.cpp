@@ -905,8 +905,13 @@ bool CDUIListViewCtrl::IsSelected(int nIndex)
 
 bool CDUIListViewCtrl::SelectItem(int nIndex, bool bTakeFocus)
 {
-	if (nIndex < 0) return false;
 	if (IsSelected(nIndex)) return true;
+	if (nIndex < 0)
+	{
+		UnSelectAllItems();
+
+		return true;
+	}
 
 	//single
 	if (false == IsMultiSelect() && 0 == (CDUIWndManager::MapKeyState() & MK_CONTROL))

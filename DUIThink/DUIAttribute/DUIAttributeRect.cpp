@@ -51,6 +51,42 @@ void CDUIAttributeRect::SetValue(const RECT &rect)
 	return;
 }
 
+void CDUIAttributeRect::SetLeft(long lLeft)
+{
+	CDUIRect rcValue = GetValue();
+	rcValue.left = lLeft;
+	SetValue(rcValue);
+
+	return;
+}
+
+void CDUIAttributeRect::SetTop(long lTop)
+{
+	CDUIRect rcValue = GetValue();
+	rcValue.top = lTop;
+	SetValue(rcValue);
+
+	return;
+}
+
+void CDUIAttributeRect::SetRight(long lRight)
+{
+	CDUIRect rcValue = GetValue();
+	rcValue.right = lRight;
+	SetValue(rcValue);
+
+	return;
+}
+
+void CDUIAttributeRect::SetBottom(long lBottom)
+{
+	CDUIRect rcValue = GetValue();
+	rcValue.bottom = lBottom;
+	SetValue(rcValue);
+
+	return;
+}
+
 bool CDUIAttributeRect::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 {
 	if (__super::SetAttribute(lpszName, lpszValue)) return true;

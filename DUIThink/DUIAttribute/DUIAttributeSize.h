@@ -32,6 +32,8 @@ public:
 	virtual CDUISize GetValue();
 	virtual void SetValue(long lCx, long lCy);
 	virtual void SetValue(const SIZE &szXY);
+	virtual void SetCx(long lCx);
+	virtual void SetCy(long lCy);
 
 	//attribute
 protected:

@@ -14,6 +14,7 @@ class DUITHINK_API CDUIAttributeTextStyle
 	: public CDUIAttributeObject
 {
 	friend class CDUIThinkEditCtrl;
+	friend class CPropertyTextStyle;
 
 	DuiDeclare_CreateAttribute(CDUIAttributeTextStyle)
 	MMDeclare_ClassName(CDUIAttributeTextStyle)

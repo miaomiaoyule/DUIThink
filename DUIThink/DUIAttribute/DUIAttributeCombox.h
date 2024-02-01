@@ -35,6 +35,7 @@ public:
 	//item
 	virtual void InitSelectItem();
 	virtual int GetCurSelItem();
+	virtual int GetCurSelIndex();
 	virtual CMMString GetCurSelDescribe();
 	virtual void SetCurSelIndex(int nIndex);
 	virtual void SelectItem(int nItem);

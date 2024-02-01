@@ -706,14 +706,14 @@ void CDUIControlBase::SetDpiPadding(bool bDpiPadding)
 
 long CDUIControlBase::GetMinWidth()
 {
-	return DuiDpiScaleCtrl(m_AttributeMinWidth.GetValue());
+	return DuiDpiScaleCtrl(m_AttributeMinSize.GetValue().cx);
 }
 
 void CDUIControlBase::SetMinWidth(long lWidth)
 {
 	if (lWidth < 0 || lWidth == GetMinWidth()) return;
 
-	m_AttributeMinWidth.SetValue(lWidth);
+	m_AttributeMinSize.SetValue(lWidth, m_AttributeMinSize.GetValue().cy);
 
 	NeedParentRefreshView();
 
@@ -722,14 +722,14 @@ void CDUIControlBase::SetMinWidth(long lWidth)
 
 long CDUIControlBase::GetMaxWidth()
 {
-	return DuiDpiScaleCtrl(m_AttributeMaxWidth.GetValue());
+	return DuiDpiScaleCtrl(m_AttributeMaxSize.GetValue().cx);
 }
 
 void CDUIControlBase::SetMaxWidth(long lWidth)
 {
 	if (lWidth < 0 || lWidth == GetMaxWidth()) return;
 
-	m_AttributeMaxWidth.SetValue(lWidth);
+	m_AttributeMaxSize.SetValue(lWidth, m_AttributeMaxSize.GetValue().cy);
 
 	NeedParentRefreshView();
 
@@ -738,14 +738,14 @@ void CDUIControlBase::SetMaxWidth(long lWidth)
 
 long CDUIControlBase::GetMinHeight()
 {
-	return DuiDpiScaleCtrl(m_AttributeMinHeight.GetValue());
+	return DuiDpiScaleCtrl(m_AttributeMinSize.GetValue().cy);
 }
 
 void CDUIControlBase::SetMinHeight(long lHeight)
 {
 	if (lHeight < 0 || lHeight == GetMinHeight()) return;
 
-	m_AttributeMinHeight.SetValue(lHeight);
+	m_AttributeMinSize.SetValue(m_AttributeMinSize.GetValue().cx, lHeight);
 
 	NeedParentRefreshView();
 
@@ -754,14 +754,14 @@ void CDUIControlBase::SetMinHeight(long lHeight)
 
 long CDUIControlBase::GetMaxHeight()
 {
-	return DuiDpiScaleCtrl(m_AttributeMaxHeight.GetValue());
+	return DuiDpiScaleCtrl(m_AttributeMaxSize.GetValue().cy);
 }
 
 void CDUIControlBase::SetMaxHeight(long lHeight)
 {
 	if (lHeight < 0 || lHeight == GetMaxHeight()) return;
 
-	m_AttributeMaxHeight.SetValue(lHeight);
+	m_AttributeMaxSize.SetValue(m_AttributeMaxSize.GetValue().cx, lHeight);
 
 	NeedParentRefreshView();
 
@@ -1645,10 +1645,8 @@ void CDUIControlBase::InitProperty()
 
 	DuiCreateGroupAttribute(m_AttributeGroupPosition, _T("Position"));
 	DuiCreateAttribute(m_AttributePosition, Key_Dui_PropPosition, _T(""), m_AttributeGroupPosition);
-	DuiCreateAttribute(m_AttributeMinWidth, _T("MinWidth"), _T(""), m_AttributeGroupPosition);
-	DuiCreateAttribute(m_AttributeMaxWidth, _T("MaxWidth"), _T(""), m_AttributeGroupPosition);
-	DuiCreateAttribute(m_AttributeMinHeight, _T("MinHeight"), _T(""), m_AttributeGroupPosition);
-	DuiCreateAttribute(m_AttributeMaxHeight, _T("MaxHeight"), _T(""), m_AttributeGroupPosition);
+	DuiCreateAttribute(m_AttributeMinSize, _T("MinSize"), _T(""), m_AttributeGroupPosition);
+	DuiCreateAttribute(m_AttributeMaxSize, _T("MaxSize"), _T(""), m_AttributeGroupPosition);
 	DuiCreateAttribute(m_AttributeDpiPadding, _T("DpiPadding"), _T(""), m_AttributeGroupPosition);
 
 	//Í¼ÏñÏà¹Ø
@@ -1692,10 +1690,8 @@ void CDUIControlBase::InitAttriValue()
 	DuiInitAttriValue(m_AttributeEnable, true);
 	DuiInitAttriValue(m_AttributeVisible, true);
 
-	DuiInitAttriValue(m_AttributeMinWidth, 0);
-	DuiInitAttriValue(m_AttributeMaxWidth, 99999);
-	DuiInitAttriValue(m_AttributeMinHeight, 0);
-	DuiInitAttriValue(m_AttributeMaxHeight, 99999);
+	DuiInitAttriSizeValue(m_AttributeMinSize, 0, 0);
+	DuiInitAttriSizeValue(m_AttributeMaxSize, 999999, 999999);
 	DuiInitAttriValue(m_AttributeDpiPadding, true);
 
 	DuiInitAttriValue(m_AttributeIsColorHSL, false);

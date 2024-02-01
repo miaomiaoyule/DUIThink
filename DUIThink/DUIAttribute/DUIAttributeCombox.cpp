@@ -87,6 +87,11 @@ int CDUIAttributeCombox::GetCurSelItem()
 	return AttriCombox.vecItem[m_nCurSel].nItem;
 }
 
+int CDUIAttributeCombox::GetCurSelIndex()
+{
+	return m_nCurSel;
+}
+
 CMMString CDUIAttributeCombox::GetCurSelDescribe()
 {
 	tagDuiCombox AttriCombox = GetCombox();

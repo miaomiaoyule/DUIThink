@@ -49,6 +49,7 @@ protected:
 public:
 	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
 	CMMString GetDescribe() const override;
+	CDUIComboxCtrl * Clone(bool bIncludeChild = true, bool bRefreshCtrlID = true) override;
 
 	//basic
 	UINT InitCtrlID() override;
@@ -88,6 +89,7 @@ public:
 
 	virtual int GetChildCount() const;
 	virtual bool InsertChild(CDUIControlBase *pChild, int nPos = -1);
+	virtual bool InsertChild(CMMString strText, int nPos = -1);
 	virtual CDUIControlBase * GetChildAt(int nIndex);
 	virtual bool Remove(CDUIControlBase *pControl);
 	virtual bool RemoveAt(int nIndex);
