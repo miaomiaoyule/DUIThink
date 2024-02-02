@@ -681,10 +681,7 @@ bool CDUIGlobal::SaveProject()
 
 bool CDUIGlobal::CloseProject()
 {
-	if (IsLoadProject())
-	{	
-		SaveProject();
-	}
+	SaveProject();
 
 	m_strProjectPath.Empty();
 	m_strProjectName.Empty();
@@ -696,7 +693,6 @@ bool CDUIGlobal::CloseProject()
 	m_strMenuDir.Empty();
 	m_str3DMenuDir.Empty();
 	m_strCalendarDir.Empty();
-	m_strFontResDefault.Empty();
 
 	ReleaseResource();
 	ReleaseDui();
@@ -1258,9 +1254,7 @@ void CDUIGlobal::LoadPublicResource()
 
 void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 {
-#ifdef DUITHINKLIB
 	return;
-#endif
 
 	tinyxml2::XMLDocument xmlDoc;
 	bool bRes = true;
@@ -1667,6 +1661,8 @@ bool CDUIGlobal::RemoveDui(const CMMString &strName)
 
 void CDUIGlobal::SetFontResDefault(const CMMString &strName)
 {
+	if (strName.IsEmpty()) return;
+
 	m_strFontResDefault = strName;
 
 	return;

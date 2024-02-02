@@ -9,7 +9,7 @@
 class CDUIComboxWnd : public CDUIWnd
 {
 	MMDeclare_ClassName()
-		DuiDeclare_Message_Map()
+	DuiDeclare_Message_Map()
 
 public:
 	CDUIComboxWnd(CDUIComboxCtrl *pOwner);
@@ -32,7 +32,7 @@ public:
 	CMMString GetDuiName() const override;
 
 protected:
-	void OnFinalMessage();
+	void OnFinalMessage() override;
 	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam, bool &bHandled);
 	void OnDuiWndInited(const DuiNotify &Notify);
 	void OnDuiItemClick(const DuiNotify &Notify);
@@ -156,6 +156,8 @@ void CDUIComboxWnd::UnInit()
 			}
 		}
 	}
+
+	m_pWndManager->DetachRootCtrl();
 
 	return;
 }

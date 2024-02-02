@@ -37,8 +37,8 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	CStringA strFontRes;
 	strFontRes = strFontRes + Dui_Resource_FontRes + (".xml");
 	tinyxml2::XMLElement *pXmlFontRes = xmlDoc.NewElement(Dui_Resource_FontRes);
-	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResDefault, (LPCSTR)CT2CA(strFontResDefault));
 	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResFile, strFontRes);
+	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResDefault, (LPCSTR)CT2CA(strFontResDefault));
 	xmlDoc.LinkEndChild(pXmlFontRes);
 
 	//ColorResNode

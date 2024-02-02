@@ -68,6 +68,7 @@ class DUITHINK_API CDUIGlobal
 	friend class CDlgWizardNotify;
 	friend class CDUIPropertyGridProperty;
 	friend class CControlNotifyView;
+	friend class CDTDesignerApp;
 
 private:
 	CDUIGlobal(void);

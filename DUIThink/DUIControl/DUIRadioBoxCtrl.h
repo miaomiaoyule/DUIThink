@@ -43,7 +43,7 @@ public:
 	bool Active() override;
 
 	//select
-	void Select(bool bSelect = false, bool bNotify = true) override;
+	void Select(bool bSelect = true, bool bNotify = true) override;
 
 	//group
 	virtual CMMString GetGroupName();

@@ -53,7 +53,7 @@ public:
 
 	//select
 	virtual bool IsSelected();
-	virtual void Select(bool bSelect = false, bool bNotify = true);
+	virtual void Select(bool bSelect = true, bool bNotify = true);
 	virtual tagDuiImageSection GetImageSectionSelNormal();
 	virtual tagDuiImageSection GetImageSectionSelHot();
 	virtual tagDuiImageSection GetImageSectionSelPushed();
