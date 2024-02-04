@@ -741,7 +741,15 @@ int CDUIComboxCtrl::GetCurSel() const
 
 bool CDUIComboxCtrl::SelectItem(int nIndex)
 {
-	return m_pShowListView ? m_pShowListView->SelectItem(nIndex) : false;
+	if (NULL == m_pShowListView) return false;
+
+	CDUIListItemCtrl *pItem = m_pShowListView->GetChildAt(nIndex);
+	if (NULL == pItem) return false;
+
+	SetText(pItem->GetText());
+	m_pShowListView->SelectItem(nIndex);
+	
+	return true;
 }
 
 int CDUIComboxCtrl::GetChildCount() const

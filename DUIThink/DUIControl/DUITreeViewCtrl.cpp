@@ -914,7 +914,9 @@ void CDUITreeViewCtrl::InitComplete()
 
 void CDUITreeViewCtrl::PaintLine(HDC hDC)
 {
-	if (GetRootView() == this)
+	if (GetRootView() != this) return;
+
+	if (IsShowRowLine() || IsShowColumnLine())
 	{
 		CDUIRect rcLayout = GetLayoutRangeOfItem();
 		if (false == IntersectRect(&rcLayout, &m_rcPaint, &rcLayout)) return;
@@ -931,7 +933,7 @@ void CDUITreeViewCtrl::PaintLine(HDC hDC)
 			CDUIRect rcNode = pTreeNode->GetAbsoluteRect();
 			if (false == IntersectRect(&rcTemp, &rcNode, &rcLayout)) continue;
 
-			pTreeNode->PaintLine(hDC);
+			pTreeNode->PaintLineOnListType(hDC);
 		}
 	}
 

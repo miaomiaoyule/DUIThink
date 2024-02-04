@@ -2354,6 +2354,13 @@ CDUIRect CDUIListViewCtrl::GetLayoutRangeOfItem()
 {
 	CDUIRect rcItemRange = GetAbsoluteRect();
 
+	//header
+	if (IsUseListHeader() && m_pListHeader && m_pListHeader->IsVisible())
+	{
+		rcItemRange.top = m_pListHeader->GetAbsoluteRect().bottom;
+		rcItemRange.right += max(0, m_pListHeader->GetWidth() - GetWidth());
+	}
+
 	//scroll bar
 	if (IsHScrollBarPushItemRange() && m_pHorizScrollBarCtrl && m_pHorizScrollBarCtrl->IsVisible())
 	{
@@ -2362,14 +2369,6 @@ CDUIRect CDUIListViewCtrl::GetLayoutRangeOfItem()
 	if (IsVScrollBarPushItemRange() && m_pVertScrollBarCtrl && m_pVertScrollBarCtrl->IsVisible())
 	{
 		rcItemRange.right -= m_pVertScrollBarCtrl->GetWidth();
-	}
-
-	//header
-	if (IsUseListHeader() && m_pListHeader && m_pListHeader->IsVisible())
-	{
-		rcItemRange.top = m_pListHeader->GetAbsoluteRect().bottom;
-		rcItemRange.right = GetAbsoluteRect().right;
-		rcItemRange.right += max(0, m_pListHeader->GetWidth() - GetWidth());
 	}
 
 	rcItemRange.left += GetRangeInset().left;

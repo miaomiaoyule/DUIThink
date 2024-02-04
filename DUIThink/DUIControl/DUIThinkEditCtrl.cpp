@@ -12,6 +12,8 @@
 
 #define Max_ThinkEditHistory			(50)
 
+static VecDuiRichTextItem g_vecDuiRichTextPreEdit;
+
 //////////////////////////////////////////////////////////////////////////
 //std::set<WORD> CDUIThinkEditCtrl::m_setEmoji;
 
@@ -1242,6 +1244,9 @@ bool CDUIThinkEditCtrl::OnDuiSetFocus()
 	if (NULL == m_pWndManager) return false;
 	if (false == __super::OnDuiSetFocus()) return false;
 
+	//pre edit
+	g_vecDuiRichTextPreEdit = GetRichTextItem();
+
 	//active
 	HWND hWndForground = GetForegroundWindow();
 	DWORD dwProIDForground = ::GetWindowThreadProcessId(hWndForground, NULL);
@@ -1277,22 +1282,31 @@ bool CDUIThinkEditCtrl::OnDuiKillFocus()
 	m_bShowCaret = false;
 	m_szScrollPos = {};
 
-	//number
-	if (EditText_NumberDouble == GetEditTextType())
+	do
 	{
-		double lfNum = _tcstod(GetText(), NULL);
-		CMMString strText = CMMStrHelp::Format(_T("%0.6lf"), lfNum);
-		SetText(strText);
+		//number
+		if (EditText_NumberDouble == GetEditTextType())
+		{
+			double lfNum = _tcstod(GetText(), NULL);
+			CMMString strText = CMMStrHelp::Format(_T("%0.6lf"), lfNum);
+			SetText(strText);
 
-		return true;
-	}
-	if (EditText_NumberInt == GetEditTextType())
+			break;
+		}
+		if (EditText_NumberInt == GetEditTextType())
+		{
+			int nNum = _tcstol(GetText(), NULL, 10);
+			CMMString strText = CMMStrHelp::Format(_T("%d"), nNum);
+			SetText(strText);
+
+			break;
+		}
+	} while (false);
+
+	//notify
+	if (g_vecDuiRichTextPreEdit != GetRichTextItem())
 	{
-		int nNum = _tcstol(GetText(), NULL, 10);
-		CMMString strText = CMMStrHelp::Format(_T("%d"), nNum);
-		SetText(strText);
-
-		return true;
+		m_pWndManager->SendNotify(this, DuiNotify_Edited);
 	}
 
 	return true;
