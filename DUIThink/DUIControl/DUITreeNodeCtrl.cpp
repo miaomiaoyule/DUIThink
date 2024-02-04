@@ -1125,6 +1125,11 @@ bool CDUITreeNodeCtrl::SaveAttribute(tinyxml2::XMLElement *pNode, bool bIncludeC
 	return bRes;
 }
 
+void CDUITreeNodeCtrl::PaintLine(HDC hDC)
+{
+	return;
+}
+
 void CDUITreeNodeCtrl::PaintLineOnListType(HDC hDC)
 {
 	if (NULL == m_pHorizContainerCtrl) return;

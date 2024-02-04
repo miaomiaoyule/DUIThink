@@ -307,11 +307,9 @@ bool CDUITreeViewCtrl::RemoveAt(int nIndex)
 
 void CDUITreeViewCtrl::RemoveAll()
 {
-	CDUITreeViewCtrl *pRootView = GetRootView();
-	if (NULL == pRootView) return;
-
 	//cur sel
-	if (VerifyChild(pRootView->GetCurSelNode()))
+	CDUITreeViewCtrl *pRootView = GetRootView();
+	if (pRootView && VerifyChild(pRootView->GetCurSelNode()))
 	{
 		pRootView->SetCurSelNode(NULL);
 	}
@@ -918,7 +916,12 @@ void CDUITreeViewCtrl::PaintLine(HDC hDC)
 {
 	if (GetRootView() == this)
 	{
-		CDUIRect rcThis = GetAbsoluteRect();
+		CDUIRect rcLayout = GetLayoutRangeOfItem();
+		if (false == IntersectRect(&rcLayout, &m_rcPaint, &rcLayout)) return;
+
+		CDUIRenderClip Clip;
+		CDUIRenderClip::GenerateClip(hDC, rcLayout, Clip);
+
 		CDUIRect rcTemp;
 		for (int n = 0; n < GetChildCount(); n++)
 		{
@@ -926,7 +929,7 @@ void CDUITreeViewCtrl::PaintLine(HDC hDC)
 			if (NULL == pTreeNode || false == pTreeNode->IsVisible()) continue;
 
 			CDUIRect rcNode = pTreeNode->GetAbsoluteRect();
-			if (false == IntersectRect(&rcTemp, &rcNode, &rcThis)) continue;
+			if (false == IntersectRect(&rcTemp, &rcNode, &rcLayout)) continue;
 
 			pTreeNode->PaintLine(hDC);
 		}

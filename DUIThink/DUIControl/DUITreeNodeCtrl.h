@@ -149,6 +149,7 @@ protected:
 
 	//paint
 protected:
+	void PaintLine(HDC hDC) override;
 	void PaintLineOnListType(HDC hDC) override;
 
 	//help
