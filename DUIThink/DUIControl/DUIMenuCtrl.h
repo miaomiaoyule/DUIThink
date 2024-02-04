@@ -10,7 +10,7 @@ class CDUIMenuCtrl;
 class CDUIMenuItemCtrl;
 
 //////////////////////////////////////////////////////////////////////////
-class CDUIMenuWnd 
+class DUITHINK_API CDUIMenuWnd
 	: public CDUIWnd
 	, public IDUIControlCallBack
 {

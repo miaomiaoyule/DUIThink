@@ -957,60 +957,6 @@ void CDUITreeNodeCtrl::SelectChildNode(bool bSelect)
 	return;
 }
 
-bool CDUITreeNodeCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Msg)
-{
-	CDUIHorizontalLayoutCtrl::OnDuiLButtonDown(pt, Msg);
-
-	do
-	{
-		CDUITreeViewCtrl *pOwnerView = GetOwnerView();
-		if (NULL == pOwnerView
-			|| NULL == m_pHorizContainerCtrl
-			|| pOwnerView->IsSelectDbClick()
-			|| false == m_pHorizContainerCtrl->GetAbsoluteRect().PtInRect(pt)) break;
-
-		auto pRootView = GetRootView();
-		if (NULL == pRootView) break;
-
-		//shift
-		if (GetKeyState(VK_SHIFT) & 0x8000)
-		{
-			CDUITreeNodeCtrl *pTreeNode = GetCurSelNode();
-			pRootView->SelectTreeNodeAll(false);
-			pRootView->SelectTreeNode(pTreeNode, this);
-
-			break;
-		}
-
-		//ctrl or select icon visible
-		if ((GetKeyState(VK_CONTROL) & 0x8000) || IsSelectIconVisible())
-		{
-			Select(!IsSelected());
-
-			if (IsSelected())
-			{
-				pRootView->SetCurSelNode(this);
-			}
-
-			break;
-		}
-
-		//single
-		{
-			pRootView->SelectTreeNodeAll(false);
-
-			Select();
-
-			pRootView->SetCurSelNode(this);
-		}
-
-	} while (false);
-
-	SendNotify(DuiNotify_ItemButtonDown);
-
-	return true;
-}
-
 bool CDUITreeNodeCtrl::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	CDUITreeViewCtrl *pOwnerView = GetOwnerView();
@@ -1311,6 +1257,59 @@ void CDUITreeNodeCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPA
 	Notify.DuiNotifyExtend.TreeView.strTextOld = strTextOld;
 
 	m_pWndManager->SendNotify(Notify);
+
+	return;
+}
+
+void CDUITreeNodeCtrl::PerformItemMouseDown(bool bLeft, const CDUIPoint &pt)
+{
+	do
+	{
+		CDUITreeViewCtrl *pOwnerView = GetOwnerView();
+		if (NULL == pOwnerView
+			|| NULL == m_pHorizContainerCtrl
+			|| pOwnerView->IsSelectDbClick()
+			|| false == m_pHorizContainerCtrl->GetAbsoluteRect().PtInRect(pt)) break;
+
+		auto pRootView = GetRootView();
+		if (NULL == pRootView) break;
+
+		//shift
+		if (GetKeyState(VK_SHIFT) & 0x8000)
+		{
+			CDUITreeNodeCtrl *pTreeNode = GetCurSelNode();
+			pRootView->SelectTreeNodeAll(false);
+			pRootView->SelectTreeNode(pTreeNode, this);
+
+			break;
+		}
+
+		//ctrl or select icon visible
+		if ((GetKeyState(VK_CONTROL) & 0x8000) || IsSelectIconVisible())
+		{
+			Select(bLeft ? !IsSelected() : true);
+
+			if (IsSelected())
+			{
+				pRootView->SetCurSelNode(this);
+			}
+
+			break;
+		}
+
+		//single
+		{
+			if (bLeft || false == IsSelected())
+			{
+				pRootView->SelectTreeNodeAll(false);
+			}
+
+			Select();
+
+			pRootView->SetCurSelNode(this);
+		}
+
+	} while (false);
 
 	return;
 }

@@ -598,7 +598,7 @@ bool CDUIListItemCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &M
 
 	SendNotify(DuiNotify_ItemButtonDown);
 
-	PerformItemMouseDown(true);
+	PerformItemMouseDown(true, pt);
 
 	return true;
 }
@@ -646,7 +646,7 @@ bool CDUIListItemCtrl::OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &M
 
 	SendNotify(DuiNotify_ItemRButtonDown);
 
-	PerformItemMouseDown(false);
+	PerformItemMouseDown(false, pt);
 
 	if (m_pOwner)
 	{
@@ -1070,7 +1070,7 @@ void CDUIListItemCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPA
 	return;
 }
 
-void CDUIListItemCtrl::PerformItemMouseDown(bool bLeft)
+void CDUIListItemCtrl::PerformItemMouseDown(bool bLeft, const CDUIPoint &pt)
 {
 	do
 	{
@@ -1100,7 +1100,7 @@ void CDUIListItemCtrl::PerformItemMouseDown(bool bLeft)
 		//check
 		if (IsSelectIconVisible())
 		{
-			Select(!IsSelected());
+			Select(bLeft ? !IsSelected() : true);
 
 			break;
 		}
@@ -1108,7 +1108,10 @@ void CDUIListItemCtrl::PerformItemMouseDown(bool bLeft)
 		//single
 		if (m_pOwner)
 		{
-			m_pOwner->UnSelectItem(GetIndex(), true);
+			if (bLeft || false == IsSelected())
+			{
+				m_pOwner->UnSelectItem(GetIndex(), true);
+			}
 
 			Select();
 		}

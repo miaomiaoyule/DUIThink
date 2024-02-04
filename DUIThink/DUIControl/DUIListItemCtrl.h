@@ -154,7 +154,7 @@ protected:
 	//help
 protected:
 	virtual void SendNotify(enDuiNotifyType NotifyType, WPARAM wParam = 0, LPARAM lParam = 0, CMMString strTextOld = _T(""));
-	virtual void PerformItemMouseDown(bool bLeft);
+	virtual void PerformItemMouseDown(bool bLeft, const CDUIPoint &pt);
 	virtual CDUIRect GetTextRange();
 	virtual CDUIRect GetBackRange();
 	virtual tagDuiListInfo GetItemStyleInfo();

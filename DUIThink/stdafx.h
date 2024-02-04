@@ -52,7 +52,6 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-extern tagDuiMenuCmd				g_DuiMenuCmd;
 extern CDUIMenuWnd *				g_pDuiMenuWndRoot;
 
 extern tagDuiCalendarCmd			g_DuiCalendarCmd;

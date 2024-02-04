@@ -139,7 +139,6 @@ public:
 
 	//message
 protected:
-	bool OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Msg) override;
 	bool OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg) override;
 	bool OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg) override;
 
@@ -159,6 +158,7 @@ protected:
 	tagDuiListInfo GetItemStyleInfo() override;
 	CDUIControlBase * FindControl(FindControlProc Proc, LPVOID pData, UINT uFlags) override;
 	void SendNotify(enDuiNotifyType NotifyType, WPARAM wParam = 0, LPARAM lParam = 0, CMMString strTextOld = _T("")) override;
+	void PerformItemMouseDown(bool bLeft, const CDUIPoint &pt) override;
 	virtual bool SelectTreeNode(CDUITreeNodeCtrl *pFromNode, CDUITreeNodeCtrl *pStopNode, bool &bFindFrom);
 	virtual void SelectTreeNodeAll(bool bSelect);
 	virtual void OnSelectChangedNode(bool bSelect);
