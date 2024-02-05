@@ -1189,6 +1189,18 @@ void CDUITreeNodeCtrl::PaintLineOnListType(HDC hDC)
 	return;
 }
 
+void CDUITreeNodeCtrl::ReapControl()
+{
+	//cur sel
+	CDUITreeViewCtrl *pRootView = GetRootView();
+	if (pRootView && this == pRootView->m_pCurNodeCtrl)
+	{
+		pRootView->SetCurSelNode(NULL);
+	}
+
+	return __super::ReapControl();
+}
+
 CDUIRect CDUITreeNodeCtrl::GetTextRange()
 {
 	if (NULL == m_pHorizContainerCtrl) return __super::GetTextRange();

@@ -2977,7 +2977,8 @@ bool CDUIGlobal::SaveAttriValue(tinyxml2::XMLDocument &xmlDoc)
 	//load attribute
 	for (auto Dui : m_vecDui)
 	{
-		CDUIControlBase *pControl = LoadDui(Dui.strName, NULL);
+		CDUIWndManager WndManger;
+		CDUIControlBase *pControl = LoadDui(Dui.strName, &WndManger);
 
 		MMSafeDelete(pControl);
 	}

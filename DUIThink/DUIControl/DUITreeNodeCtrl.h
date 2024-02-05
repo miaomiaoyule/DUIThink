@@ -154,6 +154,7 @@ protected:
 
 	//help
 protected:
+	void ReapControl() override;
 	CDUIRect GetTextRange() override;
 	CDUIRect GetBackRange() override;
 	tagDuiListInfo GetItemStyleInfo() override;

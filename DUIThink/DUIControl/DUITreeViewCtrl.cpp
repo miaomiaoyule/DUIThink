@@ -307,13 +307,6 @@ bool CDUITreeViewCtrl::RemoveAt(int nIndex)
 
 void CDUITreeViewCtrl::RemoveAll()
 {
-	//cur sel
-	CDUITreeViewCtrl *pRootView = GetRootView();
-	if (pRootView && VerifyChild(pRootView->GetCurSelNode()))
-	{
-		pRootView->SetCurSelNode(NULL);
-	}
-
 	__super::RemoveAll();
 
 	//expand icon

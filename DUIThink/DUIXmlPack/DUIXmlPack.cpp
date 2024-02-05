@@ -80,6 +80,8 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	//dui xml
 	for (auto &Item : mapWndManager)
 	{
+		if (Item.second.strName.IsEmpty()) continue;
+
 		SaveXmlUI(CDUIGlobal::GetInstance()->GetDuiFileFull(Item.second.strName), Item.first);
 	}
 

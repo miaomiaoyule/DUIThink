@@ -1643,7 +1643,7 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeWinDragEnable, _T("WinDragEnable"), _T(""), m_AttributeGroupBase);
 	DuiCreateAttribute(m_AttributeWinDropEnable, _T("WinDropEnable"), _T(""), m_AttributeGroupBase);
 
-	DuiCreateGroupAttribute(m_AttributeGroupPosition, _T("Position"));
+	DuiCreateGroupAttribute(m_AttributeGroupPosition, Key_Dui_PropPosition);
 	DuiCreateAttribute(m_AttributePosition, Key_Dui_PropPosition, _T(""), m_AttributeGroupPosition);
 	DuiCreateAttribute(m_AttributeMinSize, _T("MinSize"), _T(""), m_AttributeGroupPosition);
 	DuiCreateAttribute(m_AttributeMaxSize, _T("MaxSize"), _T(""), m_AttributeGroupPosition);
@@ -1748,7 +1748,6 @@ void CDUIControlBase::InitComplete()
 {
 	__super::InitComplete();
 
-	DuiInitAttriVisible(m_AttributeObjectID, false);
 	DuiInitAttriVisible(m_AttributeToolTipBkColor, false);
 	DuiInitAttriVisible(m_AttributeToolTipTextColor, false);
 
