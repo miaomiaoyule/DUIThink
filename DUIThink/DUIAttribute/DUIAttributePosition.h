@@ -5,7 +5,8 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-typedef std::unordered_map<uint32_t, tagDuiPosition> MapDuiAttributePosition;
+typedef std::unordered_map<uint32_t, tagDuiPosition> UnorderMapDuiAttributePosition;
+typedef std::map<uint32_t, tagDuiPosition> MapDuiAttributePosition;
 
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributePosition INTERFACE_VERSION(1,1)

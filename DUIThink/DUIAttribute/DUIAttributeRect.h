@@ -5,7 +5,8 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-typedef std::unordered_map<uint32_t, CDUIRect> MapDuiAttributeRect;
+typedef std::unordered_map<uint32_t, CDUIRect> UnorderMapDuiAttributeRect;
+typedef std::map<uint32_t, CDUIRect> MapDuiAttributeRect;
 
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeRect INTERFACE_VERSION(1,1)

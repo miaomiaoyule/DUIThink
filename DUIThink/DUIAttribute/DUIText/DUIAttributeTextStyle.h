@@ -5,7 +5,8 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-typedef std::unordered_map<uint32_t, tagDuiTextStyle> MapDuiAttributeTextStyle;
+typedef std::unordered_map<uint32_t, tagDuiTextStyle> UnorderMapDuiAttributeTextStyle;
+typedef std::map<uint32_t, tagDuiTextStyle> MapDuiAttributeTextStyle;
 
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeTextStyle INTERFACE_VERSION(1,1)

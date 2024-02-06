@@ -8,7 +8,7 @@
 class CUICommandElement;
 class CDUIAttributeObject;
 
-typedef std::unordered_map<uint32_t, CMMString> MapAttributeName;
+typedef std::map<uint32_t, CMMString> MapAttributeName;
 
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeObject INTERFACE_VERSION(1,1)

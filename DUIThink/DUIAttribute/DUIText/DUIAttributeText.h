@@ -5,7 +5,8 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-typedef std::unordered_map<uint32_t, CMMString> MapDuiAttributeText;
+typedef std::unordered_map<uint32_t, CMMString> UnorderMapDuiAttributeText;
+typedef std::map<uint32_t, CMMString> MapDuiAttributeText;
 
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeText INTERFACE_VERSION(1,1)

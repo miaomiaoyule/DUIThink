@@ -5,7 +5,8 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-typedef std::unordered_map<uint32_t, tagDuiRichText> MapDuiAttributeRichText;
+typedef std::unordered_map<uint32_t, tagDuiRichText> UnorderMapDuiAttributeRichText;
+typedef std::map<uint32_t, tagDuiRichText> MapDuiAttributeRichText;
 
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeRichText INTERFACE_VERSION(1,1)

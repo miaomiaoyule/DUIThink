@@ -5,7 +5,8 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-typedef std::unordered_map<uint32_t, std::vector<CMMString>> MapDuiAttributeColorRes;
+typedef std::unordered_map<uint32_t, std::vector<CMMString>> UnorderMapDuiAttributeColorRes;
+typedef std::map<uint32_t, std::vector<CMMString>> MapDuiAttributeColorRes;
 
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeColorSwitch INTERFACE_VERSION(1,1)

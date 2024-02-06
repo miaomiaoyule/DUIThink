@@ -5,7 +5,8 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-typedef std::unordered_map<uint32_t, tagDuiImageSection> MapDuiAttriImageSection;
+typedef std::unordered_map<uint32_t, tagDuiImageSection> UnorderMapDuiAttriImageSection;
+typedef std::map<uint32_t, tagDuiImageSection> MapDuiAttriImageSection;
 
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttriImageSection INTERFACE_VERSION(1,1)

@@ -101,21 +101,21 @@ private:
 	//attribute
 	bool								m_bAttriWaitSave = false;
 	MapAttributeName					m_mapAttriNameValue;
-	MapDuiAttributeRichText				m_mapAttriRichTextValue;
+	UnorderMapDuiAttributeRichText		m_mapAttriRichTextValue;
 	MapDuiAttributeRichText				m_mapAttriRichTextSave;
-	MapDuiAttributeText					m_mapAttriTextValue;
+	UnorderMapDuiAttributeText			m_mapAttriTextValue;
 	MapDuiAttributeText					m_mapAttriTextSave;
-	MapDuiAttributeTextStyle			m_mapAttriTextStyleValue;
+	UnorderMapDuiAttributeTextStyle		m_mapAttriTextStyleValue;
 	MapDuiAttributeTextStyle			m_mapAttriTextStyleSave;
-	MapDuiAttributeColorRes				m_mapAttriColorResValue;
+	UnorderMapDuiAttributeColorRes		m_mapAttriColorResValue;
 	MapDuiAttributeColorRes				m_mapAttriColorResSave;
-	MapDuiAttributeCombox				m_mapAttriComboxValue;
+	UnorderMapDuiAttributeCombox		m_mapAttriComboxValue;
 	MapDuiAttributeCombox				m_mapAttriComboxSave;
-	MapDuiAttributePosition				m_mapAttriPositionValue;
+	UnorderMapDuiAttributePosition		m_mapAttriPositionValue;
 	MapDuiAttributePosition				m_mapAttriPositionSave;
-	MapDuiAttributeRect					m_mapAttriRectValue;
+	UnorderMapDuiAttributeRect			m_mapAttriRectValue;
 	MapDuiAttributeRect					m_mapAttriRectSave;
-	MapDuiAttriImageSection				m_mapAttriImageSectionValue;
+	UnorderMapDuiAttriImageSection		m_mapAttriImageSectionValue;
 	MapDuiAttriImageSection				m_mapAttriImageSectionSave;
 
 	//info

@@ -5,7 +5,8 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-typedef std::unordered_map<uint32_t, tagDuiCombox> MapDuiAttributeCombox;
+typedef std::unordered_map<uint32_t, tagDuiCombox> UnorderMapDuiAttributeCombox;
+typedef std::map<uint32_t, tagDuiCombox> MapDuiAttributeCombox;
 
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeCombox INTERFACE_VERSION(1,1)
