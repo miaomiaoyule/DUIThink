@@ -29,6 +29,7 @@ interface DUITHINK_API IDUIWndNotify : public IDUIInterface
 	virtual void OnDuiWndCreate(CDUIWndManager *pWndManager) = NULL;
 	virtual void OnDuiWndClose(CDUIWndManager *pWndManager) = NULL;
 	virtual void OnDuiWndPaint(CDUIWndManager *pWndManager) {}
+	virtual void OnDuiWndSize(CDUIWndManager *pWndManager) {}
 };
 
 //////////////////////////////////////////////////////////////////////////

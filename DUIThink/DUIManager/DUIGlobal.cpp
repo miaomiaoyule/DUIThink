@@ -155,9 +155,6 @@ bool CDUIGlobal::LoadProjectFromFile(LPCTSTR lpszProjFile)
 	//load
 	if (false == CDUIXmlPack::LoadProject(strProjFileFull)) return false;
 
-	//public res
-	LoadPublicResource();
-
 	//design ctrl
 	LoadConfigCtrl(Dui_FileDesignCtrl);
 
@@ -206,9 +203,6 @@ bool CDUIGlobal::LoadProjectFromZip(void *pData, UINT uDataLen, LPCTSTR lpszPass
 	//load
 	if (false == CDUIXmlPack::LoadProject(CMMString(lpszProjName) + Dui_Name_ProjectExt)) return false;
 
-	//public res
-	LoadPublicResource();
-
 	//design ctrl
 	LoadConfigCtrl(Dui_FileDesignCtrl);
 
@@ -253,9 +247,6 @@ bool CDUIGlobal::LoadProjectFromResZip(HINSTANCE hResModule, LPCTSTR lpszZipName
 
 	//load
 	if (false == CDUIXmlPack::LoadProject(CMMString(lpszProjName) + Dui_Name_ProjectExt)) return false;
-
-	//public res
-	LoadPublicResource();
 
 	//design ctrl
 	LoadConfigCtrl(Dui_FileDesignCtrl);
@@ -679,9 +670,12 @@ bool CDUIGlobal::SaveProject()
 		m_mapResourceImage, m_mapResourceColor, m_vecDui, m_mapWndManager, m_mapControlID, m_strFontResDefault);
 }
 
-bool CDUIGlobal::CloseProject()
+bool CDUIGlobal::CloseProject(bool bSaveProject)
 {
-	SaveProject();
+	if (bSaveProject)
+	{
+		SaveProject();
+	}
 
 	m_strProjectPath.Empty();
 	m_strProjectName.Empty();
@@ -1348,7 +1342,6 @@ bool CDUIGlobal::SetProjectPath(LPCTSTR lpszPath)
 	return true;
 }
 
-//项目名称
 bool CDUIGlobal::SetProjectName(LPCTSTR lpszName)
 {
 	if (MMInvalidString(lpszName)) return false;
@@ -1365,7 +1358,6 @@ bool CDUIGlobal::SetResVersion(enDuiResVersion ResVersion)
 	return true;
 }
 
-//添加资源
 bool CDUIGlobal::AddResource(CDUIResourceBase *pResourceObj)
 {
 	if (NULL == pResourceObj || MMInvalidString(pResourceObj->GetResourceName())) return false;
@@ -3147,7 +3139,13 @@ void CDUIGlobal::ReleaseResource()
 #endif
 
 	m_uMaxControlID = Dui_CtrlIDInner_Finish;
-	m_mapControlID.clear();
+	MapDuiControlID mapControlID = m_mapControlID;
+	for (auto ControlIDItem : mapControlID)
+	{
+		if (ControlIDItem.first < Dui_CtrlIDInner_Finish) continue;
+
+		m_mapControlID.erase(ControlIDItem.first);
+	}
 
 	return;
 }

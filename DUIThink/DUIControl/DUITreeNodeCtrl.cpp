@@ -1414,7 +1414,7 @@ void CDUITreeNodeCtrl::ConstructTreeView()
 	if (NULL == m_pVertContainerCtrl) return;
 
 	CDUITreeViewCtrl *pOwnerView = GetOwnerView();
-	m_pTreeViewCtrl = pOwnerView ? (CDUITreeViewCtrl*)MMInterfaceHelper(CDUITreeViewCtrl, pOwnerView->Clone(false)) : NULL;
+	m_pTreeViewCtrl = pOwnerView ? (CDUITreeViewCtrl*)MMInterfaceHelper(CDUITreeViewCtrl, pOwnerView->Clone(false, false)) : NULL;
 
 	if (NULL == m_pTreeViewCtrl) return;
 

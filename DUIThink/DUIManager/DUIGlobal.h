@@ -233,7 +233,7 @@ public:
 	//ui manager
 protected:
 	bool SaveProject();
-	bool CloseProject();
+	bool CloseProject(bool bSaveProject = true);
 
 	//ctrl id
 	void AddCtrlID(UINT uCtrlID, CMMString strCtrlID);

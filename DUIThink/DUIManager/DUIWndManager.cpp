@@ -2477,6 +2477,12 @@ LRESULT CDUIWndManager::OnDuiSize()
 		m_pRootCtrl->NeedRefreshView();
 	}
 
+	//design refresh
+	if (g_pIDuiWndNotify)
+	{
+		g_pIDuiWndNotify->OnDuiWndSize(this);
+	}
+
 	return 0;
 }
 

@@ -1186,14 +1186,13 @@ CDUIAttributeTextStyle * CDUIListItemCtrl::GetAttributeTextStyleCur()
 		pAttribute = ListInfo.pAttributeItemTextStyleSelNormal;
 	}
 	if ((NULL == pAttribute || pAttribute->IsEmpty())
-		&& false == IsSelected()
+		&& m_AttributeTextStyle.IsEmpty()
 		&& ListInfo.pAttributeItemTextStyleNormal
 		&& false == ListInfo.pAttributeItemTextStyleNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemTextStyleNormal;
 	}
-	if (false == m_AttributeTextStyle.IsEmpty()
-		&& (0 == (m_nControlStatus & ControlStatus_Hot) || NULL == ListInfo.pAttributeItemTextStyleHot || ListInfo.pAttributeItemTextStyleHot->IsEmpty()))
+	if (NULL == pAttribute || pAttribute->IsEmpty())
 	{
 		pAttribute = &m_AttributeTextStyle;
 	}

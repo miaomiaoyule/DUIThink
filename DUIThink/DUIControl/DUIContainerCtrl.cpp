@@ -161,7 +161,7 @@ CMMString CDUIContainerCtrl::GetDescribe() const
 	return Dui_Ctrl_Container;
 }
 
-CDUIContainerCtrl * CDUIContainerCtrl::Clone(bool bIncludeChild/* = true*/, bool bRefreshCtrlID)
+CDUIContainerCtrl * CDUIContainerCtrl::Clone(bool bIncludeChild, bool bRefreshCtrlID)
 {
 	MMInterfaceHelper(CDUIContainerCtrl, __super::Clone(bIncludeChild, bRefreshCtrlID), pContainerClone);
 	if (NULL == pContainerClone) return NULL;
@@ -169,11 +169,11 @@ CDUIContainerCtrl * CDUIContainerCtrl::Clone(bool bIncludeChild/* = true*/, bool
 	//scrollbar
 	if (m_pHorizScrollBarCtrl)
 	{
-		pContainerClone->InsertChild(m_pHorizScrollBarCtrl->Clone());
+		pContainerClone->InsertChild(m_pHorizScrollBarCtrl->Clone(bIncludeChild, bRefreshCtrlID));
 	}
 	if (m_pVertScrollBarCtrl)
 	{
-		pContainerClone->InsertChild(m_pVertScrollBarCtrl->Clone());
+		pContainerClone->InsertChild(m_pVertScrollBarCtrl->Clone(bIncludeChild, bRefreshCtrlID));
 	}
 
 	//child

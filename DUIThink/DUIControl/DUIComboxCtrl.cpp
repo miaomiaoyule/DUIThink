@@ -447,7 +447,7 @@ CDUIComboxCtrl * CDUIComboxCtrl::Clone(bool bIncludeChild, bool bRefreshCtrlID)
 
 	if (m_pShowListView && NULL == pComboxClone->m_pShowListView)
 	{
-		pComboxClone->m_pShowListView = m_pShowListView->Clone();
+		pComboxClone->m_pShowListView = m_pShowListView->Clone(true, false);
 	}
 
 	return pComboxClone;
