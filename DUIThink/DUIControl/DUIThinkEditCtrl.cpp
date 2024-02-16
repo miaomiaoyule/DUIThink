@@ -1304,7 +1304,8 @@ bool CDUIThinkEditCtrl::OnDuiKillFocus()
 	} while (false);
 
 	//notify
-	if (g_vecDuiRichTextPreEdit != GetRichTextItem())
+	if (g_vecDuiRichTextPreEdit != GetRichTextItem()
+		&& false == IsReadOnly())
 	{
 		m_pWndManager->SendNotify(this, DuiNotify_Edited);
 	}
