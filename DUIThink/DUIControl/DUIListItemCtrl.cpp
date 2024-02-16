@@ -1152,7 +1152,11 @@ CDUIAttributeTextStyle * CDUIListItemCtrl::GetAttributeTextStyleCur()
 	CDUIAttributeTextStyle *pAttribute = NULL;
 	auto ListInfo = GetItemStyleInfo();
 
-	if (false == IsEnabled())
+	if (false == m_AttributeTextStyle.IsEmpty())
+	{
+		pAttribute = &m_AttributeTextStyle;
+	}
+	else if (false == IsEnabled())
 	{
 		pAttribute = ListInfo.pAttributeItemTextStyleDisabled;
 	}
@@ -1186,15 +1190,10 @@ CDUIAttributeTextStyle * CDUIListItemCtrl::GetAttributeTextStyleCur()
 		pAttribute = ListInfo.pAttributeItemTextStyleSelNormal;
 	}
 	if ((NULL == pAttribute || pAttribute->IsEmpty())
-		&& m_AttributeTextStyle.IsEmpty()
 		&& ListInfo.pAttributeItemTextStyleNormal
 		&& false == ListInfo.pAttributeItemTextStyleNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemTextStyleNormal;
-	}
-	if (NULL == pAttribute || pAttribute->IsEmpty())
-	{
-		pAttribute = &m_AttributeTextStyle;
 	}
 
 	return pAttribute;

@@ -639,7 +639,7 @@ void CDUIContainerCtrl::LineUp()
 {
 	if (NULL == m_pVertScrollBarCtrl || false == m_pVertScrollBarCtrl->IsVisible()) return;
 
-	int cyLine = m_pVertScrollBarCtrl->GetScrollMinSpeed();
+	int cyLine = m_pVertScrollBarCtrl->GetScrollSpeed();
 	cyLine = max(cyLine, Dui_ScrollSpeed_Normal);
 
 	SIZE sz = GetScrollPos();
@@ -654,7 +654,7 @@ void CDUIContainerCtrl::LineDown()
 {
 	if (NULL == m_pVertScrollBarCtrl || false == m_pVertScrollBarCtrl->IsVisible()) return;
 
-	int cyLine = m_pVertScrollBarCtrl->GetScrollMinSpeed();
+	int cyLine = m_pVertScrollBarCtrl->GetScrollSpeed();
 	cyLine = max(cyLine, Dui_ScrollSpeed_Normal);
 
 	SIZE sz = GetScrollPos();
@@ -729,7 +729,7 @@ void CDUIContainerCtrl::LineLeft()
 {
 	if (NULL == m_pHorizScrollBarCtrl || false == m_pHorizScrollBarCtrl->IsVisible()) return;
 
-	int cxLine = m_pHorizScrollBarCtrl->GetScrollMinSpeed();
+	int cxLine = m_pHorizScrollBarCtrl->GetScrollSpeed();
 	cxLine = max(cxLine, Dui_ScrollSpeed_Normal);
 
 	SIZE sz = GetScrollPos();
@@ -743,7 +743,7 @@ void CDUIContainerCtrl::LineRight()
 {
 	if (NULL == m_pHorizScrollBarCtrl || false == m_pHorizScrollBarCtrl->IsVisible()) return;
 
-	int cxLine = m_pHorizScrollBarCtrl->GetScrollMinSpeed();
+	int cxLine = m_pHorizScrollBarCtrl->GetScrollSpeed();
 	cxLine = max(cxLine, Dui_ScrollSpeed_Normal);
 
 	SIZE sz = GetScrollPos();

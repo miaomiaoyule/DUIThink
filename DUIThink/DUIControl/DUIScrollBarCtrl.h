@@ -24,7 +24,7 @@ public:
 
 	//attrubute
 protected:
-	CDUIAttributeLong					m_AttributeMinScrollSpeed;
+	CDUIAttributeLong					m_AttributeScrollSpeed;
 
 	//btn pos
 	CDUIAttributeGroup					m_AttributeGroupUpDownBtnVert;
@@ -83,7 +83,7 @@ public:
 	void SetCurValue(int nCurValue) override;
 
 	//scroll
-	virtual int GetScrollMinSpeed();
+	virtual int GetScrollSpeed();
 
 	//btn pos
 	virtual int GetUpDownBtnVertInsetLeft();

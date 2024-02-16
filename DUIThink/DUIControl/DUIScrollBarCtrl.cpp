@@ -86,9 +86,9 @@ void CDUIScrollBarCtrl::SetCurValue(int nCurValue)
 	return;
 }
 
-int CDUIScrollBarCtrl::GetScrollMinSpeed()
+int CDUIScrollBarCtrl::GetScrollSpeed()
 {
-	return m_AttributeMinScrollSpeed.GetValue();
+	return m_AttributeScrollSpeed.GetValue();
 }
 
 int CDUIScrollBarCtrl::GetUpDownBtnVertInsetLeft()
@@ -362,7 +362,7 @@ void CDUIScrollBarCtrl::InitProperty()
 	__super::InitProperty();
 
 	//create
-	DuiCreateAttribute(m_AttributeMinScrollSpeed, _T("ScrollMinSpeed"), _T(""), m_AttributeGroupMouse);
+	DuiCreateAttribute(m_AttributeScrollSpeed, _T("ScrollSpeed"), _T(""), m_AttributeGroupMouse);
 
 	DuiCreateGroupAttribute(m_AttributeGroupUpDownBtnVert, _T("UpDownBtnVert"));
 	DuiCreateAttribute(m_AttributeUpDownBtnVertInsetLeft, _T("UpDownBtnVertInsetLeft"), _T(""), m_AttributeGroupUpDownBtnVert);
@@ -399,7 +399,7 @@ void CDUIScrollBarCtrl::InitAttriValue()
 
 	DuiInitAttriValue(m_AttributeUpDownBtnVertFixedHeight, 30);
 	DuiInitAttriValue(m_AttributeUpDownBtnHorizFixedWidth, 30);
-	DuiInitAttriValue(m_AttributeMinScrollSpeed, Dui_ScrollSpeed_Normal);
+	DuiInitAttriValue(m_AttributeScrollSpeed, 60);
 
 	return;
 }
@@ -533,7 +533,7 @@ bool CDUIScrollBarCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &
 	{
 		m_nUpBtnStatus |= ControlStatus_Pushed;
 
-		SetCurValue(max(GetCurValue() - GetScrollMinSpeed(), 0));
+		SetCurValue(max(GetCurValue() - GetScrollSpeed(), 0));
 
 		//定时滑动
 		m_ptOnUpDownBtn = pt;
@@ -552,7 +552,7 @@ bool CDUIScrollBarCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &
 	{
 		m_nDownBtnStatus |= ControlStatus_Pushed;
 
-		SetCurValue(min(GetCurValue() + GetScrollMinSpeed(), GetMaxValue()));
+		SetCurValue(min(GetCurValue() + GetScrollSpeed(), GetMaxValue()));
 
 		//定时滑动
 		m_ptOnUpDownBtn = pt;
@@ -645,7 +645,7 @@ bool CDUIScrollBarCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 	if (false == m_pOwnerCtrl->IsScrollBarSpeedModel())
 	{
 		int nCurValue = GetCurValue();
-		nCurValue += WHEEL_DELTA == (int)(short)HIWORD(Msg.wParam) ? -GetScrollMinSpeed() : GetScrollMinSpeed();
+		nCurValue += WHEEL_DELTA == (int)(short)HIWORD(Msg.wParam) ? -GetScrollSpeed() : GetScrollSpeed();
 		SetCurValue(nCurValue);
 
 		return true;
@@ -659,12 +659,12 @@ bool CDUIScrollBarCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 	{
 		case WHEEL_DELTA:
 		{
-			delay_deltaY_ = (delay_deltaY_ >= 0) ? lDeltaY + GetScrollMinSpeed() : lDeltaY + 12;
+			delay_deltaY_ = (delay_deltaY_ >= 0) ? lDeltaY + GetScrollSpeed() : lDeltaY + 12;
 			break;
 		}
 		case -WHEEL_DELTA:
 		{
-			delay_deltaY_ = (delay_deltaY_ <= 0) ? lDeltaY - GetScrollMinSpeed() : lDeltaY - 12;
+			delay_deltaY_ = (delay_deltaY_ <= 0) ? lDeltaY - GetScrollSpeed() : lDeltaY - 12;
 			break;
 		}
 	}
@@ -907,7 +907,7 @@ void CDUIScrollBarCtrl::OnTimerScrollUpDownBtn(CDUIPoint ptCurMouse)
 		//up btn
 		if (m_rcUpBtn.PtInRect(m_ptOnUpDownBtn))
 		{
-			int nSpeedValue = m_ptOnUpDownBtn.x - ptCurMouse.x + GetScrollMinSpeed();
+			int nSpeedValue = m_ptOnUpDownBtn.x - ptCurMouse.x + GetScrollSpeed();
 			nSpeedValue = (nSpeedValue >= 0) ? nSpeedValue : 0;
 
 			SetCurValue((nCurValue >= nSpeedValue) ? (nCurValue - nSpeedValue) : 0);
@@ -918,7 +918,7 @@ void CDUIScrollBarCtrl::OnTimerScrollUpDownBtn(CDUIPoint ptCurMouse)
 		//down btn
 		if (m_rcDownBtn.PtInRect(m_ptOnUpDownBtn))
 		{
-			int nSpeedValue = ptCurMouse.x - m_ptOnUpDownBtn.x + GetScrollMinSpeed();
+			int nSpeedValue = ptCurMouse.x - m_ptOnUpDownBtn.x + GetScrollSpeed();
 			nSpeedValue = (nSpeedValue >= 0) ? nSpeedValue : 0;
 
 			SetCurValue(((nCurValue + nSpeedValue) <= GetMaxValue()) ? (nCurValue + nSpeedValue) : GetMaxValue());
@@ -935,7 +935,7 @@ void CDUIScrollBarCtrl::OnTimerScrollUpDownBtn(CDUIPoint ptCurMouse)
 		//up btn
 		if (m_rcUpBtn.PtInRect(m_ptOnUpDownBtn))
 		{
-			int nSpeedValue = m_ptOnUpDownBtn.y - ptCurMouse.y + GetScrollMinSpeed();
+			int nSpeedValue = m_ptOnUpDownBtn.y - ptCurMouse.y + GetScrollSpeed();
 			nSpeedValue = (nSpeedValue >= 0) ? nSpeedValue : 0;
 
 			SetCurValue((nCurValue >= nSpeedValue) ? (nCurValue - nSpeedValue) : 0);
@@ -946,7 +946,7 @@ void CDUIScrollBarCtrl::OnTimerScrollUpDownBtn(CDUIPoint ptCurMouse)
 		//down btn
 		if (m_rcDownBtn.PtInRect(m_ptOnUpDownBtn))
 		{
-			int nSpeedValue = ptCurMouse.y - m_ptOnUpDownBtn.y + GetScrollMinSpeed();
+			int nSpeedValue = ptCurMouse.y - m_ptOnUpDownBtn.y + GetScrollSpeed();
 			nSpeedValue = (nSpeedValue >= 0) ? nSpeedValue : 0;
 
 			SetCurValue(((nCurValue + nSpeedValue) <= GetMaxValue()) ? (nCurValue + nSpeedValue) : GetMaxValue());
