@@ -202,7 +202,7 @@ bool CDUIControlBase::SetCtrlID(UINT uID)
 
 void CDUIControlBase::RefreshCtrlID()
 {
-	if (GetCtrlID() < Dui_CtrlIDInner_Finish) return;
+	if (0 < GetCtrlID() && GetCtrlID() < Dui_CtrlIDInner_Finish) return;
 
 	SetCtrlID(CDUIGlobal::GetInstance()->GenerateCtrlID(this));
 

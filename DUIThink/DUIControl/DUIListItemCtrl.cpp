@@ -596,7 +596,7 @@ bool CDUIListItemCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &M
 {
 	__super::OnDuiLButtonDown(pt, Msg);
 
-	SendNotify(DuiNotify_ItemButtonDown);
+	SendNotify(DuiNotify_ItemButtonDown, Msg.wParam, Msg.lParam);
 
 	PerformItemMouseDown(true, pt);
 
@@ -612,11 +612,11 @@ bool CDUIListItemCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg
 
 	if (m_pWndManager)
 	{
-		SendNotify(DuiNotify_ItemButtonUp);
+		SendNotify(DuiNotify_ItemButtonUp, Msg.wParam, Msg.lParam);
 
 		if (bClick)
 		{
-			SendNotify(DuiNotify_ItemClick);
+			SendNotify(DuiNotify_ItemClick, Msg.wParam, Msg.lParam);
 		}
 	}
 
@@ -630,7 +630,7 @@ bool CDUIListItemCtrl::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Ms
 	//if((GetKeyState(VK_CONTROL) & 0x8000)) CTRL¼ü
 	Select();
 
-	SendNotify(DuiNotify_ItemDbClick);
+	SendNotify(DuiNotify_ItemDbClick, Msg.wParam, Msg.lParam);
 
 	Active();
 
@@ -644,7 +644,7 @@ bool CDUIListItemCtrl::OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &M
 {
 	__super::OnDuiRButtonDown(pt, Msg);
 
-	SendNotify(DuiNotify_ItemRButtonDown);
+	SendNotify(DuiNotify_ItemRButtonDown, Msg.wParam, Msg.lParam);
 
 	PerformItemMouseDown(false, pt);
 
@@ -662,7 +662,7 @@ bool CDUIListItemCtrl::OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &Msg
 
 	__super::OnDuiRButtonUp(pt, Msg);
 
-	SendNotify(DuiNotify_ItemRButtonUp);
+	SendNotify(DuiNotify_ItemRButtonUp, Msg.wParam, Msg.lParam);
 
 	if (m_pOwner)
 	{
@@ -678,7 +678,7 @@ bool CDUIListItemCtrl::OnDuiRButtonDlk(const CDUIPoint &pt, const DuiMessage &Ms
 
 	Select();
 
-	SendNotify(DuiNotify_ItemRDbClick);
+	SendNotify(DuiNotify_ItemRDbClick, Msg.wParam, Msg.lParam);
 
 	if (m_pOwner)
 	{
@@ -692,7 +692,7 @@ bool CDUIListItemCtrl::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Ms
 {
 	__super::OnDuiMouseEnter(pt, Msg);
 
-	SendNotify(DuiNotify_ItemMouseEnter);
+	SendNotify(DuiNotify_ItemMouseEnter, Msg.wParam, Msg.lParam);
 
 	Invalidate();
 
@@ -703,7 +703,7 @@ bool CDUIListItemCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg
 {
 	__super::OnDuiMouseMove(pt, Msg);
 
-	SendNotify(DuiNotify_ItemMouseMove);
+	SendNotify(DuiNotify_ItemMouseMove, Msg.wParam, Msg.lParam);
 
 	return true;
 }
@@ -712,7 +712,7 @@ void CDUIListItemCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Ms
 {
 	__super::OnDuiMouseLeave(pt, Msg);
 
-	SendNotify(DuiNotify_ItemMouseLeave);
+	SendNotify(DuiNotify_ItemMouseLeave, Msg.wParam, Msg.lParam);
 
 	Invalidate();
 
@@ -759,7 +759,7 @@ LRESULT CDUIListItemCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 {
 	__super::OnDuiKeyDown(Msg);
 
-	SendNotify(DuiNotify_ItemKeyDown);
+	SendNotify(DuiNotify_ItemKeyDown, Msg.wParam, Msg.lParam);
 
 	if (Msg.chKey == VK_RETURN)
 	{
@@ -780,7 +780,7 @@ LRESULT CDUIListItemCtrl::OnDuiKeyUp(const DuiMessage &Msg)
 {
 	__super::OnDuiKeyUp(Msg);
 
-	SendNotify(DuiNotify_ItemKeyUp);
+	SendNotify(DuiNotify_ItemKeyUp, Msg.wParam, Msg.lParam);
 
 	if (m_pOwner)
 	{

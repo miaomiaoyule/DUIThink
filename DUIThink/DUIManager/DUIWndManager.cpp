@@ -2667,7 +2667,9 @@ LRESULT CDUIWndManager::OnDuiContextMenu(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWndManager::OnDuiKillFocus(WPARAM wParam, LPARAM lParam)
 {
 	HWND hWndFocus = GetFocus();
-	if (m_hWndAttach == GetParent(hWndFocus) || m_hWndAttach == ::GetWindowOwner(hWndFocus)) return 0;
+	if (m_hWndAttach == hWndFocus
+		|| m_hWndAttach == GetParent(hWndFocus) 
+		|| m_hWndAttach == ::GetWindowOwner(hWndFocus)) return 0;
 
 	SetFocusControl(NULL);
 
