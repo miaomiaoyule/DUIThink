@@ -748,20 +748,31 @@ bool CDUIGlobal::ModifyCtrlID(UINT uIDOld, UINT uIDNew, CDUIControlBase *pContro
 {
 	if (NULL == pControl) return false;
 
-	CMMString strCtrlID;
-
 	//max id
 	if (uIDNew <= Dui_CtrlIDInner_Finish)
 	{
 		return true;
 	}
 
-	//ctrlid
-	auto FindIt = m_mapControlID.find(uIDNew);
-	if (FindIt != m_mapControlID.end())
+	//has old
+	auto FindIt = m_mapControlID.find(uIDOld);
+	if (FindIt == m_mapControlID.end())
 	{
-		strCtrlID = FindIt->second;
+		AddCtrlID(uIDNew, GenerateCtrlID(pControl));
+
+		return true;
 	}
+
+	//has new
+	CMMString strCtrlID = FindIt->second;
+	FindIt = m_mapControlID.find(uIDNew);
+	if (FindIt != m_mapControlID.end()
+		&& false == FindIt->second.IsEmpty())
+	{
+		return true;
+	}
+
+	//ctrlid
 	if (strCtrlID.IsEmpty())
 	{
 		strCtrlID = _T("IDC_") + pControl->GetDescribe() + CMMStrHelp::Format(_T("_%u"), uIDNew);

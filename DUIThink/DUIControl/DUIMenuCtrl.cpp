@@ -726,7 +726,7 @@ void CDUIMenuItemCtrl::InitComplete()
 {
 	__super::InitComplete();
 
-	DuiInitAttriVisible(m_AttributeAnimateDrag, false);
+	DuiInitAttriVisible(m_AttributeGroupAnimation, false);
 	DuiInitAttriVisible(m_AttributeExpandViewDuiName, false);
 	DuiInitAttriVisible(m_AttributeGroupScroll, false);
 
