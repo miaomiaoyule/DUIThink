@@ -585,6 +585,7 @@ CDUIContainerCtrl * CDUIWndManager::DetachRootCtrl()
 	m_pCaptureCtrl = NULL;
 	m_pFocusCtrl = NULL;
 	m_pHoverCtrl = NULL;
+	m_pEventCtrl = NULL;
 	m_pWinDragCtrl = NULL;
 	m_pWinDragEnterCtrl = NULL;
 
@@ -634,6 +635,7 @@ void CDUIWndManager::ReapControl(CDUIControlBase *pControl)
 	if (pControl == m_pCaptureCtrl) m_pCaptureCtrl = NULL;
 	if (pControl == m_pFocusCtrl) m_pFocusCtrl = NULL;
 	if (pControl == m_pHoverCtrl) m_pHoverCtrl = NULL;
+	if (pControl == m_pEventCtrl) m_pEventCtrl = NULL;
 	if (pControl == m_pWinDragCtrl) m_pWinDragCtrl = NULL;
 	if (pControl == m_pWinDragEnterCtrl) m_pWinDragEnterCtrl = NULL;
 
@@ -2037,18 +2039,16 @@ LRESULT CDUIWndManager::OnDuiLButtonDown(WPARAM wParam, LPARAM lParam)
 	DuiMsg.ptMouse = pt;
 
 	//find
-	CDUIControlBase *pControl = FindSubControlByPoint(m_pRootCtrl, pt);
-	if (pControl)
+	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);
+	if (m_pCaptureCtrl)
 	{
-		m_pCaptureCtrl = pControl;
+		SetFocusControl(m_pCaptureCtrl);
 
-		SetFocusControl(pControl);
-
-		DuiMsg.pMsgCtrl = pControl;
-		pControl->OnDuiLButtonDown(pt, DuiMsg);
+		DuiMsg.pMsgCtrl = m_pCaptureCtrl;
+		DuiMsg.pMsgCtrl->OnDuiLButtonDown(pt, DuiMsg);
 
 		//model
-		Dui_Dispatch_ModelMouseEvent(pControl, OnDuiLButtonDown, pt, DuiMsg, true);
+		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiLButtonDown, pt, DuiMsg, true);
 	}
 
 	return 0;
@@ -2068,14 +2068,14 @@ LRESULT CDUIWndManager::OnDuiLButtonUp(WPARAM wParam, LPARAM lParam)
 	DuiMsg.lParam = lParam;
 	DuiMsg.ptMouse = pt;
 
-	CDUIControlBase *pControl = m_pCaptureCtrl ? m_pCaptureCtrl : FindSubControlByPoint(m_pRootCtrl, pt);
-	if (pControl)
+	m_pCaptureCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : FindSubControlByPoint(m_pRootCtrl, pt);
+	if (m_pCaptureCtrl)
 	{
-		DuiMsg.pMsgCtrl = pControl;
-		pControl->OnDuiLButtonUp(pt, DuiMsg);
+		DuiMsg.pMsgCtrl = m_pCaptureCtrl;
+		DuiMsg.pMsgCtrl->OnDuiLButtonUp(pt, DuiMsg);
 
 		//model
-		Dui_Dispatch_ModelMouseEvent(pControl, OnDuiLButtonUp, pt, DuiMsg, true);
+		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiLButtonUp, pt, DuiMsg, true);
 	}
 
 	m_pCaptureCtrl = NULL;
@@ -2097,19 +2097,17 @@ LRESULT CDUIWndManager::OnDuiLButtonDlk(WPARAM wParam, LPARAM lParam)
 	DuiMsg.lParam = lParam;
 	DuiMsg.ptMouse = pt;
 
-	//²éÕÒ
-	CDUIControlBase *pControl = FindSubControlByPoint(m_pRootCtrl, pt);
-	if (pControl)
+	//find
+	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);
+	if (m_pCaptureCtrl)
 	{
-		m_pCaptureCtrl = pControl;
+		SetFocusControl(m_pCaptureCtrl);
 
-		SetFocusControl(pControl);
-
-		DuiMsg.pMsgCtrl = pControl;
-		pControl->OnDuiLButtonDlk(pt, DuiMsg);
+		DuiMsg.pMsgCtrl = m_pCaptureCtrl;
+		DuiMsg.pMsgCtrl->OnDuiLButtonDlk(pt, DuiMsg);
 
 		//model
-		Dui_Dispatch_ModelMouseEvent(pControl, OnDuiLButtonDlk, pt, DuiMsg, true);
+		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiLButtonDlk, pt, DuiMsg, true);
 	}
 
 	return 0;
@@ -2131,18 +2129,16 @@ LRESULT CDUIWndManager::OnDuiRButtonDown(WPARAM wParam, LPARAM lParam)
 	DuiMsg.ptMouse = pt;
 
 	//find
-	CDUIControlBase *pControl = FindSubControlByPoint(m_pRootCtrl, pt);
-	if (pControl)
+	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);
+	if (m_pCaptureCtrl)
 	{
-		m_pCaptureCtrl = pControl;
+		SetFocusControl(m_pCaptureCtrl);
 
-		SetFocusControl(pControl);
-
-		DuiMsg.pMsgCtrl = pControl;
-		pControl->OnDuiRButtonDown(pt, DuiMsg);
+		DuiMsg.pMsgCtrl = m_pCaptureCtrl;
+		DuiMsg.pMsgCtrl->OnDuiRButtonDown(pt, DuiMsg);
 
 		//model
-		Dui_Dispatch_ModelMouseEvent(pControl, OnDuiRButtonDown, pt, DuiMsg, true);
+		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiRButtonDown, pt, DuiMsg, true);
 	}
 
 	return 0;
@@ -2162,14 +2158,14 @@ LRESULT CDUIWndManager::OnDuiRButtonUp(WPARAM wParam, LPARAM lParam)
 	DuiMsg.lParam = lParam;
 	DuiMsg.ptMouse = pt;
 
-	CDUIControlBase *pControl = m_pCaptureCtrl ? m_pCaptureCtrl : FindSubControlByPoint(m_pRootCtrl, pt);
-	if (pControl)
+	m_pCaptureCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : FindSubControlByPoint(m_pRootCtrl, pt);
+	if (m_pCaptureCtrl)
 	{
-		DuiMsg.pMsgCtrl = pControl;
-		pControl->OnDuiRButtonUp(pt, DuiMsg);
+		DuiMsg.pMsgCtrl = m_pCaptureCtrl;
+		DuiMsg.pMsgCtrl->OnDuiRButtonUp(pt, DuiMsg);
 
 		//model
-		Dui_Dispatch_ModelMouseEvent(pControl, OnDuiRButtonUp, pt, DuiMsg, true);
+		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiRButtonUp, pt, DuiMsg, true);
 	}
 
 	m_pCaptureCtrl = NULL;
@@ -2190,16 +2186,16 @@ LRESULT CDUIWndManager::OnDuiRButtonDlk(WPARAM wParam, LPARAM lParam)
 	DuiMsg.ptMouse = pt;
 
 	//²éÕÒ
-	CDUIControlBase *pControl = FindSubControlByPoint(m_pRootCtrl, pt);
-	if (pControl)
+	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);
+	if (m_pCaptureCtrl)
 	{
-		SetFocusControl(pControl);
+		SetFocusControl(m_pCaptureCtrl);
 
-		DuiMsg.pMsgCtrl = pControl;
-		pControl->OnDuiRButtonDlk(pt, DuiMsg);
+		DuiMsg.pMsgCtrl = m_pCaptureCtrl;
+		DuiMsg.pMsgCtrl->OnDuiRButtonDlk(pt, DuiMsg);
 
 		//model
-		Dui_Dispatch_ModelMouseEvent(pControl, OnDuiRButtonDlk, pt, DuiMsg, true);
+		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiRButtonDlk, pt, DuiMsg, true);
 	}
 
 	return 0;
@@ -2264,13 +2260,13 @@ LRESULT CDUIWndManager::OnDuiMouseMove(WPARAM wParam, LPARAM lParam)
 	CDUIControlBase *pControl = FindSubControlByPoint(m_pRootCtrl, pt);
 
 	//hover
-	if (pControl == m_pHoverCtrl && pControl)
+	if (pControl == m_pHoverCtrl && m_pHoverCtrl)
 	{
-		DuiMsg.pMsgCtrl = pControl;
-		pControl->OnDuiMouseMove(pt, DuiMsg);
+		DuiMsg.pMsgCtrl = m_pHoverCtrl;
+		DuiMsg.pMsgCtrl->OnDuiMouseMove(pt, DuiMsg);
 
 		//model
-		Dui_Dispatch_ModelMouseEvent(pControl, OnDuiMouseMove, pt, DuiMsg, false);
+		Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseMove, pt, DuiMsg, false);
 
 		return 0;
 	}
@@ -2311,7 +2307,6 @@ LRESULT CDUIWndManager::OnDuiMouseMove(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-//Êó±êÍ£Áô
 LRESULT CDUIWndManager::OnDuiMouseHover(WPARAM wParam, LPARAM lParam)
 {
 	LRESULT lRes = 0;
@@ -2378,7 +2373,7 @@ LRESULT CDUIWndManager::OnDuiMouseLeave(WPARAM wParam, LPARAM lParam)
 	if (m_pHoverCtrl)
 	{
 		msgLeave.pMsgCtrl = m_pHoverCtrl;
-		m_pHoverCtrl->OnDuiMouseLeave(pt, msgLeave);
+		msgLeave.pMsgCtrl->OnDuiMouseLeave(pt, msgLeave);
 
 		//model
 		Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseLeave, pt, msgLeave, false);
@@ -2412,22 +2407,22 @@ LRESULT CDUIWndManager::OnDuiMouseWheel(WPARAM wParam, LPARAM lParam)
 	DuiMsg.wParam = wParam;
 
 	//find
-	CDUIControlBase *pControl = NULL;
-	NULL == pControl && m_pCaptureCtrl ? pControl = m_pCaptureCtrl : NULL;
+	CDUIControlBase *pControl = m_pCaptureCtrl;
 	NULL == pControl ? pControl = FindControlByWheel(pt, (int)(short)HIWORD(wParam)) : NULL;
 	
 	if (pControl)
 	{
-		DuiMsg.pMsgCtrl = pControl;
-		bool bRes = pControl->OnDuiMouseWheel(pt, DuiMsg);
+		m_pEventCtrl = pControl;
+		DuiMsg.pMsgCtrl = m_pEventCtrl;
+		bool bRes = DuiMsg.pMsgCtrl->OnDuiMouseWheel(pt, DuiMsg);
 
-		Dui_Dispatch_ModelMouseEvent(pControl, OnDuiMouseWheel, pt, DuiMsg, false);
+		Dui_Dispatch_ModelMouseEvent(m_pEventCtrl, OnDuiMouseWheel, pt, DuiMsg, false);
 
 		if (false == bRes
-			&& NULL == pControl->GetOwnerModelCtrl()
-			&& pControl->GetParent())
+			&& NULL == m_pEventCtrl->GetOwnerModelCtrl()
+			&& m_pEventCtrl->GetParent())
 		{
-			pControl->GetParent()->OnDuiMouseWheel(pt, DuiMsg);
+			m_pEventCtrl->GetParent()->OnDuiMouseWheel(pt, DuiMsg);
 		}
 	}
 
@@ -2490,10 +2485,12 @@ LRESULT CDUIWndManager::OnDuiKeyDown(WPARAM wParam, LPARAM lParam)
 {
 	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
 
+	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+	DuiMsg.pMsgCtrl = m_pEventCtrl;
 	DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
 	DuiMsg.ptMouse = m_ptMousePosLast;
 	DuiMsg.wKeyState = MapKeyState();
@@ -2505,7 +2502,7 @@ LRESULT CDUIWndManager::OnDuiKeyDown(WPARAM wParam, LPARAM lParam)
 	}
 
 	//model
-	Dui_Dispatch_ModelKeyboardEvent(DuiMsg.pMsgCtrl, OnDuiKeyDown, DuiMsg);
+	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiKeyDown, DuiMsg);
 
 	return 0;
 }
@@ -2514,10 +2511,12 @@ LRESULT CDUIWndManager::OnDuiKeyUp(WPARAM wParam, LPARAM lParam)
 {
 	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
 
+	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+	DuiMsg.pMsgCtrl = m_pEventCtrl;
 	DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
 	DuiMsg.ptMouse = m_ptMousePosLast;
 	DuiMsg.wKeyState = MapKeyState();
@@ -2529,7 +2528,7 @@ LRESULT CDUIWndManager::OnDuiKeyUp(WPARAM wParam, LPARAM lParam)
 	}
 
 	//model
-	Dui_Dispatch_ModelKeyboardEvent(DuiMsg.pMsgCtrl, OnDuiKeyUp, DuiMsg);
+	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiKeyUp, DuiMsg);
 
 	return 0;
 }
@@ -2538,10 +2537,12 @@ LRESULT CDUIWndManager::OnDuiChar(WPARAM wParam, LPARAM lParam)
 {
 	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
 
+	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+	DuiMsg.pMsgCtrl = m_pEventCtrl;
 	DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
 	DuiMsg.ptMouse = m_ptMousePosLast;
 	DuiMsg.wKeyState = MapKeyState();
@@ -2553,7 +2554,7 @@ LRESULT CDUIWndManager::OnDuiChar(WPARAM wParam, LPARAM lParam)
 	}
 
 	//model
-	Dui_Dispatch_ModelKeyboardEvent(DuiMsg.pMsgCtrl, OnDuiChar, DuiMsg);
+	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiChar, DuiMsg);
 
 	return 0;
 }
@@ -2562,10 +2563,12 @@ LRESULT CDUIWndManager::OnDuiSysKeyDown(WPARAM wParam, LPARAM lParam)
 {
 	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
 
+	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+	DuiMsg.pMsgCtrl = m_pEventCtrl;
 	DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
 	DuiMsg.ptMouse = m_ptMousePosLast;
 	DuiMsg.wKeyState = MapKeyState();
@@ -2577,7 +2580,7 @@ LRESULT CDUIWndManager::OnDuiSysKeyDown(WPARAM wParam, LPARAM lParam)
 	}
 
 	//model
-	Dui_Dispatch_ModelKeyboardEvent(DuiMsg.pMsgCtrl, OnDuiSysKeyDown, DuiMsg);
+	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiSysKeyDown, DuiMsg);
 
 	return 0;
 }
@@ -2586,10 +2589,12 @@ LRESULT CDUIWndManager::OnDuiSysKeyUp(WPARAM wParam, LPARAM lParam)
 {
 	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
 
+	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+	DuiMsg.pMsgCtrl = m_pEventCtrl;
 	DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
 	DuiMsg.ptMouse = m_ptMousePosLast;
 	DuiMsg.wKeyState = MapKeyState();
@@ -2601,7 +2606,7 @@ LRESULT CDUIWndManager::OnDuiSysKeyUp(WPARAM wParam, LPARAM lParam)
 	}
 
 	//model
-	Dui_Dispatch_ModelKeyboardEvent(DuiMsg.pMsgCtrl, OnDuiSysKeyUp, DuiMsg);
+	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiSysKeyUp, DuiMsg);
 
 	return 0;
 }
@@ -2610,10 +2615,12 @@ LRESULT CDUIWndManager::OnDuiSysChar(WPARAM wParam, LPARAM lParam)
 {
 	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
 
+	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+	DuiMsg.pMsgCtrl = m_pEventCtrl;
 	DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
 	DuiMsg.ptMouse = m_ptMousePosLast;
 	DuiMsg.wKeyState = MapKeyState();
@@ -2625,7 +2632,7 @@ LRESULT CDUIWndManager::OnDuiSysChar(WPARAM wParam, LPARAM lParam)
 	}
 
 	//model
-	Dui_Dispatch_ModelKeyboardEvent(DuiMsg.pMsgCtrl, OnDuiSysChar, DuiMsg);
+	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiSysChar, DuiMsg);
 
 	return 0;
 }
@@ -2637,18 +2644,18 @@ LRESULT CDUIWndManager::OnDuiContextMenu(WPARAM wParam, LPARAM lParam)
 	::ScreenToClient(m_hWndAttach, &pt);
 
 	//menu ctrl
-	CDUIControlBase *pMenuCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
-	while (pMenuCtrl && false == pMenuCtrl->IsContextMenu())
+	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+	while (m_pEventCtrl && false == m_pEventCtrl->IsContextMenu())
 	{
-		pMenuCtrl = pMenuCtrl->GetParent();
+		m_pEventCtrl = m_pEventCtrl->GetParent();
 	}
 
-	if (NULL == pMenuCtrl) return 0;
+	if (NULL == m_pEventCtrl) return 0;
 
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = pMenuCtrl;
+	DuiMsg.pMsgCtrl = m_pEventCtrl;
 	DuiMsg.ptMouse = pt;
 	DuiMsg.wKeyState = (WORD)DuiMsg.wParam;
 	DuiMsg.dwTimestamp = ::GetTickCount();
@@ -2659,7 +2666,7 @@ LRESULT CDUIWndManager::OnDuiContextMenu(WPARAM wParam, LPARAM lParam)
 	}
 
 	//model
-	Dui_Dispatch_ModelKeyboardEvent(DuiMsg.pMsgCtrl, OnDuiContextMenu, DuiMsg);
+	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiContextMenu, DuiMsg);
 
 	return 0;
 }
@@ -2711,10 +2718,12 @@ LRESULT CDUIWndManager::OnDuiCommand(WPARAM wParam, LPARAM lParam)
 	POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 	::ScreenToClient(m_hWndAttach, &pt);
 
+	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+	DuiMsg.pMsgCtrl = m_pEventCtrl;
 	DuiMsg.ptMouse = pt;
 	DuiMsg.wKeyState = MapKeyState();
 	DuiMsg.dwTimestamp = ::GetTickCount();
@@ -2722,7 +2731,7 @@ LRESULT CDUIWndManager::OnDuiCommand(WPARAM wParam, LPARAM lParam)
 	DuiMsg.pMsgCtrl->OnDuiCommand(DuiMsg);
 
 	//model
-	Dui_Dispatch_ModelEvent(DuiMsg.pMsgCtrl, OnDuiCommand, DuiMsg);
+	Dui_Dispatch_ModelEvent(m_pEventCtrl, OnDuiCommand, DuiMsg);
 
 	return 0;
 }

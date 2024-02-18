@@ -117,6 +117,7 @@ private:
 	CDUIControlBase *					m_pCaptureCtrl = NULL;
 	CDUIControlBase *					m_pFocusCtrl = NULL;
 	CDUIControlBase *					m_pHoverCtrl = NULL;
+	CDUIControlBase *					m_pEventCtrl = NULL;
 	CDUIControlBase *					m_pWinDragCtrl = NULL;
 	CDUIControlBase *					m_pWinDragEnterCtrl = NULL;
 
