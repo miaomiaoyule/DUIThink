@@ -227,4 +227,5 @@ using namespace tinyxml2;
 #include "DUIXmlPack/DUIXmlPack.h"
 
 extern DUITHINK_API tagDuiMenuCmd g_DuiMenuCmd;
+extern DUITHINK_API CDUIMenuWnd * g_pDuiMenuWndRoot;
 //////////////////////////////////////////////////////////////////////////

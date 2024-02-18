@@ -559,6 +559,9 @@ void CDUIListItemCtrl::PerformEditText()
 			m_pEditTextCtrl->Init();
 			m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
 			m_pEditTextCtrl->SetVisible(false);
+			m_pEditTextCtrl->SetBorderLine({ 1,1,1,1 });
+			m_pEditTextCtrl->SetBkColor({ Name_ColorWhite });
+			m_pEditTextCtrl->SetAutoSelAll(true);
 			InsertChild(m_pEditTextCtrl, 1);
 
 		} while (false);

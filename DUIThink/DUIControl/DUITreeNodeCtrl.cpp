@@ -501,37 +501,38 @@ void CDUITreeNodeCtrl::SetImageSectionSelIconSelPushed(const tagDuiImageSection 
 
 void CDUITreeNodeCtrl::PerformEditText()
 {
-	//create
-	if (NULL == m_pEditTextCtrl && m_pHorizContainerCtrl)
+	if (NULL == m_pHorizContainerCtrl) return;
+
+	//same parent
+	if (NULL == m_pEditTextCtrl)
 	{
 		do
 		{
-			//same parent
 			CDUITreeNodeCtrl *pParentNode = GetParentNode();
-			if (pParentNode)
-			{
-				CDUIThinkEditCtrl *pEditTextCtrl = pParentNode->GetEditTextCtrl();
-				if (NULL == pEditTextCtrl) break;
+			if (NULL == pParentNode) break;
+			
+			CDUIThinkEditCtrl *pEditTextCtrl = pParentNode->GetEditTextCtrl();
+			if (NULL == pEditTextCtrl) break;
 
-				m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, pEditTextCtrl->Clone());
-				if (NULL == m_pEditTextCtrl) break;
+			m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, pEditTextCtrl->Clone());
+			if (NULL == m_pEditTextCtrl) break;
 
-				m_pHorizContainerCtrl->InsertChild(m_pEditTextCtrl);
-
-				break;
-			}
-
-			//new
-			m_pEditTextCtrl = new CDUIThinkEditCtrl;
-			m_pEditTextCtrl->Init();
-			m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
-			m_pEditTextCtrl->SetVisible(false);
 			m_pHorizContainerCtrl->InsertChild(m_pEditTextCtrl);
 
 		} while (false);
 	}
+	//create
 	if (NULL == m_pEditTextCtrl)
 	{
+		m_pEditTextCtrl = new CDUIThinkEditCtrl;
+		m_pEditTextCtrl->Init();
+		m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
+		m_pEditTextCtrl->SetVisible(false);
+		m_pEditTextCtrl->SetBorderLine({ 1,1,1,1 });
+		m_pEditTextCtrl->SetBkColor({ Name_ColorWhite });
+		m_pEditTextCtrl->SetAutoSelAll(true);
+		m_pHorizContainerCtrl->InsertChild(m_pEditTextCtrl);
+
 		return;
 	}
 

@@ -128,7 +128,7 @@ private:
 	VecDuiNotify						m_vecAsynNotify;
 	VecDuiTimerInfo						m_vecTimers;
 	VecIDUIPreMessage					m_vecPreMessage;
-	VecDuiControlBase					m_vecDelayDelete;
+	DequeDuiControlBase					m_queDelayDelete;
 	VecDuiControlBase					m_vecFoundControls;
 	MapDuiControlBase					m_mapControl;
 	MapDuiRadioBoxGroup					m_mapRadioBoxGroup;

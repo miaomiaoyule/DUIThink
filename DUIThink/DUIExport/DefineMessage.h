@@ -5,6 +5,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 typedef std::vector<CDUIControlBase*> VecDuiControlBase;
+typedef std::deque<CDUIControlBase*> DequeDuiControlBase;
 typedef std::vector<CDUIRadioBoxCtrl*> VecDuiRadioBoxCtrl;
 typedef std::unordered_map<CMMString, VecDuiRadioBoxCtrl> MapDuiRadioBoxGroup;
 

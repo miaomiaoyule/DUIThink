@@ -452,10 +452,23 @@ CDUIControlBase* CDUIWndManager::GetFocusControl()
 void CDUIWndManager::SetFocusControl(CDUIControlBase *pFocusCtrl)
 {
 	if (m_pFocusCtrl == pFocusCtrl) return;
-	if (m_pFocusCtrl) m_pFocusCtrl->OnDuiKillFocus();
-	if (pFocusCtrl) pFocusCtrl->OnDuiSetFocus();
 
+	//kill focus
+	if (m_pFocusCtrl)
+	{
+		CDUIControlBase *pControl = m_pFocusCtrl;
+		m_pFocusCtrl = NULL;
+		pControl->OnDuiKillFocus();
+	}
+
+	//set focus
 	m_pFocusCtrl = pFocusCtrl;
+	if (m_pFocusCtrl)
+	{
+		m_pFocusCtrl->OnDuiSetFocus();
+	}
+
+	//focus child wnd
 	MMInterfaceHelper(CDUIEditCtrl, m_pFocusCtrl, pEditFocus);
 	MMInterfaceHelper(CDUIHotKeyCtrl, m_pFocusCtrl, pHotKeyFocus);
 
@@ -2013,12 +2026,13 @@ LRESULT CDUIWndManager::OnDraw(CDUIRect rcPaint)
 
 LRESULT CDUIWndManager::OnDuiDelayDelete()
 {
-	for (auto pControl : m_vecDelayDelete)
+	while (false == m_queDelayDelete.empty())
 	{
+		auto pControl = m_queDelayDelete.front();
+		m_queDelayDelete.pop_front();
+
 		MMSafeDelete(pControl);
 	}
-
-	m_vecDelayDelete.clear();
 
 	return 0;
 }
@@ -2897,7 +2911,7 @@ void CDUIWndManager::DelayDelete(CDUIControlBase *pControl)
 	pControl->ReapControl();
 	pControl->SetWndManager(NULL);
 	pControl->SetParent(NULL);
-	m_vecDelayDelete.push_back(pControl);
+	m_queDelayDelete.push_back(pControl);
 	PostAppMsg();
 
 	return;
