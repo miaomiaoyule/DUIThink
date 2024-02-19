@@ -102,7 +102,11 @@ void CDUIMenuWnd::UnInit()
 
 	Close();
 
-	m_pShowMenuView = MMDynamicPtr(CDUIMenuCtrl, m_pWndManager->DetachRootCtrl());
+	//detach view
+	if (NULL == m_pShowMenuView)
+	{
+		m_pShowMenuView = MMDynamicPtr(CDUIMenuCtrl, m_pWndManager->DetachRootCtrl());
+	}
 
 	return;
 }
@@ -148,17 +152,17 @@ LRESULT CDUIMenuWnd::OnKillFocus(WPARAM wParam, LPARAM lParam, bool &bHandled)
 	if (NULL == hMonitor) return 0;
 #endif
 
-	if (NULL == m_pOwner)
+	if (g_pDuiMenuWndRoot)
 	{
 		HWND hWndFocus = (HWND)wParam;
 		while (hWndFocus)
 		{
-			if (hWndFocus == m_hWnd) return 0;
+			if (hWndFocus == g_pDuiMenuWndRoot->GetHWND()) return 0;
 
 			hWndFocus = GetParent(hWndFocus);
 		}
 
-		UnInit();
+		g_pDuiMenuWndRoot->UnInit();
 	}
 
 	return 0;
@@ -633,6 +637,7 @@ bool CDUIMenuItemCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg
 		CheckMenu(!IsChecked());
 	}
 
+	//menu exit
 	MMInterfaceHelper(CDUIMenuCtrl, GetExpandMenuView(), pMenuView);
 	if (NULL == pMenuView
 		|| pMenuView->GetChildCount() <= 0

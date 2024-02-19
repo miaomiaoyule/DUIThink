@@ -479,10 +479,6 @@ void CDUIWndManager::SetFocusControl(CDUIControlBase *pFocusCtrl)
 	{
 		::SetFocus(m_hWndAttach);
 	}
-	if (pEditFocus && m_pFocusCtrl == m_pCaptureCtrl)
-	{
-		m_pCaptureCtrl = NULL;
-	}
 
 	return;
 }
