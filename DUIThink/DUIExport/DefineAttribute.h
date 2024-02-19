@@ -42,7 +42,7 @@ enum enDuiHorizAlignType
 //vert
 enum enDuiVertAlignType
 {
-	VertAlign_Top,
+	VertAlign_Top = 10,
 	VertAlign_Bottom,
 	VertAlign_Middle,
 };
