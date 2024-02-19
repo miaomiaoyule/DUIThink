@@ -32,7 +32,7 @@ void CDUIListItemCtrl::OnNotify(CDUIControlBase *pControl, const DuiNotify &Noti
 	{
 		switch (Notify.NotifyType)
 		{
-			case DuiNotify_KillFocus:
+			case DuiNotify_Edited:
 			{
 				CMMString strTextOld = GetText();
 

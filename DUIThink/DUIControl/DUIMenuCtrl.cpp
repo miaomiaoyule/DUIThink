@@ -25,22 +25,12 @@ CDUIMenuWnd::CDUIMenuWnd(CDUIMenuItemCtrl *pOwner, CMMString strDuiName)
 	CDUIControlBase *pRootCtrl = CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), m_pWndManager);
 	m_pShowMenuView = MMInterfaceHelper(CDUIMenuCtrl, pRootCtrl);
 
-	if (m_pShowMenuView)
-	{
-		m_pShowMenuView->RegisterControlCallBack(this);
-	}
-
 	return;
 }
 
 CDUIMenuWnd::~CDUIMenuWnd()
 {
 	UnInit();
-
-	if (m_pShowMenuView)
-	{
-		m_pShowMenuView->UnRegisterControlCallBack(this);
-	}
 
 	m_pOwner = NULL;
 	m_pWndManagerOwner = NULL;
@@ -69,7 +59,11 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 	::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
 	
 	//focus
-	m_pShowMenuView->SetFocus();
+	CDUIMenuCtrl *pRootMenuCtrl = GetMenuView();
+	if (pRootMenuCtrl)
+	{
+		pRootMenuCtrl->SetFocus();
+	}
 
 	return;
 }
@@ -94,11 +88,12 @@ void CDUIMenuWnd::UnInit()
 #endif
 
 	//unexpand view
-	if (m_pShowMenuView)
+	CDUIMenuCtrl *pRootMenuCtrl = GetMenuView();
+	if (pRootMenuCtrl)
 	{
-		for (int i = 0; i < m_pShowMenuView->GetMenuItemCount(); i++)
+		for (int i = 0; i < pRootMenuCtrl->GetMenuItemCount(); i++)
 		{
-			CDUIMenuItemCtrl *pMenuItem = m_pShowMenuView->GetMenuItem(i);
+			CDUIMenuItemCtrl *pMenuItem = pRootMenuCtrl->GetMenuItem(i);
 			if (NULL == pMenuItem) continue;
 
 			pMenuItem->Expand(false);
@@ -107,14 +102,14 @@ void CDUIMenuWnd::UnInit()
 
 	Close();
 
-	m_pWndManager->DetachRootCtrl();
+	m_pShowMenuView = MMDynamicPtr(CDUIMenuCtrl, m_pWndManager->DetachRootCtrl());
 
 	return;
 }
 
 CDUIMenuCtrl * CDUIMenuWnd::GetMenuView()
 {
-	return m_pShowMenuView;
+	return m_pShowMenuView ? m_pShowMenuView : MMDynamicPtr(CDUIMenuCtrl, m_pWndManager->GetRootCtrl());
 }
 
 void CDUIMenuWnd::SetMenuView(CDUIMenuCtrl *pMenuView)
@@ -131,15 +126,6 @@ CDUIMenuItemCtrl * CDUIMenuWnd::GetOwner()
 	return m_pOwner;
 }
 
-void CDUIMenuWnd::OnSize(CDUIControlBase *pControl)
-{
-	if (pControl == m_pShowMenuView)
-	{
-	}
-
-	return;
-}
-
 LRESULT CDUIMenuWnd::OnCreate(WPARAM wParam, LPARAM lParam, bool &bHandled)
 {
 	m_pWndManager->DetachRootCtrl();
@@ -148,6 +134,7 @@ LRESULT CDUIMenuWnd::OnCreate(WPARAM wParam, LPARAM lParam, bool &bHandled)
 
 	//init view
 	m_pWndManager->AttachRootCtrl(m_pShowMenuView);
+	m_pShowMenuView = NULL;
 
 	return 0;
 }
@@ -219,14 +206,17 @@ LRESULT CDUIMenuWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIMenuWnd::OnWMDuiResizeMenu(WPARAM wParam, LPARAM lParam)
 {
-	if (NULL == m_pShowMenuView) return 0;
+	if (NULL == m_pWndManager) return 0;
+	
+	MMInterfaceHelper(CDUIMenuCtrl, m_pWndManager->GetRootCtrl(), pRootMenuCtrl);
+	if (NULL == pRootMenuCtrl) return 0;
 
-	MMInterfaceHelper(CDUIRotateMenuCtrl, m_pShowMenuView, pRotateMenu);
+	MMInterfaceHelper(CDUIRotateMenuCtrl, pRootMenuCtrl, pRotateMenu);
 
 	//wnd size
 	CDUIRect rcWnd;
-	CDUISize szRange = m_pShowMenuView->GetTotalRange();
-	CDUIRect rcInset = m_pShowMenuView->GetRangeInset();
+	CDUISize szRange = pRootMenuCtrl->GetTotalRange();
+	CDUIRect rcInset = pRootMenuCtrl->GetRangeInset();
 	szRange.cx <= 0 ? szRange.cx = Size_MenuNormal : szRange.cx += rcInset.left + rcInset.right;
 	szRange.cy <= 0 ? szRange.cy = Size_MenuNormal : szRange.cy += rcInset.top + rcInset.bottom;
 	pRotateMenu ? szRange.cx = rcWnd.GetWidth() : szRange.cx;
@@ -254,16 +244,19 @@ LRESULT CDUIMenuWnd::OnWMDuiResizeMenu(WPARAM wParam, LPARAM lParam)
 
 void CDUIMenuWnd::OnDuiWndInited(const DuiNotify &Notify)
 {
-	if (NULL == m_pShowMenuView) return;
+	if (NULL == m_pWndManager) return;
 
-	m_pShowMenuView->EnsureVisible(m_pShowMenuView->GetCurSel());
+	MMInterfaceHelper(CDUIMenuCtrl, m_pWndManager->GetRootCtrl(), pRootMenuCtrl);
+	if (NULL == pRootMenuCtrl) return;
+
+	pRootMenuCtrl->EnsureVisible(pRootMenuCtrl->GetCurSel());
 
 	return;
 }
 
 void CDUIMenuWnd::ResizeMenu()
 {
-	if (NULL == m_pShowMenuView) return;
+	if (NULL == m_pWndManager) return;
 
 	CDUIRect rcWnd;
 	GetWindowRect(m_hWnd, &rcWnd);
@@ -295,7 +288,7 @@ void CDUIMenuWnd::ResizeMenu()
 
 void CDUIMenuWnd::ResizeSubMenu()
 {
-	if (NULL == m_pShowMenuView) return;
+	if (NULL == m_pWndManager) return;
 
 	CDUIRect rcWnd;
 	GetWindowRect(m_hWnd, &rcWnd);

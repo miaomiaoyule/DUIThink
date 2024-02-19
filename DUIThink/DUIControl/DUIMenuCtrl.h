@@ -12,7 +12,6 @@ class CDUIMenuItemCtrl;
 //////////////////////////////////////////////////////////////////////////
 class DUITHINK_API CDUIMenuWnd
 	: public CDUIWnd
-	, public IDUIControlCallBack
 {
 	MMDeclare_ClassName()
 	DuiDeclare_Message_Map()
@@ -36,10 +35,6 @@ public:
 	CDUIMenuCtrl * GetMenuView();
 	void SetMenuView(CDUIMenuCtrl *pMenuView);
 	CDUIMenuItemCtrl * GetOwner();
-
-	//override
-protected:
-	void OnSize(CDUIControlBase *pControl) override;
 
 	//override
 protected:
