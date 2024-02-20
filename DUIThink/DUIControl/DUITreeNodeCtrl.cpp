@@ -1138,6 +1138,7 @@ void CDUITreeNodeCtrl::PaintLineOnListType(HDC hDC)
 	CDUITreeViewCtrl *pRootView = GetRootView();
 	if (NULL == pRootView) return;
 
+	CDUIRect rcLayoutRootView = pRootView->GetLayoutRangeOfItem();
 	tagDuiListInfo ListInfo = pRootView->GetListInfo();
 	if (NULL == ListInfo.pAttributeColorLine) return;
 
@@ -1174,7 +1175,6 @@ void CDUITreeNodeCtrl::PaintLineOnListType(HDC hDC)
 	}
 
 	//child
-	CDUIRect rcThis = GetAbsoluteRect();
 	CDUIRect rcTemp;
 	for (int n = 0; n < GetChildNodeCount(); n++)
 	{
@@ -1182,7 +1182,7 @@ void CDUITreeNodeCtrl::PaintLineOnListType(HDC hDC)
 		if (NULL == pTreeNode || false == pTreeNode->IsVisible()) continue;
 
 		CDUIRect rcNode = pTreeNode->GetAbsoluteRect();
-		if (false == IntersectRect(&rcTemp, &rcNode, &rcThis)) continue;
+		if (false == IntersectRect(&rcTemp, &rcNode, &rcLayoutRootView)) continue;
 
 		pTreeNode->PaintLineOnListType(hDC);
 	}
