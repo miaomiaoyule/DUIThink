@@ -62,8 +62,7 @@ public:
 	virtual void AdjustWnd();
 	virtual LPCTSTR GetSuperClassName() const;
 
-protected:	virtual void OnInitDialog() {}
-	virtual void OnFindControl() {}
+protected:	virtual void OnFindControl() {}	virtual void OnInitDialog() {}
 	virtual void OnFinalMessage();
 	virtual void OnDuiTimer(const DuiNotify &Notify);
 	virtual void OnDuiClick(const DuiNotify &Notify);

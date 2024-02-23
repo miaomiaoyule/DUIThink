@@ -51,6 +51,7 @@ void CDUINotifyPump::OnNotify(const DuiNotify &Notify)
 			goto Dispatch;
 		}
 	}
+
 	return;
 
 Dispatch:
@@ -203,17 +204,20 @@ UINT CDUIWnd::DoModal()
 		Create(m_hWndParent, _T(""), DUI_WNDSTYLE_DIALOG, DUI_WNDSTYLE_EX_DIALOG);
 	}
 
-	//message
+	//disable parent
 	UINT nRet = 0;
 	HWND hWndParent = GetWindowOwner(m_hWnd);
 	bool bWndParentEnable = IsWindowEnabled(hWndParent);
 	::EnableWindow(hWndParent, false);
+
+	//show
+	ShowWindow(true, false);
 	
+	//message
 	BOOL bRet = 0;
 	MSG Msg = {};
-	while (::IsWindow(m_hWnd) && (bRet = GetMessage(&Msg, NULL, 0, 0)) != 0)
+	while (::IsWindowVisible(m_hWnd) && (bRet = GetMessage(&Msg, NULL, 0, 0)) != 0)
 	{
-		// handle the error and possibly exit
 		if (-1 == bRet)
 		{
 			assert(false);
@@ -250,13 +254,15 @@ UINT CDUIWnd::DoBlock()
 		Create(m_hWndParent, _T(""), DUI_WNDSTYLE_DIALOG, DUI_WNDSTYLE_EX_DIALOG);
 	}
 
+	//show
+	ShowWindow(true, false);
+
 	//message
 	UINT nRet = 0;
 	BOOL bRet = 0;
 	MSG Msg = {};
-	while (::IsWindow(m_hWnd) && (bRet = GetMessage(&Msg, NULL, 0, 0)) != 0)
+	while (::IsWindowVisible(m_hWnd) && (bRet = GetMessage(&Msg, NULL, 0, 0)) != 0)
 	{
-		// handle the error and possibly exit
 		if (-1 == bRet)
 		{
 			assert(false);
