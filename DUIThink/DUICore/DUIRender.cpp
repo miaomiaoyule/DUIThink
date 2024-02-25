@@ -777,7 +777,7 @@ void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, c
 	return;
 }
 
-void CDUIRenderEngine::DrawLine(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, int nStyle /*= PS_SOLID*/)
+void CDUIRenderEngine::DrawLine(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 
@@ -785,13 +785,13 @@ void CDUIRenderEngine::DrawLine(HDC hDC, const CDUIRect &rcItem, int nLineSize, 
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
-	Pen.SetDashStyle((Gdiplus::DashStyle)nStyle);
+	Pen.SetDashStyle((Gdiplus::DashStyle)LineStyle);
 	Gp.DrawLine(&Pen, rcItem.left, rcItem.top, rcItem.right, rcItem.bottom);
 
 	return;
 }
 
-void CDUIRenderEngine::DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop)
+void CDUIRenderEngine::DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop, enDuiLineStyle LineStyle)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 
@@ -815,7 +815,7 @@ void CDUIRenderEngine::DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, 
 			vecPtList.push_back({ rcDraw.left, rcDraw.bottom });
 			vecPtList.push_back({ rcDraw.left, rcDraw.top });
 			vecPtList.push_back({ rcDraw.left + szBreakTop.cx, rcDraw.top });
-			DrawPath(hDC, vecPtList, nLineSize, dwPenColor);
+			DrawPath(hDC, vecPtList, nLineSize, dwPenColor, LineStyle);
 
 			return;
 		}
@@ -823,6 +823,7 @@ void CDUIRenderEngine::DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, 
 		//rect
 		Gdiplus::Graphics Gp(hDC);
 		Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), (Gdiplus::REAL)nLineSize);
+		Pen.SetDashStyle((Gdiplus::DashStyle)LineStyle);
 		Pen.SetAlignment(Gdiplus::PenAlignmentInset);
 
 		Gp.DrawRectangle(&Pen, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
@@ -840,7 +841,7 @@ void CDUIRenderEngine::DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, 
 	return;
 }
 
-void CDUIRenderEngine::DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nLineSize, DWORD dwPenColor)
+void CDUIRenderEngine::DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle)
 {
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
@@ -856,6 +857,7 @@ void CDUIRenderEngine::DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList
 
 	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
 	Pen.SetAlignment(Gdiplus::PenAlignmentInset);
+	Pen.SetDashStyle((Gdiplus::DashStyle)LineStyle);
 	Gp.DrawPath(&Pen, &Path);
 
 	return;

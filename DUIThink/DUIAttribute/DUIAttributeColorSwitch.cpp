@@ -114,7 +114,7 @@ bool CDUIAttributeColorSwitch::DrawRoundRect(HDC hDC, const CDUIRect &rcPaint, i
 	return true;
 }
 
-bool CDUIAttributeColorSwitch::DrawLine(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nStyle, bool bHSLAdjust)
+bool CDUIAttributeColorSwitch::DrawLine(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle, bool bHSLAdjust)
 {
 	if (nBorderSize <= 0) return false;
 
@@ -128,7 +128,7 @@ bool CDUIAttributeColorSwitch::DrawLine(HDC hDC, const CDUIRect &rcPaint, int nB
 		dwColor = CDUIRenderEngine::AdjustColor(dwColor, H, S, L);
 	}
 
-	CDUIRenderEngine::DrawLine(hDC, rcPaint, nBorderSize, dwColor, nStyle);
+	CDUIRenderEngine::DrawLine(hDC, rcPaint, nBorderSize, dwColor, LineStyle);
 
 	return true;
 }
