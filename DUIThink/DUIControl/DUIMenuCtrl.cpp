@@ -219,14 +219,14 @@ LRESULT CDUIMenuWnd::OnWMDuiResizeMenu(WPARAM wParam, LPARAM lParam)
 
 	//wnd size
 	CDUIRect rcWnd;
+	GetWindowRect(m_pWndManager->GetWndHandle(), &rcWnd);
 	CDUISize szRange = pRootMenuCtrl->GetTotalRange();
 	CDUIRect rcInset = pRootMenuCtrl->GetRangeInset();
 	szRange.cx <= 0 ? szRange.cx = Size_MenuNormal : szRange.cx += rcInset.left + rcInset.right;
 	szRange.cy <= 0 ? szRange.cy = Size_MenuNormal : szRange.cy += rcInset.top + rcInset.bottom;
 	pRotateMenu ? szRange.cx = rcWnd.GetWidth() : szRange.cx;
 	pRotateMenu ? szRange.cy = rcWnd.GetHeight() : szRange.cy;
-	GetWindowRect(m_pWndManager->GetWndHandle(), &rcWnd);
-
+	
 	if (rcWnd.GetWidth() != szRange.cx
 		|| rcWnd.GetHeight() != szRange.cy)
 	{

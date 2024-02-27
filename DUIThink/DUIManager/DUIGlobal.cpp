@@ -848,6 +848,7 @@ CMMString CDUIGlobal::CreateDlg()
 	if (NULL == pRootCtrl)
 	{
 		pRootCtrl = new CDUIContainerCtrl;
+		pRootCtrl->Init();
 		pRootCtrl->SetBkColor({ Name_ColorDefault });
 	}
 
@@ -994,14 +995,19 @@ CMMString CDUIGlobal::CreateMenu(bool bSubMenu)
 
 	//control
 	CDUIWndManager *pWndManager = new CDUIWndManager();
-	CDUIMenuCtrl *pRootCtrl = new CDUIMenuCtrl;
+	CMMString strFileModel = CMMString(Dui_FolderUIModel) + _T("\\") + Dui_FileModelMenuXml;
+	DuiFileResType_File == GetDuiFileResType() ? strFileModel = CMMService::GetWorkDirectory() + _T("\\") + strFileModel : strFileModel;
+	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWndManager));
+	if (NULL == pRootCtrl)
+	{
+		pRootCtrl = new CDUIMenuCtrl;
+		pRootCtrl->Init();
+		pRootCtrl->SetBkColor({ Name_ColorDefault });
+	}
 
 	if (NULL == pWndManager || NULL == pRootCtrl) return _T("");
 
-	pWndManager->Init();
-	pRootCtrl->Init();
 	pWndManager->AttachRootCtrl(pRootCtrl);
-	pWndManager->SetWndInitSize(300, 300);
 	pWndManager->SetCaptionHeight(0);
 	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_Menu) + strFile, pWndManager);
 	MMSafeDelete(pWndManager);
@@ -1028,15 +1034,19 @@ CMMString CDUIGlobal::Create3DMenu()
 
 	//control
 	CDUIWndManager *pWndManager = new CDUIWndManager();
-	CDUIRotateMenuCtrl *pRootCtrl = new CDUIRotateMenuCtrl;
+	CMMString strFileModel = CMMString(Dui_FolderUIModel) + _T("\\") + Dui_FileModel3DMenuXml;
+	DuiFileResType_File == GetDuiFileResType() ? strFileModel = CMMService::GetWorkDirectory() + _T("\\") + strFileModel : strFileModel;
+	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWndManager));
+	if (NULL == pRootCtrl)
+	{
+		pRootCtrl = new CDUIRotateMenuCtrl;
+		pRootCtrl->Init();
+		pRootCtrl->SetBkColor({ Name_ColorDefault });
+	}
 
 	if (NULL == pWndManager || NULL == pRootCtrl) return _T("");
 
-	pWndManager->Init();
-	pRootCtrl->Init();
 	pWndManager->AttachRootCtrl(pRootCtrl);
-	pWndManager->SetWndInitSize(500, 300);
-	pWndManager->SetCaptionHeight(0);
 	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_3DMenu) + strFile, pWndManager);
 	MMSafeDelete(pWndManager);
 
@@ -1062,15 +1072,19 @@ CMMString CDUIGlobal::CreateCalendar()
 
 	//control
 	CDUIWndManager *pWndManager = new CDUIWndManager();
-	CDUICalendarCtrl *pRootCtrl = new CDUICalendarCtrl;
+	CMMString strFileModel = CMMString(Dui_FolderUIModel) + _T("\\") + Dui_FileModelCalendarXml;
+	DuiFileResType_File == GetDuiFileResType() ? strFileModel = CMMService::GetWorkDirectory() + _T("\\") + strFileModel : strFileModel;
+	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWndManager));
+	if (NULL == pRootCtrl)
+	{
+		pRootCtrl = new CDUICalendarCtrl;
+		pRootCtrl->Init();
+		pRootCtrl->SetBkColor({ Name_ColorDefault });
+	}
 
 	if (NULL == pWndManager || NULL == pRootCtrl) return _T("");
 
-	pWndManager->Init();
-	pRootCtrl->Init();
 	pWndManager->AttachRootCtrl(pRootCtrl);
-	pWndManager->SetWndInitSize(500, 300);
-	pWndManager->SetCaptionHeight(0);
 	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_Calendar) + strFile, pWndManager);
 	MMSafeDelete(pWndManager);
 

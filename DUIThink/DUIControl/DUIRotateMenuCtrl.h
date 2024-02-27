@@ -79,7 +79,6 @@ public:
 
 	//child
 	bool InsertChild(CDUIControlBase *pChild, int nPos = -1) override;
-	bool InsertChild(int nItemModelCount, int nPos = -1) override;
 	CDUIRotateMenuItemCtrl * GetChildAt(int nIndex) const override;
 
 	//scroll

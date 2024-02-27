@@ -167,7 +167,7 @@ void CDUIRotateMenuCtrl::RefreshView()
 		}
 	}
 
-	return CDUIListViewCtrl::RefreshView();
+	return __super::RefreshView();
 }
 
 bool CDUIRotateMenuCtrl::DoPaint(HDC hDC, bool bGenerateBmp/* = false*/)
@@ -221,11 +221,6 @@ bool CDUIRotateMenuCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 	}
 
 	return false;
-}
-
-bool CDUIRotateMenuCtrl::InsertChild(int nItemModelCount, int nPos/* = -1*/)
-{
-	return CDUIListViewCtrl::InsertChild(nItemModelCount, nPos);
 }
 
 CDUIRotateMenuItemCtrl * CDUIRotateMenuCtrl::GetChildAt(int nIndex) const
