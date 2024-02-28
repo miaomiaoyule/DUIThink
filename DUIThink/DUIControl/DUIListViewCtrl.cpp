@@ -2448,6 +2448,8 @@ void CDUIListViewCtrl::ScrollChilds(CDUISize szScroll)
 
 	PerformMouseDragSel();
 
+	Invalidate();
+
 	return;
 }
 
@@ -2707,45 +2709,14 @@ void CDUIListViewCtrl::CalcShowItemOnListType()
 	//init variant
 	m_nFirstShowIndex = m_nLastShowIndex = -1;
 	m_szTotalRange = { rcItemRange.GetWidth(), 0 };
+	int nYTop = -szScrollPos.cy;
+	bool bFindFirst = true;
+	bool bFindLast = true;
 
 	//first index
-	for (; m_nFirstShowIndex < GetChildCount(); m_nFirstShowIndex++)
+	for (int n = 0; n < GetChildCount(); n++)
 	{
-		CDUIControlBase *pControl = GetChildAt(m_nFirstShowIndex);
-		if (NULL == pControl || false == pControl->IsVisible()) continue;
-
-		//float
-		if (pControl->IsFloat())
-		{
-			CDUIRect rcModal = rcItemRange;
-			pControl->OnDuiSize(rcModal);
-
-			continue;
-		}
-
-		int nFixedHeight = pControl->GetFixedHeight();
-		nFixedHeight = (nFixedHeight <= 0 ? GetSwitchListItemHeight() : nFixedHeight);
-		szScrollPos.cy -= nFixedHeight;
-		szScrollPos.cy -= GetChildPaddingV();
-		if (szScrollPos.cy <= 0)
-		{
-			szScrollPos.cy += nFixedHeight;
-			szScrollPos.cy += GetChildPaddingV();
-			break;
-		}
-
-		m_szTotalRange.cx = max(m_szTotalRange.cx, pControl->GetFixedWidth());
-		m_szTotalRange.cy += m_szTotalRange.cy > 0 ? GetChildPaddingV() : 0;
-		m_szTotalRange.cy += nFixedHeight;
-	}
-
-	//position
-	m_nLastShowIndex = m_nFirstShowIndex;
-	int nYTop = -szScrollPos.cy;
-	bool bFindLast = true;
-	for (int n = m_nLastShowIndex; n < GetChildCount(); n++)
-	{
-		CDUIListItemCtrl *pItem = GetChildAt(n);
+		CDUIControlBase *pItem = GetChildAt(n);
 		if (NULL == pItem || false == pItem->IsVisible()) continue;
 
 		//float
@@ -2757,33 +2728,42 @@ void CDUIListViewCtrl::CalcShowItemOnListType()
 			continue;
 		}
 
+		//height
 		int nFixedHeight = pItem->GetFixedHeight();
 		nFixedHeight = (nFixedHeight <= 0 ? GetSwitchListItemHeight() : nFixedHeight);
 		m_szTotalRange.cx = max(m_szTotalRange.cx, pItem->GetFixedWidth());
 		m_szTotalRange.cy += m_szTotalRange.cy > 0 ? GetChildPaddingV() : 0;
 		m_szTotalRange.cy += nFixedHeight;
 
+		//item pos
+		CDUIRect rcModal = rcItemRange;
+		rcModal.Offset(CDUISize(-szScrollPos.cx, 0));
+		rcModal.top += nYTop;
+		rcModal.bottom = rcModal.top + nFixedHeight;
+		pItem->OnDuiSize(rcModal);
+
+		CDUIRect rcItem = pItem->GetAbsoluteRect();
+		if (bFindFirst)
+		{
+			m_nFirstShowIndex = n;
+
+			if (rcItem.bottom >= rcItemRange.top)
+			{
+				bFindFirst = false;
+			}
+		}
 		if (bFindLast)
 		{
-			//item pos
-			CDUIRect rcModal = rcItemRange;
-			rcModal.Offset(CDUISize(-szScrollPos.cx, 0));
-			rcModal.top += nYTop;
-			rcModal.bottom = rcModal.top + nFixedHeight;
-
-			pItem->OnDuiSize(rcModal);
-
-			//over bottom
 			m_nLastShowIndex = n;
-			CDUIRect rcItem = pItem->GetAbsoluteRect();
-			if (rcItem.top > rcItemRange.bottom)
+
+			if (rcItem.top >= rcItemRange.bottom)
 			{
 				bFindLast = false;
 			}
-
-			nYTop += rcItem.GetHeight();
-			nYTop += GetChildPaddingV();
 		}
+
+		nYTop += rcItem.GetHeight();
+		nYTop += GetChildPaddingV();
 	}
 
 	//update scrollbar
@@ -2989,7 +2969,8 @@ void CDUIListViewCtrl::CalcShowItemOnTileTypeH()
 	CalcVisibleCount();
 	CalcTileTypeInfo();
 
-	bool bFindFirst = true, bFindLast = true;
+	bool bFindFirst = true;
+	bool bFindLast = true;
 	int nCurScrollRangeY = 0;
 	m_nFirstShowIndex = m_nLastShowIndex = -1;
 	for (int n = 0, m = 0; n < GetChildCount(); n++)
@@ -3007,40 +2988,38 @@ void CDUIListViewCtrl::CalcShowItemOnTileTypeH()
 			continue;
 		}
 
+		//item pos
 		int nColumn = m % m_nColumn;
 		int nRow = m / m_nColumn;
 		int nTopOffset = (IsTopFromRange() ? 0 : GetChildPaddingV() / 2);
 		int nTop = rcItemRange.top + nRow * m_nHeightRow + nTopOffset - szScrollPos.cy;
-		int nBottom = nTop + (pItem->GetFixedHeight() <= 0 ? m_nHeightRow - GetChildPaddingV() : pItem->GetFixedHeight());
-		m++;
+		int nBottom = nTop + (pItem->GetFixedHeight() <= 0 ? m_nHeightRow - GetChildPaddingV() : pItem->GetFixedHeight());	
 		nCurScrollRangeY = max(nCurScrollRangeY, nBottom + szScrollPos.cy + GetChildPaddingV() / 2 - rcItemRange.top);
+		m++;
+
+		CDUIRect rcModal = rcItemRange;
+		int nLeftOffset = (IsLeftFromRange() ? 0 : GetChildPaddingH() / 2);
+		rcModal.left += nColumn * m_nWidthColumn + nLeftOffset;
+		rcModal.right = rcModal.left + m_nWidthColumn - GetChildPaddingH();
+		rcModal.top = nTop;
+		rcModal.bottom = nBottom;
+		pItem->OnDuiSize(rcModal);
+
+		CDUIRect rcItem = pItem->GetAbsoluteRect();
 		if (bFindFirst)
 		{
-			if (nBottom >= rcRangeScroll.top)
+			m_nFirstShowIndex = n;
+
+			if (rcItem.bottom >= rcRangeScroll.top)
 			{
-				m_nFirstShowIndex = n;
-				m_nLastShowIndex = m_nFirstShowIndex;
 				bFindFirst = false;
-
-				n--;
-				m--;
 			}
-
-			continue;
 		}
 		if (bFindLast)
 		{
-			CDUIRect rcModal = rcItemRange;
-			int nLeftOffset = (IsLeftFromRange() ? 0 : GetChildPaddingH() / 2);
-			rcModal.left += nColumn * m_nWidthColumn + nLeftOffset;
-			rcModal.right = rcModal.left + m_nWidthColumn - GetChildPaddingH();
-			rcModal.top = nTop;
-			rcModal.bottom = rcModal.top + m_nHeightRow - GetChildPaddingV();
-			pItem->OnDuiSize(rcModal);
-
 			m_nLastShowIndex = n;
-			nBottom = pItem->GetAbsoluteRect().bottom;
-			if (nBottom >= rcRangeScroll.bottom)
+
+			if (rcItem.top >= rcRangeScroll.bottom)
 			{
 				bFindLast = false;
 			}
@@ -3064,7 +3043,8 @@ void CDUIListViewCtrl::CalcShowItemOnTileTypeV()
 	CalcVisibleCount();
 	CalcTileTypeInfo();
 
-	bool bFindFirst = true, bFindLast = true;
+	bool bFindFirst = true;
+	bool bFindLast = true;
 	int nCurScrollRangeX = 0;
 	m_nFirstShowIndex = m_nLastShowIndex = -1;
 	for (int n = 0, m = 0; n < GetChildCount(); n++)
@@ -3082,40 +3062,38 @@ void CDUIListViewCtrl::CalcShowItemOnTileTypeV()
 			continue;
 		}
 
+		//item pos
 		int nRow = m % m_nRow;
 		int nColumn = m / m_nRow;
 		int nLeftOffset = (IsLeftFromRange() ? 0 : GetChildPaddingH() / 2);
 		int nLeft = rcItemRange.left + nColumn * m_nWidthColumn + nLeftOffset - szScrollPos.cx;
 		int nRight = nLeft + (pItem->GetFixedWidth() <= 0 ? m_nWidthColumn - GetChildPaddingH() : pItem->GetFixedWidth());
-		m++;
 		nCurScrollRangeX = max(nCurScrollRangeX, nRight + szScrollPos.cx + GetChildPaddingH() / 2 - rcItemRange.left);
+		m++;
+
+		CDUIRect rcModal = rcItemRange;
+		int nTopOffset = IsTopFromRange() ? 0 : GetChildPaddingV() / 2;
+		rcModal.left = nLeft;
+		rcModal.right = nRight;
+		rcModal.top += nRow * m_nHeightRow + nTopOffset;
+		rcModal.bottom = rcModal.top + m_nHeightRow - GetChildPaddingV();
+		pItem->OnDuiSize(rcModal);
+
+		CDUIRect rcItem = pItem->GetAbsoluteRect();
 		if (bFindFirst)
 		{
-			if (nRight >= rcRangeScroll.left)
+			m_nFirstShowIndex = n;
+
+			if (rcItem.right >= rcRangeScroll.left)
 			{
-				m_nFirstShowIndex = n;
-				m_nLastShowIndex = m_nFirstShowIndex;
 				bFindFirst = false;
-
-				n--;
-				m--;
 			}
-
-			continue;
 		}
 		if (bFindLast)
 		{
-			CDUIRect rcModal = rcItemRange;
-			int nTopOffset = IsTopFromRange() ? 0 : GetChildPaddingV() / 2;
-			rcModal.left = nLeft;
-			rcModal.right = rcModal.left + m_nWidthColumn - GetChildPaddingH();
-			rcModal.top += nRow * m_nHeightRow + nTopOffset;
-			rcModal.bottom = rcModal.top + m_nHeightRow - GetChildPaddingV();
-			pItem->OnDuiSize(rcModal);
-
 			m_nLastShowIndex = n;
-			nRight = pItem->GetAbsoluteRect().right;
-			if (nRight >= rcRangeScroll.right)
+
+			if (rcItem.left >= rcRangeScroll.right)
 			{
 				bFindLast = false;
 			}

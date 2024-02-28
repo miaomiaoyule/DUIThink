@@ -73,6 +73,14 @@
 #define Name_Imagetoolbar_hot			_T("{7CE29BDE-A3D3-48D0-8713-538071001FFF}")
 #define Name_Imagetoolbar_pushed		_T("{A2FECBAC-B787-48C9-9894-A548FFFFAEE8}")
 #define Name_Imagetoolbar_disabled		_T("{CCE21DB5-F9E7-4FAE-954E-CC0D4C82E60D}")
+#define Name_ImageBtnAlignLeft			_T("{C910BBA9-093E-433A-8546-2E6964D00D90}")
+#define Name_ImageBtnAlignRight			_T("{D2595E4C-6404-460E-967B-343144603F0C}")
+#define Name_ImageBtnAlignTop			_T("{FE24035D-CE26-426B-B89E-2F16F176E2D5}")
+#define Name_ImageBtnAlignBottom		_T("{4DB292BB-E187-4851-8449-AE0AD298B857}")
+#define Name_ImageBtnHorizCenter		_T("{E291D040-2A50-41A2-AB97-F3DDCEFBFF73}")
+#define Name_ImageBtnHorizSpace			_T("{B44C6417-6FF1-48CB-9000-92D6F217024E}")
+#define Name_ImageBtnVertCenter			_T("{CD238424-CA43-408D-83B7-89D58F485295}")
+#define Name_ImageBtnVertSpace			_T("{F887BC18-2371-4438-92A8-7001ACC0DF6B}")
 
 //////////////////////////////////////////////////////////////////////////
 #define Len_Account						(32)
@@ -155,6 +163,14 @@ static TCHAR g_szPublicImage[][MAX_PATH][MAX_PATH]
 	{ Name_Imagetoolbar_hot, _T("SkinDesign/toolbar_hot.png") },
 	{ Name_Imagetoolbar_pushed, _T("SkinDesign/toolbar_pushed.png") },
 	{ Name_Imagetoolbar_disabled, _T("SkinDesign/toolbar_disabled.png") },
+	{ Name_ImageBtnAlignLeft, _T("SkinDesign/BtnAlignLeft.png") },
+	{ Name_ImageBtnAlignRight, _T("SkinDesign/BtnAlignRight.png") },
+	{ Name_ImageBtnAlignTop, _T("SkinDesign/BtnAlignTop.png") },
+	{ Name_ImageBtnAlignBottom, _T("SkinDesign/BtnAlignBottom.png") },
+	{ Name_ImageBtnHorizCenter, _T("SkinDesign/BtnHorizCenter.png") },
+	{ Name_ImageBtnHorizSpace, _T("SkinDesign/BtnHorizSpace.png") },
+	{ Name_ImageBtnVertCenter, _T("SkinDesign/BtnVertCenter.png") },
+	{ Name_ImageBtnVertSpace, _T("SkinDesign/BtnVertSpace.png") },
 };
 
 //////////////////////////////////////////////////////////////////////////
