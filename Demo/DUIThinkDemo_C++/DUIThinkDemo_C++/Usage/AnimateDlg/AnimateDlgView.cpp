@@ -57,7 +57,7 @@ void CAnimateDlgView::OnDuiItemClickListViewAnimateDlg(const DuiNotify &Notify)
 
 	MMSafeDelete(m_pDlgAnimate);
 
-	enDuiAnimateWndType AnimateWndType = (enDuiAnimateWndType)(Notify.DUINotifyExtend.ListView.nIndexItem + 1);
+	enDuiAnimateWndType AnimateWndType = (enDuiAnimateWndType)(Notify.DuiNotifyExtend.ListView.nIndexItem + 1);
 	m_pDlgAnimate = new CDlgDpi(_T("DlgDpi"), NULL, false);
 
 	CDUIWndManager *pWndManager = m_pDlgAnimate->GetWndManager();

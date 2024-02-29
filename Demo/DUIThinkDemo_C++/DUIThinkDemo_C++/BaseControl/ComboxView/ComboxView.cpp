@@ -61,7 +61,7 @@ void CComboxView::OnDuiItemSelectedCombox1(const DuiNotify &Notify)
 	if (NULL == m_pCombox1Ctrl 
 		|| m_pCombox1Ctrl != Notify.pNotifyCtrl) return;
 
-	CDUIListItemCtrl *pItem = MMInterfaceHelper(CDUIListItemCtrl, m_pCombox1Ctrl->GetChildAt(Notify.DUINotifyExtend.Combox.nIndexItem));
+	CDUIListItemCtrl *pItem = MMInterfaceHelper(CDUIListItemCtrl, m_pCombox1Ctrl->GetChildAt(Notify.DuiNotifyExtend.Combox.nIndexItem));
 	if (NULL == pItem) return;
 
 	return;
@@ -72,7 +72,7 @@ void CComboxView::OnDuiItemSelectedCombox2(const DuiNotify &Notify)
 	if (NULL == m_pCombox2Ctrl
 		|| m_pCombox2Ctrl != Notify.pNotifyCtrl) return;
 
-	CDUIListItemCtrl *pItem = MMInterfaceHelper(CDUIListItemCtrl, m_pCombox2Ctrl->GetChildAt(Notify.DUINotifyExtend.Combox.nIndexItem));
+	CDUIListItemCtrl *pItem = MMInterfaceHelper(CDUIListItemCtrl, m_pCombox2Ctrl->GetChildAt(Notify.DuiNotifyExtend.Combox.nIndexItem));
 	if (NULL == pItem) return;
 
 	MMInterfaceHelper(CDUIStaticCtrl, pItem->FindSubControl(IDC_StaticCtrl_100290), pStaticItemTextCtrl);
@@ -88,7 +88,7 @@ void CComboxView::OnDuiItemSelectedCombox3(const DuiNotify &Notify)
 	if (NULL == m_pCombox3Ctrl
 		|| m_pCombox3Ctrl != Notify.pNotifyCtrl) return;
 
-	CDUIListItemCtrl *pItem = MMInterfaceHelper(CDUIListItemCtrl, m_pCombox3Ctrl->GetChildAt(Notify.DUINotifyExtend.Combox.nIndexItem));
+	CDUIListItemCtrl *pItem = MMInterfaceHelper(CDUIListItemCtrl, m_pCombox3Ctrl->GetChildAt(Notify.DuiNotifyExtend.Combox.nIndexItem));
 	if (NULL == pItem) return;
 
 	return;
@@ -100,7 +100,7 @@ void CComboxView::OnDuiItemSelectedCombox4(const DuiNotify &Notify)
 		|| NULL == m_pCombox4Ctrl->GetParent()
 		|| m_pCombox4Ctrl != Notify.pNotifyCtrl) return;
 
-	CDUIListItemCtrl *pItem = MMInterfaceHelper(CDUIListItemCtrl, m_pCombox4Ctrl->GetChildAt(Notify.DUINotifyExtend.Combox.nIndexItem));
+	CDUIListItemCtrl *pItem = MMInterfaceHelper(CDUIListItemCtrl, m_pCombox4Ctrl->GetChildAt(Notify.DuiNotifyExtend.Combox.nIndexItem));
 	if (NULL == pItem) return;
 
 	m_pCombox4Ctrl->SetForeImageSection(pItem->GetForeImageSection());
@@ -111,7 +111,7 @@ void CComboxView::OnDuiItemSelectedCombox4(const DuiNotify &Notify)
 void CComboxView::OnDuiClickBtnRemoveCombox2(const DuiNotify &Notify)
 {
 	if (NULL == m_pCombox2Ctrl
-		|| Notify.DUINotifyExtend.Combox.pComboxCtrl != m_pCombox2Ctrl) return;
+		|| Notify.DuiNotifyExtend.Combox.pComboxCtrl != m_pCombox2Ctrl) return;
 
 	for (int n = 0; n < m_pCombox2Ctrl->GetChildCount(); n++)
 	{

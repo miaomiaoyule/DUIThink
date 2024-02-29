@@ -78,7 +78,7 @@ void CDlgQQFace::OnDuiItemClickListViewFace(const DuiNotify &Notify)
 	if (NULL == m_pListViewFaceCtrl
 		|| NULL == m_pDlgQQChat) return;
 
-	CDUIListItemCtrl *pItem = m_pListViewFaceCtrl->GetChildAt(Notify.DUINotifyExtend.ListView.nIndexItem);
+	CDUIListItemCtrl *pItem = m_pListViewFaceCtrl->GetChildAt(Notify.DuiNotifyExtend.ListView.nIndexItem);
 	if (NULL == pItem) return;
 
 	CDUIAnimateCtrl *pAnimateCtrl = MMInterfaceHelper(CDUIAnimateCtrl, pItem->FindSubControl(IDC_AnimateFace));
