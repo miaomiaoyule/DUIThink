@@ -703,6 +703,10 @@ void CDUIGlobal::AddCtrlID(UINT uCtrlID, CMMString strCtrlID)
 	m_mapControlID[uCtrlID] = strCtrlID;
 	m_uMaxControlID = max(uCtrlID, m_uMaxControlID);
 
+#ifdef DUI_DESIGN
+	CDUIXmlPack::SaveCtrlID(m_mapControlID);
+#endif
+
 	return;
 }
 
@@ -724,14 +728,19 @@ CMMString CDUIGlobal::FindCtrlID(UINT uCtrlID)
 	return FindIt->second;
 }
 
-UINT CDUIGlobal::GenerateCtrlID(CDUIControlBase *pControl)
+UINT CDUIGlobal::GenerateCtrlID()
 {
-	if (NULL == pControl) return 0;
+	return ++m_uMaxControlID;
+}
 
-	UINT uCtrlID = ++m_uMaxControlID;
-	
+CMMString CDUIGlobal::GenerateCtrlID(CDUIControlBase *pControl)
+{
+	if (NULL == pControl) return _T("");
+
+	UINT uCtrlID = pControl->GetCtrlID();
+	0 == uCtrlID ? uCtrlID = GenerateCtrlID() : uCtrlID;
 	CMMString strCtrlID = _T("IDC_") + pControl->GetDescribe() + CMMStrHelp::Format(_T("_%u"), uCtrlID);
-	do 
+	do
 	{
 		if (FindCtrlID(strCtrlID) <= 0) break;
 
@@ -739,9 +748,7 @@ UINT CDUIGlobal::GenerateCtrlID(CDUIControlBase *pControl)
 
 	} while (true);
 
-	m_mapControlID[uCtrlID] = strCtrlID;
-
-	return uCtrlID;
+	return strCtrlID;
 }
 
 bool CDUIGlobal::ModifyCtrlID(UINT uIDOld, UINT uIDNew, CDUIControlBase *pControl)
@@ -775,15 +782,7 @@ bool CDUIGlobal::ModifyCtrlID(UINT uIDOld, UINT uIDNew, CDUIControlBase *pContro
 	//ctrlid
 	if (strCtrlID.IsEmpty())
 	{
-		strCtrlID = _T("IDC_") + pControl->GetDescribe() + CMMStrHelp::Format(_T("_%u"), uIDNew);
-
-		do
-		{
-			if (FindCtrlID(strCtrlID) <= 0) break;
-
-			strCtrlID += _T("X");
-
-		} while (true);
+		strCtrlID = GenerateCtrlID(pControl);
 	}
 
 	m_mapControlID[uIDNew] = strCtrlID;

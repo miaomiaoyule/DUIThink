@@ -114,7 +114,7 @@ CDUIControlBase * CDUIControlBase::Clone(bool bIncludeChild, bool bRefreshCtrlID
 		&& GetCtrlID() > Dui_CtrlIDInner_Finish 
 		&& GetCtrlID() == pControlClone->GetCtrlID())
 	{
-		pControlClone->SetCtrlID(CDUIGlobal::GetInstance()->GenerateCtrlID(pControlClone));
+		pControlClone->SetCtrlID(CDUIGlobal::GetInstance()->GenerateCtrlID());
 	}
 
 	return pControlClone;
@@ -158,7 +158,7 @@ UINT CDUIControlBase::InitCtrlID()
 {
 	if (GetCtrlID() <= 0)
 	{
-		SetCtrlID(CDUIGlobal::GetInstance()->GenerateCtrlID(this));
+		SetCtrlID(CDUIGlobal::GetInstance()->GenerateCtrlID());
 	}
 
 	return GetCtrlID();
@@ -177,8 +177,12 @@ bool CDUIControlBase::SetCtrlID(UINT uID)
 	if (uID == GetCtrlID()) return true;
 #endif
 
+	//value
+	UINT uIDOld = GetCtrlID();
+	m_AttributeObjectID.SetValue(uID);
+
 	//modify id map
-	if (false == CDUIGlobal::GetInstance()->ModifyCtrlID(GetCtrlID(), uID, this))
+	if (false == CDUIGlobal::GetInstance()->ModifyCtrlID(uIDOld, uID, this))
 	{
 		return false;
 	}
@@ -188,8 +192,6 @@ bool CDUIControlBase::SetCtrlID(UINT uID)
 	{
 		m_pWndManager->UnInitControlIDHash(this);
 	}
-
-	m_AttributeObjectID.SetValue(uID);
 
 	if (m_pWndManager)
 	{
@@ -204,7 +206,7 @@ void CDUIControlBase::RefreshCtrlID()
 {
 	if (0 < GetCtrlID() && GetCtrlID() < Dui_CtrlIDInner_Finish) return;
 
-	SetCtrlID(CDUIGlobal::GetInstance()->GenerateCtrlID(this));
+	SetCtrlID(CDUIGlobal::GetInstance()->GenerateCtrlID());
 
 	return;
 }

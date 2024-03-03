@@ -239,7 +239,8 @@ protected:
 	void AddCtrlID(UINT uCtrlID, CMMString strCtrlID);
 	UINT FindCtrlID(CMMString strCtrlID);
 	CMMString FindCtrlID(UINT uCtrlID);
-	UINT GenerateCtrlID(CDUIControlBase *pControl);
+	UINT GenerateCtrlID();
+	CMMString GenerateCtrlID(CDUIControlBase *pControl);
 	bool ModifyCtrlID(UINT uIDOld, UINT uIDNew, CDUIControlBase *pControl);
 	bool ModifyCtrlID(CMMString strCtrlIDOld, CMMString strCtrlIDNew, CDUIControlBase *pControl);
 	
