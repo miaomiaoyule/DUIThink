@@ -1549,6 +1549,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIControl\DUITreeNodeCtrl.h" />
     <ClInclude Include="DUIControl\DUITreeViewCtrl.h" />
     <ClInclude Include="DUIControl\DUIVerticalLayoutCtrl.h" />
+    <ClInclude Include="DUIControl\DUIWaterCtrl.h" />
     <ClInclude Include="DUIControl\DUIWkeBrowserCtrl.h" />
     <ClInclude Include="DUICore\DUIAnimation.h" />
     <ClInclude Include="DUICore\DUIPropertyObject.h" />
@@ -1639,6 +1640,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUIControl\DUITreeNodeCtrl.cpp" />
     <ClCompile Include="DUIControl\DUITreeViewCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIVerticalLayoutCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIWaterCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIWkeBrowserCtrl.cpp" />
     <ClCompile Include="DUICore\DUIAnimation.cpp" />
     <ClCompile Include="DUICore\DUIPropertyObject.cpp" />
@@ -1762,11 +1764,6 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DUIThink.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ThirdDepend\tinyxml2\vs\tinyxml2.vcxproj">
-      <Project>{7c72653a-e6f8-4584-b553-de3a0aee4356}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

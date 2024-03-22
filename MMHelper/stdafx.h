@@ -18,32 +18,3 @@
 #include "MMHelperHead.h"
 
 //////////////////////////////////////////////////////////////////////////
-#ifdef _DEBUG
-	#ifdef _DLL
-	#ifdef _WIN64
-		#pragma comment(lib, "../lib/svg64.lib")
-	#else
-		#pragma comment(lib, "../lib/svg.lib")
-	#endif
-	#else
-	#ifdef _WIN64
-		#pragma comment(lib, "../lib/svg64.lib")
-	#else
-		#pragma comment(lib, "../lib/svg.lib")
-	#endif
-	#endif
-#else
-	#ifdef _DLL
-	#ifdef _WIN64
-		#pragma comment(lib, "../lib/svg64.lib")
-	#else
-		#pragma comment(lib, "../lib/svg.lib")
-	#endif
-	#else
-	#ifdef _WIN64
-		#pragma comment(lib, "../lib/svg64.lib")
-	#else
-		#pragma comment(lib, "../lib/svg.lib")
-	#endif
-	#endif
-#endif
