@@ -1336,7 +1336,7 @@ CDUIControlBase * CDUIWndManager::FindControlByShortCut(TCHAR chChar) const
 {
 	if (NULL == m_pRootCtrl) return NULL;
 
-	DUIFindShortCut FindShortCut = {};
+	DuiFindShortCut FindShortCut = {};
 	FindShortCut.chChar = toupper((int)chChar);
 
 	UINT uFlag = DuiFind_Enabled | DuiFind_MeFirst | DuiFind_TopFirst | DuiFind_Visible;
@@ -1348,13 +1348,6 @@ CDUIControlBase * CDUIWndManager::FindControlByDrop(POINT pt) const
 	if (NULL == m_pRootCtrl) return NULL;
 
 	return m_pRootCtrl->FindControl(__FindControlFromDrop, &pt, DuiFind_Visible | DuiFind_HitTest | DuiFind_TopFirst);
-}
-
-CDUIControlBase * CDUIWndManager::FindControlByWheel(POINT pt, int nWheelDelta/* = WHEEL_DELTA*/) const
-{
-	if (NULL == m_pRootCtrl) return NULL;
-
-	return m_pRootCtrl->FindControl(__FindControlFromWheel, &pt, DuiFind_Visible | DuiFind_HitTest | DuiFind_TopFirst | (WHEEL_DELTA == nWheelDelta ? DuiFind_WheelUp : DuiFind_WheelDown));
 }
 
 CDUIControlBase * CDUIWndManager::FindSubControlByPoint(CDUIContainerCtrl *pParent, POINT pt)
@@ -2418,7 +2411,7 @@ LRESULT CDUIWndManager::OnDuiMouseWheel(WPARAM wParam, LPARAM lParam)
 
 	//find
 	CDUIControlBase *pControl = m_pCaptureCtrl;
-	NULL == pControl ? pControl = FindControlByWheel(pt, (int)(short)HIWORD(wParam)) : NULL;
+	NULL == pControl ? pControl = FindControl(pt) : NULL;
 	
 	if (pControl)
 	{
@@ -3000,7 +2993,7 @@ CDUIControlBase * CALLBACK CDUIWndManager::__FindControlFromShortcut(CDUIControl
 {
 	if (false == pThis->IsVisible()) return NULL;
 
-	DUIFindShortCut *pFindShortCut = static_cast<DUIFindShortCut*>(pData);
+	DuiFindShortCut *pFindShortCut = static_cast<DuiFindShortCut*>(pData);
 	if (pFindShortCut->chChar == toupper(pThis->GetShortcut())) return pThis;
 
 	return NULL;
@@ -3018,12 +3011,6 @@ CDUIControlBase * CALLBACK CDUIWndManager::__FindControlFromID(CDUIControlBase *
 	UINT uCtrlID = pThis->GetCtrlID();
 
 	return (uFindID == uCtrlID) ? pThis : NULL;
-}
-
-CDUIControlBase * CALLBACK CDUIWndManager::__FindControlFromWheel(CDUIControlBase *pThis, LPVOID pData)
-{
-	LPPOINT pPoint = static_cast<LPPOINT>(pData);
-	return ::PtInRect(&pThis->GetAbsoluteRect(), *pPoint) ? pThis : NULL;
 }
 
 CDUIControlBase * CALLBACK CDUIWndManager::__FindControlsFromClass(CDUIControlBase *pThis, LPVOID pData)

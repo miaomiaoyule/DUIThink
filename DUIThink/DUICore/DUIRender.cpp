@@ -1586,7 +1586,7 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor/* = 0*
 	return hBmpClone;
 }
 
-Bitmap *CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap)
+Bitmap *CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB)
 {
 	BITMAP bmp = {};
 	if (GetObject(hBitmap, sizeof(BITMAP), &bmp) == 0) return NULL;
@@ -1610,12 +1610,13 @@ Bitmap *CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap)
 
 	if (cbCopied == 0) return NULL;
 
-	Bitmap *pBitmap = new Bitmap(bmp.bmWidth, bmp.bmHeight, PixelFormat32bppPARGB);
+	Gdiplus::PixelFormat PixelFormat = bPARGB ? PixelFormat32bppPARGB : PixelFormat32bppARGB;
+	Bitmap *pBitmap = new Bitmap(bmp.bmWidth, bmp.bmHeight, PixelFormat);
 	if (NULL == pBitmap) return NULL;
 
 	BitmapData bitmapData;
 	Rect rect(0, 0, bmp.bmWidth, bmp.bmHeight);
-	if (Ok != pBitmap->LockBits(&rect, ImageLockModeRead | ImageLockModeWrite, PixelFormat32bppPARGB, &bitmapData))
+	if (Ok != pBitmap->LockBits(&rect, ImageLockModeRead | ImageLockModeWrite, PixelFormat, &bitmapData))
 	{
 		MMSafeDelete(pBitmap);
 

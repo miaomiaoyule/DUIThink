@@ -75,8 +75,6 @@ class CDUIScrollBarCtrl;
 #define DuiFind_TopFirst				0x00000010
 #define DuiFind_ThisView				0x00000020
 #define DuiFind_MeFirst					0x00000040
-#define DuiFind_WheelUp					0x00000080
-#define DuiFind_WheelDown				0x00000100
 
 //////////////////////////////////////////////////////////////////////////
 #define DuiDpiScaleCtrl(x)				(m_pWndManager ? m_pWndManager->GetDpiObj().Scale(x) : (x))

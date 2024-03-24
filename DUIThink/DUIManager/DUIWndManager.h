@@ -19,7 +19,7 @@ typedef struct tagDuiTimerInfo
 typedef struct tagDuiFindShortCut
 {
 	TCHAR								chChar = 0;
-} DUIFindShortCut;
+} DuiFindShortCut;
 
 typedef std::vector<DUITimerInfo> VecDuiTimerInfo;
 
@@ -282,7 +282,6 @@ public:
 	CDUIControlBase * FindControl(UINT uCtrlID) const;
 	CDUIControlBase * FindControlByShortCut(TCHAR chChar) const;
 	CDUIControlBase * FindControlByDrop(POINT pt) const;
-	CDUIControlBase * FindControlByWheel(POINT pt, int nWheelDelta = WHEEL_DELTA) const;
 	CDUIControlBase * FindSubControlByPoint(CDUIContainerCtrl *pParent, POINT pt);
 	CDUIControlBase * FindSubControlByID(CDUIContainerCtrl *pParent, UINT uCtrlID);
 	VecDuiControlBase FindSubControlsByClass(CDUIContainerCtrl *pParent, LPCTSTR pstrClass);
@@ -375,7 +374,6 @@ private:
 	static CDUIControlBase * CALLBACK __FindControlFromShortcut(CDUIControlBase *pThis, LPVOID pData);
 	static CDUIControlBase * CALLBACK __FindControlFromDrop(CDUIControlBase *pThis, LPVOID pData);
 	static CDUIControlBase * CALLBACK __FindControlFromID(CDUIControlBase *pThis, LPVOID pData);
-	static CDUIControlBase * CALLBACK __FindControlFromWheel(CDUIControlBase *pThis, LPVOID pData);
 	static CDUIControlBase * CALLBACK __FindControlsFromClass(CDUIControlBase *pThis, LPVOID pData);
 	static CDUIControlBase * CALLBACK __FindControlsFromUpdate(CDUIControlBase *pThis, LPVOID pData);
 

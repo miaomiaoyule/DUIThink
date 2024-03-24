@@ -57,7 +57,7 @@ public:
 	static HBITMAP GenerateBitmap(CDUIWndManager *pManager, CDUIControlBase *pControl, const CDUIRect &rcItem, DWORD dwFilterColor = 0);
 	static HBITMAP CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFilterColor = 0);
 	static HBITMAP CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor = 0);
-	static Bitmap * GetAlphaBitmap(HBITMAP hBitmap);
+	static Bitmap * GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB = true);
 	static bool SaveImage(HBITMAP hBitmap, CMMString strFile, enDuiSaveImageType SaveImageType = SaveImage_Png, bool bAlpahImage = false);
 
 	//alpha help

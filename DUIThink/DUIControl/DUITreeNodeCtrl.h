@@ -140,7 +140,6 @@ public:
 	//message
 protected:
 	bool OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg) override;
-	bool OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg) override;
 
 	//property
 protected:

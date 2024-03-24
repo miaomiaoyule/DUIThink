@@ -968,19 +968,6 @@ bool CDUITreeNodeCtrl::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Ms
 	return __super::OnDuiLButtonDlk(pt, Msg);
 }
 
-bool CDUITreeNodeCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg)
-{
-	__super::OnDuiMouseWheel(pt, Msg);
-
-	CDUITreeViewCtrl *pRootView = GetRootView();
-	if (pRootView)
-	{
-		pRootView->OnDuiMouseWheel(pt, Msg);
-	}
-
-	return true;
-}
-
 void CDUITreeNodeCtrl::InitComplete()
 {
 	//find
