@@ -724,14 +724,14 @@ void CDUIListItemCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Ms
 
 bool CDUIListItemCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	__super::OnDuiMouseWheel(pt, Msg);
+	bool bRes = __super::OnDuiMouseWheel(pt, Msg);
 
 	if (m_pOwner)
 	{
-		m_pOwner->OnDuiMouseWheel(pt, Msg);
+		return m_pOwner->OnDuiMouseWheel(pt, Msg);
 	}
 
-	return true;
+	return bRes;
 }
 
 bool CDUIListItemCtrl::OnDuiSetFocus()

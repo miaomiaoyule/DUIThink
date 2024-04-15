@@ -1387,6 +1387,10 @@ bool CDUIContainerCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 		MsgCopy.pMsgCtrl = m_pHorizScrollBarCtrl;
 		MsgCopy.pMsgCtrl->OnDuiMouseWheel(pt, Msg);
 	}
+	else
+	{
+		return __super::OnDuiMouseWheel(pt, Msg);
+	}
 
 	__super::OnDuiMouseWheel(pt, Msg);
 

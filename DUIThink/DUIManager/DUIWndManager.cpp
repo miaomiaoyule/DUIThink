@@ -2419,13 +2419,22 @@ LRESULT CDUIWndManager::OnDuiMouseWheel(WPARAM wParam, LPARAM lParam)
 		DuiMsg.pMsgCtrl = m_pEventCtrl;
 		bool bRes = DuiMsg.pMsgCtrl->OnDuiMouseWheel(pt, DuiMsg);
 
-		Dui_Dispatch_ModelMouseEvent(m_pEventCtrl, OnDuiMouseWheel, pt, DuiMsg, false);
-
-		if (false == bRes
-			&& NULL == m_pEventCtrl->GetOwnerModelCtrl()
-			&& m_pEventCtrl->GetParent())
+		if (false == bRes)
 		{
-			m_pEventCtrl->GetParent()->OnDuiMouseWheel(pt, DuiMsg);
+			while (m_pEventCtrl = m_pEventCtrl->GetParent())
+			{
+				if (m_pEventCtrl
+					&& m_pEventCtrl->IsEnabled()
+					&& false == m_pEventCtrl->IsMouseThrough()
+					&& ((m_pEventCtrl->GetHorizScrollBar() && m_pEventCtrl->GetHorizScrollBar()->IsVisible())
+						|| (m_pEventCtrl->GetVertScrollBar() && m_pEventCtrl->GetVertScrollBar()->IsVisible())))
+				{
+					DuiMsg.pMsgCtrl = m_pEventCtrl;
+					DuiMsg.pMsgCtrl->OnDuiMouseWheel(pt, DuiMsg);
+
+					break;
+				}
+			}
 		}
 	}
 
