@@ -178,7 +178,7 @@ public:
 	// Parameter: 	CMMString strSrc Àý£ºC:\user\desktop\test.txt C:\user\desktop\test
 	// Parameter: 	CMMString strDest Àý£ºD:\user\desktop\test.txt D:\user\desktop\test
 	//************************************
-	static bool OperatorFileOrFolder(CMMString strSrc, CMMString strDest, int nOperator = FO_COPY, bool bUI = false, bool bMultiFile = false);
+	static bool OperatorFileOrFolder(CMMString strSrc, CMMString strDest, int nOperator = FO_COPY, bool bUI = false, bool bMultiFile = false, bool bSameDir = false);
 };
 
 //////////////////////////////////////////////////////////////////////////

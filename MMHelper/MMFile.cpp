@@ -914,7 +914,7 @@ bool CMMFile::OpenFolderAndSelectFile(CMMString strFileFull)
 	return SUCCEEDED(hRes);
 }
 
-bool CMMFile::OperatorFileOrFolder(CMMString strSrc, CMMString strDest, int nOperator, bool bUI, bool bMultiFile)
+bool CMMFile::OperatorFileOrFolder(CMMString strSrc, CMMString strDest, int nOperator, bool bUI, bool bMultiFile, bool bSameDir)
 {
 	strSrc += _T('\0');
 	strDest += _T('\0');
@@ -929,6 +929,7 @@ bool CMMFile::OperatorFileOrFolder(CMMString strSrc, CMMString strDest, int nOpe
 	//如果涉及到比较敏感的内容，尽量使用SecureZeroMemory函数。
 
 	FileOp.fFlags = FOF_ALLOWUNDO;
+	FileOp.fFlags |= (bSameDir ? FOF_RENAMEONCOLLISION : 0);
 	FileOp.fFlags |= (bMultiFile ? FOF_MULTIDESTFILES : 0);
 	FileOp.fFlags |= (bUI ? 0 : (FOF_NOCONFIRMATION | FOF_NO_UI | FOF_NOCONFIRMMKDIR));
 	FileOp.hNameMappings = NULL;							//文件映射
