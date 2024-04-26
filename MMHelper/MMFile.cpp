@@ -301,7 +301,7 @@ enMMFileType CMMFile::ParseFileType(LPCTSTR lpszFile)
 	//ext
 	CMMString strName, strExt;
 	ParseFileName(strFile, strName, strExt);
-	if (strExt.GetLength() > 0)
+	if (strExt.length() > 0)
 	{
 		return FileTypeMap::GetInstance()[strExt];
 	}
@@ -330,11 +330,11 @@ bool CMMFile::ParseFileName(LPCTSTR lpszFileName, CMMString &strName, CMMString 
 	CMMString strFile = lpszFileName;
 	strFile.Trim(_T('\\'));
 	strFile.Trim(_T('/'));
-	int nPos = strFile.ReverseFind(_T('\\'));
-	nPos = max(strFile.ReverseFind(_T('/')), nPos);
+	int nPos = strFile.rfind(_T('\\'));
+	nPos = max(strFile.rfind(_T('/')), nPos);
 
-	CMMString strFileName = strFile.Right(strFile.GetLength() - nPos - 1);
-	nPos = strFileName.ReverseFind(_T('.'));
+	CMMString strFileName = strFile.Right(strFile.length() - nPos - 1);
+	nPos = strFileName.rfind(_T('.'));
 	if (nPos == -1)
 	{
 		strName = strFileName;
@@ -342,15 +342,15 @@ bool CMMFile::ParseFileName(LPCTSTR lpszFileName, CMMString &strName, CMMString 
 	}
 
 	strName = strFileName.Left(nPos);
-	strExt = strFileName.Right(strFileName.GetLength() - nPos - 1);
+	strExt = strFileName.Right(strFileName.length() - nPos - 1);
 
 	return true;
 }
 
 bool CMMFile::ParseFilePathName(LPCTSTR lpszFileFull, CMMString &strPath, CMMString &strName)
 {
-	strPath.Empty();
-	strName.Empty();
+	strPath.clear();
+	strName.clear();
 
 	if (NULL == lpszFileFull) return false;
 
@@ -358,8 +358,8 @@ bool CMMFile::ParseFilePathName(LPCTSTR lpszFileFull, CMMString &strPath, CMMStr
 	strFile.Trim(_T('\\'));
 	strFile.Trim(_T('/'));
 	strFile.Replace(_T('/'), _T('\\'));
-	int nPos = strFile.ReverseFind(_T('\\'));
-	nPos = max(strFile.ReverseFind(_T('/')), nPos);
+	int nPos = strFile.rfind(_T('\\'));
+	nPos = max(strFile.rfind(_T('/')), nPos);
 
 	//no path
 	if (-1 == nPos)
@@ -369,7 +369,7 @@ bool CMMFile::ParseFilePathName(LPCTSTR lpszFileFull, CMMString &strPath, CMMStr
 	}
 
 	strPath = strFile.Left(nPos + 1);
-	strName = strFile.Right(strFile.GetLength() - nPos - 1);
+	strName = strFile.Right(strFile.length() - nPos - 1);
 
 	return true;
 }
@@ -441,7 +441,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 {
 	//path
 	CMMString strFile = lpszFileFull;
-	if (strFile.GetLength() < 2 || _T(':') != strFile[1])
+	if (strFile.length() < 2 || _T(':') != strFile[1])
 	{
 		strFile = CMMService::GetWorkDirectory() + _T('\\') + strFile;
 	}
@@ -707,7 +707,7 @@ std::vector<CMMString> CMMFile::GetFolderOfDir(IN LPCTSTR lpszDirFull)
 	do
 	{
 		CMMString strFile = FindData.cFileName;
-		if (strFile.IsEmpty() || _T(".") == strFile || _T("..") == strFile) continue;
+		if (strFile.empty() || _T(".") == strFile || _T("..") == strFile) continue;
 
 		//path
 		if (FILE_ATTRIBUTE_DIRECTORY & FindData.dwFileAttributes)
@@ -744,7 +744,7 @@ std::vector<CMMString> CMMFile::GetFileOfDir(IN LPCTSTR lpszDirFull)
 	do
 	{
 		CMMString strFile = FindData.cFileName;
-		if (strFile.IsEmpty() || _T(".") == strFile || _T("..") == strFile) continue;
+		if (strFile.empty() || _T(".") == strFile || _T("..") == strFile) continue;
 
 		//path
 		if (0 == (FILE_ATTRIBUTE_DIRECTORY & FindData.dwFileAttributes))
@@ -781,7 +781,7 @@ std::vector<CMMString> CMMFile::GetFilesOfDir(IN LPCTSTR lpszDirFull)
 	do
 	{
 		CMMString strFile = FindData.cFileName;
-		if (strFile.IsEmpty() || _T(".") == strFile || _T("..") == strFile) continue;
+		if (strFile.empty() || _T(".") == strFile || _T("..") == strFile) continue;
 
 		vecFiles.push_back(strFile);
 
@@ -820,7 +820,7 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 				strDataA.Insert(0, strSign);
 			}
 
-			fwrite(strDataA.GetBuffer(), strDataA.GetLength(), 1, pFile);
+			fwrite(strDataA, strDataA.GetLength(), 1, pFile);
 			
 			break;
 		}
@@ -831,13 +831,13 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 			if (bClearOld)
 			{
 				CMMString strSign;
-				strSign.GetBufferSetLength(2);
-				strSign.SetAt(0, 0xFF);
-				strSign.SetAt(1, 0xFE);
-				strFileData.Insert(0, strSign);
+				strSign.resize(2);
+				strSign[0] = 0xFF;
+				strSign[1] = 0xFE;
+				strFileData.insert(0, strSign);
 			}
 
-			fwrite(strFileData.GetBuffer(), strFileData.GetLength() * sizeof(TCHAR), 1, pFile);
+			fwrite(strFileData, strFileData.length() * sizeof(TCHAR), 1, pFile);
 
 			break;
 		}
@@ -850,7 +850,7 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 		{
 			CMMStringA strDataA = CT2CA(strData);
 
-			fwrite(strDataA.GetBuffer(), strDataA.GetLength(), 1, pFile);
+			fwrite(strDataA, strDataA.GetLength(), 1, pFile);
 
 			break;
 		}
@@ -866,8 +866,8 @@ bool CMMFile::RemoveFileByHasName(CMMString strPath, CMMString strHasName)
 {
 	if (false == PathFileExists(strPath)) return false;
 
-	if (strPath[strPath.GetLength() - 1] != _T('/')
-		&& strPath[strPath.GetLength() - 1] != _T('\\'))
+	if (strPath[strPath.length() - 1] != _T('/')
+		&& strPath[strPath.length() - 1] != _T('\\'))
 	{
 		strPath += _T('\\');
 	}
@@ -881,9 +881,9 @@ bool CMMFile::RemoveFileByHasName(CMMString strPath, CMMString strHasName)
 	do
 	{
 		CMMString strFile = FindData.cFileName;
-		if (strFile.IsEmpty() || _T(".") == strFile || _T("..") == strFile)continue;
+		if (strFile.empty() || _T(".") == strFile || _T("..") == strFile)continue;
 
-		if (-1 != strFile.Find(strHasName))
+		if (-1 != strFile.find(strHasName))
 		{
 			DeleteFile(strPath + strFile);
 		}

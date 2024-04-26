@@ -163,7 +163,7 @@ public:
 
     const char* GetStr();
 
-    bool Empty() const {
+    bool clear() const {
         return _start == _end;
     }
 
@@ -250,7 +250,7 @@ public:
         _size -= count;
     }
 
-    bool Empty() const					{
+    bool clear() const					{
         return _size == 0;
     }
 
@@ -354,7 +354,7 @@ public:
 
     void Clear() {
         // Delete the blocks.
-        while( !_blockPtrs.Empty()) {
+        while( !_blockPtrs.clear()) {
             Block* lastBlock = _blockPtrs.Pop();
             delete lastBlock;
         }

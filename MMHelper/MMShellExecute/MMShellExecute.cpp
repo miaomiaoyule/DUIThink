@@ -229,7 +229,7 @@ bool CMMShellExecute::OnSubOpenEx(PtrMsgMMShellExecuteOpenEx pRecvData)
 
 void CMMShellExecute::OnSubOpenPos(PtrMsgMMShellExecuteOpenPos pRecvData)
 {
-	if (NULL == pRecvData || pRecvData->strFile.IsEmpty()) return;
+	if (NULL == pRecvData || pRecvData->strFile.empty()) return;
 
 	PIDLIST_RELATIVE pidl;
 	LPCITEMIDLIST cpidl;
@@ -302,7 +302,7 @@ void CMMShellExecute::OnSubOpenPos(PtrMsgMMShellExecuteOpenPos pRecvData)
 
 void CMMShellExecute::OnSubOpenMode(PtrMsgMMShellExecuteOpenMode pRecvData)
 {
-	if (NULL == pRecvData || pRecvData->strFile.IsEmpty()) return;
+	if (NULL == pRecvData || pRecvData->strFile.empty()) return;
 
 	OPENASINFO info = { 0 };
 	info.pcszFile = pRecvData->strFile;

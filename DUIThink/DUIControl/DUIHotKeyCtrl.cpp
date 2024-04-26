@@ -228,7 +228,7 @@ LRESULT CDUIHotKeyWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			MMScreenToClient(rcWnd, m_pWndManagerOwner->GetWndHandle());
 			do
 			{
-				if (rcWnd.IsEmpty()) break;
+				if (rcWnd.empty()) break;
 
 				HBITMAP hBmpBk = CDUIRenderEngine::GenerateBitmap(m_pWndManagerOwner, m_pWndManagerOwner->GetRootCtrl(), rcWnd);
 				if (NULL == hBmpBk) break;

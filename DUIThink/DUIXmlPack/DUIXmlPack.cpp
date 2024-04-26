@@ -80,7 +80,7 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	//dui xml
 	for (auto &Item : mapWndManager)
 	{
-		if (Item.second.strName.IsEmpty() || Item.first->IsDesigned()) continue;
+		if (Item.second.strName.empty() || Item.first->IsDesigned()) continue;
 
 		SaveXmlUI(CDUIGlobal::GetInstance()->GetDuiFileFull(Item.second.strName), Item.first);
 	}
@@ -91,23 +91,23 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	vecResource.clear();
 	for (auto &ResImageItem : mapResImage) vecResource.push_back(ResImageItem.second);
 	CMMString strImageResFile = szPath + strImageRes;
-	SaveResource(strImageResFile.GetBuffer(), vecResource);
+	SaveResource(strImageResFile.c_str(), vecResource);
 
 	//FontRes
 	vecResource.clear();
 	for (auto &ResFontItem : mapResFont) vecResource.push_back(ResFontItem.second);
 	CMMString strFontResFile = szPath + strFontRes;
-	SaveResource(strFontResFile.GetBuffer(), vecResource);
+	SaveResource(strFontResFile.c_str(), vecResource);
 
 	//ColorRes
 	vecResource.clear();
 	for (auto &ResColorItem : mapResColor) vecResource.push_back(ResColorItem.second);
 	CMMString strColorResFile = szPath + strColorRes;
-	SaveResource(strColorResFile.GetBuffer(), vecResource);
+	SaveResource(strColorResFile.c_str(), vecResource);
 
 	//Attribute
 	CMMString strAttributeFile = szPath + strAttribute;
-	SaveAttribute(strAttributeFile.GetBuffer());
+	SaveAttribute(strAttributeFile.c_str());
 
 	//CtrlID
 	CMMString strCtrlIDFile = szPath + strCtrlID;
@@ -137,7 +137,7 @@ bool CDUIXmlPack::LoadProject(LPCTSTR lpszProject)
 		CMMString strError = xmlDoc.ErrorStr();
 
 		CMMString strWarning;
-		strWarning.Format(_T("加载Dui工程(%s)XML文件失败, cause[%s]"), strFile.GetBuffer(), strError.GetBuffer());
+		strWarning.Format(_T("加载Dui工程(%s)XML文件失败, cause[%s]"), strFile.c_str(), strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 		return false;
 	}
@@ -279,7 +279,7 @@ bool CDUIXmlPack::SaveResource(LPCTSTR lpszFile, VecDuiResourceBase &vecRes)
 		CMMString strError = xmlDoc.ErrorStr();
 
 		CMMString strWarning;
-		strWarning.Format(_T("保存资源(%s)XML文件失败, cause[%s]"), lpszFile, strError.GetBuffer());
+		strWarning.Format(_T("保存资源(%s)XML文件失败, cause[%s]"), lpszFile, strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 		return false;
 	}
@@ -301,7 +301,7 @@ bool CDUIXmlPack::LoadResource(LPCTSTR lpszFile)
 		CMMString strError = xmlDoc.ErrorStr();
 
 		CMMString strWarning;
-		strWarning.Format(_T("加载资源(%s)XML文件失败, cause[%s]"), lpszFile, strError.GetBuffer());
+		strWarning.Format(_T("加载资源(%s)XML文件失败, cause[%s]"), lpszFile, strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 		return false;
 	}
@@ -348,7 +348,7 @@ bool CDUIXmlPack::SaveAttribute(LPCTSTR lpszFile)
 		CMMString strError = xmlDoc.ErrorStr();
 
 		CMMString strWarning;
-		strWarning.Format(_T("保存资源(%s)XML文件失败, cause[%s]"), lpszFile, strError.GetBuffer());
+		strWarning.Format(_T("保存资源(%s)XML文件失败, cause[%s]"), lpszFile, strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 		return false;
 	}
@@ -370,7 +370,7 @@ bool CDUIXmlPack::LoadAttribute(LPCTSTR lpszFile)
 		CMMString strError = xmlDoc.ErrorStr();
 
 		CMMString strWarning;
-		strWarning.Format(_T("加载资源(%s)XML文件失败, cause[%s]"), lpszFile, strError.GetBuffer());
+		strWarning.Format(_T("加载资源(%s)XML文件失败, cause[%s]"), lpszFile, strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 		return false;
 	}
@@ -490,24 +490,24 @@ bool CDUIXmlPack::LoadCtrlID(LPCTSTR lpszFile)
 	CMMFile::GetFileData(lpszFile, strData);
 
 	//ctrl id
-	int nPosFrom = strData.Find(_T("\n#define"));
+	int nPosFrom = strData.find(_T("\n#define"));
 	do
 	{
 		if (-1 == nPosFrom) break;
 
 		TCHAR szCtrlID[MAX_PATH] = {};
 		UINT uCtrlID = 0;
-		int nScan = swscanf_s(strData.GetBuffer() + nPosFrom, _T("\n#define %[^\(](%u)"), szCtrlID, MAX_PATH, &uCtrlID);
+		int nScan = swscanf_s(strData.c_str() + nPosFrom, _T("\n#define %[^\(](%u)"), szCtrlID, MAX_PATH, &uCtrlID);
 		if (nScan <= 0) break;
 
 		CMMString strCtrlID = szCtrlID;
 		strCtrlID.Trim();
-		if (false == strCtrlID.IsEmpty() && uCtrlID > 0)
+		if (false == strCtrlID.empty() && uCtrlID > 0)
 		{
 			CDUIGlobal::GetInstance()->AddCtrlID(uCtrlID, strCtrlID);
 		}
 
-		nPosFrom = strData.Find(_T("\n#define"), nPosFrom + 1);
+		nPosFrom = strData.find(_T("\n#define"), nPosFrom + 1);
 
 	} while (true);
 
@@ -572,7 +572,7 @@ bool CDUIXmlPack::LoadDuiXml(LPCTSTR lpszFile, tinyxml2::XMLDocument &DuiXml)
 		CMMString strError = DuiXml.ErrorStr();
 
 		CMMString strWarning;
-		strWarning.Format(_T("解析xml[%s]失败, cause[%s]"), lpszFile, strError.GetBuffer());
+		strWarning.Format(_T("解析xml[%s]失败, cause[%s]"), lpszFile, strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 
 		return false;

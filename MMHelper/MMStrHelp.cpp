@@ -39,7 +39,7 @@ CMMString CMMStrHelp::Format(LPCTSTR lpszFmt, ...)
 	va_list args;
 	va_start(args, lpszFmt);
 
-	strRes.FormatV(lpszFmt, args);
+	strRes.Format(lpszFmt, args);
 
 	va_end(args);
 
@@ -73,16 +73,16 @@ SIZE CMMStrHelp::ParseSize(LPCTSTR lpszStr)
 std::vector<int> CMMStrHelp::ParseIntFromString(CMMString strString, CMMString strSplit)
 {
 	vector<int> vecInt;
-	if (strString.IsEmpty() || strSplit.IsEmpty()) return vecInt;
+	if (strString.empty() || strSplit.empty()) return vecInt;
 
-	int nIndex = strString.Find(strSplit, 0), nIndexArr = 0;
-	while (0 <= nIndex && nIndex <= strString.GetLength())
+	int nIndex = strString.find(strSplit, 0), nIndexArr = 0;
+	while (0 <= nIndex && nIndex <= strString.length())
 	{
 		CMMString strTemp = strString.Left(nIndex);
 
 		//È¥µô·ÇÊý×Ö×Ö·û
 		CMMString strNum;
-		for (int nIndexTemp = 0; nIndexTemp < strTemp.GetLength(); nIndexTemp++)
+		for (int nIndexTemp = 0; nIndexTemp < strTemp.length(); nIndexTemp++)
 		{
 			if (_T('0') <= strTemp[nIndexTemp] && strTemp[nIndexTemp] <= _T('9'))
 			{
@@ -91,14 +91,14 @@ std::vector<int> CMMStrHelp::ParseIntFromString(CMMString strString, CMMString s
 		}
 
 		//»ñµÃID
-		vecInt.push_back(_ttoi(strNum.GetBuffer(0)));
+		vecInt.push_back(_ttoi(strNum));
 
 		//ÏÂ¸ö×Ö·û¶Î
-		strString = strString.GetBuffer(nIndex + 1);
-		nIndex = strString.Find(strSplit, 0);
+		strString = strString.Mid(nIndex + 1);
+		nIndex = strString.find(strSplit, 0);
 
 		//Ê£Óà×Ö·û
-		if (-1 == nIndex && strString.GetLength() > 0) nIndex = strString.GetLength();
+		if (-1 == nIndex && strString.length() > 0) nIndex = strString.length();
 	}
 
 	return vecInt;
@@ -107,15 +107,15 @@ std::vector<int> CMMStrHelp::ParseIntFromString(CMMString strString, CMMString s
 std::vector<CMMString> CMMStrHelp::ParseStrFromString(CMMString strString, CMMString strSplit)
 {
 	std::vector<CMMString> vecResult;
-	int pos = strString.Find(strSplit, 0);
+	int pos = strString.find(strSplit, 0);
 	while (pos >= 0)
 	{
 		vecResult.push_back(strString.Left(pos));
-		strString = strString.Right(strString.GetLength() - pos - strSplit.GetLength());
-		pos = strString.Find(strSplit);
+		strString = strString.Right(strString.length() - pos - strSplit.length());
+		pos = strString.find(strSplit);
 	}
 
-	if (false == strString.IsEmpty())
+	if (false == strString.empty())
 	{
 		vecResult.push_back(strString);
 	}

@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////
 uint32_t CMMHash::GetHash(CMMString &str)
 {
-	return MM_Fnv1a_append_bytes(MM_FNV_offset_basis, (const unsigned char*)str.GetBuffer(), sizeof(TCHAR) * str.GetLength());
+	return MM_Fnv1a_append_bytes(MM_FNV_offset_basis, (const unsigned char*)str.c_str(), sizeof(TCHAR) * str.length());
 }
 
 uint32_t CMMHash::GetHash(LPCSTR lpszStr)

@@ -329,14 +329,14 @@ CDUISize CDUIThinkEditCtrl::MeasureString(VecDuiRichTextBase vecRichTextBase)
 		//text
 		if (RichTextItem_Text == RichTextBase.ItemType)
 		{
-			for (int n = 0; n < RichTextBase.strText.GetLength(); n++)
+			for (int n = 0; n < RichTextBase.strText.length(); n++)
 			{
 				vecRichTextItem.push_back(tagDuiRichTextItem());
 				vecRichTextItem.back().strText = RichTextBase.strText[n];
 			}
 		}
 		//image
-		else if (RichTextItem_Image == RichTextBase.ItemType && false == RichTextBase.strImageResName.IsEmpty())
+		else if (RichTextItem_Image == RichTextBase.ItemType && false == RichTextBase.strImageResName.empty())
 		{
 			vecRichTextItem.push_back(RichTextBase);
 		}
@@ -361,10 +361,10 @@ bool CDUIThinkEditCtrl::SetText(LPCTSTR lpszText)
 	tagDuiTextStyle TextStyle = GetTextStyle();
 	VecDuiRichTextItem vecRichTextItem;
 	CMMString strText = __super::GetText();
-	for (int n = 0; n < strText.GetLength(); n++)
+	for (int n = 0; n < strText.length(); n++)
 	{
 		int nEmoji = CDUIGlobal::IsEmoji(strText[n]);
-		CMMString strTextSub = CMMString(strText.GetBuffer() + n, max(1, nEmoji));
+		CMMString strTextSub = CMMString(strText.c_str() + n, max(1, nEmoji));
 		nEmoji > 0 ? n += (nEmoji - 1) : 0;
 
 		vecRichTextItem.push_back(tagDuiRichTextItem());
@@ -398,7 +398,7 @@ bool CDUIThinkEditCtrl::SetRichTextItem(const VecDuiRichTextItem &vecRichTextIte
 		//text
 		if (RichTextItem_Text == RichTextItem.ItemType)
 		{
-			if (RichTextItem.strText.IsEmpty()) continue;
+			if (RichTextItem.strText.empty()) continue;
 
 			if (false == IsRichEdit() || RichTextItem.vecFontResSwitch.empty())
 			{
@@ -408,10 +408,10 @@ bool CDUIThinkEditCtrl::SetRichTextItem(const VecDuiRichTextItem &vecRichTextIte
 			{
 				RichTextItem.vecColorResSwitch = TextStyle.vecColorResSwitch;
 			}
-			for (int n = 0; n < RichTextItem.strText.GetLength(); n++)
+			for (int n = 0; n < RichTextItem.strText.length(); n++)
 			{
 				int nEmoji = CDUIGlobal::IsEmoji(RichTextItem.strText[n]);
-				CMMString strTextSub = CMMString(RichTextItem.strText.GetBuffer() + n, max(1, nEmoji));
+				CMMString strTextSub = CMMString(RichTextItem.strText.c_str() + n, max(1, nEmoji));
 				nEmoji > 0 ? n += (nEmoji - 1) : 0;
 
 				vecRichTextItemAdjust.push_back(tagDuiRichTextItem());
@@ -422,7 +422,7 @@ bool CDUIThinkEditCtrl::SetRichTextItem(const VecDuiRichTextItem &vecRichTextIte
 			}
 		}
 		//image
-		else if (RichTextItem_Image == RichTextItem.ItemType && false == RichTextItem.strImageResName.IsEmpty())
+		else if (RichTextItem_Image == RichTextItem.ItemType && false == RichTextItem.strImageResName.empty())
 		{
 			vecRichTextItemAdjust.push_back(RichTextItem);
 		}
@@ -882,7 +882,7 @@ CDUIRect CDUIThinkEditCtrl::GetSelectRange()
 
 		for (int nColumn = nColumnPre; nColumn < nColumnNext && nColumn < LineVecRichTextDraw.size(); nColumn++)
 		{
-			if (rcRange.IsEmpty()) rcRange = LineVecRichTextDraw[nColumn].rcDraw;
+			if (rcRange.empty()) rcRange = LineVecRichTextDraw[nColumn].rcDraw;
 
 			rcRange.left = min(rcRange.left, LineVecRichTextDraw[nColumn].rcDraw.left);
 			rcRange.top = min(rcRange.top, LineVecRichTextDraw[nColumn].rcDraw.top);
@@ -960,7 +960,7 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszReplace, CMMString strImageRes
 	//history
 	tagDuiThinkEditHistory History = {};
 	History.bAdd = true;
-	History.ItemType = strImageResName.IsEmpty() ? RichTextItem_Text : RichTextItem_Image;
+	History.ItemType = strImageResName.empty() ? RichTextItem_Text : RichTextItem_Image;
 	History.nCaretRowPre = m_nCaretRow;
 	History.nCaretColumnPre = m_nCaretColumn;
 	History.strText = lpszReplace;
@@ -1581,7 +1581,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	::EnableMenuItem(hPopMenu, ID_MENU_UNDO, MF_BYCOMMAND | uUndo);
 	UINT uRedo = (CanRedo() ? 0 : MF_GRAYED);
 	EnableMenuItem(hPopMenu, ID_MENU_REDO, MF_BYCOMMAND | uRedo);
-	UINT uSel = (GetSelectString().IsEmpty()) ? MF_GRAYED : 0;
+	UINT uSel = (GetSelectString().empty()) ? MF_GRAYED : 0;
 	UINT uReadonly = IsReadOnly() ? MF_GRAYED : 0;
 	EnableMenuItem(hPopMenu, ID_MENU_CUT, MF_BYCOMMAND | uSel | uReadonly);
 	EnableMenuItem(hPopMenu, ID_MENU_COPY, MF_BYCOMMAND | uSel);
@@ -1667,9 +1667,9 @@ LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 	{
 		int nLen = ImmGetCompositionString(hImc, GCS_COMPSTR, NULL, NULL);
 		strBuff = CMMString(_T('\0'), nLen + 1);
-		ImmGetCompositionString(hImc, GCS_COMPSTR, strBuff.GetBuffer(), strBuff.GetLength());
+		ImmGetCompositionString(hImc, GCS_COMPSTR, strBuff.GetBuffer(), strBuff.length());
 		
-		for (int n = 0; n < strBuff.GetLength(); n++)
+		for (int n = 0; n < strBuff.length(); n++)
 		{
 			if (CDUIGlobal::IsEmoji(strBuff[n]) > 0)
 			{
@@ -1747,7 +1747,7 @@ void CDUIThinkEditCtrl::InitComplete()
 	tagDuiTextStyle TextStyle = GetTextStyle();
 	CMMString strText = GetText();
 	m_vecRichTextItem.clear();
-	for (int n = 0; n < strText.GetLength(); n++)
+	for (int n = 0; n < strText.length(); n++)
 	{
 		m_vecRichTextItem.push_back(tagDuiRichTextItem());
 		m_vecRichTextItem.back().strText = strText[n];
@@ -1799,8 +1799,8 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 		pAttribute = &m_AttributeTextStyleNormal;
 	}
 
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
 	if (NULL == pAttribute) return;
 
 	tagDuiTextStyle TextStyle = pAttribute->GetTextStyle();
@@ -1808,10 +1808,10 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 	RichTextInfo.dwTextStyle = TextStyle.dwTextStyle;
 
 	//tiptext
-	if (m_vecRichTextItem.empty() && false == strTipText.IsEmpty())
+	if (m_vecRichTextItem.empty() && false == strTipText.empty())
 	{
 		RichTextInfo.vecRichTextItem.clear();
-		for (int n = 0; n < strTipText.GetLength(); n++)
+		for (int n = 0; n < strTipText.length(); n++)
 		{
 			RichTextInfo.vecRichTextItem.push_back(tagDuiRichTextItem());
 			RichTextInfo.vecRichTextItem.back().vecFontResSwitch = TextStyle.vecFontResSwitch;
@@ -1847,7 +1847,7 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 		{
 			for (auto &RichTextItem : RichTextInfo.vecRichTextItem)
 			{
-				RichTextItem.strText = CMMString(GetPasswordChar(), RichTextItem.strText.GetLength());
+				RichTextItem.strText = CMMString(GetPasswordChar(), RichTextItem.strText.length());
 			}
 		}
 
@@ -1927,7 +1927,7 @@ void CDUIThinkEditCtrl::PaintSelectBk(HDC hDC)
 			}
 		}
 
-		if (rcRow.IsEmpty()) continue;
+		if (rcRow.empty()) continue;
 
 		m_AttributeColorSelect.FillRect(hDC, rcRow, IsColorHSL());
 		m_AttributeImageSelect.Draw(hDC, rcRow, m_rcPaint);
@@ -2005,7 +2005,7 @@ void CDUIThinkEditCtrl::PerformMeasureString(IN LPCTSTR lpszText, IN tagDuiTextS
 	VecDuiRichTextItem vecRichTextItem;
 
 	CMMString strText = lpszText;
-	for (int n = 0; n < strText.GetLength(); n++)
+	for (int n = 0; n < strText.length(); n++)
 	{
 		vecRichTextItem.push_back(tagDuiRichTextItem());
 		vecRichTextItem.back().strText = IsPasswordMode() ? GetPasswordChar() : strText[n];
@@ -2438,7 +2438,7 @@ void CDUIThinkEditCtrl::PerformCalcSelect(OUT int &nRowFrom, OUT int &nColumnFro
 
 void CDUIThinkEditCtrl::PerformAddHistory(tagDuiThinkEditHistory History)
 {
-	if (History.strText.IsEmpty()) return;
+	if (History.strText.empty()) return;
 
 	//index
 	if (m_nIndexHistory < 0 || m_nIndexHistory >= m_queHistory.size())
@@ -2452,7 +2452,7 @@ void CDUIThinkEditCtrl::PerformAddHistory(tagDuiThinkEditHistory History)
 	}
 
 	//add
-	if (false == History.strText.IsEmpty())
+	if (false == History.strText.empty())
 	{
 		m_queHistory.push_back(History);
 		m_nIndexHistory++;
@@ -2474,7 +2474,7 @@ void CDUIThinkEditCtrl::PerformActiveHistory(tagDuiThinkEditHistory History, boo
 	{
 		SetCaretPos(History.nCaretRowNext, History.nCaretColumnNext);
 
-		for (int n = 0; n < History.strText.GetLength(); n++)
+		for (int n = 0; n < History.strText.length(); n++)
 		{
 			PerformMoveCaretHoriz(true, true, false);
 		}

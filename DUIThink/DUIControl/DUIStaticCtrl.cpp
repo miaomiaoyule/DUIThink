@@ -208,7 +208,7 @@ void CDUIStaticCtrl::SetAutoCalcHeight(bool bAutoCalcHeight)
 
 CDUISize CDUIStaticCtrl::MeasureString(LPCTSTR lpszText)
 {
-	if (false == m_AttributeRichText.IsEmpty())
+	if (false == m_AttributeRichText.empty())
 	{
 		return  m_AttributeRichText.MeasureString();
 	}
@@ -392,7 +392,7 @@ void CDUIStaticCtrl::PaintText(HDC hDC)
 	CDUIRect rcRange = GetTextRange();
 
 	//richtext
-	if (false == m_AttributeRichText.IsEmpty())
+	if (false == m_AttributeRichText.empty())
 	{
 		m_AttributeRichText.Draw(hDC, rcRange, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
 
@@ -401,7 +401,7 @@ void CDUIStaticCtrl::PaintText(HDC hDC)
 
 	//text
 	CMMString strText = GetText();
-	if (strText.IsEmpty()) return;
+	if (strText.empty()) return;
 
 	m_AttributeTextStyle.Draw(hDC, rcRange, strText, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), IsShadowText());
 

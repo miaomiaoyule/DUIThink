@@ -46,7 +46,7 @@
 //	return;
 //}
 //
-//int CMMString::GetLength() const
+//int CMMString::length() const
 //{
 //	return m_lpszStr ? (int)_tcslen(m_lpszStr) : 0;
 //}
@@ -60,7 +60,7 @@
 //{
 //	if (NULL == lpszStr) return;
 //
-//	return Insert(GetLength(), lpszStr);
+//	return Insert(length(), lpszStr);
 //}
 //
 //void CMMString::Assign(LPCTSTR lpszStr, int cchMax)
@@ -68,7 +68,7 @@
 //	if (lpszStr == NULL) lpszStr = _T("");
 //	cchMax = (cchMax < 0 ? (int)_tcslen(lpszStr) : cchMax);
 //
-//	if (cchMax > GetLength() || NULL == m_lpszStr)
+//	if (cchMax > length() || NULL == m_lpszStr)
 //	{
 //		m_lpszStr = static_cast<LPTSTR>(realloc(m_lpszStr, (cchMax + 1) * sizeof(TCHAR)));
 //		memset(m_lpszStr, 0, (cchMax + 1) * sizeof(TCHAR));
@@ -90,24 +90,24 @@
 //	if (nPos < 0 || NULL == lpszStr) return;
 //
 //	nPos = max(0, nPos);
-//	nPos = min(GetLength(), nPos);
+//	nPos = min(length(), nPos);
 //	int nLenAdd = (int)_tcslen(lpszStr);
-//	int nLenStr = GetLength();
+//	int nLenStr = length();
 //	int nNewLength = nLenStr + nLenAdd;
 //	m_lpszStr = static_cast<LPTSTR>(realloc(m_lpszStr, (nNewLength + 1) * sizeof(TCHAR)));
 //	memset(m_lpszStr + nLenStr, 0, sizeof(TCHAR) * (nLenAdd + 1));
-//	CopyMemory(m_lpszStr + nPos + nLenAdd, m_lpszStr + nPos, (GetLength() - nPos) * sizeof(TCHAR));
+//	CopyMemory(m_lpszStr + nPos + nLenAdd, m_lpszStr + nPos, (length() - nPos) * sizeof(TCHAR));
 //	CopyMemory(m_lpszStr + nPos, lpszStr, nLenAdd * sizeof(TCHAR));
 //
 //	return;
 //}
 //
-//bool CMMString::IsEmpty() const
+//bool CMMString::empty() const
 //{
 //	return NULL == m_lpszStr || m_lpszStr[0] == '\0';
 //}
 //
-//void CMMString::Empty()
+//void CMMString::clear()
 //{
 //	if (m_lpszStr) free(m_lpszStr);
 //
@@ -121,7 +121,7 @@
 //{
 //	if (NULL == m_lpszStr) return NULL;
 //
-//	nLength = max(0, min(nLength, GetLength()));
+//	nLength = max(0, min(nLength, length()));
 //
 //	return m_lpszStr + nLength;
 //}
@@ -141,7 +141,7 @@
 //
 //void CMMString::SetAt(int nIndex, TCHAR ch)
 //{
-//	assert(nIndex >= 0 && nIndex < GetLength());
+//	assert(nIndex >= 0 && nIndex < length());
 //	m_lpszStr[nIndex] = ch;
 //}
 //
@@ -165,7 +165,7 @@
 //	}
 //	else
 //	{
-//		Empty();
+//		clear();
 //	}
 //
 //	return *this;
@@ -185,7 +185,7 @@
 //	}
 //	else
 //	{
-//		Empty();
+//		clear();
 //	}
 //
 //	return *this;
@@ -219,7 +219,7 @@
 //	}
 //	else
 //	{
-//		Empty();
+//		clear();
 //	}
 //
 //	return *this;
@@ -334,25 +334,25 @@
 //CMMString CMMString::Left(int iLength) const
 //{
 //	if (iLength < 0) iLength = 0;
-//	if (iLength > GetLength()) iLength = GetLength();
+//	if (iLength > length()) iLength = length();
 //	return CMMString(m_lpszStr, iLength);
 //}
 //
 //CMMString CMMString::Mid(int iPos, int iLength) const
 //{
-//	if (iLength < 0) iLength = GetLength() - iPos;
-//	if (iPos + iLength > GetLength()) iLength = GetLength() - iPos;
+//	if (iLength < 0) iLength = length() - iPos;
+//	if (iPos + iLength > length()) iLength = length() - iPos;
 //	if (iLength <= 0) return CMMString();
 //	return CMMString(m_lpszStr + iPos, iLength);
 //}
 //
 //CMMString CMMString::Right(int iLength) const
 //{
-//	int iPos = GetLength() - iLength;
+//	int iPos = length() - iLength;
 //	if (iPos < 0)
 //	{
 //		iPos = 0;
-//		iLength = GetLength();
+//		iLength = length();
 //	}
 //
 //	return CMMString(m_lpszStr + iPos, iLength);
@@ -370,7 +370,7 @@
 //{
 //	if (NULL == m_lpszStr) return *this;
 //
-//	int nLen = GetLength();
+//	int nLen = length();
 //	for (int nPos = 0; nPos < nLen; nPos++)
 //	{
 //		if (ch == m_lpszStr[nPos]) continue;
@@ -388,7 +388,7 @@
 //{
 //	if (NULL == m_lpszStr) return *this;
 //
-//	int nLen = GetLength();
+//	int nLen = length();
 //	for (int nPos = nLen - 1; nPos >= 0; nPos--)
 //	{
 //		if (ch == m_lpszStr[nPos])
@@ -406,8 +406,8 @@
 //
 //int CMMString::Find(TCHAR ch, int iPos /*= 0*/) const
 //{
-//	assert(iPos >= 0 && iPos <= GetLength());
-//	if (iPos != 0 && (iPos < 0 || iPos >= GetLength())) return -1;
+//	assert(iPos >= 0 && iPos <= length());
+//	if (iPos != 0 && (iPos < 0 || iPos >= length())) return -1;
 //	LPCTSTR p = _tcschr(m_lpszStr + iPos, ch);
 //	if (p == NULL) return -1;
 //	return (int)(p - m_lpszStr);
@@ -416,14 +416,14 @@
 //int CMMString::Find(LPCTSTR pstrSub, int iPos /*= 0*/) const
 //{
 //	assert(false == ::IsBadStringPtr(pstrSub, -1));
-//	assert(iPos >= 0 && iPos <= GetLength());
-//	if (iPos != 0 && (iPos < 0 || iPos > GetLength())) return -1;
+//	assert(iPos >= 0 && iPos <= length());
+//	if (iPos != 0 && (iPos < 0 || iPos > length())) return -1;
 //	LPCTSTR p = _tcsstr(m_lpszStr + iPos, pstrSub);
 //	if (p == NULL) return -1;
 //	return (int)(p - m_lpszStr);
 //}
 //
-//int CMMString::ReverseFind(TCHAR ch) const
+//int CMMString::rfind(TCHAR ch) const
 //{
 //	LPCTSTR p = _tcsrchr(m_lpszStr, ch);
 //	if (p == NULL) return -1;

@@ -58,8 +58,8 @@ static BOOL CALLBACK EnumWindowProc(HWND hWnd, LPARAM lParam)
 
 	TCHAR szClassName[MAX_PATH] = {};
 	::RealGetWindowClass(hWnd, szClassName, MAX_PATH);
-	if (-1 == CMMString(szClassName).Find(_T("Shell_"))
-		|| -1 == CMMString(szClassName).Find(_T("TrayWnd"))) return true;
+	if (-1 == CMMString(szClassName).find(_T("Shell_"))
+		|| -1 == CMMString(szClassName).find(_T("TrayWnd"))) return true;
 
 	tagEnumWnd &EnumWnd = *(tagEnumWnd*)(lParam);
 	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONULL);

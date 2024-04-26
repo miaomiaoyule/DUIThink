@@ -143,7 +143,7 @@ void CDUIGroupCtrl::PaintText(HDC hDC)
 
 	//text
 	CMMString strText = GetText();
-	if (strText.IsEmpty()) return;
+	if (strText.empty()) return;
 
 	m_AttributeTextStyle.Draw(hDC, rcRange, strText, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), IsShadowText());
 

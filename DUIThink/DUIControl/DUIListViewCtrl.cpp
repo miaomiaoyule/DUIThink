@@ -1992,7 +1992,7 @@ bool CDUIListViewCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Ms
 
 bool CDUIListViewCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (false == m_AttributeImageMouseDragSel.IsEmpty()
+	if (false == m_AttributeImageMouseDragSel.empty()
 		&& this == m_pWndManager->GetCaptureControl())
 	{
 		PerformMouseDragSel();
@@ -2014,7 +2014,7 @@ bool CDUIListViewCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &M
 		if (this == m_pWndManager->GetCaptureControl())
 		{
 			m_ptMouseDown = pt;
-			m_rcMouseDragSel.Empty();
+			m_rcMouseDragSel.clear();
 			m_vecSelItemMouseDragPre = m_vecSelItem;
 		}
 	}
@@ -2045,7 +2045,7 @@ bool CDUIListViewCtrl::OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &M
 		if (this == m_pWndManager->GetCaptureControl())
 		{
 			m_ptMouseDown = pt;
-			m_rcMouseDragSel.Empty();
+			m_rcMouseDragSel.clear();
 			m_vecSelItemMouseDragPre = m_vecSelItem;
 		}
 	}
@@ -2330,7 +2330,7 @@ bool CDUIListViewCtrl::SaveAttribute(tinyxml2::XMLElement *pNode, bool bIncludeC
 void CDUIListViewCtrl::PaintMouseDragSel(HDC hDC)
 {
 	if (NULL == m_pWndManager
-		|| m_AttributeImageMouseDragSel.IsEmpty()
+		|| m_AttributeImageMouseDragSel.empty()
 		|| this != m_pWndManager->GetCaptureControl()) return;
 
 	m_AttributeImageMouseDragSel.Draw(hDC, m_rcMouseDragSel, m_rcPaint);
@@ -2611,7 +2611,7 @@ void CDUIListViewCtrl::ReapControl()
 void CDUIListViewCtrl::PerformMouseDragSel()
 {
 	if (NULL == m_pWndManager
-		|| m_AttributeImageMouseDragSel.IsEmpty()
+		|| m_AttributeImageMouseDragSel.empty()
 		|| this != m_pWndManager->GetCaptureControl()) return;
 
 	//range

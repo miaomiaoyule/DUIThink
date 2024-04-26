@@ -21,7 +21,7 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 	tagDuiRichTextDraw RichTextDraw;
 	do
 	{
-		if (false == bMeasureFinish && RichTextDraw.IsEmpty())
+		if (false == bMeasureFinish && RichTextDraw.empty())
 		{
 			if (nIndex >= RichText.vecRichTextItem.size())
 			{
@@ -41,7 +41,7 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 
 			continue;
 		}
-		if (bMeasureFinish && RichTextDraw.IsEmpty())
+		if (bMeasureFinish && RichTextDraw.empty())
 		{
 			break;
 		}
@@ -65,7 +65,7 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 			}
 			if (NULL == pFontBase || NULL == pFontBase->GetHandle())
 			{
-				RichTextDraw.strText.Empty();
+				RichTextDraw.strText.clear();
 
 				continue;
 			}
@@ -94,7 +94,7 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 				rcRichItem.right += 1;
 
 				//single word plus
-				if (1 == RichTextDraw.strText.GetLength())
+				if (1 == RichTextDraw.strText.length())
 				{
 					rcRichItem.right += 1;
 				}
@@ -108,7 +108,7 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 			CDUIImageBase *pImageBase = CDUIGlobal::GetInstance()->GetImageResource(RichTextDraw.strImageResName);
 			if (NULL == pImageBase)
 			{
-				RichTextDraw.strImageResName.Empty();
+				RichTextDraw.strImageResName.clear();
 
 				continue;
 			}
@@ -127,10 +127,10 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 			//text
 			if (RichTextItem_Text == RichTextDraw.ItemType)
 			{
-				for (int nChar = 0; nChar < RichTextDraw.strText.GetLength(); nChar++)
+				for (int nChar = 0; nChar < RichTextDraw.strText.length(); nChar++)
 				{
 					int nEmoji = CDUIGlobal::IsEmoji(RichTextDraw.strText[nChar]);
-					CMMString strDraw(RichTextDraw.strText.GetBuffer() + nChar, max(1, nEmoji));
+					CMMString strDraw(RichTextDraw.strText.c_str() + nChar, max(1, nEmoji));
 					nEmoji > 0 ? nChar += (nEmoji - 1) : 0;
 
 					CDUIRect rcChar = { rcMeasureLine.right, rcMeasureLine.top, rcMeasureLine.right + 9999, rcMeasureLine.top + 9999 };
@@ -143,7 +143,7 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 						rcChar.right += 1;
 
 						//single word plus
-						if (1 == strDraw.GetLength())
+						if (1 == strDraw.length())
 						{
 							rcChar.right += 1;
 						}
@@ -157,7 +157,7 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 						continue;
 					}
 
-					strSurplus = RichTextDraw.strText.GetBuffer() + nChar;
+					strSurplus = RichTextDraw.strText.c_str() + nChar;
 					RichTextDraw.strText.SetAt(nChar, _T('\0'));
 
 					break;
@@ -167,7 +167,7 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 			else if (RichTextItem_Image == RichTextDraw.ItemType)
 			{
 				strSurplus = RichTextDraw.strImageResName;
-				RichTextDraw.strImageResName.Empty();
+				RichTextDraw.strImageResName.clear();
 			}
 		}
 		
@@ -177,8 +177,8 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 		rcMeasureLine.right += rcRichItem.GetWidth();
 
 		//push item
-		if ((RichTextItem_Text == RichTextDraw.ItemType && false == RichTextDraw.strText.IsEmpty())
-			|| (RichTextItem_Image == RichTextDraw.ItemType && false == RichTextDraw.strImageResName.IsEmpty()))
+		if ((RichTextItem_Text == RichTextDraw.ItemType && false == RichTextDraw.strText.empty())
+			|| (RichTextItem_Image == RichTextDraw.ItemType && false == RichTextDraw.strImageResName.empty()))
 		{
 			RichTextDraw.rcDraw = rcRichItem;
 			RichTextDraw.nLine = nLine;
@@ -207,11 +207,11 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 
 		//measure finish
 		false == bMeasureFinish ? bMeasureFinish = (-1 != RichText.nLineLimit && nLine >= RichText.nLineLimit) : bMeasureFinish;
-		false == bMeasureFinish ? bMeasureFinish = (strSurplus.IsEmpty() && nIndex >= RichText.vecRichTextItem.size()) : bMeasureFinish;
+		false == bMeasureFinish ? bMeasureFinish = (strSurplus.empty() && nIndex >= RichText.vecRichTextItem.size()) : bMeasureFinish;
 		false == bMeasureFinish ? bMeasureFinish = (-1 == RichText.nLineLimit && rcMeasureLine.bottom > rcItem.bottom && false == bSingleLine && false == bAlignBottom) : bMeasureFinish;
 		false == bMeasureFinish ? bMeasureFinish = (-1 == RichText.nLineLimit && bLineFinish && rcMeasureLine.bottom == rcItem.bottom && false == bSingleLine && false == bAlignBottom) : bMeasureFinish;
 		false == bMeasureFinish ? bMeasureFinish = (bLineFinish && bSingleLine) : bMeasureFinish;
-		false == bMeasureFinish ? bMeasureFinish = rcItem.IsEmpty() : bMeasureFinish;
+		false == bMeasureFinish ? bMeasureFinish = rcItem.empty() : bMeasureFinish;
 		if (bMeasureFinish)
 		{
 			do 
@@ -229,11 +229,11 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 				rcMeasure.right = max(rcMeasure.right, RichTextDraw.rcDraw.right);
 				rcMeasure.bottom = rcMeasureLine.bottom;
 
-				bool bEndMore = false == strSurplus.IsEmpty();
+				bool bEndMore = false == strSurplus.empty();
 				RichTextDraw.strText += strSurplus;
 				for (int m = nIndex; m < RichText.vecRichTextItem.size(); m++)
 				{
-					false == bEndMore ? bEndMore = false == RichText.vecRichTextItem[m].strText.IsEmpty() : bEndMore;
+					false == bEndMore ? bEndMore = false == RichText.vecRichTextItem[m].strText.empty() : bEndMore;
 					RichTextDraw.strText += RichText.vecRichTextItem[m].strText;
 				}
 				if (bEndMore && mapLineVecRichTextDraw.size() > 1)
@@ -304,15 +304,15 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 			break;
 		}
 
-		if (false == strSurplus.IsEmpty())
+		if (false == strSurplus.empty())
 		{
 			RichTextItem_Text == RichTextDraw.ItemType ? RichTextDraw.strText = strSurplus : RichTextDraw.strImageResName = strSurplus;
 
 			continue;
 		}
 
-		RichTextDraw.strText.Empty();
-		RichTextDraw.strImageResName.Empty();
+		RichTextDraw.strText.clear();
+		RichTextDraw.strImageResName.clear();
 
 	} while (true);
 
@@ -426,7 +426,7 @@ CDUIRect CDUIRenderHelp::GetLineRange(MapLineVecDuiRichTextDraw mapLineVecRichTe
 	auto LineVecRichTextDraw = mapLineVecRichTextDraw[nLine];
 	for (auto RichTextDrawItem : LineVecRichTextDraw)
 	{
-		if (rcRange.IsEmpty())
+		if (rcRange.empty())
 		{
 			rcRange = RichTextDrawItem.rcDraw;
 		}

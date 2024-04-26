@@ -51,7 +51,7 @@ enDuiResType CDUIImageBase::GetResourceType() const
 
 CMMString CDUIImageBase::GetImageFileFull()
 {
-	if (m_strImageFile.GetLength() >= 2 && _T(':') == m_strImageFile[1])
+	if (m_strImageFile.length() >= 2 && _T(':') == m_strImageFile[1])
 	{
 		return m_strImageFile;
 	}
@@ -205,7 +205,7 @@ bool CDUIImageBase::SetResourceName(const CMMString &strName)
 void CDUIImageBase::ConstructResource(int nScale)
 {
 	if (m_hBitmap && m_nScale == nScale) return;
-	if (m_strImageFile.IsEmpty()) return;
+	if (m_strImageFile.empty()) return;
 
 	//release image
 	MMSafeDelete(m_pBitmap);
@@ -235,8 +235,8 @@ void CDUIImageBase::ConstructResource(int nScale)
 	{
 		strScale.Format(_T("@%d"), nScale);
 
-		int nPos = strFile.ReverseFind(_T('.'));
-		strFile.Insert(nPos, strScale);
+		int nPos = strFile.rfind(_T('.'));
+		strFile.insert(nPos, strScale);
 	}
 
 	//extract

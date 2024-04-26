@@ -46,7 +46,7 @@ public:
 	virtual bool FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nXRound, int nYRound, bool bHSLAdjust = false);
 
 	//color
-	virtual bool IsEmpty();
+	virtual bool empty();
 	virtual ARGB GetColorValue();
 	virtual Color GetColorObject();
 

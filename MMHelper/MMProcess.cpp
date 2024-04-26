@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////
 bool CMMProcess::CreateFileLink(CMMString strFileFull, CMMString strPathTo, CMMString strNameLink)
 {
-	if (strFileFull.IsEmpty() || strPathTo.IsEmpty()) return false;
+	if (strFileFull.empty() || strPathTo.empty()) return false;
 
 	IShellLink *pisl = NULL;
 	HRESULT hr = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&pisl);

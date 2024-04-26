@@ -27,7 +27,7 @@ CMMString CDUIButtonCtrl::GetDescribe() const
 
 CDUISize CDUIButtonCtrl::MeasureString(LPCTSTR lpszText)
 {
-	if (m_AttributeTextStyleNormal.IsEmpty()) return __super::MeasureString(lpszText);
+	if (m_AttributeTextStyleNormal.empty()) return __super::MeasureString(lpszText);
 
 	return m_AttributeTextStyleNormal.MeasureString(MMInvalidString(lpszText) ? GetText() : lpszText);
 }
@@ -84,14 +84,14 @@ ARGB CDUIButtonCtrl::GetTextColorDisabled()
 
 tagDuiTextStyle CDUIButtonCtrl::GetTextStyle()
 {
-	if (m_AttributeTextStyle.IsEmpty()) return GetTextStyleNormal();
+	if (m_AttributeTextStyle.empty()) return GetTextStyleNormal();
 
 	return __super::GetTextStyle();
 }
 
 tagDuiTextStyle CDUIButtonCtrl::GetTextStyleNormal()
 {
-	return m_AttributeTextStyleNormal.IsEmpty() ? __super::GetTextStyle() : m_AttributeTextStyleNormal.GetTextStyle();
+	return m_AttributeTextStyleNormal.empty() ? __super::GetTextStyle() : m_AttributeTextStyleNormal.GetTextStyle();
 }
 
 tagDuiTextStyle CDUIButtonCtrl::GetTextStyleHot()
@@ -402,8 +402,8 @@ void CDUIButtonCtrl::PaintStatusColor(HDC hDC)
 
 	CDUIAttributeColorSwitch *pAttribute = GetAttributeStatusColor();
 
-	if ((NULL == pAttribute || pAttribute->IsEmpty())
-		&& false == m_AttributeColorNormal.IsEmpty())
+	if ((NULL == pAttribute || pAttribute->empty())
+		&& false == m_AttributeColorNormal.empty())
 	{
 		pAttribute = &m_AttributeColorNormal;
 	}
@@ -431,7 +431,7 @@ void CDUIButtonCtrl::PaintStatusImage(HDC hDC)
 
 	CDUIAttriImageSection *pAttribute = GetAttributeStatusImage();
 
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeImageNormal : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeImageNormal : pAttribute;
 	if (NULL == pAttribute) return;
 
 	pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint, false == IsEnabled() && pAttribute != &m_AttributeImageDisabled);
@@ -441,7 +441,7 @@ void CDUIButtonCtrl::PaintStatusImage(HDC hDC)
 
 void CDUIButtonCtrl::PaintText(HDC hDC)
 {
-	if (GetText().IsEmpty() || NULL == m_pWndManager) return;
+	if (GetText().empty() || NULL == m_pWndManager) return;
 
 	CDUIRect rcRange = GetTextRange();
 
@@ -468,8 +468,8 @@ void CDUIButtonCtrl::PaintText(HDC hDC)
 		pAttribute = &m_AttributeTextStyleNormal;
 	}
 
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
 	if (NULL == pAttribute) return;
 
 	pAttribute->Draw(hDC, rcRange, GetText(), m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), IsShadowText());
@@ -480,8 +480,8 @@ void CDUIButtonCtrl::PaintText(HDC hDC)
 CDUIAttributeTextStyle * CDUIButtonCtrl::GetAttributeTextStyleActive()
 {
 	CDUIAttributeTextStyle *pAttribute = &m_AttributeTextStyleFocus;
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
 
 	return pAttribute;
 }

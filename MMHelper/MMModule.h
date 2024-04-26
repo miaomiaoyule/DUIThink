@@ -138,7 +138,7 @@ bool CMMTempldateHelper<IMMModelInterface>::CreateInstance()
 	try
 	{
 		assert(false == m_strCreateProc.empty());
-		assert(false == m_strModuleDllName.IsEmpty());
+		assert(false == m_strModuleDllName.empty());
 
 		m_hDllInstance = ::LoadLibrary(m_strModuleDllName);
 		if (NULL == m_hDllInstance)
@@ -178,7 +178,7 @@ bool CMMTempldateHelper<IMMModelInterface>::CreateInstance()
 template <typename IMMModelInterface>
 bool CMMTempldateHelper<IMMModelInterface>::CloseInstance()
 {
-	m_strDescribe.Empty();
+	m_strDescribe.clear();
 
 	if (m_pIModelInterface != NULL)
 	{

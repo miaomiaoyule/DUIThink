@@ -96,12 +96,12 @@ CMMString CMMEncrypt::XorDecrypt(CMMString strSrc)
 
 CMMString CMMEncrypt::MapEncrypt(CMMString strSrc)
 {
-	if (strSrc.IsEmpty()) return _T("");
+	if (strSrc.empty()) return _T("");
 
 	//变量定义
-	BYTE * pDataSrc = (BYTE *)strSrc.GetBuffer();
+	BYTE * pDataSrc = (BYTE *)strSrc.c_str();
 
-	for (UINT i = 0; i < strSrc.GetLength() * sizeof(TCHAR); i++)
+	for (UINT i = 0; i < strSrc.length() * sizeof(TCHAR); i++)
 	{
 		pDataSrc[i] = g_cbEncryptMap[pDataSrc[i]];
 	}
@@ -146,13 +146,13 @@ std::vector<BYTE> CMMEncrypt::MapEncrypt(std::vector<BYTE> vecData, DWORD dwMapK
 
 CMMString CMMEncrypt::MapDecrypt(CMMString strSrc)
 {
-	if (strSrc.IsEmpty()) return _T("");
+	if (strSrc.empty()) return _T("");
 
 	//变量定义
-	BYTE * pDataSrc = (BYTE *)strSrc.GetBuffer();
+	BYTE * pDataSrc = (BYTE *)strSrc.c_str();
 
 	//解密数据
-	for (UINT i = 0; i < strSrc.GetLength() * sizeof(TCHAR); i++)
+	for (UINT i = 0; i < strSrc.length() * sizeof(TCHAR); i++)
 	{
 		pDataSrc[i] = g_cbDecryptMap[pDataSrc[i]];
 	}

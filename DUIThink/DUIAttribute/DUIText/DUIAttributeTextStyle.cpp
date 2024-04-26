@@ -44,7 +44,7 @@ void CDUIAttributeTextStyle::Draw(HDC hDC, CDUIRect &rcPaint, LPCTSTR lpszText, 
 	return;
 }
 
-bool CDUIAttributeTextStyle::IsEmpty()
+bool CDUIAttributeTextStyle::empty()
 {
 	tagDuiTextStyle TextStyle = GetTextStyle();
 

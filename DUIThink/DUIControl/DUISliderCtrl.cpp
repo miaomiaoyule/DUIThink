@@ -285,8 +285,8 @@ void CDUISliderCtrl::PaintStatusColor(HDC hDC)
 		pAttribute = &m_AttributeColorThumbNormal;
 	}
 
-	if ((NULL == pAttribute || pAttribute->IsEmpty())
-		&& false == m_AttributeColorThumbNormal.IsEmpty())
+	if ((NULL == pAttribute || pAttribute->empty())
+		&& false == m_AttributeColorThumbNormal.empty())
 	{
 		pAttribute = &m_AttributeColorThumbNormal;
 	}
@@ -316,8 +316,8 @@ void CDUISliderCtrl::PaintStatusImage(HDC hDC)
 		pAttribute = &m_AttributeImageThumbNormal;
 	}
 
-	if ((NULL == pAttribute || pAttribute->IsEmpty())
-		&& false == m_AttributeImageThumbNormal.IsEmpty())
+	if ((NULL == pAttribute || pAttribute->empty())
+		&& false == m_AttributeImageThumbNormal.empty())
 	{
 		pAttribute = &m_AttributeImageThumbNormal;
 	}

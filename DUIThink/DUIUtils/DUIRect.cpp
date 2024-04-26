@@ -76,12 +76,12 @@ CDUIRect CDUIRect::RectClip(const CDUIRect& rcModal, const CDUIRect& rect)
 	return rcResult;
 }
 
-bool CDUIRect::IsEmpty()
+bool CDUIRect::empty()
 {
 	return (GetWidth() <= 0 || GetHeight() <= 0);
 }
 
-void CDUIRect::Empty()
+void CDUIRect::clear()
 {
 	left = top = right = bottom = 0;
 

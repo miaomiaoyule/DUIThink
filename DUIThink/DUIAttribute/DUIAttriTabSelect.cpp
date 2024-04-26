@@ -44,7 +44,7 @@ void CDUIAttriTabSelect::InitSelectItem()
 		if (NULL == pTabCtrl) continue;
 
 		CMMString strCtrlID = CDUIGlobal::GetInstance()->FindCtrlID(pTabCtrl->GetCtrlID());
-		if (strCtrlID.IsEmpty()) continue;
+		if (strCtrlID.empty()) continue;
 
 		AttriCombox.vecItem.push_back({ (int)pTabCtrl->GetCtrlID(), strCtrlID });
 	}

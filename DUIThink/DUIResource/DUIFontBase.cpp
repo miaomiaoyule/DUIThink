@@ -266,7 +266,7 @@ void CDUIFontBase::OnDpiChanged(int nScale)
 CMMString CDUIFontBase::FormatFontDescribe(CMMString strName, int nSize, LONG lWeight, bool bItalic, bool bUnderline, bool bStrikeOut)
 {
 	CMMString strResName;
-	strResName.Format(_T("%s-字号:%d-粗细:%d-%s-%s-%s"), strName.GetBuffer(), nSize, lWeight, bItalic ? _T("斜体") : _T("非斜体"),\
+	strResName.Format(_T("%s-字号:%d-粗细:%d-%s-%s-%s"), strName.c_str(), nSize, lWeight, bItalic ? _T("斜体") : _T("非斜体"),\
 		bUnderline ? _T("下划线") : _T("无下划线"), bStrikeOut ? _T("删除线") : _T("无删除线"));
 
 	return strResName;

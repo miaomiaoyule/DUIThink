@@ -85,9 +85,9 @@ bool CMMService::SetClipboardFiles(HWND hWndOwner, std::vector<CMMString> vecFil
 	UINT uFileListLen = 0;
 	for (auto &strFile : vecFiles)
 	{
-		if (strFile.IsEmpty()) continue;
+		if (strFile.empty()) continue;
 
-		uFileListLen += (strFile.GetLength() + 1) * sizeof(strFile[0]);
+		uFileListLen += (strFile.length() + 1) * sizeof(strFile[0]);
 	}
 
 	UINT uGblLen = sizeof(DROPFILES) + (uFileListLen + sizeof(TCHAR));
@@ -107,10 +107,10 @@ bool CMMService::SetClipboardFiles(HWND hWndOwner, std::vector<CMMString> vecFil
 	BYTE *pFileList = pData + sizeof(DROPFILES);
 	for (auto &strFile : vecFiles)
 	{
-		if (strFile.IsEmpty()) continue;
+		if (strFile.empty()) continue;
 
-		int nSize = (strFile.GetLength() + 1) * sizeof(strFile[0]);
-		memcpy(pFileList, (BYTE*)strFile.GetBuffer(), nSize);
+		int nSize = (strFile.length() + 1) * sizeof(strFile[0]);
+		memcpy(pFileList, (BYTE*)strFile.c_str(), nSize);
 		pFileList += nSize;
 	}
 
@@ -584,7 +584,7 @@ CMMString CMMService::GetUserDataPath(CMMString strFolderName)
 		return CMMString();
 	}
 
-	if (false == strFolderName.IsEmpty())
+	if (false == strFolderName.empty())
 	{
 		PathAppend(szPath, strFolderName);
 	}

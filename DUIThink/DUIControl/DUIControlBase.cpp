@@ -380,7 +380,7 @@ bool CDUIControlBase::Active()
 	if (false == IsVisible()) return false;
 	if (false == IsEnabled()) return false;
 
-	if (m_pWndManager && false == GetActiveUrl().IsEmpty())
+	if (m_pWndManager && false == GetActiveUrl().empty())
 	{
 		::ShellExecute(m_pWndManager->GetWndHandle(), NULL, GetActiveUrl(), NULL, NULL, SW_SHOW);
 	}
@@ -1214,7 +1214,7 @@ bool CDUIControlBase::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Ms
 	{
 		m_pWndManager->SendNotify(this, DuiNotify_LButtonDown, Msg.wParam, Msg.lParam);
 	}
-	if (m_pWndManager && false == GetActiveUrl().IsEmpty())
+	if (m_pWndManager && false == GetActiveUrl().empty())
 	{
 		::ShellExecute(m_pWndManager->GetWndHandle(), NULL, GetActiveUrl(), NULL, NULL, SW_SHOW);
 	}
@@ -1894,7 +1894,7 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	if (enDuiLineStyle::LineStyle_Null == GetBorderStyle()) return;
 
 	CDUIAttributeColorSwitch *pAttribute = IsFocused() ? &m_AttributeColorBorderFocus : &m_AttributeColorBorder;
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeColorBorder : NULL;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeColorBorder : NULL;
 	if (NULL == pAttribute) return;
 
 	CDUIRect rcBorderLine = GetBorderLine();

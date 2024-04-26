@@ -1137,7 +1137,7 @@ char* XMLNode::ParseDeep( char* p, StrPair* parentEndTag, int* curLineNumPtr )
             // Handle an end tag returned to this level.
             // And handle a bunch of annoying errors.
             bool mismatch = false;
-            if ( endTag.Empty() ) {
+            if ( endTag.clear() ) {
                 if ( ele->ClosingType() == XMLElement::OPEN ) {
                     mismatch = true;
                 }
@@ -2062,7 +2062,7 @@ char* XMLElement::ParseDeep( char* p, StrPair* parentEndTag, int* curLineNumPtr 
     }
 
     p = _value.ParseName( p );
-    if ( _value.Empty() ) {
+    if ( _value.clear() ) {
         return 0;
     }
 
@@ -2508,7 +2508,7 @@ void XMLDocument::SetError( XMLError error, int lineNum, const char* format, ...
 
 const char* XMLDocument::ErrorStr() const
 {
-	return _errorStr.Empty() ? "" : _errorStr.GetStr();
+	return _errorStr.clear() ? "" : _errorStr.GetStr();
 }
 
 

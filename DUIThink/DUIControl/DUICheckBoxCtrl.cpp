@@ -394,7 +394,7 @@ void CDUICheckBoxCtrl::PaintStatusColorSelected(HDC hDC)
 		pAttribute = &m_AttributeColorSelNormal;
 	}
 
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeColorSelNormal : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeColorSelNormal : pAttribute;
 	if (NULL == pAttribute) return;
 
 	CDUISize szBorderRound = GetRoundSize();
@@ -434,7 +434,7 @@ void CDUICheckBoxCtrl::PaintStatusImageSelected(HDC hDC)
 		pAttribute = &m_AttributeImageSelNormal;
 	}
 
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeImageSelNormal : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeImageSelNormal : pAttribute;
 	if (NULL == pAttribute) return;
 
 	pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint);
@@ -445,7 +445,7 @@ void CDUICheckBoxCtrl::PaintStatusImageSelected(HDC hDC)
 void CDUICheckBoxCtrl::PaintTextSelected(HDC hDC)
 {
 	CMMString strText = GetText();
-	if (strText.IsEmpty() || NULL == m_pWndManager) return;
+	if (strText.empty() || NULL == m_pWndManager) return;
 
 	CDUIRect rcRange = GetAbsoluteRect();
 	CDUIRect rcTextPadding = GetTextPadding();
@@ -479,8 +479,8 @@ void CDUICheckBoxCtrl::PaintTextSelected(HDC hDC)
 		pAttribute = &m_AttributeTextStyleSelNormal;
 	}
 
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleSelNormal : pAttribute;
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleSelNormal : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
 	if (NULL == pAttribute) return;
 
 	pAttribute->Draw(hDC, rcRange, strText, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), IsShadowText());

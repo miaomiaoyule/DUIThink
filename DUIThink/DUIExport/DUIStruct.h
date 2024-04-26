@@ -115,10 +115,10 @@ struct tagDuiRichTextItem : public tagDuiRichTextBase
 
 		return *this;
 	}
-	bool IsEmpty()
+	bool empty()
 	{
-		return (RichTextItem_Text == ItemType && strText.IsEmpty())
-			|| (RichTextItem_Image == ItemType && strImageResName.IsEmpty());
+		return (RichTextItem_Text == ItemType && strText.empty())
+			|| (RichTextItem_Image == ItemType && strImageResName.empty());
 	}
 };
 

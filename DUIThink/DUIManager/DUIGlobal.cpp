@@ -147,7 +147,7 @@ bool CDUIGlobal::LoadProjectFromFile(LPCTSTR lpszProjFile)
 	CMMString strProjFileFull = lpszProjFile;
 
 	//relative path
-	if (-1 == strProjFileFull.Find(_T(':')))
+	if (-1 == strProjFileFull.find(_T(':')))
 	{
 		strProjFileFull = CMMService::GetWorkDirectory() + _T('\\') + strProjFileFull;
 	}
@@ -168,7 +168,7 @@ bool CDUIGlobal::LoadProjectFromZip(LPCTSTR lpszZipFile, LPCTSTR lpszPassword, L
 	CMMString strZipFileFull = lpszZipFile;
 
 	//relative path
-	if (-1 == strZipFileFull.Find(_T(':')))
+	if (-1 == strZipFileFull.find(_T(':')))
 	{
 		strZipFileFull = CMMService::GetWorkDirectory() + _T('\\') + strZipFileFull;
 	}
@@ -564,7 +564,7 @@ CMMString CDUIGlobal::GetInstancePath()
 	TCHAR szModule[MAX_PATH + 1] = {};
 	::GetModuleFileName(m_hInstance, szModule, MAX_PATH);
 	CMMString strInstancePath = szModule;
-	int pos = strInstancePath.ReverseFind(_T('\\'));
+	int pos = strInstancePath.rfind(_T('\\'));
 	if (pos >= 0) strInstancePath = strInstancePath.Left(pos + 1);
 	return strInstancePath;
 }
@@ -664,7 +664,7 @@ bool CDUIGlobal::SaveProject()
 	return true;
 #endif
 
-	if (m_strProjectPath.IsEmpty() || m_strProjectName.IsEmpty()) return false;
+	if (m_strProjectPath.empty() || m_strProjectName.empty()) return false;
 
 	return CDUIXmlPack::SaveProject(m_strProjectPath, m_strProjectName, m_mapResourceFont, \
 		m_mapResourceImage, m_mapResourceColor, m_vecDui, m_mapWndManager, m_mapControlID, m_strFontResDefault);
@@ -677,16 +677,16 @@ bool CDUIGlobal::CloseProject(bool bSaveProject)
 		SaveProject();
 	}
 
-	m_strProjectPath.Empty();
-	m_strProjectName.Empty();
-	m_strSkinDir.Empty();
-	m_strDlgDir.Empty();
-	m_strViewDir.Empty();
-	m_strModelListItemDir.Empty();
-	m_strModelTreeNodeDir.Empty();
-	m_strMenuDir.Empty();
-	m_str3DMenuDir.Empty();
-	m_strCalendarDir.Empty();
+	m_strProjectPath.clear();
+	m_strProjectName.clear();
+	m_strSkinDir.clear();
+	m_strDlgDir.clear();
+	m_strViewDir.clear();
+	m_strModelListItemDir.clear();
+	m_strModelTreeNodeDir.clear();
+	m_strMenuDir.clear();
+	m_str3DMenuDir.clear();
+	m_strCalendarDir.clear();
 
 	ReleaseResource();
 	ReleaseDui();
@@ -774,13 +774,13 @@ bool CDUIGlobal::ModifyCtrlID(UINT uIDOld, UINT uIDNew, CDUIControlBase *pContro
 	CMMString strCtrlID = FindIt->second;
 	FindIt = m_mapControlID.find(uIDNew);
 	if (FindIt != m_mapControlID.end()
-		&& false == FindIt->second.IsEmpty())
+		&& false == FindIt->second.empty())
 	{
 		return true;
 	}
 
 	//ctrlid
-	if (strCtrlID.IsEmpty())
+	if (strCtrlID.empty())
 	{
 		strCtrlID = GenerateCtrlID(pControl);
 	}
@@ -797,7 +797,7 @@ bool CDUIGlobal::ModifyCtrlID(UINT uIDOld, UINT uIDNew, CDUIControlBase *pContro
 
 bool CDUIGlobal::ModifyCtrlID(CMMString strCtrlIDOld, CMMString strCtrlIDNew, CDUIControlBase *pControl)
 {
-	if (strCtrlIDNew.IsEmpty()) return false;
+	if (strCtrlIDNew.empty()) return false;
 
 	//same
 	if (FindCtrlID(strCtrlIDNew) > 0)
@@ -830,7 +830,7 @@ CMMString CDUIGlobal::CreateDlg()
 	//name
 	CMMString strName = _T("Dialog");
 	CMMString strFile = GetDuiFile(strName);
-	while (false == strFile.IsEmpty())
+	while (false == strFile.empty())
 	{
 		strName += _T("-");
 		strName += CMMService::ProductGUID();
@@ -867,7 +867,7 @@ CMMString CDUIGlobal::CreateView()
 	//name
 	CMMString strName = _T("View");
 	CMMString strFile = GetDuiFile(strName);
-	while (false == strFile.IsEmpty())
+	while (false == strFile.empty())
 	{
 		strName += _T("-");
 		strName += CMMService::ProductGUID();
@@ -909,7 +909,7 @@ CMMString CDUIGlobal::CreateModelListItem()
 	//name
 	CMMString strName = _T("ModelListItem");
 	CMMString strFile = GetDuiFile(strName);
-	while (false == strFile.IsEmpty())
+	while (false == strFile.empty())
 	{
 		strName += _T("-");
 		strName += CMMService::ProductGUID();
@@ -949,7 +949,7 @@ CMMString CDUIGlobal::CreateModelTreeNode()
 	//name
 	CMMString strName = _T("ModelTreeNode");
 	CMMString strFile = GetDuiFile(strName);
-	while (false == strFile.IsEmpty())
+	while (false == strFile.empty())
 	{
 		strName += _T("-");
 		strName += CMMService::ProductGUID();
@@ -982,7 +982,7 @@ CMMString CDUIGlobal::CreateMenu(bool bSubMenu)
 	//name
 	CMMString strName = bSubMenu ? Dui_Resource_Key_SubMenu : ("Menu");
 	CMMString strFile = GetDuiFile(strName);
-	while (false == strFile.IsEmpty())
+	while (false == strFile.empty())
 	{
 		strName += _T("-");
 		strName += CMMService::ProductGUID();
@@ -1021,7 +1021,7 @@ CMMString CDUIGlobal::Create3DMenu()
 	//name
 	CMMString strName = _T("3DMenu");
 	CMMString strFile = GetDuiFile(strName);
-	while (false == strFile.IsEmpty())
+	while (false == strFile.empty())
 	{
 		strName += _T("-");
 		strName += CMMService::ProductGUID();
@@ -1059,7 +1059,7 @@ CMMString CDUIGlobal::CreateCalendar()
 	//name
 	CMMString strName = _T("Calendar");
 	CMMString strFile = GetDuiFile(strName);
-	while (false == strFile.IsEmpty())
+	while (false == strFile.empty())
 	{
 		strName += _T("-");
 		strName += CMMService::ProductGUID();
@@ -1131,7 +1131,7 @@ bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
 	do
 	{
 		//full path
-		if (strFile.GetLength() >= 2 && strFile[1] == _T(':')) break;
+		if (strFile.length() >= 2 && strFile[1] == _T(':')) break;
 
 		//zip
 		if (DuiFileResType_Zip == GetDuiFileResType()
@@ -1164,7 +1164,7 @@ bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
 	if (DuiFileResType_File == GetDuiFileResType() || vecData.empty())
 	{
 		//full path
-		if (strFile.GetLength() < 2 || strFile[1] != _T(':'))
+		if (strFile.length() < 2 || strFile[1] != _T(':'))
 		{
 			strFile = GetProjectPath() + strFile;
 		}
@@ -1278,7 +1278,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 	bool bRes = true;
 	if (DuiFileResType_File == GetDuiFileResType())
 	{
-		CMMString strFile = CMMService::GetWorkDirectory().GetBuffer(0);
+		CMMString strFile = CMMService::GetWorkDirectory();
 		strFile = strFile + _T("\\") + Dui_FolderConfig + _T("\\") + strConfigFile;
 
 		bRes = (XML_SUCCESS == xmlDoc.LoadFile((LPCSTR)CT2CA(strFile)));
@@ -1295,7 +1295,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 	{
 		assert(false);
 		CMMString strWarning = CMMStrHelp::Format(_T("Failed of load [%s]£¬Please Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
-		MessageBox(NULL, strWarning.GetBuffer(0), NULL, NULL);
+		MessageBox(NULL, strWarning, NULL, NULL);
 
 		return;
 	}
@@ -1323,15 +1323,15 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 				CMMString strDllName = pNodeXmlSub->Attribute((LPCSTR)CT2CA(Dui_Key_DllNamePublish));
 #endif
 
-				if (true == strDllName.IsEmpty()) continue;
+				if (true == strDllName.empty()) continue;
 
 				HMODULE hModule = LoadLibrary(strDllName);
 				if (NULL == hModule)
 				{
 					assert(false);
 					CMMString strWarning;
-					strWarning.Format(_T("Failed load extenddll¡¾%s¡¿, Make sure it in the running directory"), strDllName.GetBuffer());
-					MessageBox(NULL, strWarning.GetBuffer(0), NULL, NULL);
+					strWarning.Format(_T("Failed load extenddll¡¾%s¡¿, Make sure it in the running directory"), strDllName.c_str());
+					MessageBox(NULL, strWarning, NULL, NULL);
 
 					continue;
 				}
@@ -1426,7 +1426,7 @@ bool CDUIGlobal::AddFontResource(CDUIFontBase *pResourceObj)
 	m_mapResourceFont[pResourceObj->GetResourceName()] = pResourceObj;
 
 	//default
-	if (m_strFontResDefault.IsEmpty())
+	if (m_strFontResDefault.empty())
 	{
 		m_strFontResDefault = pResourceObj ? pResourceObj->GetResourceName() : _T("");
 	}
@@ -1478,7 +1478,7 @@ bool CDUIGlobal::AddDui(enDuiType DuiType, const CMMString &strName, const CMMSt
 	}
 
 	CMMString strDuiFile = GetDuiFile(strName);
-	if (false == strDuiFile.IsEmpty())
+	if (false == strDuiFile.empty())
 	{
 		::MessageBox(NULL, _T("Have Same Name DirectUI"), NULL, NULL);
 
@@ -1492,7 +1492,7 @@ bool CDUIGlobal::AddDui(enDuiType DuiType, const CMMString &strName, const CMMSt
 
 bool CDUIGlobal::RenameFontResource(const CMMString &strNameOld, const CMMString &strNameNew)
 {
-	if (strNameOld.IsEmpty() || strNameNew.IsEmpty()) return false;
+	if (strNameOld.empty() || strNameNew.empty()) return false;
 
 	CDUIFontBase *pFontBaseOld = GetFontResource(strNameOld);
 	CDUIFontBase *pFontBaseNew = GetFontResource(strNameNew);
@@ -1513,7 +1513,7 @@ bool CDUIGlobal::RenameFontResource(const CMMString &strNameOld, const CMMString
 
 bool CDUIGlobal::RenameImageResource(const CMMString &strNameOld, const CMMString &strNameNew)
 {
-	if (strNameOld.IsEmpty() || strNameNew.IsEmpty()) return false;
+	if (strNameOld.empty() || strNameNew.empty()) return false;
 
 	CDUIImageBase *pImageBaseOld = GetImageResource(strNameOld);
 	CDUIImageBase *pImageBaseNew = GetImageResource(strNameNew);
@@ -1528,7 +1528,7 @@ bool CDUIGlobal::RenameImageResource(const CMMString &strNameOld, const CMMStrin
 
 bool CDUIGlobal::RenameColorResource(const CMMString &strNameOld, const CMMString &strNameNew)
 {
-	if (strNameOld.IsEmpty() || strNameNew.IsEmpty()) return false;
+	if (strNameOld.empty() || strNameNew.empty()) return false;
 
 	CDUIColorBase *pColorBaseOld = GetColorResource(strNameOld);
 	CDUIColorBase *pColorBaseNew = GetColorResource(strNameNew);
@@ -1598,10 +1598,10 @@ bool CDUIGlobal::RemoveFontResource(const CMMString &strName)
 	//default
 	if (m_strFontResDefault == strName)
 	{
-		m_strFontResDefault.Empty();
+		m_strFontResDefault.clear();
 
 		CDUIFontBase *pFontBase = GetFontResource(0);
-		pFontBase ? m_strFontResDefault = pFontBase->GetResourceName() : m_strFontResDefault.Empty();
+		pFontBase ? m_strFontResDefault = pFontBase->GetResourceName() : m_strFontResDefault.clear();
 	}
 
 	return true;
@@ -1642,7 +1642,7 @@ bool CDUIGlobal::RemoveColorResource(const CMMString &strName)
 
 bool CDUIGlobal::RemoveDui(const CMMString &strName)
 {
-	if (strName.IsEmpty()) return false;
+	if (strName.empty()) return false;
 
 	auto FindIt = find_if(m_vecDui.begin(), m_vecDui.end(), [&](tagDuiFile &DuiFile)
 	{
@@ -1677,7 +1677,7 @@ bool CDUIGlobal::RemoveDui(const CMMString &strName)
 
 void CDUIGlobal::SetFontResDefault(const CMMString &strName)
 {
-	if (strName.IsEmpty()) return;
+	if (strName.empty()) return;
 
 	m_strFontResDefault = strName;
 
@@ -1832,7 +1832,7 @@ bool CDUIGlobal::SaveAttriName(tinyxml2::XMLElement *pNode)
 	for (auto &NameItem : m_mapAttriNameValue)
 	{
 		auto &strName = NameItem.second;
-		if (strName.IsEmpty()) continue;
+		if (strName.empty()) continue;
 
 		uint32_t uID = CMMHash::GetHash(strName);
 		if (uID != NameItem.first)
@@ -1978,7 +1978,7 @@ bool CDUIGlobal::SaveAttriRichText(tinyxml2::XMLElement *pNode)
 				pNodeRichTextItem->SetAttribute(Dui_Key_AttriRichTextItemFontRes, (LPCSTR)CT2CA(strValueCombin, CP_UTF8));
 
 				//color
-				strValueCombin.Empty();
+				strValueCombin.clear();
 				for (auto &strResName : RichTextItem.vecColorResSwitch)
 				{
 					strValueCombin += strResName;
@@ -2089,7 +2089,7 @@ bool CDUIGlobal::SaveAttriText(tinyxml2::XMLElement *pNode)
 	for (auto &TextItem : m_mapAttriTextSave)
 	{
 		CMMString &strText = TextItem.second;
-		if (strText.IsEmpty()) continue;
+		if (strText.empty()) continue;
 
 		//verify
 		uint32_t uID = CMMHash::GetHash(strText);
@@ -2238,7 +2238,7 @@ bool CDUIGlobal::SaveAttriTextStyle(tinyxml2::XMLElement *pNode)
 		pValue->SetAttribute(Dui_Key_AttriTextStyleFontRes, (LPCSTR)CT2CA(strValueCombin, CP_UTF8));
 
 		//color
-		strValueCombin.Empty();
+		strValueCombin.clear();
 		for (auto &strResName : TextStyle.vecColorResSwitch)
 		{
 			strValueCombin += strResName;

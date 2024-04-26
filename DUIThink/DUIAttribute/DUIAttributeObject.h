@@ -76,7 +76,7 @@ public:
 
 	//modified
 	virtual bool IsModified();
-	virtual bool IsEmpty();
+	virtual bool empty();
 
 	//dpi
 	virtual int GetScale();

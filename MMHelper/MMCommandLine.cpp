@@ -9,15 +9,15 @@ CMMCommandLine::CMMCommandLine(LPCTSTR lpszCmdLine)
 
 	do 
 	{
-		nPosStart = m_strCmdLine.Find(_T('/'), nPosStart);
+		nPosStart = m_strCmdLine.find(_T('/'), nPosStart);
 		if (-1 == nPosStart) break;
 
 		CMMString strGroup;
-		int nPosFinish = m_strCmdLine.Find(_T('/'), nPosStart + 1);
+		int nPosFinish = m_strCmdLine.find(_T('/'), nPosStart + 1);
 		if (-1 == nPosFinish)
 		{
 			strGroup = m_strCmdLine.Mid(nPosStart + 1);
-			nPosStart = m_strCmdLine.GetLength();
+			nPosStart = m_strCmdLine.length();
 		}
 		else
 		{

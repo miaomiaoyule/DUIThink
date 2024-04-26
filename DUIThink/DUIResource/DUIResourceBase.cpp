@@ -62,7 +62,7 @@ void CDUIResourceBase::SetIndex(int nIndex)
 
 bool CDUIResourceBase::SetResourceName(const CMMString &strName)
 {
-	if (strName.IsEmpty() || strName == GetResourceName()) return false;
+	if (strName.empty() || strName == GetResourceName()) return false;
 
 	m_strName = strName;
 

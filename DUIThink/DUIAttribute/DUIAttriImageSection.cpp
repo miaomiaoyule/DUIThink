@@ -62,7 +62,7 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 	CDUIRect rcCorner = bScale ? DuiDpiScaleAttri(ImageSection.rcCorner) : ImageSection.rcCorner;
 
 	//verify
-	if (rcDest.IsEmpty()) return;
+	if (rcDest.empty()) return;
 
 	//mask
 	if (GetMask() > 0xff000000)
@@ -150,7 +150,7 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 	return;
 }
 
-bool CDUIAttriImageSection::IsEmpty()
+bool CDUIAttriImageSection::empty()
 {
 	tagDuiImageSection ImggeSection = GetImageSection();
 	return ImggeSection.vecImageResSwitch.empty();

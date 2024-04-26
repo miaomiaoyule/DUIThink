@@ -1647,7 +1647,7 @@ Bitmap *CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB)
 
 bool CDUIRenderEngine::SaveImage(HBITMAP hBitmap, CMMString strFile, enDuiSaveImageType SaveImageType, bool bAlpahImage)
 {
-	if (hBitmap == NULL || strFile.IsEmpty()) return false;
+	if (hBitmap == NULL || strFile.empty()) return false;
 
 	GUID ImageFormat = GUID_NULL;
 	switch (SaveImageType)

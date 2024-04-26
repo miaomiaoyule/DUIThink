@@ -11,7 +11,7 @@
 void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...)
 {
 #ifdef _DEBUG
-	CMMString strMsg;
+	CString strMsg;
 	va_list Args;
 
 	va_start(Args, pstrFormat);

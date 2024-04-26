@@ -1434,9 +1434,9 @@ CMMString CDUIRichEditCtrl::GetText()
 
 	gt.lpDefaultChar = NULL;
 	gt.lpUsedDefChar = NULL;
-	TxSendMessage(EM_GETTEXTEX, (WPARAM)&gt, (LPARAM)strText.GetBuffer(), 0);
+	TxSendMessage(EM_GETTEXTEX, (WPARAM)&gt, (LPARAM)strText.c_str(), 0);
 
-	return strText.GetBuffer();
+	return strText.c_str();
 }
 
 CMMString CDUIRichEditCtrl::GetText(long nStartChar, long nEndChar) const
@@ -1446,7 +1446,7 @@ CMMString CDUIRichEditCtrl::GetText(long nStartChar, long nEndChar) const
 	tr.chrg.cpMax = nEndChar;
 
 	CMMString strText('\0', nEndChar - nStartChar + 1);
-	tr.lpstrText = (LPTSTR)strText.GetBuffer();
+	tr.lpstrText = (LPTSTR)strText.c_str();
 	TxSendMessage(EM_GETTEXTRANGE, 0, (LPARAM)&tr, 0);
 
 	return strText;
@@ -1691,7 +1691,7 @@ long CDUIRichEditCtrl::GetStyle()
 	if (IsPasswordMode()) lStyle |= ES_PASSWORD;
 
 	tagDuiTextStyle TextStyle = {};
-	if (false == m_AttributeTextStyleNormal.IsEmpty()) TextStyle = GetTextStyleNormal();
+	if (false == m_AttributeTextStyleNormal.empty()) TextStyle = GetTextStyleNormal();
 	if (TextStyle.dwTextStyle & DT_LEFT)
 	{
 		lStyle &= ~(ES_CENTER | ES_RIGHT);
@@ -1800,7 +1800,7 @@ CMMString CDUIRichEditCtrl::GetSelText() const
 	TxSendMessage(EM_EXGETSEL, 0, (LPARAM)&cr, 0);
 
 	CMMString strText('\0', cr.cpMax - cr.cpMin + 1);
-	TxSendMessage(EM_GETSELTEXT, 0, (LPARAM)strText.GetBuffer(), 0);
+	TxSendMessage(EM_GETSELTEXT, 0, (LPARAM)strText.c_str(), 0);
 
 	return strText;
 }
@@ -1830,7 +1830,7 @@ void CDUIRichEditCtrl::ReplaceSel(LPCTSTR lpszNewText, bool bCanUndo)
 	TxSendMessage(EM_REPLACESEL, (WPARAM)bCanUndo, (LPARAM)lpszNewText, 0);
 #else
 	CMMString strText = CA2CT(lsszNewText);
-	TxSendMessage(EM_REPLACESEL, (WPARAM)bCanUndo, (LPARAM)strText.GetBuffer(), 0);
+	TxSendMessage(EM_REPLACESEL, (WPARAM)bCanUndo, (LPARAM)strText.c_str(), 0);
 #endif
 
 	return;
@@ -2131,7 +2131,7 @@ CMMString CDUIRichEditCtrl::GetLine(int nIndex, int nMaxLength) const
 {
 	CMMString strText('\0', nMaxLength + 1);
 
-	LPTSTR lpszText = (LPTSTR)strText.GetBuffer();
+	LPTSTR lpszText = (LPTSTR)strText.c_str();
 	*(LPWORD)lpszText = (WORD)nMaxLength;
 	TxSendMessage(EM_GETLINE, nIndex, (LPARAM)lpszText, 0);
 
@@ -2661,7 +2661,7 @@ void CDUIRichEditCtrl::PaintStatusImage(HDC hDC)
 		pAttribute = &m_AttributeImageNormal;
 	}
 
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeImageNormal : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeImageNormal : pAttribute;
 	if (NULL == pAttribute) return;
 
 	pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint);
@@ -2677,14 +2677,14 @@ void CDUIRichEditCtrl::PaintText(HDC hDC)
 	CDUIRect rcRichEdit = m_pTextHost->GetClientRect();
 
 	//tiptext
-	if (GetText().IsEmpty())
+	if (GetText().empty())
 	{
 		CMMString strTipText = GetTipText();
-		if (strTipText.IsEmpty()) return;
+		if (strTipText.empty()) return;
 
 		CDUIAttributeTextStyle *pAttribute = (m_nControlStatus & ControlStatus_Hot) ? &m_AttributeTextStyleTipTextHot : &m_AttributeTextStyleTipTextNormal;
-		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleTipTextNormal : pAttribute;
-		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+		NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleTipTextNormal : pAttribute;
+		NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
 
 		if (NULL == pAttribute) return;
 
@@ -2739,7 +2739,7 @@ void CDUIRichEditCtrl::ConstructTextStyle()
 	if (false == IsEnabled())
 	{
 		CDUIAttributeTextStyle *pAttribute = &m_AttributeTextStyleDisabled;
-		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+		NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
 		m_pTextHost->SetFont(pAttribute ? pAttribute->GetFont() : NULL);
 		m_pTextHost->SetColor(pAttribute ? pAttribute->GetTextColor() : 0);
 
@@ -2750,7 +2750,7 @@ void CDUIRichEditCtrl::ConstructTextStyle()
 	if (IsFocused())
 	{
 		CDUIAttributeTextStyle *pAttribute = &m_AttributeTextStyleFocus;
-		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+		NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
 		m_pTextHost->SetFont(pAttribute ? pAttribute->GetFont() : NULL);
 		m_pTextHost->SetColor(pAttribute ? pAttribute->GetTextColor() : 0);
 
@@ -2761,7 +2761,7 @@ void CDUIRichEditCtrl::ConstructTextStyle()
 	if (m_nControlStatus & ControlStatus_Hot)
 	{
 		CDUIAttributeTextStyle *pAttribute = &m_AttributeTextStyleHot;
-		if (pAttribute && false == pAttribute->IsEmpty())
+		if (pAttribute && false == pAttribute->empty())
 		{
 			m_pTextHost->SetFont(pAttribute->GetFont());
 			m_pTextHost->SetColor(pAttribute->GetTextColor());

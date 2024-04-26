@@ -74,8 +74,7 @@ CMMString CMMMD5Checksum::GetMD5(FILE *pFile)
 CMMString CMMMD5Checksum::GetMD5(const CMMString &strFilePath)
 {
 	//打开文件
-	CStringA strFile = strFilePath;
-	FILE *pFile = fopen(strFile.GetBuffer(0), "rb");
+	FILE *pFile = fopen((LPCSTR)CT2CA(strFilePath.c_str()), "rb");
 	if (NULL == pFile)
 	{
 		return _T("");
@@ -122,12 +121,12 @@ CMMString CMMMD5Checksum::Final()
 			Str.Format(_T("%x"), lpszMD5[i]);
 		}
 
-		assert(Str.GetLength() == 2);
+		assert(Str.length() == 2);
 		strMD5 += Str;
 	}
 
 	//结果校验
-	assert(strMD5.GetLength() == 32);
+	assert(strMD5.length() == 32);
 	return strMD5;
 }
 

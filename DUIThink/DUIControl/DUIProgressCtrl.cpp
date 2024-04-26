@@ -432,11 +432,11 @@ void CDUIProgressCtrl::PaintStatusColor(HDC hDC)
 	}
 
 	//verify
-	if (NULL == pAttributeGroove || pAttributeGroove->IsEmpty())
+	if (NULL == pAttributeGroove || pAttributeGroove->empty())
 	{
 		pAttributeGroove = &m_AttributeColorGrooveNormal;
 	}
-	if (NULL == pAttributeSlip || pAttributeSlip->IsEmpty())
+	if (NULL == pAttributeSlip || pAttributeSlip->empty())
 	{
 		pAttributeSlip = &m_AttributeColorSlipNormal;
 	}
@@ -486,11 +486,11 @@ void CDUIProgressCtrl::PaintStatusImage(HDC hDC)
 	}
 
 	//verify
-	if (NULL == pAttributeGroove || pAttributeGroove->IsEmpty())
+	if (NULL == pAttributeGroove || pAttributeGroove->empty())
 	{
 		pAttributeGroove = &m_AttributeImageGrooveNormal;
 	}
-	if (NULL == pAttributeSlip || pAttributeSlip->IsEmpty())
+	if (NULL == pAttributeSlip || pAttributeSlip->empty())
 	{
 		pAttributeSlip = &m_AttributeImageSlipNormal;
 	}

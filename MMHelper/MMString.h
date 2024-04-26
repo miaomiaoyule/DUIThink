@@ -21,9 +21,9 @@
 //
 //	//method
 //public:
-//	void Empty();
-//	int GetLength() const;
-//	bool IsEmpty() const;
+//	void clear();
+//	int length() const;
+//	bool empty() const;
 //	TCHAR GetAt(int nIndex) const;
 //	void SetAt(int nIndex, TCHAR ch);
 //	void Append(LPCTSTR lpszStr);
@@ -76,7 +76,7 @@
 //
 //	int Find(TCHAR ch, int iPos = 0) const;
 //	int Find(LPCTSTR lpszStr, int iPos = 0) const;
-//	int ReverseFind(TCHAR ch) const;
+//	int rfind(TCHAR ch) const;
 //	int Replace(LPCTSTR lpszFrom, LPCTSTR lpszTo);
 //
 //	int __cdecl Format(LPCTSTR pstrFormat, ...);
@@ -96,13 +96,18 @@
 //	{
 //		std::size_t operator()(const CMMString &str) const
 //		{
-//			return _Fnv1a_append_bytes(_FNV_offset_basis, (const unsigned char*)str.GetBuffer(0), sizeof(TCHAR) * str.GetLength());
+//			return _Fnv1a_append_bytes(_FNV_offset_basis, (const unsigned char*)str.GetBuffer(0), sizeof(TCHAR) * str.length());
 //		}
 //	};
 //}
 
 //////////////////////////////////////////////////////////////////////////
-class CMMString : public CAtlString
+class CMMString : 
+#ifdef UNICODE
+	public std::wstring
+#else
+	public std::string
+#endif
 {
 public:
 	CMMString()
@@ -110,310 +115,305 @@ public:
 
 	}
 	CMMString(LPCSTR lpszStr)
-		: CAtlString(lpszStr)
+		: std::wstring((LPCTSTR)CA2CT(lpszStr))
 	{
 
 	}
 	CMMString(LPCSTR lpszStr, int nLen)
-		: CAtlString(lpszStr, nLen)
+		: std::wstring((LPCTSTR)CA2CT(std::string(lpszStr, nLen).c_str()))
 	{
 
 	}
-	CMMString(CHAR ch, int nLen)
-		: CAtlString(ch, nLen)
+	CMMString(CHAR ch, int nCount)
+		: std::wstring((LPCTSTR)CA2CT(std::string(nCount, ch).c_str()))
 	{
 
 	}
 	CMMString(TCHAR ch)
-		: CAtlString(ch)
+		: std::wstring(1, ch)
 	{
 
 	}
-	CMMString(TCHAR ch, int nLen)
-		: CAtlString(ch, nLen)
+	CMMString(TCHAR ch, int nCount)
+		: std::wstring(nCount, ch)
 	{
 
 	}
 	CMMString(LPCTSTR lpszStr)
-		: CAtlString(lpszStr)
+		: std::wstring(lpszStr)
 	{
 
 	}
 	CMMString(LPCTSTR lpszStr, int nLen)
-		: CAtlString(lpszStr, nLen)
+		: std::wstring(lpszStr, nLen)
 	{
 
 	}
 	CMMString(const CMMString &strSrc)
-		: CAtlString(strSrc)
+		: std::wstring(strSrc)
 	{
 
 	}
 	CMMString(CString &strSrc)
-		: CAtlString(strSrc.GetBuffer())
+		: std::wstring(strSrc)
 	{
 
 	}
-	CMMString Mid(_In_ int iFirst)
+	CMMString Mid(int nFrom)
 	{
-		return CAtlString::Mid(iFirst).GetBuffer();
+		return length() > nFrom ? c_str() + nFrom : _T("");
 	}
-	CMMString Mid(
-		_In_ int iFirst,
-		_In_ int nCount) const
+	CMMString Mid(int nFrom, int nCount)
 	{
-		return CAtlString::Mid(iFirst, nCount).GetBuffer();
+		return length() > nFrom ? CMMString(c_str() + nFrom, nCount) : _T("");
+	}
+	CMMString Left(int nCount) const
+	{
+		return CMMString(c_str(), min(length(), nCount));
+	}
+	CMMString Right(int nCount)
+	{
+		return (c_str() + max(0, (int)length() - nCount));
 	}
 	CMMString & MakeLower()
 	{
-		PXSTR pszBuffer = GetBuffer();
-		for (int n = 0; n < GetLength(); n++)
+		std::transform(begin(), end(), begin(), tolower);
+
+		return *this;
+	}
+	CMMString & Trim(TCHAR ch = _T(' '))
+	{
+		while (front() == ch)
 		{
-			if (_T('A') <= pszBuffer[n] && pszBuffer[n] <= _T('Z'))
-			{
-				pszBuffer[n] = pszBuffer[n] + (_T('a') - _T('A'));
-			}
+			erase(begin());
+		}
+		while (back() == ch)
+		{
+			erase(rbegin().base());
 		}
 
 		return *this;
 	}
-	_Ret_notnull_ _Post_writable_size_(nLength + 1) PXSTR GetBufferSetLength(_In_ int nLength)
-	{
-		int nLenOld = GetLength();
-		if (nLength < nLenOld)
-		{
-			return CAtlString::GetBufferSetLength(nLength);
-		}
-
-		PXSTR pszBuffer = GetBuffer(nLength);
-
-		return(pszBuffer);
-	}
-	CMMString & Trim()
-	{
-		CAtlString::Trim();
-
-		return *this;
-	}
-	CMMString & Trim(TCHAR ch)
-	{
-		CAtlString::Trim(ch);
-
-		return *this;
-	}
-	CMMString & Trim(char ch)
-	{
-		CAtlString::Trim(ch);
-
-		return *this;
-	}
-	CMMString & Trim(_In_z_ PCXSTR pszTargets)
+	CMMString & Trim(LPCTSTR pszTargets)
 	{
 		return TrimLeft(pszTargets).TrimRight(pszTargets);
 	}
-	CMMString & TrimLeft(_In_z_ PCXSTR pszTargets)
+	CMMString & TrimLeft(LPCTSTR pszTargets)
 	{
-		// if we're not trimming anything, we're not doing any work
-		if ((pszTargets == NULL) || (*pszTargets == 0))
+		int nLen = lstrlen(pszTargets);
+		while (Left(nLen) == pszTargets)
 		{
-			return(*this);
-		}
-
-		int n = 0;
-		PCXSTR psz = this->GetString();
-		while ((psz[n])
-			&& (pszTargets[n])
-			&& (pszTargets[n] == psz[n]))
-		{
-			n++;
-		}
-
-		if (n > 0)
-		{
-			psz = psz + n;
-
-			// fix up data and length
-			int iFirst = int(psz - this->GetString());
-			PXSTR pszBuffer = this->GetBuffer(this->GetLength());
-			psz = pszBuffer + iFirst;
-			int nDataLength = this->GetLength() - iFirst;
-			Checked::memmove_s(pszBuffer, (this->GetLength() + 1) * sizeof(XCHAR),
-				psz, (nDataLength + 1) * sizeof(XCHAR));
-			this->ReleaseBufferSetLength(nDataLength);
+			erase(begin(), begin() + nLen);
 		}
 
 		return(*this);
 	}
-	CMMString & TrimRight(_In_z_ TCHAR ch)
+	CMMString & TrimRight(TCHAR ch)
 	{
-		return TrimRight(CMMString(ch));
+		return TrimRight(CMMString(ch).c_str());
 	}
-	CMMString & TrimRight(_In_z_ PCXSTR pszTargets)
+	CMMString & TrimRight(LPCTSTR pszTargets)
 	{
-		// if we're not trimming anything, we're not doing any work
-		int nLenTarget = lstrlen(pszTargets);
-		int nLenThis = GetLength();
-		if ((pszTargets == NULL) || (*pszTargets == 0) || nLenTarget > nLenThis)
+		int nLen = lstrlen(pszTargets);
+		while (Right(nLen) == pszTargets)
 		{
-			return(*this);
-		}
-
-		// find beginning of trailing matches
-		// by starting at beginning (DBCS aware)
-		PCXSTR psz = this->GetString();
-		PCXSTR pszLast = NULL;	
-		while (--nLenTarget >= 0 
-			&& --nLenThis >= 0
-			&& psz[nLenThis] == pszTargets[nLenTarget])
-		{
-			pszLast = psz;
-		}
-
-		if (pszLast != NULL && nLenTarget < 0)
-		{
-			// truncate at left-most matching character
-			int iLast = int(pszLast - this->GetString());
-			this->Truncate(iLast);
+			erase(rbegin().base(), (rbegin() + nLen).base());
 		}
 
 		return(*this);
 	}
-	int ReverseFind(TCHAR ch) const
+	CMMString & Replace(TCHAR chSrc, TCHAR chDest)
 	{
-		return CAtlString::ReverseFind(ch);
-	}
-	int ReverseFind(TCHAR ch, int nPosFrom) const
-	{
-		while (nPosFrom < GetLength() && nPosFrom >= 0)
-		{
-			if (this->operator[](nPosFrom) == ch) return nPosFrom;
+		std::replace(begin(), end(), chSrc, chDest);
 
-			nPosFrom--;
+		return *this;
+	}
+	CMMString & Replace(LPCTSTR lpszSrc, LPCTSTR lpszDest)
+	{
+		int nPos = find(lpszSrc);
+		while (-1 != nPos)
+		{
+			erase(begin() + nPos, begin() + nPos + lstrlen(lpszSrc));
+			insert(nPos, lpszDest);
+
+			nPos = find(lpszSrc, nPos + lstrlen(lpszDest));
 		}
 
-		return -1;
+		return *this;
 	}
-	int ReverseFind(LPCTSTR lpszFind, int nPosFrom = -1) const
+	CMMString & Format(LPCTSTR pstrFormat, va_list Args)
 	{
-		if (MMInvalidString(lpszFind)) return -1;
+		if (NULL == pstrFormat) return *this;
 
-		CMMString strTemp = *this;
-		int nLenFind = lstrlen(lpszFind);
-		-1 == nPosFrom ? nPosFrom = strTemp.GetLength() : nPosFrom;
-		if (nLenFind > nPosFrom) return -1;
-
-		for (int nSub = nPosFrom - nLenFind; nSub >= 0; nSub--)
-		{
-			if (nSub + nLenFind < nPosFrom)
+		#if _MSC_VER <= 1400
+			TCHAR *szBuffer = NULL;
+			int size = 512, nLen, counts;
+			szBuffer = (TCHAR*)malloc(size);
+			ZeroMemory(szBuffer, size);
+			while (TRUE) 
 			{
-				strTemp.SetAt(nSub + nLenFind, 0);
+				counts = size / sizeof(TCHAR);
+				nLen = _vsntprintf(szBuffer, counts, pstrFormat, Args);
+				if (nLen != -1 && nLen < counts) 
+				{
+					break;
+				}
+				if (nLen == -1) 
+				{
+					size *= 2;
+				}
+				else 
+				{
+					size += 1 * sizeof(TCHAR);
+				}
+			
+				if ((szBuffer = (TCHAR*)realloc(szBuffer, size)) != NULL) 
+				{
+					ZeroMemory(szBuffer, size);
+				}
+				else 
+				{
+					break;
+				}
 			}
 			
-			if (0 == lstrcmp(strTemp.GetBuffer() + nSub, lpszFind)) return nSub;
-		}
-		
-		return -1;
+			Assign(szBuffer);
+			free(szBuffer);
+			return nLen;
+		#else
+			int nLen = _vsntprintf(NULL, 0, pstrFormat, Args);
+			int nSize = (nLen + 1) * sizeof(TCHAR);
+			TCHAR *szBuffer = (TCHAR*)malloc(nSize);
+			ZeroMemory(szBuffer, nSize);
+			nLen = _vsntprintf(szBuffer, nLen + 1, pstrFormat, Args);
+			operator +=(szBuffer);
+			free(szBuffer);
+		#endif
+			
+		return *this;
 	}
-	bool IsEmpty() const throw()
+	CMMString & Format(LPCTSTR pstrFormat, ...)
 	{
-		LPCTSTR lpszStr = *this;
-		return MMInvalidString(lpszStr);
-	}
-	CMMString & operator += (TCHAR chRight)
-	{
-		CAtlString::operator+=(chRight);
+		va_list Args;
+
+		va_start(Args, pstrFormat);
+		Format(pstrFormat, Args);
+		va_end(Args);
 
 		return *this;
 	}
-	CMMString & operator += (LPCSTR lpszRight)
+	void SetAt(int nPos, TCHAR ch)
 	{
-		CAtlString::operator+=(lpszRight);
+		if (nPos < 0 || nPos >= length()) return;
 
-		return *this;
+		operator[](nPos) = ch;
+
+		return;
 	}
-	CMMString & operator += (LPCTSTR lpszRight)
+	int find(LPCTSTR lpszFind, int nPosOffset = 0)
 	{
-		CAtlString::operator+=(lpszRight);
-
-		return *this;
+		return (int)__super::find(lpszFind, nPosOffset);
 	}
-	CMMString & operator = (const CMMString &strRight)
+	int find(TCHAR ch, int nPosOffset = 0)
 	{
-		CAtlString::operator=(strRight);
-
-		return *this;
+		return (int)__super::find(ch, nPosOffset);
 	}
-	CMMString & operator = (_In_ const CString &strRight)
+	int rfind(LPCTSTR lpszFind, int nPosOffset = 0)
 	{
-		CAtlString::operator=(strRight);
-
-		return *this;
+		return (int)__super::rfind(lpszFind, nPosOffset);
 	}
-	CMMString & operator = (_In_opt_z_ LPCTSTR lpszRight)
+	int rfind(TCHAR ch, int nPosOffset = 0)
 	{
-		CAtlString::operator=(lpszRight);
+		return (int)__super::rfind(ch, nPosOffset);
+	}
+	int CompareNoCase(LPCTSTR lpszRight)
+	{
+		CMMString strThis = *this;
+		CMMString strRight = lpszRight;
+		strThis.MakeLower();
+		strRight.MakeLower();
 
-		return *this;
+		return lstrcmp(strThis, strRight);
 	}
 	CMMString & operator = (LPCSTR lpszRight)
 	{
-		CAtlString::operator=(lpszRight);
+		__super::operator =((LPCTSTR)CA2CT(lpszRight));
 
 		return *this;
 	}
-	CMMString & operator = (TCHAR chRight)
+	CMMString & operator = (LPCTSTR lpszRight)
 	{
-		CAtlString::operator=(chRight);
+		__super::operator =(lpszRight);
 
 		return *this;
 	}
-	CMMString & operator = (char chRight)
+	bool operator == (LPCTSTR lpszRight)
 	{
-		CAtlString::operator=(chRight);
-
-		return *this;
+		return 0 == lstrcmp(c_str(), lpszRight);
 	}
-	friend CMMString operator+(const TCHAR ch, const CMMString &src)
+	bool operator == (const CMMString &strRight)
 	{
-		CMMString strTemp = ch;
-		strTemp += src;
+		return 0 == lstrcmp(c_str(), strRight.c_str());
+	}
+	bool operator != (TCHAR ch)
+	{
+		return false == operator ==(CMMString(ch));
+	}
+	LPTSTR GetBuffer()
+	{
+		return (LPTSTR)c_str();
+	}
+	operator LPCTSTR() const
+	{
+		return c_str();
+	}
+	friend CMMString operator + (const CMMString &strLeft, TCHAR ch)
+	{
+		CMMString strTemp = strLeft;
+		strTemp.operator += (ch);
 
 		return strTemp;
 	}
-	friend CMMString operator+(const CMMString &srcLeft, const CMMString &srcRight)
+	friend CMMString operator + (TCHAR ch, const CMMString &strRight)
 	{
-		CMMString strTemp = srcLeft;
-		strTemp += srcRight;
+		CMMString strTemp(ch);
+		strTemp += strRight;
 
 		return strTemp;
 	}
-	friend CMMString operator+(const CMMString &srcLeft, const TCHAR ch)
+	friend CMMString operator + (const CMMString &strLeft, LPCTSTR lpszRight)
 	{
-		CMMString strTemp = srcLeft;
-		strTemp += ch;
-
+		CMMString strTemp = strLeft;
+		strTemp += lpszRight;
 		return strTemp;
 	}
-	friend CMMString operator+(const CMMString &srcLeft, const char ch)
+	friend CMMString operator + (const CMMString &strLeft, const CMMString &strRight)
 	{
-		CMMString strTemp = srcLeft;
-		strTemp += ch;
-
+		CMMString strTemp = strLeft;
+		strTemp += strRight;
 		return strTemp;
 	}
-	friend CMMString operator+(const CMMString &srcLeft, LPCTSTR lpszStr)
+	friend CMMString operator + (LPCTSTR lpszLeft, const CMMString &strRight)
 	{
-		CMMString strTemp = srcLeft;
-		strTemp += lpszStr;
-
-		return strTemp;
+		CMMString strLeft = lpszLeft;
+		strLeft += strRight;
+		return strLeft;
 	}
-	friend CMMString operator+(LPCTSTR lpszStr, const CMMString &src)
+	friend bool operator == (const CMMString &strLeft, const CMMString &strRight)
 	{
-		CMMString strTemp = lpszStr;
-		strTemp += src;
-
-		return strTemp;
+		return 0 == lstrcmp(strLeft, strRight);
+	}
+	friend bool operator == (const CMMString &strLeft, LPCTSTR lpszRight)
+	{
+		return 0 == lstrcmp(strLeft, lpszRight);
+	}
+	friend bool operator == (LPCTSTR lpszLeft, const CMMString &strRight)
+	{
+		return 0 == lstrcmp(lpszLeft, strRight);
+	}
+	friend bool operator != (LPCTSTR lpszLeft, const CMMString &strRight)
+	{
+		return 0 != lstrcmp(lpszLeft, strRight);
 	}
 };
 

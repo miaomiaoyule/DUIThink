@@ -236,7 +236,7 @@ LRESULT CDUIEditWnd::OnEditChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lP
 	//copy text
 	int cchLen = ::GetWindowTextLength(m_hWnd) + 1;
 	CMMString strText(_T('\0'), cchLen);
-	::GetWindowText(m_hWnd, strText.GetBuffer(), cchLen);
+	::GetWindowText(m_hWnd, (LPTSTR)strText.c_str(), cchLen);
 
 	//limit
 	if (m_pOwner->IsNumberOnly())
@@ -327,7 +327,7 @@ LRESULT CDUIEditWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CDUIRect rcWnd;
 			::GetWindowRect(m_hWnd, &rcWnd);
 			MMScreenToClient(rcWnd, m_pWndManagerOwner->GetWndHandle());
-			if (false == rcWnd.IsEmpty())
+			if (false == rcWnd.empty())
 			{
 				HBITMAP hBmpEditBk = CDUIRenderEngine::GenerateBitmap(m_pWndManagerOwner, m_pWndManagerOwner->GetRootCtrl(), rcWnd);
 				if (hBmpEditBk)
@@ -773,13 +773,13 @@ void CDUIEditCtrl::PaintText(HDC hDC)
 
 	//text
 	CMMString strText = GetText(), strTipText = GetTipText();
-	CMMString strTextDraw = strText.IsEmpty() ? strTipText : strText;
-	if (strTextDraw.IsEmpty()
-		|| (m_pEditWindow && IsWindow(m_pEditWindow->GetHWND()) && false == strText.IsEmpty())) return;
+	CMMString strTextDraw = strText.empty() ? strTipText : strText;
+	if (strTextDraw.empty()
+		|| (m_pEditWindow && IsWindow(m_pEditWindow->GetHWND()) && false == strText.empty())) return;
 
 	//textstyle
 	CDUIAttributeTextStyle *pAttribute = NULL;
-	if (strText.IsEmpty())
+	if (strText.empty())
 	{
 		pAttribute = &m_AttributeTextStyleTipTextNormal;
 	}
@@ -804,15 +804,15 @@ void CDUIEditCtrl::PaintText(HDC hDC)
 		pAttribute = &m_AttributeTextStyleNormal;
 	}
 
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
 	if (NULL == pAttribute) return;
 
 	//range
 	CDUIRect rcRange = GetTextRange();
 
 	//password
-	if (IsPasswordMode() && false == strText.IsEmpty())
+	if (IsPasswordMode() && false == strText.empty())
 	{
 		int n = 0;
 		while (strTextDraw[n])

@@ -1703,7 +1703,7 @@ bool CDUIWndManager::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESU
 
 #ifdef DUI_DESIGN
 			bUpdate = true;
-			if (rcPaint.IsEmpty())
+			if (rcPaint.empty())
 			{
 				GetClientRect(m_hWndAttach, &rcPaint);
 			}
@@ -1953,7 +1953,7 @@ LRESULT CDUIWndManager::OnDraw(CDUIRect rcPaint)
 	CDUIRect rcClient;
 	::GetClientRect(m_hWndAttach, &rcClient);
 	if (false == ::IntersectRect(&rcPaint, &rcPaint, &rcClient)) return lRes;
-	if (NULL == m_pRootCtrl || rcPaint.IsEmpty()) return lRes;
+	if (NULL == m_pRootCtrl || rcPaint.empty()) return lRes;
 
 	//layout
 	RefreshLayout();
@@ -2329,7 +2329,7 @@ LRESULT CDUIWndManager::OnDuiMouseHover(WPARAM wParam, LPARAM lParam)
 
 	//track modify
 	CMMString strToolTip = m_pHoverCtrl->GetToolTip();
-	if (strToolTip.IsEmpty()) return lRes;
+	if (strToolTip.empty()) return lRes;
 	if (false == m_bRefreshToolTip && m_strToolTip == strToolTip) return lRes;
 
 	m_bRefreshToolTip = false;
@@ -2859,7 +2859,7 @@ void CDUIWndManager::RefreshLayout()
 	//layout
 	bool bNeedLayoutMsg = false;
 	if (false == IsRefreshViewNeeded()) return;
-	if (rcClient.IsEmpty() || ::IsIconic(m_hWndAttach)) return;
+	if (rcClient.empty() || ::IsIconic(m_hWndAttach)) return;
 
 	m_bRefreshViewNeeded = false;
 

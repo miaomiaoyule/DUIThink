@@ -42,7 +42,7 @@ int CMMDpi::GetDpiOfMonitor(HMONITOR hMonitor)
 			{
 				int nError = GetLastError();
 				CMMString strTip = CMMStrHelp::Format(_T("GetDpiForMonitor failed, LastError:[%d]"), nError);
-				MessageBox(nullptr, strTip.GetBuffer(), _T("Notification"), MB_OK);
+				MessageBox(nullptr, strTip.c_str(), _T("Notification"), MB_OK);
 			}
 		}
 
@@ -80,7 +80,7 @@ enMMPROCESS_DPI_AWARENESS CMMDpi::GetProcessDPIAwareness()
 			{
 				int nError = GetLastError();
 				CMMString strTip = CMMStrHelp::Format(_T("GetProcessDpiAwareness failed, LastError:[%d]"), nError);
-				MessageBox(nullptr, strTip.GetBuffer(), _T("Notification"), MB_OK);
+				MessageBox(nullptr, strTip.c_str(), _T("Notification"), MB_OK);
 			}
 		}
 	}
