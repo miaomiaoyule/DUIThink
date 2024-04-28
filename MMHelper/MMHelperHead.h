@@ -41,6 +41,8 @@
 	#endif
 #endif
 
+#define _CRT_SECURE_NO_WARNINGS
+
 // P0607R0 Inline Variables For The STL
 #if _HAS_CXX17
 #define _INLINE_VAR	inline
@@ -103,13 +105,6 @@ using namespace std;
 #pragma comment(lib, "version.lib")
 
 //////////////////////////////////////////////////////////////////////////////////
-//string
-typedef CAtlStringW CMMStringW;
-
-#ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
-typedef CAtlStringA CMMStringA;
-#endif // _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
-
 void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 
 //////////////////////////////////////////////////////////////////////////

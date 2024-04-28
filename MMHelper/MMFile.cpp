@@ -808,11 +808,11 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 	{
 		case FileEncode_UTF8_Bom:
 		{
-			CMMStringA strDataA = CT2CA(strData, CP_UTF8);
+			CStringA strDataA = CT2CA(strData, CP_UTF8);
 
 			if (bClearOld)
 			{
-				CMMStringA strSign;
+				CStringA strSign;
 				strSign.GetBufferSetLength(3);
 				strSign.SetAt(0, 0xEF);
 				strSign.SetAt(1, 0xBB);
@@ -848,7 +848,7 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 		case FileEncode_Ansi:
 		default:
 		{
-			CMMStringA strDataA = CT2CA(strData);
+			CStringA strDataA = CT2CA(strData);
 
 			fwrite(strDataA, strDataA.GetLength(), 1, pFile);
 

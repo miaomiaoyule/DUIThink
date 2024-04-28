@@ -459,10 +459,10 @@ bool CDUIXmlPack::SaveCtrlID(const MapDuiControlID &mapCtrlID)
 	}
 
 	//write
-	CMMStringA strTip = ("//you should not modify this\n");
+	CStringA strTip = ("//you should not modify this\n");
 	fwrite(strTip.GetBuffer(), strTip.GetLength(), 1, pFile);
 
-	CMMStringA strInfo;
+	CStringA strInfo;
 	for (auto &Item : mapCtrlID)
 	{
 		if (Item.first < Dui_CtrlIDInner_Finish) continue;

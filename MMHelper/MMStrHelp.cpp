@@ -139,7 +139,7 @@ std::vector<CMMString> CMMStrHelp::ParseStrFromString(LPCSTR lpszString, LPCSTR 
 			}
 			default:
 			{
-				CMMStringA strSub(lpszString, lpszSub - lpszString);
+				CStringA strSub(lpszString, lpszSub - lpszString);
 				vecResult.push_back((LPCTSTR)CA2CT(strSub, nCodePage));
 
 				break;
