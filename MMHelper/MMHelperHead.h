@@ -41,8 +41,6 @@
 	#endif
 #endif
 
-#define _CRT_SECURE_NO_WARNINGS
-
 // P0607R0 Inline Variables For The STL
 #if _HAS_CXX17
 #define _INLINE_VAR	inline

@@ -140,12 +140,12 @@ public:
 
 	}
 	CMMString(LPCTSTR lpszStr)
-		: std::wstring(lpszStr)
+		: std::wstring(NULL == lpszStr ? _T("") : lpszStr)
 	{
 
 	}
 	CMMString(LPCTSTR lpszStr, int nLen)
-		: std::wstring(lpszStr, nLen)
+		: std::wstring(NULL == lpszStr ? _T("") : lpszStr, nLen)
 	{
 
 	}
@@ -189,7 +189,7 @@ public:
 		}
 		while (back() == ch)
 		{
-			erase(rbegin().base());
+			erase(--rbegin().base());
 		}
 
 		return *this;
@@ -217,7 +217,7 @@ public:
 		int nLen = lstrlen(pszTargets);
 		while (Right(nLen) == pszTargets)
 		{
-			erase(rbegin().base(), (rbegin() + nLen).base());
+			erase((rbegin() + nLen).base(), rbegin().base());
 		}
 
 		return(*this);
@@ -310,21 +310,21 @@ public:
 
 		return;
 	}
-	int find(LPCTSTR lpszFind, int nPosOffset = 0)
+	int find(LPCTSTR lpszFind, int nPosOffset = 0) const
 	{
 		return (int)__super::find(lpszFind, nPosOffset);
 	}
-	int find(TCHAR ch, int nPosOffset = 0)
+	int find(TCHAR ch, int nPosOffset = 0) const
 	{
 		return (int)__super::find(ch, nPosOffset);
 	}
-	int rfind(LPCTSTR lpszFind, int nPosOffset = 0)
+	int rfind(LPCTSTR lpszFind) const
 	{
-		return (int)__super::rfind(lpszFind, nPosOffset);
+		return (int)__super::rfind(lpszFind);
 	}
-	int rfind(TCHAR ch, int nPosOffset = 0)
+	int rfind(TCHAR ch) const
 	{
-		return (int)__super::rfind(ch, nPosOffset);
+		return (int)__super::rfind(ch);
 	}
 	int CompareNoCase(LPCTSTR lpszRight)
 	{
@@ -346,18 +346,6 @@ public:
 		__super::operator =(lpszRight);
 
 		return *this;
-	}
-	bool operator == (LPCTSTR lpszRight)
-	{
-		return 0 == lstrcmp(c_str(), lpszRight);
-	}
-	bool operator == (const CMMString &strRight)
-	{
-		return 0 == lstrcmp(c_str(), strRight.c_str());
-	}
-	bool operator != (TCHAR ch)
-	{
-		return false == operator ==(CMMString(ch));
 	}
 	LPTSTR GetBuffer()
 	{
@@ -414,6 +402,14 @@ public:
 	friend bool operator != (LPCTSTR lpszLeft, const CMMString &strRight)
 	{
 		return 0 != lstrcmp(lpszLeft, strRight);
+	}
+	friend bool operator != (const CMMString &strLeft, const CMMString &strRight)
+	{
+		return 0 != lstrcmp(strLeft, strRight);
+	}
+	friend bool operator != (const CMMString &strLeft, LPCTSTR lpszRight)
+	{
+		return 0 != lstrcmp(strLeft, lpszRight);
 	}
 };
 
