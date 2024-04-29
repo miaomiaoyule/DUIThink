@@ -159,11 +159,11 @@ public:
 	{
 
 	}
-	CMMString Mid(int nFrom)
+	CMMString Mid(int nFrom) const
 	{
 		return length() > nFrom ? c_str() + nFrom : _T("");
 	}
-	CMMString Mid(int nFrom, int nCount)
+	CMMString Mid(int nFrom, int nCount) const
 	{
 		return length() > nFrom ? CMMString(c_str() + nFrom, nCount) : _T("");
 	}
@@ -171,7 +171,7 @@ public:
 	{
 		return CMMString(c_str(), min(length(), nCount));
 	}
-	CMMString Right(int nCount)
+	CMMString Right(int nCount) const
 	{
 		return (c_str() + max(0, (int)length() - nCount));
 	}
@@ -318,13 +318,13 @@ public:
 	{
 		return (int)__super::find(ch, nPosOffset);
 	}
-	int rfind(LPCTSTR lpszFind) const
+	int rfind(LPCTSTR lpszFind, int nPosOffset = -1) const
 	{
-		return (int)__super::rfind(lpszFind);
+		return (int)__super::rfind(lpszFind, nPosOffset);
 	}
-	int rfind(TCHAR ch) const
+	int rfind(TCHAR ch, int nPosOffset = -1) const
 	{
-		return (int)__super::rfind(ch);
+		return (int)__super::rfind(ch, nPosOffset);
 	}
 	int CompareNoCase(LPCTSTR lpszRight)
 	{
@@ -351,15 +351,29 @@ public:
 
 		return *this;
 	}
-	LPTSTR GetBuffer()
+	LPTSTR GetBuffer(int nFrom = 0)
 	{
-		return (LPTSTR)c_str();
+		return (LPTSTR)(c_str() + max(0, min(nFrom, length())));
+	}
+	LPTSTR GetBufferSetLength(int nLen)
+	{
+		resize(nLen);
+		operator[](nLen - 1) = '\0';
+
+		return GetBuffer();
 	}
 	operator LPCTSTR() const
 	{
 		return c_str();
 	}
 	friend CMMString operator + (const CMMString &strLeft, TCHAR ch)
+	{
+		CMMString strTemp = strLeft;
+		strTemp.operator += (ch);
+
+		return strTemp;
+	}
+	friend CMMString operator + (const CMMString &strLeft, CHAR ch)
 	{
 		CMMString strTemp = strLeft;
 		strTemp.operator += (ch);

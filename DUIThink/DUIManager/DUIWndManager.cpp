@@ -2838,7 +2838,7 @@ void CDUIWndManager::AdjustImagesHSL()
 		faw::String key = m_ResInfo.m_ImageHash.GetAt(i)->Key;
 		if (!key.empty())
 		{
-			data = static_cast<TImageInfo*>(m_ResInfo.m_ImageHash.Find(key.str_view()));
+			data = static_cast<TImageInfo*>(m_ResInfo.m_ImageHash.find(key.str_view()));
 			if (data && data->bUseHSL)
 			{
 				CDUIRenderEngine::AdjustImage(m_bUseHSL, data, m_H, m_S, m_L);
