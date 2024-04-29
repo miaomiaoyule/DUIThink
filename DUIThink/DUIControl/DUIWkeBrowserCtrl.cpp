@@ -590,7 +590,7 @@ bool CDUIWkeBrowserCtrl::OnWkeNavigation(wkeWebView webView, void *param, wkeNav
 
 		return false;
 	}
-	if (-1 == strUrl.Find(_T("error.html")))
+	if (-1 == strUrl.find(_T("error.html")))
 	{
 		pWkeUI->m_strUrlCur = lpszUrl;
 	}

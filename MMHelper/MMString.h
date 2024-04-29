@@ -335,6 +335,10 @@ public:
 
 		return lstrcmp(strThis, strRight);
 	}
+	TCHAR & operator[](int nPos)
+	{
+		return __super::operator[](nPos);
+	}
 	CMMString & operator = (LPCSTR lpszRight)
 	{
 		__super::operator =((LPCTSTR)CA2CT(lpszRight));
