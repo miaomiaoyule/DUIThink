@@ -243,7 +243,7 @@ void CDUIAnimationDrag::OnDragMoveBegin(CDUIControlBase *pDragCtrl)
 	for (int n = 0; n < GetChildCount(); n++)
 	{
 		CDUIControlBase *pChild = m_pBindContainerCtrl->GetChildAt(n);
-		if (NULL == pChild || false == pChild->IsVisible()) continue;
+		if (NULL == pChild) continue;
 
 		m_vecDragPre.push_back(pChild->GetAbsoluteRect());
 

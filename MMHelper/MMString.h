@@ -183,11 +183,11 @@ public:
 	}
 	CMMString & Trim(TCHAR ch = _T(' '))
 	{
-		while (front() == ch)
+		while (length() > 0 && front() == ch)
 		{
 			erase(begin());
 		}
-		while (back() == ch)
+		while (length() > 0 && back() == ch)
 		{
 			erase(--rbegin().base());
 		}
