@@ -115,12 +115,12 @@ public:
 
 	}
 	CMMString(LPCSTR lpszStr)
-		: std::wstring((LPCTSTR)CA2CT(lpszStr))
+		: std::wstring((LPCTSTR)CA2CT(NULL == lpszStr ? ("") : lpszStr))
 	{
 
 	}
 	CMMString(LPCSTR lpszStr, int nLen)
-		: std::wstring((LPCTSTR)CA2CT(std::string(lpszStr, nLen).c_str()))
+		: std::wstring((LPCTSTR)CA2CT(std::string(NULL == lpszStr ? ("") : lpszStr, nLen).c_str()))
 	{
 
 	}
