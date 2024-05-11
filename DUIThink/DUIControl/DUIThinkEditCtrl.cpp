@@ -1457,6 +1457,18 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 
 			break;
 		}
+		case 'X':
+		case 'x':
+		{
+			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			{
+				Copy();
+
+				PerformClearSelect();
+			}
+
+			break;
+		}
 		case 'C':
 		case 'c':
 		{
