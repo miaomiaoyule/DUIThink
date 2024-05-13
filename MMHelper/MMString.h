@@ -120,7 +120,7 @@ public:
 
 	}
 	CMMString(LPCSTR lpszStr, int nLen)
-		: std::wstring((LPCTSTR)CA2CT(std::string(NULL == lpszStr ? ("") : lpszStr, nLen).c_str()))
+		: std::wstring((LPCTSTR)CA2CT(std::string(NULL == lpszStr ? ("") : lpszStr, nLen < 0 ? strlen(lpszStr) : nLen).c_str()))
 	{
 
 	}
@@ -145,7 +145,7 @@ public:
 
 	}
 	CMMString(LPCTSTR lpszStr, int nLen)
-		: std::wstring(NULL == lpszStr ? _T("") : lpszStr, nLen)
+		: std::wstring(NULL == lpszStr ? _T("") : lpszStr, nLen < 0 ? lstrlen(lpszStr) : nLen)
 	{
 
 	}
@@ -183,11 +183,11 @@ public:
 	}
 	CMMString & Trim(TCHAR ch = _T(' '))
 	{
-		while (length() > 0 && (front() == ch || (_T(' ') == ch && _T('\t') == front())))
+		while (length() > 0 && (front() == ch || (_T(' ') == ch && (_T('\t') == front() || _T('\n') == front()))))
 		{
 			erase(begin());
 		}
-		while (length() > 0 && (back() == ch || (_T(' ') == ch && _T('\t') == back())))
+		while (length() > 0 && (back() == ch || (_T(' ') == ch && (_T('\t') == back() || _T('\n') == back()))))
 		{
 			erase(--rbegin().base());
 		}
