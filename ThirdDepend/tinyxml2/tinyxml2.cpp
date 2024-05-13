@@ -103,18 +103,10 @@ distribution.
 #if defined(_WIN64)
 	#define TIXML_FSEEK _fseeki64
 	#define TIXML_FTELL _ftelli64
-#elif defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__DragonFly__) || (__CYGWIN__)
+#elif defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__DragonFly__) || defined(__CYGWIN__)
 	#define TIXML_FSEEK fseeko
 	#define TIXML_FTELL ftello
-#elif defined(__ANDROID__) 
-    #if __ANDROID_API__ > 24
-        #define TIXML_FSEEK fseeko64
-        #define TIXML_FTELL ftello64
-    #else
-        #define TIXML_FSEEK fseeko
-        #define TIXML_FTELL ftello
-    #endif
-#elif defined(__unix__) && defined(__x86_64__)
+#elif defined(__ANDROID__) && __ANDROID_API__ > 24
 	#define TIXML_FSEEK fseeko64
 	#define TIXML_FTELL ftello64
 #else
@@ -715,7 +707,7 @@ bool XMLUtil::ToUnsigned64(const char* str, uint64_t* value) {
 }
 
 
-char* XMLDocument::Identify( char* p, XMLNode** node )
+char* XMLDocument::Identify( char* p, XMLNode** node, bool first )
 {
     TIXMLASSERT( node );
     TIXMLASSERT( p );
@@ -767,9 +759,19 @@ char* XMLDocument::Identify( char* p, XMLNode** node )
         p += dtdHeaderLen;
     }
     else if ( XMLUtil::StringEqual( p, elementHeader, elementHeaderLen ) ) {
-        returnNode =  CreateUnlinkedNode<XMLElement>( _elementPool );
-        returnNode->_parseLineNum = _parseCurLineNum;
-        p += elementHeaderLen;
+
+        // Preserve whitespace pedantically before closing tag, when it's immediately after opening tag
+        if (WhitespaceMode() == PEDANTIC_WHITESPACE && first && p != start && *(p + elementHeaderLen) == '/') {
+            returnNode = CreateUnlinkedNode<XMLText>(_textPool);
+            returnNode->_parseLineNum = startLine;
+            p = start;	// Back it up, all the text counts.
+            _parseCurLineNum = startLine;
+        }
+        else {
+            returnNode = CreateUnlinkedNode<XMLElement>(_elementPool);
+            returnNode->_parseLineNum = _parseCurLineNum;
+            p += elementHeaderLen;
+        }
     }
     else {
         returnNode = CreateUnlinkedNode<XMLText>( _textPool );
@@ -820,6 +822,34 @@ XMLNode::~XMLNode()
     if ( _parent ) {
         _parent->Unlink( this );
     }
+}
+
+// ChildElementCount was originally suggested by msteiger on the sourceforge page for TinyXML and modified by KB1SPH for TinyXML-2.
+
+int XMLNode::ChildElementCount(const char *value) const {
+	int count = 0;
+
+	const XMLElement *e = FirstChildElement(value);
+
+	while (e) {
+		e = e->NextSiblingElement(value);
+		count++;
+	}
+
+	return count;
+}
+
+int XMLNode::ChildElementCount() const {
+	int count = 0;
+
+	const XMLElement *e = FirstChildElement();
+
+	while (e) {
+		e = e->NextSiblingElement();
+		count++;
+	}
+
+	return count;
 }
 
 const char* XMLNode::Value() const
@@ -1070,21 +1100,23 @@ char* XMLNode::ParseDeep( char* p, StrPair* parentEndTag, int* curLineNumPtr )
 	if (_document->Error())
 		return 0;
 
+	bool first = true;
 	while( p && *p ) {
         XMLNode* node = 0;
 
-        p = _document->Identify( p, &node );
+        p = _document->Identify( p, &node, first );
         TIXMLASSERT( p );
         if ( node == 0 ) {
             break;
         }
+        first = false;
 
        const int initialLineNum = node->_parseLineNum;
 
         StrPair endTag;
         p = node->ParseDeep( p, &endTag, curLineNumPtr );
         if ( !p ) {
-            DeleteNode( node );
+            _document->DeleteNode( node );
             if ( !_document->Error() ) {
                 _document->SetError( XML_ERROR_PARSING, initialLineNum, 0);
             }
@@ -1117,7 +1149,7 @@ char* XMLNode::ParseDeep( char* p, StrPair* parentEndTag, int* curLineNumPtr )
             }
             if ( !wellLocated ) {
                 _document->SetError( XML_ERROR_PARSING_DECLARATION, initialLineNum, "XMLDeclaration value=%s", decl->Value());
-                DeleteNode( node );
+                _document->DeleteNode( node );
                 break;
             }
         }
@@ -1137,7 +1169,7 @@ char* XMLNode::ParseDeep( char* p, StrPair* parentEndTag, int* curLineNumPtr )
             // Handle an end tag returned to this level.
             // And handle a bunch of annoying errors.
             bool mismatch = false;
-            if ( endTag.clear() ) {
+            if ( endTag.Empty() ) {
                 if ( ele->ClosingType() == XMLElement::OPEN ) {
                     mismatch = true;
                 }
@@ -1152,7 +1184,7 @@ char* XMLNode::ParseDeep( char* p, StrPair* parentEndTag, int* curLineNumPtr )
             }
             if ( mismatch ) {
                 _document->SetError( XML_ERROR_MISMATCHED_ELEMENT, initialLineNum, "XMLElement name=%s", ele->Name());
-                DeleteNode( node );
+                _document->DeleteNode( node );
                 break;
             }
         }
@@ -2062,7 +2094,7 @@ char* XMLElement::ParseDeep( char* p, StrPair* parentEndTag, int* curLineNumPtr 
     }
 
     p = _value.ParseName( p );
-    if ( _value.clear() ) {
+    if ( _value.Empty() ) {
         return 0;
     }
 
@@ -2472,7 +2504,7 @@ void XMLDocument::ClearError() {
 
 void XMLDocument::SetError( XMLError error, int lineNum, const char* format, ... )
 {
-    TIXMLASSERT( error >= 0 && error < XML_ERROR_COUNT );
+    TIXMLASSERT(error >= 0 && error < XML_ERROR_COUNT);
     _errorID = error;
     _errorLineNum = lineNum;
 	_errorStr.Reset();
@@ -2481,7 +2513,8 @@ void XMLDocument::SetError( XMLError error, int lineNum, const char* format, ...
     char* buffer = new char[BUFFER_SIZE];
 
     TIXMLASSERT(sizeof(error) <= sizeof(int));
-    TIXML_SNPRINTF(buffer, BUFFER_SIZE, "Error=%s ErrorID=%d (0x%x) Line number=%d", ErrorIDToName(error), int(error), int(error), lineNum);
+    TIXML_SNPRINTF(buffer, BUFFER_SIZE, "Error=%s ErrorID=%d (0x%x) Line number=%d",
+        ErrorIDToName(error), static_cast<int>(error), static_cast<unsigned int>(error), lineNum);
 
 	if (format) {
 		size_t len = strlen(buffer);
@@ -2508,7 +2541,7 @@ void XMLDocument::SetError( XMLError error, int lineNum, const char* format, ...
 
 const char* XMLDocument::ErrorStr() const
 {
-	return _errorStr.clear() ? "" : _errorStr.GetStr();
+	return _errorStr.Empty() ? "" : _errorStr.GetStr();
 }
 
 
