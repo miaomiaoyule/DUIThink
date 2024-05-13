@@ -2323,6 +2323,7 @@ static FILE* callfopen( const char* filepath, const char* mode )
     FILE* fp = 0;
     const errno_t err = fopen_s( &fp, filepath, mode );
     if ( err ) {
+        TIXMLASSERT(false);
         return 0;
     }
 #else

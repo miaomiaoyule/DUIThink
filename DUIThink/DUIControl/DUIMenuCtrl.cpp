@@ -54,6 +54,12 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 	{
 		m_pWndManagerOwner = static_cast<CDUIWndManager*>(m_pOwner->GetWndManager());
 	}
+	if (NULL == m_pWndManagerOwner)
+	{
+		return;
+	}
+
+	m_pWndManager->SetDesigned(m_pWndManagerOwner->IsDesigned());
 
 	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, m_ptTrack.x, m_ptTrack.y);
 	::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
@@ -81,9 +87,9 @@ void CDUIMenuWnd::UnInit()
 {
 	//save
 #ifdef DUI_DESIGN
-	if (m_pWndManager->GetRootCtrl())
+	if (m_pWndManager->GetRootCtrl() && false == m_pWndManager->IsDesigned())
 	{
-		CDUIGlobal::GetInstance()->SaveDui(GetDuiName(), MMDynamicPtr(CDUIWndManager, m_pWndManager));
+		CDUIGlobal::GetInstance()->SaveDui(GetDuiName(), m_pWndManager);
 	}
 #endif
 
