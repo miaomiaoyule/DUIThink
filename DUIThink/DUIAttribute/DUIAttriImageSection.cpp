@@ -61,44 +61,50 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 	//corner
 	CDUIRect rcCorner = bScale ? DuiDpiScaleAttri(ImageSection.rcCorner) : ImageSection.rcCorner;
 
-	//verify
-	if (rcDest.empty()) return;
-
 	//mask
+	Gdiplus::Bitmap *pBmp = NULL;
 	if (GetMask() > 0xff000000)
 	{
 		hBitmap = CDUIRenderEngine::CopyBitmap(hBitmap, GetMask());
+	}
+	if (pWndManager->IsGdiplusRenderImage())
+	{
+		pBmp = hBitmap != pImageBase->GetHandle() ? CDUIRenderEngine::GetAlphaBitmap(hBitmap) : pImageBase->GetBitmap();
+	}
+	do
+	{
+		//verify
+		if (rcDest.empty()) return;
 
+		//draw
 		if (pWndManager->IsGdiplusRenderImage())
 		{
-			Gdiplus::Bitmap *pBmp = CDUIRenderEngine::GetAlphaBitmap(hBitmap);
-			
 			CDUIRenderEngine::DrawImage(hDC, pBmp, rcDest, rcPaint, rcSource,
-				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, true, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
-			
-			MMSafeDelete(pBmp);
+				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
 		}
 		else
 		{
 			CDUIRenderEngine::DrawImage(hDC, hBitmap, rcDest, rcPaint, rcSource,
-				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, true, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
+				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
 		}
 
+		//move right
+		rcDest.Offset(rcDest.GetWidth(), 0);
+
+		//next line
+		if (rcDest.left >= rcItem.right)
+		{
+			rcDest.Offset(rcItem.left - rcDest.left, rcDest.GetHeight());
+		}
+
+		if (rcDest.top >= rcItem.bottom) break;
+
+	} while (HorizImageAlign_Tile == ImageSection.HorizImageAlign && VertImageAlign_Tile == ImageSection.VertImageAlign);
+
+	if (hBitmap != pImageBase->GetHandle())
+	{
 		MMSafeDeleteObject(hBitmap);
-
-		return;
-	}
-
-	//draw
-	if (pWndManager->IsGdiplusRenderImage())
-	{
-		CDUIRenderEngine::DrawImage(hDC, pImageBase->GetBitmap(), rcDest, rcPaint, rcSource,
-			rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
-	}
-	else
-	{
-		CDUIRenderEngine::DrawImage(hDC, hBitmap, rcDest, rcPaint, rcSource,
-			rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
+		MMSafeDelete(pBmp);
 	}
 
 	return;

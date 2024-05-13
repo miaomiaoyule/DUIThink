@@ -54,6 +54,7 @@ enum enDuiHorizImageAlignType
 	HorizImageAlign_Left,
 	HorizImageAlign_Right,
 	HorizImageAlign_Center,
+	HorizImageAlign_Tile,
 };
 
 //image section
@@ -63,6 +64,7 @@ enum enDuiVertImageAlignType
 	VertImageAlign_Top,
 	VertImageAlign_Bottom,
 	VertImageAlign_Center,
+	VertImageAlign_Tile,
 };
 
 //image section
