@@ -942,3 +942,56 @@ bool CMMFile::OperatorFileOrFolder(CMMString strSrc, CMMString strDest, int nOpe
 	int nRes = SHFileOperation(&FileOp);
 	return 0 == nRes;
 }
+
+bool CMMFile::SelectFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT std::vector<CMMString> &vecFileSelect)
+{
+	CComPtr<IFileOpenDialog> pIFileOpenDialog = NULL;
+	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pIFileOpenDialog));
+	if (false == SUCCEEDED(hr)) return false;
+
+	//filter
+	std::vector<COMDLG_FILTERSPEC> vecFilter;
+	vecFilter.push_back({ _T("所有文件"), _T("*.*") });
+	for (auto FilterItem : mapFilter)
+	{
+		vecFilter.push_back({ FilterItem.first, FilterItem.second });
+	}
+
+	//show
+	DWORD dwFlags;
+	pIFileOpenDialog->GetOptions(&dwFlags);
+	pIFileOpenDialog->SetOptions(dwFlags | FOS_FORCEFILESYSTEM | FOS_ALLOWMULTISELECT);
+	pIFileOpenDialog->SetFileTypes(vecFilter.size(), vecFilter.data());
+	pIFileOpenDialog->SetFileTypeIndex(0);
+	pIFileOpenDialog->Show(hWndParent);
+
+	//res
+	CComPtr<IShellItemArray> pItems = NULL;
+	hr = pIFileOpenDialog->GetResults(&pItems);
+	if (false == SUCCEEDED(hr)) return false;
+	
+	DWORD dwCount = 0;
+	if (false == SUCCEEDED(pItems->GetCount(&dwCount))) return false;
+	
+	//select
+	for (int i = 0; i < dwCount; i++)
+	{
+		CComPtr<IShellItem> pItem = NULL;
+		if (SUCCEEDED(pItems->GetItemAt(i, &pItem)))
+		{
+			//DWORD dwAttrs = 0;
+			//if (SUCCEEDED(pItem->GetAttributes(SFGAO_LINK, &dwAttrs)) && (dwAttrs & SFGAO_LINK)) continue;
+			
+			LPWSTR szPath = NULL;
+			hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &szPath);
+			if (SUCCEEDED(hr) && szPath)
+			{
+				vecFileSelect.push_back(szPath);
+				
+				::CoTaskMemFree(szPath);
+			}
+		}
+	}
+
+	return true;
+}

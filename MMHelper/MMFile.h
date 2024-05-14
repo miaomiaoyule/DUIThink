@@ -179,6 +179,14 @@ public:
 	// Parameter: 	CMMString strDest Àý£ºD:\user\desktop\test.txt D:\user\desktop\test
 	//************************************
 	static bool OperatorFileOrFolder(CMMString strSrc, CMMString strDest, int nOperator = FO_COPY, bool bUI = false, bool bMultiFile = false, bool bSameDir = false);
+
+	//************************************
+	// Description:	select file as filter ext 
+	// Parameter: 	HWND hWndParent
+	// Parameter: 	std::unordered_map<CMMString, CMMString> mapFilter Àý£º	L"png", L"*.png"
+	//																		L"all", L"*.jpg;*.jpeg;*.bmp;*.png;*.mp4"
+	//************************************
+	static bool SelectFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT std::vector<CMMString> &vecFileSelect);
 };
 
 //////////////////////////////////////////////////////////////////////////
