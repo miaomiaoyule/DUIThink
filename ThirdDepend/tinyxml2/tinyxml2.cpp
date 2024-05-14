@@ -2319,16 +2319,16 @@ static FILE* callfopen( const char* filepath, const char* mode )
 {
     TIXMLASSERT( filepath );
     TIXMLASSERT( mode );
-#if defined(_MSC_VER) && (_MSC_VER >= 1400 ) && (!defined WINCE)
-    FILE* fp = 0;
-    const errno_t err = fopen_s( &fp, filepath, mode );
-    if ( err ) {
-        TIXMLASSERT(false);
-        return 0;
-    }
-#else
+//#if defined(_MSC_VER) && (_MSC_VER >= 1400 ) && (!defined WINCE)
+//    FILE* fp = 0;
+//    const errno_t err = fopen_s( &fp, filepath, mode );
+//    if ( err ) {
+//        TIXMLASSERT(false);
+//        return 0;
+//    }
+//#else
     FILE* fp = fopen( filepath, mode );
-#endif
+//#endif
     return fp;
 }
 
