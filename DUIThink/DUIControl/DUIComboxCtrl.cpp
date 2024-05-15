@@ -743,12 +743,11 @@ bool CDUIComboxCtrl::SelectItem(int nIndex)
 {
 	if (NULL == m_pShowListView) return false;
 
-	CDUIListItemCtrl *pItem = m_pShowListView->GetChildAt(nIndex);
-	if (NULL == pItem) return false;
-
-	SetText(pItem->GetText());
 	m_pShowListView->SelectItem(nIndex);
 	
+	CDUIListItemCtrl *pItem = m_pShowListView->GetChildAt(nIndex);
+	SetText(pItem ? pItem->GetText() : _T(""));
+
 	return true;
 }
 
