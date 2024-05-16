@@ -943,7 +943,43 @@ bool CMMFile::OperatorFileOrFolder(CMMString strSrc, CMMString strDest, int nOpe
 	return 0 == nRes;
 }
 
-bool CMMFile::SelectFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT std::vector<CMMString> &vecFileSelect)
+bool CMMFile::OperatorSaveToFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT CMMString &strFileSave)
+{
+	CComPtr<IFileSaveDialog> pIFileSaveDialog = NULL;
+	HRESULT hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_PPV_ARGS(&pIFileSaveDialog));
+	if (false == SUCCEEDED(hr)) return false;
+
+	//filter
+	std::vector<COMDLG_FILTERSPEC> vecFilter;
+	vecFilter.push_back({ _T("所有文件"), _T("*.*") });
+	for (auto &FilterItem : mapFilter)
+	{
+		vecFilter.push_back({ FilterItem.first, FilterItem.second });
+	}
+
+	//show
+	pIFileSaveDialog->SetFileTypes(vecFilter.size(), vecFilter.data());
+	pIFileSaveDialog->SetFileTypeIndex(0);
+	pIFileSaveDialog->Show(hWndParent);
+
+	//res
+	CComPtr<IShellItem> pItem = NULL;
+	hr = pIFileSaveDialog->GetResult(&pItem);
+	if (false == SUCCEEDED(hr)) return false;
+
+	LPWSTR szPath = NULL;
+	hr = pItem->GetDisplayName(SIGDN_DESKTOPABSOLUTEPARSING, &szPath);
+	if (SUCCEEDED(hr) && szPath)
+	{
+		strFileSave = szPath;
+
+		CoTaskMemFree(szPath);
+	}
+
+	return true;
+}
+
+bool CMMFile::OperatorSelectFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT std::vector<CMMString> &vecFileSelect)
 {
 	CComPtr<IFileOpenDialog> pIFileOpenDialog = NULL;
 	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pIFileOpenDialog));
@@ -952,7 +988,7 @@ bool CMMFile::SelectFile(HWND hWndParent, std::unordered_map<CMMString, CMMStrin
 	//filter
 	std::vector<COMDLG_FILTERSPEC> vecFilter;
 	vecFilter.push_back({ _T("所有文件"), _T("*.*") });
-	for (auto FilterItem : mapFilter)
+	for (auto &FilterItem : mapFilter)
 	{
 		vecFilter.push_back({ FilterItem.first, FilterItem.second });
 	}

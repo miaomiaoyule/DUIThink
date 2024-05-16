@@ -181,12 +181,20 @@ public:
 	static bool OperatorFileOrFolder(CMMString strSrc, CMMString strDest, int nOperator = FO_COPY, bool bUI = false, bool bMultiFile = false, bool bSameDir = false);
 
 	//************************************
+	// Description:	get user save filename 
+	// Parameter: 	HWND hWndParent
+	// Parameter: 	std::unordered_map<CMMString, CMMString> mapFilter Àý£º	L"png", L"*.png"
+	//																		L"all", L"*.jpg;*.jpeg;*.bmp;*.png;*.mp4"
+	//************************************
+	static bool OperatorSaveToFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT CMMString &strFileSave);
+
+	//************************************
 	// Description:	select file as filter ext 
 	// Parameter: 	HWND hWndParent
 	// Parameter: 	std::unordered_map<CMMString, CMMString> mapFilter Àý£º	L"png", L"*.png"
 	//																		L"all", L"*.jpg;*.jpeg;*.bmp;*.png;*.mp4"
 	//************************************
-	static bool SelectFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT std::vector<CMMString> &vecFileSelect);
+	static bool OperatorSelectFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT std::vector<CMMString> &vecFileSelect);
 };
 
 //////////////////////////////////////////////////////////////////////////
