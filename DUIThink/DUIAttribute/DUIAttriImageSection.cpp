@@ -56,7 +56,7 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 	//dest
 	CDUIRect rcDest = GetDest(rcSource, rcItem);
 	rcDest.Offset(rcItem.left, rcItem.top);
-	IntersectRect(&rcDest, &rcDest, &rcItem);
+	if (false == IntersectRect(&CDUIRect(), &rcDest, &rcItem)) return;
 
 	//corner
 	CDUIRect rcCorner = bScale ? DuiDpiScaleAttri(ImageSection.rcCorner) : ImageSection.rcCorner;
