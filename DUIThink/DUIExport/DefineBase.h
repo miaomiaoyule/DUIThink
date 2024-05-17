@@ -205,20 +205,6 @@ enum enDuiType
 	DuiType_Calendar,
 };
 
-//save image
-enum enDuiSaveImageType
-{
-	SaveImage_Bmp,
-	SaveImage_Emf,
-	SaveImage_Wmf,
-	SaveImage_Jpeg,
-	SaveImage_Png,
-	SaveImage_Gif,
-	SaveImage_Tiff,
-	SaveImage_Exif,
-	SaveImage_Icon,
-};
-
 //////////////////////////////////////////////////////////////////////////
 
 #endif

@@ -1645,58 +1645,49 @@ Bitmap *CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB)
 	return pBitmap;
 }
 
-bool CDUIRenderEngine::SaveImage(HBITMAP hBitmap, CMMString strFile, enDuiSaveImageType SaveImageType, bool bAlpahImage)
+bool CDUIRenderEngine::SaveImage(HBITMAP hBitmap, CMMString strFile, bool bAlpahImage)
 {
 	if (hBitmap == NULL || strFile.empty()) return false;
 
-	GUID ImageFormat = GUID_NULL;
-	switch (SaveImageType)
+	CMMString strExt;
+	CMMFile::ParseFileName(strFile, CMMString(), strExt);
+
+	GUID ImageFormat = ImageFormatPNG;
+	if (0 == strExt.CompareNoCase(_T("bmp")))
 	{
-		case SaveImage_Bmp:
-		{
-			ImageFormat = Gdiplus::ImageFormatBMP;
-			break;
-		}
-		case SaveImage_Emf:
-		{
-			ImageFormat = Gdiplus::ImageFormatEMF;
-			break;
-		}
-		case SaveImage_Exif:
-		{
-			ImageFormat = Gdiplus::ImageFormatEXIF;
-			break;
-		}
-		case SaveImage_Gif:
-		{
-			ImageFormat = Gdiplus::ImageFormatGIF;
-			break;
-		}
-		case SaveImage_Icon:
-		{
-			ImageFormat = Gdiplus::ImageFormatIcon;
-			break;
-		}
-		case SaveImage_Jpeg:
-		{
-			ImageFormat = Gdiplus::ImageFormatJPEG;
-			break;
-		}
-		case SaveImage_Png:
-		{
-			ImageFormat = Gdiplus::ImageFormatPNG;
-			break;
-		}
-		case SaveImage_Tiff:
-		{
-			ImageFormat = Gdiplus::ImageFormatTIFF;
-			break;
-		}
-		case SaveImage_Wmf:
-		{
-			ImageFormat = Gdiplus::ImageFormatWMF;
-			break;
-		}
+		ImageFormat = Gdiplus::ImageFormatBMP;
+	}
+	else if(0 == strExt.CompareNoCase(_T("emf")))
+	{
+		ImageFormat = Gdiplus::ImageFormatEMF;
+	}
+	else if (0 == strExt.CompareNoCase(_T("exif")))
+	{
+		ImageFormat = Gdiplus::ImageFormatEXIF;
+	}
+	else if (0 == strExt.CompareNoCase(_T("gif")))
+	{
+		ImageFormat = Gdiplus::ImageFormatGIF;
+	}
+	else if (0 == strExt.CompareNoCase(_T("ico")))
+	{
+		ImageFormat = Gdiplus::ImageFormatIcon;
+	}
+	else if (0 == strExt.CompareNoCase(_T("jpeg")))
+	{
+		ImageFormat = Gdiplus::ImageFormatJPEG;
+	}
+	else if (0 == strExt.CompareNoCase(_T("png")))
+	{
+		ImageFormat = Gdiplus::ImageFormatPNG;
+	}
+	else if (0 == strExt.CompareNoCase(_T("tiff")))
+	{
+		ImageFormat = Gdiplus::ImageFormatTIFF;
+	}
+	else if (0 == strExt.CompareNoCase(_T("wmf")))
+	{
+		ImageFormat = Gdiplus::ImageFormatWMF;
 	}
 
 	CImage ImageObj;
