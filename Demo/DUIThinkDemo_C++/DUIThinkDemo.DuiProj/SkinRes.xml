@@ -471,7 +471,7 @@
 
 <CDUIImageBase ResName="QQLogo" Path="QQLogo.png"/>
 
-<CDUIImageBase ResName="QQÍ¼Æ¬20160125155954" Path="QQÍ¼Æ¬20160125155954.jpg"/>
+<CDUIImageBase ResName="QQå›¾ç‰‡20160125155954" Path="QQå›¾ç‰‡20160125155954.jpg"/>
 
 <CDUIImageBase ResName="qzonewb" Path="qzonewb.png"/>
 
@@ -545,43 +545,43 @@
 
 <CDUIImageBase ResName="VScrollThumb" Path="VScrollThumb.png"/>
 
-<CDUIImageBase ResName="°×-¹Ø±Õ100" Path="°×-¹Ø±Õ100.svg"/>
+<CDUIImageBase ResName="ç™½-å…³é—­100" Path="ç™½-å…³é—­100.svg"/>
 
-<CDUIImageBase ResName="°×-¼ÓÔØÖÐ100" Path="°×-¼ÓÔØÖÐ100.svg"/>
+<CDUIImageBase ResName="ç™½-åŠ è½½ä¸­100" Path="ç™½-åŠ è½½ä¸­100.svg"/>
 
-<CDUIImageBase ResName="°×-ÉèÖÃ36-100" Path="°×-ÉèÖÃ36-100.svg"/>
+<CDUIImageBase ResName="ç™½-è®¾ç½®36-100" Path="ç™½-è®¾ç½®36-100.svg"/>
 
-<CDUIImageBase ResName="°×-ËÑË÷·þÎñ100" Path="°×-ËÑË÷·þÎñ100.svg"/>
+<CDUIImageBase ResName="ç™½-æœç´¢æœåŠ¡100" Path="ç™½-æœç´¢æœåŠ¡100.svg"/>
 
-<CDUIImageBase ResName="°×-ËÑË÷Ö÷°´Å¥100" Path="°×-ËÑË÷Ö÷°´Å¥100.svg"/>
+<CDUIImageBase ResName="ç™½-æœç´¢ä¸»æŒ‰é’®100" Path="ç™½-æœç´¢ä¸»æŒ‰é’®100.svg"/>
 
-<CDUIImageBase ResName="°×-Í¬²½ÎÞÄÚÈÝ100" Path="°×-Í¬²½ÎÞÄÚÈÝ100.svg"/>
+<CDUIImageBase ResName="ç™½-åŒæ­¥æ— å†…å®¹100" Path="ç™½-åŒæ­¥æ— å†…å®¹100.svg"/>
 
-<CDUIImageBase ResName="°×-×îÐ¡»¯100" Path="°×-×îÐ¡»¯100.svg"/>
+<CDUIImageBase ResName="ç™½-æœ€å°åŒ–100" Path="ç™½-æœ€å°åŒ–100.svg"/>
 
-<CDUIImageBase ResName="ºÚ-¹Ø±Õ100" Path="ºÚ-¹Ø±Õ100.svg"/>
+<CDUIImageBase ResName="é»‘-å…³é—­100" Path="é»‘-å…³é—­100.svg"/>
 
-<CDUIImageBase ResName="ºÚ-¼ÓÔØÖÐ100" Path="ºÚ-¼ÓÔØÖÐ100.svg"/>
+<CDUIImageBase ResName="é»‘-åŠ è½½ä¸­100" Path="é»‘-åŠ è½½ä¸­100.svg"/>
 
-<CDUIImageBase ResName="ºÚ-ÉèÖÃ36-100" Path="ºÚ-ÉèÖÃ36-100.svg"/>
+<CDUIImageBase ResName="é»‘-è®¾ç½®36-100" Path="é»‘-è®¾ç½®36-100.svg"/>
 
-<CDUIImageBase ResName="ºÚ-ËÑË÷·þÎñ100" Path="ºÚ-ËÑË÷·þÎñ100.svg"/>
+<CDUIImageBase ResName="é»‘-æœç´¢æœåŠ¡100" Path="é»‘-æœç´¢æœåŠ¡100.svg"/>
 
-<CDUIImageBase ResName="ºÚ-ËÑË÷Ö÷°´Å¥100" Path="ºÚ-ËÑË÷Ö÷°´Å¥100.svg"/>
+<CDUIImageBase ResName="é»‘-æœç´¢ä¸»æŒ‰é’®100" Path="é»‘-æœç´¢ä¸»æŒ‰é’®100.svg"/>
 
-<CDUIImageBase ResName="ºÚ-Í¬²½ÎÞÄÚÈÝ100" Path="ºÚ-Í¬²½ÎÞÄÚÈÝ100.svg"/>
+<CDUIImageBase ResName="é»‘-åŒæ­¥æ— å†…å®¹100" Path="é»‘-åŒæ­¥æ— å†…å®¹100.svg"/>
 
-<CDUIImageBase ResName="ºÚ-×îÐ¡»¯100" Path="ºÚ-×îÐ¡»¯100.svg"/>
+<CDUIImageBase ResName="é»‘-æœ€å°åŒ–100" Path="é»‘-æœ€å°åŒ–100.svg"/>
 
-<CDUIImageBase ResName="Í¨ÓÃ-±¾µØËÑË÷logo200" Path="Í¨ÓÃ-±¾µØËÑË÷logo200.svg"/>
+<CDUIImageBase ResName="é€šç”¨-æœ¬åœ°æœç´¢logo200" Path="é€šç”¨-æœ¬åœ°æœç´¢logo200.svg"/>
 
-<CDUIImageBase ResName="ºÚ_BtnMax" Path="ºÚ_BtnMax.png"/>
+<CDUIImageBase ResName="é»‘_BtnMax" Path="é»‘_BtnMax.png"/>
 
-<CDUIImageBase ResName="ºÚ_BtnRestore" Path="ºÚ_BtnRestore.png"/>
+<CDUIImageBase ResName="é»‘_BtnRestore" Path="é»‘_BtnRestore.png"/>
 
-<CDUIImageBase ResName="°×_BtnMax" Path="°×_BtnMax.png"/>
+<CDUIImageBase ResName="ç™½_BtnMax" Path="ç™½_BtnMax.png"/>
 
-<CDUIImageBase ResName="°×_BtnRestore" Path="°×_BtnRestore.png"/>
+<CDUIImageBase ResName="ç™½_BtnRestore" Path="ç™½_BtnRestore.png"/>
 
 <CDUIImageBase ResName="explorer_hc" Path="explorer_hc.bmp"/>
 
@@ -591,11 +591,11 @@
 
 <CDUIImageBase ResName="Wrong" Path="Wrong.png"/>
 
-<CDUIImageBase ResName="²æ" Path="²æ.png"/>
+<CDUIImageBase ResName="å‰" Path="å‰.png"/>
 
-<CDUIImageBase ResName="¾Ü¾ø" Path="¾Ü¾ø.png"/>
+<CDUIImageBase ResName="æ‹’ç»" Path="æ‹’ç».png"/>
 
-<CDUIImageBase ResName="ÕýÈ·" Path="ÕýÈ·.png"/>
+<CDUIImageBase ResName="æ­£ç¡®" Path="æ­£ç¡®.png"/>
 
 <CDUIImageBase ResName="btn_down_hover" Path="btn_down_hover.png"/>
 
@@ -613,20 +613,20 @@
 
 <CDUIImageBase ResName="Close" Path="Close.png"/>
 
-<CDUIImageBase ResName="¿¨ÅÆ´óÊ¦2" Path="¿¨ÅÆ´óÊ¦2.png"/>
+<CDUIImageBase ResName="å¡ç‰Œå¤§å¸ˆ2" Path="å¡ç‰Œå¤§å¸ˆ2.png"/>
 
-<CDUIImageBase ResName="¿¨ÅÆ´óÊ¦3" Path="¿¨ÅÆ´óÊ¦3.png"/>
+<CDUIImageBase ResName="å¡ç‰Œå¤§å¸ˆ3" Path="å¡ç‰Œå¤§å¸ˆ3.png"/>
 
-<CDUIImageBase ResName="¿¨ÅÆ´óÊ¦4" Path="¿¨ÅÆ´óÊ¦4.png"/>
+<CDUIImageBase ResName="å¡ç‰Œå¤§å¸ˆ4" Path="å¡ç‰Œå¤§å¸ˆ4.png"/>
 
-<CDUIImageBase ResName="¿¨ÅÆ´óÊ¦5" Path="¿¨ÅÆ´óÊ¦5.png"/>
+<CDUIImageBase ResName="å¡ç‰Œå¤§å¸ˆ5" Path="å¡ç‰Œå¤§å¸ˆ5.png"/>
 
-<CDUIImageBase ResName="¿¨ÅÆ´óÊ¦6" Path="¿¨ÅÆ´óÊ¦6.png"/>
+<CDUIImageBase ResName="å¡ç‰Œå¤§å¸ˆ6" Path="å¡ç‰Œå¤§å¸ˆ6.png"/>
 
-<CDUIImageBase ResName="¿¨ÅÆ´óÊ¦7" Path="¿¨ÅÆ´óÊ¦7.png"/>
+<CDUIImageBase ResName="å¡ç‰Œå¤§å¸ˆ7" Path="å¡ç‰Œå¤§å¸ˆ7.png"/>
 
-<CDUIImageBase ResName="¿¨ÅÆ´óÊ¦8" Path="¿¨ÅÆ´óÊ¦8.png"/>
+<CDUIImageBase ResName="å¡ç‰Œå¤§å¸ˆ8" Path="å¡ç‰Œå¤§å¸ˆ8.png"/>
 
-<CDUIImageBase ResName="¿¨ÅÆ´óÊ¦1" Path="¿¨ÅÆ´óÊ¦1.jpg"/>
+<CDUIImageBase ResName="å¡ç‰Œå¤§å¸ˆ1" Path="å¡ç‰Œå¤§å¸ˆ1.jpg"/>
 
 <CDUIImageBase ResName="BkViewNewVersion" Path="BkViewNewVersion.png"/>
