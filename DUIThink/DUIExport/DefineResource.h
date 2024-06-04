@@ -65,7 +65,8 @@ enum enDuiResVersion
 	DuiResVersion_0 = 0,
 	DuiResVersion_1,
 	DuiResVersion_2,
-	DuiResVersion_Max = DuiResVersion_2,
+	DuiResVersion_3,
+	DuiResVersion_Max = DuiResVersion_3,
 };
 
 enum enDuiResType

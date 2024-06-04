@@ -38,7 +38,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	{
 		//dpi dlg
 		CmdLine.Get(Name_DpiDlgKey, strValue);
-		if (false == strValue.IsEmpty())
+		if (false == strValue.empty())
 		{
 			//have
 			HWND hWndDpiDlg = FindWindow(_T("CDlgDpi"), NULL);

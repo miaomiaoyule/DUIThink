@@ -612,21 +612,3 @@
 <CDUIImageBase ResName="CheckExpandUnSelect" Path="CheckExpandUnSelect.png"/>
 
 <CDUIImageBase ResName="Close" Path="Close.png"/>
-
-<CDUIImageBase ResName="卡牌大师2" Path="卡牌大师2.png"/>
-
-<CDUIImageBase ResName="卡牌大师3" Path="卡牌大师3.png"/>
-
-<CDUIImageBase ResName="卡牌大师4" Path="卡牌大师4.png"/>
-
-<CDUIImageBase ResName="卡牌大师5" Path="卡牌大师5.png"/>
-
-<CDUIImageBase ResName="卡牌大师6" Path="卡牌大师6.png"/>
-
-<CDUIImageBase ResName="卡牌大师7" Path="卡牌大师7.png"/>
-
-<CDUIImageBase ResName="卡牌大师8" Path="卡牌大师8.png"/>
-
-<CDUIImageBase ResName="卡牌大师1" Path="卡牌大师1.jpg"/>
-
-<CDUIImageBase ResName="BkViewNewVersion" Path="BkViewNewVersion.png"/>

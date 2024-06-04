@@ -204,7 +204,14 @@ bool CDUIFontBase::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 
 	if (0 == strcmp(lpszName, Dui_Resource_Key_FontName))
 	{
-		m_strFontName = lpszValue;
+		if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_3)
+		{
+			m_strFontName = lpszValue;
+		}
+		else
+		{
+			m_strFontName = CA2CT(lpszValue, CP_UTF8);
+		}
 
 		return true;
 	}
@@ -246,7 +253,7 @@ bool CDUIFontBase::SaveAttribute(tinyxml2::XMLElement* pNode)
 {
 	if (false == __super::SaveAttribute(pNode)) return false;
 
-	pNode->SetAttribute(Dui_Resource_Key_FontName, (LPSTR)CT2CA(m_strFontName));
+	pNode->SetAttribute(Dui_Resource_Key_FontName, (LPSTR)CT2CA(m_strFontName, CP_UTF8));
 	pNode->SetAttribute(Dui_Resource_Key_FontSize, m_nSize);
 	pNode->SetAttribute(Dui_Resource_Key_FontBold, m_lWeight);
 	pNode->SetAttribute(Dui_Resource_Key_FontItalic, (int)m_bItalic);

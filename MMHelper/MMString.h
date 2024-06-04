@@ -230,6 +230,8 @@ public:
 	}
 	CMMString & Replace(LPCTSTR lpszSrc, LPCTSTR lpszDest)
 	{
+		if (lstrlen(lpszSrc) <= 0) return *this;
+
 		int nPos = find(lpszSrc);
 		while (-1 != nPos)
 		{
