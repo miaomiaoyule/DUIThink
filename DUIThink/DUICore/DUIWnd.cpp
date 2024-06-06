@@ -986,3 +986,18 @@ LRESULT CALLBACK CDUIWnd::__ControlProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 		return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 }
+
+void CDUIWnd::ForegroundWindow(HWND hWnd)
+{
+	HWND hWndForground = GetForegroundWindow();
+	DWORD dwProIDForground = ::GetWindowThreadProcessId(hWndForground, NULL);
+	DWORD dwProIDCur = ::GetCurrentThreadId();
+
+	::AttachThreadInput(dwProIDCur, dwProIDForground, TRUE);
+	::SetActiveWindow(hWnd);
+	::BringWindowToTop(hWnd);
+	::SetForegroundWindow(hWnd);
+	::AttachThreadInput(dwProIDCur, dwProIDForground, FALSE);
+
+	return;
+}

@@ -304,6 +304,10 @@ public:
 
 		return *this;
 	}
+	bool empty() const noexcept
+	{
+		return (length() > 0 && _T('\0') == at(0)) || __super::empty();
+	}
 	void SetAt(int nPos, TCHAR ch)
 	{
 		if (nPos < 0 || nPos >= length()) return;

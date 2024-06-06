@@ -61,8 +61,7 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 
 	m_pWndManager->SetDesigned(m_pWndManagerOwner->IsDesigned());
 
-	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, m_ptTrack.x, m_ptTrack.y);
-	::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
+	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP, WS_EX_TOOLWINDOW, m_ptTrack.x, m_ptTrack.y);
 	
 	//focus
 	CDUIMenuCtrl *pRootMenuCtrl = GetMenuView();
@@ -291,7 +290,8 @@ void CDUIMenuWnd::ResizeMenu()
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(-rcWnd.GetWidth(), 0);
 	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight());
 
-	SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
+	SetWindowPos(m_hWnd, HWND_TOPMOST, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOACTIVATE);
+	ForegroundWindow(m_hWnd);
 
 	return;
 }
