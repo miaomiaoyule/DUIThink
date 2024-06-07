@@ -61,7 +61,7 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 
 	m_pWndManager->SetDesigned(m_pWndManagerOwner->IsDesigned());
 
-	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP, WS_EX_TOOLWINDOW, m_ptTrack.x, m_ptTrack.y);
+	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW, m_ptTrack.x, m_ptTrack.y);
 	
 	//focus
 	CDUIMenuCtrl *pRootMenuCtrl = GetMenuView();

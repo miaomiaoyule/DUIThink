@@ -133,7 +133,7 @@ bool CDUIAttributeColorSwitch::DrawLine(HDC hDC, const CDUIRect &rcPaint, int nB
 	return true;
 }
 
-bool CDUIAttributeColorSwitch::FillRect(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust)
+bool CDUIAttributeColorSwitch::FillRect(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust, ARGB dwColorGradient)
 {
 	DWORD dwColor = GetColorValue();
 	if (0 == dwColor) return false;
@@ -143,14 +143,19 @@ bool CDUIAttributeColorSwitch::FillRect(HDC hDC, const CDUIRect &rcPaint, bool b
 		short H, S, L;
 		CDUIGlobal::GetInstance()->GetHSL(&H, &S, &L);
 		dwColor = CDUIRenderEngine::AdjustColor(dwColor, H, S, L);
+
+		if (0 != dwColorGradient)
+		{
+			dwColorGradient = CDUIRenderEngine::AdjustColor(dwColorGradient, H, S, L);
+		}
 	}
 
-	CDUIRenderEngine::FillRect(hDC, rcPaint, dwColor);
+	CDUIRenderEngine::FillRect(hDC, rcPaint, dwColor, dwColorGradient);
 
 	return true;
 }
 
-bool CDUIAttributeColorSwitch::FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nXRound, int nYRound, bool bHSLAdjust)
+bool CDUIAttributeColorSwitch::FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, int nXRound, int nYRound, bool bHSLAdjust, ARGB dwColorGradient)
 {
 	DWORD dwColor = GetColorValue();
 	if (0 == dwColor) return false;
@@ -160,9 +165,14 @@ bool CDUIAttributeColorSwitch::FillRoundRect(HDC hDC, const CDUIRect &rcPaint, i
 		short H, S, L;
 		CDUIGlobal::GetInstance()->GetHSL(&H, &S, &L);
 		dwColor = CDUIRenderEngine::AdjustColor(dwColor, H, S, L);
+
+		if (0 != dwColorGradient)
+		{
+			dwColorGradient = CDUIRenderEngine::AdjustColor(dwColorGradient, H, S, L);
+		}
 	}
 
-	CDUIRenderEngine::FillRoundRect(hDC, rcPaint, nXRound, nYRound, nBorderSize, dwColor);
+	CDUIRenderEngine::FillRoundRect(hDC, rcPaint, nXRound, nYRound, nBorderSize, dwColor, dwColorGradient);
 
 	return true;
 }

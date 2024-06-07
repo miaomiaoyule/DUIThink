@@ -946,106 +946,31 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRoun
 	return;
 }
 
-void CDUIRenderEngine::FillRect(HDC hDC, const CDUIRect &rcItem, DWORD dwColor)
+void CDUIRenderEngine::FillRect(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient)
 {
 	if (dwColor <= 0x00ffffff) return;
 
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
-	Gdiplus::SolidBrush Brush(Gdiplus::Color((Gdiplus::ARGB)dwColor));
-
-	Gp.FillRectangle(&Brush, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
-
-	return;
-}
-
-void CDUIRenderEngine::FillRectGradient(HDC hDC, const CDUIRect &rcItem, DWORD dwFirstColor, DWORD dwSecondColor, bool bVertical, int nSteps)
-{
-	typedef BOOL(WINAPI *LPALPHABLEND)(HDC, int, int, int, int, HDC, int, int, int, int, BLENDFUNCTION);
-	static LPALPHABLEND lpAlphaBlend = (LPALPHABLEND)::GetProcAddress(::GetModuleHandle(_T("msimg32.dll")), "AlphaBlend");
-	if (lpAlphaBlend == NULL) lpAlphaBlend = AlphaBitBlt;
-	typedef BOOL(WINAPI *PGradientFill)(HDC, PTRIVERTEX, ULONG, PVOID, ULONG, ULONG);
-	static PGradientFill lpGradientFill = (PGradientFill)::GetProcAddress(::GetModuleHandle(_T("msimg32.dll")), "GradientFill");
-
-	BYTE bAlpha = DUIARGBGetA(dwFirstColor);
-	if (bAlpha == 0) return;
-
-	int cx = rcItem.right - rcItem.left;
-	int cy = rcItem.bottom - rcItem.top;
-	RECT rcPaint = rcItem;
-	HDC hPaintDC = hDC;
-	HBITMAP hPaintBitmap = NULL;
-	HBITMAP hOldPaintBitmap = NULL;
-	if (bAlpha < 255)
+	Gdiplus::Brush *pBrush = NULL;
+	if (0 != dwColorGradient)
 	{
-		rcPaint.left = rcPaint.top = 0;
-		rcPaint.right = cx;
-		rcPaint.bottom = cy;
-		hPaintDC = ::CreateCompatibleDC(hDC);
-		hPaintBitmap = ::CreateCompatibleBitmap(hDC, cx, cy);
-		ASSERT(hPaintDC);
-		ASSERT(hPaintBitmap);
-		hOldPaintBitmap = (HBITMAP)::SelectObject(hPaintDC, hPaintBitmap);
-	}
-	if (lpGradientFill != NULL)
-	{
-		TRIVERTEX triv[2] =
-		{
-			{ rcPaint.left, rcPaint.top, DUIARGBGetR(dwFirstColor) << 8, DUIARGBGetG(dwFirstColor) << 8, DUIARGBGetB(dwFirstColor) << 8, 0xFF00 },
-			{ rcPaint.right, rcPaint.bottom, DUIARGBGetR(dwSecondColor) << 8, DUIARGBGetG(dwSecondColor) << 8, DUIARGBGetB(dwSecondColor) << 8, 0xFF00 }
-		};
-
-		GRADIENT_RECT grc = { 0, 1 };
-		lpGradientFill(hPaintDC, triv, 2, &grc, 1, bVertical ? GRADIENT_FILL_RECT_V : GRADIENT_FILL_RECT_H);
+		pBrush = new Gdiplus::LinearGradientBrush(Gdiplus::Point(rcItem.left, rcItem.top), Gdiplus::Point(rcItem.right, rcItem.bottom), dwColor, dwColorGradient);
 	}
 	else
 	{
-		// Determine how many shades
-		int nShift = 1;
-		if (nSteps >= 64) nShift = 6;
-		else if (nSteps >= 32) nShift = 5;
-		else if (nSteps >= 16) nShift = 4;
-		else if (nSteps >= 8) nShift = 3;
-		else if (nSteps >= 4) nShift = 2;
-		int nLines = 1 << nShift;
-		for (int i = 0; i < nLines; i++)
-		{
-			// Do a little alpha blending
-			BYTE bR = (BYTE)((DUIARGBGetR(dwSecondColor) * (nLines - i) + DUIARGBGetR(dwFirstColor) * i) >> nShift);
-			BYTE bG = (BYTE)((DUIARGBGetG(dwSecondColor) * (nLines - i) + DUIARGBGetG(dwFirstColor) * i) >> nShift);
-			BYTE bB = (BYTE)((DUIARGBGetB(dwSecondColor) * (nLines - i) + DUIARGBGetB(dwFirstColor) * i) >> nShift);
-			// ... then paint with the resulting color
-			HBRUSH hBrush = ::CreateSolidBrush(RGB(bR, bG, bB));
-			RECT r2 = rcPaint;
-			if (bVertical)
-			{
-				r2.bottom = rcItem.bottom - ((i * (rcItem.bottom - rcItem.top)) >> nShift);
-				r2.top = rcItem.bottom - (((i + 1) * (rcItem.bottom - rcItem.top)) >> nShift);
-				if ((r2.bottom - r2.top) > 0) ::FillRect(hDC, &r2, hBrush);
-			}
-			else
-			{
-				r2.left = rcItem.right - (((i + 1) * (rcItem.right - rcItem.left)) >> nShift);
-				r2.right = rcItem.right - ((i * (rcItem.right - rcItem.left)) >> nShift);
-				if ((r2.right - r2.left) > 0) ::FillRect(hPaintDC, &r2, hBrush);
-			}
-			MMSafeDeleteObject(hBrush);
-		}
+		pBrush = new Gdiplus::SolidBrush(dwColor);
 	}
-	if (bAlpha < 255)
-	{
-		BLENDFUNCTION bf = { AC_SRC_OVER, 0, bAlpha, AC_SRC_ALPHA };
-		lpAlphaBlend(hDC, rcItem.left, rcItem.top, cx, cy, hPaintDC, 0, 0, cx, cy, bf);
-		::SelectObject(hPaintDC, hOldPaintBitmap);
-		MMSafeDeleteObject(hPaintBitmap);
-		MMSafeDeleteDC(hPaintDC);
-	}
+
+	Gp.FillRectangle(pBrush, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
+
+	MMSafeDelete(pBrush);
 
 	return;
 }
 
-void CDUIRenderEngine::FillRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwColor)
+void CDUIRenderEngine::FillRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwColor, DWORD dwColorGradient)
 {
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
@@ -1067,8 +992,20 @@ void CDUIRenderEngine::FillRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRoun
 	Path.AddLine(rcDraw.left, rcDraw.bottom - nYRound, rcDraw.left, rcDraw.top + nYRound); //×ó²àÊúÏß
 	Path.AddArc(rcDraw.left, rcDraw.top, nXRound * 2, nYRound * 2, 180, 90); //×óÉÏÔ²½Ç
 
-	Gdiplus::SolidBrush Brush(dwColor);
-	Gp.FillPath(&Brush, &Path);
+	//draw
+	Gdiplus::Brush *pBrush = NULL;
+	if (0 != dwColorGradient)
+	{
+		pBrush = new Gdiplus::LinearGradientBrush(Gdiplus::Point(rcItem.left, rcItem.top), Gdiplus::Point(rcItem.right, rcItem.bottom), dwColor, dwColorGradient);
+	}
+	else
+	{
+		pBrush = new Gdiplus::SolidBrush(dwColor);
+	}
+
+	Gp.FillPath(pBrush, &Path);
+
+	MMSafeDelete(pBrush);
 
 	return;
 }

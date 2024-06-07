@@ -59,6 +59,7 @@ protected:
 	//back
 	CDUIAttributeGroup					m_AttributeGroupBk;
 	CDUIAttributeColorSwitch			m_AttributeColorBk;
+	CDUIAttributeColorSwitch			m_AttributeColorGradient;
 	CDUIAttributeBool					m_AttributeIsColorHSL;
 	CDUIAttriImageSection				m_AttributeImageBack;
 	CDUIAttriImageSection				m_AttributeImageFore;
@@ -226,6 +227,8 @@ public:
 	//bk
 	virtual ARGB GetBkColor();
 	virtual void SetBkColor(const vector<CMMString> &vecResSwitch);
+	virtual ARGB GetGradientColor();
+	virtual void SetGradientColor(const vector<CMMString> &vecResSwitch);
 	virtual bool IsColorHSL();
 	virtual void SetColorHSL(bool bColorHSL);
 	virtual DWORD GetAdjustColor(DWORD dwColor);

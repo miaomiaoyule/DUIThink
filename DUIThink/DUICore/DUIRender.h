@@ -37,9 +37,8 @@ public:
 	static void DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void DrawRound(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwPenColor);
 	static void DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop = {});
-	static void FillRect(HDC hDC, const CDUIRect &rcItem, DWORD dwColor);
-	static void FillRectGradient(HDC hDC, const CDUIRect &rcItem, DWORD dwFirstColor, DWORD dwSecondColor, bool bVertical, int nSteps);
-	static void FillRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwColor);
+	static void FillRect(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient = 0);
+	static void FillRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwColor, DWORD dwColorGradient = 0);
 
 	//draw text
 	static void DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle, bool bGdiplusRender = false, Gdiplus::TextRenderingHint RenderType = TextRenderingHintSystemDefault, bool bCeilFloat = true, bool bShadow = false);

@@ -805,6 +805,20 @@ void CDUIControlBase::SetBkColor(const vector<CMMString> &vecResSwitch)
 	return;
 }
 
+ARGB CDUIControlBase::GetGradientColor()
+{
+	return m_AttributeColorGradient.GetColorValue();
+}
+
+void CDUIControlBase::SetGradientColor(const vector<CMMString> &vecResSwitch)
+{
+	m_AttributeColorGradient.SetColorResSwitch(vecResSwitch);
+
+	Invalidate();
+
+	return;
+}
+
 bool CDUIControlBase::IsColorHSL()
 {
 	return m_AttributeIsColorHSL.GetValue();
@@ -1654,6 +1668,7 @@ void CDUIControlBase::InitProperty()
 	//Í¼ÏñÏà¹Ø
 	DuiCreateGroupAttribute(m_AttributeGroupBk, _T("Back"));
 	DuiCreateAttribute(m_AttributeColorBk, _T("ColorBk"), _T(""), m_AttributeGroupBk);
+	DuiCreateAttribute(m_AttributeColorGradient, _T("ColorGradient"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeIsColorHSL, _T("IsColorHSL"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeImageBack, _T("ImageBack"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeImageFore, _T("ImageFore"), _T(""), m_AttributeGroupBk);
@@ -1768,12 +1783,12 @@ void CDUIControlBase::PaintBkColor(HDC hDC)
 		nSize = max(nSize, rcBorder.right);
 		nSize = max(nSize, rcBorder.bottom);
 
-		m_AttributeColorBk.FillRoundRect(hDC, GetBorderRect(), nSize, szBorderRound.cx, szBorderRound.cy, IsColorHSL());
+		m_AttributeColorBk.FillRoundRect(hDC, GetBorderRect(), nSize, szBorderRound.cx, szBorderRound.cy, IsColorHSL(), GetGradientColor());
 	
 		return;
 	}
 	
-	m_AttributeColorBk.FillRect(hDC, m_rcAbsolute, IsColorHSL());
+	m_AttributeColorBk.FillRect(hDC, m_rcAbsolute, IsColorHSL(), GetGradientColor());
 
 	return;
 }
