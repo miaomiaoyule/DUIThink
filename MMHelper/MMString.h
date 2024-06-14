@@ -288,7 +288,7 @@ public:
 			TCHAR *szBuffer = (TCHAR*)malloc(nSize);
 			ZeroMemory(szBuffer, nSize);
 			nLen = _vsntprintf(szBuffer, nLen + 1, pstrFormat, Args);
-			operator +=(szBuffer);
+			operator =(szBuffer);
 			free(szBuffer);
 		#endif
 			
