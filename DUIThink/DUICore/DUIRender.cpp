@@ -765,12 +765,30 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	return;
 }
 
-void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, const CDUIRect &rcItem, int nFrameCur)
+void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, const CDUIRect &rcItem, int nFrameCur, const CDUISize &szRound)
 {
 	if (NULL == pBmpAnimate) return;
 
-	GUID pageGuid = Gdiplus::FrameDimensionTime;
 	Gdiplus::Graphics Gp(hDC);
+
+	//round image
+	if (szRound.cx > 0 || szRound.cy > 0)
+	{
+		//path
+		Gdiplus::GraphicsPath Path;
+		Path.AddLine(rcItem.left + szRound.cx, rcItem.top, rcItem.right - szRound.cx, rcItem.top); //∂•≤ø∫·œﬂ
+		Path.AddArc(rcItem.right - szRound.cx * 2, rcItem.top, szRound.cx * 2, szRound.cy * 2, 270, 90); //”“…œ‘≤Ω«
+		Path.AddLine(rcItem.right, rcItem.top + szRound.cy, rcItem.right, rcItem.bottom - szRound.cy); //”“≤‡ ˙œﬂ
+		Path.AddArc(rcItem.right - szRound.cx * 2, rcItem.bottom - szRound.cy * 2, szRound.cx * 2, szRound.cy * 2, 0, 90); //”“œ¬‘≤Ω«
+		Path.AddLine(rcItem.right - szRound.cx, rcItem.bottom, rcItem.left + szRound.cx, rcItem.bottom); //µ◊≤ø∫·œﬂ
+		Path.AddArc(rcItem.left, rcItem.bottom - szRound.cy * 2, szRound.cx * 2, szRound.cy * 2, 90, 90); //◊Ûœ¬‘≤Ω«
+		Path.AddLine(rcItem.left, rcItem.bottom - szRound.cy, rcItem.left, rcItem.top + szRound.cy); //◊Û≤‡ ˙œﬂ
+		Path.AddArc(rcItem.left, rcItem.top, szRound.cx * 2, szRound.cy * 2, 180, 90); //◊Û…œ‘≤Ω«
+
+		Gp.SetClip(&Path);
+	}
+
+	GUID pageGuid = Gdiplus::FrameDimensionTime;
 	pBmpAnimate->SelectActiveFrame(&pageGuid, nFrameCur);
 	Gp.DrawImage(pBmpAnimate, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
 
@@ -863,7 +881,7 @@ void CDUIRenderEngine::DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList
 	return;
 }
 
-void CDUIRenderEngine::DrawRound(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwPenColor)
+void CDUIRenderEngine::DrawRound(HDC hDC, const CDUIRect &rcItem, const CDUISize &szRound, int nLineSize, DWORD dwPenColor)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 
@@ -875,15 +893,15 @@ void CDUIRenderEngine::DrawRound(HDC hDC, const CDUIRect &rcItem, int nXRound, i
 	//left top right bottom
 	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
 	Pen.SetAlignment(Gdiplus::PenAlignmentInset);
-	Gp.DrawArc(&Pen, rcItem.left, rcItem.top, nXRound * 2, nYRound * 2, 180, 90); // ◊Û…œ‘≤Ω«
-	Gp.DrawArc(&Pen, rcItem.right - nXRound * 2 - nLineSize, rcItem.top, nXRound * 2, nYRound * 2, 270, 90); // ”“…œ‘≤Ω«
-	Gp.DrawArc(&Pen, rcItem.right - nXRound * 2 - nLineSize, rcItem.bottom - nYRound * 2 - nLineSize, nXRound * 2, nYRound * 2, 0, 90); // ”“œ¬‘≤Ω«
-	Gp.DrawArc(&Pen, rcItem.left, rcItem.bottom - nYRound * 2 - nLineSize, nXRound * 2, nYRound * 2, 90, 90); // ◊Ûœ¬‘≤Ω«
+	Gp.DrawArc(&Pen, rcItem.left, rcItem.top, szRound.cx * 2, szRound.cy * 2, 180, 90); // ◊Û…œ‘≤Ω«
+	Gp.DrawArc(&Pen, rcItem.right - szRound.cx * 2 - nLineSize, rcItem.top, szRound.cx * 2, szRound.cy * 2, 270, 90); // ”“…œ‘≤Ω«
+	Gp.DrawArc(&Pen, rcItem.right - szRound.cx * 2 - nLineSize, rcItem.bottom - szRound.cy * 2 - nLineSize, szRound.cx * 2, szRound.cy * 2, 0, 90); // ”“œ¬‘≤Ω«
+	Gp.DrawArc(&Pen, rcItem.left, rcItem.bottom - szRound.cy * 2 - nLineSize, szRound.cx * 2, szRound.cy * 2, 90, 90); // ◊Ûœ¬‘≤Ω«
 
 	return;
 }
 
-void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop)
+void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUISize &szRound, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 
@@ -905,27 +923,27 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRoun
 		//top break
 		if (szBreakTop.cx > 0 || szBreakTop.cy > 0)
 		{
-			int nLeft = rcDraw.left + nXRound + szBreakTop.cx + szBreakTop.cy;
-			nLeft = min(nLeft, rcDraw.right - nXRound);
-			Path.AddLine(nLeft, rcDraw.top, rcDraw.right - nXRound, rcDraw.top);
+			int nLeft = rcDraw.left + szRound.cx + szBreakTop.cx + szBreakTop.cy;
+			nLeft = min(nLeft, rcDraw.right - szRound.cx);
+			Path.AddLine(nLeft, rcDraw.top, rcDraw.right - szRound.cx, rcDraw.top);
 		}
 		else
 		{
-			Path.AddLine(rcDraw.left + nXRound, rcDraw.top, rcDraw.right - nXRound, rcDraw.top);
+			Path.AddLine(rcDraw.left + szRound.cx, rcDraw.top, rcDraw.right - szRound.cx, rcDraw.top);
 		}
 		
-		Path.AddArc(rcDraw.right - nXRound * 2 - nLineSize, rcDraw.top, nXRound * 2, nYRound * 2, 270, 90); //”“…œ‘≤Ω«
-		Path.AddLine(rcDraw.right - nLineSize, rcDraw.top + nYRound, rcDraw.right - nLineSize, rcDraw.bottom - nYRound); //”“≤‡ ˙œﬂ
-		Path.AddArc(rcDraw.right - nXRound * 2 - nLineSize, rcDraw.bottom - nYRound * 2 - nLineSize, nXRound * 2, nYRound * 2, 0, 90); //”“œ¬‘≤Ω«
-		Path.AddLine(rcDraw.right - nXRound, rcDraw.bottom - nLineSize, rcDraw.left + nXRound, rcDraw.bottom - nLineSize); //µ◊≤ø∫·œﬂ
-		Path.AddArc(rcDraw.left, rcDraw.bottom - nYRound * 2 - nLineSize, nXRound * 2, nYRound * 2, 90, 90); //◊Ûœ¬‘≤Ω«
-		Path.AddLine(rcDraw.left, rcDraw.bottom - nYRound, rcDraw.left, rcDraw.top + nYRound); //◊Û≤‡ ˙œﬂ
-		Path.AddArc(rcDraw.left, rcDraw.top, nXRound * 2, nYRound * 2, 180, 90); //◊Û…œ‘≤Ω«
+		Path.AddArc(rcDraw.right - szRound.cx * 2 - nLineSize, rcDraw.top, szRound.cx * 2, szRound.cy * 2, 270, 90); //”“…œ‘≤Ω«
+		Path.AddLine(rcDraw.right - nLineSize, rcDraw.top + szRound.cy, rcDraw.right - nLineSize, rcDraw.bottom - szRound.cy); //”“≤‡ ˙œﬂ
+		Path.AddArc(rcDraw.right - szRound.cx * 2 - nLineSize, rcDraw.bottom - szRound.cy * 2 - nLineSize, szRound.cx * 2, szRound.cy * 2, 0, 90); //”“œ¬‘≤Ω«
+		Path.AddLine(rcDraw.right - szRound.cx, rcDraw.bottom - nLineSize, rcDraw.left + szRound.cx, rcDraw.bottom - nLineSize); //µ◊≤ø∫·œﬂ
+		Path.AddArc(rcDraw.left, rcDraw.bottom - szRound.cy * 2 - nLineSize, szRound.cx * 2, szRound.cy * 2, 90, 90); //◊Ûœ¬‘≤Ω«
+		Path.AddLine(rcDraw.left, rcDraw.bottom - szRound.cy, rcDraw.left, rcDraw.top + szRound.cy); //◊Û≤‡ ˙œﬂ
+		Path.AddArc(rcDraw.left, rcDraw.top, szRound.cx * 2, szRound.cy * 2, 180, 90); //◊Û…œ‘≤Ω«
 
 		//top break
 		if (szBreakTop.cx > 0 || szBreakTop.cy > 0)
 		{
-			Path.AddLine(rcDraw.left + nXRound, rcDraw.top, rcDraw.left + nXRound + szBreakTop.cx, rcDraw.top);
+			Path.AddLine(rcDraw.left + szRound.cx, rcDraw.top, rcDraw.left + szRound.cx + szBreakTop.cx, rcDraw.top);
 		}
 
 		Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
@@ -938,7 +956,7 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRoun
 	HPEN hPen = ::CreatePen(PS_SOLID | PS_INSIDEFRAME, nLineSize, RGB(GetBValue(dwPenColor), GetGValue(dwPenColor), GetRValue(dwPenColor)));
 	HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
 	HBRUSH hOldBrush = (HBRUSH)::SelectObject(hDC, ::GetStockObject(HOLLOW_BRUSH));
-	::RoundRect(hDC, rcItem.left, rcItem.top, rcItem.right, rcItem.bottom, nXRound, nYRound);
+	::RoundRect(hDC, rcItem.left, rcItem.top, rcItem.right, rcItem.bottom, szRound.cx, szRound.cy);
 	::SelectObject(hDC, hOldBrush);
 	::SelectObject(hDC, hOldPen);
 	MMSafeDeleteObject(hPen);
@@ -970,7 +988,7 @@ void CDUIRenderEngine::FillRect(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, 
 	return;
 }
 
-void CDUIRenderEngine::FillRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRound, int nYRound, int nLineSize, DWORD dwColor, DWORD dwColorGradient)
+void CDUIRenderEngine::FillRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUISize &szRound, int nLineSize, DWORD dwColor, DWORD dwColorGradient)
 {
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
@@ -983,14 +1001,14 @@ void CDUIRenderEngine::FillRoundRect(HDC hDC, const CDUIRect &rcItem, int nXRoun
 
 	//path
 	Gdiplus::GraphicsPath Path;
-	Path.AddLine(rcDraw.left + nXRound, rcDraw.top, rcDraw.right - nXRound, rcDraw.top); //∂•≤ø∫·œﬂ
-	Path.AddArc(rcDraw.right - nXRound * 2 - nLineSize, rcDraw.top, nXRound * 2, nYRound * 2, 270, 90); //”“…œ‘≤Ω«
-	Path.AddLine(rcDraw.right - nLineSize, rcDraw.top + nYRound, rcDraw.right - nLineSize, rcDraw.bottom - nYRound); //”“≤‡ ˙œﬂ
-	Path.AddArc(rcDraw.right - nXRound * 2 - nLineSize, rcDraw.bottom - nYRound * 2 - nLineSize, nXRound * 2, nYRound * 2, 0, 90); //”“œ¬‘≤Ω«
-	Path.AddLine(rcDraw.right - nXRound, rcDraw.bottom - nLineSize, rcDraw.left + nXRound, rcDraw.bottom - nLineSize); //µ◊≤ø∫·œﬂ
-	Path.AddArc(rcDraw.left, rcDraw.bottom - nYRound * 2 - nLineSize, nXRound * 2, nYRound * 2, 90, 90); //◊Ûœ¬‘≤Ω«
-	Path.AddLine(rcDraw.left, rcDraw.bottom - nYRound, rcDraw.left, rcDraw.top + nYRound); //◊Û≤‡ ˙œﬂ
-	Path.AddArc(rcDraw.left, rcDraw.top, nXRound * 2, nYRound * 2, 180, 90); //◊Û…œ‘≤Ω«
+	Path.AddLine(rcDraw.left + szRound.cx, rcDraw.top, rcDraw.right - szRound.cx, rcDraw.top); //∂•≤ø∫·œﬂ
+	Path.AddArc(rcDraw.right - szRound.cx * 2 - nLineSize, rcDraw.top, szRound.cx * 2, szRound.cy * 2, 270, 90); //”“…œ‘≤Ω«
+	Path.AddLine(rcDraw.right - nLineSize, rcDraw.top + szRound.cy, rcDraw.right - nLineSize, rcDraw.bottom - szRound.cy); //”“≤‡ ˙œﬂ
+	Path.AddArc(rcDraw.right - szRound.cx * 2 - nLineSize, rcDraw.bottom - szRound.cy * 2 - nLineSize, szRound.cx * 2, szRound.cy * 2, 0, 90); //”“œ¬‘≤Ω«
+	Path.AddLine(rcDraw.right - szRound.cx, rcDraw.bottom - nLineSize, rcDraw.left + szRound.cx, rcDraw.bottom - nLineSize); //µ◊≤ø∫·œﬂ
+	Path.AddArc(rcDraw.left, rcDraw.bottom - szRound.cy * 2 - nLineSize, szRound.cx * 2, szRound.cy * 2, 90, 90); //◊Ûœ¬‘≤Ω«
+	Path.AddLine(rcDraw.left, rcDraw.bottom - szRound.cy, rcDraw.left, rcDraw.top + szRound.cy); //◊Û≤‡ ˙œﬂ
+	Path.AddArc(rcDraw.left, rcDraw.top, szRound.cx * 2, szRound.cy * 2, 180, 90); //◊Û…œ‘≤Ω«
 
 	//draw
 	Gdiplus::Brush *pBrush = NULL;

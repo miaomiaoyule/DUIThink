@@ -260,7 +260,8 @@ void CDUIAnimateCtrl::PaintStatusImage(HDC hDC)
 {
 	__super::PaintStatusImage(hDC);
 
-	m_AttributeImageAnimate.DrawAnimate(hDC, GetAbsoluteRect(), m_rcPaint, m_AnimateImageInfo, m_nFrameCur);
+	CDUISize szBorderRound = GetRoundSize();
+	m_AttributeImageAnimate.DrawAnimate(hDC, GetAbsoluteRect(), m_rcPaint, m_AnimateImageInfo, m_nFrameCur, szBorderRound);
 
 	return;
 }

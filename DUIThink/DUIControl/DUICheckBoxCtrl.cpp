@@ -400,7 +400,7 @@ void CDUICheckBoxCtrl::PaintStatusColorSelected(HDC hDC)
 	CDUISize szBorderRound = GetRoundSize();
 	if (szBorderRound.cx > 0 && szBorderRound.cy > 0)
 	{
-		pAttribute->FillRoundRect(hDC, m_rcAbsolute, 0, szBorderRound.cx, szBorderRound.cy, IsColorHSL());
+		pAttribute->FillRoundRect(hDC, m_rcAbsolute, 0, szBorderRound, IsColorHSL());
 
 		return;
 	}

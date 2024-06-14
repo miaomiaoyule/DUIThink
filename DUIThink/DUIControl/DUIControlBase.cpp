@@ -1783,7 +1783,7 @@ void CDUIControlBase::PaintBkColor(HDC hDC)
 		nSize = max(nSize, rcBorder.right);
 		nSize = max(nSize, rcBorder.bottom);
 
-		m_AttributeColorBk.FillRoundRect(hDC, GetBorderRect(), nSize, szBorderRound.cx, szBorderRound.cy, IsColorHSL(), GetGradientColor());
+		m_AttributeColorBk.FillRoundRect(hDC, GetBorderRect(), nSize, szBorderRound, IsColorHSL(), GetGradientColor());
 	
 		return;
 	}
@@ -1920,7 +1920,7 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	nSize = max(nSize, rcBorderLine.bottom);
 	if (nSize > 0 && szBorderRound.cx > 0 && szBorderRound.cy > 0)
 	{
-		pAttribute->DrawRoundRect(hDC, GetBorderRect(), nSize, szBorderRound.cx, szBorderRound.cy, IsColorHSL(), szBreakTop);
+		pAttribute->DrawRoundRect(hDC, GetBorderRect(), nSize, szBorderRound, IsColorHSL(), szBreakTop);
 
 		return;
 	}
