@@ -2014,7 +2014,7 @@ bool CDUIListViewCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &M
 		if (this == m_pWndManager->GetCaptureControl())
 		{
 			m_ptMouseDown = pt;
-			m_rcMouseDragSel.clear();
+			m_rcMouseDragSel.Clear();
 			m_vecSelItemMouseDragPre = m_vecSelItem;
 		}
 	}
@@ -2045,7 +2045,7 @@ bool CDUIListViewCtrl::OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &M
 		if (this == m_pWndManager->GetCaptureControl())
 		{
 			m_ptMouseDown = pt;
-			m_rcMouseDragSel.clear();
+			m_rcMouseDragSel.Clear();
 			m_vecSelItemMouseDragPre = m_vecSelItem;
 		}
 	}

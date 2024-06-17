@@ -449,7 +449,7 @@ void CDUIRotateMenuCtrl::InitProperty()
 	__super::InitProperty();
 
 	//modify name
-	DuiModifyAttriName(m_AttributeGroupListView, _T("RotateMenu"));
+	DuiModifyAttriName(m_AttributeGroupListView, _T("RotateMenu"), DuiResVersion_3);
 
 	//create
 	DuiCreateAttribute(m_AttributeAngleStart, _T("AngleStart"), _T("start from right border"), m_AttributeGroupListView);

@@ -74,7 +74,7 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 	do
 	{
 		//verify
-		if (rcDest.empty()) return;
+		if (rcDest.Empty()) return;
 
 		//draw
 		if (pWndManager->IsGdiplusRenderImage())
@@ -110,7 +110,7 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 	return;
 }
 
-void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, const tagDuiAnimateImageInfo &AnimateImageInfo, int nFrameCur, const CDUISize &szRound)
+void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, const tagDuiAnimateImageInfo &AnimateImageInfo, int nFrameCur, const CDUIRect &rcRound)
 {
 	CDUIImageBase *pImageBaseCur = GetCurImageBase();
 	if (NULL == pImageBaseCur) return;
@@ -127,7 +127,7 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 		Gdiplus::Bitmap *pBmpAnimate = pImageBaseCur->GetAnimateImage();
 		if (NULL == pBmpAnimate) return;
 
-		CDUIRenderEngine::DrawAnimateImage(hDC, pBmpAnimate, rcDest, nFrameCur, szRound);
+		CDUIRenderEngine::DrawAnimateImage(hDC, pBmpAnimate, rcDest, nFrameCur, rcRound);
 
 		return;
 	}

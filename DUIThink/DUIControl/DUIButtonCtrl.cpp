@@ -412,10 +412,13 @@ void CDUIButtonCtrl::PaintStatusColor(HDC hDC)
 		return;
 	}
 
-	CDUISize szBorderRound = GetRoundSize();
-	if (szBorderRound.cx > 0 && szBorderRound.cy > 0)
+	CDUIRect rcBorderRound = GetRoundCorner();
+	if (rcBorderRound.left > 0
+		|| rcBorderRound.top > 0
+		|| rcBorderRound.right > 0
+		|| rcBorderRound.bottom > 0)
 	{
-		pAttribute->FillRoundRect(hDC, m_rcAbsolute, 0, szBorderRound, IsColorHSL());
+		pAttribute->FillRoundRect(hDC, m_rcAbsolute, 0, rcBorderRound, IsColorHSL());
 
 		return;
 	}

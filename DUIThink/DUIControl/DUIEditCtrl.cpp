@@ -327,7 +327,7 @@ LRESULT CDUIEditWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CDUIRect rcWnd;
 			::GetWindowRect(m_hWnd, &rcWnd);
 			MMScreenToClient(rcWnd, m_pWndManagerOwner->GetWndHandle());
-			if (false == rcWnd.empty())
+			if (false == rcWnd.Empty())
 			{
 				HBITMAP hBmpEditBk = CDUIRenderEngine::GenerateBitmap(m_pWndManagerOwner, m_pWndManagerOwner->GetRootCtrl(), rcWnd);
 				if (hBmpEditBk)

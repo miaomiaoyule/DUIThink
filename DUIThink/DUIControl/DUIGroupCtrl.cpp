@@ -136,7 +136,7 @@ void CDUIGroupCtrl::PaintText(HDC hDC)
 	//range
 	CDUIRect rcRange = GetAbsoluteRect();
 	rcRange.left += GetBorderLine().left;
-	rcRange.left += GetRoundSize().cx;
+	rcRange.left += GetRoundCorner().left;
 	rcRange.left += Dui_Offset_GroupBorderTopBreak;
 	rcRange.right = rcRange.left + m_szText.cx;
 	rcRange.bottom = rcRange.top + m_szText.cy;

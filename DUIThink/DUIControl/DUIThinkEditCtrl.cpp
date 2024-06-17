@@ -882,7 +882,7 @@ CDUIRect CDUIThinkEditCtrl::GetSelectRange()
 
 		for (int nColumn = nColumnPre; nColumn < nColumnNext && nColumn < LineVecRichTextDraw.size(); nColumn++)
 		{
-			if (rcRange.empty()) rcRange = LineVecRichTextDraw[nColumn].rcDraw;
+			if (rcRange.Empty()) rcRange = LineVecRichTextDraw[nColumn].rcDraw;
 
 			rcRange.left = min(rcRange.left, LineVecRichTextDraw[nColumn].rcDraw.left);
 			rcRange.top = min(rcRange.top, LineVecRichTextDraw[nColumn].rcDraw.top);
@@ -1939,7 +1939,7 @@ void CDUIThinkEditCtrl::PaintSelectBk(HDC hDC)
 			}
 		}
 
-		if (rcRow.empty()) continue;
+		if (rcRow.Empty()) continue;
 
 		m_AttributeColorSelect.FillRect(hDC, rcRow, IsColorHSL());
 		m_AttributeImageSelect.Draw(hDC, rcRow, m_rcPaint);

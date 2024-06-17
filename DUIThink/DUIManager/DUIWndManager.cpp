@@ -1703,7 +1703,7 @@ bool CDUIWndManager::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESU
 
 #ifdef DUI_DESIGN
 			bUpdate = true;
-			if (rcPaint.empty())
+			if (rcPaint.Empty())
 			{
 				GetClientRect(m_hWndAttach, &rcPaint);
 			}
@@ -1953,7 +1953,7 @@ LRESULT CDUIWndManager::OnDraw(CDUIRect rcPaint)
 	CDUIRect rcClient;
 	::GetClientRect(m_hWndAttach, &rcClient);
 	if (false == ::IntersectRect(&rcPaint, &rcPaint, &rcClient)) return lRes;
-	if (NULL == m_pRootCtrl || rcPaint.empty()) return lRes;
+	if (NULL == m_pRootCtrl || rcPaint.Empty()) return lRes;
 
 	//layout
 	RefreshLayout();
@@ -2859,7 +2859,7 @@ void CDUIWndManager::RefreshLayout()
 	//layout
 	bool bNeedLayoutMsg = false;
 	if (false == IsRefreshViewNeeded()) return;
-	if (rcClient.empty() || ::IsIconic(m_hWndAttach)) return;
+	if (rcClient.Empty() || ::IsIconic(m_hWndAttach)) return;
 
 	m_bRefreshViewNeeded = false;
 

@@ -211,7 +211,7 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 		false == bMeasureFinish ? bMeasureFinish = (-1 == RichText.nLineLimit && rcMeasureLine.bottom > rcItem.bottom && false == bSingleLine && false == bAlignBottom) : bMeasureFinish;
 		false == bMeasureFinish ? bMeasureFinish = (-1 == RichText.nLineLimit && bLineFinish && rcMeasureLine.bottom == rcItem.bottom && false == bSingleLine && false == bAlignBottom) : bMeasureFinish;
 		false == bMeasureFinish ? bMeasureFinish = (bLineFinish && bSingleLine) : bMeasureFinish;
-		false == bMeasureFinish ? bMeasureFinish = rcItem.empty() : bMeasureFinish;
+		false == bMeasureFinish ? bMeasureFinish = rcItem.Empty() : bMeasureFinish;
 		if (bMeasureFinish)
 		{
 			do 
@@ -426,7 +426,7 @@ CDUIRect CDUIRenderHelp::GetLineRange(MapLineVecDuiRichTextDraw mapLineVecRichTe
 	auto LineVecRichTextDraw = mapLineVecRichTextDraw[nLine];
 	for (auto RichTextDrawItem : LineVecRichTextDraw)
 	{
-		if (rcRange.empty())
+		if (rcRange.Empty())
 		{
 			rcRange = RichTextDrawItem.rcDraw;
 		}

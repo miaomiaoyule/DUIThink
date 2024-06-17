@@ -888,16 +888,16 @@ void CDUIControlBase::SetForeImageSection(const tagDuiImageSection &ImageSection
 	return;
 }
 
-SIZE CDUIControlBase::GetRoundSize()
+CDUIRect CDUIControlBase::GetRoundCorner()
 {
-	return m_AttributeRoundSize.GetValue();
+	return m_AttributeRoundCorner.GetValue();
 }
 
-void CDUIControlBase::SetRoundSize(SIZE cxyRound)
+void CDUIControlBase::SetRoundCorner(const CDUIRect &rcRoundCorner)
 {
-	if (cxyRound == GetRoundSize()) return;
+	if (rcRoundCorner == GetRoundCorner()) return;
 
-	m_AttributeRoundSize.SetValue(cxyRound);
+	m_AttributeRoundCorner.SetValue(rcRoundCorner);
 
 	Invalidate();
 
@@ -1141,7 +1141,6 @@ bool CDUIControlBase::OnDraw(HDC hDC, const RECT &rcPaint, bool bGenerateBmp)
 {
 	if (false == ::IntersectRect(&m_rcPaint, &rcPaint, &m_rcAbsolute)) return false;
 
-	CDUISize szBorderRound = GetRoundSize();
 	CDUIRenderClip Clip;
 	CDUIRenderClip::GenerateClip(hDC, m_rcPaint, Clip);
 
@@ -1672,15 +1671,22 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeIsColorHSL, _T("IsColorHSL"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeImageBack, _T("ImageBack"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeImageFore, _T("ImageFore"), _T(""), m_AttributeGroupBk);
-	DuiCreateAttribute(m_AttributeRoundSize, _T("RoundSize"), _T(""), m_AttributeGroupBk);
+	DuiCreateAttribute(m_AttributeRoundCorner, _T("RoundCorner"), _T(""), m_AttributeGroupBk);
+	if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_4)
+	{
+		CDUIAttributeSize RoundSize;
+		DuiCreateAttribute(RoundSize, _T("RoundSize"), _T(""), m_AttributeGroupBk);
+		SetRoundCorner({ RoundSize.cx, RoundSize.cx, RoundSize.cy, RoundSize.cy });
+		m_AttributeGroupBk.RemoveAttribute(&RoundSize);
+	}
 
 	//±ß¿òÏà¹Ø
 	DuiCreateGroupAttribute(m_AttributeGroupBorder, _T("Border"));
 	DuiCreateAttribute(m_AttributeBorderStyle, _T("BorderStyle"), _T(""), m_AttributeGroupBorder);
 	DuiCreateAttribute(m_AttributeColorBorder, _T("ColorBorder"), _T(""), m_AttributeGroupBorder);
 	DuiCreateAttribute(m_AttributeColorBorderFocus, _T("ColorFocusBorder"), _T(""), m_AttributeGroupBorder);
-	DuiCreateAttribute(m_AttributeBorderLine, DuiCompatibleAttriName(_T("BorderRect"), _T("BorderLine")), _T(""), m_AttributeGroupBorder);
-	DuiModifyAttriName(m_AttributeBorderLine, _T("BorderLine"));
+	DuiCreateAttribute(m_AttributeBorderLine, DuiCompatibleAttriName(_T("BorderRect"), _T("BorderLine"), DuiResVersion_3), _T(""), m_AttributeGroupBorder);
+	DuiModifyAttriName(m_AttributeBorderLine, _T("BorderLine"), DuiResVersion_3);
 
 	DuiCreateGroupAttribute(m_AttributeGroupMouse, _T("Mouse"));
 	DuiCreateAttribute(m_AttributeMouseThrough, _T("MouseThrough"), _T(""), m_AttributeGroupMouse);
@@ -1775,15 +1781,18 @@ void CDUIControlBase::InitComplete()
 
 void CDUIControlBase::PaintBkColor(HDC hDC)
 {
-	CDUISize szBorderRound = GetRoundSize();
-	if (szBorderRound.cx > 0 && szBorderRound.cy > 0)
+	CDUIRect rcBorderRound = GetRoundCorner();
+	if (rcBorderRound.left > 0 
+		|| rcBorderRound.top > 0
+		|| rcBorderRound.right > 0
+		|| rcBorderRound.bottom > 0)
 	{
 		CDUIRect rcBorder = GetBorderLine();
 		int nSize = max(rcBorder.left, rcBorder.top);
 		nSize = max(nSize, rcBorder.right);
 		nSize = max(nSize, rcBorder.bottom);
 
-		m_AttributeColorBk.FillRoundRect(hDC, GetBorderRect(), nSize, szBorderRound, IsColorHSL(), GetGradientColor());
+		m_AttributeColorBk.FillRoundRect(hDC, GetBorderRect(), nSize, rcBorderRound, IsColorHSL(), GetGradientColor());
 	
 		return;
 	}
@@ -1913,14 +1922,17 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	if (NULL == pAttribute) return;
 
 	CDUIRect rcBorderLine = GetBorderLine();
-	CDUISize szBorderRound = GetRoundSize();
+	CDUIRect rcBorderRound = GetRoundCorner();
 	CDUISize szBreakTop = GetBorderBreakTop();
 	int nSize = max(rcBorderLine.left, rcBorderLine.top);
 	nSize = max(nSize, rcBorderLine.right);
 	nSize = max(nSize, rcBorderLine.bottom);
-	if (nSize > 0 && szBorderRound.cx > 0 && szBorderRound.cy > 0)
+	if (rcBorderRound.left > 0
+		|| rcBorderRound.top > 0
+		|| rcBorderRound.right > 0
+		|| rcBorderRound.bottom > 0)
 	{
-		pAttribute->DrawRoundRect(hDC, GetBorderRect(), nSize, szBorderRound, IsColorHSL(), szBreakTop);
+		pAttribute->DrawRoundRect(hDC, GetBorderRect(), nSize, rcBorderRound, IsColorHSL(), szBreakTop);
 
 		return;
 	}

@@ -339,7 +339,7 @@ void CDUITabLayoutCtrl::SelectItem(int nIndex)
 
 	//animate
 	if (AnimateSelSwitch_None != GetAnimateSelSwitchType()
-		&& false == GetAbsoluteRect().empty()
+		&& false == GetAbsoluteRect().Empty()
 		&& GetChildCount() > 1
 		&& -1 != m_nOldSel
 		&& m_nOldSel != GetCurSel())

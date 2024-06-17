@@ -39,11 +39,11 @@ public:
 	//draw
 	virtual bool DrawRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, CDUISize szBreakTop = {});
 	virtual bool DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nBorderSize);
-	virtual bool DrawRound(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUISize &szRound, bool bHSLAdjust = false);
-	virtual bool DrawRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUISize &szRound, bool bHSLAdjust = false, CDUISize szBreakTop = {});
+	virtual bool DrawRound(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, bool bHSLAdjust = false);
+	virtual bool DrawRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, bool bHSLAdjust = false, CDUISize szBreakTop = {});
 	virtual bool DrawLine(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid, bool bHSLAdjust = false);
 	virtual bool FillRect(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust = false, ARGB dwColorGradient = 0);
-	virtual bool FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUISize &szRound, bool bHSLAdjust = false, ARGB dwColorGradient = 0);
+	virtual bool FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, bool bHSLAdjust = false, ARGB dwColorGradient = 0);
 
 	//color
 	virtual bool empty();

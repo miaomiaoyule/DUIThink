@@ -38,7 +38,7 @@ public:
 	virtual bool SwapAttribute(CDUIAttributeObject *pObjectFirst, CDUIAttributeObject *pObjectNext);
 
 	//method
-protected:
+public:
 	bool SetOwner(CDUIPropertyObject *pOwner) override;
 
 	//child

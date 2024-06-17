@@ -262,7 +262,7 @@ bool CDUIAttributePosition::SetPositionFromAbsolute(const CDUIRect &rcAbsolute)
 	rcRelative.bottom = rcRelative.top + rcAbsolute.GetHeight();
 
 	rcRelative.CheckRect();
-	if (rcRelative.empty()) return false;
+	if (rcRelative.Empty()) return false;
 
 	//float
 	m_pOwnerCtrl->SetFloat(true);

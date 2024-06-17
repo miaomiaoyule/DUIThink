@@ -31,14 +31,14 @@ public:
 	static void DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem);
 	static void DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
 		BYTE cbAlpha = 255, bool bAlpha = false, bool bHole = false, bool bTiledX = false, bool bTiledY = false);
-	static void DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, const CDUIRect &rcItem, int nFrameCur, const CDUISize &szRound = {});
+	static void DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, const CDUIRect &rcItem, int nFrameCur, const CDUIRect &rcRound = {});
 	static void DrawLine(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop = {}, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
-	static void DrawRound(HDC hDC, const CDUIRect &rcItem, const CDUISize &szRound, int nLineSize, DWORD dwPenColor);
-	static void DrawRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUISize &szRound, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop = {});
+	static void DrawRound(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, DWORD dwPenColor);
+	static void DrawRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop = {});
 	static void FillRect(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient = 0);
-	static void FillRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUISize &szRound, int nLineSize, DWORD dwColor, DWORD dwColorGradient = 0);
+	static void FillRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, DWORD dwColor, DWORD dwColorGradient = 0);
 
 	//draw text
 	static void DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle, bool bGdiplusRender = false, Gdiplus::TextRenderingHint RenderType = TextRenderingHintSystemDefault, bool bCeilFloat = true, bool bShadow = false);
@@ -54,6 +54,7 @@ public:
 	static void AdjustImage(HBITMAP hBitmap, DWORD dwColorSrc, DWORD dwColorDest);
 	static HBITMAP CreateARGB32Bitmap(HDC hDC, int cx, int cy, BYTE** pBits, bool bPositive = true);
 	static HBITMAP GenerateBitmap(CDUIWndManager *pManager, CDUIControlBase *pControl, const CDUIRect &rcItem, DWORD dwFilterColor = 0);
+	static Bitmap * GenerateBitmap(Bitmap *pBmp, const CDUISize szGenerate);
 	static HBITMAP CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFilterColor = 0);
 	static HBITMAP CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor = 0);
 	static Bitmap * GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB = true);

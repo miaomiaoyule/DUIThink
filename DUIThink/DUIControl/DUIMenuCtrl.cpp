@@ -281,7 +281,7 @@ void CDUIMenuWnd::ResizeMenu()
 		CDUIRect rcWndParent;
 		GetWindowRect(::GetParent(m_hWnd), &rcWndParent);
 
-		if (rcWndParent.empty()) rcWndParent = rcWork;
+		if (rcWndParent.Empty()) rcWndParent = rcWork;
 		m_ptTrack.x = rcWndParent.left + rcWndParent.GetWidth() / 2 - rcWnd.GetWidth() / 2;
 		m_ptTrack.y = rcWndParent.top + rcWndParent.GetHeight() / 2 - rcWnd.GetHeight() / 2;
 	}
@@ -848,7 +848,7 @@ void CDUIMenuItemCtrl::CalcItemRect()
 	CDUIRect rcSourceChecked = m_AttributeIconChecked.GetSource();
 	CDUIRect rcSourceNormal = m_AttributeIconNormal.GetSource();
 	CDUIRect rcSourceExpand = m_AttributeIconExpand.GetSource();
-	if (false == rcSourceChecked.empty())
+	if (false == rcSourceChecked.Empty())
 	{
 		m_rcIconChecked = GetAbsoluteRect();
 		m_rcIconChecked.left += GetIconCheckedLeftPadding();
@@ -856,16 +856,16 @@ void CDUIMenuItemCtrl::CalcItemRect()
 		m_rcIconChecked.top += (m_rcIconChecked.GetHeight() - rcSourceChecked.GetHeight()) / 2;
 		m_rcIconChecked.bottom = m_rcIconChecked.top + rcSourceChecked.GetHeight();
 	}
-	if (false == rcSourceNormal.empty())
+	if (false == rcSourceNormal.Empty())
 	{
 		m_rcIconNormal = GetAbsoluteRect();
-		false == m_rcIconChecked.empty() ? m_rcIconNormal.left = m_rcIconChecked.right : 0;
+		false == m_rcIconChecked.Empty() ? m_rcIconNormal.left = m_rcIconChecked.right : 0;
 		m_rcIconNormal.left += GetIconNormalLeftPadding();
 		m_rcIconNormal.right = m_rcIconNormal.left + rcSourceNormal.GetWidth();
 		m_rcIconNormal.top += (m_rcIconNormal.GetHeight() - rcSourceNormal.GetHeight()) / 2;
 		m_rcIconNormal.bottom = m_rcIconNormal.top + rcSourceNormal.GetHeight();
 	}
-	if (false == rcSourceExpand.empty())
+	if (false == rcSourceExpand.Empty())
 	{
 		m_rcIconExpand = GetAbsoluteRect();
 		m_rcIconExpand.right -= GetIconExpandRightPadding();
@@ -875,15 +875,15 @@ void CDUIMenuItemCtrl::CalcItemRect()
 	}
 
 	m_rcItemText = GetAbsoluteRect();
-	if (false == m_rcIconExpand.empty())
+	if (false == m_rcIconExpand.Empty())
 	{
 		m_rcItemText.right = m_rcIconExpand.left;
 	}
-	if (false == m_rcIconNormal.empty())
+	if (false == m_rcIconNormal.Empty())
 	{
 		m_rcItemText.left = m_rcIconNormal.right;
 	}
-	else if (false == m_rcIconChecked.empty())
+	else if (false == m_rcIconChecked.Empty())
 	{
 		m_rcItemText.left = m_rcIconChecked.right;
 	}
