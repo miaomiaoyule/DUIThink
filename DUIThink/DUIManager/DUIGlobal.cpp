@@ -666,6 +666,8 @@ bool CDUIGlobal::SaveProject()
 
 	if (m_strProjectPath.empty() || m_strProjectName.empty()) return false;
 
+	SetResVersion(DuiResVersion_Max);
+
 	return CDUIXmlPack::SaveProject(m_strProjectPath, m_strProjectName, m_mapResourceFont, \
 		m_mapResourceImage, m_mapResourceColor, m_vecDui, m_mapWndManager, m_mapControlID, m_strFontResDefault);
 }
