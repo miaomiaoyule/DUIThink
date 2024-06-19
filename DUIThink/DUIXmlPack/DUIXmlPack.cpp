@@ -747,12 +747,20 @@ bool CDUIXmlPack::LoadControlFromXML(tinyxml2::XMLElement *pNodeXml, CDUIControl
 		return false;
 	}
 
+	bool bPropertyInited = false;
 	do
 	{
 		//control
 		CDUIControlBase *pChildCtrl = CDUIFactory::GetInstance()->CreateControlObj(pNodeXml->Name());
 		if (pChildCtrl)
 		{
+			if (false == bPropertyInited)
+			{
+				bPropertyInited = true;
+
+				pControl->InitProperty();
+			}
+
 			LoadControlFromXML(pNodeXml, pChildCtrl);
 
 			MMInterfaceHelper(CDUIContainerCtrl, pControl, pContainer);
@@ -780,7 +788,14 @@ bool CDUIXmlPack::LoadControlFromXML(tinyxml2::XMLElement *pNodeXml, CDUIControl
 
 	} while (pNodeXml = pNodeXml->NextSiblingElement(), NULL != pNodeXml);
 
-	pControl->Init();
+	if (bPropertyInited)
+	{
+		pControl->InitComplete();
+	}
+	else
+	{
+		pControl->Init();
+	}
 
 	return true;
 }
