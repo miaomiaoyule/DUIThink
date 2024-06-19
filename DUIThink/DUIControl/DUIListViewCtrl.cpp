@@ -2480,13 +2480,13 @@ CDUIListItemCtrl * CDUIListViewCtrl::ProductItemDefault()
 	return pItem;
 }
 
-void CDUIListViewCtrl::SetInternVisible(bool bVisible)
+void CDUIListViewCtrl::SetInternVisible(bool bVisible, bool bTraversal)
 {
-	__super::SetInternVisible(bVisible);
+	__super::SetInternVisible(bVisible, bTraversal);
 
 	if (m_pListHeader)
 	{
-		m_pListHeader->SetInternVisible(IsVisible());
+		m_pListHeader->SetInternVisible(IsVisible(), bTraversal);
 	}
 
 	return;

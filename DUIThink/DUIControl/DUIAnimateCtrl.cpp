@@ -68,22 +68,6 @@ void CDUIAnimateCtrl::SetVisible(bool bVisible)
 	return;
 }
 
-void CDUIAnimateCtrl::SetInternVisible(bool bVisible)
-{
-	__super::SetInternVisible(bVisible);
-
-	if (IsVisible() && IsAutoPlay())
-	{
-		PlayAnimate();
-
-		return;
-	}
-
-	StopAnimate();
-
-	return;
-}
-
 tagDuiImageSection CDUIAnimateCtrl::GetImageSectionAnimate()
 {
 	return m_AttributeImageAnimate.GetImageSection();
@@ -253,6 +237,22 @@ void CDUIAnimateCtrl::PaintStatusImage(HDC hDC)
 
 	CDUIRect rcBorderRound = GetRoundCorner();
 	m_AttributeImageAnimate.DrawAnimate(hDC, GetAbsoluteRect(), m_rcPaint, m_AnimateImageInfo, m_nFrameCur, rcBorderRound);
+
+	return;
+}
+
+void CDUIAnimateCtrl::SetInternVisible(bool bVisible, bool bTraversal)
+{
+	__super::SetInternVisible(bVisible, bTraversal);
+
+	if (IsVisible() && IsAutoPlay())
+	{
+		PlayAnimate();
+
+		return;
+	}
+
+	StopAnimate();
 
 	return;
 }

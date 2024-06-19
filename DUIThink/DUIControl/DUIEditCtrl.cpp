@@ -816,9 +816,9 @@ void CDUIEditCtrl::PaintText(HDC hDC)
 	return;
 }
 
-void CDUIEditCtrl::SetInternVisible(bool bVisible)
+void CDUIEditCtrl::SetInternVisible(bool bVisible, bool bTraversal)
 {
-	__super::SetInternVisible(bVisible);
+	__super::SetInternVisible(bVisible, bTraversal);
 
 	if (false == IsVisible() && m_pEditWindow)
 	{

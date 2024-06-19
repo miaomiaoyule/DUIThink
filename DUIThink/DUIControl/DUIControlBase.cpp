@@ -1956,7 +1956,7 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	return;
 }
 
-void CDUIControlBase::SetInternVisible(bool bVisible)
+void CDUIControlBase::SetInternVisible(bool bVisible, bool bTraversal)
 {
 	if (bVisible == m_bInternVisible) return;
 

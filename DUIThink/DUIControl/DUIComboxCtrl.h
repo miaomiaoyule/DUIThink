@@ -116,7 +116,7 @@ protected:
 
 	//help
 protected:
-	void SetInternVisible(bool bVisible = true) override;
+	void SetInternVisible(bool bVisible = true, bool bTraversal = false) override;
 	CDUIControlBase * FindControl(FindControlProc Proc, LPVOID pData, UINT uFlags) override;
 	void ReapControl() override;
 	CDUIAttributeColorSwitch * GetAttributeStatusColor() override;

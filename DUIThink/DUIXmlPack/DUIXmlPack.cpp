@@ -601,16 +601,16 @@ CDUIControlBase * CDUIXmlPack::LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWndMan
 			if (pControl)
 			{
 				pRootCtrl = MMInterfaceHelper(CDUIContainerCtrl, pControl);
-				if (pRootCtrl)
+				if (NULL == pRootCtrl)
 				{
-					LoadControlFromXML(pNodeXml, pRootCtrl);
+					MMSafeDelete(pControl);
 
-					break;
+					continue;
 				}
 
-				MMSafeDelete(pControl);
+				LoadControlFromXML(pNodeXml, pRootCtrl);
 
-				continue;
+				break;
 			}
 		}
 
@@ -644,7 +644,14 @@ CDUIControlBase * CDUIXmlPack::LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWndMan
 
 	} while (pNodeXml = pNodeXml->NextSiblingElement(), pNodeXml);
 
-	if (pWndManager) pWndManager->Init();
+	if (pWndManager)
+	{
+		pWndManager->Init();
+	}
+	if (pRootCtrl)
+	{
+		pRootCtrl->RefreshChildInternVisible(true);
+	}
 
 	return pRootCtrl;
 }
@@ -740,20 +747,12 @@ bool CDUIXmlPack::LoadControlFromXML(tinyxml2::XMLElement *pNodeXml, CDUIControl
 		return false;
 	}
 
-	bool bPropertyInited = false;
 	do
 	{
 		//control
 		CDUIControlBase *pChildCtrl = CDUIFactory::GetInstance()->CreateControlObj(pNodeXml->Name());
 		if (pChildCtrl)
 		{
-			if (false == bPropertyInited)
-			{
-				bPropertyInited = true;
-
-				pControl->InitProperty();
-			}
-
 			LoadControlFromXML(pNodeXml, pChildCtrl);
 
 			MMInterfaceHelper(CDUIContainerCtrl, pControl, pContainer);
@@ -781,14 +780,7 @@ bool CDUIXmlPack::LoadControlFromXML(tinyxml2::XMLElement *pNodeXml, CDUIControl
 
 	} while (pNodeXml = pNodeXml->NextSiblingElement(), NULL != pNodeXml);
 
-	if (bPropertyInited)
-	{
-		pControl->InitComplete();
-	}
-	else
-	{
-		pControl->Init();
-	}
+	pControl->Init();
 
 	return true;
 }

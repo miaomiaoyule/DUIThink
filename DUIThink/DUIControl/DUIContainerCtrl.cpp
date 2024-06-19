@@ -1408,22 +1408,22 @@ void CDUIContainerCtrl::RefreshScrollBar()
 	return;
 }
 
-void CDUIContainerCtrl::RefreshChildInternVisible()
+void CDUIContainerCtrl::RefreshChildInternVisible(bool bTraversal)
 {
 	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
 	{
 		CDUIControlBase *pControl = GetChildAt(nIndex);
 		if (NULL == pControl) continue;
 
-		pControl->SetInternVisible(IsVisible());
+		pControl->SetInternVisible(IsVisible(), bTraversal);
 	}
 	if (m_pHorizScrollBarCtrl)
 	{
-		m_pHorizScrollBarCtrl->SetInternVisible(IsVisible());
+		m_pHorizScrollBarCtrl->SetInternVisible(IsVisible(), bTraversal);
 	}
 	if (m_pVertScrollBarCtrl)
 	{
-		m_pVertScrollBarCtrl->SetInternVisible(IsVisible());
+		m_pVertScrollBarCtrl->SetInternVisible(IsVisible(), bTraversal);
 	}
 
 	return;
@@ -1500,15 +1500,15 @@ void CDUIContainerCtrl::ScrollChilds(CDUISize szScroll)
 	return;
 }
 
-void CDUIContainerCtrl::SetInternVisible(bool bVisible)
+void CDUIContainerCtrl::SetInternVisible(bool bVisible, bool bTraversal)
 {
 	bool bVisibleOld = IsVisible();
 
-	__super::SetInternVisible(bVisible);
+	__super::SetInternVisible(bVisible, bTraversal);
 
-	if (bVisibleOld != IsVisible())
+	if (bVisibleOld != IsVisible() || bTraversal)
 	{
-		RefreshChildInternVisible();
+		RefreshChildInternVisible(bTraversal);
 	}
 
 	return;

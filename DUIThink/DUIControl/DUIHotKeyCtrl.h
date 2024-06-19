@@ -80,7 +80,7 @@ protected:
 
 	//help
 protected:
-	void SetInternVisible(bool bVisible = true) override;
+	void SetInternVisible(bool bVisible = true, bool bTraversal = false) override;
 	virtual BYTE HotkeyToMod(BYTE cbModifierFlag);
 	virtual BYTE ModToHotkey(BYTE cbModifierFlag);
 };

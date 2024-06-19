@@ -340,7 +340,7 @@ protected:
 	int GetMaxSelItemIndex();
 
 	virtual CDUIListItemCtrl * ProductItemDefault();
-	void SetInternVisible(bool bVisible = true) override;
+	void SetInternVisible(bool bVisible = true, bool bTraversal = false) override;
 	CDUIControlBase * FindControl(FindControlProc Proc, LPVOID pData, UINT uFlags) override;
 	void ReapControl() override;
 	void PerformMouseDragSel();

@@ -185,13 +185,13 @@ protected:
 	//help
 protected:
 	virtual void RefreshScrollBar();
-	virtual void RefreshChildInternVisible();
+	virtual void RefreshChildInternVisible(bool bTraversal = false);
 	virtual CDUIRect GetLayoutRangeOfScrollBar();
 	virtual CDUIRect GetLayoutRangeOfItem();
 	virtual void UpdateScrollBar(CDUISize szRange);
 	virtual void ScrollChilds(CDUISize szScroll);
 
-	void SetInternVisible(bool bVisible = true) override;
+	void SetInternVisible(bool bVisible = true, bool bTraversal = false) override;
 	CDUIControlBase * FindControl(FindControlProc Proc, LPVOID pData, UINT uFlags) override;
 	void ReapControl() override;
 };

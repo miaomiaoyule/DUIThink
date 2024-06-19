@@ -561,9 +561,9 @@ void CDUIHotKeyCtrl::InitComplete()
 	return;
 }
 
-void CDUIHotKeyCtrl::SetInternVisible(bool bVisible/* = true*/)
+void CDUIHotKeyCtrl::SetInternVisible(bool bVisible, bool bTraversal)
 {
-	__super::SetInternVisible(bVisible);
+	__super::SetInternVisible(bVisible, bTraversal);
 
 	if (false == IsVisible() && m_pHotKeyWindow)
 	{
