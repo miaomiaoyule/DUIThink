@@ -7,6 +7,19 @@ MMImplement_ClassName(CDUITabLayoutCtrl)
 CDUITabLayoutCtrl::CDUITabLayoutCtrl(void)
 {
 	m_nOldSel = -1;
+
+	static tagDuiCombox AttriCombox;
+	if (AttriCombox.vecItem.empty())
+	{
+		AttriCombox.vecItem.push_back({ AnimateSelSwitch_None, _T("None") });
+		AttriCombox.vecItem.push_back({ AnimateSelSwitch_H, _T("SelSwitch_H") });
+		AttriCombox.vecItem.push_back({ AnimateSelSwitch_V, _T("SelSwitch_V") });
+	}
+
+	m_AttributeAnimateSelSwitchType.SetCombox(AttriCombox);
+	m_AttributeAnimateSelSwitchType.SelectItem(AnimateSelSwitch_None);
+
+	return;
 }
 
 CDUITabLayoutCtrl::~CDUITabLayoutCtrl(void)
@@ -260,17 +273,6 @@ void CDUITabLayoutCtrl::InitProperty()
 	DuiCreateGroupAttribute(m_AttributeGroupSelect, _T("Select"));
 	DuiCreateAttribute(m_AttributeSelectIndex, _T("SelectIndex"), _T(""), m_AttributeGroupSelect);
 	DuiCreateAttribute(m_AttributeAnimateSelSwitchType, _T("AnimateSelSwitchType"), _T(""), m_AttributeGroupSelect);
-
-	//value
-	if (false == m_AttributeAnimateSelSwitchType.IsModified())
-	{
-		tagDuiCombox AttriCombox;
-		AttriCombox.vecItem.push_back({ AnimateSelSwitch_None, _T("None") });
-		AttriCombox.vecItem.push_back({ AnimateSelSwitch_H, _T("SelSwitch_H") });
-		AttriCombox.vecItem.push_back({ AnimateSelSwitch_V, _T("SelSwitch_V") });
-		m_AttributeAnimateSelSwitchType.SetCombox(AttriCombox);
-		m_AttributeAnimateSelSwitchType.SelectItem(AnimateSelSwitch_None);
-	}
 
 	return;
 }

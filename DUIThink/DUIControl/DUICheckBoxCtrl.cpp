@@ -301,7 +301,6 @@ void CDUICheckBoxCtrl::InitNormalSkin()
 	return;
 }
 
-//»æÖÆ
 void CDUICheckBoxCtrl::PaintStatusColor(HDC hDC)
 {
 	if (IsSelected())

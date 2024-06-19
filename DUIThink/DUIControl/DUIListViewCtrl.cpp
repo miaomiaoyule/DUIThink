@@ -7,6 +7,17 @@ MMImplement_ClassName(CDUIListViewCtrl)
 
 CDUIListViewCtrl::CDUIListViewCtrl(void)
 {
+	static tagDuiCombox AttriCombox;
+	if (AttriCombox.vecItem.empty())
+	{
+		AttriCombox.vecItem.push_back({ ListView_List, _T("List") });
+		AttriCombox.vecItem.push_back({ ListView_TileH, _T("TileH") });
+		AttriCombox.vecItem.push_back({ ListView_TileV, _T("TileV") });
+	}
+
+	m_AttributeListViewType.SetCombox(AttriCombox);
+	m_AttributeListViewType.SelectItem(ListView_List);
+
 	return;
 }
 
@@ -2249,15 +2260,6 @@ void CDUIListViewCtrl::InitProperty()
 	//value
 	DuiInitAttriValue(m_AttributeUseHorizScrollBar, true);
 	DuiInitAttriValue(m_AttributeUseVertScrollBar, true);
-	if (false == m_AttributeListViewType.IsModified())
-	{
-		tagDuiCombox AttriCombox;
-		AttriCombox.vecItem.push_back({ ListView_List, _T("List") });
-		AttriCombox.vecItem.push_back({ ListView_TileH, _T("TileH") });
-		AttriCombox.vecItem.push_back({ ListView_TileV, _T("TileV") });
-		m_AttributeListViewType.SetCombox(AttriCombox);
-		m_AttributeListViewType.SelectItem(ListView_List);
-	}
 
 	return;
 }

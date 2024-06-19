@@ -11,6 +11,43 @@ MMImplement_ClassName(CDUIControlBase)
 
 CDUIControlBase::CDUIControlBase(void)
 {
+	{
+		static tagDuiCombox AttriCombox;
+		if (AttriCombox.vecItem.empty())
+		{
+			AttriCombox.vecItem.push_back({ LineStyle_Null, _T("Null") });
+			AttriCombox.vecItem.push_back({ LineStyle_Solid, _T("Solid") });
+			AttriCombox.vecItem.push_back({ LineStyle_Dash, _T("Dash") });
+			AttriCombox.vecItem.push_back({ LineStyle_Dot, _T("Dot") });
+			AttriCombox.vecItem.push_back({ LineStyle_DashDot, _T("DashDot") });
+			AttriCombox.vecItem.push_back({ LineStyle_DashDotDot, _T("DashDotDot") });
+		}
+
+		m_AttributeBorderStyle.SetCombox(AttriCombox);
+		m_AttributeBorderStyle.SelectItem(LineStyle_Solid);
+	}
+	{
+		static tagDuiCombox AttriCombox;
+		if (AttriCombox.vecItem.empty())
+		{
+			AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_Arrow, _T("Arrow") });
+			AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_IBeam, _T("IBeam") });
+			AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_Wait, _T("Wait") });
+			AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_Cross, _T("Cross") });
+			AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_UpArrow, _T("UpArrow") });
+			AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_SizeNWSE, _T("SizeNWSE") });
+			AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_SizeNESW, _T("SizeNESW") });
+			AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_SizeWE, _T("SizeWE") });
+			AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_SizeNS, _T("SizeNS") });
+			AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_SizeALL, _T("SizeALL") });
+			AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_No, _T("No") });
+			AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_Hand, _T("Hand") });
+		}
+
+		m_AttributeCursor.SetCombox(AttriCombox);
+		m_AttributeCursor.SelectItem(Cursor_Arrow);
+	}
+
 	return;
 }
 
@@ -1649,6 +1686,7 @@ bool CDUIControlBase::OnWinDrop(const tagDuiDropData *pDropData, DWORD *pdwEffec
 
 void CDUIControlBase::InitProperty()
 {
+	//create
 	DuiCreateGroupAttribute(m_AttributeGroupBase, _T("ControlBase"));
 	DuiCreateAttribute(m_AttributeObjectID, Key_Dui_PropCtrlID, _T(""), m_AttributeGroupBase);
 	DuiCreateAttribute(m_AttributeEnable, _T("Enable"), _T(""), m_AttributeGroupBase);
@@ -1664,7 +1702,6 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeMaxSize, _T("MaxSize"), _T(""), m_AttributeGroupPosition);
 	DuiCreateAttribute(m_AttributeDpiPadding, _T("DpiPadding"), _T(""), m_AttributeGroupPosition);
 
-	//图像相关
 	DuiCreateGroupAttribute(m_AttributeGroupBk, _T("Back"));
 	DuiCreateAttribute(m_AttributeColorBk, _T("ColorBk"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeColorGradient, _T("ColorGradient"), _T(""), m_AttributeGroupBk);
@@ -1672,15 +1709,7 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeImageBack, _T("ImageBack"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeImageFore, _T("ImageFore"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeRoundCorner, _T("RoundCorner"), _T(""), m_AttributeGroupBk);
-	if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_4)
-	{
-		CDUIAttributeSize RoundSize;
-		DuiCreateAttribute(RoundSize, _T("RoundSize"), _T(""), m_AttributeGroupBk);
-		SetRoundCorner({ RoundSize.cx, RoundSize.cx, RoundSize.cy, RoundSize.cy });
-		m_AttributeGroupBk.RemoveAttribute(&RoundSize);
-	}
 
-	//边框相关
 	DuiCreateGroupAttribute(m_AttributeGroupBorder, _T("Border"));
 	DuiCreateAttribute(m_AttributeBorderStyle, _T("BorderStyle"), _T(""), m_AttributeGroupBorder);
 	DuiCreateAttribute(m_AttributeColorBorder, _T("ColorBorder"), _T(""), m_AttributeGroupBorder);
@@ -1695,73 +1724,19 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeContextMenu, _T("ContextMenu"), _T(""), m_AttributeGroupMouse);
 	DuiCreateAttribute(m_AttributeActiveUrl, _T("ActiveUrl"), _T(""), m_AttributeGroupMouse);
 
-	//控件提示
 	DuiCreateGroupAttribute(m_AttributeGroupToolTip, _T("ToolTip"));
 	DuiCreateAttribute(m_AttributeToolTip, _T("ToolTip"), _T(""), m_AttributeGroupToolTip);
 	DuiCreateAttribute(m_AttributeToolTipWidth, _T("ToolTipWidth"), _T(""), m_AttributeGroupToolTip);
 	DuiCreateAttribute(m_AttributeToolTipBkColor, _T("ToolTipBkColor"), _T(""), m_AttributeGroupToolTip);
 	DuiCreateAttribute(m_AttributeToolTipTextColor, _T("ToolTipTextColor"), _T(""), m_AttributeGroupToolTip);
 
-	return;
-}
-
-void CDUIControlBase::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	//baseinfo
-	DuiInitAttriValue(m_AttributeEnable, true);
-	DuiInitAttriValue(m_AttributeVisible, true);
-
-	DuiInitAttriSizeValue(m_AttributeMinSize, 0, 0);
-	DuiInitAttriSizeValue(m_AttributeMaxSize, 999999, 999999);
-	DuiInitAttriValue(m_AttributeDpiPadding, true);
-
-	DuiInitAttriValue(m_AttributeIsColorHSL, false);
-
-	DuiInitAttriValue(m_AttributeMouseThrough, false);
-	DuiInitAttriValue(m_AttributeClickTransmit, true);
-	DuiInitAttriValue(m_AttributeContextMenu, false);
-
-	DuiInitAttriValue(m_AttributeToolTip, _T(""));
-	DuiInitAttriValue(m_AttributeToolTipWidth, 500);
-	DuiInitAttriColor(m_AttributeToolTipBkColor, DUIARGB(255, 253, 198, 104));
-	DuiInitAttriColor(m_AttributeToolTipTextColor, 0);
-
-	DuiInitAttriValue(m_AttributeUserData, _T(""));
-	DuiInitAttriValue(m_AttributeUserTag, 0);
-
-	if (false == m_AttributeBorderStyle.IsModified())
+	//compatible
+	if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_4)
 	{
-		tagDuiCombox AttriCombox;
-		AttriCombox.vecItem.push_back({ LineStyle_Null, _T("Null") });
-		AttriCombox.vecItem.push_back({ LineStyle_Solid, _T("Solid") });
-		AttriCombox.vecItem.push_back({ LineStyle_Dash, _T("Dash") });
-		AttriCombox.vecItem.push_back({ LineStyle_Dot, _T("Dot") });
-		AttriCombox.vecItem.push_back({ LineStyle_DashDot, _T("DashDot") });
-		AttriCombox.vecItem.push_back({ LineStyle_DashDotDot, _T("DashDotDot") });
-		m_AttributeBorderStyle.SetCombox(AttriCombox);
-		m_AttributeBorderStyle.SelectItem(LineStyle_Solid);
-	}
-
-	//光标
-	if (false == m_AttributeCursor.IsModified())
-	{
-		tagDuiCombox AttriCombox;
-		AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_Arrow, _T("Arrow") });
-		AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_IBeam, _T("IBeam") });
-		AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_Wait, _T("Wait") });
-		AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_Cross, _T("Cross") });
-		AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_UpArrow, _T("UpArrow") });
-		AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_SizeNWSE, _T("SizeNWSE") });
-		AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_SizeNESW, _T("SizeNESW") });
-		AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_SizeWE, _T("SizeWE") });
-		AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_SizeNS, _T("SizeNS") });
-		AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_SizeALL, _T("SizeALL") });
-		AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_No, _T("No") });
-		AttriCombox.vecItem.push_back({ enDuiCursor::Cursor_Hand, _T("Hand") });
-		m_AttributeCursor.SetCombox(AttriCombox);
-		m_AttributeCursor.SelectItem(Cursor_Arrow);
+		CDUIAttributeSize RoundSize;
+		DuiCreateAttribute(RoundSize, _T("RoundSize"), _T(""), m_AttributeGroupBk);
+		SetRoundCorner({ RoundSize.cx, RoundSize.cx, RoundSize.cy, RoundSize.cy });
+		m_AttributeGroupBk.RemoveAttribute(&RoundSize);
 	}
 
 	return;
@@ -1771,10 +1746,19 @@ void CDUIControlBase::InitComplete()
 {
 	__super::InitComplete();
 
+	//compatible
+	if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_4)
+	{
+		CDUIRect rcRoundCorner = GetRoundCorner();
+		if (rcRoundCorner.left > 0 || rcRoundCorner.top > 0 || rcRoundCorner.right > 0 || rcRoundCorner.bottom > 0)
+		{
+			m_AttributeRoundCorner.NotifyChange();
+		}
+	}
+
+	//visible
 	DuiInitAttriVisible(m_AttributeToolTipBkColor, false);
 	DuiInitAttriVisible(m_AttributeToolTipTextColor, false);
-
-	SetInternVisible(m_pParent ? m_pParent->IsVisible() : true);
 
 	return;
 }

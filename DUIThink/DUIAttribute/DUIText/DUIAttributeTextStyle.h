@@ -21,7 +21,7 @@ class DUITHINK_API CDUIAttributeTextStyle
 	MMDeclare_ClassName(CDUIAttributeTextStyle)
 
 public:
-	CDUIAttributeTextStyle(void);
+	CDUIAttributeTextStyle(DWORD dwTextStyle = DT_LEFT | DT_TOP | DT_SINGLELINE | DT_END_ELLIPSIS);
 	virtual ~CDUIAttributeTextStyle(void);
 
 	//variant

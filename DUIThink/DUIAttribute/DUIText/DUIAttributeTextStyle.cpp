@@ -5,11 +5,13 @@
 DuiImplement_CreateAttribute(CDUIAttributeTextStyle)
 MMImplement_ClassName(CDUIAttributeTextStyle)
 
-CDUIAttributeTextStyle::CDUIAttributeTextStyle(void)
+CDUIAttributeTextStyle::CDUIAttributeTextStyle(DWORD dwTextStyle)
 {
 #ifdef DUI_DESIGN
 	m_DuiAttributeType = DuiAttribute_TextStyle;
 #endif
+
+	SetTextStyle(dwTextStyle);
 
 	return;
 }

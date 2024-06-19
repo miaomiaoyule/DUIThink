@@ -110,6 +110,18 @@ MMImplement_ClassName(CDUIThinkEditCtrl)
 
 CDUIThinkEditCtrl::CDUIThinkEditCtrl()
 {
+	static tagDuiCombox AttriCombox;
+	if (AttriCombox.vecItem.empty())
+	{
+		AttriCombox.vecItem.push_back({ EditText_None, _T("None") });
+		AttriCombox.vecItem.push_back({ EditText_Number, _T("Number") });
+		AttriCombox.vecItem.push_back({ EditText_NumberInt, _T("NumberInt") });
+		AttriCombox.vecItem.push_back({ EditText_NumberDouble, _T("NumberDouble") });
+	}
+
+	m_AttributeEditTextType.SetCombox(AttriCombox);
+	m_AttributeEditTextType.SelectItem(EditText_None);
+
 	return;
 }
 
@@ -1719,16 +1731,6 @@ void CDUIThinkEditCtrl::InitProperty()
 
 	//value
 	DuiInitAttriValue(m_AttributeContextMenu, true);
-	if (false == m_AttributeEditTextType.IsModified())
-	{
-		tagDuiCombox AttriCombox;
-		AttriCombox.vecItem.push_back({ EditText_None, _T("None") });
-		AttriCombox.vecItem.push_back({ EditText_Number, _T("Number") });
-		AttriCombox.vecItem.push_back({ EditText_NumberInt, _T("NumberInt") });
-		AttriCombox.vecItem.push_back({ EditText_NumberDouble, _T("NumberDouble") });
-		m_AttributeEditTextType.SetCombox(AttriCombox);
-		m_AttributeEditTextType.SelectItem(EditText_None);
-	}
 	if (false == m_AttributeCursor.IsModified())
 	{
 		m_AttributeCursor.SelectItem(Cursor_IBeam);

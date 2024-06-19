@@ -7,7 +7,19 @@ MMImplement_ClassName(CDUISpinCtrl)
 
 CDUISpinCtrl::CDUISpinCtrl(void)
 {
+	static tagDuiCombox AttriCombox;
+	if (AttriCombox.vecItem.empty())
+	{
+		AttriCombox.vecItem.push_back({ EditText_None, _T("None") });
+		AttriCombox.vecItem.push_back({ EditText_Number, _T("Number") });
+		AttriCombox.vecItem.push_back({ EditText_NumberInt, _T("NumberInt") });
+		AttriCombox.vecItem.push_back({ EditText_NumberDouble, _T("NumberDouble") });
+	}
 
+	m_AttributeEditTextType.SetCombox(AttriCombox);
+	m_AttributeEditTextType.SelectItem(EditText_None);
+
+	return;
 }
 
 CDUISpinCtrl::~CDUISpinCtrl(void)
@@ -516,18 +528,6 @@ void CDUISpinCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeImageDownBtnNormal, _T("ImageDownBtnNormal"), _T(""), m_AttributeGroupSpin);
 	DuiCreateAttribute(m_AttributeImageDownBtnHot, _T("ImageDownBtnHot"), _T(""), m_AttributeGroupSpin);
 	DuiCreateAttribute(m_AttributeImageDownBtnPushed, _T("ImageDownBtnPushed"), _T(""), m_AttributeGroupSpin);
-
-	//value
-	if (false == m_AttributeEditTextType.IsModified())
-	{
-		tagDuiCombox AttriCombox;
-		AttriCombox.vecItem.push_back({ EditText_None, _T("None") });
-		AttriCombox.vecItem.push_back({ EditText_Number, _T("Number") });
-		AttriCombox.vecItem.push_back({ EditText_NumberInt, _T("NumberInt") });
-		AttriCombox.vecItem.push_back({ EditText_NumberDouble, _T("NumberDouble") });
-		m_AttributeEditTextType.SetCombox(AttriCombox);
-		m_AttributeEditTextType.SelectItem(EditText_None);
-	}
 
 	return;
 }

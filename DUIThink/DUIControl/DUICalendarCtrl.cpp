@@ -224,6 +224,17 @@ DuiEnd_Message_Map()
 
 CDUICalendarCtrl::CDUICalendarCtrl(void)
 {
+	static tagDuiCombox AttriCombox;
+	if (AttriCombox.vecItem.empty())
+	{
+		AttriCombox.vecItem.push_back({ CalendarWeek_FirstMonday, _T("FirstMonday") });
+		AttriCombox.vecItem.push_back({ CalendarWeek_FirstSunday, _T("FirstSunday") });
+	}
+
+	m_AttributeWeekStyle.SetCombox(AttriCombox);
+	m_AttributeWeekStyle.SelectItem(CalendarWeek_FirstMonday);
+
+	return;
 }
 
 CDUICalendarCtrl::~CDUICalendarCtrl(void)
@@ -855,35 +866,6 @@ void CDUICalendarCtrl::InitProperty()
 	for (int n = 0; n < Dui_Count_WeekDay; n++)
 	{
 		DuiCreateAttribute(m_AttributeTextWeekDay[n], m_szWeekDayAttriName[n], m_szWeekDayAttriName[n], m_AttributeGroupDays);
-	}
-
-	//value
-	DuiInitAttriAlignRight(m_AttributeTextStyleYearNormal, true);
-	DuiInitAttriVAlignCenter(m_AttributeTextStyleYearNormal, true);
-	DuiInitAttriAlignRight(m_AttributeTextStyleYearHot, true);
-	DuiInitAttriVAlignCenter(m_AttributeTextStyleYearHot, true);
-	DuiInitAttriAlignLeft(m_AttributeTextStyleMonthNormal, true);
-	DuiInitAttriVAlignCenter(m_AttributeTextStyleMonthNormal, true);
-	DuiInitAttriAlignLeft(m_AttributeTextStyleMonthHot, true);
-	DuiInitAttriVAlignCenter(m_AttributeTextStyleMonthHot, true);
-	DuiInitAttriAlignCenter(m_AttributeTextStyleWeek, true);
-	DuiInitAttriVAlignCenter(m_AttributeTextStyleWeek, true);
-	DuiInitAttriAlignCenter(m_AttributeTextStyleOtherMonthDay, true);
-	DuiInitAttriVAlignCenter(m_AttributeTextStyleOtherMonthDay, true);
-	DuiInitAttriAlignCenter(m_AttributeTextStyleCurMonthDay, true);
-	DuiInitAttriVAlignCenter(m_AttributeTextStyleCurMonthDay, true);
-	DuiInitAttriAlignCenter(m_AttributeTextStyleHotMonthDay, true);
-	DuiInitAttriVAlignCenter(m_AttributeTextStyleHotMonthDay, true);
-	DuiInitAttriAlignCenter(m_AttributeTextStyleToday, true);
-	DuiInitAttriVAlignCenter(m_AttributeTextStyleToday, true);
-
-	if (false == m_AttributeWeekStyle.IsModified())
-	{
-		tagDuiCombox AttriCombox;
-		AttriCombox.vecItem.push_back({ CalendarWeek_FirstMonday, _T("FirstMonday") });
-		AttriCombox.vecItem.push_back({ CalendarWeek_FirstSunday, _T("FirstSunday") });
-		m_AttributeWeekStyle.SetCombox(AttriCombox);
-		m_AttributeWeekStyle.SelectItem(CalendarWeek_FirstMonday);
 	}
 
 	return;

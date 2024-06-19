@@ -27,10 +27,10 @@ protected:
 	CDUIAttributeBool					m_AttributeHeaderVisible = true;
 	CDUIAttributeLong					m_AttributeHeaderHeight = 30;
 	CDUIAttributeSize					m_AttributeLeftRightBtnSize = SIZE{ 30, 30 };
-	CDUIAttributeTextStyle				m_AttributeTextStyleYearNormal;
-	CDUIAttributeTextStyle				m_AttributeTextStyleYearHot;
-	CDUIAttributeTextStyle				m_AttributeTextStyleMonthNormal;
-	CDUIAttributeTextStyle				m_AttributeTextStyleMonthHot;
+	CDUIAttributeTextStyle				m_AttributeTextStyleYearNormal = DT_SINGLELINE | DT_END_ELLIPSIS | DT_RIGHT | DT_VCENTER;
+	CDUIAttributeTextStyle				m_AttributeTextStyleYearHot = DT_SINGLELINE | DT_END_ELLIPSIS | DT_RIGHT | DT_VCENTER;
+	CDUIAttributeTextStyle				m_AttributeTextStyleMonthNormal = DT_SINGLELINE | DT_END_ELLIPSIS | DT_LEFT | DT_VCENTER;
+	CDUIAttributeTextStyle				m_AttributeTextStyleMonthHot = DT_SINGLELINE | DT_END_ELLIPSIS | DT_LEFT | DT_VCENTER;
 	CDUIAttributeColorSwitch			m_AttributeColorYearNormal;
 	CDUIAttributeColorSwitch			m_AttributeColorYearHot;
 	CDUIAttributeColorSwitch			m_AttributeColorMonthNormal;
@@ -49,11 +49,11 @@ protected:
 	CDUIAttriImageSection				m_AttributeImageHotDayBk;
 	CDUIAttriImageSection				m_AttributeImageSelDayBk;
 	CDUIAttriImageSection				m_AttributeImageTodayBk;
-	CDUIAttributeTextStyle				m_AttributeTextStyleWeek;
-	CDUIAttributeTextStyle				m_AttributeTextStyleOtherMonthDay;
-	CDUIAttributeTextStyle				m_AttributeTextStyleCurMonthDay;
-	CDUIAttributeTextStyle				m_AttributeTextStyleHotMonthDay;
-	CDUIAttributeTextStyle				m_AttributeTextStyleToday;
+	CDUIAttributeTextStyle				m_AttributeTextStyleWeek = DT_SINGLELINE | DT_END_ELLIPSIS | DT_CENTER | DT_VCENTER;
+	CDUIAttributeTextStyle				m_AttributeTextStyleOtherMonthDay = DT_SINGLELINE | DT_END_ELLIPSIS | DT_CENTER | DT_VCENTER;
+	CDUIAttributeTextStyle				m_AttributeTextStyleCurMonthDay = DT_SINGLELINE | DT_END_ELLIPSIS | DT_CENTER | DT_VCENTER;
+	CDUIAttributeTextStyle				m_AttributeTextStyleHotMonthDay = DT_SINGLELINE | DT_END_ELLIPSIS | DT_CENTER | DT_VCENTER;
+	CDUIAttributeTextStyle				m_AttributeTextStyleToday = DT_SINGLELINE | DT_END_ELLIPSIS | DT_CENTER | DT_VCENTER;
 	CDUIAttributeText					m_AttributeTextWeekDay[Dui_Count_WeekDay] = { _T("星期一"), _T("星期二"), _T("星期三"), _T("星期四"), _T("星期五"), _T("星期六"), _T("星期天"), };
 
 	//variant

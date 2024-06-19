@@ -1280,8 +1280,6 @@ void CDUIContainerCtrl::InitComplete()
 
 	EnableScrollBar(IsUseHorizScrollBar(), IsUseVertScrollBar());
 
-	RefreshChildInternVisible();
-
 	return;
 }
 

@@ -6,6 +6,29 @@ MMImplement_ClassName(CDUIProgressCtrl)
 
 CDUIProgressCtrl::CDUIProgressCtrl(void)
 {
+	{
+		static tagDuiCombox AttriCombox;
+		if (AttriCombox.vecItem.empty())
+		{
+			AttriCombox.vecItem.push_back({ ProgressType_Horiz, _T("ProgressHoriz") });
+			AttriCombox.vecItem.push_back({ ProgressType_Vert, _T("ProgressVert") });
+		}
+
+		m_AttributeProgressType.SetCombox(AttriCombox);
+		m_AttributeProgressType.SelectItem(ProgressType_Horiz);
+	}
+	{
+		static tagDuiCombox AttriCombox;
+		if (AttriCombox.vecItem.empty())
+		{
+			AttriCombox.vecItem.push_back({ ProgressMove_Positive, _T("MovePositive") });
+			AttriCombox.vecItem.push_back({ ProgressMove_Reverse, _T("MoveReverse") });
+		}
+
+		m_AttributeProgressMoveType.SetCombox(AttriCombox);
+		m_AttributeProgressMoveType.SelectItem(ProgressMove_Positive);
+	}
+
 	return;
 }
 
@@ -357,24 +380,6 @@ void CDUIProgressCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeImageSlipNormal, _T("ImageSlipNormal"), _T(""), m_AttributeGroupSlip);
 	DuiCreateAttribute(m_AttributeImageSlipHot, _T("ImageSlipHot"), _T(""), m_AttributeGroupSlip);
 	DuiCreateAttribute(m_AttributeSlipInsetToGroove, _T("SlipInsetToGroove"), _T(""), m_AttributeGroupSlip);
-
-	//value
-	if (false == m_AttributeProgressType.IsModified())
-	{
-		tagDuiCombox AttriCombox;
-		AttriCombox.vecItem.push_back({ ProgressType_Horiz, _T("ProgressHoriz") });
-		AttriCombox.vecItem.push_back({ ProgressType_Vert, _T("ProgressVert") });
-		m_AttributeProgressType.SetCombox(AttriCombox);
-		m_AttributeProgressType.SelectItem(ProgressType_Horiz);
-	}
-	if (false == m_AttributeProgressMoveType.IsModified())
-	{
-		tagDuiCombox AttriCombox;
-		AttriCombox.vecItem.push_back({ ProgressMove_Positive, _T("MovePositive") });
-		AttriCombox.vecItem.push_back({ ProgressMove_Reverse, _T("MoveReverse") });
-		m_AttributeProgressMoveType.SetCombox(AttriCombox);
-		m_AttributeProgressMoveType.SelectItem(ProgressMove_Positive);
-	}
 
 	return;
 }
