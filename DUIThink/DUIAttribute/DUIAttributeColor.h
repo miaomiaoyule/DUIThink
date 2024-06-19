@@ -14,7 +14,7 @@ class DUITHINK_API CDUIAttributeColor
 	MMDeclare_ClassName(CDUIAttributeColor)
 
 public:
-	CDUIAttributeColor(void);
+	CDUIAttributeColor(ARGB dwColor = DUIARGB(255, 253, 198, 104));
 	~CDUIAttributeColor(void);
 
 protected:

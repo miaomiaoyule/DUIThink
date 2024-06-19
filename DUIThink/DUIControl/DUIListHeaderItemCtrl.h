@@ -22,9 +22,9 @@ public:
 	//attribute
 protected:
 	CDUIAttributeGroup					m_AttributeGroupSep;
-	CDUIAttributeLong					m_AttributeSepWidth;
+	CDUIAttributeLong					m_AttributeSepWidth = 1;
 	CDUIAttributeFloat					m_AttributeSepScale;
-	CDUIAttributeColorSwitch			m_AttributeSepColor;
+	CDUIAttributeColorSwitch			m_AttributeSepColor = Name_ColorBlack;
 	CDUIAttriImageSection				m_AttributeSepImage;
 
 	CDUIAttributeGroup					m_AttributeGroupStatus;
@@ -94,7 +94,6 @@ public:
 	//property
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 
 	//paint

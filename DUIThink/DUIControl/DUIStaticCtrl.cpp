@@ -377,13 +377,6 @@ void CDUIStaticCtrl::InitProperty()
 	return;
 }
 
-void CDUIStaticCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	return;
-}
-
 void CDUIStaticCtrl::PaintText(HDC hDC)
 {
 	if (NULL == m_pWndManager) return;

@@ -18,7 +18,7 @@ class DUITHINK_API CDUIAttributeText
 	MMDeclare_ClassName(CDUIAttributeText)
 
 public:
-	CDUIAttributeText();
+	CDUIAttributeText(LPCTSTR lpszText = NULL);
 	virtual ~CDUIAttributeText(void);
 
 	//variant

@@ -2,10 +2,6 @@
 #include "DUIRotateMenuCtrl.h"
 
 //////////////////////////////////////////////////////////////////////////
-#define Dui_AngleSpace_Min				(10)
-#define Dui_AngleSpace_Max				(360)
-
-//////////////////////////////////////////////////////////////////////////
 DuiImplement_CreateControl(CDUIRotateMenuItemCtrl)
 MMImplement_ClassName(CDUIRotateMenuItemCtrl)
 
@@ -458,20 +454,6 @@ void CDUIRotateMenuCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeRotateClockWise, _T("RotateClockWise"), _T(""), m_AttributeGroupListView);
 	DuiCreateAttribute(m_AttributeItemSizeMin, _T("ItemSizeMin"), _T(""), m_AttributeGroupListView);
 	DuiCreateAttribute(m_AttributeItemSizeMax, _T("ItemSizeMax"), _T(""), m_AttributeGroupListView);
-
-	return;
-}
-
-void CDUIRotateMenuCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriSizeValue(m_AttributeItemSizeMin, 25, 25);
-	DuiInitAttriSizeValue(m_AttributeItemSizeMax, 50, 50);
-	DuiInitAttriValue(m_AttributeAngleStart, -60);
-	DuiInitAttriValue(m_AttributeAngleFinish, 240);
-	DuiInitAttriValue(m_AttributeAngleSpaceMin, Dui_AngleSpace_Min);
-	DuiInitAttriValue(m_AttributeRotateClockWise, true);
 
 	return;
 }

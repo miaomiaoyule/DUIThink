@@ -158,16 +158,6 @@ void CDUIRadioBoxCtrl::InitProperty()
 	return;
 }
 
-void CDUIRadioBoxCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeGroupName, _T("0"));
-	DuiInitAttriValue(m_AttributeBindTabCtrlIndex, -1);
-
-	return;
-}
-
 bool CDUIRadioBoxCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	bool bClick = (m_nControlStatus & ControlStatus_Pushed);

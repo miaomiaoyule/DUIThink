@@ -42,8 +42,8 @@ protected:
 	//base
 	CDUIAttributeGroup					m_AttributeGroupBase;
 	CDUIAttributeULong					m_AttributeObjectID;
-	CDUIAttributeBool					m_AttributeEnable;
-	CDUIAttributeBool					m_AttributeVisible;
+	CDUIAttributeBool					m_AttributeEnable = true;
+	CDUIAttributeBool					m_AttributeVisible = true;
 	CDUIAttributeText					m_AttributeUserData;
 	CDUIAttributeLong					m_AttributeUserTag;
 	CDUIAttributeBool					m_AttributeWinDragEnable;
@@ -52,9 +52,9 @@ protected:
 	//pos
 	CDUIAttributeGroup					m_AttributeGroupPosition;
 	CDUIAttributePosition				m_AttributePosition;
-	CDUIAttributeBool					m_AttributeDpiPadding;
+	CDUIAttributeBool					m_AttributeDpiPadding = true;
 	CDUIAttributeSize					m_AttributeMinSize;
-	CDUIAttributeSize					m_AttributeMaxSize;
+	CDUIAttributeSize					m_AttributeMaxSize = SIZE{ 999999, 999999 };
 
 	//back
 	CDUIAttributeGroup					m_AttributeGroupBk;
@@ -75,7 +75,7 @@ protected:
 	//mouse
 	CDUIAttributeGroup					m_AttributeGroupMouse;
 	CDUIAttributeBool					m_AttributeMouseThrough;
-	CDUIAttributeBool					m_AttributeClickTransmit;
+	CDUIAttributeBool					m_AttributeClickTransmit = true;
 	CDUIAttributeCursor					m_AttributeCursor;
 	CDUIAttributeBool					m_AttributeContextMenu;
 	CDUIAttributeText					m_AttributeActiveUrl;
@@ -83,8 +83,8 @@ protected:
 	//tip
 	CDUIAttributeGroup					m_AttributeGroupToolTip;
 	CDUIAttributeText					m_AttributeToolTip;
-	CDUIAttributeLong					m_AttributeToolTipWidth;
-	CDUIAttributeColor					m_AttributeToolTipBkColor;
+	CDUIAttributeLong					m_AttributeToolTipWidth = 500;
+	CDUIAttributeColor					m_AttributeToolTipBkColor = DUIARGB(255, 253, 198, 104);
 	CDUIAttributeColor					m_AttributeToolTipTextColor;
 
 	//variant
@@ -334,7 +334,6 @@ protected:
 	//** you can override if you need, but you must execute this class first **//
 protected:
 	virtual void InitProperty();
-	virtual void InitAttriValue();
 	virtual void InitComplete();
 
 	//paint

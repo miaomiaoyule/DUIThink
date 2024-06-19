@@ -847,13 +847,6 @@ void CDUIComboxCtrl::InitProperty()
 	return;
 }
 
-void CDUIComboxCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	return;
-}
-
 void CDUIComboxCtrl::InitComplete()
 {
 	__super::InitComplete();

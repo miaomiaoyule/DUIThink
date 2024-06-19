@@ -5,7 +5,8 @@
 DuiImplement_CreateAttribute(CDUIAttributeBool)
 MMImplement_ClassName(CDUIAttributeBool)
 
-CDUIAttributeBool::CDUIAttributeBool(void)
+CDUIAttributeBool::CDUIAttributeBool(bool bValue)
+	: m_bValue(bValue)
 {
 #ifdef DUI_DESIGN
 	m_DuiAttributeType = DuiAttribute_Bool;

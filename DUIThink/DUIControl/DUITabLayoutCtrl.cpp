@@ -261,16 +261,7 @@ void CDUITabLayoutCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeSelectIndex, _T("SelectIndex"), _T(""), m_AttributeGroupSelect);
 	DuiCreateAttribute(m_AttributeAnimateSelSwitchType, _T("AnimateSelSwitchType"), _T(""), m_AttributeGroupSelect);
 
-	return;
-}
-
-//≥ı º Ù–‘
-void CDUITabLayoutCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeSelectIndex, -1);
-
+	//value
 	if (false == m_AttributeAnimateSelSwitchType.IsModified())
 	{
 		tagDuiCombox AttriCombox;

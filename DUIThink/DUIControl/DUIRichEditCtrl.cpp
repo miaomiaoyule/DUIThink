@@ -2606,20 +2606,7 @@ void CDUIRichEditCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeImageDisabled, _T("ImageDisabled"), _T(""), m_AttributeGroupRichEdit);
 	DuiCreateAttribute(m_AttributeTextPadding, _T("TextPadding"), _T(""), m_AttributeGroupRichEdit);
 
-	return;
-}
-
-void CDUIRichEditCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeRichText, true);
-	DuiInitAttriValue(m_AttributeTransparent, true);
-	DuiInitAttriValue(m_AttributePasswordChar, _T("*"));
-	DuiInitAttriValue(m_AttributeMaxChar, (32 * 1024) - 1);
-	DuiInitAttriValue(m_AttributeNumberMinLimit, 0x80000000);
-	DuiInitAttriValue(m_AttributeNumberMaxLimit, 0x7fffffff);
-
+	//value
 	if (false == m_AttributeCursor.IsModified())
 	{
 		m_AttributeCursor.SelectItem(Cursor_IBeam);

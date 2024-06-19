@@ -101,7 +101,6 @@ protected:
 	//proprety
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 
 	//paint
 protected:

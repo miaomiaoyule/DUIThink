@@ -5,8 +5,8 @@
 DuiImplement_CreateAttribute(CDUIAttributeSize)
 MMImplement_ClassName(CDUIAttributeSize)
 
-CDUIAttributeSize::CDUIAttributeSize()
-	: SIZE{}
+CDUIAttributeSize::CDUIAttributeSize(SIZE szValue)
+	: SIZE(szValue)
 {
 #ifdef DUI_DESIGN
 	m_DuiAttributeType = DuiAttribute_Size;

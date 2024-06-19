@@ -21,7 +21,7 @@ public:
 	//attribute
 protected:
 	CDUIAttributeGroup					m_AttributeGroupSelect;
-	CDUIAttributeLong					m_AttributeSelectIndex;
+	CDUIAttributeLong					m_AttributeSelectIndex = -1;
 	CDUIAttributeCombox					m_AttributeAnimateSelSwitchType;
 
 	//variant
@@ -66,7 +66,6 @@ public:
 	//attribute
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 
 	//help

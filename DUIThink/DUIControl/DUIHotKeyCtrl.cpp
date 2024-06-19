@@ -552,13 +552,6 @@ void CDUIHotKeyCtrl::InitProperty()
 	return;
 }
 
-void CDUIHotKeyCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	return;
-}
-
 void CDUIHotKeyCtrl::InitComplete()
 {
 	__super::InitComplete();

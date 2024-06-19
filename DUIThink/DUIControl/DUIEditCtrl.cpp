@@ -734,6 +734,7 @@ void CDUIEditCtrl::InitProperty()
 {
 	__super::InitProperty();
 
+	//create
 	DuiCreateGroupAttribute(m_AttributeGroupEdit, _T("Edit"));
 	DuiCreateAttribute(m_AttributeReadOnly, _T("ReadOnly"), _T("ReadOnly"), m_AttributeGroupEdit);
 	DuiCreateAttribute(m_AttributeNumberOnly, _T("NumberOnly"), _T("NumberOnly"), m_AttributeGroupEdit);
@@ -747,18 +748,7 @@ void CDUIEditCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeTipText, _T("TipText"), _T("Tip Info For Empty Edit"), m_AttributeGroupEdit);
 	DuiCreateAttribute(m_AttributeTextStyleTipTextNormal, _T("TextStyleTipTextNormal"), _T(""), m_AttributeGroupEdit);
 
-	return;
-}
-
-void CDUIEditCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeMaxChar, 255);
-	DuiInitAttriValue(m_AttributeNumberMinLimit, 0x80000000);
-	DuiInitAttriValue(m_AttributeNumberMaxLimit, 0x7fffffff);
-	DuiInitAttriValue(m_AttributePasswordChar, _T("*"));
-
+	//value
 	if (false == m_AttributeCursor.IsModified())
 	{
 		m_AttributeCursor.SelectItem(Cursor_IBeam);

@@ -18,7 +18,7 @@ class DUITHINK_API CDUIAttributeColorSwitch
 	MMDeclare_ClassName(CDUIAttributeColorSwitch)
 
 public:
-	CDUIAttributeColorSwitch(void);
+	CDUIAttributeColorSwitch(LPCTSTR lpszColorSwitch = NULL);
 	~CDUIAttributeColorSwitch(void);
 
 	//variant

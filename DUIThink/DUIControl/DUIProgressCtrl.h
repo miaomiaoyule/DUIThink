@@ -26,7 +26,7 @@ protected:
 
 	//value
 	CDUIAttributeGroup					m_AttributeGroupValue;
-	CDUIAttributeLong					m_AttributeMaxValue;
+	CDUIAttributeLong					m_AttributeMaxValue = 100;
 	CDUIAttributeLong					m_AttributeCurValue;
 
 	//groove
@@ -108,7 +108,6 @@ protected:
 	//property
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 
 	//paint

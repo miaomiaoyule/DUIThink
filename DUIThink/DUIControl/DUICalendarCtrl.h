@@ -24,9 +24,9 @@ public:
 	//attribute
 protected:
 	CDUIAttributeGroup					m_AttributeGroupHeader;
-	CDUIAttributeBool					m_AttributeHeaderVisible;
-	CDUIAttributeLong					m_AttributeHeaderHeight;
-	CDUIAttributeSize					m_AttributeLeftRightBtnSize;
+	CDUIAttributeBool					m_AttributeHeaderVisible = true;
+	CDUIAttributeLong					m_AttributeHeaderHeight = 30;
+	CDUIAttributeSize					m_AttributeLeftRightBtnSize = SIZE{ 30, 30 };
 	CDUIAttributeTextStyle				m_AttributeTextStyleYearNormal;
 	CDUIAttributeTextStyle				m_AttributeTextStyleYearHot;
 	CDUIAttributeTextStyle				m_AttributeTextStyleMonthNormal;
@@ -42,7 +42,7 @@ protected:
 
 	CDUIAttributeGroup					m_AttributeGroupDays;
 	CDUIAttributeCombox					m_AttributeWeekStyle;
-	CDUIAttributeLong					m_AttributeWeekHeight;
+	CDUIAttributeLong					m_AttributeWeekHeight = 30;
 	CDUIAttributeColorSwitch			m_AttributeColorHotDayBk;
 	CDUIAttributeColorSwitch			m_AttributeColorSelDayBk;
 	CDUIAttributeColorSwitch			m_AttributeColorTodayBk;
@@ -54,7 +54,7 @@ protected:
 	CDUIAttributeTextStyle				m_AttributeTextStyleCurMonthDay;
 	CDUIAttributeTextStyle				m_AttributeTextStyleHotMonthDay;
 	CDUIAttributeTextStyle				m_AttributeTextStyleToday;
-	CDUIAttributeText					m_AttributeTextWeekDay[Dui_Count_WeekDay];
+	CDUIAttributeText					m_AttributeTextWeekDay[Dui_Count_WeekDay] = { _T("星期一"), _T("星期二"), _T("星期三"), _T("星期四"), _T("星期五"), _T("星期六"), _T("星期天"), };
 
 	//variant
 protected:
@@ -75,7 +75,6 @@ protected:
 	tagDuiCalendarCmd					m_CalendarCmd;
 
 	static LPCTSTR						m_szWeekDayAttriName[Dui_Count_WeekDay];
-	static LPCTSTR						m_szWeekDayInitText[Dui_Count_WeekDay];
 
 	//override
 protected:
@@ -164,7 +163,6 @@ protected:
 	//proprety
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 
 	//notify

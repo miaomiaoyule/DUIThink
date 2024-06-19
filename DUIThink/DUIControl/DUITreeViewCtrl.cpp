@@ -870,25 +870,13 @@ void CDUITreeViewCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeImageExpandIconSelHot, _T("ExpandIconSelHot"), _T(""), m_AttributeGroupTreeExpandIcon);
 	DuiCreateAttribute(m_AttributeImageExpandIconSelPushed, _T("ExpandIconSelPushed"), _T(""), m_AttributeGroupTreeExpandIcon);
 
-	return;
-}
-
-void CDUITreeViewCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
+	//value
 	DuiInitAttriColorRes(m_AttributeColorItemStatusHot, );
 	DuiInitAttriColorRes(m_AttributeColorItemStatusSelHot, );
 	DuiInitAttriValue(m_AttributeUseHorizScrollBar, false);
 	DuiInitAttriValue(m_AttributeUseVertScrollBar, false);
 	DuiInitAttriValue(m_AttributeMultiSel, true);
 	DuiInitAttriValue(m_AttributeSelectIconVisible, true);
-	DuiInitAttriValue(m_AttributeExpandEnable, true);
-	DuiInitAttriValue(m_AttributeExpandDbClick, true);
-	DuiInitAttriValue(m_AttributeExpandIconVisible, true);
-	DuiInitAttriValue(m_AttributeExpandIconFixedWidth, 30);
-	DuiInitAttriValue(m_AttributeExpandIconFixedHeight, 30);
-	DuiInitAttriValue(m_AttributeChildIndent, 17);
 
 	return;
 }

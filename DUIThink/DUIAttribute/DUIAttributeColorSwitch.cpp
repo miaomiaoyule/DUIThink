@@ -5,11 +5,16 @@
 DuiImplement_CreateAttribute(CDUIAttributeColorSwitch)
 MMImplement_ClassName(CDUIAttributeColorSwitch)
 
-CDUIAttributeColorSwitch::CDUIAttributeColorSwitch()
+CDUIAttributeColorSwitch::CDUIAttributeColorSwitch(LPCTSTR lpszColorSwitch)
 {
 #ifdef DUI_DESIGN
 	m_DuiAttributeType = DuiAttribute_ColorSwitch;
 #endif
+
+	if (lpszColorSwitch)
+	{
+		SetColorResSwitch({ lpszColorSwitch });
+	}
 
 	return;
 }

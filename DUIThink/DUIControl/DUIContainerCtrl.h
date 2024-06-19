@@ -41,11 +41,11 @@ protected:
 
 	//scrollbar
 	CDUIAttributeGroup					m_AttributeGroupScroll;
-	CDUIAttributeBool					m_AttributeScrollBarSpeedModel;
+	CDUIAttributeBool					m_AttributeScrollBarSpeedModel = true;
 	CDUIAttributeBool					m_AttributeUseHorizScrollBar;
 	CDUIAttributeBool					m_AttributeUseVertScrollBar;
-	CDUIAttributeBool					m_AttributeHScrollBarPushItemRange;
-	CDUIAttributeBool					m_AttributeVScrollBarPushItemRange;
+	CDUIAttributeBool					m_AttributeHScrollBarPushItemRange = true;
+	CDUIAttributeBool					m_AttributeVScrollBarPushItemRange = true;
 
 	//child
 	CDUIAttributeGroup					m_AttributeGroupChild;
@@ -171,7 +171,6 @@ public:
 	//property
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 	bool SaveAttribute(tinyxml2::XMLElement *pNode, bool bIncludeChild = true) override;
 

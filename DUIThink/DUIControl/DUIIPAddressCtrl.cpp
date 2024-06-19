@@ -176,15 +176,6 @@ void CDUIIPAddressCtrl::InitProperty()
 	return;
 }
 
-void CDUIIPAddressCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeIP, _T("192.168.1.1"));
-
-	return;
-}
-
 void CDUIIPAddressCtrl::InitComplete()
 {
 	__super::InitComplete();

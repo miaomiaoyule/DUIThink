@@ -719,13 +719,6 @@ void CDUIMenuItemCtrl::InitProperty()
 	return;
 }
 
-void CDUIMenuItemCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	return;
-}
-
 void CDUIMenuItemCtrl::InitComplete()
 {
 	__super::InitComplete();

@@ -5,11 +5,16 @@
 DuiImplement_CreateAttribute(CDUIAttributeText)
 MMImplement_ClassName(CDUIAttributeText)
 
-CDUIAttributeText::CDUIAttributeText()
+CDUIAttributeText::CDUIAttributeText(LPCTSTR lpszText)
 {
 #ifdef DUI_DESIGN
 	m_DuiAttributeType = DuiAttribute_Text;
 #endif
+
+	if (lpszText)
+	{
+		SetValue(lpszText);
+	}
 
 	return;
 }

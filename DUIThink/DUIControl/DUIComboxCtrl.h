@@ -102,7 +102,6 @@ public:
 	//property
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 
 	//paint

@@ -27,18 +27,18 @@ public:
 protected:
 	//edit
 	CDUIAttributeGroup					m_AttributeGroupRichEdit;
-	CDUIAttributeBool					m_AttributeRichText;
+	CDUIAttributeBool					m_AttributeRichText = true;
 	CDUIAttributeBool					m_AttributeReadOnly;
 	CDUIAttributeBool					m_AttributeNumberOnly;
 	CDUIAttributeBool					m_AttributePasswordMode;
-	CDUIAttributeText					m_AttributePasswordChar;
+	CDUIAttributeText					m_AttributePasswordChar = _T("*");
 	CDUIAttributeBool					m_AttributeAllowBeep;
 	CDUIAttributeBool					m_AttributeSaveSelection;
-	CDUIAttributeBool					m_AttributeTransparent;
+	CDUIAttributeBool					m_AttributeTransparent = true;
 	CDUIAttributeBool					m_AttributeAutoSelAll;
-	CDUIAttributeLong					m_AttributeMaxChar;
-	CDUIAttributeLong					m_AttributeNumberMinLimit;
-	CDUIAttributeLong					m_AttributeNumberMaxLimit;
+	CDUIAttributeLong					m_AttributeMaxChar = (32 * 1024) - 1;
+	CDUIAttributeLong					m_AttributeNumberMinLimit = 0x80000000;
+	CDUIAttributeLong					m_AttributeNumberMaxLimit = 0x7fffffff;
 	CDUIAttributeText					m_AttributeTipText;
 	CDUIAttributeText					m_AttributeText;
 	CDUIAttributeTextStyle				m_AttributeTextStyleTipTextNormal;
@@ -241,7 +241,6 @@ protected:
 	//property
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 
 	//paint

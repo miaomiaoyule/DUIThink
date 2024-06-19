@@ -393,17 +393,6 @@ void CDUIScrollBarCtrl::InitProperty()
 	return;
 }
 
-void CDUIScrollBarCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeUpDownBtnVertFixedHeight, 30);
-	DuiInitAttriValue(m_AttributeUpDownBtnHorizFixedWidth, 30);
-	DuiInitAttriValue(m_AttributeScrollSpeed, 60);
-
-	return;
-}
-
 void CDUIScrollBarCtrl::InitComplete()
 {
 	__super::InitComplete();

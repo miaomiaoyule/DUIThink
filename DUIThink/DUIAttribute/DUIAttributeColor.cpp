@@ -5,7 +5,8 @@
 DuiImplement_CreateAttribute(CDUIAttributeColor)
 MMImplement_ClassName(CDUIAttributeColor)
 
-CDUIAttributeColor::CDUIAttributeColor()
+CDUIAttributeColor::CDUIAttributeColor(ARGB dwColor)
+	: m_dwColor(dwColor)
 {
 #ifdef DUI_DESIGN
 	m_DuiAttributeType = DuiAttribute_Color;

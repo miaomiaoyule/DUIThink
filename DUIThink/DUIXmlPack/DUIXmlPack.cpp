@@ -752,7 +752,6 @@ bool CDUIXmlPack::LoadControlFromXML(tinyxml2::XMLElement *pNodeXml, CDUIControl
 				bPropertyInited = true;
 
 				pControl->InitProperty();
-				pControl->InitAttriValue();
 			}
 
 			LoadControlFromXML(pNodeXml, pChildCtrl);

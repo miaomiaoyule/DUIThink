@@ -256,16 +256,6 @@ void CDUISliderCtrl::InitProperty()
 	return;
 }
 
-void CDUISliderCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeThumbVertFixedHeight, 30);
-	DuiInitAttriValue(m_AttributeThumbHorizFixedWidth, 30);
-
-	return;
-}
-
 void CDUISliderCtrl::PaintStatusColor(HDC hDC)
 {
 	__super::PaintStatusColor(hDC);

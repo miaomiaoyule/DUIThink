@@ -26,9 +26,9 @@ public:
 protected:
 	//radio
 	CDUIAttributeGroup					m_AttributeGroupRadio;
-	CDUIAttributeText					m_AttributeGroupName;
+	CDUIAttributeText					m_AttributeGroupName = _T("0");
 	CDUIAttriTabSelect					m_AttributeBindTabCtrlID;
-	CDUIAttributeLong					m_AttributeBindTabCtrlIndex;
+	CDUIAttributeLong					m_AttributeBindTabCtrlIndex = -1;
 
 	//override
 protected:
@@ -60,7 +60,6 @@ public:
 	//property
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 
 	//message
 protected:

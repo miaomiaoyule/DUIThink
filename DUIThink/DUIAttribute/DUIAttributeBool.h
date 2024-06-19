@@ -14,7 +14,7 @@ class DUITHINK_API CDUIAttributeBool
 	MMDeclare_ClassName(CDUIAttributeBool)
 
 public:
-	CDUIAttributeBool(void);
+	CDUIAttributeBool(bool bValue = false);
 	~CDUIAttributeBool(void);
 
 protected:

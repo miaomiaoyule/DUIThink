@@ -24,18 +24,18 @@ public:
 
 	//attrubute
 protected:
-	CDUIAttributeLong					m_AttributeScrollSpeed;
+	CDUIAttributeLong					m_AttributeScrollSpeed = 60;
 
 	//btn pos
 	CDUIAttributeGroup					m_AttributeGroupUpDownBtnVert;
 	CDUIAttributeLong					m_AttributeUpDownBtnVertInsetLeft;
 	CDUIAttributeLong					m_AttributeUpDownBtnVertInsetRight;
-	CDUIAttributeLong					m_AttributeUpDownBtnVertFixedHeight;
+	CDUIAttributeLong					m_AttributeUpDownBtnVertFixedHeight = 30;
 
 	CDUIAttributeGroup					m_AttributeGroupUpDownBtnHoriz;
 	CDUIAttributeLong					m_AttributeUpDownBtnHorizInsetTop;
 	CDUIAttributeLong					m_AttributeUpDownBtnHorizInsetBottom;
-	CDUIAttributeLong					m_AttributeUpDownBtnHorizFixedWidth;
+	CDUIAttributeLong					m_AttributeUpDownBtnHorizFixedWidth = 30;
 
 	//btn status
 	CDUIAttributeGroup					m_AttributeGroupUpBtnStatus;
@@ -137,7 +137,6 @@ protected:
 	//property
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 
 	//paint

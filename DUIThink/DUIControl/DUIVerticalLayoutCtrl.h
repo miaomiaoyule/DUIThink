@@ -51,7 +51,6 @@ public:
 	//property
 protected:
 	void InitProperty();
-	void InitAttriValue();
 	void InitComplete();
 
 	//message

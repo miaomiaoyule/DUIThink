@@ -358,13 +358,7 @@ void CDUIProgressCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeImageSlipHot, _T("ImageSlipHot"), _T(""), m_AttributeGroupSlip);
 	DuiCreateAttribute(m_AttributeSlipInsetToGroove, _T("SlipInsetToGroove"), _T(""), m_AttributeGroupSlip);
 
-	return;
-}
-
-void CDUIProgressCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
+	//value
 	if (false == m_AttributeProgressType.IsModified())
 	{
 		tagDuiCombox AttriCombox;
@@ -381,9 +375,6 @@ void CDUIProgressCtrl::InitAttriValue()
 		m_AttributeProgressMoveType.SetCombox(AttriCombox);
 		m_AttributeProgressMoveType.SelectItem(ProgressMove_Positive);
 	}
-
-	DuiInitAttriValue(m_AttributeMaxValue, 100);
-	DuiInitAttriValue(m_AttributeCurValue, 0);
 
 	return;
 }

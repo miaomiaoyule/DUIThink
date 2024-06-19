@@ -1272,19 +1272,6 @@ void CDUIContainerCtrl::InitProperty()
 	return;
 }
 
-void CDUIContainerCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeScrollBarSpeedModel, true);
-	DuiInitAttriValue(m_AttributeUseHorizScrollBar, false);
-	DuiInitAttriValue(m_AttributeUseVertScrollBar, false);
-	DuiInitAttriValue(m_AttributeHScrollBarPushItemRange, true);
-	DuiInitAttriValue(m_AttributeVScrollBarPushItemRange, true);
-
-	return;
-}
-
 void CDUIContainerCtrl::InitComplete()
 {
 	__super::InitComplete();

@@ -68,7 +68,6 @@ public:
 	//** you can override if you need, but you should execute this class first **//
 protected:
 	virtual void InitProperty();
-	virtual void InitAttriValue();
 	virtual void InitComplete();
 	virtual void InitNormalSkin();
 				 

@@ -36,12 +36,12 @@ protected:
 
 	//list type
 	CDUIAttributeGroup					m_AttributeGroupListType;
-	CDUIAttributeLong					m_AttributeSwitchListItemHeight;
+	CDUIAttributeLong					m_AttributeSwitchListItemHeight = 30;
 	CDUIAttributeBool					m_AttributeSelectIconVisible;
 	CDUIAttributeBool					m_AttributeSelectDbClick;
 	CDUIAttributeLong					m_AttributeSelectIconLeftPadding;
-	CDUIAttributeLong					m_AttributeSelectIconFixedWidth;
-	CDUIAttributeLong					m_AttributeSelectIconFixedHeight;
+	CDUIAttributeLong					m_AttributeSelectIconFixedWidth = 30;
+	CDUIAttributeLong					m_AttributeSelectIconFixedHeight = 30;
 	CDUIAttriImageSection				m_AttributeImageSelectIconNormal;
 	CDUIAttriImageSection				m_AttributeImageSelectIconHot;
 	CDUIAttriImageSection				m_AttributeImageSelectIconPushed;
@@ -55,7 +55,7 @@ protected:
 	CDUIAttributeBool					m_AttributeAutoCalcItemHeight;
 	CDUIAttributeBool					m_AttributeLeftFromRange;
 	CDUIAttributeBool					m_AttributeTopFromRange;
-	CDUIAttributeSize					m_AttributeSwitchTileItemSize;
+	CDUIAttributeSize					m_AttributeSwitchTileItemSize = SIZE{ 50, 50 };
 
 	//item text
 	CDUIAttributeGroup					m_AttributeGroupItemText;
@@ -69,9 +69,9 @@ protected:
 	//item status
 	CDUIAttributeGroup					m_AttributeGroupItemStatus;
 	CDUIAttributeColorSwitch			m_AttributeColorItemStatusNormal;
-	CDUIAttributeColorSwitch			m_AttributeColorItemStatusHot;
+	CDUIAttributeColorSwitch			m_AttributeColorItemStatusHot = Name_ColorSelBk;
 	CDUIAttributeColorSwitch			m_AttributeColorItemStatusSelNormal;
-	CDUIAttributeColorSwitch			m_AttributeColorItemStatusSelHot;
+	CDUIAttributeColorSwitch			m_AttributeColorItemStatusSelHot = Name_ColorSelBk;
 	CDUIAttributeColorSwitch			m_AttributeColorItemStatusDisabled;
 	CDUIAttriImageSection				m_AttributeImageItemStatusNormal;
 	CDUIAttriImageSection				m_AttributeImageItemStatusHot;
@@ -323,7 +323,6 @@ protected:
 	//property
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 	bool SaveAttribute(tinyxml2::XMLElement *pNode, bool bIncludeChild = true) override;
 

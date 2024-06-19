@@ -350,13 +350,6 @@ void CDUIHorizontalLayoutCtrl::InitProperty()
 	return;
 }
 
-void CDUIHorizontalLayoutCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	return;
-}
-
 void CDUIHorizontalLayoutCtrl::InitComplete()
 {
 	__super::InitComplete();

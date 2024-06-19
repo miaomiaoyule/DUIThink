@@ -1830,20 +1830,7 @@ void CDUIWndManager::InitProperty()
 	DuiCreateGroupAttribute(m_AttributeGroupCustom, _T("CustomData"));
 	DuiCreateAttribute(m_AttributeUserTag, _T("UserTag"), _T(""), m_AttributeGroupCustom);
 
-	return;
-}
-
-//初始化属性值
-void CDUIWndManager::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriSizeValue(m_AttributeWndInitSize, 500, 500);
-	DuiInitAttriValue(m_AttributeWndCaptionHeight, 30);
-	DuiInitAttriValue(m_AttributeWndAlpha, 255);
-	DuiInitAttriValue(m_AttributeAnimationFrame, ANIMATE_FRAME);
-	DuiInitAttriValue(m_AttributeAnimationElapse, Dui_TimerAnimate_Elapse);
-
+	//value
 	if (false == m_AttributeGdiplusRenderType.IsModified())
 	{
 		tagDuiCombox AttriCombox;
@@ -1893,7 +1880,7 @@ void CDUIWndManager::InitAttriValue()
 		m_AttributeAnimationType.SetCombox(AttriCombox);
 		m_AttributeAnimationType.SelectItem(AnimateWnd_None);
 	}
-
+	
 	return;
 }
 

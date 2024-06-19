@@ -2246,26 +2246,9 @@ void CDUIListViewCtrl::InitProperty()
 	DuiSwapAttriIndex(m_AttributeChildPaddingH, m_AttributeChildPaddingV);
 	DuiSwapAttriIndex(m_AttributeAutoCalcChildPaddingH, m_AttributeAutoCalcChildPaddingV);
 
-	return;
-}
-
-void CDUIListViewCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
+	//value
 	DuiInitAttriValue(m_AttributeUseHorizScrollBar, true);
 	DuiInitAttriValue(m_AttributeUseVertScrollBar, true);
-	DuiInitAttriValue(m_AttributeMultiSel, false);
-	DuiInitAttriValue(m_AttributeItemModelInitCount, 0);
-	DuiInitAttriValue(m_AttributeUseListHeader, false);
-	DuiInitAttriValue(m_AttributeScrollSelect, false);
-	DuiInitAttriValue(m_AttributeSwitchListItemHeight, 30);
-	DuiInitAttriValue(m_AttributeSelectIconVisible, false);
-	DuiInitAttriValue(m_AttributeSelectIconFixedWidth, 30);
-	DuiInitAttriValue(m_AttributeSelectIconFixedHeight, 30);
-	DuiInitAttriSizeValue(m_AttributeSwitchTileItemSize, 50, 50);
-	DuiInitAttriColorRes(m_AttributeColorItemStatusHot, Name_ColorSelBk);
-	DuiInitAttriColorRes(m_AttributeColorItemStatusSelHot, Name_ColorSelBk);
 	if (false == m_AttributeListViewType.IsModified())
 	{
 		tagDuiCombox AttriCombox;

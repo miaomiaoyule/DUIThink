@@ -22,12 +22,12 @@ protected:
 	CDUIAttributeGroup					m_AttributeGroupThumbVert;
 	CDUIAttributeLong					m_AttributeThumbVertInsetLeft;
 	CDUIAttributeLong					m_AttributeThumbVertInsetRight;
-	CDUIAttributeLong					m_AttributeThumbVertFixedHeight;
+	CDUIAttributeLong					m_AttributeThumbVertFixedHeight = 30;
 
 	CDUIAttributeGroup					m_AttributeGroupThumbHoriz;
 	CDUIAttributeLong					m_AttributeThumbHorizInsetTop;
 	CDUIAttributeLong					m_AttributeThumbHorizInsetBottom;
-	CDUIAttributeLong					m_AttributeThumbHorizFixedWidth;
+	CDUIAttributeLong					m_AttributeThumbHorizFixedWidth = 30;
 
 	CDUIAttributeGroup					m_AttributeGroupThumbStatus;
 	CDUIAttributeColorSwitch			m_AttributeColorThumbNormal;
@@ -80,7 +80,6 @@ public:
 	//property
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 
 	//paint
 protected:

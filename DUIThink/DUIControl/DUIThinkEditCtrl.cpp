@@ -1717,20 +1717,8 @@ void CDUIThinkEditCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeTipText, _T("TipText"), _T("Tip Info For Empty Edit"), m_AttributeGroupEdit);
 	DuiCreateAttribute(m_AttributeTextStyleTipTextNormal, _T("TextStyleTipTextNormal"), _T(""), m_AttributeGroupEdit);
 
-	return;
-}
-
-void CDUIThinkEditCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
+	//value
 	DuiInitAttriValue(m_AttributeContextMenu, true);
-	DuiInitAttriColorRes(m_AttributeColorSelect, Name_ColorSelBk);
-	DuiInitAttriValue(m_AttributeMaxChar, 255);
-	DuiInitAttriValue(m_AttributeNumberMinLimit, 0x80000000);
-	DuiInitAttriValue(m_AttributeNumberMaxLimit, 0x7fffffff);
-	DuiInitAttriValue(m_AttributePasswordChar, _T("*"));
-
 	if (false == m_AttributeEditTextType.IsModified())
 	{
 		tagDuiCombox AttriCombox;

@@ -470,13 +470,6 @@ void CDUIWkeBrowserCtrl::InitProperty()
 	return;
 }
 
-void CDUIWkeBrowserCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	return;
-}
-
 void CDUIWkeBrowserCtrl::InitComplete()
 {
 	__super::InitComplete();

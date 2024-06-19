@@ -244,18 +244,6 @@ void CDUIListHeaderItemCtrl::InitProperty()
 	return;
 }
 
-void CDUIListHeaderItemCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeSepWidth, 1);
-	DuiInitAttriValue(m_AttributeUseHorizScrollBar, false);
-	DuiInitAttriValue(m_AttributeUseVertScrollBar, false);
-	DuiInitAttriColorRes(m_AttributeSepColor, Name_ColorBlack);
-
-	return;
-}
-
 void CDUIListHeaderItemCtrl::InitComplete()
 {
 	__super::InitComplete();

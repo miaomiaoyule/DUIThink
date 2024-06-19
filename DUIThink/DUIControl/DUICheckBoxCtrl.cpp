@@ -254,16 +254,6 @@ void CDUICheckBoxCtrl::InitProperty()
 	return;
 }
 
-//初始化属性值
-void CDUICheckBoxCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeIsSelected, false);
-
-	return;
-}
-
 void CDUICheckBoxCtrl::InitNormalSkin()
 {
 	auto pImageBaseCheckBoxUnSelect = CDUIGlobal::GetInstance()->GetImageResource(Name_ImageCheckBoxUnSelect);

@@ -24,14 +24,14 @@ public:
 protected:
 	//tree node
 	CDUIAttributeGroup					m_AttributeGroupTreeNode;
-	CDUIAttributeBool					m_AttributeExpandEnable;
-	CDUIAttributeBool					m_AttributeExpandDbClick;
-	CDUIAttributeBool					m_AttributeExpandIconVisible;
+	CDUIAttributeBool					m_AttributeExpandEnable = true;
+	CDUIAttributeBool					m_AttributeExpandDbClick = true;
+	CDUIAttributeBool					m_AttributeExpandIconVisible = true;
 	CDUIAttributeBool					m_AttributeSelectSingle;
 	CDUIAttributeLong					m_AttributeExpandIconLeftPadding;
-	CDUIAttributeLong					m_AttributeExpandIconFixedWidth;
-	CDUIAttributeLong					m_AttributeExpandIconFixedHeight;
-	CDUIAttributeLong					m_AttributeChildIndent;
+	CDUIAttributeLong					m_AttributeExpandIconFixedWidth = 30;
+	CDUIAttributeLong					m_AttributeExpandIconFixedHeight = 30;
+	CDUIAttributeLong					m_AttributeChildIndent = 17;
 
 	CDUIAttributeGroup					m_AttributeGroupTreeExpandIcon;
 	CDUIAttriImageSection				m_AttributeImageExpandIconNormal;
@@ -130,7 +130,6 @@ protected:
 	//property
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 
 	//paint

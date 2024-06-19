@@ -111,7 +111,6 @@ bool CDUIPropertyObject::Init()
 	bool bFromXml = false == m_mapAttributeBuffer.empty();
 	
 	InitProperty();
-	InitAttriValue();
 	InitComplete();
 
 	if (false == bFromXml)
@@ -130,11 +129,6 @@ UINT CDUIPropertyObject::InitCtrlID()
 void CDUIPropertyObject::InitProperty()
 {
 
-}
-
-void CDUIPropertyObject::InitAttriValue()
-{
-	return;
 }
 
 void CDUIPropertyObject::InitComplete()

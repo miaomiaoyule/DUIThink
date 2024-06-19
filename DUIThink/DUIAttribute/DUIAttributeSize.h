@@ -15,7 +15,7 @@ class DUITHINK_API CDUIAttributeSize
 	MMDeclare_ClassName(CDUIAttributeSize)
 
 public:
-	CDUIAttributeSize();
+	CDUIAttributeSize(SIZE szValue = {});
 	virtual ~CDUIAttributeSize();
 
 	//variant

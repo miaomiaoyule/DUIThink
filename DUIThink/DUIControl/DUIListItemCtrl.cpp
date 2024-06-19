@@ -810,16 +810,6 @@ void CDUIListItemCtrl::InitProperty()
 	return;
 }
 
-void CDUIListItemCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeUseHorizScrollBar, false);
-	DuiInitAttriValue(m_AttributeUseVertScrollBar, false);
-
-	return;
-}
-
 void CDUIListItemCtrl::InitComplete()
 {
 	__super::InitComplete();

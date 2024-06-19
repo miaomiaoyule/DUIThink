@@ -45,12 +45,12 @@ public:
 
 	//attribute
 protected:
-	CDUIAttributeLong					m_AttributeAngleStart;
-	CDUIAttributeLong					m_AttributeAngleFinish;
-	CDUIAttributeLong					m_AttributeAngleSpaceMin;
-	CDUIAttributeBool					m_AttributeRotateClockWise;
-	CDUIAttributeSize					m_AttributeItemSizeMin;
-	CDUIAttributeSize					m_AttributeItemSizeMax;
+	CDUIAttributeLong					m_AttributeAngleStart = -60;
+	CDUIAttributeLong					m_AttributeAngleFinish = 240;
+	CDUIAttributeLong					m_AttributeAngleSpaceMin = Dui_Min_AngleSpace;
+	CDUIAttributeBool					m_AttributeRotateClockWise = true;
+	CDUIAttributeSize					m_AttributeItemSizeMin = SIZE{ 25, 25 };
+	CDUIAttributeSize					m_AttributeItemSizeMax = SIZE{ 50, 50 };
 
 	//variant
 protected:
@@ -112,7 +112,6 @@ protected:
 	//proprety
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 
 	//paint

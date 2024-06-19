@@ -247,15 +247,6 @@ void CDUIAnimateCtrl::InitProperty()
 	return;
 }
 
-void CDUIAnimateCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeAutoPlay, true);
-
-	return;
-}
-
 void CDUIAnimateCtrl::PaintStatusImage(HDC hDC)
 {
 	__super::PaintStatusImage(hDC);

@@ -517,15 +517,7 @@ void CDUISpinCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeImageDownBtnHot, _T("ImageDownBtnHot"), _T(""), m_AttributeGroupSpin);
 	DuiCreateAttribute(m_AttributeImageDownBtnPushed, _T("ImageDownBtnPushed"), _T(""), m_AttributeGroupSpin);
 
-	return;
-}
-
-void CDUISpinCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeUpDownBtnFixedWidth, 30);
-
+	//value
 	if (false == m_AttributeEditTextType.IsModified())
 	{
 		tagDuiCombox AttriCombox;

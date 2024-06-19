@@ -20,7 +20,7 @@ public:
 	//attribute
 protected:
 	CDUIAttributeGroup					m_AttributeGroupEdit;
-	CDUIAttributeColorSwitch			m_AttributeColorSelect;
+	CDUIAttributeColorSwitch			m_AttributeColorSelect = Name_ColorSelBk;
 	CDUIAttriImageSection				m_AttributeImageSelect;
 	CDUIAttributeCombox					m_AttributeEditTextType;
 	CDUIAttributeBool					m_AttributeRichEdit;
@@ -28,10 +28,10 @@ protected:
 	CDUIAttributeBool					m_AttributePasswordMode;
 	CDUIAttributeBool					m_AttributeAutoSelAll;
 	CDUIAttributeBool					m_AttributeWantReturn;
-	CDUIAttributeLong					m_AttributeMaxChar;
-	CDUIAttributeLong					m_AttributeNumberMinLimit;
-	CDUIAttributeLong					m_AttributeNumberMaxLimit;
-	CDUIAttributeText					m_AttributePasswordChar;
+	CDUIAttributeLong					m_AttributeMaxChar = 255;
+	CDUIAttributeLong					m_AttributeNumberMinLimit = 0x80000000;
+	CDUIAttributeLong					m_AttributeNumberMaxLimit = 0x7fffffff;
+	CDUIAttributeText					m_AttributePasswordChar = _T("*");
 	CDUIAttributeText					m_AttributeTipText;
 	CDUIAttributeTextStyle				m_AttributeTextStyleTipTextNormal;
 
@@ -158,7 +158,6 @@ protected:
 	//property 
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 
 	//paint

@@ -10,6 +10,8 @@ typedef CDUIControlBase* (CALLBACK* FindControlProc)(CDUIControlBase*, LPVOID pD
 //////////////////////////////////////////////////////////////////////////
 #define Dui_Min_ThumbSize							(5)			
 #define Dui_Min_ThumbInterval						(100)
+#define Dui_Min_AngleSpace							(10)
+#define Dui_Max_AngleSpace							(360)
 #define Dui_Count_WeekDay							(7)
 #define Dui_ScrollSpeed_Normal						(8)
 #define Dui_Max_ListColumn							(32)

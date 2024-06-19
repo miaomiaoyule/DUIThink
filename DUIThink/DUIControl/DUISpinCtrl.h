@@ -31,7 +31,7 @@ protected:
 	CDUIAttributeTextStyle				m_AttributeTextStylePushed;
 	CDUIAttributeTextStyle				m_AttributeTextStyleFocus;
 	CDUIAttributeLong					m_AttributeUpDownBtnRightPadding;
-	CDUIAttributeLong					m_AttributeUpDownBtnFixedWidth;
+	CDUIAttributeLong					m_AttributeUpDownBtnFixedWidth = 30;
 	CDUIAttriImageSection				m_AttributeImageUpBtnNormal;
 	CDUIAttriImageSection				m_AttributeImageUpBtnHot;
 	CDUIAttriImageSection				m_AttributeImageUpBtnPushed;
@@ -105,7 +105,6 @@ protected:
 	//property
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 
 	//help

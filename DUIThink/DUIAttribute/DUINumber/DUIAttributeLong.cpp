@@ -5,7 +5,8 @@
 DuiImplement_CreateAttribute(CDUIAttributeLong)
 MMImplement_ClassName(CDUIAttributeLong)
 
-CDUIAttributeLong::CDUIAttributeLong()
+CDUIAttributeLong::CDUIAttributeLong(long lValue)
+	: m_lValue(lValue)
 {
 #ifdef DUI_DESIGN
 	m_DuiAttributeType = DuiAttribute_Long;

@@ -53,15 +53,15 @@ public:
 	//attribute
 private:
 	CDUIAttributeGroup					m_AttributeGroupWndInfo;
-	CDUIAttributeLong					m_AttributeWndCaptionHeight;
-	CDUIAttributeSize					m_AttributeWndInitSize;
+	CDUIAttributeLong					m_AttributeWndCaptionHeight = 30;
+	CDUIAttributeSize					m_AttributeWndInitSize = SIZE{ 500, 500 };
 	CDUIAttributeSize					m_AttributeWndMinSize;
 	CDUIAttributeSize					m_AttributeWndMaxSize;
 	CDUIAttributeRect					m_AttributeWndResizeTrack;
 
 	CDUIAttributeGroup					m_AttributeGroupLayered;
 	CDUIAttributeBool					m_AttributeWndLayered;
-	CDUIAttributeLong					m_AttributeWndAlpha;
+	CDUIAttributeLong					m_AttributeWndAlpha = 255;
 
 	CDUIAttributeGroup					m_AttributeGroupRenderText;
 	CDUIAttributeBool					m_AttributeGdiplusRenderText;
@@ -72,8 +72,8 @@ private:
 
 	CDUIAttributeGroup					m_AttributeGroupAnimation;
 	CDUIAttributeCombox					m_AttributeAnimationType;
-	CDUIAttributeLong					m_AttributeAnimationFrame;
-	CDUIAttributeLong					m_AttributeAnimationElapse;
+	CDUIAttributeLong					m_AttributeAnimationFrame = ANIMATE_FRAME;
+	CDUIAttributeLong					m_AttributeAnimationElapse = Dui_TimerAnimate_Elapse;
 
 	CDUIAttributeGroup					m_AttributeGroupCustom;
 	CDUIAttributeLong					m_AttributeUserTag;
@@ -308,7 +308,6 @@ public:
 	//property	   
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 	void InitComplete() override;
 	bool SaveAttribute(tinyxml2::XMLElement *pNode);
 

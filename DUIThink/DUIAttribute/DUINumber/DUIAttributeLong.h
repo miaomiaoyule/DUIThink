@@ -14,7 +14,7 @@ class DUITHINK_API CDUIAttributeLong
 	MMDeclare_ClassName(CDUIAttributeLong)
 
 public:
-	CDUIAttributeLong();
+	CDUIAttributeLong(long lValue = 0);
 	virtual ~CDUIAttributeLong();
 
 protected:

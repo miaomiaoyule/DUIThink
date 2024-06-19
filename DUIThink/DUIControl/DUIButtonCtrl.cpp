@@ -389,13 +389,6 @@ void CDUIButtonCtrl::InitProperty()
 	return;
 }
 
-void CDUIButtonCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	return;
-}
-
 void CDUIButtonCtrl::PaintStatusColor(HDC hDC)
 {
 	__super::PaintStatusColor(hDC);

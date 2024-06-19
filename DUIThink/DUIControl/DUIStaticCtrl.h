@@ -85,7 +85,6 @@ public:
 	//property
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 
 	//paint
 protected:

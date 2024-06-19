@@ -23,7 +23,7 @@ protected:
 	CDUIAttriImageSection				m_AttributeImageAnimate;
 	CDUIAttributeSize					m_AttributeSequenceFrameSize;
 	CDUIAttributeLong					m_AttributeSequenceFrameSpeed;
-	CDUIAttributeBool					m_AttributeAutoPlay;
+	CDUIAttributeBool					m_AttributeAutoPlay = true;
 
 	//variant
 protected:
@@ -62,7 +62,6 @@ protected:
 	//property 
 protected:
 	void InitProperty() override;
-	void InitAttriValue() override;
 
 	//paint
 protected:

@@ -20,7 +20,7 @@ public:
 	//attribute
 protected:
 	CDUIAttributeGroup					m_AttributeGroupIP;
-	CDUIAttributeText					m_AttributeIP;
+	CDUIAttributeText					m_AttributeIP = _T("192.168.1.1");
 	CDUIAttributeTextStyle				m_AttributeTextStyle;
 	CDUIAttributeTextStyle				m_AttributeTextStyleIPDot;
 
@@ -62,7 +62,6 @@ protected:
 	//proprety
 protected:
 	void InitProperty();
-	void InitAttriValue();
 	void InitComplete();
 
 	//paint

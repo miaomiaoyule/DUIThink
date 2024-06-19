@@ -353,13 +353,6 @@ void CDUIVerticalLayoutCtrl::InitProperty()
 	return;
 }
 
-void CDUIVerticalLayoutCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	return;
-}
-
 void CDUIVerticalLayoutCtrl::InitComplete()
 {
 	__super::InitComplete();

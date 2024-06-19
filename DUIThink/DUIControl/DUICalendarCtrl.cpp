@@ -209,7 +209,6 @@ void CDUICalendarWnd::AdjustCalendar()
 
 //////////////////////////////////////////////////////////////////////////
 LPCTSTR CDUICalendarCtrl::m_szWeekDayAttriName[Dui_Count_WeekDay] = { _T("Monday"), _T("Tuesday"), _T("Wednesday"), _T("Thursday"), _T("Friday"), _T("Saturday"), _T("Sunday"), };
-LPCTSTR CDUICalendarCtrl::m_szWeekDayInitText[Dui_Count_WeekDay] = { _T("星期一"), _T("星期二"), _T("星期三"), _T("星期四"), _T("星期五"), _T("星期六"), _T("星期天"), };
 
 DuiImplement_CreateControl(CDUICalendarCtrl)
 MMImplement_ClassName(CDUICalendarCtrl)
@@ -821,6 +820,7 @@ void CDUICalendarCtrl::InitProperty()
 {
 	__super::InitProperty();
 
+	//create
 	DuiCreateGroupAttribute(m_AttributeGroupHeader, _T("Header"));
 	DuiCreateAttribute(m_AttributeHeaderVisible, _T("HeaderVisible"), _T(""), m_AttributeGroupHeader);
 	DuiCreateAttribute(m_AttributeHeaderHeight, _T("HeaderHeight"), _T(""), m_AttributeGroupHeader);
@@ -857,17 +857,7 @@ void CDUICalendarCtrl::InitProperty()
 		DuiCreateAttribute(m_AttributeTextWeekDay[n], m_szWeekDayAttriName[n], m_szWeekDayAttriName[n], m_AttributeGroupDays);
 	}
 
-	return;
-}
-
-void CDUICalendarCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
-	DuiInitAttriValue(m_AttributeHeaderVisible, true);
-	DuiInitAttriValue(m_AttributeHeaderHeight, 30);
-	DuiInitAttriSizeValue(m_AttributeLeftRightBtnSize, { 30, 30 });
-	DuiInitAttriValue(m_AttributeWeekHeight, 30);
+	//value
 	DuiInitAttriAlignRight(m_AttributeTextStyleYearNormal, true);
 	DuiInitAttriVAlignCenter(m_AttributeTextStyleYearNormal, true);
 	DuiInitAttriAlignRight(m_AttributeTextStyleYearHot, true);
@@ -886,10 +876,6 @@ void CDUICalendarCtrl::InitAttriValue()
 	DuiInitAttriVAlignCenter(m_AttributeTextStyleHotMonthDay, true);
 	DuiInitAttriAlignCenter(m_AttributeTextStyleToday, true);
 	DuiInitAttriVAlignCenter(m_AttributeTextStyleToday, true);
-	for (int n = 0; n < Dui_Count_WeekDay; n++)
-	{
-		DuiInitAttriValue(m_AttributeTextWeekDay[n], m_szWeekDayInitText[n]);
-	}
 
 	if (false == m_AttributeWeekStyle.IsModified())
 	{

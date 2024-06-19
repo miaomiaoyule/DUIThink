@@ -339,15 +339,8 @@ void CDUIListHeaderCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeScaleItem, _T("UseScaleItem"), _T("item width is use scal of header's width"), m_AttributeGroupHeader);
 	DuiCreateAttribute(m_AttributeItemInitCount, _T("ItemInitCount"), _T("init item count"), m_AttributeGroupHeader);
 
-	return;
-}
-
-void CDUIListHeaderCtrl::InitAttriValue()
-{
-	__super::InitAttriValue();
-
+	//value
 	DuiInitAttriValue(m_AttributeAutoCalcChildPaddingH, true);
-	DuiInitAttriValue(m_AttributeScaleItem, false);
 
 	return;
 }
