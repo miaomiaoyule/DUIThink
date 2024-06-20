@@ -1419,7 +1419,7 @@ void CDUIRichEditCtrl::SetTipText(LPCTSTR lpszTipText)
 CMMString CDUIRichEditCtrl::GetText()
 {
 	long lLen = GetTextLength(GTL_DEFAULT);
-	GETTEXTEX gt;
+	GETTEXTEX gt = {};
 	gt.flags = GT_DEFAULT;
 
 #ifdef _UNICODE
@@ -1432,8 +1432,6 @@ CMMString CDUIRichEditCtrl::GetText()
 	CMMString strText('\0', lLen * 2 + 1);
 #endif
 
-	gt.lpDefaultChar = NULL;
-	gt.lpUsedDefChar = NULL;
 	TxSendMessage(EM_GETTEXTEX, (WPARAM)&gt, (LPARAM)strText.c_str(), 0);
 
 	return strText.c_str();

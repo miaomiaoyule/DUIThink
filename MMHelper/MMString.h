@@ -125,7 +125,7 @@ public:
 
 	}
 	CMMString(CHAR ch, int nCount)
-		: std::wstring((LPCTSTR)CA2CT(std::string(nCount, ch).c_str()))
+		: CMMString((TCHAR)ch, nCount)
 	{
 
 	}
