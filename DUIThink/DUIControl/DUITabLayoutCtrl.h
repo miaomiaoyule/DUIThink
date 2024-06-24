@@ -63,10 +63,14 @@ public:
 	virtual enDuiAnimateSelSwithType GetAnimateSelSwitchType();
 	virtual void SetAnimateSelSwitchType(enDuiAnimateSelSwithType AnimateSelSwitchType);
 
-	//attribute
+	//property
 protected:
 	void InitProperty() override;
 	void InitComplete() override;
+
+	//message
+protected:
+	void OnDuiTimer(UINT uTimerID, const DuiMessage &Msg) override;
 
 	//help
 protected:

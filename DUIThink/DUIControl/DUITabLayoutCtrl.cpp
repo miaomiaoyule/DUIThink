@@ -290,6 +290,18 @@ void CDUITabLayoutCtrl::InitComplete()
 	return;
 }
 
+void CDUITabLayoutCtrl::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
+{
+	if (Dui_TimerAnimate_ID == uTimerID)
+	{
+		OnAnimationElapse(uTimerID);
+
+		return;
+	}
+
+	return __super::OnDuiTimer(uTimerID, Msg);
+}
+
 void CDUITabLayoutCtrl::SelectItem(int nIndex)
 {
 	int nCurSel = GetCurSel();
@@ -337,6 +349,12 @@ void CDUITabLayoutCtrl::SelectItem(int nIndex)
 		&& -1 != m_nOldSel
 		&& m_nOldSel != GetCurSel())
 	{
+		CDUIControlBase *pChildOldSel = GetChildAt(m_nOldSel);
+		if (pChildOldSel)
+		{
+			pChildOldSel->SetVisible(true);
+		}
+
 		StopAnimation();
 
 		StartAnimation();
