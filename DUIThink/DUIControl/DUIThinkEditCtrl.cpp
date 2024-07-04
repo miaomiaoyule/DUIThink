@@ -1424,8 +1424,6 @@ void CDUIThinkEditCtrl::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
 		KillTimer(Dui_TimerInputChar_ID);
 
 		//add
-		if (m_strInput.empty()) return;
-
 		SetReplaceSel(m_strInput);
 
 		m_strInput.clear();
