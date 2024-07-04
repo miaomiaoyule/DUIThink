@@ -229,12 +229,7 @@ CMMString CDUIThinkEditCtrl::GetDescribe() const
 
 void CDUIThinkEditCtrl::Invalidate()
 {
-	__super::Invalidate();
-
-	if (m_pBindCtrl)
-	{
-		m_pBindCtrl->Invalidate();
-	}
+	SetTimer(Dui_TimerDelayRefresh_ID, Dui_TimerDelayRefresh_Elapse);
 
 	return;
 }
@@ -964,57 +959,71 @@ void CDUIThinkEditCtrl::SetSelAll()
 	return;
 }
 
-void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszReplace, CMMString strImageResName, bool bHistory)
+void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName, bool bHistory)
 {
 	//clear
 	PerformClearSelect();
 
+	if (MMInvalidString(lpszText) && MMInvalidString(lpszImageResName)) return;
+
+	//measure
+	tagDuiTextStyle TextStyle = GetTextStyleActive();
+	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
+	if (MMInvalidString(lpszText))
+	{
+		VecDuiRichTextItem vecRichTextItem;
+		tagDuiRichTextItem RichTextItem;
+		RichTextItem.ItemType = RichTextItem_Image;
+		RichTextItem.strImageResName = lpszImageResName;
+		vecRichTextItem.push_back(RichTextItem);
+		PerformMeasureString(vecRichTextItem, TextStyle, mapLineVecRichTextDraw, CDUIRect());
+	}
+	else
+	{
+		PerformMeasureString(lpszText, TextStyle, mapLineVecRichTextDraw, CDUIRect());
+	}
+
 	//history
 	tagDuiThinkEditHistory History = {};
 	History.bAdd = true;
-	History.ItemType = strImageResName.empty() ? RichTextItem_Text : RichTextItem_Image;
+	History.ItemType = MMInvalidString(lpszText) ? RichTextItem_Image : RichTextItem_Text;
 	History.nCaretRowPre = m_nCaretRow;
 	History.nCaretColumnPre = m_nCaretColumn;
-	History.strText = lpszReplace;
-	History.strImageResName = strImageResName;
+	History.strText = lpszText;
+	History.strImageResName = lpszImageResName;
 
 	//cur line
-	tagDuiTextStyle TextStyle = GetTextStyle();
 	do
 	{
-		if (m_nCaretRow >= 0 && m_nCaretRow < m_mapLineVecRichTextDraw.size())
+		auto pFuncInsert = [&](VecDuiRichTextDraw &LineVecRichTextDraw, int nIndexInsert)
+		{
+			if (mapLineVecRichTextDraw.empty()) return;
+
+			nIndexInsert = max(0, nIndexInsert);
+			for (auto It = mapLineVecRichTextDraw.rbegin(); It != mapLineVecRichTextDraw.rend(); ++It)
+			{
+				for (auto &RichTextItemDraw : It->second)
+				{
+					LineVecRichTextDraw.insert(LineVecRichTextDraw.begin() + nIndexInsert, RichTextItemDraw);
+				}
+			}
+		};
+		if (0 <= m_nCaretRow && m_nCaretRow < m_mapLineVecRichTextDraw.size())
 		{
 			auto &LineVecRichTextDraw = m_mapLineVecRichTextDraw[m_nCaretRow];
 			if (m_nCaretColumn < 0 || m_nCaretColumn >= LineVecRichTextDraw.size())
 			{
-				LineVecRichTextDraw.insert(LineVecRichTextDraw.begin(), tagDuiRichTextDraw());
-				LineVecRichTextDraw.front().ItemType = History.ItemType;
-				LineVecRichTextDraw.front().strText = lpszReplace;
-				LineVecRichTextDraw.front().strImageResName = strImageResName;
-				LineVecRichTextDraw.front().vecFontResSwitch = TextStyle.vecFontResSwitch;
-				LineVecRichTextDraw.front().vecColorResSwitch = TextStyle.vecColorResSwitch;
+				pFuncInsert(LineVecRichTextDraw, 0);
 
 				break;
 			}
 
-			tagDuiRichTextDraw RichTextDrawItem;
-			RichTextDrawItem.ItemType = History.ItemType;
-			RichTextDrawItem.strText = lpszReplace;
-			RichTextDrawItem.strImageResName = strImageResName;
-			RichTextDrawItem.vecFontResSwitch = TextStyle.vecFontResSwitch;
-			RichTextDrawItem.vecColorResSwitch = TextStyle.vecColorResSwitch;
-			LineVecRichTextDraw.insert(LineVecRichTextDraw.begin() + m_nCaretColumn + 1, RichTextDrawItem);
-
+			pFuncInsert(LineVecRichTextDraw, m_nCaretColumn + 1);
+			
 			break;
 		}
 
-		tagDuiRichTextDraw RichTextDrawItem;
-		RichTextDrawItem.ItemType = History.ItemType;
-		RichTextDrawItem.strText = lpszReplace;
-		RichTextDrawItem.strImageResName = strImageResName;
-		RichTextDrawItem.vecFontResSwitch = TextStyle.vecFontResSwitch;
-		RichTextDrawItem.vecColorResSwitch = TextStyle.vecColorResSwitch;
-		m_mapLineVecRichTextDraw[0].push_back(RichTextDrawItem);
+		pFuncInsert(m_mapLineVecRichTextDraw[0], 0);
 
 	} while (false);
 
@@ -1031,17 +1040,17 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszReplace, CMMString strImageRes
 	SetRichTextItem(vecRichTextItem);
 
 	//adjust
-	RefreshView();
+	PerformAdjustRichText();
 
 	//caret
 	if (RichTextItem_Text == History.ItemType)
 	{
-		int nLen = lstrlen(lpszReplace);
+		int nLen = lstrlen(lpszText);
 		for (int n = 0; n < nLen; n++)
 		{
 			PerformMoveCaretHoriz(false, false, false);
 
-			int nEmoji = CDUIGlobal::IsEmoji(lpszReplace[n]);
+			int nEmoji = CDUIGlobal::IsEmoji(lpszText[n]);
 			nEmoji > 0 ? n += nEmoji - 1 : 0;	
 		}
 	}
@@ -1057,6 +1066,17 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszReplace, CMMString strImageRes
 	if (bHistory)
 	{
 		PerformAddHistory(History);
+	}
+
+	//number limit
+	if (IsNumberOnly())
+	{
+		int nNumSrc = _ttol(GetText());
+		int nNumAdjust = min(max(nNumSrc, GetNumberMinLimit()), GetNumberMaxLimit());
+		if (nNumSrc != nNumAdjust)
+		{
+			SetText(CMMStrHelp::Format(_T("%d"), nNumAdjust));
+		}
 	}
 
 	Invalidate();
@@ -1386,6 +1406,32 @@ void CDUIThinkEditCtrl::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
 
 		return;
 	}
+	if (Dui_TimerDelayRefresh_ID == uTimerID)
+	{
+		KillTimer(Dui_TimerDelayRefresh_ID);
+
+		__super::Invalidate();
+
+		if (m_pBindCtrl)
+		{
+			m_pBindCtrl->Invalidate();
+		}
+
+		return;
+	}
+	if (Dui_TimerInputChar_ID == uTimerID)
+	{
+		KillTimer(Dui_TimerInputChar_ID);
+
+		//add
+		if (m_strInput.empty()) return;
+
+		SetReplaceSel(m_strInput);
+
+		m_strInput.clear();
+
+		return;
+	}
 
 	return __super::OnDuiTimer(uTimerID, Msg);
 }
@@ -1566,18 +1612,8 @@ LRESULT CDUIThinkEditCtrl::OnDuiChar(const DuiMessage &Msg)
 	}
 
 	//add
-	SetReplaceSel(strReplace);
-
-	//number limit
-	if (IsNumberOnly())
-	{
-		int nNumSrc = _ttol(GetText());
-		int nNumAdjust = min(max(nNumSrc, GetNumberMinLimit()), GetNumberMaxLimit());
-		if (nNumSrc != nNumAdjust)
-		{
-			SetText(CMMStrHelp::Format(_T("%d"), nNumAdjust));
-		}
-	}
+	m_strInput += strReplace;
+	SetTimer(Dui_TimerInputChar_ID, Dui_TimerInputChar_Elapse);
 
 	return 0;
 }
@@ -2397,7 +2433,7 @@ void CDUIThinkEditCtrl::PerformClearSelect(bool bHistory)
 	m_nCaretSelFromColumn = nColumnFrom;
 
 	//refresh
-	RefreshView();
+	PerformAdjustRichText();
 
 	//caret
 	PerformAdjustCaret();
@@ -2415,6 +2451,47 @@ void CDUIThinkEditCtrl::PerformAdjustCaret()
 	{
 		m_pWndManager->SetCaretPos({ rcCaret.left, rcCaret.top });
 	}
+
+	return;
+}
+
+void CDUIThinkEditCtrl::PerformAdjustRichText()
+{
+	//param
+	CDUIRect rcRange = GetTextRange();
+	int nLeft = rcRange.left;
+	int nTop = rcRange.top;
+	int nLineHeight = 0;
+	int nLine = 0;
+
+	//calc sort
+	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
+	for (auto &LineVecRichTextDraw : m_mapLineVecRichTextDraw)
+	{
+		for (auto &RichTextDrawItem : LineVecRichTextDraw.second)
+		{
+			if (nLeft + RichTextDrawItem.rcDraw.GetWidth() > rcRange.right
+				&& nLeft != rcRange.left)
+			{
+				nLeft = rcRange.left;
+				nTop = nTop + nLineHeight;
+				nLineHeight = 0;
+				nLine++;
+			}
+			
+			RichTextDrawItem.rcDraw.Offset(nLeft - RichTextDrawItem.rcDraw.left, nTop - RichTextDrawItem.rcDraw.top);
+			nLeft += RichTextDrawItem.rcDraw.GetWidth();
+			nLineHeight = max(nLineHeight, RichTextDrawItem.rcDraw.GetHeight());
+			mapLineVecRichTextDraw[nLine].push_back(RichTextDrawItem);
+		}
+	}
+
+	m_mapLineVecRichTextDraw = mapLineVecRichTextDraw;
+
+	//adjust
+	tagDuiTextStyle TextStyle = GetTextStyleActive();
+	CDUIRect rcMeasure;
+	CDUIRenderHelp::AdjustRichText(TextStyle.dwTextStyle, rcRange, m_mapLineVecRichTextDraw, rcMeasure);
 
 	return;
 }

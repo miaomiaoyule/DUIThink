@@ -40,6 +40,7 @@ protected:
 	CDUIControlBase *					m_pBindCtrl = NULL;
 	VecDuiRichTextItem					m_vecRichTextItem;
 	MapLineVecDuiRichTextDraw			m_mapLineVecRichTextDraw;
+	CMMString							m_strInput;
 	CDUISize							m_szScrollRange;
 	CDUISize							m_szScrollPos;
 	bool								m_bMouseDownFocus = false;
@@ -121,7 +122,7 @@ public:
 	virtual CDUIRect GetSelectRange();
 	virtual void SetSel(long nStartChar, long nEndChar);
 	virtual void SetSelAll();
-	virtual void SetReplaceSel(LPCTSTR lpszReplace, CMMString strImageResName = _T(""), bool bHistory = true);
+	virtual void SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName = _T(""), bool bHistory = true);
 	virtual bool CanUndo();
 	virtual bool CanRedo();
 	virtual void Undo();
@@ -180,6 +181,7 @@ protected:
 	virtual void PerformMoveCaretVert(bool bUp);
 	virtual void PerformClearSelect(bool bHistory = true);
 	virtual void PerformAdjustCaret();
+	virtual void PerformAdjustRichText();
 	virtual void PerformCalcSelect(OUT int &nRowFrom, OUT int &nColumnFrom, OUT int &nRowTarget, OUT int &nColumnTarget);
 	virtual void PerformAddHistory(tagDuiThinkEditHistory History);
 	virtual void PerformActiveHistory(tagDuiThinkEditHistory History, bool bUndo);

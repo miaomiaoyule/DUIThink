@@ -319,11 +319,9 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 	return;
 }
 
-void CDUIRenderHelp::AdjustRichText(IN const tagDuiRichText &RichText, IN CDUIRect rcItem, OUT MapLineVecDuiRichTextDraw &mapLineVecRichTextDraw, 
+void CDUIRenderHelp::AdjustRichText(IN DWORD dwTextStyle, IN CDUIRect rcItem, OUT MapLineVecDuiRichTextDraw &mapLineVecRichTextDraw,
 	IN CDUIRect rcMeasure)
 {
-	DWORD dwTextStyle = RichText;
-
 	//horiz adjust
 	for (auto &LineVecRichTextDraw : mapLineVecRichTextDraw)
 	{
