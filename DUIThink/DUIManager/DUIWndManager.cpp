@@ -2770,6 +2770,7 @@ void CDUIWndManager::OnDpiChanged(int nScalePre)
 	//refresh
 	if (GetRootCtrl())
 	{
+		GetRootCtrl()->OnDpiChanged(nScalePre);
 		GetRootCtrl()->NeedRefreshView();
 	}
 

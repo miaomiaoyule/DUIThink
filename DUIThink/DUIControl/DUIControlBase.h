@@ -119,6 +119,7 @@ protected:
 	//interface
 protected:
 	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
+	virtual void OnDpiChanged(int nScalePre);
 	virtual void OnResourceDelete(CDUIResourceBase *pResourceObj);
 	virtual void OnResourceSwitch(int nIndexRes);
 

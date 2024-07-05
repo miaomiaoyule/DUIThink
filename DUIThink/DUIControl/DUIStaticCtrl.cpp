@@ -46,6 +46,15 @@ bool CDUIStaticCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 	return false;
 }
 
+void CDUIStaticCtrl::OnDpiChanged(int nScalePre)
+{
+	__super::OnDpiChanged(nScalePre);
+
+	m_bNeedMeasureSize = true;
+
+	return;
+}
+
 LPVOID CDUIStaticCtrl::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
 	QUERYINTERFACE(CDUIStaticCtrl, Guid, dwQueryVer);
@@ -118,10 +127,13 @@ void CDUIStaticCtrl::RefreshView()
 
 		//measure
 		CDUISize szMeasure = MeasureString();
-		szMeasure.cx = min(GetMaxWidth(), max(szMeasure.cx, GetMinWidth()));
-		szMeasure.cy = min(GetMaxHeight(), max(szMeasure.cy, GetMinHeight()));
-		int nWidthAuto = DuiDpiScaleBackCtrl(szMeasure.cx) + GetTextPadding().left + GetTextPadding().right;
-		int nHeightAuto = DuiDpiScaleBackCtrl(szMeasure.cy) + GetTextPadding().top + GetTextPadding().bottom;
+		CDUIRect rcTextPadding = GetTextPadding();
+		int nWidthAuto = szMeasure.cx + rcTextPadding.left + rcTextPadding.right;
+		int nHeightAuto = szMeasure.cy + rcTextPadding.top + rcTextPadding.bottom;
+		nWidthAuto = min(GetMaxWidth(), max(nWidthAuto, GetMinWidth()));
+		nHeightAuto = min(GetMaxHeight(), max(nHeightAuto, GetMinHeight()));
+		nWidthAuto = DuiDpiScaleBackCtrl(nWidthAuto);
+		nHeightAuto = DuiDpiScaleBackCtrl(nHeightAuto);
 		if (IsAutoCalcWidth())
 		{
 			bool bCalcHeight = false;
@@ -148,8 +160,9 @@ void CDUIStaticCtrl::RefreshView()
 				m_bNeedMeasureSize = false;
 
 				szMeasure = MeasureString();
+				szMeasure.cy = szMeasure.cy + rcTextPadding.top + rcTextPadding.bottom;
 				szMeasure.cy = min(GetMaxHeight(), max(szMeasure.cy, GetMinHeight()));
-				nHeightAuto = DuiDpiScaleBackCtrl(szMeasure.cy) + GetTextPadding().top + GetTextPadding().bottom;
+				nHeightAuto = DuiDpiScaleBackCtrl(szMeasure.cy);
 			}
 		}
 		if (IsAutoCalcHeight()

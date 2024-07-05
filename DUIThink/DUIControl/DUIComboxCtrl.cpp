@@ -396,6 +396,18 @@ bool CDUIComboxCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 	return false;
 }
 
+void CDUIComboxCtrl::OnDpiChanged(int nScalePre)
+{
+	__super::OnDpiChanged(nScalePre);
+
+	if (m_pEditCtrl)
+	{
+		m_pEditCtrl->OnDpiChanged(nScalePre);
+	}
+
+	return;
+}
+
 void CDUIComboxCtrl::OnResourceDelete(CDUIResourceBase *pResourceObj)
 {
 	__super::OnResourceDelete(pResourceObj);

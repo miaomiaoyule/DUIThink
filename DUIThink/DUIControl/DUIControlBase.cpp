@@ -91,6 +91,11 @@ bool CDUIControlBase::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 	return false;
 }
 
+void CDUIControlBase::OnDpiChanged(int nScalePre)
+{
+	return;
+}
+
 void CDUIControlBase::OnResourceDelete(CDUIResourceBase *pResourceObj)
 {
 	return CDUIGlobal::PerformResourceDelete(this, pResourceObj);

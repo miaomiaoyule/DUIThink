@@ -53,6 +53,29 @@ bool CDUIContainerCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 	return false;
 }
 
+void CDUIContainerCtrl::OnDpiChanged(int nScalePre)
+{
+	__super::OnDpiChanged(nScalePre);
+
+	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
+	{
+		CDUIControlBase *pChild = GetChildAt(nIndex);
+		if (NULL == pChild) continue;
+
+		pChild->OnDpiChanged(nScalePre);
+	}
+	if (m_pHorizScrollBarCtrl)
+	{
+		m_pHorizScrollBarCtrl->OnDpiChanged(nScalePre);
+	}
+	if (m_pVertScrollBarCtrl)
+	{
+		m_pVertScrollBarCtrl->OnDpiChanged(nScalePre);
+	}
+
+	return;
+}
+
 void CDUIContainerCtrl::OnResourceDelete(CDUIResourceBase *pResourceObj)
 {
 	__super::OnResourceDelete(pResourceObj);

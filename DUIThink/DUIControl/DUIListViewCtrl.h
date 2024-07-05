@@ -115,6 +115,7 @@ protected:
 
 	//override
 protected:
+	void OnDpiChanged(int nScalePre) override;
 	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
 
 	//override

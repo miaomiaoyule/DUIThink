@@ -61,6 +61,18 @@ bool CDUIListViewCtrl::UnRegisterControlListen(IDUIInterface *pIControlListen)
 	return true;
 }
 
+void CDUIListViewCtrl::OnDpiChanged(int nScalePre)
+{
+	__super::OnDpiChanged(nScalePre);
+
+	if (m_pListHeader)
+	{
+		m_pListHeader->OnDpiChanged(nScalePre);
+	}
+
+	return;
+}
+
 bool CDUIListViewCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 {
 	if (__super::OnAttributeChange(pAttributeObj)) return true;
