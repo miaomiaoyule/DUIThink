@@ -2456,11 +2456,14 @@ void CDUIThinkEditCtrl::PerformAdjustCaret()
 void CDUIThinkEditCtrl::PerformAdjustRichText()
 {
 	//param
+	tagDuiTextStyle TextStyle = GetTextStyleActive();
 	CDUIRect rcRange = GetTextRange();
+	CDUIRect rcMeasure = { rcRange.left, rcRange.top, rcRange.left, rcRange.top };
 	int nLeft = rcRange.left;
 	int nTop = rcRange.top;
 	int nLineHeight = 0;
 	int nLine = 0;
+	bool bSingleLine = (TextStyle.dwTextStyle & DT_SINGLELINE) || 0 == (TextStyle.dwTextStyle & DT_WORDBREAK);
 
 	//calc sort
 	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
@@ -2469,7 +2472,8 @@ void CDUIThinkEditCtrl::PerformAdjustRichText()
 		for (auto &RichTextDrawItem : LineVecRichTextDraw.second)
 		{
 			if (nLeft + RichTextDrawItem.rcDraw.GetWidth() > rcRange.right
-				&& nLeft != rcRange.left)
+				&& nLeft != rcRange.left
+				&& false == bSingleLine)
 			{
 				nLeft = rcRange.left;
 				nTop = nTop + nLineHeight;
@@ -2480,6 +2484,8 @@ void CDUIThinkEditCtrl::PerformAdjustRichText()
 			RichTextDrawItem.rcDraw.Offset(nLeft - RichTextDrawItem.rcDraw.left, nTop - RichTextDrawItem.rcDraw.top);
 			nLeft += RichTextDrawItem.rcDraw.GetWidth();
 			nLineHeight = max(nLineHeight, RichTextDrawItem.rcDraw.GetHeight());
+			rcMeasure.right = max(rcMeasure.right, nLeft);
+			rcMeasure.bottom = max(rcMeasure.bottom, nTop + nLineHeight);
 			mapLineVecRichTextDraw[nLine].push_back(RichTextDrawItem);
 		}
 	}
@@ -2487,8 +2493,6 @@ void CDUIThinkEditCtrl::PerformAdjustRichText()
 	m_mapLineVecRichTextDraw = mapLineVecRichTextDraw;
 
 	//adjust
-	tagDuiTextStyle TextStyle = GetTextStyleActive();
-	CDUIRect rcMeasure;
 	CDUIRenderHelp::AdjustRichText(TextStyle.dwTextStyle, rcRange, m_mapLineVecRichTextDraw, rcMeasure);
 
 	return;
