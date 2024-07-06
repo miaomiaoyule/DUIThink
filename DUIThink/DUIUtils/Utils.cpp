@@ -181,7 +181,6 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 			|| (RichTextItem_Image == RichTextDraw.ItemType && false == RichTextDraw.strImageResName.empty()))
 		{
 			RichTextDraw.rcDraw = rcRichItem;
-			RichTextDraw.nLine = nLine;
 			mapLineVecRichTextDraw[nLine].push_back(RichTextDraw);
 		}
 

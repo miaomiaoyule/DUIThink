@@ -246,14 +246,7 @@ void CDUIThinkEditCtrl::RefreshView()
 	PerformMeasureString(m_vecRichTextItem, TextStyle, m_mapLineVecRichTextDraw, rcMeasure);
 
 	//range pos
-	CDUIRect rcRange = GetTextRange();
-	CDUISize szScrollPos = GetScrollPos();
-	m_szScrollPos = {};
-	m_szScrollRange.cx = max(rcMeasure.GetWidth() - rcRange.GetWidth(), 0);
-	m_szScrollRange.cy = max(rcMeasure.GetHeight() - rcRange.GetHeight(), 0);
-	szScrollPos.cx = min(szScrollPos.cx, m_szScrollRange.cx);
-	szScrollPos.cy = min(szScrollPos.cy, m_szScrollRange.cy);
-	SetScrollPos(szScrollPos);
+	PerformAdjustScrollPos(rcMeasure);
 
 	//caret
 	PerformAdjustCaret();
@@ -2469,24 +2462,32 @@ void CDUIThinkEditCtrl::PerformAdjustRichText()
 	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
 	for (auto &LineVecRichTextDraw : m_mapLineVecRichTextDraw)
 	{
-		for (auto &RichTextDrawItem : LineVecRichTextDraw.second)
+		for (int n = 0; n < LineVecRichTextDraw.second.size(); n++)
 		{
-			if (nLeft + RichTextDrawItem.rcDraw.GetWidth() > rcRange.right
-				&& nLeft != rcRange.left
-				&& false == bSingleLine)
-			{
-				nLeft = rcRange.left;
-				nTop = nTop + nLineHeight;
-				nLineHeight = 0;
-				nLine++;
-			}
-			
+			tagDuiRichTextDraw &RichTextDrawItem = LineVecRichTextDraw.second[n];
 			RichTextDrawItem.rcDraw.Offset(nLeft - RichTextDrawItem.rcDraw.left, nTop - RichTextDrawItem.rcDraw.top);
+			mapLineVecRichTextDraw[nLine].push_back(RichTextDrawItem);
+
 			nLeft += RichTextDrawItem.rcDraw.GetWidth();
 			nLineHeight = max(nLineHeight, RichTextDrawItem.rcDraw.GetHeight());
 			rcMeasure.right = max(rcMeasure.right, nLeft);
 			rcMeasure.bottom = max(rcMeasure.bottom, nTop + nLineHeight);
-			mapLineVecRichTextDraw[nLine].push_back(RichTextDrawItem);
+
+			//next line
+			if (n + 1 < LineVecRichTextDraw.second.size())
+			{
+				tagDuiRichTextDraw &RichTextDrawItemNext = LineVecRichTextDraw.second[n + 1];
+				bool bOverRight = nLeft + RichTextDrawItemNext.rcDraw.GetWidth() > rcRange.right;
+				bool bWordWrap = _T('\n') == RichTextDrawItemNext.strText.Left(0) || _T('\r') == RichTextDrawItemNext.strText.Left(0);
+				if ((bOverRight || bWordWrap) 
+					&& false == bSingleLine)
+				{
+					nLeft = rcRange.left;
+					nTop = nTop + nLineHeight;
+					nLineHeight = 0;
+					nLine++;
+				}
+			}
 		}
 	}
 
@@ -2494,6 +2495,23 @@ void CDUIThinkEditCtrl::PerformAdjustRichText()
 
 	//adjust
 	CDUIRenderHelp::AdjustRichText(TextStyle.dwTextStyle, rcRange, m_mapLineVecRichTextDraw, rcMeasure);
+	
+	//scroll 
+	PerformAdjustScrollPos(rcMeasure);
+
+	return;
+}
+
+void CDUIThinkEditCtrl::PerformAdjustScrollPos(CDUIRect rcMeasure)
+{
+	CDUIRect rcRange = GetTextRange();
+	CDUISize szScrollPos = GetScrollPos();
+	m_szScrollPos = {};
+	m_szScrollRange.cx = max(rcMeasure.GetWidth() - rcRange.GetWidth(), 0);
+	m_szScrollRange.cy = max(rcMeasure.GetHeight() - rcRange.GetHeight(), 0);
+	szScrollPos.cx = min(szScrollPos.cx, m_szScrollRange.cx);
+	szScrollPos.cy = min(szScrollPos.cy, m_szScrollRange.cy);
+	SetScrollPos(szScrollPos);
 
 	return;
 }

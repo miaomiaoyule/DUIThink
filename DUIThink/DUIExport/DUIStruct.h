@@ -185,7 +185,6 @@ struct tagDuiRichTextDraw : public tagDuiRichTextItem
 {
 	//target
 	CDUIRect							rcDraw;
-	int									nLine = 0;
 
 	//text
 	CDUIFontBase *						pFontBase = NULL;

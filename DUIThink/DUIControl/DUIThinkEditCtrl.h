@@ -182,6 +182,7 @@ protected:
 	virtual void PerformClearSelect(bool bHistory = true);
 	virtual void PerformAdjustCaret();
 	virtual void PerformAdjustRichText();
+	virtual void PerformAdjustScrollPos(CDUIRect rcMeasure);
 	virtual void PerformCalcSelect(OUT int &nRowFrom, OUT int &nColumnFrom, OUT int &nRowTarget, OUT int &nColumnTarget);
 	virtual void PerformAddHistory(tagDuiThinkEditHistory History);
 	virtual void PerformActiveHistory(tagDuiThinkEditHistory History, bool bUndo);
