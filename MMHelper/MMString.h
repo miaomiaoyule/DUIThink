@@ -288,7 +288,7 @@ public:
 			TCHAR *szBuffer = (TCHAR*)malloc(nSize);
 			ZeroMemory(szBuffer, nSize);
 			nLen = _vsntprintf(szBuffer, nLen + 1, pstrFormat, Args);
-			operator =(szBuffer);
+			operator = (szBuffer);
 			free(szBuffer);
 		#endif
 			
@@ -300,6 +300,18 @@ public:
 
 		va_start(Args, pstrFormat);
 		Format(pstrFormat, Args);
+		va_end(Args);
+
+		return *this;
+	}
+	CMMString & AppendFormat(LPCTSTR pstrFormat, ...)
+	{
+		va_list Args;
+
+		va_start(Args, pstrFormat);
+		CMMString strTemp;
+		strTemp.Format(pstrFormat, Args);
+		operator += (strTemp);
 		va_end(Args);
 
 		return *this;
@@ -347,13 +359,13 @@ public:
 	}
 	CMMString & operator = (LPCSTR lpszRight)
 	{
-		__super::operator =((LPCTSTR)CA2CT(lpszRight));
+		__super::operator = ((LPCTSTR)CA2CT(lpszRight));
 
 		return *this;
 	}
 	CMMString & operator = (LPCTSTR lpszRight)
 	{
-		__super::operator =(lpszRight);
+		__super::operator = (lpszRight);
 
 		return *this;
 	}
