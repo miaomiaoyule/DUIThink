@@ -214,6 +214,7 @@ protected:
 
 	//property
 protected:
+	void InitProperty() override;
 	void InitComplete() override;
 
 	//message

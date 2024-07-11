@@ -55,9 +55,6 @@ bool CDUIGlobal::Init(HINSTANCE hInstance)
 	m_hInstance = hInstance;
 	m_ThreadPool.Run(2);
 
-	ReleaseResource();
-	ReleaseDui();
-
 	//public res
 	LoadPublicResource();
 
@@ -79,23 +76,12 @@ bool CDUIGlobal::UnInit()
 	if (false == CMMAsyncObject::UnInit()) return false;
 	if (false == CMMServiceItem::UnInit()) return false;
 
-	CloseProject();
-
+	//stop thread
 	m_ThreadPool.Stop();
 
-	//extend dll
-	for (HMODULE var : m_vecModuleExtendDll)
-	{
-		if (NULL == var) continue;
-
-		FreeLibrary(var);
-	}
-
-	m_vecModuleExtendDll.clear();
+	//instance res
 	m_DuiFileResType = DuiFileResType_File;
 	m_nIndexSwitchRes = 0;
-
-	//instance res
 	m_hInstance = NULL;
 	m_hInstanceResource = NULL;
 	m_vecZipData.clear();
@@ -105,8 +91,20 @@ bool CDUIGlobal::UnInit()
 		m_hResourceZip = NULL;
 	}
 
+	//close project
+	CloseProject();
+
 	//third
 	CMMSvg::GetInstance()->UnInit();
+
+	//extend dll
+	for (HMODULE hDllModule : m_vecModuleExtendDll)
+	{
+		if (NULL == hDllModule) continue;
+
+		FreeLibrary(hDllModule);
+	}
+	m_vecModuleExtendDll.clear();
 
 	return true;
 }
@@ -3180,7 +3178,9 @@ void CDUIGlobal::ReleaseFontResource()
 {
 	for (auto ResourceIt = m_mapResourceFont.begin(); ResourceIt != m_mapResourceFont.end();)
 	{
-		if (NULL == ResourceIt->second || ResourceIt->second->IsDesign())
+		if (ResourceIt->second 
+			&& ResourceIt->second->IsDesign() 
+			&& m_hInstance)
 		{
 			++ResourceIt;
 
@@ -3201,7 +3201,9 @@ void CDUIGlobal::ReleaseImageResource()
 {
 	for (auto ResourceIt = m_mapResourceImage.begin(); ResourceIt != m_mapResourceImage.end();)
 	{
-		if (NULL == ResourceIt->second || ResourceIt->second->IsDesign())
+		if (ResourceIt->second 
+			&& ResourceIt->second->IsDesign()
+			&& m_hInstance)
 		{
 			++ResourceIt;
 
@@ -3222,7 +3224,9 @@ void CDUIGlobal::ReleaseColorResource()
 {
 	for (auto ResourceIt = m_mapResourceColor.begin(); ResourceIt != m_mapResourceColor.end();)
 	{
-		if (NULL == ResourceIt->second || ResourceIt->second->IsDesign())
+		if (ResourceIt->second 
+			&& ResourceIt->second->IsDesign()
+			&& m_hInstance)
 		{
 			++ResourceIt;
 

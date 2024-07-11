@@ -58,6 +58,8 @@ CMMTCPSocketClient::~CMMTCPSocketClient()
 {
 	WSACleanup();
 
+	MMSafeDelete(m_pData);
+
 	return;
 }
 

@@ -1019,6 +1019,17 @@ CDUIMenuItemCtrl * CDUIMenuCtrl::GetChildAt(int nIndex) const
 	return MMInterfaceHelper(CDUIMenuItemCtrl, MMStaticPtr(CDUIControlBase, pItem));
 }
 
+void CDUIMenuCtrl::InitProperty()
+{
+	__super::InitProperty();
+
+	//value
+	DuiInitAttriValue(m_AttributeUseHorizScrollBar, false);
+	DuiInitAttriValue(m_AttributeUseVertScrollBar, false);
+
+	return;
+}
+
 void CDUIMenuCtrl::InitComplete()
 {
 	__super::InitComplete();

@@ -2285,14 +2285,17 @@ void CDUIListViewCtrl::InitComplete()
 	DuiInitAttriVisible(m_AttributeAutoCalcChildPaddingV, true);
 	
 	//header
-	if (NULL == m_pListHeader)
+	if (NULL == m_pListHeader && 0 != lstrcmp(GetClass(), CDUIRotateMenuCtrl().GetClass()))
 	{
 		CDUIListHeaderCtrl *pListHeader = new CDUIListHeaderCtrl();
 		pListHeader->Init();
 		pListHeader->SetPadding(0, 0, 0, 0);
 		pListHeader->SetFixedHeight(30);
 
-		InsertChild(pListHeader);
+		if (false == InsertChild(pListHeader))
+		{
+			MMSafeDelete(pListHeader);
+		}
 	}
 	if (m_pAnimateDrag)
 	{

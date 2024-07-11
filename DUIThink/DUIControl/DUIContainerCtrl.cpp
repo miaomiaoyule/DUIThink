@@ -497,7 +497,10 @@ void CDUIContainerCtrl::SetUseHorizScrollBar(bool bUseHorizScrollBar)
 			}
 		}
 
-		InsertChild(pScrollBarCtrl);
+		if (false == InsertChild(pScrollBarCtrl))
+		{
+			MMSafeDelete(pScrollBarCtrl);
+		}
 	}
 
 	Invalidate();
