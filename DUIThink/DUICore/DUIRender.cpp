@@ -1576,7 +1576,7 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor/* = 0*
 
 	HBITMAP hBmpClone = NULL;
 	pBmp->GetHBITMAP(Gdiplus::Color(0, 0, 0, 0), &hBmpClone);
-	if (NULL == hBmpClone) return NULL;
+	MMSafeDelete(pBmp);
 
 	if (0 != dwFilterColor)
 	{
