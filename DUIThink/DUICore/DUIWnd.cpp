@@ -35,17 +35,9 @@ void CDUINotifyPump::OnNotify(const DuiNotify &Notify)
 	const Dui_MsgMapEntry *lpEntry = NULL;
 	const Dui_MsgMap *pMessageMap = NULL;
 
-#ifndef DUI_LIB
-	for (pMessageMap = GetDUIMessageMap(); pMessageMap != NULL; pMessageMap = (*pMessageMap->pfnGetBaseMap)())
-#else
-	for (pMessageMap = GetDUIMessageMap(); pMessageMap != NULL; pMessageMap = pMessageMap->pBaseMap)
-#endif
+	for (pMessageMap = GetDuiMessageMap(); pMessageMap != NULL; pMessageMap = (*pMessageMap->pfnGetBaseMap)())
 	{
-#ifndef DUI_LIB
 		ASSERT(pMessageMap != (*pMessageMap->pfnGetBaseMap)());
-#else
-		ASSERT(pMessageMap != pMessageMap->pBaseMap);
-#endif
 		if ((lpEntry = DuiFindMessageEntry(pMessageMap->lpEntries, Notify)) != NULL)
 		{
 			goto Dispatch;

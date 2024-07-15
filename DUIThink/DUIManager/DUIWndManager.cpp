@@ -103,6 +103,7 @@ void CDUIWndManager::OnWinDragEnter(IDataObject *pIDataObject, DWORD dwKeyState,
 
 	// parse IDataObject
 	CDUIPoint ptMouse = { pt.x, pt.y };
+	ScreenToClient(m_hWndAttach, &ptMouse);
 	m_ptMousePosLast = ptMouse;
 	m_DropData.ptMouse = ptMouse;
 	m_DropData.pIDataObject = pIDataObject;
@@ -249,6 +250,7 @@ void CDUIWndManager::OnWinDragOver(DWORD dwKeyState, POINTL pt, DWORD *pdwEffect
 	if (NULL == m_pRootCtrl) return;
 
 	POINT ptMouse = { pt.x, pt.y };
+	ScreenToClient(m_hWndAttach, &ptMouse);
 	if (m_DropData.ptMouse == ptMouse
 		&& m_DropData.dwKeyState == dwKeyState)
 	{
@@ -316,6 +318,7 @@ void CDUIWndManager::OnWinDrop(IDataObject *pIDataObject, POINTL pt, DWORD *pdwE
 	if (NULL == m_pRootCtrl) return;
 
 	POINT ptMouse = { pt.x, pt.y };
+	ScreenToClient(m_hWndAttach, &ptMouse);
 	m_ptMousePosLast = ptMouse;
 	m_DropData.pIDataObject = pIDataObject;
 	m_DropData.ptMouse = ptMouse;

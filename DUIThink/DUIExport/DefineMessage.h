@@ -27,7 +27,6 @@ enum enDuiNotifyType
 	DuiNotify_DragAnimateMoving = 11,
 	DuiNotify_DragAnimateFinish = 12,
 	DuiNotify_DpiChanged = 13,
-	DuiNotify_Drop = 14,
 	DuiNotify_CtrlIDChanged = 40,
 	DuiNotify_VisibleChanged = 41,
 	DuiNotify_WndManagerAttach = 50,
@@ -213,12 +212,12 @@ private:                                                                  \
 protected:                                                                \
 	static const Dui_MsgMap messageMap;                                   \
 	static const Dui_MsgMap * PASCAL _GetBaseMessageMap();                 \
-	virtual const Dui_MsgMap * GetDUIMessageMap() const;                      \
+	virtual const Dui_MsgMap * GetDuiMessageMap() const;                      \
 
 #define DuiBaseBegin_Message_Map(theClass)                              \
 	const Dui_MsgMap * PASCAL theClass::_GetBaseMessageMap()               \
 { return NULL; }                                                  \
-	const Dui_MsgMap * theClass::GetDUIMessageMap() const                     \
+	const Dui_MsgMap * theClass::GetDuiMessageMap() const                     \
 { return &theClass::messageMap; }                                 \
 	DUITHINK_COMDAT const Dui_MsgMap theClass::messageMap =                  \
 {  &theClass::_GetBaseMessageMap, &theClass::_messageEntries[0] };\
@@ -228,7 +227,7 @@ protected:                                                                \
 #define DuiBegin_Message_Map(theClass, baseClass)                        \
 	const Dui_MsgMap * PASCAL theClass::_GetBaseMessageMap()               \
 { return &baseClass::messageMap; }                                \
-	const Dui_MsgMap * theClass::GetDUIMessageMap() const                     \
+	const Dui_MsgMap * theClass::GetDuiMessageMap() const                     \
 { return &theClass::messageMap; }                                 \
 	DUITHINK_COMDAT const Dui_MsgMap theClass::messageMap =                  \
 { &theClass::_GetBaseMessageMap, &theClass::_messageEntries[0] }; \
