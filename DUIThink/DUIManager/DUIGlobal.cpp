@@ -348,6 +348,11 @@ CDUIFontBase * CDUIGlobal::GetFontResDefault()
 	return GetFontResource(m_strFontResDefault);
 }
 
+MapDuiFontBase CDUIGlobal::GetFontResourceAll()
+{
+	return m_mapResourceFont;
+}
+
 int CDUIGlobal::GetColorResourceCount()
 {
 	return m_mapResourceColor.size();
@@ -386,6 +391,11 @@ CDUIColorBase * CDUIGlobal::GetColorResource(ARGB dwColor)
 	return NULL;
 }
 
+MapDuiColorBase CDUIGlobal::GetColorResourceAll()
+{
+	return m_mapResourceColor;
+}
+
 int CDUIGlobal::GetImageResourceCount()
 {
 	return m_mapResourceImage.size();
@@ -420,6 +430,11 @@ CDUIImageBase * CDUIGlobal::GetImageResourceByFile(const CMMString &strFileFull)
 	});
 
 	return FindRes != m_mapResourceImage.end() ? FindRes->second : NULL;
+}
+
+MapDuiImageBase CDUIGlobal::GetImageResourceAll()
+{
+	return m_mapResourceImage;
 }
 
 int CDUIGlobal::GetDuiCount(enDuiType DuiType)

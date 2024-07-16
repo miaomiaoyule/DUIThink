@@ -140,7 +140,7 @@ static TCHAR g_szPublicImage[][MAX_PATH][MAX_PATH]
 	{ Name_ImageClockSecond, _T("SkinDesign/ClockSecond.png") },
 	{ Name_ImageClockCenterDot, _T("SkinDesign/ClockCenterDot.png") },
 	{ Name_ImageGif, _T("SkinDesign/Face.gif") },
-	{ Name_ImageSequenceFrame, _T("SkinDesign/SequenceFrame.jpeg") },
+	{ Name_ImageSequenceFrame, _T("SkinDesign/SequenceFrame.png") },
 	{ Name_Imagebtn_normal, _T("SkinDesign/btn_normal.png") },
 	{ Name_Imagebtn_highlight, _T("SkinDesign/btn_highlight.png") },
 	{ Name_Imagebtn_down, _T("SkinDesign/btn_down.png") },

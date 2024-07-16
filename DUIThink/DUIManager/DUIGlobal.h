@@ -190,16 +190,19 @@ public:
 	CDUIFontBase * GetFontResource(const CMMString &strName);
 	CDUIFontBase * GetFontResource(int nIndex);
 	CDUIFontBase * GetFontResDefault();
+	MapDuiFontBase GetFontResourceAll();
 
 	int GetColorResourceCount();
 	CDUIColorBase * GetColorResource(const CMMString &strName);
 	CDUIColorBase * GetColorResource(int nIndex);
 	CDUIColorBase * GetColorResource(ARGB dwColor);
+	MapDuiColorBase GetColorResourceAll();
 
 	int GetImageResourceCount();
 	CDUIImageBase * GetImageResource(const CMMString &strName);
 	CDUIImageBase * GetImageResource(int nIndex);
 	CDUIImageBase * GetImageResourceByFile(const CMMString &strFileFull);
+	MapDuiImageBase GetImageResourceAll();
 
 	int GetDuiCount(enDuiType DuiType);
 	CMMString GetDuiName(int nIndex, enDuiType DuiType);
