@@ -39,9 +39,6 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateControl(CDUISpinCtrl);
 	DUIInner_RegisterCreateControl(CDUIClockCtrl);
 	DUIInner_RegisterCreateControl(CDUIGroupCtrl);
-#ifdef DUITHINKWKE
-	DUIInner_RegisterCreateControl(CDUIWkeBrowserCtrl);
-#endif
 
 	//ืสิด
 	DUIInner_RegisterCreateResource(CDUIFontBase);

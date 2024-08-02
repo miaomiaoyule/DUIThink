@@ -23,12 +23,13 @@ CMMSvg * CMMSvg::GetInstance()
 
 bool CMMSvg::Init()
 {
-#ifdef _DEBUG
-	resvg_init_log();
-#endif
+	if (g_pResvgOptions) return true;
 
 	g_pResvgOptions = resvg_options_create();
-	resvg_options_load_system_fonts(g_pResvgOptions);
+	if (g_pResvgOptions)
+	{
+		resvg_options_load_system_fonts(g_pResvgOptions);
+	}
 
 	return true;
 }
@@ -46,7 +47,7 @@ bool CMMSvg::UnInit()
 
 bool CMMSvg::ParseImage(IN LPCTSTR lpszFile, IN int nScale, OUT std::vector<BYTE> &vecPixel, OUT int &nWidth, OUT int &nHeight)
 {
-	if (NULL == g_pResvgOptions || MMInvalidString(lpszFile)) return false;
+	if (MMInvalidString(lpszFile)) return false;
 
 	std::vector<BYTE> vecData;
 	CMMFile::GetFileData(lpszFile, vecData);
@@ -66,7 +67,9 @@ bool CMMSvg::ParseImage(IN LPCTSTR lpszFile, IN int nScale, OUT HBITMAP &hBitmap
 
 bool CMMSvg::ParseImage(IN const std::vector<BYTE> &vecData, IN int nScale, OUT std::vector<BYTE> &vecPixel, OUT int &nWidth, OUT int &nHeight)
 {
-	if (NULL == g_pResvgOptions || vecData.empty()) return false;
+	if (false == Init()
+		|| NULL == g_pResvgOptions 
+		|| vecData.empty()) return false;
 
 	resvg_render_tree *tree = NULL;
 	int err = resvg_parse_tree_from_data((const char*)vecData.data(), vecData.size(), g_pResvgOptions, &tree);
@@ -83,8 +86,7 @@ bool CMMSvg::ParseImage(IN const std::vector<BYTE> &vecData, IN int nScale, OUT 
 	nHeight = MulDiv((int)size.height, nScale, 100);
 
 	vecPixel.resize(nWidth * nHeight * 4);
-	resvg_fit_to fit_to = { RESVG_FIT_TO_TYPE_ZOOM, fScale };
-	resvg_render(tree, fit_to, resvg_transform_identity(), nWidth, nHeight, (char*)vecPixel.data());
+	resvg_render(tree, resvg_transform_identity(), nWidth, nHeight, (char*)vecPixel.data());
 
 	resvg_tree_destroy(tree);
 

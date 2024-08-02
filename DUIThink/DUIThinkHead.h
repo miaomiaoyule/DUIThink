@@ -13,23 +13,6 @@
 
 #define DUITHINK_COMDAT __declspec(selectany)
 
-//dll name
-#ifndef DUITHINK_DLL_NAME
-	#ifdef _DLL
-		#ifdef _DEBUG
-			#define DUITHINK_DLL_NAME			_T("DUIThinkD.dll")		
-		#else
-			#define DUITHINK_DLL_NAME			_T("DUIThink.dll")		
-		#endif
-	#else
-		#ifdef _DEBUG
-			#define DUITHINK_DLL_NAME			_T("DUIThink_MT_D.dll")		
-		#else
-			#define DUITHINK_DLL_NAME			_T("DUIThink_MT.dll")		
-		#endif
-	#endif
-#endif
-
 #if defined _M_IX86
 #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #elif defined _M_IA64
@@ -76,10 +59,6 @@ using namespace std;
 
 //////////////////////////////////////////////////////////////////////////
 #include "../MMHelper/MMHelperHead.h"
-
-#ifdef DUITHINKWKE
-#include "../ThirdDepend/wke/Include/wke.h"
-#endif
 #include "../ThirdDepend/tinyxml2/tinyxml2.h"
 #include <olectl.h>
 using namespace tinyxml2;
@@ -207,7 +186,6 @@ using namespace tinyxml2;
 #include "DUIControl/DUIComboxCtrl.h"
 #include "DUIControl/DUITreeNodeCtrl.h"
 #include "DUIControl/DUITreeViewCtrl.h"
-#include "DUIControl/DUIWkeBrowserCtrl.h"
 #include "DUIControl/DUIMenuCtrl.h"
 #include "DUIControl/DUIHotKeyCtrl.h"
 #include "DUIControl/DUICalendarCtrl.h"

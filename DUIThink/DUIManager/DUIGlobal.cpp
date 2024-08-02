@@ -114,28 +114,6 @@ bool CDUIGlobal::IsLoadProject()
 	return m_bProjectExist;
 }
 
-void CDUIGlobal::InitializeWebkit()
-{
-#ifdef DUITHINKWKE
-	// 初始化
-	wkeInitialize();
-
-	//绑定全局函数
-	jsBindFunction("jsToNative", JsToNative, 2);
-#endif
-
-	return;
-}
-
-void CDUIGlobal::UninitializeWebkit()
-{
-#ifdef DUITHINKWKE
-	wkeFinalize();
-#endif
-
-	return;
-}
-
 bool CDUIGlobal::LoadProjectFromFile(LPCTSTR lpszProjFile)
 {
 	ReleaseResource();
@@ -3329,67 +3307,6 @@ bool CDUIGlobal::TranslateMessage(const LPMSG pMsg)
 
 	return false;
 }
-
-#ifdef DUITHINKWKE
-jsValue JS_CALL CDUIGlobal::JsToNative(jsExecState es)
-{
-#ifdef DUITHINKWKE
-	//查找UI对象
-	CDUIWkeBrowserCtrl *pWkeCtrl = NULL;
-	wkeWebView pWke = jsGetWebView(es);
-	if (pWke)
-	{
-		auto FindIt = g_mapWkeBrowserCtrl.find(pWke);
-		if (FindIt != g_mapWkeBrowserCtrl.end())
-		{
-			pWkeCtrl = FindIt->second;
-		}
-	}
-	if (pWkeCtrl)
-	{
-		int nArg = jsArgCount(es);
-		if (nArg == 2)
-		{
-			jsValue arg1 = jsArg(es, 0);
-			jsValue arg2 = jsArg(es, 1);
-
-			//需要保证两个参数都为字符串
-			if (jsIsString(arg1) && jsIsString(arg2))
-			{
-				CMMString strArg1 = jsToTempStringW(es, arg1);
-				CMMString strArg2 = jsToTempStringW(es, arg2);
-
-				if (_T("refresh") == strArg1)
-				{
-					//本地刷新
-					pWkeCtrl->Navigate(pWkeCtrl->GetUrlCur());
-
-					return jsUndefined();
-				}
-
-				if (pWkeCtrl->GetWkeCallBack())
-				{
-					LPCTSTR lpRet = pWkeCtrl->GetWkeCallBack()->OnJS2Native(pWkeCtrl, strArg1, strArg2, pWkeCtrl->GetListenObj());
-					if (lpRet)
-					{
-#ifdef _UNICODE
-						return jsStringW(es, lpRet);
-#else
-						return jsString(es, lpRet);
-#endif
-					}
-				}
-
-			}
-		}
-	}
-
-	return jsUndefined();
-#endif
-
-	return 0;
-}
-#endif
 
 void CDUIGlobal::RegisterWndNotify(IDUIWndNotify *pIDuiWndNotify)
 {

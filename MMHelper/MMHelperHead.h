@@ -15,22 +15,6 @@
 	#endif
 #endif
 
-#ifndef MMHELPER_DLL_NAME
-	#ifdef _DLL
-		#ifdef _DEBUG
-			#define MMHELPER_DLL_NAME			_T("MMHelperD.dll")			
-		#else		
-			#define MMHELPER_DLL_NAME			_T("MMHelper.dll")			
-		#endif
-	#else
-		#ifdef _DEBUG
-			#define MMHELPER_DLL_NAME			_T("MMHelper_MT_D.dll")			
-		#else		
-			#define MMHELPER_DLL_NAME			_T("MMHelper_MT.dll")			
-		#endif
-	#endif
-#endif 
-
 #ifdef _DEBUG
 	#ifndef MMTRACE
 	#define MMTRACE MMTrace
@@ -93,6 +77,7 @@
 #include <ShlObj.h>
 #include <Shlwapi.h>
 #include <ShellAPI.h>
+#include <winternl.h>
 using namespace std;
 
 #pragma comment(lib, "ws2_32.lib")

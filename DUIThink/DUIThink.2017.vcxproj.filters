@@ -228,9 +228,6 @@
     <ClInclude Include="DUIExport\DefineResource.h">
       <Filter>DUIExport</Filter>
     </ClInclude>
-    <ClInclude Include="DUIControl\DUIWkeBrowserCtrl.h">
-      <Filter>DUIControl</Filter>
-    </ClInclude>
     <ClInclude Include="Define\DefineBase.h">
       <Filter>Define</Filter>
     </ClInclude>
@@ -463,9 +460,6 @@
     </ClCompile>
     <ClCompile Include="DUICore\DUIWnd.cpp">
       <Filter>DUICore</Filter>
-    </ClCompile>
-    <ClCompile Include="DUIControl\DUIWkeBrowserCtrl.cpp">
-      <Filter>DUIControl</Filter>
     </ClCompile>
     <ClCompile Include="DUIControl\DUIAnimateCtrl.cpp">
       <Filter>DUIControl</Filter>

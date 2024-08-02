@@ -161,8 +161,6 @@ public:
 	bool Init(HINSTANCE hInstance);
 	bool UnInit() override;
 	bool IsLoadProject();
-	void InitializeWebkit();
-	void UninitializeWebkit();
 	bool LoadProjectFromFile(LPCTSTR lpszProjFile);
 	bool LoadProjectFromZip(LPCTSTR lpszZipFile, LPCTSTR lpszPassword, LPCTSTR lpszProjName);
 	bool LoadProjectFromZip(void *pData, UINT uDataLen, LPCTSTR lpszPassword, LPCTSTR lpszProjName);
@@ -358,9 +356,6 @@ public:
 
 	//static help
 public:
-#ifdef DUITHINKWKE
-	static jsValue JS_CALL JsToNative(jsExecState es);
-#endif
 	static void RegisterWndNotify(IDUIWndNotify *pIDuiWndNotify);
 	static void UnRegisterWndNotify(IDUIWndNotify *pIDuiWndNotify);
 	static int IsEmoji(TCHAR ch);
