@@ -5,7 +5,7 @@
 
 3、更是一个生态，用户可自定义开发控件在DUIThink编辑器快速调用，更可上传到DUIThink平台形成一个公共的所有使用者都可以使用的控件，控件作者可以获得使用者赞助。
 
-官网：http://www.DUIThink.com/
+官网：http://121.5.53.246/
 
 QQ群：885314879
 
@@ -92,7 +92,7 @@ QQ群：885314879
 
 
 
-Official website: http://www.DUIThink.com/
+Official website: http://121.5.53.246/
 
 
 
