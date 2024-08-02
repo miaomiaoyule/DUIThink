@@ -425,9 +425,9 @@ BOOL CMMService::GetMacAddr(BYTE* szSystemInfo, UINT uSystemInfoLen)
 // 硬盘序列号，注意：有的硬盘没有序列号
 BOOL CMMService::GetHdiskSerial(BYTE* szSystemInfo, UINT uSystemInfoLen)
 {
-	OSVERSIONINFO ovi = {};
-	ovi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-	GetVersionEx(&ovi);
+	OSVERSIONINFOEX ovi = {};
+	ovi.dwOSVersionInfoSize = sizeof(ovi);
+	CMMVersion::GetOSVersionInfo(&ovi);
 
 	if (ovi.dwPlatformId != VER_PLATFORM_WIN32_NT)
 	{

@@ -63,9 +63,6 @@ bool CDUIGlobal::Init(HINSTANCE hInstance)
 	LoadConfigCtrl(Dui_FileDesignCtrl);
 #endif
 
-	//third
-	CMMSvg::GetInstance()->Init();
-
 	return true;
 }
 
