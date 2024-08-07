@@ -86,7 +86,8 @@ bool CMMSvg::ParseImage(IN const std::vector<BYTE> &vecData, IN int nScale, OUT 
 	nHeight = MulDiv((int)size.height, nScale, 100);
 
 	vecPixel.resize(nWidth * nHeight * 4);
-	resvg_render(tree, resvg_transform_identity(), nWidth, nHeight, (char*)vecPixel.data());
+	resvg_fit_to fit_to = { RESVG_FIT_TO_TYPE_ZOOM, fScale };
+	resvg_render(tree, fit_to, resvg_transform_identity(), nWidth, nHeight, (char*)vecPixel.data());
 
 	resvg_tree_destroy(tree);
 
