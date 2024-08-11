@@ -612,3 +612,5 @@
 <CDUIImageBase ResName="CheckExpandUnSelect" Path="CheckExpandUnSelect.png"/>
 
 <CDUIImageBase ResName="Close" Path="Close.png"/>
+
+<CDUIImageBase ResName="2-{A30CF539-0F25-4196-B52E-D49D25D2096C}" Path="2.png"/>

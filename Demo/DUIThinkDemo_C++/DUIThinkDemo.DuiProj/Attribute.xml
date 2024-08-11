@@ -607,6 +607,7 @@
     <a ValueID="3739958374" Text="普通文字、单行、水平靠右、垂直靠上"/>
     <a ValueID="3760824904" Text="TreeNode3_1_1"/>
     <a ValueID="3768650134" Text="TreeView"/>
+    <a ValueID="3771424734" Text="MyName"/>
     <a ValueID="3816077983" Text="SequenceFrame"/>
     <a ValueID="3819596197" Text="首页"/>
     <a ValueID="3826140597" Text="DlgAnimate3DRotateReplaceTB"/>
@@ -654,6 +655,7 @@
     <a ValueID="33192902" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff808080;" Style="32800"/>
     <a ValueID="55055809" FontRes="" ColorRes="" Style="40984"/>
     <a ValueID="143946609" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xffffffff;" Style="32809"/>
+    <a ValueID="150695717" FontRes="" ColorRes="0xff000000;" Style="32804"/>
     <a ValueID="222004861" FontRes="" ColorRes="0xffffffff;0xff000000;" Style="32804"/>
     <a ValueID="310886567" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="" Style="32809"/>
     <a ValueID="355867744" FontRes="" ColorRes="" Style="32801"/>
@@ -721,6 +723,7 @@
     <a ValueID="2190632076" ColorRes="0xffcde8ff;"/>
     <a ValueID="2365708054" ColorRes="0xff000000;"/>
     <a ValueID="2415961374" ColorRes="0xff808080;"/>
+    <a ValueID="3090692486" ColorRes="0xaaaaaaaa;"/>
     <a ValueID="3132787290" ColorRes="0xff804000;"/>
     <a ValueID="3363002323" ColorRes="0xff3f3f41;"/>
     <a ValueID="3574593318" ColorRes="0xffffffff;"/>
@@ -836,6 +839,7 @@
     <a ValueID="1719598206" Position="0-2-0-0-16-10-8-0-16"/>
     <a ValueID="1740418119" Position="0-0-0-0-416-10-0-0-0"/>
     <a ValueID="1779101774" Position="0-0-0-0-318-10-0-0-0"/>
+    <a ValueID="1807144112" Position="0-0-20-0-53-10-0-0-0"/>
     <a ValueID="1807610958" Position="0-0-83-0-100-10-18-0-100"/>
     <a ValueID="2021200749" Position="0-1-0-20-16-12-0-0-16"/>
     <a ValueID="2063663944" Position="1-1-0-10-480-10-0-10-0"/>
@@ -892,7 +896,9 @@
     <a ValueID="3221534916" Position="0-1-0-0-9-10-0-0-0"/>
     <a ValueID="3226910260" Position="0-2-0-0-235-10-23-0-34"/>
     <a ValueID="3232767372" Position="0-0-0-0-0-10-0-0-123"/>
+    <a ValueID="3248802012" Position="0-0-10-10-0-10-30-30-0"/>
     <a ValueID="3273673315" Position="0-0-0-0-0-10-14-0-20"/>
+    <a ValueID="3296403828" Position="1-0-15-0-52-10-179-18-15"/>
     <a ValueID="3312118814" Position="0-0-0-0-0-10-0-0-20"/>
     <a ValueID="3328404376" Position="0-0-2-0-389-10-357-0-115"/>
     <a ValueID="3340092449" Position="0-0-5-0-257-10-0-0-0"/>
@@ -1040,6 +1046,7 @@
     <a ValueID="1190965408" ImageRes="{3901AB19-D453-4EE1-A2B2-0EE5701B9A9A};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="1238034157" ImageRes="0;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="1244252964" ImageRes="{D1C016EE-350C-4335-8573-D9156841952A};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="1" PartAll="3" PartSel="2" Alpha="255" Mask="0" Corner="5,0,5,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1246074460" ImageRes="{C59429A4-D032-4517-B0A5-54D1647C3370};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="3" Source="168,0,252,34" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="1269855703" ImageRes="{3901AB19-D453-4EE1-A2B2-0EE5701B9A9A};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="20,0,40,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="1276942784" ImageRes="CHECK_BOX;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="3" Source="0,0,102,17" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="1278096198" ImageRes="btn_down;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="2" Source="20,0,40,20" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
@@ -1089,6 +1096,7 @@
     <a ValueID="2011327852" ImageRes="logo_360;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="2015760186" ImageRes="CHECK_BOX;" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="6" PartSel="3" Source="34,0,51,17" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="2019929796" ImageRes="{95A0A73A-4E45-4D47-A9AB-5FC7E0F3A641};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2023981958" ImageRes="{5D038E0C-9B44-4CCA-AAF3-9B14175FEF27};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="1" Source="0,0,84,34" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="2048343327" ImageRes="EDIT;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="60,0,90,26" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="2089732844" ImageRes="{66EB709C-5356-4559-894B-CE733B57AFB3};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="2093527046" ImageRes="RepairMovie01;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,1734,102" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
@@ -1146,6 +1154,7 @@
     <a ValueID="2917029745" ImageRes="{6327FE22-6CD6-4104-B0C5-75CA625F71C9};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,80,20" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="2934482382" ImageRes="{66EB709C-5356-4559-894B-CE733B57AFB3};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="2982527498" ImageRes="{F8B7DCBC-923C-4E60-A2FA-1032B9BBFDEE};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,12,19" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3004170866" ImageRes="{EB778ACD-B963-4648-AF85-FE14195C1770};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="4" PartSel="2" Source="84,0,168,34" Alpha="255" Mask="4278190080" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="3017489194" ImageRes="{6327FE22-6CD6-4104-B0C5-75CA625F71C9};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Alpha="255" Mask="0" Corner="4,4,4,4" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="3030283001" ImageRes="ico_report;" HAlign="3" VAlign="1" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,48,48" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
     <a ValueID="3089030350" ImageRes="mac;" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,22,22" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
