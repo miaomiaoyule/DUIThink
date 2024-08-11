@@ -2,7 +2,12 @@
 #include "DlgDemo.h"
 
 //////////////////////////////////////////////////////////////////////////
+#define Time_TrayIcon_ID				(1989)
+#define Time_TrayIcon_Elapse			(1000)
+
+//////////////////////////////////////////////////////////////////////////
 DuiBegin_Message_Map(CDlgDemo, CDUIWnd)
+	Dui_On_Notify_Ctrl(DuiNotify_Timer, IDC_TabViewControls, OnTimerTabViewControls)
 DuiEnd_Message_Map()
 
 CDlgDemo::CDlgDemo(LPCTSTR lpszDuiName)
@@ -33,11 +38,28 @@ LRESULT CDlgDemo::OnWndCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bo
 
 			break;
 		}
+		case WM_DEMO_TRAYICON:
+		{
+			bHandled = true;
+
+			OnWMDemoTrayIcon(wParam, lParam);
+
+			break;
+		}
 		default:
 			break;
 	}
 
 	return __super::OnWndCustomMessage(uMsg, wParam, lParam, bHandled);
+}
+
+void CDlgDemo::OnFindControl()
+{
+	__super::OnFindControl();
+
+	Dui_DDX_Control(CDUIContainerCtrl, m_pTabViewControls, IDC_TabViewControls)
+
+	return;
 }
 
 void CDlgDemo::OnInitDialog()
@@ -46,13 +68,10 @@ void CDlgDemo::OnInitDialog()
 
 	//control
 	{
-		MMInterfaceHelper(CDUIContainerCtrl, m_pWndManager->FindControl(IDC_TabViewControls), pTabControl);
-		if (NULL == pTabControl) return;
-
-		m_ProgressView.Attach(MMInterfaceHelper(CDUIContainerCtrl, pTabControl->FindSubControl(IDC_HorizProgressView)));
-		m_CheckBoxView.Attach(MMInterfaceHelper(CDUIContainerCtrl, pTabControl->FindSubControl(IDC_VertCheckBoxView)));
-		m_RadioBoxView.Attach(MMInterfaceHelper(CDUIContainerCtrl, pTabControl->FindSubControl(IDC_VertRadioBoxView)));
-		m_ComboxView.Attach(MMInterfaceHelper(CDUIContainerCtrl, pTabControl->FindSubControl(IDC_VertComboxView)));
+		m_ProgressView.Attach(MMInterfaceHelper(CDUIContainerCtrl, m_pTabViewControls->FindSubControl(IDC_HorizProgressView)));
+		m_CheckBoxView.Attach(MMInterfaceHelper(CDUIContainerCtrl, m_pTabViewControls->FindSubControl(IDC_VertCheckBoxView)));
+		m_RadioBoxView.Attach(MMInterfaceHelper(CDUIContainerCtrl, m_pTabViewControls->FindSubControl(IDC_VertRadioBoxView)));
+		m_ComboxView.Attach(MMInterfaceHelper(CDUIContainerCtrl, m_pTabViewControls->FindSubControl(IDC_VertComboxView)));
 	}
 
 	//usage
@@ -76,7 +95,29 @@ void CDlgDemo::OnInitDialog()
 		m_QQView.Attach(MMInterfaceHelper(CDUIContainerCtrl, pTabMain->FindSubControl(IDC_VertQQView)));
 	}
 
+	//tray
+	{
+		m_TrayIcon.CreateTrayIcon(m_hWnd, CDUIGlobal::GetInstance()->GetInstanceHandle(), IDI_DUITHINKDEMOC, _T("DUIThinkDemo"), WM_DEMO_TRAYICON);
+		m_pTabViewControls->SetTimer(Time_TrayIcon_ID, Time_TrayIcon_Elapse);
+	}
+
 	CenterWindow();
+
+	return;
+}
+
+void CDlgDemo::OnTimerTabViewControls(const DuiNotify &Notify)
+{
+	switch (Notify.wParam)
+	{
+		case Time_TrayIcon_ID:
+		{
+			m_bShowTrayIcon = !m_bShowTrayIcon;
+			m_TrayIcon.ShowIcon(m_bShowTrayIcon);
+
+			break;
+		}
+	}
 
 	return;
 }
@@ -85,6 +126,22 @@ void CDlgDemo::OnWMDemoDpiWnd(WPARAM wParam, LPARAM lParam)
 {
 	HWND hWndDpiDlg = (HWND)wParam;
 	m_DpiDlgView.SetDpiDlgHandle(hWndDpiDlg);
+
+	return;
+}
+
+void CDlgDemo::OnWMDemoTrayIcon(WPARAM wParam, LPARAM lParam)
+{
+	if (WM_LBUTTONDOWN == lParam)
+	{
+
+	}
+	else if (WM_LBUTTONUP == lParam)
+	{
+	}
+	else if (WM_MOUSEMOVE == lParam)
+	{
+	}
 
 	return;
 }

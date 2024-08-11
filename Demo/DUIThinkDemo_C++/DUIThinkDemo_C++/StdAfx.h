@@ -28,6 +28,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 #include "../DUIThinkDemo.DuiProj/ResourceCtrlID.h"
+#include "Resource.h"
 #include "Define.h"
 #include "BaseControl/StaticView/StaticView.h"
 #include "BaseControl/CheckBoxView/CheckBoxView.h"

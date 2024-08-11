@@ -12,33 +12,48 @@ public:
 	CDlgDemo(LPCTSTR lpszDuiName);
 	~CDlgDemo();
 
-	//variant
+	//control
 protected:
 	//control
+	CDUIContainerCtrl *					m_pTabViewControls = NULL;
+
+	//control view
 	CStaticView							m_StaticView;
 	CCheckBoxView						m_CheckBoxView;
 	CRadioBoxView						m_RadioBoxView;
 	CProgressView						m_ProgressView;
 	CComboxView							m_ComboxView;
 
-	//usage
+	//usage view
 	CDpiDlgView							m_DpiDlgView;
 	CSvgImageView						m_SvgImageView;
 	CSwitchSkinView						m_SwitchSkinView;
 	CAnimateDlgView						m_AnimateDlgView;
 
-	//qq
+	//qq view
 	CQQView								m_QQView;
+
+	//variant
+protected:
+	//tray
+	CMMTrayIcon							m_TrayIcon;
+	bool								m_bShowTrayIcon = true;
 
 	//override
 protected:
 	LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnWndCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) override;
+	void OnFindControl() override;
 	void OnInitDialog() override;
+
+	//notify
+protected:
+	void OnTimerTabViewControls(const DuiNotify &Notify);
 
 	//message
 protected:
 	void OnWMDemoDpiWnd(WPARAM wParam, LPARAM lParam);
+	void OnWMDemoTrayIcon(WPARAM wParam, LPARAM lParam);
 };
 
 //////////////////////////////////////////////////////////////////////////

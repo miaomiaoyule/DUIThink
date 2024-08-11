@@ -33,6 +33,10 @@ public:
 	bool SetIcon(UINT uIconResourceID);
 	HICON GetIcon() const;
 	void ShowIcon(bool bShow);
+
+	//static
+public:
+	static RECT GetTrayIconPos(HWND hWndOwner);
 };
 
 //////////////////////////////////////////////////////////////////////////
