@@ -18,12 +18,22 @@
 //////////////////////////////////////////////////////////////////////////
 #include "../../../DUIThink/DUIThinkHead.h"
 
+#ifdef _WIN64
+#ifdef _DEBUG
+#pragma comment(lib, "../../../lib/MMHelper.201764D.lib")
+#pragma comment(lib, "../../../lib/DUIThink.201764D.lib")
+#else
+#pragma comment(lib, "../../../lib/MMHelper.201764.lib")
+#pragma comment(lib, "../../../lib/DUIThink.201764.lib")
+#endif
+#else
 #ifdef _DEBUG
 #pragma comment(lib, "../../../lib/MMHelper.2017D.lib")
 #pragma comment(lib, "../../../lib/DUIThink.2017D.lib")
 #else
 #pragma comment(lib, "../../../lib/MMHelper.2017.lib")
 #pragma comment(lib, "../../../lib/DUIThink.2017.lib")
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////////
@@ -43,6 +53,7 @@
 #include "QQ/DlgQQFace.h"
 #include "QQ/DlgQQChat.h"
 #include "DlgDpi.h"
+#include "DlgChatTip.h"
 #include "DlgDemo.h"
 
 //////////////////////////////////////////////////////////////////////////

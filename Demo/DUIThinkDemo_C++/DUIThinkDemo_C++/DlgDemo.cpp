@@ -3,7 +3,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 #define Time_TrayIcon_ID				(1989)
-#define Time_TrayIcon_Elapse			(1000)
+#define Time_TrayIcon_Elapse			(450)
 
 //////////////////////////////////////////////////////////////////////////
 DuiBegin_Message_Map(CDlgDemo, CDUIWnd)
@@ -141,6 +141,39 @@ void CDlgDemo::OnWMDemoTrayIcon(WPARAM wParam, LPARAM lParam)
 	}
 	else if (WM_MOUSEMOVE == lParam)
 	{
+		//icon pos
+		CDUIRect rcTrayIcon = CMMTrayIcon::GetTrayIconPos(m_hWnd);
+
+		//win11
+		bool bWin11 = false;
+		if (rcTrayIcon.Empty())
+		{
+			bWin11 = true;
+
+			CDUIPoint ptMouse;
+			GetCursorPos(&ptMouse);
+
+			HWND hWndShellTray = FindWindow(_T("Shell_TrayWnd"), NULL);
+			GetWindowRect(hWndShellTray, &rcTrayIcon);
+			rcTrayIcon.left = ptMouse.x - 1;
+			rcTrayIcon.right = ptMouse.x + 1;
+		}
+
+		//verify
+		if (m_pDlgChatTip && IsWindow(*m_pDlgChatTip))
+		{
+			if (bWin11)
+			{
+				m_pDlgChatTip->PerformRefreshMonitorPos(rcTrayIcon);
+			}
+
+			return;
+		}
+
+		//dlg chat tip
+		MMSafeDelete(m_pDlgChatTip);
+		m_pDlgChatTip = new CDlgChatTip(rcTrayIcon);
+		m_pDlgChatTip->Create(m_hWnd, _T(""), DUI_WNDSTYLE_DIALOG, DUI_WNDSTYLE_EX_DIALOG | WS_EX_TOPMOST);
 	}
 
 	return;

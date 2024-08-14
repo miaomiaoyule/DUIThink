@@ -71,8 +71,6 @@
 
 <CDUIImageBase ResName="32" Path="32.gif"/>
 
-<CDUIImageBase ResName="32X32" Path="32X32.png"/>
-
 <CDUIImageBase ResName="33" Path="33.gif"/>
 
 <CDUIImageBase ResName="34" Path="34.gif"/>
@@ -104,8 +102,6 @@
 <CDUIImageBase ResName="47" Path="47.gif"/>
 
 <CDUIImageBase ResName="48" Path="48.gif"/>
-
-<CDUIImageBase ResName="48X48" Path="48X48.png"/>
 
 <CDUIImageBase ResName="49" Path="49.gif"/>
 
@@ -612,3 +608,7 @@
 <CDUIImageBase ResName="CheckExpandUnSelect" Path="CheckExpandUnSelect.png"/>
 
 <CDUIImageBase ResName="Close" Path="Close.png"/>
+
+<CDUIImageBase ResName="48X48" Path="48X48.png"/>
+
+<CDUIImageBase ResName="32X32" Path="32X32.png"/>

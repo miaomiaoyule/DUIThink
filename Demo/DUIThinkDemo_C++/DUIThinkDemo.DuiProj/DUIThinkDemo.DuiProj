@@ -32,3 +32,5 @@
 <DirectUI DuiName="QQChatItem" DuiType="2" DuiFile="QQChatItem.xml"/>
 
 <DirectUI DuiName="DlgQQFace" DuiType="0" DuiFile="DlgQQFace.xml"/>
+
+<DirectUI DuiName="DlgChatTip" DuiType="0" DuiFile="DlgChatTip.xml"/>
