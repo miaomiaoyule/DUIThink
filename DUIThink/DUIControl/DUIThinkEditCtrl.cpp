@@ -997,7 +997,7 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName
 			{
 				for (auto &RichTextItemDraw : It->second)
 				{
-					LineVecRichTextDraw.insert(LineVecRichTextDraw.begin() + nIndexInsert, RichTextItemDraw);
+					LineVecRichTextDraw.insert(LineVecRichTextDraw.begin() + nIndexInsert++, RichTextItemDraw);
 				}
 			}
 		};
