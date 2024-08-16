@@ -85,5 +85,5 @@ DTDesigner (Closed source) :
 - 6、Support Ctrl+C, Ctrl+V, Ctrl+Z, and Ctrl+Y
 - 7、Copy the ui to another view, no need to make the ui again
 - 8、support developer custom controls
-- 9、real-time preview of the dpi effect of the form
+- 9、real-time preview of the dpi effect of the form  
 Download: http://121.5.53.246/DTDesigner2.0.zip
