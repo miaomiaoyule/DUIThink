@@ -341,21 +341,7 @@ VecDuiRichTextItem CDUIGlobal::ParseVecRichTextItem(LPCSTR lpszValue)
 			{
 				if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriRichTextItemFontRes))
 				{
-					switch (CDUIGlobal::GetInstance()->GetResVersion())
-					{
-						case DuiResVersion_0:
-						{
-							RichTextItem.vecFontResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), (";"));
-
-							break;
-						}
-						default:
-						{
-							RichTextItem.vecFontResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), (";"), CP_UTF8);
-
-							break;
-						}
-					}
+					RichTextItem.vecFontResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), (";"), CP_UTF8);
 					
 					continue;
 				}
@@ -367,21 +353,7 @@ VecDuiRichTextItem CDUIGlobal::ParseVecRichTextItem(LPCSTR lpszValue)
 				}
 				if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriRichTextItemText))
 				{
-					switch (CDUIGlobal::GetInstance()->GetResVersion())
-					{
-						case DuiResVersion_0:
-						{
-							RichTextItem.strText = pNodeAttribute->Value();
-
-							break;
-						}
-						default:
-						{
-							RichTextItem.strText = CA2CT(pNodeAttribute->Value(), CP_UTF8);
-
-							break;
-						}
-					}
+					RichTextItem.strText = CA2CT(pNodeAttribute->Value(), CP_UTF8);
 
 					continue;
 				}

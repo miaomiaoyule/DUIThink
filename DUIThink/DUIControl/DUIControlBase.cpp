@@ -1735,31 +1735,12 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeToolTipBkColor, _T("ToolTipBkColor"), _T(""), m_AttributeGroupToolTip);
 	DuiCreateAttribute(m_AttributeToolTipTextColor, _T("ToolTipTextColor"), _T(""), m_AttributeGroupToolTip);
 
-	//compatible
-	if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_4)
-	{
-		CDUIAttributeSize RoundSize;
-		DuiCreateAttribute(RoundSize, _T("RoundSize"), _T(""), m_AttributeGroupBk);
-		SetRoundCorner({ RoundSize.cx, RoundSize.cx, RoundSize.cy, RoundSize.cy });
-		m_AttributeGroupBk.RemoveAttribute(&RoundSize);
-	}
-
 	return;
 }
 
 void CDUIControlBase::InitComplete()
 {
 	__super::InitComplete();
-
-	//compatible
-	if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_4)
-	{
-		CDUIRect rcRoundCorner = GetRoundCorner();
-		if (rcRoundCorner.left > 0 || rcRoundCorner.top > 0 || rcRoundCorner.right > 0 || rcRoundCorner.bottom > 0)
-		{
-			m_AttributeRoundCorner.NotifyChange();
-		}
-	}
 
 	//visible
 	DuiInitAttriVisible(m_AttributeToolTipBkColor, false);
