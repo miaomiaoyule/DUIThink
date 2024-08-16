@@ -1,13 +1,15 @@
 # Chinese introduction DUIThink
+DUIThink是一个Windows下免费开源的DirectUI界面库，包含了一整套桌面软件的开发部件，与其说这是一个界面库，不如说它是一个开发框架，功能组件有（线程池、文件操作、iocp网络模型、文件监听、注册表监听、文件拖拽、命令行解析、磁吸算法、内存池、分辨率转换、字符串操作等）。您完全可以直接使用这个框架来开发任何你想要的桌面应用。  
+  
 官网：http://121.5.53.246/   
 QQ群：885314879   
-视频教程：https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1  
+视频教程：https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1    
+  
+# 初衷：  
+- mfc做不了绚丽的ui，很多地方需要自绘，修改起来也麻烦   
+- 手写xml上手难，效率低下，预览调整也麻烦，非所见即所得，一些控件属性记不住还要对照属性表使用  
 
-初衷：   
-    mfc做不了绚丽的ui，很多地方需要自绘，修改起来也麻烦   
-    一些ui库手写xml上手难，效率低下，预览调整也麻烦，非所见即所得，一些控件属性记不住还要对照属性表使用  
-
-DUIThink库：  
+# DUIThink库：  
 - 1、控件布局靠上、靠下、靠左、靠右、居中、相对、绝对   
 - 2、控件大小固定宽高、最大最小宽高、根据文本自动调整宽高、根据子控件自动调整宽高   
 - 3、控件背景颜色、图片、圆角、渐变颜色   
@@ -30,7 +32,7 @@ DUIThink库：
 - 20、一键换肤功能，只需要一行代码  
 - 21、控件自定义Bitmap背景  
 
-DTDesigner设计器（闭源）：  
+# DTDesigner设计器（闭源）：  
 - 1、像mfc一样自动生成窗体类、控件变量、控件事件代码  
 - 2、任意拖放、对齐控件，修改控件属性所见即所得  
 - 3、图片、字体、颜色资源一览无余  
@@ -41,19 +43,22 @@ DTDesigner设计器（闭源）：
 - 8、支持开发者自定义控件  
 - 9、实时预览窗体各dpi效果  
 下载：http://121.5.53.246/DTDesigner2.0.zip  
-
-
+ 
+   
+  
+  
 # English introduction DUIThink
-
+DUIThink is a free and open source DirectUI interface library for Windows, which contains a complete set of desktop software development components. It is not so much an interface library as a development framework. The functional components are (thread pool, file operation, iocp network model, file listening, registry listening, file dragging, command line parsing, magnetic algorithm, memory pool, resolution conversion, string operation, etc.). You can use this framework directly to develop any desktop application you want.
+* * *
 Official website: http://121.5.53.246/  
 QQ group: 885314879  
 Video tutorial: https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1  
 
-Original Intention:  
-mfc can not do gorgeous ui, many places need to draw themselves, modify it is also troublesome  
-Some ui libraries handwriting xml is inefficient, preview adjustment is also troublesome, what you see is what you get, some control properties can not remember but also use against the property table  
+# Original Intention:  
+- mfc can not do gorgeous ui, many places need to draw themselves, modify it is also troublesome  
+- handwriting xml is inefficient, preview adjustment is also troublesome, what you see is what you get, some control properties can not remember but also use against the property table  
 
-DUIThink library:  
+# DUIThink library:  
 - 1、control layout on the top, bottom, left, right, center, relative, absolute  
 - 2、the control size fixed width and height, maximum and minimum width and height, automatically adjust the width and height according to the text, automatically adjust the width and height according to the child control  
 - 3、control background color, picture, rounded corner, gradient color  
@@ -76,7 +81,7 @@ DUIThink library:
 - 20、one-click skin function, only need a line of code
 - 21、control custom Bitmap background
 
-DTDesigner (Closed source) :
+# DTDesigner (Closed source) :
 - 1、like mfc automatically generate form classes, control variables, control event code
 - 2、any drag and drop, align controls, modify control properties wysiWYG
 - 3、picture, font, color resources at a glance
