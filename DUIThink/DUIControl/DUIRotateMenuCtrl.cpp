@@ -493,7 +493,7 @@ void CDUIRotateMenuCtrl::PaintBkColor(HDC hDC)
 
 void CDUIRotateMenuCtrl::OnDuiItemButtonDown(const DuiNotify &Notify)
 {
-	if (Notify.pNotifyCtrl != this) return;
+	if (Notify.uCtrlID != GetCtrlID()) return;
 
 	m_ptMouseDown = Notify.ptMouse;
 	m_ptLastMousePos = Notify.ptMouse;
@@ -503,7 +503,7 @@ void CDUIRotateMenuCtrl::OnDuiItemButtonDown(const DuiNotify &Notify)
 
 void CDUIRotateMenuCtrl::OnDuiItemMouseMove(const DuiNotify &Notify)
 {
-	if (Notify.pNotifyCtrl != this || NULL == m_pWndManager) return;
+	if (Notify.uCtrlID != GetCtrlID() || NULL == m_pWndManager) return;
 
 	DuiNotify::tagDuiNotifyExtend NotifyExtend = Notify.DuiNotifyExtend;
 	int nIndex = NotifyExtend.ListView.nIndexItem;

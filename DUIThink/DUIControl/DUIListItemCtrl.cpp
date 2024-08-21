@@ -1051,7 +1051,7 @@ void CDUIListItemCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPA
 
 	DuiNotify Notify;
 	Notify.NotifyType = NotifyType;
-	Notify.pNotifyCtrl = m_pOwner;
+	Notify.uCtrlID = m_pOwner->GetCtrlID();
 	Notify.wParam = wParam;
 	Notify.lParam = lParam;
 	Notify.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_ListView;

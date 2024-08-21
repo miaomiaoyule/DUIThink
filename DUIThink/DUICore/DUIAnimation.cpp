@@ -407,7 +407,7 @@ void CDUIAnimationDrag::OnDuiWinDragEnter(const DuiNotify &Notify)
 {
 	if (NULL == m_pBindContainerCtrl
 		|| NULL == m_pBindContainerCtrl->GetWndManager()
-		|| Notify.pNotifyCtrl != m_pBindContainerCtrl
+		|| Notify.uCtrlID != m_pBindContainerCtrl->GetCtrlID()
 		|| false == m_pBindContainerCtrl->IsAnimateDrag()
 		|| NULL == m_pBindContainerCtrl->GetWndManager()->GetDropData()
 		|| m_pDragingCtrl) return;
@@ -459,7 +459,7 @@ void CDUIAnimationDrag::OnDuiWinDragLeave(const DuiNotify &Notify)
 	if (NULL == m_pBindContainerCtrl
 		|| NULL == m_pBindContainerCtrl->GetWndManager()
 		|| NULL == m_pDragingCtrl
-		|| Notify.pNotifyCtrl != m_pBindContainerCtrl) return;
+		|| Notify.uCtrlID != m_pBindContainerCtrl->GetCtrlID()) return;
 
 	if (Dui_CtrlIDInner_DragTmp != m_pDragingCtrl->GetCtrlID()) return;
 
@@ -481,7 +481,7 @@ void CDUIAnimationDrag::OnDuiWinDragOver(const DuiNotify &Notify)
 	if (NULL == m_pBindContainerCtrl
 		|| NULL == m_pBindContainerCtrl->GetWndManager()
 		|| NULL == m_pDragingCtrl
-		|| Notify.pNotifyCtrl != m_pBindContainerCtrl) return;
+		|| Notify.uCtrlID != m_pBindContainerCtrl->GetCtrlID()) return;
 
 	if (false == ::PtInRect(&m_pBindContainerCtrl->GetAbsoluteRect(), m_pBindContainerCtrl->GetWndManager()->GetMousePosLast())) return;
 
@@ -1104,7 +1104,7 @@ void CDUIAnimationWnd::StartAnimationWnd(bool bShow/* = true*/)
 	//notify
 	DuiNotify Notify;
 	Notify.NotifyType = DuiNotify_WndAnimateStart;
-	Notify.pNotifyCtrl = pRootCtrl;
+	Notify.uCtrlID = pRootCtrl->GetCtrlID();
 	Notify.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_WndAnimate;
 	Notify.DuiNotifyExtend.WndAnimate.bShow = m_bShow;
 	pWndManager->SendNotify(Notify);
@@ -1149,7 +1149,7 @@ void CDUIAnimationWnd::StopAnimationWnd()
 	//notify
 	DuiNotify Notify;
 	Notify.NotifyType = DuiNotify_WndAnimateFinish;
-	Notify.pNotifyCtrl = GetRootCtrl();
+	Notify.uCtrlID = pRootCtrl->GetCtrlID();
 	Notify.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_WndAnimate;
 	Notify.DuiNotifyExtend.WndAnimate.bShow = m_bShow;
 	pWndManager->SendNotify(Notify);

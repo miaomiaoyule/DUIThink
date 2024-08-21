@@ -658,8 +658,7 @@ void CDUIWndManager::ReapControl(CDUIControlBase *pControl)
 	for (int i = m_vecAsynNotify.size() - 1; i >= 0; i--)
 	{
 		DuiNotify &Notify = m_vecAsynNotify[i];
-		if (Notify.pNotifyCtrl == pControl
-			|| Notify.DuiNotifyExtend.TreeView.pTreeNode == pControl
+		if (Notify.DuiNotifyExtend.TreeView.pTreeNode == pControl
 			|| Notify.DuiNotifyExtend.TreeView.pRootNode == pControl
 			|| Notify.DuiNotifyExtend.TreeView.pRootView == pControl)
 		{
@@ -1251,18 +1250,20 @@ bool CDUIWndManager::RemoveINotify(IDUINotify *pINotify)
 
 void CDUIWndManager::SendNotify(DuiNotify &Notify)
 {
-	if (NULL == Notify.pNotifyCtrl) return;
-
 	Notify.ptMouse = m_ptMousePosLast;
 	Notify.wKeyState = MapKeyState();
 	Notify.dwTimestamp = ::GetTickCount();
 
-	for (int n = 0; n < Notify.pNotifyCtrl->GetControlCallBackCount(); n++)
+	CDUIControlBase *pControl = FindControl(Notify.uCtrlID);
+	if (pControl)
 	{
-		IDUIControlCallBack *pICallBack = Notify.pNotifyCtrl->GetControlCallBack(n);
-		if (NULL == pICallBack) continue;
+		for (int n = 0; n < pControl->GetControlCallBackCount(); n++)
+		{
+			IDUIControlCallBack *pICallBack = pControl->GetControlCallBack(n);
+			if (NULL == pICallBack) continue;
 
-		pICallBack->OnNotify(Notify.pNotifyCtrl, Notify);
+			pICallBack->OnNotify(pControl, Notify);
+		}
 	}
 	for (int n = 0; n < m_vecINotify.size(); n++)
 	{
@@ -1281,7 +1282,7 @@ void CDUIWndManager::SendNotify(CDUIControlBase *pControl, enDuiNotifyType Notif
 
 	DuiNotify Notify;
 	Notify.NotifyType = NotifyType;
-	Notify.pNotifyCtrl = pControl;
+	Notify.uCtrlID = pControl->GetCtrlID();
 	Notify.wParam = wParam;
 	Notify.lParam = lParam;
 	SendNotify(Notify);
@@ -1291,16 +1292,9 @@ void CDUIWndManager::SendNotify(CDUIControlBase *pControl, enDuiNotifyType Notif
 
 void CDUIWndManager::PostNotify(DuiNotify &Notify)
 {
-	if (NULL == Notify.pNotifyCtrl || this != Notify.pNotifyCtrl->GetWndManager()) return;
-
-	Notify.NotifyType = Notify.NotifyType;
-	Notify.pNotifyCtrl = Notify.pNotifyCtrl;
-	Notify.wParam = Notify.wParam;
-	Notify.lParam = Notify.lParam;
 	Notify.ptMouse = m_ptMousePosLast;
 	Notify.wKeyState = MapKeyState();
 	Notify.dwTimestamp = ::GetTickCount();
-	Notify.DuiNotifyExtend = Notify.DuiNotifyExtend;
 	m_vecAsynNotify.push_back(Notify);
 
 	PostAppMsg();
@@ -1314,7 +1308,7 @@ void CDUIWndManager::PostNotify(CDUIControlBase *pControl, enDuiNotifyType Notif
 
 	DuiNotify Notify;
 	Notify.NotifyType = NotifyType;
-	Notify.pNotifyCtrl = pControl;
+	Notify.uCtrlID = pControl->GetCtrlID();
 	Notify.wParam = wParam;
 	Notify.lParam = lParam;
 	PostNotify(Notify);
@@ -2913,14 +2907,16 @@ void CDUIWndManager::DispatchNotify()
 		auto Notify = m_vecAsynNotify.front();
 		m_vecAsynNotify.erase(m_vecAsynNotify.begin());
 
-		if (NULL == Notify.pNotifyCtrl) continue;
-
-		for (int n = 0; n < Notify.pNotifyCtrl->GetControlCallBackCount(); n++)
+		CDUIControlBase *pControl = FindControl(Notify.uCtrlID);
+		if (pControl)
 		{
-			IDUIControlCallBack *pICallBack = Notify.pNotifyCtrl->GetControlCallBack(n);
-			if (NULL == pICallBack) continue;
+			for (int n = 0; n < pControl->GetControlCallBackCount(); n++)
+			{
+				IDUIControlCallBack *pICallBack = pControl->GetControlCallBack(n);
+				if (NULL == pICallBack) continue;
 
-			pICallBack->OnNotify(Notify.pNotifyCtrl, Notify);
+				pICallBack->OnNotify(pControl, Notify);
+			}
 		}
 		for (int n = 0; n < m_vecINotify.size(); n++)
 		{

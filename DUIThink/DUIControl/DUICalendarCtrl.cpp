@@ -897,7 +897,7 @@ void CDUICalendarCtrl::InitComplete()
 
 void CDUICalendarCtrl::OnDuiMouseWheel(const DuiNotify &Notify)
 {
-	if (Notify.pNotifyCtrl != m_pListDayCtrl1 && Notify.pNotifyCtrl != m_pListDayCtrl2) return;
+	if (Notify.uCtrlID != m_pListDayCtrl1->GetCtrlID() && Notify.uCtrlID != m_pListDayCtrl2->GetCtrlID()) return;
 
 	switch ((int)(short)HIWORD(Notify.wParam))
 	{
@@ -921,9 +921,9 @@ void CDUICalendarCtrl::OnDuiMouseWheel(const DuiNotify &Notify)
 void CDUICalendarCtrl::OnDuiItemSelected(const DuiNotify &Notify)
 {
 	if (NULL == m_pListDayCtrl1 || NULL == m_pListDayCtrl2) return;
-	if (m_pListDayCtrl1 != Notify.pNotifyCtrl && m_pListDayCtrl2 != Notify.pNotifyCtrl) return;
+	if (m_pListDayCtrl1->GetCtrlID() != Notify.uCtrlID && m_pListDayCtrl2->GetCtrlID() != Notify.uCtrlID) return;
 
-	CDUIListViewCtrl *pListDays = m_pListDayCtrl1 == Notify.pNotifyCtrl ? m_pListDayCtrl1 : m_pListDayCtrl2;
+	CDUIListViewCtrl *pListDays = m_pListDayCtrl1->GetCtrlID() == Notify.uCtrlID ? m_pListDayCtrl1 : m_pListDayCtrl2;
 	CDUIListItemCtrl *pDay = pListDays->GetChildAt(pListDays->GetCurSel());
 
 	if (NULL == pDay) return;
@@ -938,7 +938,7 @@ void CDUICalendarCtrl::OnDuiItemSelected(const DuiNotify &Notify)
 
 void CDUICalendarCtrl::OnDuiBtnLeft(const DuiNotify &Notify)
 {
-	if (m_pBtnLeftCtrl != Notify.pNotifyCtrl) return;
+	if (m_pBtnLeftCtrl->GetCtrlID() != Notify.uCtrlID) return;
 
 	SwitchYearMonth(true);
 
@@ -947,7 +947,7 @@ void CDUICalendarCtrl::OnDuiBtnLeft(const DuiNotify &Notify)
 
 void CDUICalendarCtrl::OnDuiBtnRight(const DuiNotify &Notify)
 {
-	if (m_pBtnRightCtrl != Notify.pNotifyCtrl) return;
+	if (m_pBtnRightCtrl->GetCtrlID() != Notify.uCtrlID) return;
 
 	SwitchYearMonth(false);
 
@@ -958,7 +958,7 @@ void CDUICalendarCtrl::OnDuiBtnYear(const DuiNotify &Notify)
 {
 	if (NULL == m_pWndManager
 		|| NULL == m_pBtnYearCtrl
-		|| Notify.pNotifyCtrl != m_pBtnYearCtrl) return;
+		|| Notify.uCtrlID != m_pBtnYearCtrl->GetCtrlID()) return;
 
 	CDUIMenuWnd YearWnd;
 	MMSafeDelete(g_pDuiMenuWndRoot);
@@ -1040,7 +1040,7 @@ void CDUICalendarCtrl::OnDuiBtnMonth(const DuiNotify &Notify)
 {
 	if (NULL == m_pWndManager
 		|| NULL == m_pBtnMonthCtrl
-		|| Notify.pNotifyCtrl != m_pBtnMonthCtrl) return;
+		|| Notify.uCtrlID != m_pBtnMonthCtrl->GetCtrlID()) return;
 
 	CDUIMenuWnd MonthWnd;
 	MMSafeDelete(g_pDuiMenuWndRoot);

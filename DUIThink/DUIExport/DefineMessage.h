@@ -128,7 +128,7 @@ typedef struct tagDuiNotify
 	};
 
 	enDuiNotifyType						NotifyType = DuiNotify_Invalid;
-	CDUIControlBase *					pNotifyCtrl = NULL;
+	UINT								uCtrlID = 0;
 	DWORD								dwTimestamp = 0;
 	POINT								ptMouse = {};
 	WORD								wKeyState = 0;
@@ -140,7 +140,6 @@ typedef struct tagDuiNotify
 		enDuiNotifyExtendType			Type = DuiNotifyExtend_None;
 		struct
 		{
-			CDUIComboxCtrl *			pComboxCtrl;
 			int							nIndexItem;
 		}Combox;
 		struct tagDuiNotifyListView

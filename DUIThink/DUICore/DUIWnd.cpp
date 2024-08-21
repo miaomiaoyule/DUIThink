@@ -6,15 +6,12 @@ DuiEnd_Message_Map()
 
 static const Dui_MsgMapEntry * DuiFindMessageEntry(const Dui_MsgMapEntry *lpEntry, const DuiNotify &Notify)
 {
-	if (NULL == Notify.pNotifyCtrl) return NULL;
-
-	UINT uCtrlID = Notify.pNotifyCtrl->GetCtrlID();
 	const Dui_MsgMapEntry *pNotifyEntry = NULL;
 	while (lpEntry->nSig != DuiSign_end)
 	{
 		if (lpEntry->Notify == Notify.NotifyType)
 		{
-			if (0 != lpEntry->uCtrlID && lpEntry->uCtrlID == uCtrlID)
+			if (0 != lpEntry->uCtrlID && lpEntry->uCtrlID == Notify.uCtrlID)
 			{
 				return lpEntry;
 			}
@@ -445,13 +442,11 @@ void CDUIWnd::OnDuiClick(const DuiNotify &Notify)
 {
 	if (NULL == m_pWndManager) return;
 
-	UINT uCtrlID = Notify.pNotifyCtrl->GetCtrlID();
-	
-	if (Dui_CtrlIDInner_BtnClose == uCtrlID
-		|| Dui_CtrlIDInner_BtnCancel == uCtrlID
-		|| Dui_CtrlIDInner_BtnOk == uCtrlID)
+	if (Dui_CtrlIDInner_BtnClose == Notify.uCtrlID
+		|| Dui_CtrlIDInner_BtnCancel == Notify.uCtrlID
+		|| Dui_CtrlIDInner_BtnOk == Notify.uCtrlID)
 	{
-		m_nCtrlIDClose = uCtrlID;
+		m_nCtrlIDClose = Notify.uCtrlID;
 
 		if (AnimateWnd_None != m_pWndManager->GetAnimateWndType())
 		{
@@ -460,23 +455,23 @@ void CDUIWnd::OnDuiClick(const DuiNotify &Notify)
 			return;
 		}
 
-		Close(Dui_CtrlIDInner_BtnOk == uCtrlID ? uCtrlID : Dui_CtrlIDInner_BtnCancel);
+		Close(Dui_CtrlIDInner_BtnOk == Notify.uCtrlID ? Notify.uCtrlID : Dui_CtrlIDInner_BtnCancel);
 		
 		return;
 	}
-	else if (Dui_CtrlIDInner_BtnMin == uCtrlID)
+	else if (Dui_CtrlIDInner_BtnMin == Notify.uCtrlID)
 	{
 		SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
 		
 		return;
 	}
-	else if (Dui_CtrlIDInner_BtnMax == uCtrlID)
+	else if (Dui_CtrlIDInner_BtnMax == Notify.uCtrlID)
 	{
 		SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 		
 		return;
 	}
-	else if (Dui_CtrlIDInner_BtnRestore == uCtrlID)
+	else if (Dui_CtrlIDInner_BtnRestore == Notify.uCtrlID)
 	{
 		SendMessage(WM_SYSCOMMAND, SC_RESTORE, 0);
 		
