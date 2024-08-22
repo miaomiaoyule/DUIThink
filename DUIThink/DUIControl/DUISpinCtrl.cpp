@@ -202,7 +202,7 @@ void CDUISpinCtrl::OnDuiClickBtnUp(const DuiNotify &Notify)
 {
 	if (NULL == m_pBtnUpCtrl
 		|| NULL == m_pEditValueCtrl
-		|| Notify.uCtrlID != m_pBtnUpCtrl->GetCtrlID()) return;
+		|| Notify.pNotifyCtrl != m_pBtnUpCtrl) return;
 
 	double lfNumSrc = _tcstod(m_pEditValueCtrl->GetText(), NULL) + 1;
 
@@ -215,7 +215,7 @@ void CDUISpinCtrl::OnDuiClickBtnDown(const DuiNotify &Notify)
 {
 	if (NULL == m_pBtnDownCtrl
 		|| NULL == m_pEditValueCtrl
-		|| Notify.uCtrlID != m_pBtnDownCtrl->GetCtrlID()) return;
+		|| Notify.pNotifyCtrl != m_pBtnDownCtrl) return;
 
 	double lfNumSrc = _tcstod(m_pEditValueCtrl->GetText(), NULL) - 1;
 
@@ -228,10 +228,10 @@ void CDUISpinCtrl::OnDuiTextChangeValue(const DuiNotify &Notify)
 {
 	if (NULL == m_pEditValueCtrl
 		|| NULL == m_pWndManager
-		|| Notify.uCtrlID != m_pEditValueCtrl->GetCtrlID()) return;
+		|| Notify.pNotifyCtrl != m_pEditValueCtrl) return;
 
 	DuiNotify NotifyTemp = Notify;
-	NotifyTemp.uCtrlID = GetCtrlID();
+	NotifyTemp.pNotifyCtrl = this;
 	m_pWndManager->SendNotify(NotifyTemp);
 
 	return;

@@ -201,7 +201,7 @@ void CDUIComboxWnd::OnDuiItemClick(const DuiNotify &Notify)
 {
 	if (NULL == m_pComboxView
 		|| NULL == m_pOwner
-		|| m_pComboxView->GetCtrlID() != Notify.uCtrlID) return;
+		|| m_pComboxView != Notify.pNotifyCtrl) return;
 
 	CDUIListItemCtrl *pItem = m_pComboxView->GetChildAt(Notify.DuiNotifyExtend.ListView.nIndexItem);
 	if (NULL == pItem) return;
@@ -219,7 +219,7 @@ void CDUIComboxWnd::OnDuiItemClick(const DuiNotify &Notify)
 void CDUIComboxWnd::OnDuiItemMouseEnter(const DuiNotify &Notify)
 {
 	if (NULL == m_pOwner || m_pOwner->GetWaveHeight() <= 0) return;
-	if (NULL == m_pComboxView || m_pComboxView->GetCtrlID() != Notify.uCtrlID) return;
+	if (NULL == m_pComboxView || m_pComboxView != Notify.pNotifyCtrl) return;
 
 	DuiNotify::tagDuiNotifyExtend NotifyExtend = Notify.DuiNotifyExtend;
 	int nIndex = NotifyExtend.ListView.nIndexItem;
@@ -269,7 +269,7 @@ void CDUIComboxWnd::OnDuiItemMouseLeave(const DuiNotify &Notify)
 void CDUIComboxWnd::OnDuiTimer(const DuiNotify &Notify)
 {
 	if (NULL == m_pOwner || m_pOwner->GetWaveHeight() <= 0) return;
-	if (NULL == m_pComboxView || m_pComboxView->GetCtrlID() != Notify.uCtrlID) return;
+	if (NULL == m_pComboxView || m_pComboxView != Notify.pNotifyCtrl) return;
 	if (-1 == m_nItemToWave) return;
 
 	//to normal
@@ -322,12 +322,13 @@ void CDUIComboxWnd::OnNotify(const DuiNotify &Notify)
 
 	if (m_pOwner
 		&& m_pWndManagerOwner
-		&& (Notify.uCtrlID == m_pComboxView->GetCtrlID() || m_pComboxView->FindSubControl(Notify.uCtrlID)))
+		&& (Notify.pNotifyCtrl == m_pComboxView || m_pComboxView->VerifyChild(Notify.pNotifyCtrl)))
 	{
 		DuiNotify NotifyOwner = Notify;
 		NotifyOwner.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_Combox;
+		NotifyOwner.DuiNotifyExtend.Combox.pComboxCtrl = m_pOwner;
 		NotifyOwner.DuiNotifyExtend.Combox.nIndexItem = Notify.DuiNotifyExtend.ListView.nIndexItem;
-		NotifyOwner.uCtrlID = Notify.uCtrlID == m_pComboxView->GetCtrlID() ? m_pOwner->GetCtrlID() : NotifyOwner.uCtrlID;
+		NotifyOwner.pNotifyCtrl = Notify.pNotifyCtrl == m_pComboxView ? m_pOwner : NotifyOwner.pNotifyCtrl;
 		m_pWndManagerOwner->SendNotify(NotifyOwner);
 	}
 
@@ -824,7 +825,8 @@ bool CDUIComboxCtrl::Active()
 	DuiNotify Notify = {};
 	Notify.NotifyType = DuiNotify_ComboxExpand;
 	Notify.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_Combox;
-	Notify.uCtrlID = GetCtrlID();
+	Notify.DuiNotifyExtend.Combox.pComboxCtrl = this;
+	Notify.pNotifyCtrl = this;
 	m_pWndManager->SendNotify(Notify);
 
 	return true;

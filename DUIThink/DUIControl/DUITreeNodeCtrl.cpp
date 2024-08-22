@@ -1252,7 +1252,7 @@ void CDUITreeNodeCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPA
 
 	DuiNotify Notify;
 	Notify.NotifyType = NotifyType;
-	Notify.uCtrlID = pRootView->GetCtrlID();
+	Notify.pNotifyCtrl = pRootView;
 	Notify.wParam = wParam;
 	Notify.lParam = lParam;
 	Notify.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_TreeView;
