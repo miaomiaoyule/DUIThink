@@ -1253,12 +1253,19 @@ void CDUIWndManager::SendNotify(DuiNotify &Notify)
 {
 	if (NULL == Notify.pNotifyCtrl) return;
 
+	CDUIWndManager *pWndManager = Notify.pNotifyCtrl->GetWndManager();
+	if (NULL == pWndManager) return;
+
+	Notify.uCtrlID = Notify.pNotifyCtrl->GetCtrlID();
 	Notify.ptMouse = m_ptMousePosLast;
 	Notify.wKeyState = MapKeyState();
 	Notify.dwTimestamp = ::GetTickCount();
 
-	for (int n = 0; n < Notify.pNotifyCtrl->GetControlCallBackCount(); n++)
+	int nCount = Notify.pNotifyCtrl->GetControlCallBackCount();
+	for (int n = 0; n < nCount; n++)
 	{
+		if (false == pWndManager->VerifyControl(Notify.pNotifyCtrl)) return;
+
 		IDUIControlCallBack *pICallBack = Notify.pNotifyCtrl->GetControlCallBack(n);
 		if (NULL == pICallBack) continue;
 
@@ -1293,14 +1300,9 @@ void CDUIWndManager::PostNotify(DuiNotify &Notify)
 {
 	if (NULL == Notify.pNotifyCtrl || this != Notify.pNotifyCtrl->GetWndManager()) return;
 
-	Notify.NotifyType = Notify.NotifyType;
-	Notify.pNotifyCtrl = Notify.pNotifyCtrl;
-	Notify.wParam = Notify.wParam;
-	Notify.lParam = Notify.lParam;
 	Notify.ptMouse = m_ptMousePosLast;
 	Notify.wKeyState = MapKeyState();
 	Notify.dwTimestamp = ::GetTickCount();
-	Notify.DuiNotifyExtend = Notify.DuiNotifyExtend;
 	m_vecAsynNotify.push_back(Notify);
 
 	PostAppMsg();
