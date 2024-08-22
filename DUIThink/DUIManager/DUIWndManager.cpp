@@ -2910,15 +2910,21 @@ void CDUIWndManager::DelayDelete(CDUIControlBase *pControl)
 
 void CDUIWndManager::DispatchNotify()
 {
-	while (m_vecAsynNotify.size() > 0)
+	VecDuiNotify vecAsynNotify = m_vecAsynNotify;
+	m_vecAsynNotify.clear();
+	
+	for(auto &Notify : vecAsynNotify)
 	{
-		auto Notify = m_vecAsynNotify.front();
-		m_vecAsynNotify.erase(m_vecAsynNotify.begin());
-
 		if (NULL == Notify.pNotifyCtrl) continue;
+		
+		CDUIWndManager *pWndManager = Notify.pNotifyCtrl->GetWndManager();
+		if (NULL == pWndManager) continue;
 
-		for (int n = 0; n < Notify.pNotifyCtrl->GetControlCallBackCount(); n++)
+		int nCount = Notify.pNotifyCtrl->GetControlCallBackCount();
+		for (int n = 0; n < nCount; n++)
 		{
+			if (false == pWndManager->VerifyControl(Notify.pNotifyCtrl)) break;
+		
 			IDUIControlCallBack *pICallBack = Notify.pNotifyCtrl->GetControlCallBack(n);
 			if (NULL == pICallBack) continue;
 
