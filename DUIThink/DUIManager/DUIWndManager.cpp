@@ -551,7 +551,7 @@ bool CDUIWndManager::AttachRootCtrl(CDUIContainerCtrl* pControl)
 
 			if (pRadioBoxCtrl->IsSelected())
 			{
-				pRadioBoxCtrl->PerformUnSelOther();
+				pRadioBoxCtrl->PerformUnSelOther(false);
 				pRadioBoxCtrl->PerformActiveBindTabPage();
 
 				break;

@@ -72,7 +72,7 @@ protected:
 	//active tab
 	virtual void PerformActiveBindTabPage();
 	//unsel other
-	virtual void PerformUnSelOther();
+	virtual void PerformUnSelOther(bool bNotify);
 };
 
 typedef std::vector<CDUIRadioBoxCtrl*> VecDuiRadioBoxCtrl;

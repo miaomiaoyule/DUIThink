@@ -61,7 +61,7 @@ void CDUIRadioBoxCtrl::Select(bool bSelect, bool bNotify)
 
 	if (bSelect)
 	{
-		PerformUnSelOther();
+		PerformUnSelOther(bNotify);
 	}
 
 	__super::Select(bSelect, bNotify);
@@ -235,7 +235,7 @@ void CDUIRadioBoxCtrl::PerformActiveBindTabPage()
 	return;
 }
 
-void CDUIRadioBoxCtrl::PerformUnSelOther()
+void CDUIRadioBoxCtrl::PerformUnSelOther(bool bNotify)
 {
 	if (NULL == m_pWndManager) return;
 
@@ -246,7 +246,7 @@ void CDUIRadioBoxCtrl::PerformUnSelOther()
 		CDUIRadioBoxCtrl *pRadioBoxCtrl = vecRadioBox[nIndex];
 		if (NULL == pRadioBoxCtrl || pRadioBoxCtrl == this) continue;
 
-		pRadioBoxCtrl->Select(false);
+		pRadioBoxCtrl->Select(false, bNotify);
 	}
 
 	return;
