@@ -242,7 +242,6 @@ protected:
 	CMMString FindCtrlID(UINT uCtrlID);
 	UINT GenerateCtrlID();
 	CMMString GenerateCtrlID(CDUIControlBase *pControl);
-	bool ModifyCtrlID(UINT uIDOld, UINT uIDNew, CDUIControlBase *pControl);
 	bool ModifyCtrlID(CMMString strCtrlIDOld, CMMString strCtrlIDNew, CDUIControlBase *pControl);
 	
 	//dui

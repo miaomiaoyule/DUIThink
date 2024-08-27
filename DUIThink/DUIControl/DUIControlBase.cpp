@@ -220,23 +220,18 @@ bool CDUIControlBase::SetCtrlID(UINT uID)
 #endif
 
 	//value
-	UINT uIDOld = GetCtrlID();
 	m_AttributeObjectID.SetValue(uID);
 
-	//modify id map
-	if (false == CDUIGlobal::GetInstance()->ModifyCtrlID(uIDOld, uID, this))
+	//id map
+	if (uID > Dui_CtrlIDInner_Finish)
 	{
-		return false;
+		CDUIGlobal::GetInstance()->AddCtrlID(uID, CDUIGlobal::GetInstance()->GenerateCtrlID(this));
 	}
 
 	//info
 	if (m_pWndManager)
 	{
 		m_pWndManager->UnInitControlIDHash(this);
-	}
-
-	if (m_pWndManager)
-	{
 		m_pWndManager->InitControlIDHash(this);
 		m_pWndManager->SendNotify(this, DuiNotify_CtrlIDChanged);
 	}

@@ -688,14 +688,11 @@ bool CDUIGlobal::CloseProject(bool bSaveProject)
 
 void CDUIGlobal::AddCtrlID(UINT uCtrlID, CMMString strCtrlID)
 {
-	if (m_mapControlID.find(uCtrlID) != m_mapControlID.end()) return;
+	if ((0 < uCtrlID && uCtrlID < Dui_CtrlIDInner_Finish)
+		|| m_mapControlID.find(uCtrlID) != m_mapControlID.end()) return;
 
 	m_mapControlID[uCtrlID] = strCtrlID;
 	m_uMaxControlID = max(uCtrlID, m_uMaxControlID);
-
-#ifdef DUI_DESIGN
-	CDUIXmlPack::SaveCtrlID(m_mapControlID);
-#endif
 
 	return;
 }
@@ -739,50 +736,6 @@ CMMString CDUIGlobal::GenerateCtrlID(CDUIControlBase *pControl)
 	} while (true);
 
 	return strCtrlID;
-}
-
-bool CDUIGlobal::ModifyCtrlID(UINT uIDOld, UINT uIDNew, CDUIControlBase *pControl)
-{
-	if (NULL == pControl) return false;
-
-	//max id
-	if (uIDNew <= Dui_CtrlIDInner_Finish)
-	{
-		return true;
-	}
-
-	//has old
-	auto FindIt = m_mapControlID.find(uIDOld);
-	if (FindIt == m_mapControlID.end())
-	{
-		AddCtrlID(uIDNew, GenerateCtrlID(pControl));
-
-		return true;
-	}
-
-	//has new
-	CMMString strCtrlID = FindIt->second;
-	FindIt = m_mapControlID.find(uIDNew);
-	if (FindIt != m_mapControlID.end()
-		&& false == FindIt->second.empty())
-	{
-		return true;
-	}
-
-	//ctrlid
-	if (strCtrlID.empty())
-	{
-		strCtrlID = GenerateCtrlID(pControl);
-	}
-
-	m_mapControlID[uIDNew] = strCtrlID;
-	m_uMaxControlID = max(uIDNew, m_uMaxControlID);
-
-#ifdef DUI_DESIGN
-	return CDUIXmlPack::SaveCtrlID(m_mapControlID);
-#else
-	return true;
-#endif
 }
 
 bool CDUIGlobal::ModifyCtrlID(CMMString strCtrlIDOld, CMMString strCtrlIDNew, CDUIControlBase *pControl)
