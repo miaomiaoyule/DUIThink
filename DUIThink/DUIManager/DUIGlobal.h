@@ -59,6 +59,7 @@ class DUITHINK_API CDUIGlobal
 	friend class CDUIAttributeRect;
 	friend class CDUIAttributeSize;
 	friend class CDUIAttriTabSelect;
+	friend class CDUIAttributeCtrlID;
 	friend class CDUIPropertyObject;
 	friend class CDUIImageBase;
 	friend class CDUIPreview;
@@ -96,11 +97,12 @@ private:
 	MapDuiImageBase						m_mapResourceImage;
 	VecDuiFile							m_vecDui;
 	MapDuiModelStore					m_mapModelStore;
-	MapDuiControlID						m_mapControlID;
 
 	//attribute
 	bool								m_bAttriWaitSave = false;
 	MapAttributeName					m_mapAttriNameValue;
+	MapDuiControlID						m_mapControlIDValue;
+	MapDuiControlID						m_mapControlIDSave;
 	UnorderMapDuiAttributeRichText		m_mapAttriRichTextValue;
 	MapDuiAttributeRichText				m_mapAttriRichTextSave;
 	UnorderMapDuiAttributeText			m_mapAttriTextValue;

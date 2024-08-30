@@ -78,8 +78,7 @@ bool CDUIControlBase::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 
 	__super::OnAttributeChange(pAttributeObj);
 
-	//Ãû³Æ¸Ä±ä
-	if (pAttributeObj == &m_AttributeObjectID)
+	if (pAttributeObj == &m_AttributeCtrlID)
 	{
 		SetCtrlID(GetCtrlID());
 
@@ -208,7 +207,7 @@ UINT CDUIControlBase::InitCtrlID()
 
 UINT CDUIControlBase::GetCtrlID()
 {
-	return m_AttributeObjectID.GetValue();
+	return m_AttributeCtrlID.GetValue();
 }
 
 bool CDUIControlBase::SetCtrlID(UINT uID)
@@ -220,7 +219,7 @@ bool CDUIControlBase::SetCtrlID(UINT uID)
 #endif
 
 	//value
-	m_AttributeObjectID.SetValue(uID);
+	m_AttributeCtrlID.SetValue(uID);
 
 	//id map
 	if (uID > Dui_CtrlIDInner_Finish)
@@ -1688,7 +1687,7 @@ void CDUIControlBase::InitProperty()
 {
 	//create
 	DuiCreateGroupAttribute(m_AttributeGroupBase, _T("ControlBase"));
-	DuiCreateAttribute(m_AttributeObjectID, Key_Dui_PropCtrlID, _T(""), m_AttributeGroupBase);
+	DuiCreateAttribute(m_AttributeCtrlID, _T("ID"), _T(""), m_AttributeGroupBase);
 	DuiCreateAttribute(m_AttributeEnable, _T("Enable"), _T(""), m_AttributeGroupBase);
 	DuiCreateAttribute(m_AttributeVisible, _T("Visible"), _T(""), m_AttributeGroupBase);
 	DuiCreateAttribute(m_AttributeUserData, _T("UserData"), _T(""), m_AttributeGroupBase);

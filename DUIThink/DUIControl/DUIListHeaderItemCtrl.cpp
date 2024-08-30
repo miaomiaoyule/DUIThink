@@ -89,11 +89,27 @@ void CDUIListHeaderItemCtrl::SetSepScale(float fScale)
 	if (fScale == GetSepScale()) return;
 
 	m_AttributeSepScale.SetValue(fScale);
+
+	return;
 }
 
 RECT CDUIListHeaderItemCtrl::GetSepRect()
 {
 	return m_rcSep;
+}
+
+vector<CMMString> CDUIListHeaderItemCtrl::GetColorResSwitchSep()
+{
+	return m_AttributeSepColor.GetColorResSwitch();
+}
+
+void CDUIListHeaderItemCtrl::SetColorResSwitchSep(const vector<CMMString> &vecResSwitch)
+{
+	m_AttributeSepColor.SetColorResSwitch(vecResSwitch);
+
+	Invalidate();
+
+	return;
 }
 
 void CDUIListHeaderItemCtrl::SetFixedWidth(int nWidth)
@@ -146,6 +162,23 @@ void CDUIListHeaderItemCtrl::RefreshView()
 	__super::RefreshView();
 
 	CalcSepRect();
+
+	//refresh subitem
+	CDUIRect rcThis = GetAbsoluteRect();
+	if (rcThis != m_rcThisLast)
+	{
+		m_rcThisLast = rcThis;
+
+		if (m_pOwner)
+		{
+			CDUIListViewCtrl *pListView = m_pOwner->GetOwner();
+
+			if (pListView)
+			{
+				pListView->NeedRefreshView();
+			}
+		}
+	}
 
 	return;
 }
@@ -451,29 +484,6 @@ void CDUIListHeaderItemCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessa
 	Invalidate();
 
 	return __super::OnDuiMouseLeave(pt, Msg);
-}
-
-void CDUIListHeaderItemCtrl::OnDuiSize(CDUIRect rcParentAbs)
-{
-	CDUIRect rcThis = GetAbsoluteRect();
-
-	__super::OnDuiSize(rcParentAbs);
-
-	//refresh subitem
-	if (rcThis != GetAbsoluteRect())
-	{
-		if (m_pOwner)
-		{
-			CDUIListViewCtrl *pListView = m_pOwner->GetOwner();
-
-			if (pListView)
-			{
-				pListView->NeedRefreshView();
-			}
-		}
-	}
-
-	return;
 }
 
 void CDUIListHeaderItemCtrl::CalcSepRect()

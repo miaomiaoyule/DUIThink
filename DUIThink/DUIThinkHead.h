@@ -148,6 +148,7 @@ using namespace tinyxml2;
 #include "DUIAttribute/DUINumber/DUIAttributeFloat.h"
 #include "DUIAttribute/DUINumber/DUIAttributeLong.h"
 #include "DUIAttribute/DUINumber/DUIAttributeULong.h"
+#include "DUIAttribute/DUINumber/DUIAttributeCtrlID.h"
 #include "DUIAttribute/DUIText/DUIAttributeText.h"
 #include "DUIAttribute/DUIText/DUIAttributeTextStyle.h"
 #include "DUIAttribute/DUIText/DUIAttributeRichText.h"

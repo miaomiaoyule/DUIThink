@@ -4,19 +4,11 @@
 //////////////////////////////////////////////////////////////////////////
 bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const MapDuiFontBase &mapResFont, \
 	const MapDuiImageBase &mapResImage, const MapDuiColorBase &mapResColor, const VecDuiFile &vecDui, \
-	const MapWndManager &mapWndManager, const MapDuiControlID &mapCtrlID, CMMString strFontResDefault)
+	const MapWndManager &mapWndManager, CMMString strFontResDefault)
 {
 	if (MMInvalidString(lpszProjPath) || MMInvalidString(lpszProjName)) return false;
 
-	//文件名称
-	TCHAR szPath[MAX_PATH] = {};
-	lstrcpyn(szPath, lpszProjPath, MMCountString(szPath));
-	::PathAddBackslash(szPath);
-	CMMString strProj = szPath;
-	strProj += lpszProjName;
-	strProj += Dui_Name_ProjectExt;
-
-	//XML文件
+	//xml
 	tinyxml2::XMLDocument xmlDoc;
 	tinyxml2::XMLDeclaration *pDeclaration = xmlDoc.NewDeclaration();
 	xmlDoc.LinkEndChild(pDeclaration);
@@ -26,14 +18,14 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	pXmlVersionRes->SetAttribute(Dui_Resource_Key_Version, DuiResVersion_Max);
 	xmlDoc.LinkEndChild(pXmlVersionRes);
 
-	//ImageResNode
+	//image res file
 	CStringA strImageRes;
 	strImageRes = strImageRes + Dui_Resource_ImageRes + (".xml");
 	tinyxml2::XMLElement *pXmlImageRes = xmlDoc.NewElement(Dui_Resource_ImageRes);
 	pXmlImageRes->SetAttribute(Dui_Resource_Key_ImageResFile, strImageRes);
 	xmlDoc.LinkEndChild(pXmlImageRes);
 
-	//FontResNode
+	//font res file
 	CStringA strFontRes;
 	strFontRes = strFontRes + Dui_Resource_FontRes + (".xml");
 	tinyxml2::XMLElement *pXmlFontRes = xmlDoc.NewElement(Dui_Resource_FontRes);
@@ -41,28 +33,28 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResDefault, (LPCSTR)CT2CA(strFontResDefault));
 	xmlDoc.LinkEndChild(pXmlFontRes);
 
-	//ColorResNode
+	//color res file
 	CStringA strColorRes;
 	strColorRes = strColorRes + Dui_Resource_ColorRes + (".xml");
 	tinyxml2::XMLElement *pXmlColorRes = xmlDoc.NewElement(Dui_Resource_ColorRes);
 	pXmlColorRes->SetAttribute(Dui_Resource_Key_ColorResFile, strColorRes);
 	xmlDoc.LinkEndChild(pXmlColorRes);
 
-	//AttributeNode
+	//attribute file
 	CStringA strAttribute;
 	strAttribute = strAttribute + Dui_Resource_Attribute + (".xml");
 	tinyxml2::XMLElement *pXmlAttribute = xmlDoc.NewElement(Dui_Resource_Attribute);
 	pXmlAttribute->SetAttribute(Dui_Resource_Key_AttributeFile, strAttribute);
 	xmlDoc.LinkEndChild(pXmlAttribute);
 
-	//CtrlIDNode
+	//ctrl id file
 	CStringA strCtrlID;
 	strCtrlID = strCtrlID + Dui_Resource_CtrlID + (".h");
 	tinyxml2::XMLElement *pXmlCtrlID = xmlDoc.NewElement(Dui_Resource_CtrlID);
 	pXmlCtrlID->SetAttribute(Dui_Resource_Key_CtrlIDFile, strCtrlID);
 	xmlDoc.LinkEndChild(pXmlCtrlID);
 
-	//DuiXml
+	//dui node
 	for (auto It = vecDui.begin(); It != vecDui.end(); ++It)
 	{
 		tinyxml2::XMLElement *pXmlDui = xmlDoc.NewElement(Dui_Resource_DirectUI);
@@ -72,6 +64,13 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 		xmlDoc.LinkEndChild(pXmlDui);
 	}
 
+	//project file
+	TCHAR szPath[MAX_PATH] = {};
+	lstrcpyn(szPath, lpszProjPath, MMCountString(szPath));
+	::PathAddBackslash(szPath);
+	CMMString strProj = szPath;
+	strProj += lpszProjName;
+	strProj += Dui_Name_ProjectExt;
 	xmlDoc.SaveFile((LPSTR)CT2CA(strProj));
 
 	//encrypt
@@ -85,36 +84,28 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 		SaveXmlUI(CDUIGlobal::GetInstance()->GetDuiFileFull(Item.second.strName), Item.first);
 	}
 
+	//image res
 	VecDuiResourceBase vecResource;
-
-	//ImageRes
 	vecResource.clear();
 	for (auto &ResImageItem : mapResImage) vecResource.push_back(ResImageItem.second);
 	CMMString strImageResFile = szPath + strImageRes;
 	SaveResource(strImageResFile.c_str(), vecResource);
 
-	//FontRes
+	//font res
 	vecResource.clear();
 	for (auto &ResFontItem : mapResFont) vecResource.push_back(ResFontItem.second);
 	CMMString strFontResFile = szPath + strFontRes;
 	SaveResource(strFontResFile.c_str(), vecResource);
 
-	//ColorRes
+	//color res
 	vecResource.clear();
 	for (auto &ResColorItem : mapResColor) vecResource.push_back(ResColorItem.second);
 	CMMString strColorResFile = szPath + strColorRes;
 	SaveResource(strColorResFile.c_str(), vecResource);
 
-	//Attribute
+	//attribute
 	CMMString strAttributeFile = szPath + strAttribute;
 	SaveAttribute(strAttributeFile.c_str());
-
-	//CtrlID
-	CMMString strCtrlIDFile = szPath + strCtrlID;
-	if (false == PathFileExists(strCtrlIDFile))
-	{
-		SaveCtrlID(mapCtrlID);
-	}
 
 	return true;
 }

@@ -9,7 +9,7 @@ class DUITHINK_API CDUIXmlPack
 public:
 	static bool SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const MapDuiFontBase &mapResFont, \
 		const MapDuiImageBase &mapResImage, const MapDuiColorBase &mapResColor, const VecDuiFile &vecDui, \
-		const MapWndManager &mapWndManager, const MapDuiControlID &mapCtrlID, CMMString strFontResDefault);
+		const MapWndManager &mapWndManager, CMMString strFontResDefault);
 	static bool LoadProject(LPCTSTR lpszProject);
 	static bool SaveResource(LPCTSTR lpszFile, VecDuiResourceBase &VecRes);
 	static bool LoadResource(LPCTSTR lpszFile);

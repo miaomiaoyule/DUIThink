@@ -41,7 +41,7 @@ public:
 protected:
 	//base
 	CDUIAttributeGroup					m_AttributeGroupBase;
-	CDUIAttributeULong					m_AttributeObjectID;
+	CDUIAttributeCtrlID					m_AttributeCtrlID;
 	CDUIAttributeBool					m_AttributeEnable = true;
 	CDUIAttributeBool					m_AttributeVisible = true;
 	CDUIAttributeText					m_AttributeUserData;

@@ -2,7 +2,7 @@
 #include "DUIGlobal.h"
 
 //////////////////////////////////////////////////////////////////////////
-#define DuiInitCtrlIDItem(CtrlID) m_mapControlID[CtrlID] = _T(#CtrlID)
+#define DuiInitCtrlIDItem(CtrlID) m_mapControlIDValue[CtrlID] = _T(#CtrlID)
 
 //////////////////////////////////////////////////////////////////////////
 CDUIGlobal::CDUIGlobal(void)
@@ -657,7 +657,7 @@ bool CDUIGlobal::SaveProject()
 	SetResVersion(DuiResVersion_Max);
 
 	return CDUIXmlPack::SaveProject(m_strProjectPath, m_strProjectName, m_mapResourceFont, \
-		m_mapResourceImage, m_mapResourceColor, m_vecDui, m_mapWndManager, m_mapControlID, m_strFontResDefault);
+		m_mapResourceImage, m_mapResourceColor, m_vecDui, m_mapWndManager, m_strFontResDefault);
 }
 
 bool CDUIGlobal::CloseProject(bool bSaveProject)
@@ -689,9 +689,9 @@ bool CDUIGlobal::CloseProject(bool bSaveProject)
 void CDUIGlobal::AddCtrlID(UINT uCtrlID, CMMString strCtrlID)
 {
 	if ((0 < uCtrlID && uCtrlID < Dui_CtrlIDInner_Finish)
-		|| m_mapControlID.find(uCtrlID) != m_mapControlID.end()) return;
+		|| m_mapControlIDValue.find(uCtrlID) != m_mapControlIDValue.end()) return;
 
-	m_mapControlID[uCtrlID] = strCtrlID;
+	m_mapControlIDValue[uCtrlID] = strCtrlID;
 	m_uMaxControlID = max(uCtrlID, m_uMaxControlID);
 
 	return;
@@ -699,7 +699,7 @@ void CDUIGlobal::AddCtrlID(UINT uCtrlID, CMMString strCtrlID)
 
 UINT CDUIGlobal::FindCtrlID(CMMString strCtrlID)
 {
-	for (auto &Item : m_mapControlID)
+	for (auto &Item : m_mapControlIDValue)
 	{
 		if (Item.second == strCtrlID) return Item.first;
 	}
@@ -709,8 +709,8 @@ UINT CDUIGlobal::FindCtrlID(CMMString strCtrlID)
 
 CMMString CDUIGlobal::FindCtrlID(UINT uCtrlID)
 {
-	auto FindIt = m_mapControlID.find(uCtrlID);
-	if (FindIt == m_mapControlID.end()) return _T("");
+	auto FindIt = m_mapControlIDValue.find(uCtrlID);
+	if (FindIt == m_mapControlIDValue.end()) return _T("");
 
 	return FindIt->second;
 }
@@ -751,14 +751,14 @@ bool CDUIGlobal::ModifyCtrlID(CMMString strCtrlIDOld, CMMString strCtrlIDNew, CD
 	}
 
 	//modify
-	for (auto &Item : m_mapControlID)
+	for (auto &Item : m_mapControlIDValue)
 	{
 		if (Item.second == strCtrlIDOld)
 		{
 			Item.second = strCtrlIDNew;
 
 #ifdef DUI_DESIGN
-			return CDUIXmlPack::SaveCtrlID(m_mapControlID);
+			return CDUIXmlPack::SaveCtrlID(m_mapControlIDValue);
 #else
 			return true;
 #endif
@@ -2863,6 +2863,12 @@ void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t uID)
 
 	switch (AttriType)
 	{
+		case DuiAttribute_CtrlID:
+		{
+			DuiAttriReadValue(uID, m_mapControlIDSave, m_mapControlIDValue);
+
+			break;
+		}
 		case DuiAttribute_RichText:
 		{
 			DuiAttriReadValue(uID, m_mapAttriRichTextSave, m_mapAttriRichTextValue);
@@ -2933,7 +2939,7 @@ bool CDUIGlobal::SaveAttriValue(tinyxml2::XMLDocument &xmlDoc)
 
 	m_mapModelStore.clear();
 
-	//load attribute
+	//load dui
 	for (auto Dui : m_vecDui)
 	{
 		CDUIWndManager WndManger;
@@ -2956,6 +2962,11 @@ bool CDUIGlobal::SaveAttriValue(tinyxml2::XMLDocument &xmlDoc)
 
 	m_bAttriWaitSave = false;
 
+	//ctrl id
+	CDUIXmlPack::SaveCtrlID(m_mapControlIDSave);
+	m_mapControlIDValue = m_mapControlIDSave;
+
+	//attribute
 	tinyxml2::XMLElement *pNode = xmlDoc.NewElement((LPCSTR)CT2CA(CDUIAttributeObject().GetClass()));
 	SaveAttriName(pNode);
 	xmlDoc.LinkEndChild(pNode);
@@ -3000,6 +3011,7 @@ bool CDUIGlobal::SaveAttriValue(tinyxml2::XMLDocument &xmlDoc)
 	m_mapAttriPositionSave.clear();
 	m_mapAttriRectSave.clear();
 	m_mapAttriImageSectionSave.clear();
+	m_mapControlIDSave.clear();
 
 	return true;
 }
@@ -3106,12 +3118,12 @@ void CDUIGlobal::ReleaseResource()
 #endif
 
 	m_uMaxControlID = Dui_CtrlIDInner_Finish;
-	MapDuiControlID mapControlID = m_mapControlID;
+	MapDuiControlID mapControlID = m_mapControlIDValue;
 	for (auto ControlIDItem : mapControlID)
 	{
 		if (ControlIDItem.first < Dui_CtrlIDInner_Finish) continue;
 
-		m_mapControlID.erase(ControlIDItem.first);
+		m_mapControlIDValue.erase(ControlIDItem.first);
 	}
 
 	return;
