@@ -506,6 +506,7 @@
     <a ValueID="1863812566" Text="DlgAnimate3DRoundReplaceTB"/>
     <a ValueID="1923478980" Text="DlgAnimateSize"/>
     <a ValueID="1944135536" Text="5"/>
+    <a ValueID="1946410817" Text="9月"/>
     <a ValueID="1979569200" Text="百度搜索"/>
     <a ValueID="1985526189" Text="ggdfgdfgfdgfdg"/>
     <a ValueID="1990070244" Text="DlgAnimate3DRoundRight"/>
@@ -623,7 +624,6 @@
     <a ValueID="3846715846" Text="换肤"/>
     <a ValueID="3857225387" Text="6"/>
     <a ValueID="3871699748" Text="最新：3.0.0.1"/>
-    <a ValueID="3900052954" Text="6月"/>
     <a ValueID="3911129795" Text="未使用"/>
     <a ValueID="3919511782" Text="300"/>
     <a ValueID="3945861580" Text="DlgAnimate3DRotateLeftRight"/>
@@ -899,12 +899,10 @@
     <a ValueID="2796199595" Position="0-0-98-0-159-10-20-0-81"/>
     <a ValueID="2806444616" Position="0-0-0-0-128-10-62-0-128"/>
     <a ValueID="2829354335" Position="0-0-0-0-300-10-0-0-0"/>
-    <a ValueID="2838726619" Position="0-0-0-0-40-12-0-0-18"/>
     <a ValueID="2869680438" Position="0-0-0-0-17-12-0-0-17"/>
     <a ValueID="3028561321" Position="0-1-9-10-37-12-0-0-20"/>
     <a ValueID="3062189494" Position="0-0-0-0-20-12-0-0-20"/>
     <a ValueID="3086879907" Position="0-0-5-0-24-12-0-0-24"/>
-    <a ValueID="3110556671" Position="0-0-0-0-19-12-0-0-18"/>
     <a ValueID="3123692034" Position="1-0-450-0-42-10-46-0-28"/>
     <a ValueID="3125446401" Position="0-0-17-0-0-10-0-0-300"/>
     <a ValueID="3140852276" Position="0-0-0-0-0-11-0-0-9"/>
@@ -961,7 +959,6 @@
     <a ValueID="58450096" Value="0,0,0,0"/>
     <a ValueID="144109009" Value="0,0,0,10"/>
     <a ValueID="148177465" Value="10,0,0,0"/>
-    <a ValueID="155018971" Value="3,0,0,0"/>
     <a ValueID="374663057" Value="22,2,2,1"/>
     <a ValueID="616508794" Value="4,4,24,4"/>
     <a ValueID="820132688" Value="7,0,7,0"/>
