@@ -222,9 +222,11 @@ UINT CDUIListViewCtrl::InitCtrlID()
 	return GetCtrlID();
 }
 
-void CDUIListViewCtrl::RefreshCtrlID()
+void CDUIListViewCtrl::RefreshCtrlID(bool bSelfSingle)
 {
-	__super::RefreshCtrlID();
+	__super::RefreshCtrlID(bSelfSingle);
+
+	if (bSelfSingle) return;
 
 	if (m_pListHeader)
 	{

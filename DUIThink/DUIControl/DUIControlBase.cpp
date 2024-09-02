@@ -238,7 +238,7 @@ bool CDUIControlBase::SetCtrlID(UINT uID)
 	return true;
 }
 
-void CDUIControlBase::RefreshCtrlID()
+void CDUIControlBase::RefreshCtrlID(bool bSelfSingle)
 {
 	if (0 < GetCtrlID() && GetCtrlID() < Dui_CtrlIDInner_Finish) return;
 

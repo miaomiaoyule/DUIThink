@@ -131,7 +131,7 @@ public:
 
 	//basic
 	UINT InitCtrlID() override;
-	void RefreshCtrlID() override;
+	void RefreshCtrlID(bool bSelfSingle = false) override;
 	bool SetWndManager(CDUIWndManager *pWndManager) override;
 	void SetVisible(bool bVisible = true) override;
 	void SetAnimateDrag(bool bAnimateDrag) override;

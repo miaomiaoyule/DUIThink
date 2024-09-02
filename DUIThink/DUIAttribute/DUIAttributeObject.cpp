@@ -181,6 +181,12 @@ bool CDUIAttributeObject::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 
 		return true;
 	}
+	if (0 == strcmp(lpszName, Dui_Key_AttriObjModified))
+	{
+		m_bModified = (atol(lpszValue));
+
+		return true;
+	}
 #ifdef DUI_DESIGN
 	if (0 == strcmp(lpszName, Dui_Key_AttriObjDescr))
 	{
@@ -188,19 +194,13 @@ bool CDUIAttributeObject::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 
 		return true;
 	}
-#endif
 	if (0 == strcmp(lpszName, Dui_Key_AttriObjVisible))
 	{
 		SetVisible(atol(lpszValue));
 
 		return true;
 	}
-	if (0 == strcmp(lpszName, Dui_Key_AttriObjModified))
-	{
-		m_bModified = (atol(lpszValue));
-
-		return true;
-	}
+#endif
 
 	return false;
 }

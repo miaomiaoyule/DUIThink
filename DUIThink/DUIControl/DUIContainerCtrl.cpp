@@ -241,9 +241,11 @@ UINT CDUIContainerCtrl::InitCtrlID()
 	return GetCtrlID();
 }
 
-void CDUIContainerCtrl::RefreshCtrlID()
+void CDUIContainerCtrl::RefreshCtrlID(bool bSelfSingle)
 {
-	__super::RefreshCtrlID();
+	__super::RefreshCtrlID(bSelfSingle);
+
+	if (bSelfSingle) return;
 
 	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
 	{

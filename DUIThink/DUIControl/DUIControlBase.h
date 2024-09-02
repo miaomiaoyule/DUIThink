@@ -140,7 +140,7 @@ public:
 	virtual UINT InitCtrlID() override;
 	virtual UINT GetCtrlID();
 	virtual bool SetCtrlID(UINT uID);
-	virtual void RefreshCtrlID();
+	virtual void RefreshCtrlID(bool bSelfSingle = false);
 	virtual HWND GetWndHandle();
 	virtual bool SetWndManager(CDUIWndManager *pWndManager);
 	virtual CDUIWndManager * GetWndManager() override;

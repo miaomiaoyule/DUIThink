@@ -477,9 +477,11 @@ UINT CDUIComboxCtrl::InitCtrlID()
 	return GetCtrlID();
 }
 
-void CDUIComboxCtrl::RefreshCtrlID()
+void CDUIComboxCtrl::RefreshCtrlID(bool bSelfSingle)
 {
-	__super::RefreshCtrlID();
+	__super::RefreshCtrlID(bSelfSingle);
+
+	if (bSelfSingle) return;
 
 	if (m_pEditCtrl)
 	{
