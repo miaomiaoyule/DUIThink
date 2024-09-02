@@ -1941,17 +1941,20 @@ LRESULT CDUIWndManager::OnDraw(CDUIRect rcPaint)
 	if (dwStyle != dwNewStyle) ::SetWindowLong(m_hWndAttach, GWL_EXSTYLE, dwNewStyle);
 	dwStyle = ::GetWindowLong(m_hWndAttach, GWL_EXSTYLE);
 
+	//layout
+	RefreshLayout();
+
+	//verify
+	if (NULL == m_pRootCtrl) return lRes;
+
+	//animation wnd
+	if (IsAnimatingWnd()) return lRes;
+
 	//Should we paint?
 	CDUIRect rcClient;
 	::GetClientRect(m_hWndAttach, &rcClient);
 	if (false == ::IntersectRect(&rcPaint, &rcPaint, &rcClient)) return lRes;
 	if (NULL == m_pRootCtrl || rcPaint.Empty()) return lRes;
-
-	//layout
-	RefreshLayout();
-
-	//animation wnd
-	if (IsAnimatingWnd()) return lRes;
 
 	//object
 	if (NULL == m_hBmpBackground || NULL == m_hMemDcBackground)
@@ -1987,10 +1990,10 @@ LRESULT CDUIWndManager::OnDraw(CDUIRect rcPaint)
 	//update
 	if (dwStyle & WS_EX_LAYERED)
 	{
-		RECT rcWnd = {};
+		CDUIRect rcWnd = {};
 		::GetWindowRect(m_hWndAttach, &rcWnd);
 		POINT pt = { rcWnd.left, rcWnd.top };
-		SIZE szWindow = { rcClient.GetWidth(), rcClient.GetHeight() };
+		SIZE szWindow = { rcWnd.GetWidth(), rcWnd.GetHeight() };
 		POINT ptSrc = { 0, 0 };
 		BLENDFUNCTION Blend = { AC_SRC_OVER, 0, GetWndAlpha(), AC_SRC_ALPHA };
 		::UpdateLayeredWindow(m_hWndAttach, m_hDCPaint, &pt, &szWindow, m_hMemDcBackground,
@@ -2852,7 +2855,7 @@ void CDUIWndManager::RefreshLayout()
 	//layout
 	bool bNeedLayoutMsg = false;
 	if (false == IsRefreshViewNeeded()) return;
-	if (rcClient.Empty() || ::IsIconic(m_hWndAttach)) return;
+	if (NULL == m_pRootCtrl || rcClient.Empty() || ::IsIconic(m_hWndAttach)) return;
 
 	m_bRefreshViewNeeded = false;
 

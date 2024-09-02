@@ -323,8 +323,8 @@ void CDUIMenuWnd::ResizeSubMenu()
 
 	return;
 }
-//////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////
 DuiImplement_CreateControl(CDUIMenuItemCtrl)
 MMImplement_ClassName(CDUIMenuItemCtrl)
 
@@ -999,7 +999,7 @@ void CDUIMenuCtrl::RefreshView()
 
 	if (NULL == m_pWndManager || false == IsWindow(m_pWndManager->GetWndHandle())) return;
 
-	PostMessage(m_pWndManager->GetWndHandle(), WM_DUIRESIZEMENU, NULL, NULL);
+	SendMessage(m_pWndManager->GetWndHandle(), WM_DUIRESIZEMENU, NULL, NULL);
 
 	return;
 }

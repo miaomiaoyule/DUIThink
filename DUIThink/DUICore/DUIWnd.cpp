@@ -977,14 +977,15 @@ LRESULT CALLBACK CDUIWnd::__ControlProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 void CDUIWnd::ForegroundWindow(HWND hWnd)
 {
 	HWND hWndForground = GetForegroundWindow();
-	DWORD dwProIDForground = ::GetWindowThreadProcessId(hWndForground, NULL);
-	DWORD dwProIDCur = ::GetCurrentThreadId();
+	DWORD dwThreadIDForground = ::GetWindowThreadProcessId(hWndForground, NULL);
+	DWORD dwThreadIDCur = ::GetCurrentThreadId();
+	if (dwThreadIDForground == dwThreadIDCur || hWndForground == hWnd) return;
 
-	::AttachThreadInput(dwProIDCur, dwProIDForground, TRUE);
+	::AttachThreadInput(dwThreadIDCur, dwThreadIDForground, TRUE);
 	::SetActiveWindow(hWnd);
 	::BringWindowToTop(hWnd);
 	::SetForegroundWindow(hWnd);
-	::AttachThreadInput(dwProIDCur, dwProIDForground, FALSE);
+	::AttachThreadInput(dwThreadIDCur, dwThreadIDForground, FALSE);
 
 	return;
 }
