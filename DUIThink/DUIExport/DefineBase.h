@@ -136,7 +136,7 @@ extern ZRESULT UnzipItem(HZIPDT hz, int index, void *dst, unsigned int len, DWOR
 
 //find ctrl
 #define Dui_DDX_Control(ClassName, Variant, CtrlID)\
-	Variant = MMInterfaceHelper(ClassName, m_pWndOwner->FindControl(CtrlID));
+	Variant = MMInterfaceHelper(ClassName, FindControl(CtrlID));
 
 //hash
 namespace std

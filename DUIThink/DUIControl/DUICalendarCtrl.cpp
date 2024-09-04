@@ -1004,7 +1004,6 @@ void CDUICalendarCtrl::OnDuiBtnYear(const DuiNotify &Notify)
 	CDUISize szWnd;
 	szWnd.cx = szYear.cx * sqrt(CALENDAR_COUNT_YEAR) + pYearView->GetChildPaddingH() * sqrt(CALENDAR_COUNT_YEAR);
 	szWnd.cy = szYear.cy * sqrt(CALENDAR_COUNT_YEAR) + pYearView->GetChildPaddingV() * sqrt(CALENDAR_COUNT_YEAR);
-	YearWnd.CDUIPropertyObject::Init();
 	YearWnd.SetGdiplusRenderText(true);
 	YearWnd.SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
 	YearWnd.SetWndInitSize(szWnd.cx, szWnd.cy);
@@ -1081,7 +1080,6 @@ void CDUICalendarCtrl::OnDuiBtnMonth(const DuiNotify &Notify)
 
 	//size
 	CDUISize szWnd(szMonth.cx * 4, szMonth.cy * 3 + pMonthView->GetChildPaddingV() * 3);
-	MonthWnd.CDUIPropertyObject::Init();
 	MonthWnd.SetGdiplusRenderText(true);
 	MonthWnd.SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
 	MonthWnd.SetWndInitSize(szWnd.cx, szWnd.cy);

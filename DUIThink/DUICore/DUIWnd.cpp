@@ -22,6 +22,8 @@ CDUIWnd::CDUIWnd(LPCTSTR lpszDuiName, HWND hWndParent)
 	, m_OldWndProc(::DefWindowProc)
 	, m_bSubWindow(false)
 {
+	__super::Init();
+
 	CDUIGlobal::GetInstance()->AddWnd(this);
 
 	return;
