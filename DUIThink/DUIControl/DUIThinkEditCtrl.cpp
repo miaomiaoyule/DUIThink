@@ -127,9 +127,9 @@ CDUIThinkEditCtrl::CDUIThinkEditCtrl()
 
 CDUIThinkEditCtrl::~CDUIThinkEditCtrl()
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->RemovePreMessagePtr(this);
+		m_pWndOwner->RemovePreMessagePtr(this);
 	}
 
 	MMSafeDelete(m_pBmpShadowText);
@@ -139,14 +139,14 @@ CDUIThinkEditCtrl::~CDUIThinkEditCtrl()
 
 LRESULT CDUIThinkEditCtrl::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
 {
-	if (NULL == m_pWndManager) return 0;
+	if (NULL == m_pWndOwner) return 0;
 
 	if (WM_IME_COMPOSITION == uMsg
 		|| WM_KEYDOWN == uMsg)
 	{
 		if (IsFocused())
 		{
-			HIMC hImc = ::ImmGetContext(m_pWndManager->GetWndHandle());
+			HIMC hImc = ::ImmGetContext(m_pWndOwner->GetWndHandle());
 			if (hImc)
 			{
 				//pos
@@ -176,7 +176,7 @@ LRESULT CDUIThinkEditCtrl::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lPar
 
 				} while (false);
 				
-				ImmReleaseContext(m_pWndManager->GetWndHandle(), hImc);
+				ImmReleaseContext(m_pWndOwner->GetWndHandle(), hImc);
 			}
 
 			return 0;
@@ -238,7 +238,7 @@ void CDUIThinkEditCtrl::RefreshView()
 {
 	__super::RefreshView();
 
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	//measure
 	tagDuiTextStyle TextStyle = GetTextStyleActive();
@@ -281,8 +281,8 @@ bool CDUIThinkEditCtrl::DoPaint(HDC hDC, bool bGenerateBmp)
 	if (false == __super::DoPaint(hDC, bGenerateBmp)) return false;
 
 	//caret timer
-	if (m_pWndManager 
-		&& false == m_pWndManager->FindTimer(this, Dui_TimerCaret_ID)
+	if (m_pWndOwner 
+		&& false == m_pWndOwner->FindTimer(this, Dui_TimerCaret_ID)
 		&& IsFocused())
 	{
 		SetTimer(Dui_TimerCaret_ID, Dui_TimerCaret_Elapse);
@@ -303,7 +303,7 @@ bool CDUIThinkEditCtrl::DoPaint(HDC hDC, bool bGenerateBmp)
 
 CDUISize CDUIThinkEditCtrl::MeasureString(LPCTSTR lpszText)
 {
-	if (NULL == m_pWndManager) return {};
+	if (NULL == m_pWndOwner) return {};
 
 	tagDuiTextStyle TextStyle = GetTextStyleNormal();
 	CDUIRect rcMeasure;
@@ -321,7 +321,7 @@ CDUISize CDUIThinkEditCtrl::MeasureString(LPCTSTR lpszText)
 
 CDUISize CDUIThinkEditCtrl::MeasureString(VecDuiRichTextBase vecRichTextBase)
 {
-	if (NULL == m_pWndManager) return {};
+	if (NULL == m_pWndOwner) return {};
 
 	VecDuiRichTextItem vecRichTextItem;
 	for (auto &RichTextBase : vecRichTextBase)
@@ -803,7 +803,7 @@ CDUISize CDUIThinkEditCtrl::GetScrollRange()
 
 CMMString CDUIThinkEditCtrl::GetSelectString()
 {
-	if (NULL == m_pWndManager || m_mapLineVecRichTextDraw.empty()) return _T("");
+	if (NULL == m_pWndOwner || m_mapLineVecRichTextDraw.empty()) return _T("");
 
 	//from target
 	int nRowFrom = 0;
@@ -847,7 +847,7 @@ CMMString CDUIThinkEditCtrl::GetSelectString()
 
 CDUIRect CDUIThinkEditCtrl::GetSelectRange()
 {
-	if (NULL == m_pWndManager || m_mapLineVecRichTextDraw.empty()) return {};
+	if (NULL == m_pWndOwner || m_mapLineVecRichTextDraw.empty()) return {};
 
 	//from target
 	int nRowFrom = 0;
@@ -1266,7 +1266,7 @@ bool CDUIThinkEditCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 
 bool CDUIThinkEditCtrl::OnDuiSetFocus()
 {
-	if (NULL == m_pWndManager) return false;
+	if (NULL == m_pWndOwner) return false;
 	if (false == __super::OnDuiSetFocus()) return false;
 
 	//pre edit
@@ -1278,9 +1278,9 @@ bool CDUIThinkEditCtrl::OnDuiSetFocus()
 	DWORD dwProIDCur = ::GetCurrentThreadId();
 
 	::AttachThreadInput(dwProIDCur, dwProIDForground, TRUE);
-	::SetActiveWindow(m_pWndManager->GetWndHandle());
-	::BringWindowToTop(m_pWndManager->GetWndHandle());
-	::SetForegroundWindow(m_pWndManager->GetWndHandle());
+	::SetActiveWindow(m_pWndOwner->GetWndHandle());
+	::BringWindowToTop(m_pWndOwner->GetWndHandle());
+	::SetForegroundWindow(m_pWndOwner->GetWndHandle());
 	::AttachThreadInput(dwProIDCur, dwProIDForground, FALSE);
 
 	//edit
@@ -1290,8 +1290,8 @@ bool CDUIThinkEditCtrl::OnDuiSetFocus()
 	{
 		SetSelAll();
 
-		m_bMouseDownFocus = (CDUIWndManager::MapKeyState() & MK_LBUTTON)
-			|| (CDUIWndManager::MapKeyState() & MK_RBUTTON);
+		m_bMouseDownFocus = (CDUIWnd::MapKeyState() & MK_LBUTTON)
+			|| (CDUIWnd::MapKeyState() & MK_RBUTTON);
 	}
 
 	return true;
@@ -1300,10 +1300,10 @@ bool CDUIThinkEditCtrl::OnDuiSetFocus()
 bool CDUIThinkEditCtrl::OnDuiKillFocus()
 {
 	if (false == __super::OnDuiKillFocus()) return false;
-	if (NULL == m_pWndManager) return false;
+	if (NULL == m_pWndOwner) return false;
 
 	KillTimer(Dui_TimerCaret_ID);
-	m_pWndManager->ShowCaret(false);
+	m_pWndOwner->ShowCaret(false);
 	m_bShowCaret = false;
 	m_szScrollPos = {};
 
@@ -1332,7 +1332,7 @@ bool CDUIThinkEditCtrl::OnDuiKillFocus()
 	if (g_vecDuiRichTextPreEdit != GetRichTextItem()
 		&& false == IsReadOnly())
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_Edited);
+		m_pWndOwner->SendNotify(this, DuiNotify_Edited);
 	}
 
 	return true;
@@ -1342,9 +1342,9 @@ void CDUIThinkEditCtrl::OnDuiWndManagerAttach()
 {
 	__super::OnDuiWndManagerAttach();
 
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
-	m_pWndManager->AddPreMessagePtr(this);
+	m_pWndOwner->AddPreMessagePtr(this);
 
 	return;
 }
@@ -1353,9 +1353,9 @@ void CDUIThinkEditCtrl::OnDuiWndManagerDetach()
 {
 	__super::OnDuiWndManagerDetach();
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->RemovePreMessagePtr(this);
+		m_pWndOwner->RemovePreMessagePtr(this);
 	}
 
 	return;
@@ -1435,13 +1435,13 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 	{
 		case VK_LEFT:
 		{
-			PerformMoveCaretHoriz(true, CDUIWndManager::MapKeyState() & MK_SHIFT);
+			PerformMoveCaretHoriz(true, CDUIWnd::MapKeyState() & MK_SHIFT);
 
 			break;
 		}
 		case VK_RIGHT:
 		{
-			PerformMoveCaretHoriz(false, CDUIWndManager::MapKeyState() & MK_SHIFT);
+			PerformMoveCaretHoriz(false, CDUIWnd::MapKeyState() & MK_SHIFT);
 
 			break;
 		}
@@ -1479,7 +1479,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		case 'A':
 		case 'a':
 		{
-			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			if (CDUIWnd::MapKeyState() & MK_CONTROL)
 			{
 				SetSelAll();
 			}
@@ -1489,7 +1489,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		case 'Z':
 		case 'z':
 		{
-			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			if (CDUIWnd::MapKeyState() & MK_CONTROL)
 			{
 				Undo();
 			}
@@ -1499,7 +1499,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		case 'Y':
 		case 'y':
 		{
-			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			if (CDUIWnd::MapKeyState() & MK_CONTROL)
 			{
 				Redo();
 			}
@@ -1509,7 +1509,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		case 'X':
 		case 'x':
 		{
-			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			if (CDUIWnd::MapKeyState() & MK_CONTROL)
 			{
 				Copy();
 
@@ -1521,7 +1521,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		case 'C':
 		case 'c':
 		{
-			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			if (CDUIWnd::MapKeyState() & MK_CONTROL)
 			{
 				Copy();
 			}
@@ -1531,7 +1531,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		case 'V':
 		case 'v':
 		{
-			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			if (CDUIWnd::MapKeyState() & MK_CONTROL)
 			{
 				Paste();
 			}
@@ -1611,7 +1611,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiChar(const DuiMessage &Msg)
 
 LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 {
-	if (NULL == m_pWndManager) return 0;
+	if (NULL == m_pWndOwner) return 0;
 
 	__super::OnDuiContextMenu(Msg);
 
@@ -1640,8 +1640,8 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	EnableMenuItem(hPopMenu, ID_MENU_PASTE, MF_BYCOMMAND | uReadonly);
 
 	CDUIPoint ptScreen = Msg.ptMouse;
-	::ClientToScreen(m_pWndManager->GetWndHandle(), &ptScreen);
-	TrackPopupMenu(hPopMenu, TPM_RIGHTBUTTON, ptScreen.x, ptScreen.y, 0, m_pWndManager->GetWndHandle(), NULL);
+	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptScreen);
+	TrackPopupMenu(hPopMenu, TPM_RIGHTBUTTON, ptScreen.x, ptScreen.y, 0, m_pWndOwner->GetWndHandle(), NULL);
 	DestroyMenu(hPopMenu);
 
 	return 0;
@@ -1707,13 +1707,13 @@ LRESULT CDUIThinkEditCtrl::OnDuiCommand(const DuiMessage &Msg)
 
 LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 {
-	if (NULL == m_pWndManager) return 0;
+	if (NULL == m_pWndOwner) return 0;
 
 	__super::OnDuiImeComPosition(Msg);
 
 	//emoji
 	CMMString strBuff;
-	HIMC hImc = ::ImmGetContext(m_pWndManager->GetWndHandle());
+	HIMC hImc = ::ImmGetContext(m_pWndOwner->GetWndHandle());
 	if (hImc)
 	{
 		int nLen = ImmGetCompositionString(hImc, GCS_COMPSTR, NULL, NULL);
@@ -1730,7 +1730,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 			}
 		}
 
-		ImmReleaseContext(m_pWndManager->GetWndHandle(), hImc);
+		ImmReleaseContext(m_pWndOwner->GetWndHandle(), hImc);
 	}
 
 	return 0;
@@ -1789,7 +1789,7 @@ void CDUIThinkEditCtrl::InitComplete()
 
 void CDUIThinkEditCtrl::PaintText(HDC hDC)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	//normal
 	CDUIRect rcRange = GetTextRange();
@@ -1848,7 +1848,7 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 			RichTextInfo.vecRichTextItem.back().strText = strTipText[n];
 		}
 
-		CDUIRenderEngine::DrawRichText(hDC, rcRange, RichTextInfo, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), GetRichTextLineSpace());
+		CDUIRenderEngine::DrawRichText(hDC, rcRange, RichTextInfo, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace());
 
 		return;
 	}
@@ -1891,7 +1891,7 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 
 				CDUIRect rcDraw(0, 0, rcRange.GetWidth(), rcRange.GetHeight());
 				CDUIMemDC MemDC(hDC, rcDraw, false);
-				CDUIRenderEngine::DrawRichText(MemDC, rcDraw, RichTextInfo, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
+				CDUIRenderEngine::DrawRichText(MemDC, rcDraw, RichTextInfo, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
 				CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcDraw.GetWidth(), rcDraw);
 				m_pBmpShadowText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
 			}
@@ -1904,13 +1904,13 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 		}
 
 		//normal
-		CDUIRenderEngine::DrawRichText(hDC, rcRange, RichTextInfo, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
+		CDUIRenderEngine::DrawRichText(hDC, rcRange, RichTextInfo, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
 
 		return;
 	}
 
 	//focus
-	CDUIRenderEngine::DrawRichText(hDC, rcRange, m_mapLineVecRichTextDraw, TextStyle.dwTextStyle, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType());
+	CDUIRenderEngine::DrawRichText(hDC, rcRange, m_mapLineVecRichTextDraw, TextStyle.dwTextStyle, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType());
 
 	return;
 }
@@ -2072,7 +2072,7 @@ void CDUIThinkEditCtrl::PerformMeasureString(IN VecDuiRichTextItem vecRichTextIt
 	CDUIRect rcItem = rcRange;
 	RichTextInfo.IsWordBreak() ? rcItem.bottom += 9999 : rcItem.right += 9999;
 	rcMeasure = CDUIRect(rcItem.left, rcItem.top, rcItem.left, rcItem.top);
-	CDUIRenderHelp::MeasureRichText(m_pWndManager->GetWndDC(), RichTextInfo, mapLineVecRichTextDraw, rcMeasure, rcItem, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), GetRichTextLineSpace());
+	CDUIRenderHelp::MeasureRichText(m_pWndOwner->GetWndDC(), RichTextInfo, mapLineVecRichTextDraw, rcMeasure, rcItem, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace());
 	CDUIRenderHelp::AdjustRichText(RichTextInfo, rcRange, mapLineVecRichTextDraw, rcMeasure);
 
 	return;
@@ -2080,7 +2080,7 @@ void CDUIThinkEditCtrl::PerformMeasureString(IN VecDuiRichTextItem vecRichTextIt
 
 void CDUIThinkEditCtrl::PerformHitText(CDUIPoint pt, bool bFromMouseDown)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	CDUIRect rcPos = GetTextPositionVisible();
 	bool bHitBottom = pt.y > rcPos.bottom;
@@ -2165,8 +2165,8 @@ void CDUIThinkEditCtrl::PerformHitText(CDUIPoint pt, bool bFromMouseDown)
 	//caret pos
 	CDUIRect rcCaret = GetCaretPos();
 
-	m_pWndManager->CreateCaret(NULL, rcCaret.GetWidth(), rcCaret.GetHeight());
-	m_pWndManager->SetCaretPos({ rcCaret.left, rcCaret.top });
+	m_pWndOwner->CreateCaret(NULL, rcCaret.GetWidth(), rcCaret.GetHeight());
+	m_pWndOwner->SetCaretPos({ rcCaret.left, rcCaret.top });
 	m_bShowCaret = true;
 
 	if (bFromMouseDown)
@@ -2180,7 +2180,7 @@ void CDUIThinkEditCtrl::PerformHitText(CDUIPoint pt, bool bFromMouseDown)
 
 void CDUIThinkEditCtrl::PerformMoveCaretHoriz(bool bLeft, bool bSelect, bool bAdjustWordWrap)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	do
 	{
@@ -2251,21 +2251,21 @@ void CDUIThinkEditCtrl::PerformMoveCaretHoriz(bool bLeft, bool bSelect, bool bAd
 
 		m_bShowCaret = true;
 		Invalidate();
-		UpdateWindow(m_pWndManager->GetWndHandle());
+		UpdateWindow(m_pWndOwner->GetWndHandle());
 
 		return;
 	}
 
 	m_bShowCaret = true;
 	Invalidate();
-	UpdateWindow(m_pWndManager->GetWndHandle());
+	UpdateWindow(m_pWndOwner->GetWndHandle());
 
 	return;
 }
 
 void CDUIThinkEditCtrl::PerformMoveCaretVert(bool bUp)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	int nCaretRowPre = m_nCaretRow;
 
@@ -2306,7 +2306,7 @@ void CDUIThinkEditCtrl::PerformMoveCaretVert(bool bUp)
 	if (m_nCaretRow < 0 || m_nCaretRow >= m_mapLineVecRichTextDraw.size()) return;
 
 	//shift
-	bool bSelect = 0 != (CDUIWndManager::MapKeyState() & MK_SHIFT);
+	bool bSelect = 0 != (CDUIWnd::MapKeyState() & MK_SHIFT);
 	if (false == bSelect)
 	{
 		m_nCaretSelFromRow = m_nCaretRow;
@@ -2338,14 +2338,14 @@ void CDUIThinkEditCtrl::PerformMoveCaretVert(bool bUp)
 
 	m_bShowCaret = true;
 	Invalidate();
-	UpdateWindow(m_pWndManager->GetWndHandle());
+	UpdateWindow(m_pWndOwner->GetWndHandle());
 
 	return;
 }
 
 void CDUIThinkEditCtrl::PerformClearSelect(bool bHistory)
 {
-	if (NULL == m_pWndManager || IsReadOnly()) return;
+	if (NULL == m_pWndOwner || IsReadOnly()) return;
 
 	//from target
 	int nRowFrom = 0;
@@ -2434,13 +2434,13 @@ void CDUIThinkEditCtrl::PerformClearSelect(bool bHistory)
 
 void CDUIThinkEditCtrl::PerformAdjustCaret()
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	CDUIRect rcCaret = GetCaretPos();
 
 	if (IsFocused())
 	{
-		m_pWndManager->SetCaretPos({ rcCaret.left, rcCaret.top });
+		m_pWndOwner->SetCaretPos({ rcCaret.left, rcCaret.top });
 	}
 
 	return;

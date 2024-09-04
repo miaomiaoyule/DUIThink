@@ -131,9 +131,9 @@ void CDUIProgressCtrl::SetCurValue(int nCurValue)
 	CalcSubPos();
 
 	//notify
-	if (GetWndManager())
+	if (GetWndOwner())
 	{
-		GetWndManager()->SendNotify(this, DuiNotify_ValueChanged);
+		GetWndOwner()->SendNotify(this, DuiNotify_ValueChanged);
 	}
 
 	Invalidate();

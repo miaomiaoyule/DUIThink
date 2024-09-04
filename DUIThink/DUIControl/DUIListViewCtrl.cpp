@@ -37,7 +37,7 @@ CDUIListViewCtrl::~CDUIListViewCtrl(void)
 	return;
 }
 
-bool CDUIListViewCtrl::RegisterControlListen(IDUIInterface *pIControlListen)
+bool CDUIListViewCtrl::RegisterControlListen(IDuiInterface *pIControlListen)
 {
 	if (NULL == pIControlListen || false == __super::RegisterControlListen(pIControlListen)) return false;
 
@@ -49,7 +49,7 @@ bool CDUIListViewCtrl::RegisterControlListen(IDUIInterface *pIControlListen)
 	return true;
 }
 
-bool CDUIListViewCtrl::UnRegisterControlListen(IDUIInterface *pIControlListen)
+bool CDUIListViewCtrl::UnRegisterControlListen(IDuiInterface *pIControlListen)
 {
 	if (NULL == pIControlListen || false == __super::UnRegisterControlListen(pIControlListen)) return false;
 
@@ -236,13 +236,13 @@ void CDUIListViewCtrl::RefreshCtrlID(bool bSelfSingle)
 	return;
 }
 
-bool CDUIListViewCtrl::SetWndManager(CDUIWndManager *pWndManager)
+bool CDUIListViewCtrl::SetWndOwner(CDUIWnd *pWndOwner)
 {
-	if (false == __super::SetWndManager(pWndManager)) return false;
+	if (false == __super::SetWndOwner(pWndOwner)) return false;
 
 	if (m_pListHeader)
 	{
-		m_pListHeader->SetWndManager(m_pWndManager);
+		m_pListHeader->SetWndOwner(m_pWndOwner);
 	}
 
 	return true;
@@ -327,7 +327,7 @@ bool CDUIListViewCtrl::DoPaint(HDC hDC, bool bGenerateBmp)
 		if (false == pItem->IsFloat() && (n < m_nFirstShowIndex || n > m_nLastShowIndex)) continue;
 
 		//focus
-		if (m_pWndManager && m_pWndManager->GetFocusControl() && m_pWndManager->GetFocusControl()->GetOwnerModelCtrl() == pItem)
+		if (m_pWndOwner && m_pWndOwner->GetFocusControl() && m_pWndOwner->GetFocusControl()->GetOwnerModelCtrl() == pItem)
 		{
 			pItemFocus = pItem;
 
@@ -469,9 +469,9 @@ void CDUIListViewCtrl::SwitchListViewType(enDuiListViewType ListViewType)
 	}
 
 	//notify
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_SwitchListViewType);
+		m_pWndOwner->SendNotify(this, DuiNotify_SwitchListViewType);
 	}
 
 	NeedRefreshView();
@@ -939,7 +939,7 @@ bool CDUIListViewCtrl::SelectItem(int nIndex, bool bTakeFocus)
 	}
 
 	//single
-	if (false == IsMultiSelect() && 0 == (CDUIWndManager::MapKeyState() & MK_CONTROL))
+	if (false == IsMultiSelect() && 0 == (CDUIWnd::MapKeyState() & MK_CONTROL))
 	{
 		UnSelectItem(nIndex, true);
 	}
@@ -1148,9 +1148,9 @@ bool CDUIListViewCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 		m_pListHeader->SetParent(this);
 		m_pListHeader->SetOwner(this);
 
-		if (m_pWndManager)
+		if (m_pWndOwner)
 		{
-			m_pWndManager->InitControls(pChild);
+			m_pWndOwner->InitControls(pChild);
 		}
 		if (IsVisible())
 		{
@@ -2018,7 +2018,7 @@ bool CDUIListViewCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Ms
 bool CDUIListViewCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	if (false == m_AttributeImageMouseDragSel.empty()
-		&& this == m_pWndManager->GetCaptureControl())
+		&& this == m_pWndOwner->GetCaptureControl())
 	{
 		PerformMouseDragSel();
 	}
@@ -2032,11 +2032,11 @@ bool CDUIListViewCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &M
 
 	if (this == Msg.pMsgCtrl)
 	{
-		if (0 == (CDUIWndManager::MapKeyState() & MK_CONTROL) && 0 == (CDUIWndManager::MapKeyState() & MK_SHIFT))
+		if (0 == (CDUIWnd::MapKeyState() & MK_CONTROL) && 0 == (CDUIWnd::MapKeyState() & MK_SHIFT))
 		{
 			UnSelectAllItems();
 		}
-		if (this == m_pWndManager->GetCaptureControl())
+		if (this == m_pWndOwner->GetCaptureControl())
 		{
 			m_ptMouseDown = pt;
 			m_rcMouseDragSel.Clear();
@@ -2063,11 +2063,11 @@ bool CDUIListViewCtrl::OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &M
 {
 	if (this == Msg.pMsgCtrl)
 	{
-		if (0 == (CDUIWndManager::MapKeyState() & MK_CONTROL) && 0 == (CDUIWndManager::MapKeyState() & MK_SHIFT))
+		if (0 == (CDUIWnd::MapKeyState() & MK_CONTROL) && 0 == (CDUIWnd::MapKeyState() & MK_SHIFT))
 		{
 			UnSelectAllItems();
 		}
-		if (this == m_pWndManager->GetCaptureControl())
+		if (this == m_pWndOwner->GetCaptureControl())
 		{
 			m_ptMouseDown = pt;
 			m_rcMouseDragSel.Clear();
@@ -2331,9 +2331,9 @@ bool CDUIListViewCtrl::SaveAttribute(tinyxml2::XMLElement *pNode, bool bIncludeC
 
 void CDUIListViewCtrl::PaintMouseDragSel(HDC hDC)
 {
-	if (NULL == m_pWndManager
+	if (NULL == m_pWndOwner
 		|| m_AttributeImageMouseDragSel.empty()
-		|| this != m_pWndManager->GetCaptureControl()) return;
+		|| this != m_pWndOwner->GetCaptureControl()) return;
 
 	m_AttributeImageMouseDragSel.Draw(hDC, m_rcMouseDragSel, m_rcPaint);
 
@@ -2550,7 +2550,7 @@ CDUIControlBase * CDUIListViewCtrl::FindControl(FindControlProc Proc, LPVOID pDa
 		}
 
 		//focus
-		CDUIControlBase *pFocusCtrl = m_pWndManager->GetFocusControl();
+		CDUIControlBase *pFocusCtrl = m_pWndOwner->GetFocusControl();
 		if (pFocusCtrl && pFocusCtrl->GetOwnerModelCtrl())
 		{
 			for (int n = 0; n < GetChildCount(); n++)
@@ -2612,14 +2612,14 @@ void CDUIListViewCtrl::ReapControl()
 
 void CDUIListViewCtrl::PerformMouseDragSel()
 {
-	if (NULL == m_pWndManager
+	if (NULL == m_pWndOwner
 		|| m_AttributeImageMouseDragSel.empty()
-		|| this != m_pWndManager->GetCaptureControl()) return;
+		|| this != m_pWndOwner->GetCaptureControl()) return;
 
 	//range
 	CDUIPoint ptMouse = {};
 	GetCursorPos(&ptMouse);
-	ScreenToClient(m_pWndManager->GetWndHandle(), &ptMouse);
+	ScreenToClient(m_pWndOwner->GetWndHandle(), &ptMouse);
 	m_rcMouseDragSel = CDUIRect
 	(
 		min(ptMouse.x, m_ptMouseDown.x),

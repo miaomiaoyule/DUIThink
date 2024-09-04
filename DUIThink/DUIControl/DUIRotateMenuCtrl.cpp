@@ -54,9 +54,9 @@ CDUIRotateMenuCtrl::CDUIRotateMenuCtrl(void)
 
 CDUIRotateMenuCtrl::~CDUIRotateMenuCtrl(void)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->RemoveINotify(this);
+		m_pWndOwner->RemoveINotify(this);
 	}
 
 	return;
@@ -93,18 +93,18 @@ CMMString CDUIRotateMenuCtrl::GetDescribe() const
 	return Dui_Ctrl_RotateMenu;
 }
 
-bool CDUIRotateMenuCtrl::SetWndManager(CDUIWndManager *pWndManager)
+bool CDUIRotateMenuCtrl::SetWndOwner(CDUIWnd *pWndOwner)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->RemoveINotify(this);
+		m_pWndOwner->RemoveINotify(this);
 	}
 
-	if (false == __super::SetWndManager(pWndManager)) return false;
+	if (false == __super::SetWndOwner(pWndOwner)) return false;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->AddINotify(this);
+		m_pWndOwner->AddINotify(this);
 	}
 
 	return true;
@@ -409,7 +409,7 @@ bool CDUIRotateMenuCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage 
 
 bool CDUIRotateMenuCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (m_pWndManager && m_pWndManager->GetCaptureControl() == this)
+	if (m_pWndOwner && m_pWndOwner->GetCaptureControl() == this)
 	{
 		ScrollChilds(pt);
 	}
@@ -503,7 +503,7 @@ void CDUIRotateMenuCtrl::OnDuiItemButtonDown(const DuiNotify &Notify)
 
 void CDUIRotateMenuCtrl::OnDuiItemMouseMove(const DuiNotify &Notify)
 {
-	if (Notify.pNotifyCtrl != this || NULL == m_pWndManager) return;
+	if (Notify.pNotifyCtrl != this || NULL == m_pWndOwner) return;
 
 	DuiNotify::tagDuiNotifyExtend NotifyExtend = Notify.DuiNotifyExtend;
 	int nIndex = NotifyExtend.ListView.nIndexItem;
@@ -511,8 +511,8 @@ void CDUIRotateMenuCtrl::OnDuiItemMouseMove(const DuiNotify &Notify)
 	CDUIListItemCtrl *pListItem = GetChildAt(nIndex);
 	if (NULL == pListItem) return;
 
-	if (pListItem == m_pWndManager->GetCaptureControl()
-		|| pListItem->VerifyChild(m_pWndManager->GetCaptureControl()))
+	if (pListItem == m_pWndOwner->GetCaptureControl()
+		|| pListItem->VerifyChild(m_pWndOwner->GetCaptureControl()))
 	{
 		ScrollChilds(Notify.ptMouse);
 	}

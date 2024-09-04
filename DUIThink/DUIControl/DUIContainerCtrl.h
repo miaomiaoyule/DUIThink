@@ -18,7 +18,7 @@ class DUITHINK_API CDUIContainerCtrl
 	friend class CDUIXmlPack;
 	friend class CDUIControlBase;
 	friend class CDUIScrollBarCtrl;
-	friend class CDUIWndManager;
+	friend class CDUIWnd;
 	friend class CDUIListHeaderCtrl;
 	friend class CDUIListViewCtrl;
 	friend class CDTDesignerDoc;
@@ -68,8 +68,8 @@ protected:
 	void OnDpiChanged(int nScalePre) override;
 	void OnResourceDelete(CDUIResourceBase *pResourceObj) override;
 	void OnResourceSwitch(int nIndexRes) override;
-	bool RegisterControlListen(IDUIInterface *pIControlListen) override;
-	bool UnRegisterControlListen(IDUIInterface *pIControlListen) override;
+	bool RegisterControlListen(IDuiInterface *pIControlListen) override;
+	bool UnRegisterControlListen(IDuiInterface *pIControlListen) override;
 
 	//method
 public:
@@ -80,7 +80,7 @@ public:
 	//basic
 	UINT InitCtrlID() override;
 	void RefreshCtrlID(bool bSelfSingle = false) override;
-	bool SetWndManager(CDUIWndManager *pWndManager) override;
+	bool SetWndOwner(CDUIWnd *pWndOwner) override;
 	void SetVisible(bool bVisible = true) override;
 
 	//modal

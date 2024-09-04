@@ -1556,6 +1556,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIControl\DUIVerticalLayoutCtrl.h" />
     <ClInclude Include="DUIControl\DUIWaterCtrl.h" />
     <ClInclude Include="DUICore\DUIAnimation.h" />
+    <ClInclude Include="DUICore\DUINotifyPump.h" />
     <ClInclude Include="DUICore\DUIPropertyObject.h" />
     <ClInclude Include="DUICore\DUIRender.h" />
     <ClInclude Include="DUICore\DUIWnd.h" />
@@ -1569,7 +1570,6 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIExport\IDUIInterface.h" />
     <ClInclude Include="DUIManager\DUIFactory.h" />
     <ClInclude Include="DUIManager\DUIGlobal.h" />
-    <ClInclude Include="DUIManager\DUIWndManager.h" />
     <ClInclude Include="DUIResource\DUIColorBase.h" />
     <ClInclude Include="DUIResource\DUIFontBase.h" />
     <ClInclude Include="DUIResource\DUIImageBase.h" />
@@ -1644,13 +1644,13 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUIControl\DUIVerticalLayoutCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIWaterCtrl.cpp" />
     <ClCompile Include="DUICore\DUIAnimation.cpp" />
+    <ClCompile Include="DUICore\DUINotifyPump.cpp" />
     <ClCompile Include="DUICore\DUIPropertyObject.cpp" />
     <ClCompile Include="DUICore\DUIRender.cpp" />
     <ClCompile Include="DUICore\DUIWnd.cpp" />
     <ClCompile Include="DUIExport\IDUIInterface.cpp" />
     <ClCompile Include="DUIManager\DUIFactory.cpp" />
     <ClCompile Include="DUIManager\DUIGlobal.cpp" />
-    <ClCompile Include="DUIManager\DUIWndManager.cpp" />
     <ClCompile Include="DUIResource\DUIColorBase.cpp" />
     <ClCompile Include="DUIResource\DUIFontBase.cpp" />
     <ClCompile Include="DUIResource\DUIImageBase.cpp" />

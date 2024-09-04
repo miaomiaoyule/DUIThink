@@ -339,9 +339,9 @@ bool CDUISliderCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 
 bool CDUISliderCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_MouseMove, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_MouseMove, Msg.wParam, Msg.lParam);
 	}
 	if (0 == (m_nControlStatus & ControlStatus_Pushed) && m_rcCurThumb.PtInRect(pt))
 	{

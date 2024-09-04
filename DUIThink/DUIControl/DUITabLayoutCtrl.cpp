@@ -332,9 +332,9 @@ void CDUITabLayoutCtrl::SelectItem(int nIndex)
 	}
 
 	//select bind RadioBox
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		CDUIRadioBoxCtrl *pRadioBoxCtrl = m_pWndManager->GetRadioBoxOfBindTabCtrl(this, GetCurSel());
+		CDUIRadioBoxCtrl *pRadioBoxCtrl = m_pWndOwner->GetRadioBoxOfBindTabCtrl(this, GetCurSel());
 
 		if (pRadioBoxCtrl)
 		{

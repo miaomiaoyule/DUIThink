@@ -46,7 +46,6 @@ class DUITHINK_API CDUIGlobal
 	friend class CFontResView;
 	friend class CColorResView;
 	friend class CColorGridWnd;
-	friend class CDUIWndManager;
 	friend class CDUIAttributeObject;
 	friend class CDUIAttriImageSection;
 	friend class CDUIAttributeTextStyle;
@@ -63,6 +62,7 @@ class DUITHINK_API CDUIGlobal
 	friend class CDUIPropertyObject;
 	friend class CDUIImageBase;
 	friend class CDUIPreview;
+	friend class CDUIWnd;
 	friend class CControlView;
 	friend class CVSManager;
 	friend class CDlgWizardVariant;
@@ -126,7 +126,7 @@ private:
 	CMMThreadPool						m_ThreadPool;
 	CMMDpi								m_DpiInfo;
 	std::vector<HMODULE>				m_vecModuleExtendDll;
-	MapWndManager						m_mapWndManager;
+	MapWnd								m_mapWnd;
 	HINSTANCE							m_hInstance = NULL;
 	HINSTANCE							m_hInstanceResource = NULL;
 	enDuiFileResType					m_DuiFileResType = DuiFileResType_File;
@@ -231,7 +231,7 @@ public:
 
 	//dui
 public:
-	CDUIControlBase * LoadDui(const CMMString &strName, CDUIWndManager *pWndManager = NULL);
+	CDUIControlBase * LoadDui(const CMMString &strName, CDUIWnd *pWnd = NULL);
 
 	//ui manager
 protected:
@@ -256,7 +256,7 @@ protected:
 	CMMString CreateCalendar();
 	CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
 	CDUIControlBase * ParseDui(LPCTSTR lpszXml);
-	bool SaveDui(LPCTSTR lpszName, CDUIWndManager *pWndManager);
+	bool SaveDui(LPCTSTR lpszName, CDUIWnd *pWnd);
 	CMMString SaveDui(CDUIPropertyObject *pProp, bool bIncludeChild = true);
 	bool ExtractResourceData(vector<BYTE> &vecData, CMMString strFile);
 	
@@ -334,14 +334,14 @@ protected:
 	void OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t uID);
 	bool SaveAttriValue(tinyxml2::XMLDocument &xmlDoc);
 
-	//WndManager
-	void AddWndManager(CDUIWndManager *pWndManager);
-	MapWndManager GetWndManagerAll();
-	tagDuiFile GetWndManagerInfo(CDUIWndManager *pWndManager);
-	void RenameWndManager(const CMMString &strNameOld, const CMMString &strNameNew);
-	void RenameWndManager(CDUIWndManager *pWndManager, const CMMString &strNameNew);
-	void SetWndManagerDuiType(CDUIWndManager *pWndManager, enDuiType DuiType);
-	void RemoveWndManager(CDUIWndManager *pWndManager);
+	//Wnd
+	void AddWnd(CDUIWnd *pWnd);
+	MapWnd GetWndAll();
+	tagDuiFile GetWndInfo(CDUIWnd *pWnd);
+	void RenameWnd(const CMMString &strNameOld, const CMMString &strNameNew);
+	void RenameWnd(CDUIWnd *pWnd, const CMMString &strNameNew);
+	void SetWndDuiType(CDUIWnd *pWnd, enDuiType DuiType);
+	void RemoveWnd(CDUIWnd *pWnd);
 
 	//release
 	void ReleaseResource();

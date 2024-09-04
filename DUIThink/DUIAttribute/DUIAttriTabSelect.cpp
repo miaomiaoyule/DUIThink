@@ -27,8 +27,8 @@ LPVOID CDUIAttriTabSelect::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 
 void CDUIAttriTabSelect::InitSelectItem()
 {
-	CDUIWndManager *pWndManager = GetOwnerWndManager();
-	if (NULL == pWndManager) return;
+	CDUIWnd *pWnd = GetOwnerWnd();
+	if (NULL == pWnd) return;
 	
 	CMMString strDescribe = GetCurSelDescribe();
 
@@ -37,7 +37,7 @@ void CDUIAttriTabSelect::InitSelectItem()
 	tagDuiCombox AttriCombox;
 	AttriCombox.vecItem.push_back({ 0, _T("") });
 	
-	VecDuiControlBase vecControl = pWndManager->FindSubControlsByClass(pWndManager->GetRootCtrl(), CDUITabLayoutCtrl().GetClass());
+	VecDuiControlBase vecControl = pWnd->FindSubControlsByClass(pWnd->GetRootCtrl(), CDUITabLayoutCtrl().GetClass());
 	for (auto pControl : vecControl)
 	{
 		MMInterfaceHelper(CDUITabLayoutCtrl, pControl, pTabCtrl);

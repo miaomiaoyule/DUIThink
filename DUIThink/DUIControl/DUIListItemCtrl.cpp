@@ -613,7 +613,7 @@ bool CDUIListItemCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg
 
 	__super::OnDuiLButtonUp(pt, Msg);
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
 		SendNotify(DuiNotify_ItemButtonUp, Msg.wParam, Msg.lParam);
 
@@ -856,7 +856,7 @@ void CDUIListItemCtrl::InitComplete()
 
 void CDUIListItemCtrl::PaintText(HDC hDC)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	//text
 	CMMString strText = GetText();
@@ -868,7 +868,7 @@ void CDUIListItemCtrl::PaintText(HDC hDC)
 
 	CDUIRect rcRange = GetTextRange();
 
-	pAttribute->Draw(hDC, rcRange, strText, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), false);
+	pAttribute->Draw(hDC, rcRange, strText, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), false);
 
 	return;
 }
@@ -1047,7 +1047,7 @@ void CDUIListItemCtrl::PaintLineOnTileType(HDC hDC)
 
 void CDUIListItemCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPARAM lParam, CMMString strTextOld)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	DuiNotify Notify;
 	Notify.NotifyType = NotifyType;
@@ -1058,7 +1058,7 @@ void CDUIListItemCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPA
 	Notify.DuiNotifyExtend.ListView.nIndexItem = GetIndex();
 	Notify.DuiNotifyExtend.ListView.strTextOld = strTextOld;
 
-	m_pWndManager->SendNotify(Notify);
+	m_pWndOwner->SendNotify(Notify);
 
 	return;
 }

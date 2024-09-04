@@ -12,7 +12,7 @@ class CDUIThinkEditCtrl;
 static const GUID IID_CDUISpinCtrl = { 0xFD64C6EC,0xA2AC,0x4228,0xB2,0x02,0x3E,0xA7,0x72,0x42,0x97,0xF7 };
 class DUITHINK_API CDUISpinCtrl
 	: public CDUIHorizontalLayoutCtrl
-	, public IDUIControlCallBack
+	, public IDuiControlCallBack
 {
 	DuiDeclare_CreateControl(CDUISpinCtrl)
 	MMDeclare_ClassName(CDUISpinCtrl)

@@ -66,9 +66,6 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateAttribute(CDUIAttributeRect);
 	DUIInner_RegisterCreateAttribute(CDUIAttributeHotKey);
 
-	//窗体管理类
-	DUIInner_RegisterCreateWndManager(CDUIWndManager);
-
 	return;
 }
 
@@ -110,15 +107,6 @@ CDUIAttributeObject * CDUIFactory::CreateAttributeObj(LPCSTR lpszClassName)
 	return (CDUIAttributeObject*)(FindIt->second());
 }
 
-CDUIWndManager * CDUIFactory::CreateWndManagerObj(LPCSTR lpszClassName)
-{
-	auto FindIt = m_mapWndManagerClass.find(lpszClassName);
-
-	if (FindIt == m_mapWndManagerClass.end()) return NULL;
-
-	return (CDUIWndManager*)(FindIt->second());
-}
-
 void CDUIFactory::RegistControlClass(LPCSTR lpszClassName, DUICreateControlObj pFunc)
 {
 	m_mapControlClass.insert(MapDuiCreateControl::value_type(lpszClassName, pFunc));
@@ -132,11 +120,6 @@ void CDUIFactory::RegistResourceClass(LPCSTR lpszClassName, DUICreateResourceObj
 void CDUIFactory::RegistAttributeClass(LPCSTR lpszClassName, DUICreateAttributeObj pFunc)
 {
 	m_mapAttributeClass.insert(MapDuiCreateAttribute::value_type(lpszClassName, pFunc));
-}
-
-void CDUIFactory::RegistWndManagerClass(LPCSTR lpszClassName, DUICreateWndManagerObj pFunc)
-{
-	m_mapWndManagerClass.insert(MapDuiCreateWndManager::value_type(lpszClassName, pFunc));
 }
 
 //////////////////////////////////////////////////////////////////////////

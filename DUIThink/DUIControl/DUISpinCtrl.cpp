@@ -227,12 +227,12 @@ void CDUISpinCtrl::OnDuiClickBtnDown(const DuiNotify &Notify)
 void CDUISpinCtrl::OnDuiTextChangeValue(const DuiNotify &Notify)
 {
 	if (NULL == m_pEditValueCtrl
-		|| NULL == m_pWndManager
+		|| NULL == m_pWndOwner
 		|| Notify.pNotifyCtrl != m_pEditValueCtrl) return;
 
 	DuiNotify NotifyTemp = Notify;
 	NotifyTemp.pNotifyCtrl = this;
-	m_pWndManager->SendNotify(NotifyTemp);
+	m_pWndOwner->SendNotify(NotifyTemp);
 
 	return;
 }

@@ -45,7 +45,7 @@ VecControlListen CDUIPropertyObject::GetControlListen()
 #endif
 }
 
-bool CDUIPropertyObject::RegisterControlListen(IDUIInterface *pIControlListen)
+bool CDUIPropertyObject::RegisterControlListen(IDuiInterface *pIControlListen)
 {
 	if (NULL == pIControlListen) return false;
 
@@ -58,7 +58,7 @@ bool CDUIPropertyObject::RegisterControlListen(IDUIInterface *pIControlListen)
 	return true;
 }
 
-bool CDUIPropertyObject::UnRegisterControlListen(IDUIInterface *pIControlListen)
+bool CDUIPropertyObject::UnRegisterControlListen(IDuiInterface *pIControlListen)
 {
 	if (NULL == pIControlListen) return false;
 
@@ -99,7 +99,7 @@ const CMMDpi & CDUIPropertyObject::GetDpiObj()
 	return CDUIGlobal::GetInstance()->GetDpiObj();
 }
 
-CDUIWndManager * CDUIPropertyObject::GetWndManager()
+CDUIWnd * CDUIPropertyObject::GetWndOwner()
 {
 	return NULL;
 }

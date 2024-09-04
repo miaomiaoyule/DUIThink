@@ -122,7 +122,7 @@ void CDUIContainerCtrl::OnResourceSwitch(int nIndexRes)
 	return;
 }
 
-bool CDUIContainerCtrl::RegisterControlListen(IDUIInterface *pIControlListen)
+bool CDUIContainerCtrl::RegisterControlListen(IDuiInterface *pIControlListen)
 {
 	if (NULL == pIControlListen || false == __super::RegisterControlListen(pIControlListen)) return false;
 
@@ -147,7 +147,7 @@ bool CDUIContainerCtrl::RegisterControlListen(IDUIInterface *pIControlListen)
 	return true;
 }
 
-bool CDUIContainerCtrl::UnRegisterControlListen(IDUIInterface *pIControlListen)
+bool CDUIContainerCtrl::UnRegisterControlListen(IDuiInterface *pIControlListen)
 {
 	if (NULL == pIControlListen || false == __super::UnRegisterControlListen(pIControlListen)) return false;
 
@@ -264,22 +264,22 @@ void CDUIContainerCtrl::RefreshCtrlID(bool bSelfSingle)
 	return;
 }
 
-bool CDUIContainerCtrl::SetWndManager(CDUIWndManager *pWndManager)
+bool CDUIContainerCtrl::SetWndOwner(CDUIWnd *pWndOwner)
 {
-	if (false == __super::SetWndManager(pWndManager)) return false;
+	if (false == __super::SetWndOwner(pWndOwner)) return false;
 
 	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
 	{
 		CDUIControlBase *pChild = GetChildAt(nIndex);
-		if (pChild) pChild->SetWndManager(m_pWndManager);
+		if (pChild) pChild->SetWndOwner(m_pWndOwner);
 	}
 	if (m_pHorizScrollBarCtrl)
 	{
-		m_pHorizScrollBarCtrl->SetWndManager(m_pWndManager);
+		m_pHorizScrollBarCtrl->SetWndOwner(m_pWndOwner);
 	}
 	if (m_pVertScrollBarCtrl)
 	{
-		m_pVertScrollBarCtrl->SetWndManager(m_pWndManager);
+		m_pVertScrollBarCtrl->SetWndOwner(m_pWndOwner);
 	}
 
 	return true;
@@ -655,9 +655,9 @@ void CDUIContainerCtrl::SetScrollPos(SIZE szPos, bool bMsg)
 	{
 		m_pVertScrollBarCtrl->SetCurValue(szPos.cy);
 	}
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_Scroll);
+		m_pWndOwner->SendNotify(this, DuiNotify_Scroll);
 	}
 
 	return;
@@ -922,9 +922,9 @@ bool CDUIContainerCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 	pChild->SetParent(this);
 	pChild->SetOwnerModelCtrl(GetOwnerModelCtrl());
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->InitControls(pChild);
+		m_pWndOwner->InitControls(pChild);
 	}
 	if (IsVisible())
 	{
@@ -953,7 +953,7 @@ CDUIControlBase * CDUIContainerCtrl::DetachChild(int nIndex)
 
 		pChild->SetOwnerModelCtrl(NULL);
 		pChild->ReapControl();
-		pChild->SetWndManager(NULL);
+		pChild->SetWndOwner(NULL);
 
 		NeedRefreshView();
 
@@ -1103,9 +1103,9 @@ bool CDUIContainerCtrl::Remove(CDUIControlBase *pControl)
 	//delete
 	m_vecChilds.erase(m_vecChilds.begin() + nIndex);
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->DelayDelete(pControl);
+		m_pWndOwner->DelayDelete(pControl);
 	}
 	else
 	{
@@ -1128,9 +1128,9 @@ bool CDUIContainerCtrl::RemoveAt(int nIndex)
 	//delete
 	m_vecChilds.erase(m_vecChilds.begin() + nIndex);
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->DelayDelete(pControl);
+		m_pWndOwner->DelayDelete(pControl);
 	}
 	else
 	{
@@ -1152,9 +1152,9 @@ void CDUIContainerCtrl::RemoveAll()
 		//control notify
 		CDUIGlobal::PerformNotifyChildRemove(this, pControl);
 
-		if (m_pWndManager)
+		if (m_pWndOwner)
 		{
-			m_pWndManager->DelayDelete(pControl);
+			m_pWndOwner->DelayDelete(pControl);
 		}
 		else
 		{
@@ -1186,12 +1186,12 @@ int CDUIContainerCtrl::TranslateIndex(CDUIPoint pt)
 
 CDUIControlBase * CDUIContainerCtrl::FindSubControl(UINT uCtrlID)
 {
-	return FindControl(CDUIWndManager::__FindControlFromID, (LPVOID)&uCtrlID, DuiFind_All);
+	return FindControl(CDUIWnd::__FindControlFromID, (LPVOID)&uCtrlID, DuiFind_All);
 }
 
 CDUIControlBase * CDUIContainerCtrl::FindSubControlThisView(UINT uCtrlID)
 {
-	return FindControl(CDUIWndManager::__FindControlFromID, (LPVOID)&uCtrlID, DuiFind_All | DuiFind_ThisView);
+	return FindControl(CDUIWnd::__FindControlFromID, (LPVOID)&uCtrlID, DuiFind_All | DuiFind_ThisView);
 }
 
 int CDUIContainerCtrl::FindNextIndex(int nIndexCur, bool bPositive, UINT uFlags, int nNextCount) const

@@ -9,7 +9,7 @@ class DUITHINK_API CDUIXmlPack
 public:
 	static bool SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const MapDuiFontBase &mapResFont, \
 		const MapDuiImageBase &mapResImage, const MapDuiColorBase &mapResColor, const VecDuiFile &vecDui, \
-		const MapWndManager &mapWndManager, CMMString strFontResDefault);
+		const MapWnd &mapWnd, CMMString strFontResDefault);
 	static bool LoadProject(LPCTSTR lpszProject);
 	static bool SaveResource(LPCTSTR lpszFile, VecDuiResourceBase &VecRes);
 	static bool LoadResource(LPCTSTR lpszFile);
@@ -17,11 +17,11 @@ public:
 	static bool LoadAttribute(LPCTSTR lpszFile);
 	static bool SaveCtrlID(const MapDuiControlID &mapCtrlID);
 	static bool LoadCtrlID(LPCTSTR lpszFile);
-	static bool SaveXmlUI(LPCTSTR lpszFile, CDUIWndManager *pWndManager);
+	static bool SaveXmlUI(LPCTSTR lpszFile, CDUIWnd *pWnd);
 	static CMMString SaveDui(CDUIPropertyObject *pProp, bool bIncludeChild = true);
 	static bool LoadDuiXml(LPCTSTR lpszFile, tinyxml2::XMLDocument &DuiXml);
-	static CDUIControlBase * LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWndManager *pWndManager);
-	static CDUIControlBase * LoadDui(LPCTSTR lpszFile, CDUIWndManager *pWndManager);
+	static CDUIControlBase * LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWnd *pWnd);
+	static CDUIControlBase * LoadDui(LPCTSTR lpszFile, CDUIWnd *pWnd);
 	static CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
 	static CDUIControlBase * ParseDui(LPCTSTR lpszXml);
 	static bool RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pProp);

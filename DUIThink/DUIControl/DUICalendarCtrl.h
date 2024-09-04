@@ -11,7 +11,7 @@ static const GUID IID_CDUICalendarCtrl = { 0xA6D76CAA,0xF4CD,0x47F1,0xAD,0x6E,0x
 class DUITHINK_API CDUICalendarCtrl
 	: public CDUIVerticalLayoutCtrl
 	, public CDUINotifyPump
-	, public IDUIControlCallBack
+	, public IDuiControlCallBack
 {
 	DuiDeclare_CreateControl(CDUICalendarCtrl)
 	MMDeclare_ClassName(CDUICalendarCtrl)
@@ -91,7 +91,7 @@ public:
 	CMMString GetDescribe() const override;
 
 	//basic
-	bool SetWndManager(CDUIWndManager *pWndManager) override;
+	bool SetWndOwner(CDUIWnd *pWndOwner) override;
 
 	//calendar;
 	virtual bool IsHeaderVisible();

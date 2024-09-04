@@ -61,9 +61,9 @@ CDUIPropertyObject * CDUIAttributeObject::GetOwner()
 	return m_pOwner;
 }
 
-CDUIWndManager * CDUIAttributeObject::GetOwnerWndManager()
+CDUIWnd * CDUIAttributeObject::GetOwnerWnd()
 {
-	return m_pOwner ? m_pOwner->GetWndManager() : NULL;
+	return m_pOwner ? m_pOwner->GetWndOwner() : NULL;
 }
 
 CDUIAttributeGroup * CDUIAttributeObject::GetGroup()

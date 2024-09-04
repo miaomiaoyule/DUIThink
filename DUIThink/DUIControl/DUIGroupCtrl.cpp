@@ -79,9 +79,9 @@ bool CDUIGroupCtrl::SetText(LPCTSTR lpszText)
 
 	m_AttributeText.SetValue(lpszText);
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_TextChanged);
+		m_pWndOwner->SendNotify(this, DuiNotify_TextChanged);
 	}
 
 	Invalidate();
@@ -131,7 +131,7 @@ void CDUIGroupCtrl::SetTextStyle(const tagDuiTextStyle &TextStyle)
 
 void CDUIGroupCtrl::PaintText(HDC hDC)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	//range
 	CDUIRect rcRange = GetAbsoluteRect();
@@ -145,7 +145,7 @@ void CDUIGroupCtrl::PaintText(HDC hDC)
 	CMMString strText = GetText();
 	if (strText.empty()) return;
 
-	m_AttributeTextStyle.Draw(hDC, rcRange, strText, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), IsShadowText());
+	m_AttributeTextStyle.Draw(hDC, rcRange, strText, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), IsShadowText());
 
 	return;
 }

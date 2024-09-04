@@ -13,10 +13,10 @@ public:
 	//variant
 protected:
 	CDUIHotKeyCtrl *					m_pOwner = NULL;
-	CDUIWndManager *					m_pWndManagerOwner = NULL;
+	CDUIWnd *							m_pWndOwner = NULL;
 
 public:
-	void Init();
+	bool Init();
 	void UnInit();
 	void AdjustWndSize(bool bCreate);
 
@@ -52,16 +52,16 @@ CDUIHotKeyWnd::~CDUIHotKeyWnd()
 	return;
 }
 
-void CDUIHotKeyWnd::Init()
+bool CDUIHotKeyWnd::Init()
 {
-	if (NULL == m_pOwner || IsWindow(GetHWND())) return;
+	if (NULL == m_pOwner || IsWindow(GetWndHandle())) return true;
 
-	m_pWndManagerOwner = static_cast<CDUIWndManager*>(m_pOwner->GetWndManager());
+	m_pWndOwner = static_cast<CDUIWnd*>(m_pOwner->GetWndOwner());
 
-	if (NULL == m_pWndManagerOwner)
+	if (NULL == m_pWndOwner)
 	{
 		assert(false);
-		return;
+		return false;
 	}
 
 	//wndstyle
@@ -75,12 +75,12 @@ void CDUIHotKeyWnd::Init()
 	(TextStyle.dwTextStyle & DT_CENTER) ? uWndStyle |= ES_CENTER : NULL;
 	(TextStyle.dwTextStyle & DT_RIGHT) ? uWndStyle |= ES_RIGHT : NULL;
 
-	Create(m_pWndManagerOwner->GetWndHandle(), _T(""), uWndStyle, WS_EX_WINDOWEDGE | WS_EX_TRANSPARENT);
+	Create(m_pWndOwner->GetWndHandle(), _T(""), uWndStyle, WS_EX_WINDOWEDGE | WS_EX_TRANSPARENT);
 
 	if (false == IsWindow(m_hWnd))
 	{
 		assert(false);
-		return;
+		return false;
 	}
 
 	AdjustWndSize(true);
@@ -107,7 +107,7 @@ void CDUIHotKeyWnd::Init()
 	::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
 	::SetFocus(m_hWnd);
 
-	return;
+	return true;
 }
 
 void CDUIHotKeyWnd::UnInit()
@@ -119,7 +119,7 @@ void CDUIHotKeyWnd::UnInit()
 
 void CDUIHotKeyWnd::AdjustWndSize(bool bCreate)
 {
-	if (NULL == m_pOwner || NULL == m_pWndManagerOwner) return;
+	if (NULL == m_pOwner) return;
 
 	CDUIRect rcPos = m_pOwner->GetTextRange();
 
@@ -136,7 +136,7 @@ void CDUIHotKeyWnd::AdjustWndSize(bool bCreate)
 	if (GetWindowLong(m_hWnd, GWL_STYLE) & WS_POPUP)
 	{
 		CDUIRect rcWnd;
-		::GetWindowRect(m_pWndManagerOwner->GetWndHandle(), &rcWnd);
+		::GetWindowRect(m_pWndOwner->GetWndHandle(), &rcWnd);
 		rcPos.Offset(rcWnd.left, rcWnd.top);
 	}
 
@@ -158,11 +158,11 @@ void CDUIHotKeyWnd::OnFinalMessage()
 {
 	__super::OnFinalMessage();
 
-	if (m_pOwner && m_pWndManagerOwner)
+	if (m_pOwner && m_pWndOwner)
 	{
-		if (m_pWndManagerOwner->GetFocusControl() == m_pOwner)
+		if (m_pWndOwner->GetFocusControl() == m_pOwner)
 		{
-			m_pWndManagerOwner->SetFocusControl(NULL);
+			m_pWndOwner->SetFocusControl(NULL);
 		}
 
 		m_pOwner->Invalidate();
@@ -199,7 +199,7 @@ LRESULT CDUIHotKeyWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			if (VK_RETURN == TCHAR(wParam))
 			{
-				m_pWndManagerOwner->SendNotify(m_pOwner, DuiNotify_Return);
+				m_pWndOwner->SendNotify(m_pOwner, DuiNotify_Return);
 			}
 
 			//text
@@ -225,12 +225,12 @@ LRESULT CDUIHotKeyWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			CDUIRect rcWnd;
 			::GetWindowRect(m_hWnd, &rcWnd);
-			MMScreenToClient(rcWnd, m_pWndManagerOwner->GetWndHandle());
+			MMScreenToClient(rcWnd, m_pWndOwner->GetWndHandle());
 			do
 			{
 				if (rcWnd.Empty()) break;
 
-				HBITMAP hBmpBk = CDUIRenderEngine::GenerateBitmap(m_pWndManagerOwner, m_pWndManagerOwner->GetRootCtrl(), rcWnd);
+				HBITMAP hBmpBk = CDUIRenderEngine::GenerateBitmap(m_pWndOwner, m_pWndOwner->GetRootCtrl(), rcWnd);
 				if (NULL == hBmpBk) break;
 
 				Bitmap *pBmp = CDUIRenderEngine::GetAlphaBitmap(hBmpBk);
@@ -301,9 +301,9 @@ CDUIHotKeyCtrl::~CDUIHotKeyCtrl(void)
 {
 	MMSafeDelete(m_pHotKeyWindow);
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->RemovePreMessagePtr(this);
+		m_pWndOwner->RemovePreMessagePtr(this);
 	}
 
 	return;
@@ -380,7 +380,7 @@ void CDUIHotKeyCtrl::RefreshView()
 	__super::RefreshView();
 
 	//adjust
-	if (m_pHotKeyWindow && m_pHotKeyWindow->GetHWND())
+	if (m_pHotKeyWindow && m_pHotKeyWindow->GetWndHandle())
 	{
 		m_pHotKeyWindow->AdjustWndSize(false);
 	}
@@ -496,7 +496,7 @@ void CDUIHotKeyCtrl::SetAutoSelAll(bool bAutoSelAll)
 bool CDUIHotKeyCtrl::OnDuiSetFocus()
 {
 	if (false == __super::OnDuiSetFocus()) return false;
-	if (m_pHotKeyWindow && m_pHotKeyWindow->GetHWND()) return true;
+	if (m_pHotKeyWindow && m_pHotKeyWindow->GetWndHandle()) return true;
 
 	m_pHotKeyWindow->Init();
 
@@ -523,9 +523,9 @@ void CDUIHotKeyCtrl::OnDuiWndManagerAttach()
 {
 	__super::OnDuiWndManagerAttach();
 
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
-	m_pWndManager->AddPreMessagePtr(this);
+	m_pWndOwner->AddPreMessagePtr(this);
 
 	return;
 }
@@ -534,9 +534,9 @@ void CDUIHotKeyCtrl::OnDuiWndManagerDetach()
 {
 	__super::OnDuiWndManagerAttach();
 
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
-	m_pWndManager->RemovePreMessagePtr(this);
+	m_pWndOwner->RemovePreMessagePtr(this);
 
 	return;
 }

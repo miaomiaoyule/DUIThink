@@ -14,7 +14,7 @@ typedef std::map<uint32_t, CMMString> MapAttributeName;
 #define VER_CDUIAttributeObject INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeObject = { 0x5AF26DBE,0x6DDA,0x4512,0x8F,0x97,0x5E,0x08,0x2A,0xC7,0x72,0xE4 };
 class DUITHINK_API CDUIAttributeObject
-	: public IDUIInterface
+	: public IDuiInterface
 {
 	friend class CDUIGlobal;
 	friend class CDUIXmlPack;
@@ -62,7 +62,7 @@ public:
 	virtual LPCTSTR GetAttributeName();
 	virtual enDuiAttributeType GetAttributeType();
 	virtual CDUIPropertyObject * GetOwner();
-	virtual CDUIWndManager * GetOwnerWndManager();
+	virtual CDUIWnd * GetOwnerWnd();
 	virtual CDUIAttributeGroup * GetGroup();
 	virtual LPCTSTR GetGroupName();
 

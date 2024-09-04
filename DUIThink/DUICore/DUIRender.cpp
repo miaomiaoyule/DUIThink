@@ -1481,10 +1481,10 @@ HBITMAP CDUIRenderEngine::CreateARGB32Bitmap(HDC hDC, int cx, int cy, BYTE **pBi
 	return hBitmap;
 }
 
-HBITMAP CDUIRenderEngine::GenerateBitmap(CDUIWndManager *pManager, CDUIControlBase *pControl, const CDUIRect &rcItem, DWORD dwFilterColor)
+HBITMAP CDUIRenderEngine::GenerateBitmap(CDUIWnd *pWnd, CDUIControlBase *pControl, const CDUIRect &rcItem, DWORD dwFilterColor)
 {
-	HDC hPaintDC = ::CreateCompatibleDC(pManager->GetWndDC());
-	HBITMAP hPaintBitmap = ::CreateCompatibleBitmap(pManager->GetWndDC(), rcItem.right, rcItem.bottom);
+	HDC hPaintDC = ::CreateCompatibleDC(pWnd->GetWndDC());
+	HBITMAP hPaintBitmap = ::CreateCompatibleBitmap(pWnd->GetWndDC(), rcItem.right, rcItem.bottom);
 	ASSERT(hPaintDC);
 	ASSERT(hPaintBitmap);
 	HBITMAP hOldPaintBitmap = (HBITMAP)::SelectObject(hPaintDC, hPaintBitmap);
@@ -1492,8 +1492,8 @@ HBITMAP CDUIRenderEngine::GenerateBitmap(CDUIWndManager *pManager, CDUIControlBa
 	AdjustImage(hPaintBitmap, dwFilterColor, 0);
 
 	LPBYTE pBmpBits = NULL;
-	HDC hCloneDC = ::CreateCompatibleDC(pManager->GetWndDC());
-	HBITMAP hBitmap = CreateARGB32Bitmap(pManager->GetWndDC(), rcItem.GetWidth(), rcItem.GetHeight(), &pBmpBits);
+	HDC hCloneDC = ::CreateCompatibleDC(pWnd->GetWndDC());
+	HBITMAP hBitmap = CreateARGB32Bitmap(pWnd->GetWndDC(), rcItem.GetWidth(), rcItem.GetHeight(), &pBmpBits);
 	ASSERT(hCloneDC);
 	ASSERT(hBitmap);
 	if (hBitmap != NULL)

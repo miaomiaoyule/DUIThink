@@ -339,7 +339,7 @@ bool CDUIAttributePosition::SetPositionFromAbsolute(const CDUIRect &rcAbsolute)
 
 CDUIRect CDUIAttributePosition::GetAbsoluteRect(const CDUIRect &rcParentAbs)
 {
-	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndManager()) return {};
+	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return {};
 
 	//layout
 	tagDuiPosition Position = GetPosition();

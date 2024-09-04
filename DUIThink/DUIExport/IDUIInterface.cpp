@@ -1,19 +1,19 @@
 #include "StdAfx.h"
-#include "IDUIInterface.h"
+#include "IDuiInterface.h"
 
 //////////////////////////////////////////////////////////////////////////
-LPVOID IDUIInterface::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
+LPVOID IDuiInterface::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
-	QUERYINTERFACE(IDUIInterface, Guid, dwQueryVer);
+	QUERYINTERFACE(IDuiInterface, Guid, dwQueryVer);
 	QUERYINTERFACE(IMMUnknown, Guid, dwQueryVer);
 
 	return NULL;
 }
 
 //////////////////////////////////////////////////////////////////////////
-LPVOID IDUIPropertyObject::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
+LPVOID IDuiPropertyObject::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
-	QUERYINTERFACE(IDUIPropertyObject, Guid, dwQueryVer);
+	QUERYINTERFACE(IDuiPropertyObject, Guid, dwQueryVer);
 
 	return __super::QueryInterface(Guid, dwQueryVer);
 }

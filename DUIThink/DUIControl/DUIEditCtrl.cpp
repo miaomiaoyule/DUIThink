@@ -12,11 +12,11 @@ public:
 
 protected:
 	CDUIEditCtrl *						m_pOwner = NULL;
-	CDUIWndManager *					m_pWndManagerOwner = NULL;
+	CDUIWnd *							m_pWndOwner = NULL;
 	HBRUSH								m_hBkBrush = NULL;
 
 public:
-	void Init();
+	bool Init() override;
 	void UnInit();
 	void AdjustWndSize(bool bCreate);
 
@@ -71,16 +71,16 @@ CDUIEditWnd::~CDUIEditWnd()
 	return;
 }
 
-void CDUIEditWnd::Init()
+bool CDUIEditWnd::Init()
 {
-	if (NULL == m_pOwner || IsWindow(GetHWND())) return;
+	if (NULL == m_pOwner || IsWindow(GetWndHandle())) return true;
 
-	m_pWndManagerOwner = static_cast<CDUIWndManager*>(m_pOwner->GetWndManager());
+	m_pWndOwner = m_pOwner->GetWndOwner();
 
-	if (NULL == m_pWndManagerOwner)
+	if (NULL == m_pWndOwner)
 	{
 		assert(false);
-		return;
+		return false;
 	}
 
 	//wndstyle
@@ -90,7 +90,7 @@ void CDUIEditWnd::Init()
 	tagDuiTextStyle TextStyle = pAttribute ? pAttribute->GetTextStyle() : tagDuiTextStyle();
 
 	uWndStyle = WS_CHILD | ES_AUTOHSCROLL | WS_VISIBLE;
-	m_pWndManagerOwner->IsWndLayered() || m_pOwner->IsDesktopEdit() ? uWndStyle |= WS_POPUP : NULL;
+	m_pWndOwner->IsWndLayered() || m_pOwner->IsDesktopEdit() ? uWndStyle |= WS_POPUP : NULL;
 	rcBorderLine.left || rcBorderLine.top || rcBorderLine.right || rcBorderLine.bottom ? uWndStyle |= WS_BORDER : NULL;
 	if (TextStyle.IsWordBreak())
 	{
@@ -105,12 +105,12 @@ void CDUIEditWnd::Init()
 	(TextStyle.dwTextStyle & DT_CENTER) ? uWndStyle |= ES_CENTER : NULL;
 	(TextStyle.dwTextStyle & DT_RIGHT) ? uWndStyle |= ES_RIGHT : NULL;
 
-	Create(m_pWndManagerOwner->GetWndHandle(), _T(""), uWndStyle, 0);
+	Create(m_pWndOwner->GetWndHandle(), _T(""), uWndStyle, 0);
 
 	if (false == IsWindow(m_hWnd))
 	{
 		assert(false);
-		return;
+		return false;
 	}
 	if (m_pOwner->IsDesktopEdit())
 	{
@@ -143,7 +143,7 @@ void CDUIEditWnd::Init()
 	::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
 	::SetFocus(m_hWnd);
 
-	return;
+	return true;
 }
 
 void CDUIEditWnd::UnInit()
@@ -155,7 +155,7 @@ void CDUIEditWnd::UnInit()
 
 void CDUIEditWnd::AdjustWndSize(bool bCreate)
 {
-	if (NULL == m_pOwner || NULL == m_pWndManagerOwner) return;
+	if (NULL == m_pOwner) return;
 
 	CDUIRect rcPos = m_pOwner->GetTextRange();
 
@@ -172,7 +172,7 @@ void CDUIEditWnd::AdjustWndSize(bool bCreate)
 	if (GetWindowLong(m_hWnd, GWL_STYLE) & WS_POPUP)
 	{
 		CDUIRect rcWnd;
-		::GetWindowRect(m_pWndManagerOwner->GetWndHandle(), &rcWnd);
+		::GetWindowRect(m_pWndOwner->GetWndHandle(), &rcWnd);
 		rcPos.Offset(rcWnd.left, rcWnd.top);
 	}
 
@@ -202,13 +202,13 @@ void CDUIEditWnd::OnFinalMessage()
 {
 	__super::OnFinalMessage();
 
-	if (m_pOwner && m_pWndManagerOwner)
+	if (m_pOwner && m_pWndOwner)
 	{
-		m_pWndManagerOwner->SendNotify(m_pOwner, DuiNotify_Edited);
+		m_pWndOwner->SendNotify(m_pOwner, DuiNotify_Edited);
 
-		if (m_pWndManagerOwner->GetFocusControl() == m_pOwner)
+		if (m_pWndOwner->GetFocusControl() == m_pOwner)
 		{
-			m_pWndManagerOwner->SetFocusControl(NULL);
+			m_pWndOwner->SetFocusControl(NULL);
 		}
 
 		m_pOwner->OnEditDestroy();
@@ -231,7 +231,7 @@ LRESULT CDUIEditWnd::OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &
 
 LRESULT CDUIEditWnd::OnEditChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, bool &/*bHandled*/)
 {
-	if (NULL == m_pOwner || NULL == m_pWndManagerOwner) return 0;
+	if (NULL == m_pOwner) return 0;
 
 	//copy text
 	int cchLen = ::GetWindowTextLength(m_hWnd) + 1;
@@ -245,13 +245,13 @@ LRESULT CDUIEditWnd::OnEditChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lP
 		int nNumAdjust = min(max(nNumSrc, m_pOwner->GetNumberMinLimit()), m_pOwner->GetNumberMaxLimit());
 		if (nNumSrc != nNumAdjust)
 		{
-			Edit_SetText(GetHWND(), CMMStrHelp::Format(_T("%d"), nNumAdjust));
+			Edit_SetText(GetWndHandle(), CMMStrHelp::Format(_T("%d"), nNumAdjust));
 
 			return 0;
 		}
 	}
 
-	ShowCaret(GetHWND());
+	ShowCaret(GetWndHandle());
 
 	m_pOwner->SetText(strText);
 
@@ -262,7 +262,7 @@ LRESULT CDUIEditWnd::OnEditChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lP
 
 LRESULT CDUIEditWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	if (NULL == m_pOwner || NULL == m_pWndManagerOwner) return __super::OnOldWndProc(uMsg, wParam, lParam);
+	if (NULL == m_pOwner || NULL == m_pWndOwner) return __super::OnOldWndProc(uMsg, wParam, lParam);
 
 	LRESULT lRes = 0;
 	bool bHandled = false;
@@ -305,7 +305,7 @@ LRESULT CDUIEditWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (VK_RETURN == TCHAR(wParam))
 			{
 				bHandled = true;
-				m_pWndManagerOwner->SendNotify(m_pOwner, DuiNotify_Return);
+				m_pWndOwner->SendNotify(m_pOwner, DuiNotify_Return);
 			}
 			else if (VK_TAB == TCHAR(wParam))
 			{
@@ -326,10 +326,10 @@ LRESULT CDUIEditWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			CDUIRect rcWnd;
 			::GetWindowRect(m_hWnd, &rcWnd);
-			MMScreenToClient(rcWnd, m_pWndManagerOwner->GetWndHandle());
+			MMScreenToClient(rcWnd, m_pWndOwner->GetWndHandle());
 			if (false == rcWnd.Empty())
 			{
-				HBITMAP hBmpEditBk = CDUIRenderEngine::GenerateBitmap(m_pWndManagerOwner, m_pWndManagerOwner->GetRootCtrl(), rcWnd);
+				HBITMAP hBmpEditBk = CDUIRenderEngine::GenerateBitmap(m_pWndOwner, m_pWndOwner->GetRootCtrl(), rcWnd);
 				if (hBmpEditBk)
 				{
 					m_hBkBrush = ::CreatePatternBrush(hBmpEditBk);
@@ -433,17 +433,17 @@ bool CDUIEditCtrl::SetText(LPCTSTR lpszText)
 {
 	if (false == __super::SetText(lpszText)) return false;
 
-	if (m_pEditWindow && m_pEditWindow->GetHWND())
+	if (m_pEditWindow && m_pEditWindow->GetWndHandle())
 	{
-		int nLen = ::Edit_GetTextLength(m_pEditWindow->GetHWND()) + 1;
+		int nLen = ::Edit_GetTextLength(m_pEditWindow->GetWndHandle()) + 1;
 
 		std::vector<TCHAR> vecEditText;
 		vecEditText.resize(nLen);
-		Edit_GetText(m_pEditWindow->GetHWND(), vecEditText.data(), vecEditText.size());
+		Edit_GetText(m_pEditWindow->GetWndHandle(), vecEditText.data(), vecEditText.size());
 
 		if (0 != lstrcmp(vecEditText.data(), lpszText))
 		{
-			Edit_SetText(m_pEditWindow->GetHWND(), GetText());
+			Edit_SetText(m_pEditWindow->GetWndHandle(), GetText());
 		}
 	}
 
@@ -457,7 +457,7 @@ void CDUIEditCtrl::RefreshView()
 	__super::RefreshView();
 
 	//adjust
-	if (m_pEditWindow && m_pEditWindow->GetHWND())
+	if (m_pEditWindow && m_pEditWindow->GetWndHandle())
 	{
 		m_pEditWindow->AdjustWndSize(false);
 	}
@@ -467,9 +467,9 @@ void CDUIEditCtrl::RefreshView()
 
 void CDUIEditCtrl::SetSel(long nStartChar, long nEndChar)
 {
-	if (m_pEditWindow && m_pEditWindow->GetHWND())
+	if (m_pEditWindow && m_pEditWindow->GetWndHandle())
 	{
-		Edit_SetSel(m_pEditWindow->GetHWND(), nStartChar, nEndChar);
+		Edit_SetSel(m_pEditWindow->GetWndHandle(), nStartChar, nEndChar);
 	}
 
 	return;
@@ -484,9 +484,9 @@ void CDUIEditCtrl::SetSelAll()
 
 void CDUIEditCtrl::SetReplaceSel(LPCTSTR lpszReplace)
 {
-	if (m_pEditWindow && m_pEditWindow->GetHWND())
+	if (m_pEditWindow && m_pEditWindow->GetWndHandle())
 	{
-		Edit_ReplaceSel(m_pEditWindow->GetHWND(), lpszReplace);
+		Edit_ReplaceSel(m_pEditWindow->GetWndHandle(), lpszReplace);
 	}
 
 	return;
@@ -503,9 +503,9 @@ void CDUIEditCtrl::SetReadOnly(bool bReadOnly)
 
 	m_AttributeReadOnly.SetValue(bReadOnly);
 
-	if (m_pEditWindow && m_pEditWindow->GetHWND())
+	if (m_pEditWindow && m_pEditWindow->GetWndHandle())
 	{
-		Edit_SetReadOnly(m_pEditWindow->GetHWND(), IsReadOnly());
+		Edit_SetReadOnly(m_pEditWindow->GetWndHandle(), IsReadOnly());
 	}
 
 	Invalidate();
@@ -524,11 +524,11 @@ void CDUIEditCtrl::SetNumberOnly(bool bNumberOnly)
 
 	m_AttributeNumberOnly.SetValue(bNumberOnly);
 
-	if (m_pEditWindow && m_pEditWindow->GetHWND())
+	if (m_pEditWindow && m_pEditWindow->GetWndHandle())
 	{
-		LONG styleValue = ::GetWindowLong(m_pEditWindow->GetHWND(), GWL_STYLE);
+		LONG styleValue = ::GetWindowLong(m_pEditWindow->GetWndHandle(), GWL_STYLE);
 		IsNumberOnly() ? styleValue |= ES_NUMBER : styleValue &= ~ES_NUMBER;
-		::SetWindowLong(m_pEditWindow->GetHWND(), GWL_STYLE, styleValue);
+		::SetWindowLong(m_pEditWindow->GetWndHandle(), GWL_STYLE, styleValue);
 	}
 
 	Invalidate();
@@ -547,11 +547,11 @@ void CDUIEditCtrl::SetPasswordMode(bool bPasswordMode)
 
 	m_AttributePasswordMode.SetValue(bPasswordMode);
 
-	if (m_pEditWindow && m_pEditWindow->GetHWND())
+	if (m_pEditWindow && m_pEditWindow->GetWndHandle())
 	{
-		LONG styleValue = ::GetWindowLong(m_pEditWindow->GetHWND(), GWL_STYLE);
+		LONG styleValue = ::GetWindowLong(m_pEditWindow->GetWndHandle(), GWL_STYLE);
 		IsPasswordMode() ? styleValue |= ES_PASSWORD : styleValue &= ~ES_PASSWORD;
-		::SetWindowLong(m_pEditWindow->GetHWND(), GWL_STYLE, styleValue);
+		::SetWindowLong(m_pEditWindow->GetWndHandle(), GWL_STYLE, styleValue);
 	}
 
 	Invalidate();
@@ -598,9 +598,9 @@ void CDUIEditCtrl::SetMaxChar(UINT uMax)
 
 	m_AttributeMaxChar.SetValue(uMax);
 
-	if (m_pEditWindow && m_pEditWindow->GetHWND())
+	if (m_pEditWindow && m_pEditWindow->GetWndHandle())
 	{
-		Edit_LimitText(m_pEditWindow->GetHWND(), GetMaxChar());
+		Edit_LimitText(m_pEditWindow->GetWndHandle(), GetMaxChar());
 	}
 
 	return;
@@ -645,9 +645,9 @@ void CDUIEditCtrl::SetPasswordChar(TCHAR chPasswordChar)
 
 	m_AttributePasswordChar.SetValue(CMMString(chPasswordChar));
 
-	if (m_pEditWindow && m_pEditWindow->GetHWND())
+	if (m_pEditWindow && m_pEditWindow->GetWndHandle())
 	{
-		Edit_SetPasswordChar(m_pEditWindow->GetHWND(), GetPasswordChar());
+		Edit_SetPasswordChar(m_pEditWindow->GetWndHandle(), GetPasswordChar());
 	}
 
 	Invalidate();
@@ -707,7 +707,7 @@ bool CDUIEditCtrl::OnDuiSetCursor(const CDUIPoint &pt, const DuiMessage &Msg)
 bool CDUIEditCtrl::OnDuiSetFocus()
 {
 	if (false == __super::OnDuiSetFocus()) return false;
-	if (m_pEditWindow && m_pEditWindow->GetHWND()) return true;
+	if (m_pEditWindow && m_pEditWindow->GetWndHandle()) return true;
 
 	m_pEditWindow->Init();
 
@@ -759,13 +759,13 @@ void CDUIEditCtrl::InitProperty()
 
 void CDUIEditCtrl::PaintText(HDC hDC)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	//text
 	CMMString strText = GetText(), strTipText = GetTipText();
 	CMMString strTextDraw = strText.empty() ? strTipText : strText;
 	if (strTextDraw.empty()
-		|| (m_pEditWindow && IsWindow(m_pEditWindow->GetHWND()) && false == strText.empty())) return;
+		|| (m_pEditWindow && IsWindow(m_pEditWindow->GetWndHandle()) && false == strText.empty())) return;
 
 	//textstyle
 	CDUIAttributeTextStyle *pAttribute = NULL;
@@ -811,7 +811,7 @@ void CDUIEditCtrl::PaintText(HDC hDC)
 		}
 	}
 
-	pAttribute->Draw(hDC, rcRange, strTextDraw, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), IsShadowText());
+	pAttribute->Draw(hDC, rcRange, strTextDraw, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), IsShadowText());
 
 	return;
 }

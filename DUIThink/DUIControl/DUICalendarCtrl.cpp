@@ -31,11 +31,11 @@ public:
 	CDUICalendarCtrl * GetCalendarCtrl();
 
 protected:
-	LRESULT OnCreate(WPARAM wParam, LPARAM lParam, bool &bHandled);
-	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam, bool &bHandled);
-	LRESULT OnKeyDown(WPARAM /*wParam*/, LPARAM /*lParam*/, bool &bHandled);
-	LRESULT OnClose(WPARAM /*wParam*/, LPARAM /*lParam*/, bool &bHandled);
-	LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/);
+	LRESULT OnCreate(WPARAM wParam, LPARAM lParam) override;
+	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam) override;
+	LRESULT OnKeyDown(WPARAM /*wParam*/, LPARAM /*lParam*/) override;
+	LRESULT OnClose(WPARAM /*wParam*/, LPARAM /*lParam*/) override;
+	LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/) override;
 
 protected:
 	void AdjustCalendar();
@@ -47,7 +47,7 @@ MMImplement_ClassName(CDUICalendarWnd)
 CDUICalendarWnd::CDUICalendarWnd(CMMString strDuiName)
 	: CDUIWnd(strDuiName)
 {
-	CDUIControlBase *pRootCtrl = CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), m_pWndManager);
+	CDUIControlBase *pRootCtrl = CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), this);
 	m_pShowCalendarView = MMInterfaceHelper(CDUICalendarCtrl, pRootCtrl);
 
 	return;
@@ -93,15 +93,15 @@ void CDUICalendarWnd::UnInit()
 {
 	//save
 #ifdef DUI_DESIGN
-	if (m_pWndManager->GetRootCtrl())
+	if (GetRootCtrl())
 	{
-		CDUIGlobal::GetInstance()->SaveDui(GetDuiName(), MMDynamicPtr(CDUIWndManager, m_pWndManager));
+		CDUIGlobal::GetInstance()->SaveDui(GetDuiName(), this);
 	}
 #endif
 
 	Close();
 
-	m_pWndManager->DetachRootCtrl();
+	DetachRootCtrl();
 
 	return;
 }
@@ -111,35 +111,35 @@ CDUICalendarCtrl * CDUICalendarWnd::GetCalendarCtrl()
 	return m_pShowCalendarView;
 }
 
-LRESULT CDUICalendarWnd::OnCreate(WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDUICalendarWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 {
-	m_pWndManager->DetachRootCtrl();
+	DetachRootCtrl();
 
-	__super::OnCreate(wParam, lParam, bHandled);
+	__super::OnCreate(wParam, lParam);
 
 	//init view
-	m_pWndManager->AttachRootCtrl(m_pShowCalendarView);
+	AttachRootCtrl(m_pShowCalendarView);
 
 	AdjustCalendar();
 
 	return 0;
 }
 
-LRESULT CDUICalendarWnd::OnKillFocus(WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDUICalendarWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 {
-	__super::OnKillFocus(wParam, lParam, bHandled);
+	__super::OnKillFocus(wParam, lParam);
 
 #ifdef DUI_DESIGN
 	HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONULL);
 	if (NULL == hMonitor) return 0;
 #endif
 
-	if (g_pDuiCalendarWnd && IsWindow(g_pDuiCalendarWnd->GetHWND()))
+	if (g_pDuiCalendarWnd && IsWindow(g_pDuiCalendarWnd->GetWndHandle()))
 	{
 		HWND hWndFocus = (HWND)wParam;
 		while (hWndFocus)
 		{
-			if (hWndFocus == g_pDuiCalendarWnd->GetHWND()) return 0;
+			if (hWndFocus == g_pDuiCalendarWnd->GetWndHandle()) return 0;
 
 			hWndFocus = GetParent(hWndFocus);
 		}
@@ -150,9 +150,9 @@ LRESULT CDUICalendarWnd::OnKillFocus(WPARAM wParam, LPARAM lParam, bool &bHandle
 	return 0;
 }
 
-LRESULT CDUICalendarWnd::OnKeyDown(WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDUICalendarWnd::OnKeyDown(WPARAM wParam, LPARAM lParam)
 {
-	__super::OnKeyDown(wParam, lParam, bHandled);
+	__super::OnKeyDown(wParam, lParam);
 
 	if (VK_ESCAPE == wParam)
 	{
@@ -162,9 +162,9 @@ LRESULT CDUICalendarWnd::OnKeyDown(WPARAM wParam, LPARAM lParam, bool &bHandled)
 	return 0;
 }
 
-LRESULT CDUICalendarWnd::OnClose(WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDUICalendarWnd::OnClose(WPARAM wParam, LPARAM lParam)
 {
-	__super::OnClose(wParam, lParam, bHandled);
+	__super::OnClose(wParam, lParam);
 
 	return 0;
 }
@@ -178,9 +178,7 @@ void CDUICalendarWnd::AdjustCalendar()
 {
 	if (NULL == m_pShowCalendarView) return;
 
-	CDUIRect rcWnd;
-	GetWindowRect(m_hWnd, &rcWnd);
-
+	CDUIRect rcWnd = GetWindowRect();
 	MONITORINFO oMonitor = {};
 	oMonitor.cbSize = sizeof(oMonitor);
 	::GetMonitorInfo(::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
@@ -190,7 +188,7 @@ void CDUICalendarWnd::AdjustCalendar()
 	if (-1 == m_ptTrack.x && -1 == m_ptTrack.y)
 	{
 		CDUIRect rcWndParent;
-		GetWindowRect(::GetParent(m_hWnd), &rcWndParent);
+		::GetWindowRect(::GetParent(m_hWnd), &rcWndParent);
 
 		m_ptTrack.x = rcWndParent.left + rcWndParent.GetWidth() / 2 - rcWnd.GetWidth() / 2;
 		m_ptTrack.y = rcWndParent.top + rcWndParent.GetHeight() / 2 - rcWnd.GetHeight() / 2;
@@ -321,18 +319,18 @@ CMMString CDUICalendarCtrl::GetDescribe() const
 	return Dui_Ctrl_Calendar;
 }
 
-bool CDUICalendarCtrl::SetWndManager(CDUIWndManager *pWndManager)
+bool CDUICalendarCtrl::SetWndOwner(CDUIWnd *pWndOwner)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->RemoveINotify(this);
+		m_pWndOwner->RemoveINotify(this);
 	}
 
-	if (false == __super::SetWndManager(pWndManager)) return false;
+	if (false == __super::SetWndOwner(pWndOwner)) return false;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->AddINotify(this);
+		m_pWndOwner->AddINotify(this);
 	}
 
 	return true;
@@ -956,7 +954,7 @@ void CDUICalendarCtrl::OnDuiBtnRight(const DuiNotify &Notify)
 
 void CDUICalendarCtrl::OnDuiBtnYear(const DuiNotify &Notify)
 {
-	if (NULL == m_pWndManager
+	if (NULL == m_pWndOwner
 		|| NULL == m_pBtnYearCtrl
 		|| Notify.pNotifyCtrl != m_pBtnYearCtrl) return;
 
@@ -964,9 +962,6 @@ void CDUICalendarCtrl::OnDuiBtnYear(const DuiNotify &Notify)
 	MMSafeDelete(g_pDuiMenuWndRoot);
 	g_pDuiMenuWndRoot = &YearWnd;
 	g_DuiMenuCmd = {};
-
-	CDUIWndManager *pWndManagerYear = dynamic_cast<CDUIWndManager*>(YearWnd.GetWndManager());
-	if (NULL == pWndManagerYear) return;
 
 	SYSTEMTIME SysTime = {};
 	GetLocalTime(&SysTime);
@@ -1009,20 +1004,20 @@ void CDUICalendarCtrl::OnDuiBtnYear(const DuiNotify &Notify)
 	CDUISize szWnd;
 	szWnd.cx = szYear.cx * sqrt(CALENDAR_COUNT_YEAR) + pYearView->GetChildPaddingH() * sqrt(CALENDAR_COUNT_YEAR);
 	szWnd.cy = szYear.cy * sqrt(CALENDAR_COUNT_YEAR) + pYearView->GetChildPaddingV() * sqrt(CALENDAR_COUNT_YEAR);
-	pWndManagerYear->Init();
-	pWndManagerYear->SetGdiplusRenderText(true);
-	pWndManagerYear->SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
-	pWndManagerYear->SetWndInitSize(szWnd.cx, szWnd.cy);
-	pWndManagerYear->SetWndLayered(true);
-	pWndManagerYear->SetCaptionHeight(0);
+	YearWnd.CDUIPropertyObject::Init();
+	YearWnd.SetGdiplusRenderText(true);
+	YearWnd.SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
+	YearWnd.SetWndInitSize(szWnd.cx, szWnd.cy);
+	YearWnd.SetWndLayered(true);
+	YearWnd.SetCaptionHeight(0);
 
 	//pos
 	CDUIPoint ptTrack(m_pBtnYearCtrl->GetAbsoluteRect().left, m_pBtnYearCtrl->GetAbsoluteRect().top);
-	::ClientToScreen(m_pWndManager->GetWndHandle(), &ptTrack);
+	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptTrack);
 	ptTrack.Offset(-szWnd.cx, m_pBtnYearCtrl->GetHeight() / 2 - szWnd.cy / 2);
 
 	YearWnd.SetMenuView(pYearView);
-	YearWnd.Init(m_pWndManager->GetWndHandle(), ptTrack);
+	YearWnd.Init(m_pWndOwner->GetWndHandle(), ptTrack);
 	YearWnd.DoBlock();
 
 	//select
@@ -1038,7 +1033,7 @@ void CDUICalendarCtrl::OnDuiBtnYear(const DuiNotify &Notify)
 
 void CDUICalendarCtrl::OnDuiBtnMonth(const DuiNotify &Notify)
 {
-	if (NULL == m_pWndManager
+	if (NULL == m_pWndOwner
 		|| NULL == m_pBtnMonthCtrl
 		|| Notify.pNotifyCtrl != m_pBtnMonthCtrl) return;
 
@@ -1046,9 +1041,6 @@ void CDUICalendarCtrl::OnDuiBtnMonth(const DuiNotify &Notify)
 	MMSafeDelete(g_pDuiMenuWndRoot);
 	g_pDuiMenuWndRoot = &MonthWnd;
 	g_DuiMenuCmd = {};
-
-	CDUIWndManager *pWndManagerMonth = dynamic_cast<CDUIWndManager*>(MonthWnd.GetWndManager());
-	if (NULL == pWndManagerMonth) return;
 
 	SYSTEMTIME SysTime = {};
 	GetLocalTime(&SysTime);
@@ -1089,20 +1081,20 @@ void CDUICalendarCtrl::OnDuiBtnMonth(const DuiNotify &Notify)
 
 	//size
 	CDUISize szWnd(szMonth.cx * 4, szMonth.cy * 3 + pMonthView->GetChildPaddingV() * 3);
-	pWndManagerMonth->Init();
-	pWndManagerMonth->SetGdiplusRenderText(true);
-	pWndManagerMonth->SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
-	pWndManagerMonth->SetWndInitSize(szWnd.cx, szWnd.cy);
-	pWndManagerMonth->SetWndLayered(true);
-	pWndManagerMonth->SetCaptionHeight(0);
+	MonthWnd.CDUIPropertyObject::Init();
+	MonthWnd.SetGdiplusRenderText(true);
+	MonthWnd.SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
+	MonthWnd.SetWndInitSize(szWnd.cx, szWnd.cy);
+	MonthWnd.SetWndLayered(true);
+	MonthWnd.SetCaptionHeight(0);
 
 	//pos
 	CDUIPoint ptTrack(m_pBtnMonthCtrl->GetAbsoluteRect().right, m_pBtnMonthCtrl->GetAbsoluteRect().top);
-	::ClientToScreen(m_pWndManager->GetWndHandle(), &ptTrack);
+	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptTrack);
 	ptTrack.Offset(0, m_pBtnMonthCtrl->GetHeight() / 2 - szWnd.cy / 2);
 
 	MonthWnd.SetMenuView(pMonthView);
-	MonthWnd.Init(m_pWndManager->GetWndHandle(), ptTrack);
+	MonthWnd.Init(m_pWndOwner->GetWndHandle(), ptTrack);
 	MonthWnd.DoBlock();
 
 	//select

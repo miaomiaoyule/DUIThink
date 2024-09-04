@@ -10,9 +10,9 @@ CDUIRadioBoxCtrl::CDUIRadioBoxCtrl(void)
 
 CDUIRadioBoxCtrl::~CDUIRadioBoxCtrl(void)
 {
-	if (GetWndManager())
+	if (GetWndOwner())
 	{
-		GetWndManager()->RemoveRadioBoxFromGroup(this);
+		GetWndOwner()->RemoveRadioBoxFromGroup(this);
 	}
 
 	return;
@@ -80,16 +80,16 @@ CMMString CDUIRadioBoxCtrl::GetGroupName()
 
 void CDUIRadioBoxCtrl::SetGroupName(LPCTSTR lpszGroup)
 {
-	if (GetWndManager())
+	if (GetWndOwner())
 	{
-		GetWndManager()->RemoveRadioBoxFromGroup(this);
+		GetWndOwner()->RemoveRadioBoxFromGroup(this);
 	}
 
 	m_AttributeGroupName.SetValue(lpszGroup);
 
-	if (GetWndManager())
+	if (GetWndOwner())
 	{
-		GetWndManager()->AddRadioBoxToGroup(this);
+		GetWndOwner()->AddRadioBoxToGroup(this);
 	}
 
 	return;
@@ -97,11 +97,11 @@ void CDUIRadioBoxCtrl::SetGroupName(LPCTSTR lpszGroup)
 
 CDUITabLayoutCtrl * CDUIRadioBoxCtrl::GetBindTabCtrl()
 {
-	if (NULL == GetWndManager()) return NULL;
+	if (NULL == GetWndOwner()) return NULL;
 
 	UINT uBindTabCtrlID = GetBindTabCtrlID();
 
-	CDUIControlBase *pControl = GetWndManager()->FindControl(uBindTabCtrlID);
+	CDUIControlBase *pControl = GetWndOwner()->FindControl(uBindTabCtrlID);
 	if (NULL == pControl) return NULL;
 
 	return MMInterfaceHelper(CDUITabLayoutCtrl, pControl);
@@ -181,9 +181,9 @@ void CDUIRadioBoxCtrl::OnDuiWndManagerAttach()
 {
 	__super::OnDuiWndManagerAttach();
 
-	if (GetWndManager())
+	if (GetWndOwner())
 	{
-		GetWndManager()->AddRadioBoxToGroup(this);
+		GetWndOwner()->AddRadioBoxToGroup(this);
 	}
 
 	return;
@@ -193,9 +193,9 @@ void CDUIRadioBoxCtrl::OnDuiWndManagerDetach()
 {
 	__super::OnDuiWndManagerDetach();
 
-	if (GetWndManager())
+	if (GetWndOwner())
 	{
-		GetWndManager()->RemoveRadioBoxFromGroup(this);
+		GetWndOwner()->RemoveRadioBoxFromGroup(this);
 	}
 
 	return;
@@ -203,7 +203,7 @@ void CDUIRadioBoxCtrl::OnDuiWndManagerDetach()
 
 void CDUIRadioBoxCtrl::PerformActiveBindTabPage()
 {
-	if (false == IsSelected() || NULL == GetWndManager()) return;
+	if (false == IsSelected() || NULL == GetWndOwner()) return;
 
 	CDUITabLayoutCtrl *pBindTabCtrl = GetBindTabCtrl();
 	if (pBindTabCtrl == NULL) return;
@@ -213,7 +213,7 @@ void CDUIRadioBoxCtrl::PerformActiveBindTabPage()
 	//如果没有绑定下标则以组内下标
 	if (lBindTabCtrlIndex < 0)
 	{
-		auto vecRadioBox = GetWndManager()->GetRadioBoxGroup(GetGroupName());
+		auto vecRadioBox = GetWndOwner()->GetRadioBoxGroup(GetGroupName());
 		for (int nIndex = 0; nIndex < vecRadioBox.size(); nIndex++)
 		{
 			if (vecRadioBox[nIndex] == this)
@@ -237,10 +237,10 @@ void CDUIRadioBoxCtrl::PerformActiveBindTabPage()
 
 void CDUIRadioBoxCtrl::PerformUnSelOther(bool bNotify)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	//unselect other
-	auto vecRadioBox = m_pWndManager->GetRadioBoxGroup(GetGroupName());
+	auto vecRadioBox = m_pWndOwner->GetRadioBoxGroup(GetGroupName());
 	for (int nIndex = 0; nIndex < vecRadioBox.size(); nIndex++)
 	{
 		CDUIRadioBoxCtrl *pRadioBoxCtrl = vecRadioBox[nIndex];

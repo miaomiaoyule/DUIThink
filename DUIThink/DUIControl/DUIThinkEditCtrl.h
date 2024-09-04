@@ -6,7 +6,7 @@
 static const GUID IID_CDUIThinkEditCtrl = { 0x83439E85,0x4226,0x4E6D,0xB2,0x9A,0xD4,0x83,0xBB,0x75,0x51,0xB1 };
 class DUITHINK_API CDUIThinkEditCtrl 
 	: public CDUIButtonCtrl
-	, public IDUIPreMessage
+	, public IDuiPreMessage
 {
 	friend class CDUIComboxCtrl;
 

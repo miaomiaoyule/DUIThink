@@ -453,6 +453,24 @@ typedef std::vector<tagDuiThinkEditHistory> VecDuiThinkEditHistory;
 typedef std::deque<tagDuiThinkEditHistory> QueDuiThinkEditHistory;
 
 //////////////////////////////////////////////////////////////////////////
+typedef struct tagDuiTimerInfo
+{
+	CDUIPropertyObject *				pProp = NULL;
+	CDUIControlBase *					pControl = NULL;
+	UINT								nLocalID = 0;
+	HWND								hWnd = NULL;
+	UINT								uWinTimer = 0;
+	bool								bKilled = false;
+} DuiTimerInfo;
+
+typedef struct tagDuiFindShortCut
+{
+	TCHAR								chChar = 0;
+} DuiFindShortCut;
+
+typedef std::vector<DuiTimerInfo> VecDuiTimerInfo;
+
+//////////////////////////////////////////////////////////////////////////
 struct tagDuiDropData
 {
 	DWORD								dwKeyState = 0;
@@ -476,7 +494,7 @@ struct tagDuiDropData
 };
 
 //////////////////////////////////////////////////////////////////////////
-typedef std::unordered_map<CDUIWndManager*, tagDuiFile> MapWndManager;
+typedef std::unordered_map<CDUIWnd*, tagDuiFile> MapWnd;
 
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()

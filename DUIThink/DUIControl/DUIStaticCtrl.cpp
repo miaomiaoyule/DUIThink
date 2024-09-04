@@ -240,9 +240,9 @@ bool CDUIStaticCtrl::SetText(LPCTSTR lpszText)
 
 	m_AttributeText.SetValue(lpszText);
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_TextChanged);
+		m_pWndOwner->SendNotify(this, DuiNotify_TextChanged);
 	}
 	if (IsAutoCalcWidth() || IsAutoCalcHeight())
 	{
@@ -267,9 +267,9 @@ bool CDUIStaticCtrl::SetRichTextItem(const VecDuiRichTextItem &vecRichTextItem)
 
 	m_AttributeRichText.SetRichTextItem(vecRichTextItem);
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_TextChanged);
+		m_pWndOwner->SendNotify(this, DuiNotify_TextChanged);
 	}
 	if (IsAutoCalcWidth() || IsAutoCalcHeight())
 	{
@@ -392,7 +392,7 @@ void CDUIStaticCtrl::InitProperty()
 
 void CDUIStaticCtrl::PaintText(HDC hDC)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	//range
 	CDUIRect rcRange = GetTextRange();
@@ -400,7 +400,7 @@ void CDUIStaticCtrl::PaintText(HDC hDC)
 	//richtext
 	if (false == m_AttributeRichText.empty())
 	{
-		m_AttributeRichText.Draw(hDC, rcRange, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
+		m_AttributeRichText.Draw(hDC, rcRange, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
 
 		return;
 	}
@@ -409,7 +409,7 @@ void CDUIStaticCtrl::PaintText(HDC hDC)
 	CMMString strText = GetText();
 	if (strText.empty()) return;
 
-	m_AttributeTextStyle.Draw(hDC, rcRange, strText, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), IsShadowText());
+	m_AttributeTextStyle.Draw(hDC, rcRange, strText, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), IsShadowText());
 
 	return;
 }

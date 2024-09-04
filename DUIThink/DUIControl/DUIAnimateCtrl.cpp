@@ -282,7 +282,7 @@ void CDUIAnimateCtrl::PlayCurFrame()
 	if (m_AnimateImageInfo.nFrameCount <= 0
 		|| (AnimateImage_Gif == m_AnimateImageInfo.AnimateImageType && m_AnimateImageInfo.vecGifPropertyItem.size() <= 0)
 		|| (AnimateImage_SequenceFrame == m_AnimateImageInfo.AnimateImageType && m_AnimateImageInfo.nSequenceFrameSpeed <= 0)
-		|| NULL == m_pWndManager) return;
+		|| NULL == m_pWndOwner) return;
 
 	int nElapse = 100;
 	switch (m_AnimateImageInfo.AnimateImageType)
