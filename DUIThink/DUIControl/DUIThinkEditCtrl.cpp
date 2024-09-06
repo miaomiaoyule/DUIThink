@@ -680,32 +680,6 @@ CDUIRect CDUIThinkEditCtrl::GetCaretPos()
 		rcCaret.Offset(rcText.right - rcCaret.left, rcText.bottom - rcCaret.GetHeight() - rcCaret.top);
 	}
 
-	//scroll
-	CDUIRect rcRange = GetTextRange();
-	CDUISize szScrollPos = GetScrollPos();
-	if (rcCaret.left < rcRange.left && m_szScrollRange.cx > 0)
-	{
-		szScrollPos.cx -= (rcRange.left - rcCaret.left);
-		rcCaret.Offset(rcRange.left - rcCaret.left, 0);
-	}
-	if (rcCaret.left > rcRange.right && m_szScrollRange.cx > 0)
-	{
-		szScrollPos.cx += (rcCaret.left - rcRange.right);
-		rcCaret.Offset(-(rcCaret.left - rcRange.right), 0);
-	}
-	if (rcCaret.top < rcRange.top && m_szScrollRange.cy > 0)
-	{
-		szScrollPos.cy -= (rcRange.top - rcCaret.top);
-		rcCaret.Offset(0, rcRange.top - rcCaret.top);
-	}
-	if (rcCaret.bottom > rcRange.bottom && m_szScrollRange.cy > 0)
-	{
-		szScrollPos.cy += (rcCaret.bottom - rcRange.bottom);
-		rcCaret.Offset(0, -(rcCaret.bottom - rcRange.bottom));
-	}
-
-	SetScrollPos(szScrollPos);
-
 	return rcCaret;
 }
 
@@ -1055,7 +1029,6 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName
 	//history
 	History.nCaretRowNext = m_nCaretRow;
 	History.nCaretColumnNext = m_nCaretColumn;
-
 	if (bHistory)
 	{
 		PerformAddHistory(History);
@@ -1273,15 +1246,7 @@ bool CDUIThinkEditCtrl::OnDuiSetFocus()
 	g_vecDuiRichTextPreEdit = GetRichTextItem();
 
 	//active
-	HWND hWndForground = GetForegroundWindow();
-	DWORD dwProIDForground = ::GetWindowThreadProcessId(hWndForground, NULL);
-	DWORD dwProIDCur = ::GetCurrentThreadId();
-
-	::AttachThreadInput(dwProIDCur, dwProIDForground, TRUE);
-	::SetActiveWindow(m_pWndOwner->GetWndHandle());
-	::BringWindowToTop(m_pWndOwner->GetWndHandle());
-	::SetForegroundWindow(m_pWndOwner->GetWndHandle());
-	::AttachThreadInput(dwProIDCur, dwProIDForground, FALSE);
+	CDUIWnd::ForegroundWindow(m_pWndOwner->GetWndHandle());
 
 	//edit
 	RefreshView();
@@ -1828,8 +1793,8 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 		pAttribute = &m_AttributeTextStyleNormal;
 	}
 
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
 	if (NULL == pAttribute) return;
 
 	tagDuiTextStyle TextStyle = pAttribute->GetTextStyle();
@@ -2164,7 +2129,6 @@ void CDUIThinkEditCtrl::PerformHitText(CDUIPoint pt, bool bFromMouseDown)
 
 	//caret pos
 	CDUIRect rcCaret = GetCaretPos();
-
 	m_pWndOwner->CreateCaret(NULL, rcCaret.GetWidth(), rcCaret.GetHeight());
 	m_pWndOwner->SetCaretPos({ rcCaret.left, rcCaret.top });
 	m_bShowCaret = true;
@@ -2438,6 +2402,32 @@ void CDUIThinkEditCtrl::PerformAdjustCaret()
 
 	CDUIRect rcCaret = GetCaretPos();
 
+	//scroll ensure visible
+	CDUIRect rcRange = GetTextRange();
+	CDUISize szScrollPos = GetScrollPos();
+	if (rcCaret.left < rcRange.left && m_szScrollRange.cx > 0)
+	{
+		szScrollPos.cx -= (rcRange.left - rcCaret.left);
+		rcCaret.Offset(rcRange.left - rcCaret.left, 0);
+	}
+	if (rcCaret.left > rcRange.right && m_szScrollRange.cx > 0)
+	{
+		szScrollPos.cx += (rcCaret.left - rcRange.right);
+		rcCaret.Offset(-(rcCaret.left - rcRange.right), 0);
+	}
+	if (rcCaret.top < rcRange.top && m_szScrollRange.cy > 0)
+	{
+		szScrollPos.cy -= (rcRange.top - rcCaret.top);
+		rcCaret.Offset(0, rcRange.top - rcCaret.top);
+	}
+	if (rcCaret.bottom > rcRange.bottom && m_szScrollRange.cy > 0)
+	{
+		szScrollPos.cy += (rcCaret.bottom - rcRange.bottom);
+		rcCaret.Offset(0, -(rcCaret.bottom - rcRange.bottom));
+	}
+
+	SetScrollPos(szScrollPos);
+
 	if (IsFocused())
 	{
 		m_pWndOwner->SetCaretPos({ rcCaret.left, rcCaret.top });
@@ -2506,7 +2496,6 @@ void CDUIThinkEditCtrl::PerformAdjustScrollPos(CDUIRect rcMeasure)
 {
 	CDUIRect rcRange = GetTextRange();
 	CDUISize szScrollPos = GetScrollPos();
-	m_szScrollPos = {};
 	m_szScrollRange.cx = max(rcMeasure.GetWidth() - rcRange.GetWidth(), 0);
 	m_szScrollRange.cy = max(rcMeasure.GetHeight() - rcRange.GetHeight(), 0);
 	szScrollPos.cx = min(szScrollPos.cx, m_szScrollRange.cx);
