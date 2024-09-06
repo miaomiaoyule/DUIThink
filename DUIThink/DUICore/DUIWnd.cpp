@@ -1983,210 +1983,130 @@ LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	OnDuiDelayDelete();
 
 	LRESULT lRes = 0;
-	bool bHandled = false;
-
 	switch (uMsg)
 	{
 		case WM_DUIAPP:
 		{
-			bHandled = true;
-
 			m_bPostedAppMsg = false;
 
-			break;
+			return 0;
 		}
 		case WM_CREATE:
 		{
-			bHandled = true;
-
-			lRes = OnCreate(wParam, lParam);
-
-			break;
+			return OnCreate(wParam, lParam);
 		}
 		case WM_CLOSE:
 		{
-			lRes = OnClose(wParam, lParam);
-
-			break;
+			return OnClose(wParam, lParam);
 		}
 		case WM_DESTROY:
 		{
-			lRes = OnDestroy(wParam, lParam);
-
-			break;
+			return OnDestroy(wParam, lParam);
 		}
 #if defined(WIN32) && !defined(UNDER_CE)
 		case WM_NCACTIVATE:
 		{
-			if (false == ::IsIconic(m_hWnd)) bHandled = true;
-
-			lRes = OnNcActivate(wParam, lParam);
-
-			break;
+			return OnNcActivate(wParam, lParam);
 		}
 		case WM_NCCALCSIZE:
 		{
-			bHandled = true;
-
-			lRes = OnNcCalcSize(wParam, lParam);
-
-			break;
+			return OnNcCalcSize(wParam, lParam);
 		}
 		case WM_NCPAINT:
 		{
-			bHandled = true;
-
-			lRes = OnNcPaint(wParam, lParam);
-
-			break;
+			return OnNcPaint(wParam, lParam);
 		}
 		case WM_NCHITTEST:
 		{
-			bHandled = true;
-
-			lRes = OnNcHitTest(wParam, lParam);
-
-			break;
+			return OnNcHitTest(wParam, lParam);
 		}
 		case WM_GETMINMAXINFO:
 		{
-			bHandled = true;
-
-			lRes = OnGetMinMaxInfo(wParam, lParam);
-
-			break;
+			return OnGetMinMaxInfo(wParam, lParam);
 		}
 #endif
 		case WM_EXITSIZEMOVE:
 		{
-			lRes = OnExitSizeMove(wParam, lParam);
-
-			break;
+			return OnExitSizeMove(wParam, lParam);
 		}
 		case WM_SYSCOMMAND:
 		{
-			bHandled = true;
-
-			lRes = OnSysCommand(wParam, lParam); 
-			
-			break;
+			return OnSysCommand(wParam, lParam); 
 		}
 		case WM_LBUTTONDOWN:
 		{
-			lRes = OnLButtonDown(wParam, lParam);
-
-			break;
+			return OnLButtonDown(wParam, lParam);
 		}
 		case WM_LBUTTONUP:
 		{
-			lRes = OnLButtonUp(wParam, lParam);
-
-			break;
+			return OnLButtonUp(wParam, lParam);
 		}
 		case WM_LBUTTONDBLCLK:
 		{
-			lRes = OnLButtonDlk(wParam, lParam);
-
-			break;
+			return OnLButtonDlk(wParam, lParam);
 		}
 		case WM_RBUTTONDOWN:
 		{
-			lRes = OnRButtonDown(wParam, lParam);
-
-			break;
+			return OnRButtonDown(wParam, lParam);
 		}
 		case WM_RBUTTONUP:
 		{
-			lRes = OnRButtonUp(wParam, lParam);
-
-			break;
+			return OnRButtonUp(wParam, lParam);
 		}
 		case WM_RBUTTONDBLCLK:
 		{
-			lRes = OnRButtonDlk(wParam, lParam);
-
-			break;
+			return OnRButtonDlk(wParam, lParam);
 		}
 		case WM_MOUSEMOVE:
 		{
-			lRes = OnMouseMove(wParam, lParam);
-
-			break;
+			return OnMouseMove(wParam, lParam);
 		}
 		case WM_MOUSEHOVER:
 		{
-			bHandled = true;
-
-			lRes = OnMouseHover(wParam, lParam);
-
-			break;
+			return OnMouseHover(wParam, lParam);
 		}
 		case WM_MOUSELEAVE:
 		{
-			lRes = OnMouseLeave(wParam, lParam);
-
-			break;
+			return OnMouseLeave(wParam, lParam);
 		}
 		case WM_MOUSEWHEEL:
 		{
-			lRes = OnMouseWheel(wParam, lParam);
-
-			break;
+			return OnMouseWheel(wParam, lParam);
 		}
 		case WM_TIMER:
 		{
-			lRes = OnTimer(wParam, lParam);
-
-			break;
+			return OnTimer(wParam, lParam);
 		}
 		case WM_SIZE:
 		{
-			bHandled = true;
-
-			lRes = OnSize(wParam, lParam);
-
-			break;
+			return OnSize(wParam, lParam);
 		}
 		case WM_KEYDOWN:
 		{
-			lRes = OnKeyDown(wParam, lParam);
-
-			break;
+			return OnKeyDown(wParam, lParam);
 		}
 		case WM_KEYUP:
 		{
-			lRes = OnKeyUp(wParam, lParam);
-
-			break;
+			return OnKeyUp(wParam, lParam);
 		}
 		case WM_CHAR:
 		{
-			lRes = OnChar(wParam, lParam);
-
-			break;
+			return OnChar(wParam, lParam);
 		}
 		case WM_SYSKEYDOWN:
 		{
-			lRes = OnSysKeyDown(wParam, lParam);
-
-			break;
+			return OnSysKeyDown(wParam, lParam);
 		}
 		case WM_SYSKEYUP:
 		{
-			lRes = OnSysKeyUp(wParam, lParam);
-
-			break;
+			return OnSysKeyUp(wParam, lParam);
 		}
 		case WM_SYSCHAR:
 		{
-			lRes = OnSysChar(wParam, lParam);
-
-			break;
+			return OnSysChar(wParam, lParam);
 		}
 		case WM_PAINT:
 		{
-			bHandled = true;
-
 			CDUIRect rcPaint;
 			bool bUpdate = ::GetUpdateRect(m_hWnd, &rcPaint, FALSE);
 
@@ -2214,81 +2134,55 @@ LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				g_pIDuiWndNotify->OnDuiWndPaint(this);
 			}
 
-			break;
+			return 0;
 		}
 		case WM_ERASEBKGND:
 		{
 			// We'll do the painting here...
-			bHandled = true;
-
-			lRes = 1;
-
-			break;
+			return 1;
 		}
 		case WM_CONTEXTMENU:
 		{
-			lRes = OnContextMenu(wParam, lParam);
-
-			break;
+			return OnContextMenu(wParam, lParam);
 		}
 		case WM_SETFOCUS:
 		{
-			lRes = OnSetFocus(wParam, lParam);
-
-			break;
+			return OnSetFocus(wParam, lParam);
 		}
 		case WM_KILLFOCUS:
 		{
-			lRes = OnKillFocus(wParam, lParam);
-
-			break;
+			return OnKillFocus(wParam, lParam);
 		}
 		case WM_SETCURSOR:
 		{
-			lRes = OnSetCursor(wParam, lParam);
-
-			if (1 == lRes) bHandled = true;;
-
-			break;
+			return OnSetCursor(wParam, lParam);
 		}
 		case WM_DPICHANGED:
 		{
-			lRes = OnDpiChanged(wParam, lParam);
-
-			break;
+			return OnDpiChanged(wParam, lParam);
 		}
 		case WM_NOTIFY:
 		{
-			bHandled = true;
-
 			LPNMHDR lpNMHDR = (LPNMHDR)lParam;
 			if (lpNMHDR != NULL) lRes = ::SendMessage(lpNMHDR->hwndFrom, OCM__BASE + uMsg, wParam, lParam);
 			
-			break;
+			return lRes;
 		}
 		case WM_COMMAND:
 		{
 			if (lParam == 0)
 			{
-				lRes = OnCommand(wParam, lParam);
-
-				break;
+				return OnCommand(wParam, lParam);
 			}
-
-			bHandled = true;
 
 			HWND hWndChild = (HWND)lParam;
 			lRes = ::SendMessage(hWndChild, OCM__BASE + uMsg, wParam, lParam);
 			
-			break;
+			return lRes;
 		}
 		case WM_IME_COMPOSITION:
 		{
-			lRes = OnImeComPosition(wParam, lParam);
-
-			if (lRes > 0) bHandled = true;;
-
-			break;
+			return OnImeComPosition(wParam, lParam);
 		}
 		case WM_CTLCOLOREDIT:
 		case WM_CTLCOLORSTATIC:
@@ -2296,17 +2190,13 @@ LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			// Refer To: http://msdn.microsoft.com/en-us/library/bb761691(v=vs.85).aspx
 			// Read-only or disabled edit controls do not send the WM_CTLCOLOREDIT message; instead, they send the WM_CTLCOLORSTATIC message.
 			if (lParam == 0) break;
-			
-			bHandled = true;
 
 			HWND hWndChild = (HWND)lParam;
 			lRes = ::SendMessage(hWndChild, OCM__BASE + uMsg, wParam, lParam);
 			
-			break;
+			return lRes;
 		}
 	}
-
-	if (bHandled) return lRes;
 
 	return OnOldWndProc(uMsg, wParam, lParam);
 }
@@ -2342,7 +2232,6 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 	m_bFirstLayout = true;
 
 	AdjustWndSize();
-	AddPreMessagePtr(this);
 	AddINotify(this);
 	AttachRootCtrl(pRootCtrl);
 
@@ -2378,7 +2267,7 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIWnd::OnClose(WPARAM wParam, LPARAM lParam)
 {
-	return 0;
+	return OnOldWndProc(WM_CLOSE, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnDestroy(WPARAM wParam, LPARAM lParam)
@@ -2388,12 +2277,14 @@ LRESULT CDUIWnd::OnDestroy(WPARAM wParam, LPARAM lParam)
 		g_pIDuiWndNotify->OnDuiWndClose(this);
 	}
 
-	return 0;
+	return OnOldWndProc(WM_DESTROY, wParam, lParam);
 }
 
-LRESULT CDUIWnd::OnNcActivate(WPARAM wParam, LPARAM /*lParam*/)
+LRESULT CDUIWnd::OnNcActivate(WPARAM wParam, LPARAM lParam)
 {
-	return (wParam == 0) ? TRUE : FALSE;
+	if (false == ::IsIconic(m_hWnd)) return (wParam == 0) ? TRUE : FALSE;
+
+	return OnOldWndProc(WM_NCACTIVATE, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnNcCalcSize(WPARAM wParam, LPARAM lParam)
@@ -2503,7 +2394,7 @@ LRESULT CDUIWnd::OnGetMinMaxInfo(WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIWnd::OnExitSizeMove(WPARAM wParam, LPARAM lParam)
 {
-	return 0;
+	return OnOldWndProc(WM_EXITSIZEMOVE, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnSysCommand(WPARAM wParam, LPARAM lParam)
@@ -2529,7 +2420,7 @@ LRESULT CDUIWnd::OnSysCommand(WPARAM wParam, LPARAM lParam)
 		}
 	}
 #else
-	LRESULT lRes = OnOldWndProc(uMsg, wParam, lParam);
+	LRESULT lRes = OnOldWndProc(WM_SYSCOMMAND, wParam, lParam);
 #endif
 
 	return lRes;
@@ -2563,7 +2454,7 @@ LRESULT CDUIWnd::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiLButtonDown, pt, DuiMsg, true);
 	}
 
-	return 0;
+	return OnOldWndProc(WM_LBUTTONDOWN, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnLButtonUp(WPARAM wParam, LPARAM lParam)
@@ -2592,7 +2483,7 @@ LRESULT CDUIWnd::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 
 	m_pCaptureCtrl = NULL;
 
-	return 0;
+	return OnOldWndProc(WM_LBUTTONUP, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnLButtonDlk(WPARAM wParam, LPARAM lParam)
@@ -2622,7 +2513,7 @@ LRESULT CDUIWnd::OnLButtonDlk(WPARAM wParam, LPARAM lParam)
 		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiLButtonDlk, pt, DuiMsg, true);
 	}
 
-	return 0;
+	return OnOldWndProc(WM_LBUTTONDBLCLK, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnRButtonDown(WPARAM wParam, LPARAM lParam)
@@ -2653,7 +2544,7 @@ LRESULT CDUIWnd::OnRButtonDown(WPARAM wParam, LPARAM lParam)
 		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiRButtonDown, pt, DuiMsg, true);
 	}
 
-	return 0;
+	return OnOldWndProc(WM_RBUTTONDOWN, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnRButtonUp(WPARAM wParam, LPARAM lParam)
@@ -2682,7 +2573,7 @@ LRESULT CDUIWnd::OnRButtonUp(WPARAM wParam, LPARAM lParam)
 
 	m_pCaptureCtrl = NULL;
 
-	return 0;
+	return OnOldWndProc(WM_RBUTTONUP, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnRButtonDlk(WPARAM wParam, LPARAM lParam)
@@ -2710,113 +2601,117 @@ LRESULT CDUIWnd::OnRButtonDlk(WPARAM wParam, LPARAM lParam)
 		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiRButtonDlk, pt, DuiMsg, true);
 	}
 
-	return 0;
+	return OnOldWndProc(WM_RBUTTONDBLCLK, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnMouseMove(WPARAM wParam, LPARAM lParam)
 {
-	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
-
-	//msg
-	DuiMessage DuiMsg = {};
-	DuiMsg.wParam = wParam;
-	DuiMsg.lParam = lParam;
-	DuiMsg.ptMouse = pt;
-
-	//capture
-	if (m_pCaptureCtrl)
+	do
 	{
-		DuiMsg.pMsgCtrl = m_pCaptureCtrl;
-		m_pCaptureCtrl->OnDuiMouseMove(pt, DuiMsg);
+		CDUIPoint pt(lParam);
+		m_ptMousePosLast.x = pt.x;
+		m_ptMousePosLast.y = pt.y;
 
-		//model
-		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiMouseMove, pt, DuiMsg, false);
+		//msg
+		DuiMessage DuiMsg = {};
+		DuiMsg.wParam = wParam;
+		DuiMsg.lParam = lParam;
+		DuiMsg.ptMouse = pt;
 
-		if (NULL == m_pWinDragCtrl
-			&& (abs(m_ptMousePosLast.x - m_ptMousePosDown.x) >= 4 || abs(m_ptMousePosLast.y - m_ptMousePosDown.y) >= 4))
+		//capture
+		if (m_pCaptureCtrl)
 		{
-			if (m_pCaptureCtrl->IsWinDragEnabled())
-			{
-				m_pCaptureCtrl->OnWinDragStart(pt, DuiMsg);
+			DuiMsg.pMsgCtrl = m_pCaptureCtrl;
+			m_pCaptureCtrl->OnDuiMouseMove(pt, DuiMsg);
 
-				//model
-				Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnWinDragStart, pt, DuiMsg, false);
-			}
-			else if ((NULL == MMInterfaceHelper(CDUIThinkEditCtrl, m_pCaptureCtrl) || m_pFocusCtrl != m_pCaptureCtrl)
-				&& (NULL == MMInterfaceHelper(CDUIEditCtrl, m_pCaptureCtrl) || m_pFocusCtrl != m_pCaptureCtrl)
-				&& (NULL == MMInterfaceHelper(CDUIRichEditCtrl, m_pCaptureCtrl) || m_pFocusCtrl != m_pCaptureCtrl)
-				&& m_pCaptureCtrl->GetOwnerModelCtrl()
-				&& m_pCaptureCtrl->GetOwnerModelCtrl()->IsWinDragEnabled())
+			//model
+			Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiMouseMove, pt, DuiMsg, false);
+
+			if (NULL == m_pWinDragCtrl
+				&& (abs(m_ptMousePosLast.x - m_ptMousePosDown.x) >= 4 || abs(m_ptMousePosLast.y - m_ptMousePosDown.y) >= 4))
 			{
-				m_pCaptureCtrl->GetOwnerModelCtrl()->OnWinDragStart(pt, DuiMsg);
+				if (m_pCaptureCtrl->IsWinDragEnabled())
+				{
+					m_pCaptureCtrl->OnWinDragStart(pt, DuiMsg);
+
+					//model
+					Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnWinDragStart, pt, DuiMsg, false);
+				}
+				else if ((NULL == MMInterfaceHelper(CDUIThinkEditCtrl, m_pCaptureCtrl) || m_pFocusCtrl != m_pCaptureCtrl)
+					&& (NULL == MMInterfaceHelper(CDUIEditCtrl, m_pCaptureCtrl) || m_pFocusCtrl != m_pCaptureCtrl)
+					&& (NULL == MMInterfaceHelper(CDUIRichEditCtrl, m_pCaptureCtrl) || m_pFocusCtrl != m_pCaptureCtrl)
+					&& m_pCaptureCtrl->GetOwnerModelCtrl()
+					&& m_pCaptureCtrl->GetOwnerModelCtrl()->IsWinDragEnabled())
+				{
+					m_pCaptureCtrl->GetOwnerModelCtrl()->OnWinDragStart(pt, DuiMsg);
+				}
+			}
+
+			break;
+		}
+
+		//tooltip
+		if (false == m_bMouseTracking)
+		{
+			TRACKMOUSEEVENT tme = {};
+			tme.cbSize = sizeof(TRACKMOUSEEVENT);
+			tme.dwFlags = TME_HOVER | TME_LEAVE;
+			tme.hwndTrack = m_hWnd;
+			tme.dwHoverTime = NULL == m_hWndTooltip ? m_nToolTipHoverTime : (DWORD)::SendMessage(m_hWndTooltip, TTM_GETDELAYTIME, TTDT_INITIAL, 0L);
+			BOOL bRes = _TrackMouseEvent(&tme);
+			m_bMouseTracking = true;
+		}
+
+		CDUIControlBase *pControl = FindSubControlByPoint(m_pRootCtrl, pt);
+
+		//hover
+		if (pControl == m_pHoverCtrl && m_pHoverCtrl)
+		{
+			DuiMsg.pMsgCtrl = m_pHoverCtrl;
+			DuiMsg.pMsgCtrl->OnDuiMouseMove(pt, DuiMsg);
+
+			//model
+			Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseMove, pt, DuiMsg, false);
+
+			break;
+		}
+
+		//leave
+		if (m_pHoverCtrl)
+		{
+			DuiMessage msgLeave = {};
+			msgLeave.wParam = DuiMsg.wParam;
+			msgLeave.lParam = DuiMsg.lParam;
+			msgLeave.pMsgCtrl = m_pHoverCtrl;
+			m_pHoverCtrl->OnDuiMouseLeave(pt, msgLeave);
+			Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseLeave, pt, msgLeave, false);
+
+			if (m_hWndTooltip)
+			{
+				::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, false, (LPARAM)&m_ToolTip);
 			}
 		}
 
-		return 0;
-	}
+		//hover
+		m_pHoverCtrl = pControl;
+		m_bRefreshToolTip = true;
 
-	//tooltip
-	if (false == m_bMouseTracking)
-	{
-		TRACKMOUSEEVENT tme = {};
-		tme.cbSize = sizeof(TRACKMOUSEEVENT);
-		tme.dwFlags = TME_HOVER | TME_LEAVE;
-		tme.hwndTrack = m_hWnd;
-		tme.dwHoverTime = NULL == m_hWndTooltip ? m_nToolTipHoverTime : (DWORD)::SendMessage(m_hWndTooltip, TTM_GETDELAYTIME, TTDT_INITIAL, 0L);
-		BOOL bRes = _TrackMouseEvent(&tme);
-		m_bMouseTracking = true;
-	}
-
-	CDUIControlBase *pControl = FindSubControlByPoint(m_pRootCtrl, pt);
-
-	//hover
-	if (pControl == m_pHoverCtrl && m_pHoverCtrl)
-	{
-		DuiMsg.pMsgCtrl = m_pHoverCtrl;
-		DuiMsg.pMsgCtrl->OnDuiMouseMove(pt, DuiMsg);
-
-		//model
-		Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseMove, pt, DuiMsg, false);
-
-		return 0;
-	}
-
-	//leave
-	if (m_pHoverCtrl)
-	{
-		DuiMessage msgLeave = {};
-		msgLeave.wParam = DuiMsg.wParam;
-		msgLeave.lParam = DuiMsg.lParam;
-		msgLeave.pMsgCtrl = m_pHoverCtrl;
-		m_pHoverCtrl->OnDuiMouseLeave(pt, msgLeave);
-		Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseLeave, pt, msgLeave, false);
-
-		if (m_hWndTooltip)
+		if (m_pHoverCtrl)
 		{
-			::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, false, (LPARAM)&m_ToolTip);
+			//enter
+			DuiMsg.pMsgCtrl = pControl;
+			m_pHoverCtrl->OnDuiMouseEnter(pt, DuiMsg);
+			Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseEnter, pt, DuiMsg, false);
+
+			//move
+			DuiMsg.pMsgCtrl = pControl;
+			m_pHoverCtrl->OnDuiMouseMove(pt, DuiMsg);
+			Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseMove, pt, DuiMsg, false);
 		}
-	}
 
-	//hover
-	m_pHoverCtrl = pControl;
-	m_bRefreshToolTip = true;
+	} while (false);
 
-	if (m_pHoverCtrl)
-	{
-		//enter
-		DuiMsg.pMsgCtrl = pControl;
-		m_pHoverCtrl->OnDuiMouseEnter(pt, DuiMsg);
-		Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseEnter, pt, DuiMsg, false);
-
-		//move
-		DuiMsg.pMsgCtrl = pControl;
-		m_pHoverCtrl->OnDuiMouseMove(pt, DuiMsg);
-		Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseMove, pt, DuiMsg, false);
-	}
-
-	return 0;
+	return OnOldWndProc(WM_MOUSEMOVE, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnMouseHover(WPARAM wParam, LPARAM lParam)
@@ -2899,7 +2794,7 @@ LRESULT CDUIWnd::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	if (m_bMouseTracking && m_hWnd) ::SendMessage(m_hWnd, WM_MOUSEMOVE, 0, (LPARAM)-1);
 	m_bMouseTracking = false;
 
-	return 0;
+	return OnOldWndProc(WM_MOUSELEAVE, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnMouseWheel(WPARAM wParam, LPARAM lParam)
@@ -2950,7 +2845,7 @@ LRESULT CDUIWnd::OnMouseWheel(WPARAM wParam, LPARAM lParam)
 	// Let's make sure that the scroll item below the cursor is the same as before...
 	::SendMessage(m_hWnd, WM_MOUSEMOVE, 0, (LPARAM)MAKELPARAM(m_ptMousePosLast.x, m_ptMousePosLast.y));
 
-	return 0;
+	return OnOldWndProc(WM_MOUSEWHEEL, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnTimer(WPARAM wParam, LPARAM lParam)
@@ -2981,7 +2876,7 @@ LRESULT CDUIWnd::OnTimer(WPARAM wParam, LPARAM lParam)
 		}
 	}
 
-	return 0;
+	return OnOldWndProc(WM_TIMER, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnSize(WPARAM wParam, LPARAM lParam)
@@ -3004,158 +2899,182 @@ LRESULT CDUIWnd::OnSize(WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIWnd::OnKeyDown(WPARAM wParam, LPARAM lParam)
 {
-	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
-
-	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
-
-	DuiMessage DuiMsg = {};
-	DuiMsg.wParam = wParam;
-	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pEventCtrl;
-	DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
-	DuiMsg.ptMouse = m_ptMousePosLast;
-	DuiMsg.wKeyState = MapKeyState();
-	DuiMsg.dwTimestamp = ::GetTickCount();
-
-	if (DuiMsg.pMsgCtrl->IsEnabled())
+	do
 	{
-		DuiMsg.pMsgCtrl->OnDuiKeyDown(DuiMsg);
-	}
+		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
-	//model
-	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiKeyDown, DuiMsg);
+		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
 
-	return 0;
+		DuiMessage DuiMsg = {};
+		DuiMsg.wParam = wParam;
+		DuiMsg.lParam = lParam;
+		DuiMsg.pMsgCtrl = m_pEventCtrl;
+		DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
+		DuiMsg.ptMouse = m_ptMousePosLast;
+		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.dwTimestamp = ::GetTickCount();
+
+		if (DuiMsg.pMsgCtrl->IsEnabled())
+		{
+			DuiMsg.pMsgCtrl->OnDuiKeyDown(DuiMsg);
+		}
+
+		//model
+		Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiKeyDown, DuiMsg);
+
+	} while (false);
+	
+	return OnOldWndProc(WM_KEYDOWN, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnKeyUp(WPARAM wParam, LPARAM lParam)
 {
-	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
-
-	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
-
-	DuiMessage DuiMsg = {};
-	DuiMsg.wParam = wParam;
-	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pEventCtrl;
-	DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
-	DuiMsg.ptMouse = m_ptMousePosLast;
-	DuiMsg.wKeyState = MapKeyState();
-	DuiMsg.dwTimestamp = ::GetTickCount();
-
-	if (DuiMsg.pMsgCtrl->IsEnabled())
+	do
 	{
-		DuiMsg.pMsgCtrl->OnDuiKeyUp(DuiMsg);
-	}
+		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
-	//model
-	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiKeyUp, DuiMsg);
+		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
 
-	return 0;
+		DuiMessage DuiMsg = {};
+		DuiMsg.wParam = wParam;
+		DuiMsg.lParam = lParam;
+		DuiMsg.pMsgCtrl = m_pEventCtrl;
+		DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
+		DuiMsg.ptMouse = m_ptMousePosLast;
+		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.dwTimestamp = ::GetTickCount();
+
+		if (DuiMsg.pMsgCtrl->IsEnabled())
+		{
+			DuiMsg.pMsgCtrl->OnDuiKeyUp(DuiMsg);
+		}
+
+		//model
+		Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiKeyUp, DuiMsg);
+
+	} while (false);
+	
+	return OnOldWndProc(WM_KEYUP, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnChar(WPARAM wParam, LPARAM lParam)
 {
-	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
-
-	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
-
-	DuiMessage DuiMsg = {};
-	DuiMsg.wParam = wParam;
-	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pEventCtrl;
-	DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
-	DuiMsg.ptMouse = m_ptMousePosLast;
-	DuiMsg.wKeyState = MapKeyState();
-	DuiMsg.dwTimestamp = ::GetTickCount();
-
-	if (DuiMsg.pMsgCtrl->IsEnabled())
+	do
 	{
-		DuiMsg.pMsgCtrl->OnDuiChar(DuiMsg);
-	}
+		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
-	//model
-	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiChar, DuiMsg);
+		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
 
-	return 0;
+		DuiMessage DuiMsg = {};
+		DuiMsg.wParam = wParam;
+		DuiMsg.lParam = lParam;
+		DuiMsg.pMsgCtrl = m_pEventCtrl;
+		DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
+		DuiMsg.ptMouse = m_ptMousePosLast;
+		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.dwTimestamp = ::GetTickCount();
+
+		if (DuiMsg.pMsgCtrl->IsEnabled())
+		{
+			DuiMsg.pMsgCtrl->OnDuiChar(DuiMsg);
+		}
+
+		//model
+		Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiChar, DuiMsg);
+
+	} while (false);
+	
+	return OnOldWndProc(WM_CHAR, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnSysKeyDown(WPARAM wParam, LPARAM lParam)
 {
-	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
-
-	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
-
-	DuiMessage DuiMsg = {};
-	DuiMsg.wParam = wParam;
-	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pEventCtrl;
-	DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
-	DuiMsg.ptMouse = m_ptMousePosLast;
-	DuiMsg.wKeyState = MapKeyState();
-	DuiMsg.dwTimestamp = ::GetTickCount();
-
-	if (DuiMsg.pMsgCtrl->IsEnabled())
+	do
 	{
-		DuiMsg.pMsgCtrl->OnDuiSysKeyDown(DuiMsg);
-	}
+		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
-	//model
-	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiSysKeyDown, DuiMsg);
+		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
 
-	return 0;
+		DuiMessage DuiMsg = {};
+		DuiMsg.wParam = wParam;
+		DuiMsg.lParam = lParam;
+		DuiMsg.pMsgCtrl = m_pEventCtrl;
+		DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
+		DuiMsg.ptMouse = m_ptMousePosLast;
+		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.dwTimestamp = ::GetTickCount();
+
+		if (DuiMsg.pMsgCtrl->IsEnabled())
+		{
+			DuiMsg.pMsgCtrl->OnDuiSysKeyDown(DuiMsg);
+		}
+
+		//model
+		Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiSysKeyDown, DuiMsg);
+
+	} while (false);
+	
+	return OnOldWndProc(WM_SYSKEYDOWN, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnSysKeyUp(WPARAM wParam, LPARAM lParam)
 {
-	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
-
-	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
-
-	DuiMessage DuiMsg = {};
-	DuiMsg.wParam = wParam;
-	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pEventCtrl;
-	DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
-	DuiMsg.ptMouse = m_ptMousePosLast;
-	DuiMsg.wKeyState = MapKeyState();
-	DuiMsg.dwTimestamp = ::GetTickCount();
-
-	if (DuiMsg.pMsgCtrl->IsEnabled())
+	do
 	{
-		DuiMsg.pMsgCtrl->OnDuiSysKeyUp(DuiMsg);
-	}
+		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
-	//model
-	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiSysKeyUp, DuiMsg);
+		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
 
-	return 0;
+		DuiMessage DuiMsg = {};
+		DuiMsg.wParam = wParam;
+		DuiMsg.lParam = lParam;
+		DuiMsg.pMsgCtrl = m_pEventCtrl;
+		DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
+		DuiMsg.ptMouse = m_ptMousePosLast;
+		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.dwTimestamp = ::GetTickCount();
+
+		if (DuiMsg.pMsgCtrl->IsEnabled())
+		{
+			DuiMsg.pMsgCtrl->OnDuiSysKeyUp(DuiMsg);
+		}
+
+		//model
+		Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiSysKeyUp, DuiMsg);
+
+	} while (false);
+	
+	return OnOldWndProc(WM_SYSKEYUP, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnSysChar(WPARAM wParam, LPARAM lParam)
 {
-	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
-
-	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
-
-	DuiMessage DuiMsg = {};
-	DuiMsg.wParam = wParam;
-	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pEventCtrl;
-	DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
-	DuiMsg.ptMouse = m_ptMousePosLast;
-	DuiMsg.wKeyState = MapKeyState();
-	DuiMsg.dwTimestamp = ::GetTickCount();
-
-	if (DuiMsg.pMsgCtrl->IsEnabled())
+	do
 	{
-		DuiMsg.pMsgCtrl->OnDuiSysChar(DuiMsg);
-	}
+		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
-	//model
-	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiSysChar, DuiMsg);
+		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
 
-	return 0;
+		DuiMessage DuiMsg = {};
+		DuiMsg.wParam = wParam;
+		DuiMsg.lParam = lParam;
+		DuiMsg.pMsgCtrl = m_pEventCtrl;
+		DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
+		DuiMsg.ptMouse = m_ptMousePosLast;
+		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.dwTimestamp = ::GetTickCount();
+
+		if (DuiMsg.pMsgCtrl->IsEnabled())
+		{
+			DuiMsg.pMsgCtrl->OnDuiSysChar(DuiMsg);
+		}
+
+		//model
+		Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiSysChar, DuiMsg);
+
+	} while (false);
+	
+	return OnOldWndProc(WM_SYSCHAR, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnPaint(CDUIRect rcPaint)
@@ -3237,130 +3156,157 @@ LRESULT CDUIWnd::OnPaint(CDUIRect rcPaint)
 
 LRESULT CDUIWnd::OnContextMenu(WPARAM wParam, LPARAM lParam)
 {
-	//pt
-	POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-	::ScreenToClient(m_hWnd, &pt);
-
-	//menu ctrl
-	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
-	while (m_pEventCtrl && false == m_pEventCtrl->IsContextMenu())
+	do
 	{
-		m_pEventCtrl = m_pEventCtrl->GetParent();
-	}
+		//pt
+		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+		::ScreenToClient(m_hWnd, &pt);
 
-	if (NULL == m_pEventCtrl) return 0;
+		//menu ctrl
+		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+		while (m_pEventCtrl && false == m_pEventCtrl->IsContextMenu())
+		{
+			m_pEventCtrl = m_pEventCtrl->GetParent();
+		}
 
-	DuiMessage DuiMsg = {};
-	DuiMsg.wParam = wParam;
-	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pEventCtrl;
-	DuiMsg.ptMouse = pt;
-	DuiMsg.wKeyState = (WORD)DuiMsg.wParam;
-	DuiMsg.dwTimestamp = ::GetTickCount();
+		if (NULL == m_pEventCtrl) break;
 
-	if (DuiMsg.pMsgCtrl->IsContextMenu())
-	{
-		DuiMsg.pMsgCtrl->OnDuiContextMenu(DuiMsg);
-	}
+		DuiMessage DuiMsg = {};
+		DuiMsg.wParam = wParam;
+		DuiMsg.lParam = lParam;
+		DuiMsg.pMsgCtrl = m_pEventCtrl;
+		DuiMsg.ptMouse = pt;
+		DuiMsg.wKeyState = (WORD)DuiMsg.wParam;
+		DuiMsg.dwTimestamp = ::GetTickCount();
 
-	//model
-	Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiContextMenu, DuiMsg);
+		if (DuiMsg.pMsgCtrl->IsContextMenu())
+		{
+			DuiMsg.pMsgCtrl->OnDuiContextMenu(DuiMsg);
+		}
 
-	return 0;
+		//model
+		Dui_Dispatch_ModelKeyboardEvent(m_pEventCtrl, OnDuiContextMenu, DuiMsg);
+
+	} while (false);
+	
+	return OnOldWndProc(WM_CONTEXTMENU, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnSetFocus(WPARAM wParam, LPARAM lParam)
 {
-	return 0;
+	return OnOldWndProc(WM_SETFOCUS, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 {
-	HWND hWndFocus = GetFocus();
-	if (m_hWnd == hWndFocus
-		|| (m_hWnd == GetParent(hWndFocus) && (GetWindowLong(hWndFocus, GWL_STYLE) & WS_CHILD))
-		|| (m_hWnd == ::GetWindowOwner(hWndFocus) && (GetWindowLong(hWndFocus, GWL_STYLE) & WS_CHILD))) return 0;
+	do
+	{
+		HWND hWndFocus = GetFocus();
+		if (m_hWnd == hWndFocus
+			|| (m_hWnd == GetParent(hWndFocus) && (GetWindowLong(hWndFocus, GWL_STYLE) & WS_CHILD))
+			|| (m_hWnd == ::GetWindowOwner(hWndFocus) && (GetWindowLong(hWndFocus, GWL_STYLE) & WS_CHILD))) break;
 
-	SetFocusControl(NULL);
+		SetFocusControl(NULL);
 
-	return 0;
+	} while (false);
+
+	return OnOldWndProc(WM_KILLFOCUS, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnSetCursor(WPARAM wParam, LPARAM lParam)
 {
-	if (LOWORD(lParam) != HTCLIENT) return 0;
-	if (m_pCaptureCtrl) return 1;
+	do
+	{
+		if (LOWORD(lParam) != HTCLIENT) break;
+		if (m_pCaptureCtrl) return 1;
 
-	POINT pt = { 0 };
-	::GetCursorPos(&pt);
-	::ScreenToClient(m_hWnd, &pt);
-	CDUIControlBase *pControl = FindControl(pt);
-	if (NULL == pControl) return 0;
-	if ((pControl->GetControlFlags() & DUIFLAG_SETCURSOR) == 0) return 0;
+		POINT pt = { 0 };
+		::GetCursorPos(&pt);
+		::ScreenToClient(m_hWnd, &pt);
+		CDUIControlBase *pControl = FindControl(pt);
+		if (NULL == pControl) break;
+		if ((pControl->GetControlFlags() & DUIFLAG_SETCURSOR) == 0) break;
 
-	DuiMessage DuiMsg = {};
-	DuiMsg.wParam = wParam;
-	DuiMsg.lParam = lParam;
-	DuiMsg.wKeyState = MapKeyState();
-	DuiMsg.dwTimestamp = ::GetTickCount();
-	DuiMsg.ptMouse = pt;
-	pControl->OnDuiSetCursor(pt, DuiMsg);
+		DuiMessage DuiMsg = {};
+		DuiMsg.wParam = wParam;
+		DuiMsg.lParam = lParam;
+		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.dwTimestamp = ::GetTickCount();
+		DuiMsg.ptMouse = pt;
+		pControl->OnDuiSetCursor(pt, DuiMsg);
 
-	return 1;
+		return 1;
+
+	} while (false);
+	
+	return OnOldWndProc(WM_SETCURSOR, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnDpiChanged(WPARAM wParam, LPARAM lParam)
 {
-	return 0;
+	return OnOldWndProc(WM_DPICHANGED, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
+	do
+	{
+		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
-	POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-	::ScreenToClient(m_hWnd, &pt);
+		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+		::ScreenToClient(m_hWnd, &pt);
 
-	m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
 
-	DuiMessage DuiMsg = {};
-	DuiMsg.wParam = wParam;
-	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pEventCtrl;
-	DuiMsg.ptMouse = pt;
-	DuiMsg.wKeyState = MapKeyState();
-	DuiMsg.dwTimestamp = ::GetTickCount();
+		DuiMessage DuiMsg = {};
+		DuiMsg.wParam = wParam;
+		DuiMsg.lParam = lParam;
+		DuiMsg.pMsgCtrl = m_pEventCtrl;
+		DuiMsg.ptMouse = pt;
+		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.dwTimestamp = ::GetTickCount();
 
-	DuiMsg.pMsgCtrl->OnDuiCommand(DuiMsg);
+		DuiMsg.pMsgCtrl->OnDuiCommand(DuiMsg);
 
-	//model
-	Dui_Dispatch_ModelEvent(m_pEventCtrl, OnDuiCommand, DuiMsg);
+		//model
+		Dui_Dispatch_ModelEvent(m_pEventCtrl, OnDuiCommand, DuiMsg);
 
-	return 0;
+	} while (false);
+	
+	return OnOldWndProc(WM_COMMAND, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnImeComPosition(WPARAM wParam, LPARAM lParam)
 {
-	if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) return 0;
+	do
+	{
+		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
-	POINT pt = {};
-	GetCursorPos(&pt);
-	::ScreenToClient(m_hWnd, &pt);
+		POINT pt = {};
+		GetCursorPos(&pt);
+		::ScreenToClient(m_hWnd, &pt);
 
-	DuiMessage DuiMsg = {};
-	DuiMsg.wParam = wParam;
-	DuiMsg.lParam = lParam;
-	DuiMsg.pMsgCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
-	DuiMsg.ptMouse = pt;
-	DuiMsg.wKeyState = MapKeyState();
-	DuiMsg.dwTimestamp = ::GetTickCount();
+		DuiMessage DuiMsg = {};
+		DuiMsg.wParam = wParam;
+		DuiMsg.lParam = lParam;
+		DuiMsg.pMsgCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+		DuiMsg.ptMouse = pt;
+		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.dwTimestamp = ::GetTickCount();
+		LRESULT lRes = DuiMsg.pMsgCtrl->OnDuiImeComPosition(DuiMsg);
 
-	return DuiMsg.pMsgCtrl->OnDuiImeComPosition(DuiMsg);
+		if (lRes > 0)
+		{
+			return lRes;
+		}
+
+	} while (false);
+	
+	return OnOldWndProc(WM_IME_COMPOSITION, wParam, lParam);
 }
 
 void CDUIWnd::OnFinalMessage()
 {
-	RemovePreMessagePtr(this);
 	RemoveINotify(this);
 
 	if (GetRootCtrl())

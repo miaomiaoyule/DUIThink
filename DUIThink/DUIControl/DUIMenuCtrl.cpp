@@ -295,17 +295,17 @@ void CDUIMenuWnd::ResizeSubMenu()
 	CDUIRect rcWnd;
 	::GetWindowRect(m_hWnd, &rcWnd);
 
-	MONITORINFO oMonitor = {};
-	oMonitor.cbSize = sizeof(oMonitor);
-	::GetMonitorInfo(::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
-	CDUIRect rcWork = oMonitor.rcWork;
+	MONITORINFO MonitorInfo = {};
+	MonitorInfo.cbSize = sizeof(MonitorInfo);
+	::GetMonitorInfo(::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTOPRIMARY), &MonitorInfo);
+	CDUIRect rcWork = MonitorInfo.rcWork;
 
 	CDUIRect rcWndOwner;
-	::GetWindowRect(GetWndHandle(), &rcWndOwner);
+	::GetWindowRect(m_pWndOwner->GetWndHandle(), &rcWndOwner);
 
 	CDUIRect rcOwner = m_pOwner->GetAbsoluteRect();
 	CDUIPoint ptOwner(rcOwner.right, rcOwner.top);
-	ClientToScreen(GetWndHandle(), &ptOwner);
+	ClientToScreen(m_pWndOwner->GetWndHandle(), &ptOwner);
 
 	rcWnd.Offset(rcWndOwner.right - rcWnd.left, ptOwner.y - rcWnd.top);
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(-(rcWndOwner.GetWidth() + rcWnd.GetWidth()), 0);
