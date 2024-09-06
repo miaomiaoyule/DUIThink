@@ -2017,7 +2017,7 @@ bool CDUIListViewCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Ms
 
 bool CDUIListViewCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (false == m_AttributeImageMouseDragSel.empty()
+	if (false == m_AttributeImageMouseDragSel.IsEmpty()
 		&& this == m_pWndOwner->GetCaptureControl())
 	{
 		PerformMouseDragSel();
@@ -2332,7 +2332,7 @@ bool CDUIListViewCtrl::SaveAttribute(tinyxml2::XMLElement *pNode, bool bIncludeC
 void CDUIListViewCtrl::PaintMouseDragSel(HDC hDC)
 {
 	if (NULL == m_pWndOwner
-		|| m_AttributeImageMouseDragSel.empty()
+		|| m_AttributeImageMouseDragSel.IsEmpty()
 		|| this != m_pWndOwner->GetCaptureControl()) return;
 
 	m_AttributeImageMouseDragSel.Draw(hDC, m_rcMouseDragSel, m_rcPaint);
@@ -2613,7 +2613,7 @@ void CDUIListViewCtrl::ReapControl()
 void CDUIListViewCtrl::PerformMouseDragSel()
 {
 	if (NULL == m_pWndOwner
-		|| m_AttributeImageMouseDragSel.empty()
+		|| m_AttributeImageMouseDragSel.IsEmpty()
 		|| this != m_pWndOwner->GetCaptureControl()) return;
 
 	//range

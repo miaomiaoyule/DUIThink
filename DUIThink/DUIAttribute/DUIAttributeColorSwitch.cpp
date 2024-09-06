@@ -182,11 +182,9 @@ bool CDUIAttributeColorSwitch::FillRoundRect(HDC hDC, const CDUIRect &rcPaint, i
 	return true;
 }
 
-bool CDUIAttributeColorSwitch::empty()
+bool CDUIAttributeColorSwitch::IsEmpty()
 {
-	std::vector<CMMString> vecColorRes = GetColorResSwitch();
-
-	return vecColorRes.empty();
+	return GetColorResSwitch().empty();
 }
 
 ARGB CDUIAttributeColorSwitch::GetColorValue()

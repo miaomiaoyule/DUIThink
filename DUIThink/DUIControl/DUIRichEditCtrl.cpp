@@ -1689,7 +1689,7 @@ long CDUIRichEditCtrl::GetStyle()
 	if (IsPasswordMode()) lStyle |= ES_PASSWORD;
 
 	tagDuiTextStyle TextStyle = {};
-	if (false == m_AttributeTextStyleNormal.empty()) TextStyle = GetTextStyleNormal();
+	if (false == m_AttributeTextStyleNormal.IsEmpty()) TextStyle = GetTextStyleNormal();
 	if (TextStyle.dwTextStyle & DT_LEFT)
 	{
 		lStyle &= ~(ES_CENTER | ES_RIGHT);
@@ -2646,7 +2646,7 @@ void CDUIRichEditCtrl::PaintStatusImage(HDC hDC)
 		pAttribute = &m_AttributeImageNormal;
 	}
 
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeImageNormal : pAttribute;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeImageNormal : pAttribute;
 	if (NULL == pAttribute) return;
 
 	pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint);
@@ -2668,8 +2668,8 @@ void CDUIRichEditCtrl::PaintText(HDC hDC)
 		if (strTipText.empty()) return;
 
 		CDUIAttributeTextStyle *pAttribute = (m_nControlStatus & ControlStatus_Hot) ? &m_AttributeTextStyleTipTextHot : &m_AttributeTextStyleTipTextNormal;
-		NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleTipTextNormal : pAttribute;
-		NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleTipTextNormal : pAttribute;
+		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
 
 		if (NULL == pAttribute) return;
 
@@ -2724,7 +2724,7 @@ void CDUIRichEditCtrl::ConstructTextStyle()
 	if (false == IsEnabled())
 	{
 		CDUIAttributeTextStyle *pAttribute = &m_AttributeTextStyleDisabled;
-		NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
 		m_pTextHost->SetFont(pAttribute ? pAttribute->GetFont() : NULL);
 		m_pTextHost->SetColor(pAttribute ? pAttribute->GetTextColor() : 0);
 
@@ -2735,7 +2735,7 @@ void CDUIRichEditCtrl::ConstructTextStyle()
 	if (IsFocused())
 	{
 		CDUIAttributeTextStyle *pAttribute = &m_AttributeTextStyleFocus;
-		NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
 		m_pTextHost->SetFont(pAttribute ? pAttribute->GetFont() : NULL);
 		m_pTextHost->SetColor(pAttribute ? pAttribute->GetTextColor() : 0);
 
@@ -2746,7 +2746,7 @@ void CDUIRichEditCtrl::ConstructTextStyle()
 	if (m_nControlStatus & ControlStatus_Hot)
 	{
 		CDUIAttributeTextStyle *pAttribute = &m_AttributeTextStyleHot;
-		if (pAttribute && false == pAttribute->empty())
+		if (pAttribute && false == pAttribute->IsEmpty())
 		{
 			m_pTextHost->SetFont(pAttribute->GetFont());
 			m_pTextHost->SetColor(pAttribute->GetTextColor());

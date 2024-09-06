@@ -301,7 +301,7 @@ void CDUIListHeaderItemCtrl::PaintStatusColor(HDC hDC)
 	{
 		pAttribute = &m_AttributeColorHot;
 	}
-	else if (IsFocused() && false == m_AttributeColorFocus.empty())
+	else if (IsFocused() && false == m_AttributeColorFocus.IsEmpty())
 	{
 		pAttribute = &m_AttributeColorFocus;
 	}
@@ -336,7 +336,7 @@ void CDUIListHeaderItemCtrl::PaintStatusImage(HDC hDC)
 	{
 		pAttribute = &m_AttributeImageHot;
 	}
-	else if (IsFocused() && false == m_AttributeImageFocus.empty())
+	else if (IsFocused() && false == m_AttributeImageFocus.IsEmpty())
 	{
 		pAttribute = &m_AttributeImageFocus;
 	}
@@ -368,7 +368,7 @@ void CDUIListHeaderItemCtrl::PaintText(HDC hDC)
 	CMMString strText = GetText();
 	if (strText.empty()) return;
 
-	if (false == m_AttributeTextStyle.empty()
+	if (false == m_AttributeTextStyle.IsEmpty()
 		&& 0 == (m_nControlStatus & ControlStatus_Hot))
 	{
 		pAttribute = &m_AttributeTextStyle;

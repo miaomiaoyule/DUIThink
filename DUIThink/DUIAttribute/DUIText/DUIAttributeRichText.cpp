@@ -28,14 +28,14 @@ LPVOID CDUIAttributeRichText::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 
 void CDUIAttributeRichText::Draw(HDC hDC, CDUIRect &rcPaint, bool bGdiplusRender, Gdiplus::TextRenderingHint RenderType, int nLineSpace, bool bShadow)
 {
-	if (empty() || NULL == m_pOwner) return;
+	if (IsEmpty() || NULL == m_pOwner) return;
 
 	CDUIRenderEngine::DrawRichText(hDC, rcPaint, GetRichText(), bGdiplusRender, RenderType, nLineSpace);
 
 	return;
 }
 
-bool CDUIAttributeRichText::empty()
+bool CDUIAttributeRichText::IsEmpty()
 {
 	tagDuiRichText RichText = GetRichText();
 

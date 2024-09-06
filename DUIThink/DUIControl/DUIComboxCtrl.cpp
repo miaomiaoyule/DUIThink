@@ -875,47 +875,47 @@ void CDUIComboxCtrl::InitComplete()
 		m_pEditCtrl->SetBindCtrl(this);
 		m_pEditCtrl->SetVisible(IsEditEnable());
 
-		if (false == m_AttributeTextStyle.empty())
+		if (false == m_AttributeTextStyle.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyle(m_AttributeTextStyle.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleNormal.empty())
+		if (false == m_AttributeTextStyleNormal.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleNormal(m_AttributeTextStyleNormal.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleHot.empty())
+		if (false == m_AttributeTextStyleHot.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleHot(m_AttributeTextStyleHot.GetTextStyle());
 		}
-		if (false == m_AttributeTextStylePushed.empty())
+		if (false == m_AttributeTextStylePushed.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStylePushed(m_AttributeTextStylePushed.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleFocus.empty())
+		if (false == m_AttributeTextStyleFocus.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleFocus(m_AttributeTextStyleFocus.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleDisabled.empty())
+		if (false == m_AttributeTextStyleDisabled.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleDisabled(m_AttributeTextStyleDisabled.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleSelNormal.empty())
+		if (false == m_AttributeTextStyleSelNormal.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleNormal(m_AttributeTextStyleSelNormal.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleSelHot.empty())
+		if (false == m_AttributeTextStyleSelHot.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleHot(m_AttributeTextStyleSelHot.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleSelPushed.empty())
+		if (false == m_AttributeTextStyleSelPushed.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStylePushed(m_AttributeTextStyleSelPushed.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleSelFocus.empty())
+		if (false == m_AttributeTextStyleSelFocus.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleFocus(m_AttributeTextStyleSelFocus.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleSelDisabled.empty())
+		if (false == m_AttributeTextStyleSelDisabled.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleDisabled(m_AttributeTextStyleSelDisabled.GetTextStyle());
 		}

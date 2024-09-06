@@ -794,8 +794,8 @@ void CDUIEditCtrl::PaintText(HDC hDC)
 		pAttribute = &m_AttributeTextStyleNormal;
 	}
 
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
 	if (NULL == pAttribute) return;
 
 	//range

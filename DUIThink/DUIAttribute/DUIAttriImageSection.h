@@ -35,7 +35,7 @@ public:
 	virtual void Draw(CDUIImageBase *pImageBase, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled = false);
 	virtual void DrawAnimate(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, const tagDuiAnimateImageInfo &AnimateImageInfo, int nFrameCur, const CDUIRect &rcRound = {});
 
-	virtual bool empty();
+	virtual bool IsEmpty();
 	virtual tagDuiImageSection GetImageSection();
 	virtual void SetImageSection(const tagDuiImageSection &ImageSection);
 	virtual CDUIImageBase * GetCurImageBase();

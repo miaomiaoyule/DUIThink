@@ -1882,7 +1882,7 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	if (enDuiLineStyle::LineStyle_Null == GetBorderStyle()) return;
 
 	CDUIAttributeColorSwitch *pAttribute = IsFocused() ? &m_AttributeColorBorderFocus : &m_AttributeColorBorder;
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeColorBorder : NULL;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeColorBorder : NULL;
 	if (NULL == pAttribute) return;
 
 	CDUIRect rcBorderLine = GetBorderLine();

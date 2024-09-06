@@ -127,7 +127,7 @@ bool CDUIAttributeObject::IsModified()
 	return m_bModified;
 }
 
-bool CDUIAttributeObject::empty()
+bool CDUIAttributeObject::IsEmpty()
 {
 	return false;
 }

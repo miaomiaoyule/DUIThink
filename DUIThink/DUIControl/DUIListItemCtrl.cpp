@@ -904,16 +904,16 @@ void CDUIListItemCtrl::PaintItemColor(HDC hDC)
 			pAttribute = ListInfo.pAttributeItemStatusColorNormal;
 		}
 	}
-	if ((NULL == pAttribute || pAttribute->empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& true == IsSelected()
 		&& ListInfo.pAttributeItemStatusColorSelNormal
-		&& false == ListInfo.pAttributeItemStatusColorSelNormal->empty())
+		&& false == ListInfo.pAttributeItemStatusColorSelNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemStatusColorSelNormal;
 	}
-	if ((NULL == pAttribute || pAttribute->empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& ListInfo.pAttributeItemStatusColorNormal
-		&& false == ListInfo.pAttributeItemStatusColorNormal->empty())
+		&& false == ListInfo.pAttributeItemStatusColorNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemStatusColorNormal;
 	}
@@ -955,16 +955,16 @@ void CDUIListItemCtrl::PaintItemImage(HDC hDC)
 			pAttribute = ListInfo.pAttributeItemStatusImageNormal;
 		}
 	}
-	if ((NULL == pAttribute || pAttribute->empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& true == IsSelected()
 		&& ListInfo.pAttributeItemStatusImageSelNormal
-		&& false == ListInfo.pAttributeItemStatusImageSelNormal->empty())
+		&& false == ListInfo.pAttributeItemStatusImageSelNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemStatusImageSelNormal;
 	}
-	if ((NULL == pAttribute || pAttribute->empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& ListInfo.pAttributeItemStatusImageNormal
-		&& false == ListInfo.pAttributeItemStatusImageNormal->empty())
+		&& false == ListInfo.pAttributeItemStatusImageNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemStatusImageNormal;
 	}
@@ -1145,7 +1145,7 @@ CDUIAttributeTextStyle * CDUIListItemCtrl::GetAttributeTextStyleCur()
 	CDUIAttributeTextStyle *pAttribute = NULL;
 	auto ListInfo = GetItemStyleInfo();
 
-	if (false == m_AttributeTextStyle.empty())
+	if (false == m_AttributeTextStyle.IsEmpty())
 	{
 		pAttribute = &m_AttributeTextStyle;
 	}
@@ -1175,16 +1175,16 @@ CDUIAttributeTextStyle * CDUIListItemCtrl::GetAttributeTextStyleCur()
 			pAttribute = ListInfo.pAttributeItemTextStyleNormal;
 		}
 	}
-	if ((NULL == pAttribute || pAttribute->empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& true == IsSelected()
 		&& ListInfo.pAttributeItemTextStyleSelNormal
-		&& false == ListInfo.pAttributeItemTextStyleSelNormal->empty())
+		&& false == ListInfo.pAttributeItemTextStyleSelNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemTextStyleSelNormal;
 	}
-	if ((NULL == pAttribute || pAttribute->empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& ListInfo.pAttributeItemTextStyleNormal
-		&& false == ListInfo.pAttributeItemTextStyleNormal->empty())
+		&& false == ListInfo.pAttributeItemTextStyleNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemTextStyleNormal;
 	}

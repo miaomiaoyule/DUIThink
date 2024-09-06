@@ -156,10 +156,9 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 	return;
 }
 
-bool CDUIAttriImageSection::empty()
+bool CDUIAttriImageSection::IsEmpty()
 {
-	tagDuiImageSection ImggeSection = GetImageSection();
-	return ImggeSection.vecImageResSwitch.empty();
+	return GetImageSection().vecImageResSwitch.empty();
 }
 
 tagDuiImageSection CDUIAttriImageSection::GetImageSection()
