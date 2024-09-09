@@ -956,15 +956,15 @@ void CDUIWnd::SetTag(UINT_PTR pTag)
 	return;
 }
 
-bool CDUIWnd::SetTimer(CDUIPropertyObject *pProp, UINT uTimerID, UINT uElapse)
+bool CDUIWnd::SetTimer(CDUIPropertyObject *pProperty, UINT uTimerID, UINT uElapse)
 {
-	ASSERT(pProp != NULL);
+	ASSERT(pProperty != NULL);
 	ASSERT(uElapse > 0);
-	if (NULL == pProp || 0 == uElapse) return false;
+	if (NULL == pProperty || 0 == uElapse) return false;
 
 	for (auto &TimerInfo : m_vecTimers)
 	{
-		if (TimerInfo.pProp == pProp
+		if (TimerInfo.pProperty == pProperty
 			&& TimerInfo.hWnd == m_hWnd
 			&& TimerInfo.nLocalID == uTimerID)
 		{
@@ -988,8 +988,8 @@ bool CDUIWnd::SetTimer(CDUIPropertyObject *pProp, UINT uTimerID, UINT uElapse)
 
 	DuiTimerInfo TimerInfo;
 	TimerInfo.hWnd = m_hWnd;
-	TimerInfo.pProp = pProp;
-	TimerInfo.pControl = MMInterfaceHelper(CDUIControlBase, pProp);
+	TimerInfo.pProperty = pProperty;
+	TimerInfo.pControl = MMInterfaceHelper(CDUIControlBase, pProperty);
 	TimerInfo.nLocalID = uTimerID;
 	TimerInfo.uWinTimer = m_uTimerID;
 	TimerInfo.bKilled = false;
@@ -998,14 +998,14 @@ bool CDUIWnd::SetTimer(CDUIPropertyObject *pProp, UINT uTimerID, UINT uElapse)
 	return true;
 }
 
-bool CDUIWnd::FindTimer(CDUIPropertyObject *pProp, UINT uTimerID)
+bool CDUIWnd::FindTimer(CDUIPropertyObject *pProperty, UINT uTimerID)
 {
-	ASSERT(pProp != NULL);
-	if (NULL == pProp) return false;
+	ASSERT(pProperty != NULL);
+	if (NULL == pProperty) return false;
 
 	auto FindIt = find_if(m_vecTimers.begin(), m_vecTimers.end(), [&](DuiTimerInfo &TimerInfo)
 	{
-		return TimerInfo.pProp == pProp
+		return TimerInfo.pProperty == pProperty
 			&& TimerInfo.hWnd == m_hWnd
 			&& TimerInfo.nLocalID == uTimerID
 			&& false == TimerInfo.bKilled;
@@ -1014,14 +1014,14 @@ bool CDUIWnd::FindTimer(CDUIPropertyObject *pProp, UINT uTimerID)
 	return FindIt != m_vecTimers.end();
 }
 
-bool CDUIWnd::KillTimer(CDUIPropertyObject *pProp, UINT uTimerID)
+bool CDUIWnd::KillTimer(CDUIPropertyObject *pProperty, UINT uTimerID)
 {
-	ASSERT(pProp != NULL);
-	if (NULL == pProp) return false;
+	ASSERT(pProperty != NULL);
+	if (NULL == pProperty) return false;
 
 	for (auto &TimerInfo : m_vecTimers)
 	{
-		if (TimerInfo.pProp == pProp
+		if (TimerInfo.pProperty == pProperty
 			&& TimerInfo.hWnd == m_hWnd
 			&& TimerInfo.nLocalID == uTimerID)
 		{
@@ -1039,16 +1039,16 @@ bool CDUIWnd::KillTimer(CDUIPropertyObject *pProp, UINT uTimerID)
 	return false;
 }
 
-bool CDUIWnd::KillTimer(CDUIPropertyObject *pProp)
+bool CDUIWnd::KillTimer(CDUIPropertyObject *pProperty)
 {
-	ASSERT(pProp != NULL);
-	if (NULL == pProp) return false;
+	ASSERT(pProperty != NULL);
+	if (NULL == pProperty) return false;
 
 	for (int i = m_vecTimers.size() - 1; i >= 0; i--)
 	{
 		DuiTimerInfo TimerInfo = (m_vecTimers[i]);
 
-		if (TimerInfo.pProp == pProp)
+		if (TimerInfo.pProperty == pProperty)
 		{
 			if (false == TimerInfo.bKilled) ::KillTimer(TimerInfo.hWnd, TimerInfo.uWinTimer);
 
@@ -2854,7 +2854,7 @@ LRESULT CDUIWnd::OnTimer(WPARAM wParam, LPARAM lParam)
 
 	for (auto &TimerInfo : m_vecTimers)
 	{
-		if (NULL == TimerInfo.pProp) continue;
+		if (NULL == TimerInfo.pProperty) continue;
 
 		if (TimerInfo.hWnd == m_hWnd
 			&& TimerInfo.uWinTimer == wParam

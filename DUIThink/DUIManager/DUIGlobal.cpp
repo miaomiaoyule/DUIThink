@@ -1064,9 +1064,9 @@ bool CDUIGlobal::SaveDui(LPCTSTR lpszName, CDUIWnd *pWnd)
 	return CDUIXmlPack::SaveXmlUI(strFile, pWnd);
 }
 
-CMMString CDUIGlobal::SaveDui(CDUIPropertyObject *pProp, bool bIncludeChild)
+CMMString CDUIGlobal::SaveDui(CDUIPropertyObject *pProperty, bool bIncludeChild)
 {
-	return CDUIXmlPack::SaveDui(pProp, bIncludeChild);
+	return CDUIXmlPack::SaveDui(pProperty, bIncludeChild);
 }
 
 bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
@@ -1131,11 +1131,11 @@ bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
 	return true;
 }
 
-bool CDUIGlobal::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pProp)
+bool CDUIGlobal::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pProperty)
 {
-	if (NULL == pNodeXml || NULL == pProp) return false;
+	if (NULL == pNodeXml || NULL == pProperty) return false;
 
-	return CDUIXmlPack::RefreshAttibute(pNodeXml, pProp);
+	return CDUIXmlPack::RefreshAttibute(pNodeXml, pProperty);
 }
 
 CMMThreadPool * CDUIGlobal::GetThreadPool()

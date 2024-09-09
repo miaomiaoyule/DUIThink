@@ -257,11 +257,11 @@ protected:
 	CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
 	CDUIControlBase * ParseDui(LPCTSTR lpszXml);
 	bool SaveDui(LPCTSTR lpszName, CDUIWnd *pWnd);
-	CMMString SaveDui(CDUIPropertyObject *pProp, bool bIncludeChild = true);
+	CMMString SaveDui(CDUIPropertyObject *pProperty, bool bIncludeChild = true);
 	bool ExtractResourceData(vector<BYTE> &vecData, CMMString strFile);
 	
 	//refresh
-	bool RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pProp);
+	bool RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pProperty);
 
 	//module
 protected:
