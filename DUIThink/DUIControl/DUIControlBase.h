@@ -24,7 +24,7 @@ class DUITHINK_API CDUIControlBase
 	friend class CDUIAttributePosition;
 	friend class CDUIAttributeColorSwitch;
 	friend class CDUILayoutView;
-	friend class CControlNotifyView;
+	friend class CNotifyView;
 
 	DuiDeclare_CreateControl(CDUIControlBase)
 	MMDeclare_ClassName(CDUIControlBase)
