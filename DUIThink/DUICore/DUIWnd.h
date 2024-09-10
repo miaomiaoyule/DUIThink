@@ -201,10 +201,10 @@ public:
 	virtual virtual void SetTag(UINT_PTR pTag);
 
 	//timer
-	virtual bool SetTimer(CDUIPropertyObject *pProp, UINT uTimerID, UINT uElapse);
-	virtual bool FindTimer(CDUIPropertyObject *pProp, UINT uTimerID);
-	virtual bool KillTimer(CDUIPropertyObject *pProp, UINT uTimerID);
-	virtual bool KillTimer(CDUIPropertyObject *pProp);
+	virtual bool SetTimer(CDUIPropertyObject *pPropObj, UINT uTimerID, UINT uElapse);
+	virtual bool FindTimer(CDUIPropertyObject *pPropObj, UINT uTimerID);
+	virtual bool KillTimer(CDUIPropertyObject *pPropObj, UINT uTimerID);
+	virtual bool KillTimer(CDUIPropertyObject *pPropObj);
 	virtual bool RemoveAllTimer();
 
 	//radio

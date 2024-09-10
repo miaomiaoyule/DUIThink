@@ -16,7 +16,7 @@ interface DUITHINK_API IControlListen : public IDuiInterface
 	virtual void OnChildAdd(CDUIContainerCtrl *pParent, CDUIControlBase *pChild) {}
 	virtual void OnChildRemove(CDUIContainerCtrl *pParent, CDUIControlBase *pChild) {}
 	virtual void OnVisibleChange(CDUIControlBase *pControl) {}
-	virtual void OnAttributeChange(CDUIPropertyObject *pProp, CDUIAttributeObject *pAttribute) {}
+	virtual void OnAttributeChange(CDUIPropertyObject *pPropObj, CDUIAttributeObject *pAttribute) {}
 };
 
 //////////////////////////////////////////////////////////////////////////

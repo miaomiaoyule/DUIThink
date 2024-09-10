@@ -18,13 +18,13 @@ public:
 	static bool SaveCtrlID(const MapDuiControlID &mapCtrlID);
 	static bool LoadCtrlID(LPCTSTR lpszFile);
 	static bool SaveXmlUI(LPCTSTR lpszFile, CDUIWnd *pWnd);
-	static CMMString SaveDui(CDUIPropertyObject *pProp, bool bIncludeChild = true);
+	static CMMString SaveDui(CDUIPropertyObject *pPropObj, bool bIncludeChild = true);
 	static bool LoadDuiXml(LPCTSTR lpszFile, tinyxml2::XMLDocument &DuiXml);
 	static CDUIControlBase * LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWnd *pWnd);
 	static CDUIControlBase * LoadDui(LPCTSTR lpszFile, CDUIWnd *pWnd);
 	static CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
 	static CDUIControlBase * ParseDui(LPCTSTR lpszXml);
-	static bool RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pProp);
+	static bool RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pPropObj);
 
 public:
 	static bool LoadResourceFromXML(tinyxml2::XMLElement *pNodeXml, CDUIResourceBase *pDUIResource);

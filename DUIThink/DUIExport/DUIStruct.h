@@ -455,7 +455,7 @@ typedef std::deque<tagDuiThinkEditHistory> QueDuiThinkEditHistory;
 //////////////////////////////////////////////////////////////////////////
 typedef struct tagDuiTimerInfo
 {
-	CDUIPropertyObject *				pProp = NULL;
+	CDUIPropertyObject *				pPropObj = NULL;
 	CDUIControlBase *					pControl = NULL;
 	UINT								nLocalID = 0;
 	HWND								hWnd = NULL;

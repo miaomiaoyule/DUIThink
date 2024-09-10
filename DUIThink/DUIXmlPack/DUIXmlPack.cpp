@@ -535,15 +535,15 @@ bool CDUIXmlPack::SaveXmlUI(LPCTSTR lpszFile, CDUIWnd *pWnd)
 	return true;
 }
 
-CMMString CDUIXmlPack::SaveDui(CDUIPropertyObject *pProperty, bool bIncludeChild)
+CMMString CDUIXmlPack::SaveDui(CDUIPropertyObject *pPropObj, bool bIncludeChild)
 {
-	if (NULL == pProperty) return _T("");
+	if (NULL == pPropObj) return _T("");
 
 	tinyxml2::XMLDocument xmlDoc;
-	tinyxml2::XMLElement *pNode = xmlDoc.NewElement((LPCSTR)CT2CA(pProperty->GetClass()));
+	tinyxml2::XMLElement *pNode = xmlDoc.NewElement((LPCSTR)CT2CA(pPropObj->GetClass()));
 	if (NULL == pNode) return _T("");
 
-	pProperty->SaveAttribute(pNode, bIncludeChild);
+	pPropObj->SaveAttribute(pNode, bIncludeChild);
 
 	tinyxml2::XMLPrinter xmlPrinter;
 	pNode->Accept(&xmlPrinter);
@@ -681,9 +681,9 @@ CDUIControlBase * CDUIXmlPack::ParseDui(LPCTSTR lpszXml)
 	return ParseDui(xmlDoc.RootElement());
 }
 
-bool CDUIXmlPack::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pProperty)
+bool CDUIXmlPack::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pPropObj)
 {
-	if (NULL == pNodeXml || NULL == pProperty) return false;
+	if (NULL == pNodeXml || NULL == pPropObj) return false;
 
 	//参数节点
 	tinyxml2::XMLElement *pNodeSub = pNodeXml->FirstChildElement();
@@ -691,7 +691,7 @@ bool CDUIXmlPack::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyOb
 
 	do
 	{
-		CDUIAttributeObject *pAttribute = CDUIGlobal::GetInstance()->GetAttributeObj(pProperty, (LPCTSTR)CA2CT(pNodeSub->Name()));
+		CDUIAttributeObject *pAttribute = CDUIGlobal::GetInstance()->GetAttributeObj(pPropObj, (LPCTSTR)CA2CT(pNodeSub->Name()));
 		if (pAttribute)
 		{
 			LoadAtrributeFromXML(pNodeSub, pAttribute);
