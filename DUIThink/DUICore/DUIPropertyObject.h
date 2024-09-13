@@ -54,6 +54,10 @@ public:
 public:
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
 	virtual CMMString GetDescribe() const;
+	virtual CDUIAttributeObject * GetAttributeObj(LPCTSTR lpszName);
+	virtual int GetAttributeGroupIndex(CDUIAttributeGroup *pAttributeGroup);
+	virtual void SetAttributeGroupIndex(CDUIAttributeGroup *pAttributeGroup, int nIndex);
+	virtual VecAttributeGroup GetAttributeGroup();
 
 	//property
 	//** you forbid override **//
@@ -76,6 +80,7 @@ protected:
 protected:
 	bool CreateGroupAttribute(CDUIAttributeGroup &AttriGroup, LPCTSTR lpszName);
 	bool CreateAttribute(CDUIAttributeObject &Attribute, LPCTSTR lpszName, LPCTSTR lpszDescribe, CDUIAttributeGroup *pAttriGroup);
+	bool AddAttributeBuffer(tinyxml2::XMLElement *pNodeXml);
 
 	//xml
 	//** you forbid override **//

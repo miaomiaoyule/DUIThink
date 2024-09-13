@@ -1674,7 +1674,7 @@ void CDUIGlobal::OnResourceDelete(CDUIResourceBase *pResourceObj)
 		{
 			if (NULL == Wnd.first) continue;
 
-			//Wnd.first->OnResourceDelete(pResourceObj);
+			Wnd.first->Invalidate();
 		}
 	}
 
@@ -1691,7 +1691,7 @@ void CDUIGlobal::OnResourceSwitch(int nIndexRes)
 		{
 			if (NULL == Wnd.first) continue;
 
-			Wnd.first->OnResourceSwitch(nIndexRes);
+			Wnd.first->Invalidate();
 		}
 	}
 

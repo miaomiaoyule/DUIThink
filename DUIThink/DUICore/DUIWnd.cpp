@@ -3422,28 +3422,6 @@ void CDUIWnd::OnDpiChanged(int nScalePre)
 	return;
 }
 
-void CDUIWnd::OnResourceDelete(CDUIResourceBase *pResourceObj)
-{
-	if (NULL == m_pRootCtrl) return;
-
-	m_pRootCtrl->OnResourceDelete(pResourceObj);
-
-	Invalidate();
-
-	return;
-}
-
-void CDUIWnd::OnResourceSwitch(int nIndexRes)
-{
-	if (NULL == m_pRootCtrl) return;
-
-	m_pRootCtrl->OnResourceSwitch(nIndexRes);
-
-	Invalidate();
-
-	return;
-}
-
 void CDUIWnd::AdjustWndSize()
 {
 	CDUISize szWndInit = GetWndInitSize();

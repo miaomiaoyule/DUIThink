@@ -76,52 +76,6 @@ void CDUIContainerCtrl::OnDpiChanged(int nScalePre)
 	return;
 }
 
-void CDUIContainerCtrl::OnResourceDelete(CDUIResourceBase *pResourceObj)
-{
-	__super::OnResourceDelete(pResourceObj);
-
-	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
-	{
-		CDUIControlBase *pChild = GetChildAt(nIndex);
-		if (NULL == pChild) continue;
-
-		pChild->OnResourceDelete(pResourceObj);
-	}
-	if (m_pHorizScrollBarCtrl)
-	{
-		m_pHorizScrollBarCtrl->OnResourceDelete(pResourceObj);
-	}
-	if (m_pVertScrollBarCtrl)
-	{
-		m_pVertScrollBarCtrl->OnResourceDelete(pResourceObj);
-	}
-
-	return;
-}
-
-void CDUIContainerCtrl::OnResourceSwitch(int nIndexRes)
-{
-	__super::OnResourceSwitch(nIndexRes);
-
-	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
-	{
-		CDUIControlBase *pChild = GetChildAt(nIndex);
-		if (NULL == pChild) continue;
-
-		pChild->OnResourceSwitch(nIndexRes);
-	}
-	if (m_pHorizScrollBarCtrl)
-	{
-		m_pHorizScrollBarCtrl->OnResourceSwitch(nIndexRes);
-	}
-	if (m_pVertScrollBarCtrl)
-	{
-		m_pVertScrollBarCtrl->OnResourceSwitch(nIndexRes);
-	}
-
-	return;
-}
-
 bool CDUIContainerCtrl::RegisterControlListen(IDuiInterface *pIControlListen)
 {
 	if (NULL == pIControlListen || false == __super::RegisterControlListen(pIControlListen)) return false;

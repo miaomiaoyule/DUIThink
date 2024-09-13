@@ -374,8 +374,6 @@ protected:
 	CDUIWnd * GetWndOwner() override;
 	void OnDuiDelayDelete();
 	void OnDpiChanged(int nScalePre);
-	void OnResourceDelete(CDUIResourceBase *pResourceObj);
-	void OnResourceSwitch(int nIndexRes);
 	void AdjustWndSize();
 	void AdjustImagesHSL();
 	void RefreshLayout();

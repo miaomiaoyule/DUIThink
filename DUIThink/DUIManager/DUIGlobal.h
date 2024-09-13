@@ -366,15 +366,7 @@ public:
 	static void PerformNotifyChildAdd(CDUIPropertyObject *pPropertyObj, CDUIControlBase *pChild);
 	static void PerformNotifyChildRemove(CDUIPropertyObject *pPropertyObj, CDUIControlBase *pChild);
 	static void PerformNotifyVisibleChange(CDUIPropertyObject *pPropertyObj);
-	static void PerformResourceDelete(CDUIControlBase *pControl, CDUIResourceBase *pResourceObj);
-	static void PerformResourceSwitch(CDUIControlBase *pControl, int nIndexRes);
-	static bool PerformAddAttributeBuffer(CDUIPropertyObject *pPropertyObj, tinyxml2::XMLElement *pNodeXml);
 	static VecDuiRichTextItem ParseVecRichTextItem(LPCSTR lpszValue);
-	static VecAttributeGroup GetAttributeGroup(CDUIPropertyObject *pPropertyObj);
-	static int GetAttributeGroupIndex(CDUIAttributeGroup *pAttributeGroup);
-	static void SetAttributeGroupIndex(CDUIAttributeGroup *pAttributeGroup, int nIndex);
-	static CDUIAttributeObject * GetAttributeObj(CDUIPropertyObject *pPropertyObj, LPCTSTR lpszName);
-	static bool CreateAttributeForDesign(CDUIAttributeObject **ppAttribute, enDuiAttributeType attributeType, LPCTSTR lpszName, LPCTSTR lpszDescribe);
 };
 
 //////////////////////////////////////////////////////////////////////////

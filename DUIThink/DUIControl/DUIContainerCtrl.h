@@ -66,8 +66,6 @@ protected:
 protected:
 	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
 	void OnDpiChanged(int nScalePre) override;
-	void OnResourceDelete(CDUIResourceBase *pResourceObj) override;
-	void OnResourceSwitch(int nIndexRes) override;
 	bool RegisterControlListen(IDuiInterface *pIControlListen) override;
 	bool UnRegisterControlListen(IDuiInterface *pIControlListen) override;
 

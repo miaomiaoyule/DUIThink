@@ -118,11 +118,6 @@ protected:
 	void OnDpiChanged(int nScalePre) override;
 	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
 
-	//override
-protected:
-	void OnResourceDelete(CDUIResourceBase *pResourceObj) override;
-	void OnResourceSwitch(int nIndexRes) override;
-
 	//method
 public:
 	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;

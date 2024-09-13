@@ -95,16 +95,6 @@ void CDUIControlBase::OnDpiChanged(int nScalePre)
 	return;
 }
 
-void CDUIControlBase::OnResourceDelete(CDUIResourceBase *pResourceObj)
-{
-	return CDUIGlobal::PerformResourceDelete(this, pResourceObj);
-}
-
-void CDUIControlBase::OnResourceSwitch(int nIndexRes)
-{
-	return CDUIGlobal::PerformResourceSwitch(this, nIndexRes);
-}
-
 LPVOID CDUIControlBase::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
 	QUERYINTERFACE(CDUIControlBase, Guid, dwQueryVer);

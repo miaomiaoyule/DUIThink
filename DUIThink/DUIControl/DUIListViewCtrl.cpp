@@ -159,30 +159,6 @@ bool CDUIListViewCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 	return false;
 }
 
-void CDUIListViewCtrl::OnResourceDelete(CDUIResourceBase *pResourceObj)
-{
-	__super::OnResourceDelete(pResourceObj);
-
-	if (m_pListHeader)
-	{
-		m_pListHeader->OnResourceDelete(pResourceObj);
-	}
-
-	return;
-}
-
-void CDUIListViewCtrl::OnResourceSwitch(int nIndexRes)
-{
-	__super::OnResourceSwitch(nIndexRes);
-
-	if (m_pListHeader)
-	{
-		m_pListHeader->OnResourceSwitch(nIndexRes);
-	}
-
-	return;
-}
-
 LPVOID CDUIListViewCtrl::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
 	QUERYINTERFACE(CDUIListViewCtrl, Guid, dwQueryVer);

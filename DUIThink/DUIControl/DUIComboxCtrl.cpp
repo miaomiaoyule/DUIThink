@@ -408,38 +408,6 @@ void CDUIComboxCtrl::OnDpiChanged(int nScalePre)
 	return;
 }
 
-void CDUIComboxCtrl::OnResourceDelete(CDUIResourceBase *pResourceObj)
-{
-	__super::OnResourceDelete(pResourceObj);
-
-	if (m_pShowListView)
-	{
-		m_pShowListView->OnResourceDelete(pResourceObj);
-	}
-	if (m_pEditCtrl)
-	{
-		m_pEditCtrl->OnResourceDelete(pResourceObj);
-	}
-
-	return;
-}
-
-void CDUIComboxCtrl::OnResourceSwitch(int nIndexRes)
-{
-	__super::OnResourceSwitch(nIndexRes);
-
-	if (m_pShowListView)
-	{
-		m_pShowListView->OnResourceSwitch(nIndexRes);
-	}
-	if (m_pEditCtrl)
-	{
-		m_pEditCtrl->OnResourceSwitch(nIndexRes);
-	}
-
-	return;
-}
-
 LPVOID CDUIComboxCtrl::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
 	QUERYINTERFACE(CDUIComboxCtrl, Guid, dwQueryVer);

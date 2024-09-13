@@ -615,7 +615,7 @@ CDUIControlBase * CDUIXmlPack::LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWnd *p
 				LoadAtrributeFromXML(pNodeXml, &Attribute);
 
 				CMMString strName = Attribute.GetAttributeName();
-				CDUIAttributeObject *pAttributeRefresh = CDUIGlobal::GetInstance()->GetAttributeObj(pWnd, strName);
+				CDUIAttributeObject *pAttributeRefresh = pWnd->GetAttributeObj(strName);
 				if (pAttributeRefresh)
 				{
 					LoadAtrributeFromXML(pNodeXml, pAttributeRefresh);
@@ -625,7 +625,7 @@ CDUIControlBase * CDUIXmlPack::LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWnd *p
 			}
 
 			//new attribute
-			if (false == CDUIGlobal::GetInstance()->PerformAddAttributeBuffer(pWnd, pNodeXml))
+			if (false == pWnd->AddAttributeBuffer(pNodeXml))
 			{
 				assert(false);
 			}
@@ -691,7 +691,7 @@ bool CDUIXmlPack::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyOb
 
 	do
 	{
-		CDUIAttributeObject *pAttribute = CDUIGlobal::GetInstance()->GetAttributeObj(pPropObj, (LPCTSTR)CA2CT(pNodeSub->Name()));
+		CDUIAttributeObject *pAttribute = pPropObj->GetAttributeObj((LPCTSTR)CA2CT(pNodeSub->Name()));
 		if (pAttribute)
 		{
 			LoadAtrributeFromXML(pNodeSub, pAttribute);
@@ -770,7 +770,7 @@ bool CDUIXmlPack::LoadControlFromXML(tinyxml2::XMLElement *pNodeXml, CDUIControl
 		}
 
 		//attribute
-		if (false == CDUIGlobal::GetInstance()->PerformAddAttributeBuffer(pControl, pNodeXml))
+		if (false == pControl->AddAttributeBuffer(pNodeXml))
 		{
 			assert(false);
 		}
