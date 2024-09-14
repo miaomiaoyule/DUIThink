@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CDUIWndManager>
+<CDUIWnd>
     <CDUIListItemCtrl>
         <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3588651087"/>
         <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="838912894"/>
@@ -45,4 +45,4 @@
             <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="2731990189"/>
         </CDUIButtonCtrl>
     </CDUIListItemCtrl>
-</CDUIWndManager>
+</CDUIWnd>

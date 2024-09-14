@@ -574,6 +574,8 @@ bool CDUIXmlPack::LoadDuiXml(LPCTSTR lpszFile, tinyxml2::XMLDocument &DuiXml)
 
 CDUIControlBase * CDUIXmlPack::LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWnd *pWnd)
 {
+	DWORD dwTickCount = GetTickCount();
+
 	//开始导入
 	tinyxml2::XMLElement *pXMLRoot = DuiXml.RootElement();
 	if (NULL == pXMLRoot) return NULL;
@@ -644,6 +646,8 @@ CDUIControlBase * CDUIXmlPack::LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWnd *p
 		pRootCtrl->RefreshChildInternVisible(true);
 	}
 
+	MMTRACE(_T("LoadDui:%s-Time:%u"), _T(""), GetTickCount() - dwTickCount);
+
 	return pRootCtrl;
 }
 
@@ -651,8 +655,12 @@ CDUIControlBase * CDUIXmlPack::LoadDui(LPCTSTR lpszFile, CDUIWnd *pWnd)
 {
 	if (MMInvalidString(lpszFile)) return NULL;
 
+	DWORD dwTickCount = GetTickCount();
+
 	tinyxml2::XMLDocument xmlDoc;
 	if (false == LoadDuiXml(lpszFile, xmlDoc)) return NULL;
+
+	MMTRACE(_T("LoadDuiFile:%s-Time:%u"), lpszFile, GetTickCount() - dwTickCount);
 
 	return LoadDui(xmlDoc, pWnd);
 }

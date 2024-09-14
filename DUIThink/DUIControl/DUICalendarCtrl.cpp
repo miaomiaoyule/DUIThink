@@ -893,6 +893,11 @@ void CDUICalendarCtrl::InitComplete()
 	return;
 }
 
+bool CDUICalendarCtrl::SaveAttribute(tinyxml2::XMLElement *pNode, bool bIncludeChild)
+{
+	return __super::SaveAttribute(pNode, false);
+}
+
 void CDUICalendarCtrl::OnDuiMouseWheel(const DuiNotify &Notify)
 {
 	if (Notify.pNotifyCtrl != m_pListDayCtrl1 && Notify.pNotifyCtrl != m_pListDayCtrl2) return;

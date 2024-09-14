@@ -164,6 +164,7 @@ protected:
 protected:
 	void InitProperty() override;
 	void InitComplete() override;
+	bool SaveAttribute(tinyxml2::XMLElement *pNode, bool bIncludeChild = true) override;
 
 	//notify
 protected:

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CDUIWndManager>
+<CDUIWnd>
     <WndInitSize Descr="" NameID="3201664855" Visible="1" Modified="1" ValueID="0" Value="280,202"/>
     <CDUIContainerCtrl>
         <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="10"/>
@@ -293,4 +293,4 @@
             <ImageDisabled Descr="" NameID="1525998706" Visible="1" Modified="1" ValueID="1221069057"/>
         </CDUIButtonCtrl>
     </CDUIContainerCtrl>
-</CDUIWndManager>
+</CDUIWnd>
