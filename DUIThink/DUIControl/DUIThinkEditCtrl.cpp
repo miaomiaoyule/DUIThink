@@ -241,7 +241,11 @@ void CDUIThinkEditCtrl::RefreshView()
 	if (NULL == m_pWndOwner) return;
 
 	//caret count
-	CDUISize szSelChar = GetSel();
+	CDUISize szSelChar;
+	if (m_nCaretRow != m_nCaretRowFrom || m_nCaretColumn != m_nCaretColumnFrom)
+	{
+		szSelChar = GetSel();
+	}
 
 	//measure
 	tagDuiTextStyle TextStyle = GetTextStyleActive();
@@ -249,8 +253,11 @@ void CDUIThinkEditCtrl::RefreshView()
 	PerformMeasureString(m_vecRichTextItem, TextStyle, m_mapLineVecRichTextDraw, rcMeasure);
 
 	//caret pos
-	SetSel(szSelChar.cx, szSelChar.cy);
-	
+	if (m_nCaretRow != m_nCaretRowFrom || m_nCaretColumn != m_nCaretColumnFrom)
+	{
+		SetSel(szSelChar.cx, szSelChar.cy);
+	}
+
 	//range pos
 	PerformAdjustScrollPos(rcMeasure);
 
@@ -880,7 +887,7 @@ CDUISize CDUIThinkEditCtrl::GetSel()
 	int nRowTarget = -1;
 	int nColumnTarget = -1;
 	PerformCalcSelect(nRowFrom, nColumnFrom, nRowTarget, nColumnTarget);
-	if (0 < nRowFrom && nRowFrom < m_mapLineVecRichTextDraw.size())
+	if (0 <= nRowFrom && nRowFrom < m_mapLineVecRichTextDraw.size())
 	{
 		for (int nRow = 0; nRow < nRowFrom; nRow++)
 		{
@@ -889,7 +896,7 @@ CDUISize CDUIThinkEditCtrl::GetSel()
 
 		szSelChar.cx += (nColumnFrom >= 0 ? nColumnFrom : 0);
 	}
-	if (0 < nRowTarget && nRowTarget < m_mapLineVecRichTextDraw.size())
+	if (0 <= nRowTarget && nRowTarget < m_mapLineVecRichTextDraw.size())
 	{
 		for (int nRow = 0; nRow < nRowTarget; nRow++)
 		{
@@ -905,7 +912,6 @@ CDUISize CDUIThinkEditCtrl::GetSel()
 void CDUIThinkEditCtrl::SetSel(long nStartChar, long nEndChar)
 {
 	if (m_mapLineVecRichTextDraw.size() <= 0) return;
-	if (-1 == nStartChar && -1 == nEndChar) return SetSelAll();
 
 	nStartChar = max(0, nStartChar);
 	nEndChar = max(0, nEndChar);
@@ -924,13 +930,13 @@ void CDUIThinkEditCtrl::SetSel(long nStartChar, long nEndChar)
 			&& -1 == m_nCaretRow)
 		{
 			m_nCaretRow = nLine;
-			m_nCaretColumn = 0 == nStartChar ? -1 : nStartChar - 1;
+			m_nCaretColumn = nStartChar - 1;
 		}
 		if (LineVecRichTextDraw.size() > nEndChar
 			&& -1 == m_nCaretRowFrom)
 		{
 			m_nCaretRowFrom = nLine;
-			m_nCaretColumnFrom = 0 == nEndChar ? -1 : nEndChar - 1;
+			m_nCaretColumnFrom = nEndChar;
 
 			break;
 		}
@@ -1971,7 +1977,7 @@ void CDUIThinkEditCtrl::PaintSelectBk(HDC hDC)
 void CDUIThinkEditCtrl::PaintCaret(HDC hDC)
 {
 	CDUIAttributeTextStyle *pAttribute = GetAttributeTextStyleActive();
-	if (NULL == pAttribute) return;
+	if (NULL == pAttribute || false == IsFocused()) return;
 
 	CDUIColorBase *pColorBase = pAttribute->GetColorBaseCur();
 	CDUIRect rcCaret = GetCaretPos();
