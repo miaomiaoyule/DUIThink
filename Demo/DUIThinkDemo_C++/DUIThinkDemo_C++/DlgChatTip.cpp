@@ -47,7 +47,7 @@ void CDlgChatTip::OnInitDialog()
 {
 	//wnd pos
 	CDUIRect rcWnd;
-	GetWindowRect(m_hWnd, &rcWnd);
+	::GetWindowRect(m_hWnd, &rcWnd);
 
 	CDUIPoint ptWnd = { m_rcMonitor.left + m_rcMonitor.GetWidth() / 2 - rcWnd.GetWidth() / 2, m_rcMonitor.top - rcWnd.GetHeight() };
 	SetWindowPos(m_hWnd, NULL, ptWnd.x, ptWnd.y, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER);
@@ -58,9 +58,9 @@ void CDlgChatTip::OnInitDialog()
 	return;
 }
 
-LRESULT CDlgChatTip::OnMouseMove(WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDlgChatTip::OnMouseMove(WPARAM wParam, LPARAM lParam)
 {
-	return __super::OnMouseMove(wParam, lParam, bHandled);
+	return __super::OnMouseMove(wParam, lParam);
 }
 
 void CDlgChatTip::OnDuiWndInited(const DuiNotify &Notify)
@@ -78,7 +78,7 @@ void CDlgChatTip::OnDuiTimer_IDC_ListViewChatTip(const DuiNotify &Notify)
 	if (Time_VerifyMousePos_ID == Notify.wParam)
 	{
 		CDUIRect rcWnd;
-		GetWindowRect(m_hWnd, &rcWnd);
+		::GetWindowRect(m_hWnd, &rcWnd);
 
 		CDUIPoint ptMouse;
 		GetCursorPos(&ptMouse);

@@ -16,9 +16,9 @@ CSwitchSkinView::~CSwitchSkinView()
 {
 	if (m_pSwitchSkinViewCtrl)
 	{
-		if (m_pSwitchSkinViewCtrl->GetWndManager())
+		if (m_pSwitchSkinViewCtrl->GetWndOwner())
 		{
-			m_pSwitchSkinViewCtrl->GetWndManager()->RemoveINotify(this);
+			m_pSwitchSkinViewCtrl->GetWndOwner()->RemoveINotify(this);
 		}
 	}
 
@@ -31,9 +31,9 @@ void CSwitchSkinView::Attach(CDUIContainerCtrl *pViewBase)
 
 	if (NULL == m_pSwitchSkinViewCtrl) return;
 
-	if (m_pSwitchSkinViewCtrl->GetWndManager())
+	if (m_pSwitchSkinViewCtrl->GetWndOwner())
 	{
-		m_pSwitchSkinViewCtrl->GetWndManager()->AddINotify(this);
+		m_pSwitchSkinViewCtrl->GetWndOwner()->AddINotify(this);
 	}
 
 	//ctrl
@@ -49,9 +49,9 @@ void CSwitchSkinView::OnDuiWndInited(const DuiNotify &Notify)
 
 void CSwitchSkinView::OnDuiClickBtnSwitchSkin1(const DuiNotify &Notify)
 {
-	if (NULL == m_pSwitchSkinViewCtrl || NULL == m_pSwitchSkinViewCtrl->GetWndManager()) return;
+	if (NULL == m_pSwitchSkinViewCtrl || NULL == m_pSwitchSkinViewCtrl->GetWndOwner()) return;
 
-	auto pIWndManager = m_pSwitchSkinViewCtrl->GetWndManager();
+	auto pIWndManager = m_pSwitchSkinViewCtrl->GetWndOwner();
 
 	CMMString strCmdLine;
 	strCmdLine = strCmdLine + _T(" /") + Name_DpiDlgKey + _T(" DlgDpi");

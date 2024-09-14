@@ -44,19 +44,12 @@ LRESULT CDlgQQChat::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return __super::OnWndMessage(uMsg, wParam, lParam);
 }
 
-LRESULT CDlgQQChat::OnWndCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
-{
-	return __super::OnWndCustomMessage(uMsg, wParam, lParam, bHandled);
-}
-
 void CDlgQQChat::OnInitDialog()
 {
-	if (NULL == m_pWndManager) return;
-
-	m_pListViewMessageCtrl = MMInterfaceHelper(CDUIListViewCtrl, m_pWndManager->FindControl(IDC_ListViewMessage));
-	m_pEditSendCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, m_pWndManager->FindControl(IDC_EditSend));
-	m_pBtnSendCtrl = MMInterfaceHelper(CDUIButtonCtrl, m_pWndManager->FindControl(IDC_BtnSend));
-	m_pBtnFaceCtrl = MMInterfaceHelper(CDUIButtonCtrl, m_pWndManager->FindControl(IDC_BtnFace));
+	m_pListViewMessageCtrl = MMInterfaceHelper(CDUIListViewCtrl, FindControl(IDC_ListViewMessage));
+	m_pEditSendCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, FindControl(IDC_EditSend));
+	m_pBtnSendCtrl = MMInterfaceHelper(CDUIButtonCtrl, FindControl(IDC_BtnSend));
+	m_pBtnFaceCtrl = MMInterfaceHelper(CDUIButtonCtrl, FindControl(IDC_BtnFace));
 
 	m_pListViewMessageCtrl->RemoveAll();
 	m_pEditSendCtrl->SetRichEdit(true);

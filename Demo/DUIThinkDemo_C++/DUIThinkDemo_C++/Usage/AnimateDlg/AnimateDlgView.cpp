@@ -18,9 +18,9 @@ CAnimateDlgView::~CAnimateDlgView()
 
 	if (m_pAnimateDlgViewCtrl)
 	{
-		if (m_pAnimateDlgViewCtrl->GetWndManager())
+		if (m_pAnimateDlgViewCtrl->GetWndOwner())
 		{
-			m_pAnimateDlgViewCtrl->GetWndManager()->RemoveINotify(this);
+			m_pAnimateDlgViewCtrl->GetWndOwner()->RemoveINotify(this);
 		}
 	}
 
@@ -33,9 +33,9 @@ void CAnimateDlgView::Attach(CDUIContainerCtrl *pViewBase)
 
 	if (NULL == m_pAnimateDlgViewCtrl) return;
 
-	if (m_pAnimateDlgViewCtrl->GetWndManager())
+	if (m_pAnimateDlgViewCtrl->GetWndOwner())
 	{
-		m_pAnimateDlgViewCtrl->GetWndManager()->AddINotify(this);
+		m_pAnimateDlgViewCtrl->GetWndOwner()->AddINotify(this);
 	}
 
 	//ctrl
@@ -52,7 +52,7 @@ void CAnimateDlgView::OnDuiWndInited(const DuiNotify &Notify)
 void CAnimateDlgView::OnDuiItemClickListViewAnimateDlg(const DuiNotify &Notify)
 {
 	if (NULL == m_pListViewAnimateDlgCtrl 
-		|| NULL == m_pListViewAnimateDlgCtrl->GetWndManager()
+		|| NULL == m_pListViewAnimateDlgCtrl->GetWndOwner()
 		|| m_pListViewAnimateDlgCtrl != Notify.pNotifyCtrl) return;
 
 	MMSafeDelete(m_pDlgAnimate);
@@ -60,10 +60,7 @@ void CAnimateDlgView::OnDuiItemClickListViewAnimateDlg(const DuiNotify &Notify)
 	enDuiAnimateWndType AnimateWndType = (enDuiAnimateWndType)(Notify.DuiNotifyExtend.ListView.nIndexItem + 1);
 	m_pDlgAnimate = new CDlgDpi(_T("DlgDpi"), NULL, false);
 
-	CDUIWndManager *pWndManager = m_pDlgAnimate->GetWndManager();
-	if (NULL == pWndManager) return;
-
-	pWndManager->SetAnimateWndType(AnimateWndType);
+	m_pDlgAnimate->SetAnimateWndType(AnimateWndType);
 	m_pDlgAnimate->Create(NULL, _T(""), DUI_WNDSTYLE_DIALOG, DUI_WNDSTYLE_EX_DIALOG);
 
 	return;

@@ -46,7 +46,6 @@ protected:
 	//override
 protected:
 	LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
-	LRESULT OnWndCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) override;
 	void OnFindControl() override;
 	void OnInitDialog() override;
 

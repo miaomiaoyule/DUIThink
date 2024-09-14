@@ -27,17 +27,10 @@ CDlgDpi::~CDlgDpi()
 
 LRESULT CDlgDpi::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	return __super::OnWndMessage(uMsg, wParam, lParam);
-}
-
-LRESULT CDlgDpi::OnWndCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
-{
 	switch (uMsg)
 	{
 		case WM_DEMO_DPISCALE:
 		{
-			bHandled = true;
-
 			OnWMDemoDpiScale(wParam, lParam);
 
 			break;
@@ -46,19 +39,19 @@ LRESULT CDlgDpi::OnWndCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, boo
 			break;
 	}
 
-	return __super::OnWndCustomMessage(uMsg, wParam, lParam, bHandled);
+	return __super::OnWndMessage(uMsg, wParam, lParam);
 }
 
 void CDlgDpi::OnInitDialog()
 {
-	if (NULL == m_pWndManager || NULL == m_pWndManager->GetRootCtrl()) return;
+	if (NULL == GetRootCtrl()) return;
 
 	//control
-	m_pBtnSwitchResCtrl = MMInterfaceHelper(CDUIButtonCtrl, m_pWndManager->FindControl(IDC_BtnSwitchRes));
+	m_pBtnSwitchResCtrl = MMInterfaceHelper(CDUIButtonCtrl, FindControl(IDC_BtnSwitchRes));
 
 	//init
 	m_pBtnSwitchResCtrl->SetVisible(m_bNeedSwitchRes);
-	m_pWndManager->SetTimer(m_pWndManager->GetRootCtrl(), Timer_VerifyParentWnd_ID, Timer_VerifyParentWnd_Elapse);
+	SetTimer(GetRootCtrl(), Timer_VerifyParentWnd_ID, Timer_VerifyParentWnd_Elapse);
 
 	::PostMessage(m_hWndParent, WM_DEMO_DPIWND, (WPARAM)m_hWnd, NULL);
 

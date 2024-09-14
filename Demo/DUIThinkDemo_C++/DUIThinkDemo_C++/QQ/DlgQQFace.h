@@ -6,7 +6,7 @@ class CDlgQQChat;
 //////////////////////////////////////////////////////////////////////////
 class CDlgQQFace
 	: public CDUIWnd
-	, public IDUIControlCallBack
+	, public IDuiControlCallBack
 {
 	MMDeclare_ClassName()
 	DuiDeclare_Message_Map()
@@ -31,7 +31,6 @@ protected:
 	//override
 protected:
 	LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
-	LRESULT OnWndCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) override;
 	void OnInitDialog() override;
 
 	//notify

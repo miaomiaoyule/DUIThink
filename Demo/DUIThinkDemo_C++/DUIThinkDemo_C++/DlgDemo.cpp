@@ -23,25 +23,16 @@ CDlgDemo::~CDlgDemo()
 
 LRESULT CDlgDemo::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	return __super::OnWndMessage(uMsg, wParam, lParam);
-}
-
-LRESULT CDlgDemo::OnWndCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
-{
 	switch (uMsg)
 	{
 		case WM_DEMO_DPIWND:
 		{
-			bHandled = true;
-
 			OnWMDemoDpiWnd(wParam, lParam);
 
 			break;
 		}
 		case WM_DEMO_TRAYICON:
 		{
-			bHandled = true;
-
 			OnWMDemoTrayIcon(wParam, lParam);
 
 			break;
@@ -50,7 +41,7 @@ LRESULT CDlgDemo::OnWndCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bo
 			break;
 	}
 
-	return __super::OnWndCustomMessage(uMsg, wParam, lParam, bHandled);
+	return __super::OnWndMessage(uMsg, wParam, lParam);
 }
 
 void CDlgDemo::OnFindControl()
@@ -64,8 +55,6 @@ void CDlgDemo::OnFindControl()
 
 void CDlgDemo::OnInitDialog()
 {
-	if (NULL == m_pWndManager) return;
-
 	//control
 	{
 		m_ProgressView.Attach(MMInterfaceHelper(CDUIContainerCtrl, m_pTabViewControls->FindSubControl(IDC_HorizProgressView)));
@@ -76,7 +65,7 @@ void CDlgDemo::OnInitDialog()
 
 	//usage
 	{
-		MMInterfaceHelper(CDUIContainerCtrl, m_pWndManager->FindControl(IDC_TabViewDisplay), pTabUsage);
+		MMInterfaceHelper(CDUIContainerCtrl, FindControl(IDC_TabViewDisplay), pTabUsage);
 		if (NULL == pTabUsage) return;
 
 		m_DpiDlgView.Attach(MMInterfaceHelper(CDUIContainerCtrl, pTabUsage->FindSubControl(IDC_VertDpiDlgView)));
@@ -84,12 +73,12 @@ void CDlgDemo::OnInitDialog()
 		m_SwitchSkinView.Attach(MMInterfaceHelper(CDUIContainerCtrl, pTabUsage->FindSubControl(IDC_VertSwitchSkinView)));
 		m_AnimateDlgView.Attach(MMInterfaceHelper(CDUIContainerCtrl, pTabUsage->FindSubControl(IDC_VertAnimateDlgView)));
 
-		m_pWndManager->AddPreMessagePtr(&m_SvgImageView);
+		AddPreMessagePtr(&m_SvgImageView);
 	}
 
 	//qq
 	{
-		MMInterfaceHelper(CDUIContainerCtrl, m_pWndManager->FindControl(IDC_TabViewMain), pTabMain);
+		MMInterfaceHelper(CDUIContainerCtrl, FindControl(IDC_TabViewMain), pTabMain);
 		if (NULL == pTabMain) return;
 
 		m_QQView.Attach(MMInterfaceHelper(CDUIContainerCtrl, pTabMain->FindSubControl(IDC_VertQQView)));
@@ -154,7 +143,7 @@ void CDlgDemo::OnWMDemoTrayIcon(WPARAM wParam, LPARAM lParam)
 			GetCursorPos(&ptMouse);
 
 			HWND hWndShellTray = FindWindow(_T("Shell_TrayWnd"), NULL);
-			GetWindowRect(hWndShellTray, &rcTrayIcon);
+			::GetWindowRect(hWndShellTray, &rcTrayIcon);
 			rcTrayIcon.left = ptMouse.x - 1;
 			rcTrayIcon.right = ptMouse.x + 1;
 		}

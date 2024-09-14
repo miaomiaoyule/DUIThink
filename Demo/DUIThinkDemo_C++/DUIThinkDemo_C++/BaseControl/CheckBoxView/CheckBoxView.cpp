@@ -15,9 +15,9 @@ CCheckBoxView::~CCheckBoxView()
 {
 	if (m_pCheckBoxViewCtrl)
 	{
-		if (m_pCheckBoxViewCtrl->GetWndManager())
+		if (m_pCheckBoxViewCtrl->GetWndOwner())
 		{
-			m_pCheckBoxViewCtrl->GetWndManager()->RemoveINotify(this);
+			m_pCheckBoxViewCtrl->GetWndOwner()->RemoveINotify(this);
 		}
 	}
 
@@ -30,9 +30,9 @@ void CCheckBoxView::Attach(CDUIContainerCtrl *pViewBase)
 
 	if (NULL == m_pCheckBoxViewCtrl) return;
 
-	if (m_pCheckBoxViewCtrl->GetWndManager())
+	if (m_pCheckBoxViewCtrl->GetWndOwner())
 	{
-		m_pCheckBoxViewCtrl->GetWndManager()->AddINotify(this);
+		m_pCheckBoxViewCtrl->GetWndOwner()->AddINotify(this);
 	}
 
 	//ctrl

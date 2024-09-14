@@ -16,9 +16,9 @@ CQQView::~CQQView()
 {
 	if (m_pQQViewCtrl)
 	{
-		if (m_pQQViewCtrl->GetWndManager())
+		if (m_pQQViewCtrl->GetWndOwner())
 		{
-			m_pQQViewCtrl->GetWndManager()->RemoveINotify(this);
+			m_pQQViewCtrl->GetWndOwner()->RemoveINotify(this);
 		}
 	}
 
@@ -31,9 +31,9 @@ void CQQView::Attach(CDUIContainerCtrl *pViewBase)
 
 	if (NULL == m_pQQViewCtrl) return;
 
-	if (m_pQQViewCtrl->GetWndManager())
+	if (m_pQQViewCtrl->GetWndOwner())
 	{
-		m_pQQViewCtrl->GetWndManager()->AddINotify(this);
+		m_pQQViewCtrl->GetWndOwner()->AddINotify(this);
 	}
 
 	//ctrl
@@ -50,10 +50,10 @@ void CQQView::OnDuiWndInited(const DuiNotify &Notify)
 void CQQView::OnDuiClickBtnQQChat(const DuiNotify &Notify)
 {
 	if (NULL == m_pQQViewCtrl 
-		|| NULL == m_pQQViewCtrl->GetWndManager()) return;
+		|| NULL == m_pQQViewCtrl->GetWndOwner()) return;
 
 	CDlgQQChat DlgQQChat;
-	DlgQQChat.Create(m_pQQViewCtrl->GetWndManager()->GetWndHandle(), _T("DlgQQChat"), DUI_WNDSTYLE_DIALOG, DUI_WNDSTYLE_EX_DIALOG);
+	DlgQQChat.Create(m_pQQViewCtrl->GetWndOwner()->GetWndHandle(), _T("DlgQQChat"), DUI_WNDSTYLE_DIALOG, DUI_WNDSTYLE_EX_DIALOG);
 	DlgQQChat.DoModal();
 
 	return;

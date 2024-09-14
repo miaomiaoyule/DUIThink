@@ -27,7 +27,7 @@ public:
 protected:
 	void OnFindControl() override;
 	void OnInitDialog() override;
-	LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam, bool &bHandled) override;
+	LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam) override;
 
 	//notify
 protected:
