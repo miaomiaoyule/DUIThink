@@ -13,7 +13,7 @@
 //////////////////////////////////////////////////////////////////////////
 //describe
 #define Dui_Prop_Object								(_T("PropertyObj"))
-#define Dui_Wnd_Manager								(_T("WndManager"))
+#define Dui_Window									(_T("Window"))
 
 #define Dui_Ctrl_Control							(_T("ControlCtrl"))
 #define Dui_Ctrl_Static								(_T("StaticCtrl"))

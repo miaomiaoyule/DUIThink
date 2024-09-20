@@ -46,6 +46,7 @@ protected:
 	//variant
 protected:
 	CDUIListHeaderCtrl *				m_pOwner = NULL;
+	CDUIRect							m_rcThisLast;
 	CDUIRect							m_rcSep;							//·Ö¸ôÇøÓò
 	int									m_nSepStatus;						//·Ö¸ô×´Ì¬
 	CDUIPoint							m_ptLastMouse;
@@ -67,6 +68,8 @@ public:
 	virtual float GetSepScale();
 	virtual void SetSepScale(float fScale);
 	virtual RECT GetSepRect();
+	virtual vector<CMMString> GetColorResSwitchSep();
+	virtual void SetColorResSwitchSep(const vector<CMMString> &vecResSwitch);
 
 	//layout
 	void SetFixedWidth(int nWidth) override;
@@ -110,8 +113,6 @@ protected:
 	bool OnDuiSetCursor(const CDUIPoint &pt, const DuiMessage &Msg) override;
 	bool OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg) override;
 	void OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg) override;
-
-	void OnDuiSize(CDUIRect rcParentAbs) override;
 
 	//help
 protected:

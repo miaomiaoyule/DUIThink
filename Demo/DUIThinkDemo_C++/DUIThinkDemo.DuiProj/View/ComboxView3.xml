@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CDUIWndManager>
+<CDUIWnd>
     <CDUIListViewCtrl>
         <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100295"/>
         <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3409602188"/>
@@ -96,4 +96,4 @@
             </CDUIListHeaderItemCtrl>
         </CDUIListHeaderCtrl>
     </CDUIListViewCtrl>
-</CDUIWndManager>
+</CDUIWnd>

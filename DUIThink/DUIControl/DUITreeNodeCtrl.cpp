@@ -113,7 +113,7 @@ void CDUITreeNodeCtrl::OnVisibleChanged(CDUIControlBase *pControl)
 
 void CDUITreeNodeCtrl::OnSelectChangedExpand()
 {
-	if (NULL == m_pWndManager
+	if (NULL == m_pWndOwner
 		|| NULL == m_pHorizContainerCtrl
 		|| NULL == m_pCheckExpandCtrl) return;
 
@@ -1245,7 +1245,7 @@ CDUIControlBase * CDUITreeNodeCtrl::FindControl(FindControlProc Proc, LPVOID pDa
 
 void CDUITreeNodeCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPARAM lParam, CMMString strTextOld)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	CDUITreeNodeCtrl *pRootNode = GetRootNode();
 	CDUITreeViewCtrl *pRootView = MMStaticPtr(CDUITreeViewCtrl, pRootNode->GetOwnerView());
@@ -1261,7 +1261,7 @@ void CDUITreeNodeCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPA
 	Notify.DuiNotifyExtend.TreeView.pRootView = pRootView;
 	Notify.DuiNotifyExtend.TreeView.strTextOld = strTextOld;
 
-	m_pWndManager->SendNotify(Notify);
+	m_pWndOwner->SendNotify(Notify);
 
 	return;
 }

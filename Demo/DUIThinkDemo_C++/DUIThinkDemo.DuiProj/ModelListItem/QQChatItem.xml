@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CDUIWndManager>
+<CDUIWnd>
     <CDUIListItemCtrl>
         <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="1542582807"/>
         <ColorBk Descr="" NameID="1718533353" Visible="1" Modified="1" ValueID="2166136261"/>
@@ -54,4 +54,4 @@
             </CDUIControlBase>
         </CDUIVerticalLayoutCtrl>
     </CDUIListItemCtrl>
-</CDUIWndManager>
+</CDUIWnd>

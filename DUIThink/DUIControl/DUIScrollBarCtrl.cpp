@@ -526,9 +526,9 @@ bool CDUIScrollBarCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &
 
 		//定时滑动
 		m_ptOnUpDownBtn = pt;
-		if (m_pWndManager)
+		if (m_pWndOwner)
 		{
-			m_pWndManager->SetTimer(this, Dui_TimerScrollAuto_ID, Dui_TimerScrollAuto_Elapse);
+			m_pWndOwner->SetTimer(this, Dui_TimerScrollAuto_ID, Dui_TimerScrollAuto_Elapse);
 		}
 
 		Invalidate();
@@ -545,9 +545,9 @@ bool CDUIScrollBarCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &
 
 		//定时滑动
 		m_ptOnUpDownBtn = pt;
-		if (m_pWndManager)
+		if (m_pWndOwner)
 		{
-			m_pWndManager->SetTimer(this, Dui_TimerScrollAuto_ID, Dui_TimerScrollAuto_Elapse);
+			m_pWndOwner->SetTimer(this, Dui_TimerScrollAuto_ID, Dui_TimerScrollAuto_Elapse);
 		}
 
 		Invalidate();
@@ -561,9 +561,9 @@ bool CDUIScrollBarCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &
 bool CDUIScrollBarCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	//滚动定时
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->KillTimer(this, Dui_TimerScrollAuto_ID);
+		m_pWndOwner->KillTimer(this, Dui_TimerScrollAuto_ID);
 	}
 
 	m_nUpBtnStatus &= ~ControlStatus_Pushed;
@@ -663,9 +663,9 @@ bool CDUIScrollBarCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 
 	delay_number_ = (DWORD)sqrt((double)abs(delay_deltaY_)) * 5;
 	delay_left_ = delay_number_;
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SetTimer(this, Dui_TimerScrollSlowdown_ID, Dui_TimerScrollSlowdown_Elapse);
+		m_pWndOwner->SetTimer(this, Dui_TimerScrollSlowdown_ID, Dui_TimerScrollSlowdown_Elapse);
 	}
 
 	return true;
@@ -678,7 +678,7 @@ void CDUIScrollBarCtrl::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
 	{
 		POINT ptMouse = {};
 		::GetCursorPos(&ptMouse);
-		if (m_pWndManager) ::ScreenToClient(m_pWndManager->GetWndHandle(), &ptMouse);
+		if (m_pWndOwner) ::ScreenToClient(m_pWndOwner->GetWndHandle(), &ptMouse);
 
 		OnTimerScrollUpDownBtn(CDUIPoint(ptMouse.x, ptMouse.y));
 
@@ -972,9 +972,9 @@ void CDUIScrollBarCtrl::OnTimerScrollMouseWheel()
 	delay_number_ = 0;
 	delay_left_ = 0;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->KillTimer(this, Dui_TimerScrollSlowdown_ID);
+		m_pWndOwner->KillTimer(this, Dui_TimerScrollSlowdown_ID);
 	}
 
 	Invalidate();

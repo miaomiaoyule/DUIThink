@@ -4,53 +4,53 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
-#define VER_IDUIInterface INTERFACE_VERSION(1,1)
-static const GUID IID_IDUIInterface = { 0x3CA0AA03,0xA27F,0x471A,0xB4,0x51,0xD4,0x77,0x41,0x2B,0x0A,0xFD };
-interface DUITHINK_API IDUIInterface : public IMMUnknown
+#define VER_IDuiInterface INTERFACE_VERSION(1,1)
+static const GUID IID_IDuiInterface = { 0x3CA0AA03,0xA27F,0x471A,0xB4,0x51,0xD4,0x77,0x41,0x2B,0x0A,0xFD };
+interface DUITHINK_API IDuiInterface : public IMMUnknown
 {
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
 };
 
-typedef std::vector<IDUIInterface*> VecControlListen;
+typedef std::vector<IDuiInterface*> VecControlListen;
 
 //////////////////////////////////////////////////////////////////////////
 //Notify
-interface IDUINotify
+interface IDuiNotify
 {
-	virtual ~IDUINotify() {}
+	virtual ~IDuiNotify() {}
 	virtual void OnNotify(const DuiNotify &Notify) = 0;
 };
 
-typedef std::vector<IDUINotify*> VecIDUINotify;
+typedef std::vector<IDuiNotify*> VecIDuiNotify;
 
 //////////////////////////////////////////////////////////////////////////
 //PreMessage
-interface IDUIPreMessage
+interface IDuiPreMessage
 {
-	virtual ~IDUIPreMessage() {}
+	virtual ~IDuiPreMessage() {}
 	virtual LRESULT OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) = 0;
 };
 
-typedef std::vector<IDUIPreMessage*> VecIDUIPreMessage;
+typedef std::vector<IDuiPreMessage*> VecIDuiPreMessage;
 
 //////////////////////////////////////////////////////////////////////////
 //property obj
-#define VER_IDUIPropertyObject INTERFACE_VERSION(1,1)
-static const GUID IID_IDUIPropertyObject = { 0x26744DF3,0xFCAE,0x4F87,0x81,0x01,0x27,0xB0,0x70,0xE8,0xF7,0x81 };
-interface DUITHINK_API IDUIPropertyObject : public IDUIInterface
+#define VER_IDuiPropertyObject INTERFACE_VERSION(1,1)
+static const GUID IID_IDuiPropertyObject = { 0x26744DF3,0xFCAE,0x4F87,0x81,0x01,0x27,0xB0,0x70,0xE8,0xF7,0x81 };
+interface DUITHINK_API IDuiPropertyObject : public IDuiInterface
 {
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
 	virtual bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) = NULL;
 	virtual VecControlListen GetControlListen() = NULL;
-	virtual bool RegisterControlListen(IDUIInterface *pIControlListen) = NULL;
-	virtual bool UnRegisterControlListen(IDUIInterface *pIControlListen) = NULL;
+	virtual bool RegisterControlListen(IDuiInterface *pIControlListen) = NULL;
+	virtual bool UnRegisterControlListen(IDuiInterface *pIControlListen) = NULL;
 };
 
 //////////////////////////////////////////////////////////////////////////
 //control callback
-interface IDUIControlCallBack
+interface IDuiControlCallBack
 {
-	virtual ~IDUIControlCallBack() {}
+	virtual ~IDuiControlCallBack() {}
 	virtual void OnNotify(CDUIControlBase *pControl, const DuiNotify &Notify) {}
 	virtual void OnRelease(CDUIControlBase *pControl) {}
 	virtual void OnPaint(CDUIControlBase *pControl, HDC hDC) {}
@@ -58,7 +58,7 @@ interface IDUIControlCallBack
 	virtual void OnVisibleChanged(CDUIControlBase *pControl) {}
 };
 
-typedef std::vector<IDUIControlCallBack*> VecIDUIControlCallBack;
+typedef std::vector<IDuiControlCallBack*> VecIDuiControlCallBack;
 
 //////////////////////////////////////////////////////////////////////////
 

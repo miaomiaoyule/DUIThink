@@ -53,7 +53,7 @@ public:
 	static void AdjustImage(CDUIImageBase *pImageBase, short H, short S, short L);
 	static void AdjustImage(HBITMAP hBitmap, DWORD dwColorSrc, DWORD dwColorDest);
 	static HBITMAP CreateARGB32Bitmap(HDC hDC, int cx, int cy, BYTE** pBits, bool bPositive = true);
-	static HBITMAP GenerateBitmap(CDUIWndManager *pManager, CDUIControlBase *pControl, const CDUIRect &rcItem, DWORD dwFilterColor = 0);
+	static HBITMAP GenerateBitmap(CDUIWnd *pWnd, CDUIControlBase *pControl, const CDUIRect &rcItem, DWORD dwFilterColor = 0);
 	static Bitmap * GenerateBitmap(Bitmap *pBmp, const CDUISize szGenerate);
 	static HBITMAP CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFilterColor = 0);
 	static HBITMAP CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor = 0);

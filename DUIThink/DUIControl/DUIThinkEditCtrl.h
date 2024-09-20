@@ -6,7 +6,7 @@
 static const GUID IID_CDUIThinkEditCtrl = { 0x83439E85,0x4226,0x4E6D,0xB2,0x9A,0xD4,0x83,0xBB,0x75,0x51,0xB1 };
 class DUITHINK_API CDUIThinkEditCtrl 
 	: public CDUIButtonCtrl
-	, public IDUIPreMessage
+	, public IDuiPreMessage
 {
 	friend class CDUIComboxCtrl;
 
@@ -47,8 +47,8 @@ protected:
 	bool								m_bShowCaret = false;
 	int									m_nCaretRow = -1;
 	int									m_nCaretColumn = -1;
-	int									m_nCaretSelFromRow = -1;
-	int									m_nCaretSelFromColumn = -1;
+	int									m_nCaretRowFrom = -1;
+	int									m_nCaretColumnFrom = -1;
 	int									m_nIndexHistory = -1;
 	QueDuiThinkEditHistory				m_queHistory;
 	Gdiplus::Bitmap *					m_pBmpShadowText = NULL;
@@ -120,6 +120,7 @@ public:
 	virtual CDUISize GetScrollRange();
 	virtual CMMString GetSelectString();
 	virtual CDUIRect GetSelectRange();
+	virtual CDUISize GetSel();
 	virtual void SetSel(long nStartChar, long nEndChar);
 	virtual void SetSelAll();
 	virtual void SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName = _T(""), bool bHistory = true);

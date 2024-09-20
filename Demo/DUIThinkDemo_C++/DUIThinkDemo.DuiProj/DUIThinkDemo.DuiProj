@@ -33,4 +33,4 @@
 
 <DirectUI DuiName="DlgQQFace" DuiType="0" DuiFile="DlgQQFace.xml"/>
 
-<DirectUI DuiName="DglChatTip" DuiType="0" DuiFile="DglChatTip.xml"/>
+<DirectUI DuiName="DlgChatTip" DuiType="0" DuiFile="DlgChatTip.xml"/>

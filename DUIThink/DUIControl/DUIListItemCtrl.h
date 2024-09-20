@@ -9,7 +9,7 @@
 static const GUID IID_CDUIListItemCtrl = { 0xFFEE2302,0x6B5D,0x4688,0xB0,0x95,0x1E,0x9F,0x28,0x28,0x85,0x98 };
 class DUITHINK_API CDUIListItemCtrl
 	: public CDUIHorizontalLayoutCtrl
-	, public IDUIControlCallBack
+	, public IDuiControlCallBack
 {
 	friend class CDUIListViewCtrl;
 

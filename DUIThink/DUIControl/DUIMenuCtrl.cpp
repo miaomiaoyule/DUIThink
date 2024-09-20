@@ -22,7 +22,7 @@ CDUIMenuWnd::CDUIMenuWnd(CDUIMenuItemCtrl *pOwner, CMMString strDuiName)
 	: CDUIWnd(strDuiName)
 	, m_pOwner(pOwner)
 {
-	CDUIControlBase *pRootCtrl = CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), m_pWndManager);
+	CDUIControlBase *pRootCtrl = CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), this);
 	m_pShowMenuView = MMInterfaceHelper(CDUIMenuCtrl, pRootCtrl);
 
 	return;
@@ -33,7 +33,7 @@ CDUIMenuWnd::~CDUIMenuWnd()
 	UnInit();
 
 	m_pOwner = NULL;
-	m_pWndManagerOwner = NULL;
+	m_pWndOwner = NULL;
 
 	MMSafeDelete(m_pShowMenuView);
 
@@ -52,14 +52,14 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 	}
 	if (m_pOwner)
 	{
-		m_pWndManagerOwner = static_cast<CDUIWndManager*>(m_pOwner->GetWndManager());
+		m_pWndOwner = static_cast<CDUIWnd*>(m_pOwner->GetWndOwner());
 	}
-	if (NULL == m_pWndManagerOwner)
+	if (NULL == m_pWndOwner)
 	{
 		return;
 	}
 
-	m_pWndManager->SetDesigned(m_pWndManagerOwner->IsDesigned());
+	SetDesigned(m_pWndOwner->IsDesigned());
 
 	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW, m_ptTrack.x, m_ptTrack.y);
 	
@@ -86,9 +86,9 @@ void CDUIMenuWnd::UnInit()
 {
 	//save
 #ifdef DUI_DESIGN
-	if (m_pWndManager->GetRootCtrl() && false == m_pWndManager->IsDesigned())
+	if (GetRootCtrl() && false == IsDesigned())
 	{
-		CDUIGlobal::GetInstance()->SaveDui(GetDuiName(), m_pWndManager);
+		CDUIGlobal::GetInstance()->SaveDui(GetDuiName(), this);
 	}
 #endif
 
@@ -110,7 +110,7 @@ void CDUIMenuWnd::UnInit()
 	//detach view
 	if (NULL == m_pShowMenuView)
 	{
-		m_pShowMenuView = MMDynamicPtr(CDUIMenuCtrl, m_pWndManager->DetachRootCtrl());
+		m_pShowMenuView = MMDynamicPtr(CDUIMenuCtrl, DetachRootCtrl());
 	}
 
 	return;
@@ -118,7 +118,7 @@ void CDUIMenuWnd::UnInit()
 
 CDUIMenuCtrl * CDUIMenuWnd::GetMenuView()
 {
-	return m_pShowMenuView ? m_pShowMenuView : MMDynamicPtr(CDUIMenuCtrl, m_pWndManager->GetRootCtrl());
+	return m_pShowMenuView ? m_pShowMenuView : MMDynamicPtr(CDUIMenuCtrl, GetRootCtrl());
 }
 
 void CDUIMenuWnd::SetMenuView(CDUIMenuCtrl *pMenuView)
@@ -135,22 +135,22 @@ CDUIMenuItemCtrl * CDUIMenuWnd::GetOwner()
 	return m_pOwner;
 }
 
-LRESULT CDUIMenuWnd::OnCreate(WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDUIMenuWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 {
-	m_pWndManager->DetachRootCtrl();
+	DetachRootCtrl();
 
-	__super::OnCreate(wParam, lParam, bHandled);
+	__super::OnCreate(wParam, lParam);
 
 	//init view
-	m_pWndManager->AttachRootCtrl(m_pShowMenuView);
+	AttachRootCtrl(m_pShowMenuView);
 	m_pShowMenuView = NULL;
 
 	return 0;
 }
 
-LRESULT CDUIMenuWnd::OnKillFocus(WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDUIMenuWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 {
-	__super::OnKillFocus(wParam, lParam, bHandled);
+	__super::OnKillFocus(wParam, lParam);
 
 #ifdef DUI_DESIGN
 	HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONULL);
@@ -162,7 +162,7 @@ LRESULT CDUIMenuWnd::OnKillFocus(WPARAM wParam, LPARAM lParam, bool &bHandled)
 		HWND hWndFocus = (HWND)wParam;
 		while (hWndFocus)
 		{
-			if (hWndFocus == g_pDuiMenuWndRoot->GetHWND()) return 0;
+			if (hWndFocus == g_pDuiMenuWndRoot->GetWndHandle()) return 0;
 
 			hWndFocus = GetParent(hWndFocus);
 		}
@@ -173,9 +173,9 @@ LRESULT CDUIMenuWnd::OnKillFocus(WPARAM wParam, LPARAM lParam, bool &bHandled)
 	return 0;
 }
 
-LRESULT CDUIMenuWnd::OnKeyDown(WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDUIMenuWnd::OnKeyDown(WPARAM wParam, LPARAM lParam)
 {
-	__super::OnKeyDown(wParam, lParam, bHandled);
+	__super::OnKeyDown(wParam, lParam);
 
 	if (VK_ESCAPE == wParam
 		|| (VK_LEFT == wParam && m_pOwner))
@@ -186,9 +186,9 @@ LRESULT CDUIMenuWnd::OnKeyDown(WPARAM wParam, LPARAM lParam, bool &bHandled)
 	return 0;
 }
 
-LRESULT CDUIMenuWnd::OnClose(WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDUIMenuWnd::OnClose(WPARAM wParam, LPARAM lParam)
 {
-	__super::OnClose(wParam, lParam, bHandled);
+	__super::OnClose(wParam, lParam);
 
 	if (m_pOwner)
 	{
@@ -215,16 +215,14 @@ LRESULT CDUIMenuWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIMenuWnd::OnWMDuiResizeMenu(WPARAM wParam, LPARAM lParam)
 {
-	if (NULL == m_pWndManager) return 0;
-	
-	MMInterfaceHelper(CDUIMenuCtrl, m_pWndManager->GetRootCtrl(), pRootMenuCtrl);
+	MMInterfaceHelper(CDUIMenuCtrl, GetRootCtrl(), pRootMenuCtrl);
 	if (NULL == pRootMenuCtrl) return 0;
 
 	MMInterfaceHelper(CDUIRotateMenuCtrl, pRootMenuCtrl, pRotateMenu);
 
 	//wnd size
 	CDUIRect rcWnd;
-	GetWindowRect(m_pWndManager->GetWndHandle(), &rcWnd);
+	::GetWindowRect(GetWndHandle(), &rcWnd);
 	CDUISize szRange = pRootMenuCtrl->GetTotalRange();
 	CDUIRect rcInset = pRootMenuCtrl->GetRangeInset();
 	szRange.cx <= 0 ? szRange.cx = Size_MenuNormal : szRange.cx += rcInset.left + rcInset.right;
@@ -235,7 +233,7 @@ LRESULT CDUIMenuWnd::OnWMDuiResizeMenu(WPARAM wParam, LPARAM lParam)
 	if (rcWnd.GetWidth() != szRange.cx
 		|| rcWnd.GetHeight() != szRange.cy)
 	{
-		SetWindowPos(m_pWndManager->GetWndHandle(), NULL, 0, 0, szRange.cx, szRange.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOOWNERZORDER);
+		SetWindowPos(GetWndHandle(), NULL, 0, 0, szRange.cx, szRange.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOOWNERZORDER);
 	}
 
 	//wnd pos
@@ -253,9 +251,7 @@ LRESULT CDUIMenuWnd::OnWMDuiResizeMenu(WPARAM wParam, LPARAM lParam)
 
 void CDUIMenuWnd::OnDuiWndInited(const DuiNotify &Notify)
 {
-	if (NULL == m_pWndManager) return;
-
-	MMInterfaceHelper(CDUIMenuCtrl, m_pWndManager->GetRootCtrl(), pRootMenuCtrl);
+	MMInterfaceHelper(CDUIMenuCtrl, GetRootCtrl(), pRootMenuCtrl);
 	if (NULL == pRootMenuCtrl) return;
 
 	pRootMenuCtrl->EnsureVisible(pRootMenuCtrl->GetCurSel());
@@ -265,10 +261,8 @@ void CDUIMenuWnd::OnDuiWndInited(const DuiNotify &Notify)
 
 void CDUIMenuWnd::ResizeMenu()
 {
-	if (NULL == m_pWndManager) return;
-
 	CDUIRect rcWnd;
-	GetWindowRect(m_hWnd, &rcWnd);
+	::GetWindowRect(m_hWnd, &rcWnd);
 
 	MONITORINFO oMonitor = {};
 	oMonitor.cbSize = sizeof(oMonitor);
@@ -279,7 +273,7 @@ void CDUIMenuWnd::ResizeMenu()
 	if (-1 == m_ptTrack.x && -1 == m_ptTrack.y)
 	{
 		CDUIRect rcWndParent;
-		GetWindowRect(::GetParent(m_hWnd), &rcWndParent);
+		::GetWindowRect(::GetParent(m_hWnd), &rcWndParent);
 
 		if (rcWndParent.Empty()) rcWndParent = rcWork;
 		m_ptTrack.x = rcWndParent.left + rcWndParent.GetWidth() / 2 - rcWnd.GetWidth() / 2;
@@ -298,22 +292,20 @@ void CDUIMenuWnd::ResizeMenu()
 
 void CDUIMenuWnd::ResizeSubMenu()
 {
-	if (NULL == m_pWndManager) return;
-
 	CDUIRect rcWnd;
-	GetWindowRect(m_hWnd, &rcWnd);
+	::GetWindowRect(m_hWnd, &rcWnd);
 
-	MONITORINFO oMonitor = {};
-	oMonitor.cbSize = sizeof(oMonitor);
-	::GetMonitorInfo(::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
-	CDUIRect rcWork = oMonitor.rcWork;
+	MONITORINFO MonitorInfo = {};
+	MonitorInfo.cbSize = sizeof(MonitorInfo);
+	::GetMonitorInfo(::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTOPRIMARY), &MonitorInfo);
+	CDUIRect rcWork = MonitorInfo.rcWork;
 
 	CDUIRect rcWndOwner;
-	GetWindowRect(m_pWndManagerOwner->GetWndHandle(), &rcWndOwner);
+	::GetWindowRect(m_pWndOwner->GetWndHandle(), &rcWndOwner);
 
 	CDUIRect rcOwner = m_pOwner->GetAbsoluteRect();
 	CDUIPoint ptOwner(rcOwner.right, rcOwner.top);
-	ClientToScreen(m_pWndManagerOwner->GetWndHandle(), &ptOwner);
+	ClientToScreen(m_pWndOwner->GetWndHandle(), &ptOwner);
 
 	rcWnd.Offset(rcWndOwner.right - rcWnd.left, ptOwner.y - rcWnd.top);
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(-(rcWndOwner.GetWidth() + rcWnd.GetWidth()), 0);
@@ -323,8 +315,8 @@ void CDUIMenuWnd::ResizeSubMenu()
 
 	return;
 }
-//////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////
 DuiImplement_CreateControl(CDUIMenuItemCtrl)
 MMImplement_ClassName(CDUIMenuItemCtrl)
 
@@ -423,7 +415,7 @@ void CDUIMenuItemCtrl::RefreshView()
 
 bool CDUIMenuItemCtrl::IsExpanded() const
 {
-	return IsSelected() && m_pExpandMenuWnd && IsWindow(m_pExpandMenuWnd->GetHWND());
+	return IsSelected() && m_pExpandMenuWnd && IsWindow(m_pExpandMenuWnd->GetWndHandle());
 }
 
 bool CDUIMenuItemCtrl::Expand(bool bExpand)
@@ -648,7 +640,7 @@ bool CDUIMenuItemCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg
 	if (NULL == pMenuView
 		|| pMenuView->GetChildCount() <= 0
 		|| NULL == m_pExpandMenuWnd
-		|| false == IsWindow(m_pExpandMenuWnd->GetHWND()))
+		|| false == IsWindow(m_pExpandMenuWnd->GetWndHandle()))
 	{
 		g_DuiMenuCmd.uMenuID = GetCtrlID();
 		g_DuiMenuCmd.uMenuTag = GetTag();
@@ -771,17 +763,17 @@ CDUIRect CDUIMenuItemCtrl::GetTextRange()
 
 void CDUIMenuItemCtrl::ActiveExpandMenu()
 {
-	if (NULL == m_pWndManager || false == IsHasExpandMenu()) return;
-	if (NULL == m_pExpandMenuWnd || IsWindow(m_pExpandMenuWnd->GetHWND())) return;
+	if (NULL == m_pWndOwner || false == IsHasExpandMenu()) return;
+	if (NULL == m_pExpandMenuWnd || IsWindow(m_pExpandMenuWnd->GetWndHandle())) return;
 
-	m_pExpandMenuWnd->Init(m_pWndManager->GetWndHandle());
+	m_pExpandMenuWnd->Init(m_pWndOwner->GetWndHandle());
 
 	return;
 }
 
 void CDUIMenuItemCtrl::UnActiveExpandMenu()
 {
-	if (NULL == m_pExpandMenuWnd || false == IsWindow(m_pExpandMenuWnd->GetHWND())) return;
+	if (NULL == m_pExpandMenuWnd || false == IsWindow(m_pExpandMenuWnd->GetWndHandle())) return;
 
 	m_pExpandMenuWnd->UnInit();
 
@@ -997,9 +989,9 @@ void CDUIMenuCtrl::RefreshView()
 {
 	__super::RefreshView();
 
-	if (NULL == m_pWndManager || false == IsWindow(m_pWndManager->GetWndHandle())) return;
+	if (NULL == m_pWndOwner || false == IsWindow(m_pWndOwner->GetWndHandle())) return;
 
-	PostMessage(m_pWndManager->GetWndHandle(), WM_DUIRESIZEMENU, NULL, NULL);
+	SendMessage(m_pWndOwner->GetWndHandle(), WM_DUIRESIZEMENU, NULL, NULL);
 
 	return;
 }

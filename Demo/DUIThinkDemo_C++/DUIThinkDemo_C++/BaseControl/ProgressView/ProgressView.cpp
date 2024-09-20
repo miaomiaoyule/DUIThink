@@ -20,9 +20,9 @@ CProgressView::~CProgressView()
 {
 	if (m_pProgressViewCtrl)
 	{
-		if (m_pProgressViewCtrl->GetWndManager())
+		if (m_pProgressViewCtrl->GetWndOwner())
 		{
-			m_pProgressViewCtrl->GetWndManager()->RemoveINotify(this);
+			m_pProgressViewCtrl->GetWndOwner()->RemoveINotify(this);
 		}
 	}
 
@@ -35,9 +35,9 @@ void CProgressView::Attach(CDUIContainerCtrl *pViewBase)
 
 	if (NULL == m_pProgressViewCtrl) return;
 
-	if (m_pProgressViewCtrl->GetWndManager())
+	if (m_pProgressViewCtrl->GetWndOwner())
 	{
-		m_pProgressViewCtrl->GetWndManager()->AddINotify(this);
+		m_pProgressViewCtrl->GetWndOwner()->AddINotify(this);
 	}
 
 	//horiz

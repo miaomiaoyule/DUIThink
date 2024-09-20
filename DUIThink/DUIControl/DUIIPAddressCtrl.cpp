@@ -207,12 +207,12 @@ void CDUIIPAddressCtrl::InitComplete()
 
 void CDUIIPAddressCtrl::PaintText(HDC hDC)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	for (int n = 0; n < m_vecIPDot.size(); n++)
 	{
 		CDUIRect &rcDot = m_vecIPDot[n];
-		m_AttributeTextStyleIPDot.Draw(hDC, rcDot, TEXT_IPDOT, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), false);
+		m_AttributeTextStyleIPDot.Draw(hDC, rcDot, TEXT_IPDOT, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), false);
 	}
 
 	return;

@@ -20,9 +20,9 @@ CComboxView::~CComboxView()
 {
 	if (m_pComboxViewCtrl)
 	{
-		if (m_pComboxViewCtrl->GetWndManager())
+		if (m_pComboxViewCtrl->GetWndOwner())
 		{
-			m_pComboxViewCtrl->GetWndManager()->RemoveINotify(this);
+			m_pComboxViewCtrl->GetWndOwner()->RemoveINotify(this);
 		}
 	}
 
@@ -35,9 +35,9 @@ void CComboxView::Attach(CDUIContainerCtrl *pViewBase)
 	
 	if (NULL == m_pComboxViewCtrl) return;
 
-	if (m_pComboxViewCtrl->GetWndManager())
+	if (m_pComboxViewCtrl->GetWndOwner())
 	{
-		m_pComboxViewCtrl->GetWndManager()->AddINotify(this);
+		m_pComboxViewCtrl->GetWndOwner()->AddINotify(this);
 	}
 
 	//ctrl

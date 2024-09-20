@@ -131,9 +131,9 @@ void CDUIProgressCtrl::SetCurValue(int nCurValue)
 	CalcSubPos();
 
 	//notify
-	if (GetWndManager())
+	if (GetWndOwner())
 	{
-		GetWndManager()->SendNotify(this, DuiNotify_ValueChanged);
+		GetWndOwner()->SendNotify(this, DuiNotify_ValueChanged);
 	}
 
 	Invalidate();
@@ -428,11 +428,11 @@ void CDUIProgressCtrl::PaintStatusColor(HDC hDC)
 	}
 
 	//verify
-	if (NULL == pAttributeGroove || pAttributeGroove->empty())
+	if (NULL == pAttributeGroove || pAttributeGroove->IsEmpty())
 	{
 		pAttributeGroove = &m_AttributeColorGrooveNormal;
 	}
-	if (NULL == pAttributeSlip || pAttributeSlip->empty())
+	if (NULL == pAttributeSlip || pAttributeSlip->IsEmpty())
 	{
 		pAttributeSlip = &m_AttributeColorSlipNormal;
 	}
@@ -482,11 +482,11 @@ void CDUIProgressCtrl::PaintStatusImage(HDC hDC)
 	}
 
 	//verify
-	if (NULL == pAttributeGroove || pAttributeGroove->empty())
+	if (NULL == pAttributeGroove || pAttributeGroove->IsEmpty())
 	{
 		pAttributeGroove = &m_AttributeImageGrooveNormal;
 	}
-	if (NULL == pAttributeSlip || pAttributeSlip->empty())
+	if (NULL == pAttributeSlip || pAttributeSlip->IsEmpty())
 	{
 		pAttributeSlip = &m_AttributeImageSlipNormal;
 	}

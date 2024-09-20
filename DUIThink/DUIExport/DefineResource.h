@@ -25,6 +25,9 @@
 #define Name_Colorff333237				_T("0xff333237")
 #define Name_Colorff414143				_T("0xff414143")
 #define Name_Colorff3f3f41				_T("0xff3f3f41")
+#define Name_Color11dcdcdc				_T("0x11dcdcdc")
+#define Name_Colorffc1c1c1				_T("0xffc1c1c1")
+#define Name_Colorffcce4f7				_T("0xffcce4f7")
 
 static TCHAR g_szPublicColor[][MAX_PATH] = 
 {
@@ -48,6 +51,7 @@ static TCHAR g_szPublicColor[][MAX_PATH] =
 	Name_Colorff333237,
 	Name_Colorff414143,
 	Name_Colorff3f3f41,
+	Name_Color11dcdcdc,
 };
 
 static LOGFONT g_PublicFont[] =

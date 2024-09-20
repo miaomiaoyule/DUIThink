@@ -204,14 +204,7 @@ bool CDUIFontBase::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 
 	if (0 == strcmp(lpszName, Dui_Resource_Key_FontName))
 	{
-		if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_3)
-		{
-			m_strFontName = lpszValue;
-		}
-		else
-		{
-			m_strFontName = CA2CT(lpszValue, CP_UTF8);
-		}
+		m_strFontName = CA2CT(lpszValue, CP_UTF8);
 
 		return true;
 	}

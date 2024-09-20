@@ -28,14 +28,14 @@ LPVOID CDUIAttributeRichText::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 
 void CDUIAttributeRichText::Draw(HDC hDC, CDUIRect &rcPaint, bool bGdiplusRender, Gdiplus::TextRenderingHint RenderType, int nLineSpace, bool bShadow)
 {
-	if (empty() || NULL == m_pOwner) return;
+	if (IsEmpty() || NULL == m_pOwner) return;
 
 	CDUIRenderEngine::DrawRichText(hDC, rcPaint, GetRichText(), bGdiplusRender, RenderType, nLineSpace);
 
 	return;
 }
 
-bool CDUIAttributeRichText::empty()
+bool CDUIAttributeRichText::IsEmpty()
 {
 	tagDuiRichText RichText = GetRichText();
 
@@ -373,7 +373,7 @@ CDUISize CDUIAttributeRichText::MeasureString()
 	MMInterfaceHelper(CDUIControlBase, m_pOwner, pOwnerCtrl);
 	if (NULL == pOwnerCtrl) return {};
 
-	CDUIWndManager *pWndManager = m_pOwner->GetWndManager();
+	CDUIWnd *pWndManager = m_pOwner->GetWndOwner();
 	if (NULL == pWndManager) return {};
 
 	CDUIRect rcText = { 0, 0, 9999, 9999 };

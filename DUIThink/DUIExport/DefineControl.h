@@ -4,6 +4,7 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
+typedef std::unordered_map<UINT, CDUIControlBase*> MapDuiControlBase;
 typedef int (CALLBACK *PLVCompareFunc)(CDUIControlBase *pCtrlFirst, CDUIControlBase *pCtrlNext, UINT_PTR dwData);
 typedef CDUIControlBase* (CALLBACK* FindControlProc)(CDUIControlBase*, LPVOID pData);
 

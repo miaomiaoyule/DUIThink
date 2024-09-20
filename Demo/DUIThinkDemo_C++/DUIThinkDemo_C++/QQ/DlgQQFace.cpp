@@ -47,16 +47,9 @@ LRESULT CDlgQQFace::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return __super::OnWndMessage(uMsg, wParam, lParam);
 }
 
-LRESULT CDlgQQFace::OnWndCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
-{
-	return __super::OnWndCustomMessage(uMsg, wParam, lParam, bHandled);
-}
-
 void CDlgQQFace::OnInitDialog()
 {
-	if (NULL == m_pWndManager) return;
-
-	m_pListViewFaceCtrl = MMInterfaceHelper(CDUIListViewCtrl, m_pWndManager->FindControl(IDC_ListViewFace));
+	m_pListViewFaceCtrl = MMInterfaceHelper(CDUIListViewCtrl, FindControl(IDC_ListViewFace));
 
 	//init
 	InitInfo();
@@ -128,7 +121,7 @@ void CDlgQQFace::PerformAdjustPos()
 	if (NULL == m_pListViewFaceCtrl) return;
 
 	CDUIRect rcWnd;
-	GetWindowRect(m_hWnd, &rcWnd);
+	::GetWindowRect(m_hWnd, &rcWnd);
 	rcWnd.Offset(m_rcEventCtrl.left - rcWnd.left, m_rcEventCtrl.top - rcWnd.top);
 	rcWnd.Offset(-(rcWnd.GetWidth() - m_rcEventCtrl.GetWidth()) / 2, -m_pListViewFaceCtrl->GetFixedHeight());
 	SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, NULL, NULL, SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);

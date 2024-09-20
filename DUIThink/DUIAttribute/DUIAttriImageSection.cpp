@@ -43,8 +43,8 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 {
 	if (NULL == pImageBase) return;
 
-	CDUIWndManager *pWndManager = GetOwnerWndManager();
-	if (NULL == pWndManager) return;
+	CDUIWnd *pWnd = GetOwnerWnd();
+	if (NULL == pWnd) return;
 
 	bool bScale = pImageBase->IsScale();
 	bool bAlpha = pImageBase->IsAlpha();
@@ -67,7 +67,7 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 	{
 		hBitmap = CDUIRenderEngine::CopyBitmap(hBitmap, GetMask());
 	}
-	if (pWndManager->IsGdiplusRenderImage())
+	if (pWnd->IsGdiplusRenderImage())
 	{
 		pBmp = hBitmap != pImageBase->GetHandle() ? CDUIRenderEngine::GetAlphaBitmap(hBitmap) : pImageBase->GetBitmap();
 	}
@@ -77,7 +77,7 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 		if (rcDest.Empty()) return;
 
 		//draw
-		if (pWndManager->IsGdiplusRenderImage())
+		if (pWnd->IsGdiplusRenderImage())
 		{
 			CDUIRenderEngine::DrawImage(hDC, pBmp, rcDest, rcPaint, rcSource,
 				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
@@ -156,10 +156,9 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 	return;
 }
 
-bool CDUIAttriImageSection::empty()
+bool CDUIAttriImageSection::IsEmpty()
 {
-	tagDuiImageSection ImggeSection = GetImageSection();
-	return ImggeSection.vecImageResSwitch.empty();
+	return GetImageSection().vecImageResSwitch.empty();
 }
 
 tagDuiImageSection CDUIAttriImageSection::GetImageSection()

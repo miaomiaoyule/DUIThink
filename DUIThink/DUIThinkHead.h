@@ -125,7 +125,7 @@ using namespace tinyxml2;
 #include "DUIExport/DefineAttribute.h"
 #include "DUIExport/DefineAnimation.h"
 #include "DUIExport/DefineResource.h"
-#include "DUIExport/IDUIInterface.h"
+#include "DUIExport/IDuiInterface.h"
 #include "DUIExport/DUIStruct.h"
 
 #include "DUIResource/DUIResourceBase.h"
@@ -148,6 +148,7 @@ using namespace tinyxml2;
 #include "DUIAttribute/DUINumber/DUIAttributeFloat.h"
 #include "DUIAttribute/DUINumber/DUIAttributeLong.h"
 #include "DUIAttribute/DUINumber/DUIAttributeULong.h"
+#include "DUIAttribute/DUINumber/DUIAttributeCtrlID.h"
 #include "DUIAttribute/DUIText/DUIAttributeText.h"
 #include "DUIAttribute/DUIText/DUIAttributeTextStyle.h"
 #include "DUIAttribute/DUIText/DUIAttributeRichText.h"
@@ -157,8 +158,9 @@ using namespace tinyxml2;
 
 #include "DUICore/DUIPropertyObject.h"
 #include "DUICore/DUIRender.h"
-#include "DUICore/DUIWnd.h"
+#include "DUICore/DUINotifyPump.h"
 #include "DUICore/DUIAnimation.h"
+#include "DUICore/DUIWnd.h"
 
 #include "DUIControl/DUIControlBase.h"
 #include "DUIControl/DUIStaticCtrl.h"
@@ -198,7 +200,6 @@ using namespace tinyxml2;
 #include "Interface.h"
 #include "DUIUtils/Utils.h"
 
-#include "DUIManager/DUIWndManager.h"
 #include "DUIManager/DUIFactory.h"
 #include "DUIManager/DUIGlobal.h"
 

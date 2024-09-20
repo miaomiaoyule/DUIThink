@@ -5,17 +5,13 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-class CDUIWndManager;
-class CDUILayoutView;
-
-//////////////////////////////////////////////////////////////////////////
 #define VER_CDUIControlBase INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIControlBase = { 0x001037EB,0x1B2F,0x4DDD,0x82,0x48,0xB0,0xB4,0xA3,0x95,0xD0,0xD4 };
 class DUITHINK_API CDUIControlBase
 	: public CDUIPropertyObject
 {
 	friend class CDUIXmlPack;
-	friend class CDUIWndManager;
+	friend class CDUIWnd;
 	friend class CDUIContainerCtrl;
 	friend class CDUIVerticalLayoutCtrl;
 	friend class CDUIHorizontalLayoutCtrl;
@@ -28,7 +24,7 @@ class DUITHINK_API CDUIControlBase
 	friend class CDUIAttributePosition;
 	friend class CDUIAttributeColorSwitch;
 	friend class CDUILayoutView;
-	friend class CControlNotifyView;
+	friend class CNotifyView;
 
 	DuiDeclare_CreateControl(CDUIControlBase)
 	MMDeclare_ClassName(CDUIControlBase)
@@ -41,7 +37,7 @@ public:
 protected:
 	//base
 	CDUIAttributeGroup					m_AttributeGroupBase;
-	CDUIAttributeULong					m_AttributeObjectID;
+	CDUIAttributeCtrlID					m_AttributeCtrlID;
 	CDUIAttributeBool					m_AttributeEnable = true;
 	CDUIAttributeBool					m_AttributeVisible = true;
 	CDUIAttributeText					m_AttributeUserData;
@@ -91,7 +87,7 @@ protected:
 protected:
 	CDUIContainerCtrl *					m_pParent = NULL;
 	CDUIControlBase *					m_pOwnerModelCtrl = NULL;
-	CDUIWndManager *					m_pWndManager = NULL;
+	CDUIWnd *							m_pWndOwner = NULL;
 
 	//pos
 	CDUIRect							m_rcModalParent;
@@ -114,14 +110,12 @@ protected:
 	tagDuiRippleBitmap *				m_pRippleBmp = NULL;
 
 	//callback
-	VecIDUIControlCallBack				m_vecIControlCallBack;
+	VecIDuiControlCallBack				m_vecIControlCallBack;
 
 	//interface
 protected:
 	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
 	virtual void OnDpiChanged(int nScalePre);
-	virtual void OnResourceDelete(CDUIResourceBase *pResourceObj);
-	virtual void OnResourceSwitch(int nIndexRes);
 
 	//method 
 	//** you can override if you need **//
@@ -132,18 +126,18 @@ public:
 	virtual CDUIControlBase * Clone(bool bIncludeChild = true, bool bRefreshCtrlID = true);
 	virtual int GetScale() override;
 	virtual int GetControlCallBackCount();
-	virtual IDUIControlCallBack * GetControlCallBack(int nIndex);
-	virtual void RegisterControlCallBack(IDUIControlCallBack *pCallBack);
-	virtual void UnRegisterControlCallBack(IDUIControlCallBack *pCallBack);
+	virtual IDuiControlCallBack * GetControlCallBack(int nIndex);
+	virtual void RegisterControlCallBack(IDuiControlCallBack *pCallBack);
+	virtual void UnRegisterControlCallBack(IDuiControlCallBack *pCallBack);
 
 	//basic
 	virtual UINT InitCtrlID() override;
 	virtual UINT GetCtrlID();
 	virtual bool SetCtrlID(UINT uID);
-	virtual void RefreshCtrlID();
+	virtual void RefreshCtrlID(bool bSelfSingle = false);
 	virtual HWND GetWndHandle();
-	virtual bool SetWndManager(CDUIWndManager *pWndManager);
-	virtual CDUIWndManager * GetWndManager() override;
+	virtual bool SetWndOwner(CDUIWnd *pWndOwner);
+	virtual CDUIWnd * GetWndOwner() override;
 	virtual void SetParent(CDUIContainerCtrl *pParent);
 	virtual CDUIContainerCtrl * GetParent() const;
 	virtual CDUIControlBase * GetPrevSiblingCtrl();
@@ -184,7 +178,7 @@ public:
 	// Returns:   	bool
 	// Parameter: 	CDUIRect & rcAbsolute
 	//************************************
-	virtual bool SetAbsoluteRect(CDUIRect &rcAbsolute);
+	virtual bool SetAbsoluteRect(CDUIRect rcAbsolute);
 	virtual CDUIRect GetAbsoluteRect();
 	virtual bool IsFloat();
 	virtual void SetFloat(bool bFloat);
@@ -362,10 +356,8 @@ protected:
 	virtual CDUIScrollBarCtrl * GetVertScrollBar() const { return NULL; }
 };
 
-DUITHINK_API bool operator == (IDUIInterface *pLeft, const CDUIControlBase &pControl);
-DUITHINK_API bool operator != (IDUIInterface *pLeft, const CDUIControlBase &pControl);
-
-typedef std::unordered_map<UINT, CDUIControlBase*> MapDuiControlBase;
+DUITHINK_API bool operator == (IDuiInterface *pLeft, const CDUIControlBase &pControl);
+DUITHINK_API bool operator != (IDuiInterface *pLeft, const CDUIControlBase &pControl);
 
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()

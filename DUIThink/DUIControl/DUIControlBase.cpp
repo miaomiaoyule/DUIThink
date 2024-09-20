@@ -56,7 +56,7 @@ CDUIControlBase::~CDUIControlBase(void)
 	//callback
 	for (int n = 0; n < m_vecIControlCallBack.size(); n++)
 	{
-		IDUIControlCallBack *pICallBack = m_vecIControlCallBack[n];
+		IDuiControlCallBack *pICallBack = m_vecIControlCallBack[n];
 		if (NULL == pICallBack) continue;
 
 		pICallBack->OnRelease(this);
@@ -67,7 +67,7 @@ CDUIControlBase::~CDUIControlBase(void)
 	ReapControl();
 
 	m_pParent = NULL;
-	m_pWndManager = NULL;
+	m_pWndOwner = NULL;
 
 	return;
 }
@@ -78,8 +78,7 @@ bool CDUIControlBase::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 
 	__super::OnAttributeChange(pAttributeObj);
 
-	//Ãû³Æ¸Ä±ä
-	if (pAttributeObj == &m_AttributeObjectID)
+	if (pAttributeObj == &m_AttributeCtrlID)
 	{
 		SetCtrlID(GetCtrlID());
 
@@ -94,16 +93,6 @@ bool CDUIControlBase::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 void CDUIControlBase::OnDpiChanged(int nScalePre)
 {
 	return;
-}
-
-void CDUIControlBase::OnResourceDelete(CDUIResourceBase *pResourceObj)
-{
-	return CDUIGlobal::PerformResourceDelete(this, pResourceObj);
-}
-
-void CDUIControlBase::OnResourceSwitch(int nIndexRes)
-{
-	return CDUIGlobal::PerformResourceSwitch(this, nIndexRes);
 }
 
 LPVOID CDUIControlBase::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
@@ -164,7 +153,7 @@ CDUIControlBase * CDUIControlBase::Clone(bool bIncludeChild, bool bRefreshCtrlID
 
 int CDUIControlBase::GetScale()
 {
-	return m_pWndManager ? m_pWndManager->GetScale() : 100;
+	return m_pWndOwner ? m_pWndOwner->GetScale() : 100;
 }
 
 int CDUIControlBase::GetControlCallBackCount()
@@ -172,12 +161,12 @@ int CDUIControlBase::GetControlCallBackCount()
 	return m_vecIControlCallBack.size();
 }
 
-IDUIControlCallBack * CDUIControlBase::GetControlCallBack(int nIndex)
+IDuiControlCallBack * CDUIControlBase::GetControlCallBack(int nIndex)
 {
 	return 0 <= nIndex && nIndex < m_vecIControlCallBack.size() ? m_vecIControlCallBack[nIndex] : NULL;
 }
 
-void CDUIControlBase::RegisterControlCallBack(IDUIControlCallBack *pCallBack)
+void CDUIControlBase::RegisterControlCallBack(IDuiControlCallBack *pCallBack)
 {
 	if (find(m_vecIControlCallBack.begin(), m_vecIControlCallBack.end(), pCallBack) != m_vecIControlCallBack.end()) return;
 
@@ -186,7 +175,7 @@ void CDUIControlBase::RegisterControlCallBack(IDUIControlCallBack *pCallBack)
 	return;
 }
 
-void CDUIControlBase::UnRegisterControlCallBack(IDUIControlCallBack *pCallBack)
+void CDUIControlBase::UnRegisterControlCallBack(IDuiControlCallBack *pCallBack)
 {
 	auto FindIt = find(m_vecIControlCallBack.begin(), m_vecIControlCallBack.end(), pCallBack);
 	if (FindIt == m_vecIControlCallBack.end()) return;
@@ -208,7 +197,7 @@ UINT CDUIControlBase::InitCtrlID()
 
 UINT CDUIControlBase::GetCtrlID()
 {
-	return m_AttributeObjectID.GetValue();
+	return m_AttributeCtrlID.GetValue();
 }
 
 bool CDUIControlBase::SetCtrlID(UINT uID)
@@ -220,31 +209,26 @@ bool CDUIControlBase::SetCtrlID(UINT uID)
 #endif
 
 	//value
-	UINT uIDOld = GetCtrlID();
-	m_AttributeObjectID.SetValue(uID);
+	m_AttributeCtrlID.SetValue(uID);
 
-	//modify id map
-	if (false == CDUIGlobal::GetInstance()->ModifyCtrlID(uIDOld, uID, this))
+	//id map
+	if (uID > Dui_CtrlIDInner_Finish)
 	{
-		return false;
+		CDUIGlobal::GetInstance()->AddCtrlID(uID, CDUIGlobal::GetInstance()->GenerateCtrlID(this));
 	}
 
 	//info
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->UnInitControlIDHash(this);
-	}
-
-	if (m_pWndManager)
-	{
-		m_pWndManager->InitControlIDHash(this);
-		m_pWndManager->SendNotify(this, DuiNotify_CtrlIDChanged);
+		m_pWndOwner->UnInitControlIDHash(this);
+		m_pWndOwner->InitControlIDHash(this);
+		m_pWndOwner->SendNotify(this, DuiNotify_CtrlIDChanged);
 	}
 
 	return true;
 }
 
-void CDUIControlBase::RefreshCtrlID()
+void CDUIControlBase::RefreshCtrlID(bool bSelfSingle)
 {
 	if (0 < GetCtrlID() && GetCtrlID() < Dui_CtrlIDInner_Finish) return;
 
@@ -255,18 +239,18 @@ void CDUIControlBase::RefreshCtrlID()
 
 HWND CDUIControlBase::GetWndHandle()
 {
-	return m_pWndManager ? m_pWndManager->GetWndHandle() : NULL;
+	return m_pWndOwner ? m_pWndOwner->GetWndHandle() : NULL;
 }
 
-bool CDUIControlBase::SetWndManager(CDUIWndManager *pWndManager)
+bool CDUIControlBase::SetWndOwner(CDUIWnd *pWndOwner)
 {
-	if (m_pWndManager == pWndManager) return false;
+	if (m_pWndOwner == pWndOwner) return false;
 
 	//uninit
 	OnDuiWndManagerDetach();
 
 	//init
-	m_pWndManager = static_cast<CDUIWndManager*>(pWndManager);
+	m_pWndOwner = pWndOwner;
 	m_nControlStatus = ControlStatus_Normal;
 
 	OnDuiWndManagerAttach();
@@ -274,9 +258,9 @@ bool CDUIControlBase::SetWndManager(CDUIWndManager *pWndManager)
 	return true;
 }
 
-CDUIWndManager * CDUIControlBase::GetWndManager()
+CDUIWnd * CDUIControlBase::GetWndOwner()
 {
-	return m_pWndManager;
+	return m_pWndOwner;
 }
 
 void CDUIControlBase::SetParent(CDUIContainerCtrl *pParent)
@@ -311,9 +295,9 @@ void CDUIControlBase::SetVisible(bool bVisible)
 
 	m_AttributeVisible.SetValue(bVisible);
 
-	if (false == IsVisible() && m_pWndManager && m_pWndManager->GetFocusControl() == this)
+	if (false == IsVisible() && m_pWndOwner && m_pWndOwner->GetFocusControl() == this)
 	{
-		m_pWndManager->SetFocusControl(NULL);
+		m_pWndOwner->SetFocusControl(NULL);
 	}
 
 	NeedParentRefreshView();
@@ -322,15 +306,15 @@ void CDUIControlBase::SetVisible(bool bVisible)
 	CDUIGlobal::PerformNotifyVisibleChange(this);
 
 	//notify
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_VisibleChanged);
+		m_pWndOwner->SendNotify(this, DuiNotify_VisibleChanged);
 	}
 
 	//callback
 	for (int n = 0; n < m_vecIControlCallBack.size(); n++)
 	{
-		IDUIControlCallBack *pICallBack = m_vecIControlCallBack[n];
+		IDuiControlCallBack *pICallBack = m_vecIControlCallBack[n];
 		if (NULL == pICallBack) continue;
 
 		pICallBack->OnVisibleChanged(this);
@@ -390,19 +374,19 @@ void CDUIControlBase::SetClickTransmit(bool bTransmit)
 
 bool CDUIControlBase::IsCaptured()
 {
-	return m_pWndManager && m_pWndManager->GetCaptureControl() == this;
+	return m_pWndOwner && m_pWndOwner->GetCaptureControl() == this;
 }
 
 bool CDUIControlBase::IsFocused()
 {
-	return m_pWndManager && m_pWndManager->GetFocusControl() == this;
+	return m_pWndOwner && m_pWndOwner->GetFocusControl() == this;
 }
 
 void CDUIControlBase::SetFocus()
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SetFocusControl(this);
+		m_pWndOwner->SetFocusControl(this);
 	}
 
 	return;
@@ -410,9 +394,9 @@ void CDUIControlBase::SetFocus()
 
 void CDUIControlBase::KillFocus()
 {
-	if (NULL == m_pWndManager || false == IsFocused()) return;
+	if (NULL == m_pWndOwner || false == IsFocused()) return;
 
-	m_pWndManager->SetFocusControl(NULL);
+	m_pWndOwner->SetFocusControl(NULL);
 
 	return;
 }
@@ -422,9 +406,9 @@ bool CDUIControlBase::Active()
 	if (false == IsVisible()) return false;
 	if (false == IsEnabled()) return false;
 
-	if (m_pWndManager && false == GetActiveUrl().empty())
+	if (m_pWndOwner && false == GetActiveUrl().empty())
 	{
-		::ShellExecute(m_pWndManager->GetWndHandle(), NULL, GetActiveUrl(), NULL, NULL, SW_SHOW);
+		::ShellExecute(m_pWndOwner->GetWndHandle(), NULL, GetActiveUrl(), NULL, NULL, SW_SHOW);
 	}
 
 	return true;
@@ -508,7 +492,7 @@ void CDUIControlBase::MovePosition(SIZE szOffset)
 	return;
 }
 
-bool CDUIControlBase::SetAbsoluteRect(CDUIRect &rcAbsolute)
+bool CDUIControlBase::SetAbsoluteRect(CDUIRect rcAbsolute)
 {
 	if (rcAbsolute == GetAbsoluteRect()) return false;
 
@@ -814,23 +798,23 @@ void CDUIControlBase::SetMaxHeight(long lHeight)
 
 bool CDUIControlBase::SetTimer(UINT uTimerID, UINT nElapse)
 {
-	if (NULL == m_pWndManager) return false;
+	if (NULL == m_pWndOwner) return false;
 
-	return m_pWndManager->SetTimer(this, uTimerID, nElapse);
+	return m_pWndOwner->SetTimer(this, uTimerID, nElapse);
 }
 
 bool CDUIControlBase::KillTimer(UINT uTimerID)
 {
-	if (NULL == m_pWndManager) return false;
+	if (NULL == m_pWndOwner) return false;
 
-	return m_pWndManager->KillTimer(this, uTimerID);
+	return m_pWndOwner->KillTimer(this, uTimerID);
 }
 
 bool CDUIControlBase::KillTimer()
 {
-	if (NULL == m_pWndManager) return false;
+	if (NULL == m_pWndOwner) return false;
 
-	return m_pWndManager->KillTimer(this);
+	return m_pWndOwner->KillTimer(this);
 }
 
 ARGB CDUIControlBase::GetBkColor()
@@ -1129,9 +1113,9 @@ void CDUIControlBase::Invalidate()
 
 	CDUIRect rcInvalidate = GetAbsoluteRect();
 
-	if (m_pWndManager && m_pWndManager->GetWndHandle())
+	if (m_pWndOwner && m_pWndOwner->GetWndHandle())
 	{
-		::InvalidateRect(m_pWndManager->GetWndHandle(), &rcInvalidate, TRUE);
+		::InvalidateRect(m_pWndOwner->GetWndHandle(), &rcInvalidate, TRUE);
 	}
 
 	return;
@@ -1145,9 +1129,9 @@ void CDUIControlBase::NeedRefreshView()
 
 	Invalidate();
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->NeedRefreshView();
+		m_pWndOwner->NeedRefreshView();
 	}
 
 	return;
@@ -1193,7 +1177,7 @@ bool CDUIControlBase::OnDraw(HDC hDC, const RECT &rcPaint, bool bGenerateBmp)
 	{
 		for (int n = 0; n < m_vecIControlCallBack.size(); n++)
 		{
-			IDUIControlCallBack *pICallBack = m_vecIControlCallBack[n];
+			IDuiControlCallBack *pICallBack = m_vecIControlCallBack[n];
 			if (NULL == pICallBack) continue;
 
 			pICallBack->OnPaint(this, hDC);
@@ -1229,9 +1213,9 @@ void CDUIControlBase::SetWinDragEnabled(bool bDragEnabled)
 
 	m_AttributeWinDragEnable.SetValue(bDragEnabled);
 
-	if (IsWinDragEnabled() && m_pWndManager)
+	if (IsWinDragEnabled() && m_pWndOwner)
 	{
-		m_pWndManager->Register(m_pWndManager->GetWndHandle());
+		m_pWndOwner->Register(m_pWndOwner->GetWndHandle());
 	}
 
 	return;
@@ -1248,9 +1232,9 @@ void CDUIControlBase::SetWinDropEnabled(bool bDropEnabled)
 
 	m_AttributeWinDropEnable.SetValue(bDropEnabled);
 
-	if (IsWinDropEnabled() && m_pWndManager)
+	if (IsWinDropEnabled() && m_pWndOwner)
 	{
-		m_pWndManager->Register(m_pWndManager->GetWndHandle());
+		m_pWndOwner->Register(m_pWndOwner->GetWndHandle());
 	}
 
 	return;
@@ -1265,13 +1249,13 @@ bool CDUIControlBase::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Ms
 {
 	m_nControlStatus |= ControlStatus_Pushed;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_LButtonDown, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_LButtonDown, Msg.wParam, Msg.lParam);
 	}
-	if (m_pWndManager && false == GetActiveUrl().empty())
+	if (m_pWndOwner && false == GetActiveUrl().empty())
 	{
-		::ShellExecute(m_pWndManager->GetWndHandle(), NULL, GetActiveUrl(), NULL, NULL, SW_SHOW);
+		::ShellExecute(m_pWndOwner->GetWndHandle(), NULL, GetActiveUrl(), NULL, NULL, SW_SHOW);
 	}
 
 	Invalidate();
@@ -1283,9 +1267,9 @@ bool CDUIControlBase::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	m_nControlStatus &= ~ControlStatus_Pushed;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_LButtonUp, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_LButtonUp, Msg.wParam, Msg.lParam);
 	}
 	if (GetParent()
 		&& GetParent()->IsAnimateDrag()
@@ -1303,9 +1287,9 @@ bool CDUIControlBase::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg
 {
 	m_nControlStatus |= ControlStatus_Pushed;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_LDbClick, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_LDbClick, Msg.wParam, Msg.lParam);
 	}
 
 	Invalidate();
@@ -1317,9 +1301,9 @@ bool CDUIControlBase::OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &Ms
 {
 	m_nControlStatus |= ControlStatus_Pushed;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_RButtonDown, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_RButtonDown, Msg.wParam, Msg.lParam);
 	}
 
 	Invalidate();
@@ -1331,9 +1315,9 @@ bool CDUIControlBase::OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	m_nControlStatus &= ~ControlStatus_Pushed;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_RButtonUp, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_RButtonUp, Msg.wParam, Msg.lParam);
 	}
 
 	Invalidate();
@@ -1345,9 +1329,9 @@ bool CDUIControlBase::OnDuiRButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg
 {
 	m_nControlStatus |= ControlStatus_Pushed;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_RDbClick, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_RDbClick, Msg.wParam, Msg.lParam);
 	}
 
 	Invalidate();
@@ -1366,9 +1350,9 @@ bool CDUIControlBase::OnDuiSetCursor(const CDUIPoint &pt, const DuiMessage &Msg)
 		::SetCursor(::LoadCursor(nullptr, IDC_ARROW));
 	}
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_SetCursor, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_SetCursor, Msg.wParam, Msg.lParam);
 	}
 
 	return true;
@@ -1378,9 +1362,9 @@ bool CDUIControlBase::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Msg
 {
 	m_nControlStatus |= ControlStatus_Hot;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_MouseEnter, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_MouseEnter, Msg.wParam, Msg.lParam);
 	}
 
 	Invalidate();
@@ -1390,9 +1374,9 @@ bool CDUIControlBase::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Msg
 
 bool CDUIControlBase::OnDuiMouseHover(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_MouseHover, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_MouseHover, Msg.wParam, Msg.lParam);
 	}
 
 	return true;
@@ -1402,11 +1386,11 @@ bool CDUIControlBase::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	int nControlStatusOld = m_nControlStatus;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_MouseMove, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_MouseMove, Msg.wParam, Msg.lParam);
 	}
-	if (m_pWndManager
+	if (m_pWndOwner
 		&& (m_nControlStatus & ControlStatus_Pushed)
 		&& GetParent()
 		&& GetParent()->IsAnimateDrag()
@@ -1441,9 +1425,9 @@ void CDUIControlBase::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg
 {
 	m_nControlStatus &= ~ControlStatus_Hot;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_MouseLeave, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_MouseLeave, Msg.wParam, Msg.lParam);
 	}
 
 	return;
@@ -1451,9 +1435,9 @@ void CDUIControlBase::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg
 
 bool CDUIControlBase::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_MouseWheel, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_MouseWheel, Msg.wParam, Msg.lParam);
 	}
 
 	return false;
@@ -1463,9 +1447,9 @@ bool CDUIControlBase::OnDuiSetFocus()
 {
 	if (false == IsEnabled()) return false;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_SetFocus);
+		m_pWndOwner->SendNotify(this, DuiNotify_SetFocus);
 	}
 
 	Invalidate();
@@ -1477,9 +1461,9 @@ bool CDUIControlBase::OnDuiKillFocus()
 {
 	if (false == IsEnabled()) return false;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_KillFocus);
+		m_pWndOwner->SendNotify(this, DuiNotify_KillFocus);
 	}
 
 	Invalidate();
@@ -1489,13 +1473,13 @@ bool CDUIControlBase::OnDuiKillFocus()
 
 void CDUIControlBase::OnDuiWndManagerAttach()
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
-	m_pWndManager->SendNotify(this, DuiNotify_WndManagerAttach);
+	m_pWndOwner->SendNotify(this, DuiNotify_WndManagerAttach);
 
 	if (IsWinDragEnabled() || IsWinDropEnabled())
 	{
-		m_pWndManager->Register(m_pWndManager->GetWndHandle());
+		m_pWndOwner->Register(m_pWndOwner->GetWndHandle());
 	}
 
 	return;
@@ -1503,9 +1487,9 @@ void CDUIControlBase::OnDuiWndManagerAttach()
 
 void CDUIControlBase::OnDuiWndManagerDetach()
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_WndManagerDetach);
+		m_pWndOwner->SendNotify(this, DuiNotify_WndManagerDetach);
 	}
 
 	return;
@@ -1513,9 +1497,9 @@ void CDUIControlBase::OnDuiWndManagerDetach()
 
 void CDUIControlBase::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_Timer, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_Timer, Msg.wParam, Msg.lParam);
 	}
 
 	return;
@@ -1532,7 +1516,7 @@ void CDUIControlBase::OnDuiSize(CDUIRect rcParentAbs)
 	//callback
 	for (int n = 0; n < m_vecIControlCallBack.size(); n++)
 	{
-		IDUIControlCallBack *pICallBack = m_vecIControlCallBack[n];
+		IDuiControlCallBack *pICallBack = m_vecIControlCallBack[n];
 		if (NULL == pICallBack) continue;
 
 		pICallBack->OnSize(this);
@@ -1543,9 +1527,9 @@ void CDUIControlBase::OnDuiSize(CDUIRect rcParentAbs)
 
 LRESULT CDUIControlBase::OnDuiKeyDown(const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_KeyDown, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_KeyDown, Msg.wParam, Msg.lParam);
 	}
 
 	return 0;
@@ -1553,9 +1537,9 @@ LRESULT CDUIControlBase::OnDuiKeyDown(const DuiMessage &Msg)
 
 LRESULT CDUIControlBase::OnDuiKeyUp(const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_KeyUp, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_KeyUp, Msg.wParam, Msg.lParam);
 	}
 
 	return 0;
@@ -1563,9 +1547,9 @@ LRESULT CDUIControlBase::OnDuiKeyUp(const DuiMessage &Msg)
 
 LRESULT CDUIControlBase::OnDuiChar(const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_Char, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_Char, Msg.wParam, Msg.lParam);
 	}
 
 	return 0;
@@ -1573,9 +1557,9 @@ LRESULT CDUIControlBase::OnDuiChar(const DuiMessage &Msg)
 
 LRESULT CDUIControlBase::OnDuiSysKeyDown(const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_SysKeyDown, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_SysKeyDown, Msg.wParam, Msg.lParam);
 	}
 
 	return 0;
@@ -1583,9 +1567,9 @@ LRESULT CDUIControlBase::OnDuiSysKeyDown(const DuiMessage &Msg)
 
 LRESULT CDUIControlBase::OnDuiSysKeyUp(const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_SysKeyUp, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_SysKeyUp, Msg.wParam, Msg.lParam);
 	}
 
 	return 0;
@@ -1593,9 +1577,9 @@ LRESULT CDUIControlBase::OnDuiSysKeyUp(const DuiMessage &Msg)
 
 LRESULT CDUIControlBase::OnDuiSysChar(const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_SysChar, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_SysChar, Msg.wParam, Msg.lParam);
 	}
 
 	return 0;
@@ -1605,9 +1589,9 @@ LRESULT CDUIControlBase::OnDuiContextMenu(const DuiMessage &Msg)
 {
 	if (IsContextMenu())
 	{
-		if (m_pWndManager)
+		if (m_pWndOwner)
 		{
-			m_pWndManager->SendNotify(this, DuiNotify_Menu, Msg.wParam, Msg.lParam);
+			m_pWndOwner->SendNotify(this, DuiNotify_Menu, Msg.wParam, Msg.lParam);
 		}
 	}
 
@@ -1616,9 +1600,9 @@ LRESULT CDUIControlBase::OnDuiContextMenu(const DuiMessage &Msg)
 
 LRESULT CDUIControlBase::OnDuiCommand(const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_Command, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_Command, Msg.wParam, Msg.lParam);
 	}
 
 	return 0;
@@ -1633,9 +1617,9 @@ bool CDUIControlBase::OnWinDragStart(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	if (false == IsWinDragEnabled()) return false;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_WinDragStart, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_WinDragStart, Msg.wParam, Msg.lParam);
 	}
 
 	return true;
@@ -1645,9 +1629,9 @@ bool CDUIControlBase::OnWinDragEnter(const tagDuiDropData *pDropData, DWORD *pdw
 {
 	if (false == IsWinDropEnabled()) return false;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_WinDragEnter, (WPARAM)pDropData, (LPARAM)pdwEffect);
+		m_pWndOwner->SendNotify(this, DuiNotify_WinDragEnter, (WPARAM)pDropData, (LPARAM)pdwEffect);
 	}
 
 	return true;
@@ -1657,9 +1641,9 @@ bool CDUIControlBase::OnWinDragOver(const tagDuiDropData *pDropData, DWORD &dwEf
 {
 	if (false == IsWinDropEnabled()) return false;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_WinDragOver, (WPARAM)pDropData, (LPARAM)&dwEffect);
+		m_pWndOwner->SendNotify(this, DuiNotify_WinDragOver, (WPARAM)pDropData, (LPARAM)&dwEffect);
 	}
 
 	return true;
@@ -1669,9 +1653,9 @@ bool CDUIControlBase::OnWinDragLeave(const tagDuiDropData *pDropData)
 {
 	if (false == IsWinDropEnabled()) return false;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_WinDragLeave, (WPARAM)pDropData);
+		m_pWndOwner->SendNotify(this, DuiNotify_WinDragLeave, (WPARAM)pDropData);
 	}
 
 	return true;
@@ -1681,9 +1665,9 @@ bool CDUIControlBase::OnWinDrop(const tagDuiDropData *pDropData, DWORD *pdwEffec
 {
 	if (false == IsWinDropEnabled()) return false;
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_WinDrop, (WPARAM)pDropData, LPARAM(pdwEffect));
+		m_pWndOwner->SendNotify(this, DuiNotify_WinDrop, (WPARAM)pDropData, LPARAM(pdwEffect));
 	}
 
 	return true;
@@ -1693,7 +1677,7 @@ void CDUIControlBase::InitProperty()
 {
 	//create
 	DuiCreateGroupAttribute(m_AttributeGroupBase, _T("ControlBase"));
-	DuiCreateAttribute(m_AttributeObjectID, Key_Dui_PropCtrlID, _T(""), m_AttributeGroupBase);
+	DuiCreateAttribute(m_AttributeCtrlID, _T("ID"), _T(""), m_AttributeGroupBase);
 	DuiCreateAttribute(m_AttributeEnable, _T("Enable"), _T(""), m_AttributeGroupBase);
 	DuiCreateAttribute(m_AttributeVisible, _T("Visible"), _T(""), m_AttributeGroupBase);
 	DuiCreateAttribute(m_AttributeUserData, _T("UserData"), _T(""), m_AttributeGroupBase);
@@ -1735,31 +1719,12 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeToolTipBkColor, _T("ToolTipBkColor"), _T(""), m_AttributeGroupToolTip);
 	DuiCreateAttribute(m_AttributeToolTipTextColor, _T("ToolTipTextColor"), _T(""), m_AttributeGroupToolTip);
 
-	//compatible
-	if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_4)
-	{
-		CDUIAttributeSize RoundSize;
-		DuiCreateAttribute(RoundSize, _T("RoundSize"), _T(""), m_AttributeGroupBk);
-		SetRoundCorner({ RoundSize.cx, RoundSize.cx, RoundSize.cy, RoundSize.cy });
-		m_AttributeGroupBk.RemoveAttribute(&RoundSize);
-	}
-
 	return;
 }
 
 void CDUIControlBase::InitComplete()
 {
 	__super::InitComplete();
-
-	//compatible
-	if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_4)
-	{
-		CDUIRect rcRoundCorner = GetRoundCorner();
-		if (rcRoundCorner.left > 0 || rcRoundCorner.top > 0 || rcRoundCorner.right > 0 || rcRoundCorner.bottom > 0)
-		{
-			m_AttributeRoundCorner.NotifyChange();
-		}
-	}
 
 	//visible
 	DuiInitAttriVisible(m_AttributeToolTipBkColor, false);
@@ -1907,7 +1872,7 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	if (enDuiLineStyle::LineStyle_Null == GetBorderStyle()) return;
 
 	CDUIAttributeColorSwitch *pAttribute = IsFocused() ? &m_AttributeColorBorderFocus : &m_AttributeColorBorder;
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeColorBorder : NULL;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeColorBorder : NULL;
 	if (NULL == pAttribute) return;
 
 	CDUIRect rcBorderLine = GetBorderLine();
@@ -1967,24 +1932,24 @@ void CDUIControlBase::SetInternVisible(bool bVisible, bool bTraversal)
 
 	m_bInternVisible = bVisible;
 
-	if (false == IsVisible() && m_pWndManager && m_pWndManager->GetFocusControl() == this)
+	if (false == IsVisible() && m_pWndOwner && m_pWndOwner->GetFocusControl() == this)
 	{
-		m_pWndManager->SetFocusControl(NULL);
+		m_pWndOwner->SetFocusControl(NULL);
 	}
 
 	//notify
 	CDUIGlobal::PerformNotifyVisibleChange(this);
 
 	//notify
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_VisibleChanged);
+		m_pWndOwner->SendNotify(this, DuiNotify_VisibleChanged);
 	}
 
 	//callback
 	for (int n = 0; n < m_vecIControlCallBack.size(); n++)
 	{
-		IDUIControlCallBack *pICallBack = m_vecIControlCallBack[n];
+		IDuiControlCallBack *pICallBack = m_vecIControlCallBack[n];
 		if (NULL == pICallBack) continue;
 
 		pICallBack->OnVisibleChanged(this);
@@ -2004,9 +1969,9 @@ CDUIControlBase * CDUIControlBase::FindControl(FindControlProc Proc, LPVOID pDat
 
 void CDUIControlBase::ReapControl()
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->ReapControl(this);
+		m_pWndOwner->ReapControl(this);
 	}
 
 	return;
@@ -2033,12 +1998,12 @@ CDUISize CDUIControlBase::GetBorderBreakTop()
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool operator == (IDUIInterface *pLeft, const CDUIControlBase &pControl)
+bool operator == (IDuiInterface *pLeft, const CDUIControlBase &pControl)
 {
 	return MMInterfaceHelper(CDUIControlBase, pLeft) == &pControl;
 }
 
-bool operator != (IDUIInterface *pLeft, const CDUIControlBase &pControl)
+bool operator != (IDuiInterface *pLeft, const CDUIControlBase &pControl)
 {
 	return false == operator == (pLeft, pControl);
 }

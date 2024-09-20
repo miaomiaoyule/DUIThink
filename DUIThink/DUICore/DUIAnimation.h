@@ -176,7 +176,7 @@ protected:
 };
 
 //////////////////////////////////////////////////////////////////////////
-class CDUIAnimationWnd
+class DUITHINK_API CDUIAnimationWnd
 	: public CDUIAnimation
 {
 public:

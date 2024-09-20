@@ -128,7 +128,8 @@ typedef struct tagDuiNotify
 	};
 
 	enDuiNotifyType						NotifyType = DuiNotify_Invalid;
-	CDUIControlBase *					pNotifyCtrl = NULL;
+	CDUIControlBase *					pNotifyCtrl = NULL;						//maybe released, you should verify valid
+	UINT								uCtrlID = 0;
 	DWORD								dwTimestamp = 0;
 	POINT								ptMouse = {};
 	WORD								wKeyState = 0;

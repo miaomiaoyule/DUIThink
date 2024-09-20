@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CDUIWndManager>
+<CDUIWnd>
     <WndLayered Descr="" NameID="1850352994" Visible="1" Modified="1" ValueID="0" Value="1"/>
     <GdiplusRenderText Descr="" NameID="2521333858" Visible="1" Modified="1" ValueID="0" Value="1"/>
     <GdiplusRenderType Descr="" NameID="1877431087" Visible="1" Modified="1" ValueID="3789843824" Cur="5"/>
@@ -122,4 +122,4 @@
             </CDUIButtonCtrl>
         </CDUIContainerCtrl>
     </CDUIContainerCtrl>
-</CDUIWndManager>
+</CDUIWnd>

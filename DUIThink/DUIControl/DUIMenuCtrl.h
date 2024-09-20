@@ -23,7 +23,7 @@ public:
 
 protected:
 	CDUIMenuItemCtrl *					m_pOwner = NULL;
-	CDUIWndManager *					m_pWndManagerOwner = NULL;
+	CDUIWnd *							m_pWndOwner = NULL;
 	CDUIMenuCtrl *						m_pShowMenuView = NULL;
 	CDUIPoint							m_ptTrack;
 
@@ -38,11 +38,11 @@ public:
 
 	//override
 protected:
-	LRESULT OnCreate(WPARAM wParam, LPARAM lParam, bool &bHandled);
-	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam, bool &bHandled);
-	LRESULT OnKeyDown(WPARAM /*wParam*/, LPARAM /*lParam*/, bool &bHandled);
-	LRESULT OnClose(WPARAM /*wParam*/, LPARAM /*lParam*/, bool &bHandled);
-	LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/);
+	LRESULT OnCreate(WPARAM wParam, LPARAM lParam) override;
+	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam) override;
+	LRESULT OnKeyDown(WPARAM /*wParam*/, LPARAM /*lParam*/) override;
+	LRESULT OnClose(WPARAM /*wParam*/, LPARAM /*lParam*/) override;
+	LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/) override;
 
 	//message
 protected:

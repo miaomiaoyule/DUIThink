@@ -35,7 +35,7 @@ public:
 	virtual void Draw(HDC hDC, CDUIRect &rcPaint, bool bGdiplusRender, Gdiplus::TextRenderingHint RenderType, int nLineSpace, bool bShadow);
 
 	//res
-	virtual bool empty();
+	virtual bool IsEmpty() override;
 	virtual void Clear();
 	virtual tagDuiRichText GetRichText();
 	virtual void SetRichText(const tagDuiRichText &RichText);

@@ -40,7 +40,7 @@ public:
 	virtual void Draw(HDC hDC, CDUIRect &rcPaint, LPCTSTR lpszText, bool bGdiplusRender, Gdiplus::TextRenderingHint RenderType, bool bShadow);
 
 	//res
-	virtual bool empty();
+	virtual bool IsEmpty() override;
 	virtual void Clear();
 	virtual tagDuiTextStyle GetTextStyle();
 	virtual void SetTextStyle(const tagDuiTextStyle &TextStyle);

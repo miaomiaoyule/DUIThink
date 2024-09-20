@@ -36,15 +36,13 @@ protected:
 
 	//override
 protected:
-	bool RegisterControlListen(IDUIInterface *pIControlListen) override;
-	bool UnRegisterControlListen(IDUIInterface *pIControlListen) override;
+	bool RegisterControlListen(IDuiInterface *pIControlListen) override;
+	bool UnRegisterControlListen(IDuiInterface *pIControlListen) override;
 
 	//override
 protected:
 	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
 	void OnDpiChanged(int nScalePre) override;
-	void OnResourceDelete(CDUIResourceBase *pResourceObj) override;
-	void OnResourceSwitch(int nIndexRes) override;
 
 	//method
 public:
@@ -54,9 +52,10 @@ public:
 
 	//basic
 	UINT InitCtrlID() override;
-	void RefreshCtrlID() override;
-	bool SetWndManager(CDUIWndManager *pWndManager) override;
+	void RefreshCtrlID(bool bSelfSingle = false) override;
+	bool SetWndOwner(CDUIWnd *pWndOwner) override;
 	void SetVisible(bool bVisible = true) override;
+	CMMString GetText() override;
 	bool SetText(LPCTSTR lpszText) override;
 
 	//refresh

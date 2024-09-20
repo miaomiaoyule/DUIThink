@@ -11,7 +11,7 @@ class CDUIResourceBase;
 #define VER_CDUIResourceBase INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIResourceBase = { 0x8610FFDD,0xC1A9,0x49A6,0xBA,0xDA,0xA9,0x77,0x5F,0x87,0x04,0x01 };
 class DUITHINK_API CDUIResourceBase 
-	: public IDUIInterface
+	: public IDuiInterface
 {
 	friend class CDUIXmlPack;
 	friend class CDUIGlobal;

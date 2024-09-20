@@ -265,6 +265,10 @@ RECT CMMTrayIcon::GetTrayIconPos(HWND hWndOwner)
 					ReadProcessMemory(hProcess, (LPVOID)((DWORD)p_tbbutton), buff, 1024, 0);
 					rcPos = *(RECT*)(buff);
 
+					RECT rcWndToolBar = {};
+					GetWindowRect(hWndToolBar, &rcWndToolBar);
+					OffsetRect(&rcPos, rcWndToolBar.left, rcWndToolBar.top);
+
 					break;
 				}
 			}

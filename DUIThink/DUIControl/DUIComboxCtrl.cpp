@@ -17,7 +17,7 @@ public:
 
 protected:
 	CDUIComboxCtrl *					m_pOwner = NULL;
-	CDUIWndManager *					m_pWndManagerOwner = NULL;
+	CDUIWnd *							m_pWndOwner = NULL;
 	CDUIListViewCtrl *					m_pComboxView = NULL;
 
 	int									m_nItemHeightNormal = 0;
@@ -33,7 +33,7 @@ public:
 
 protected:
 	void OnFinalMessage() override;
-	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam, bool &bHandled);
+	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam) override;
 	void OnDuiWndInited(const DuiNotify &Notify);
 	void OnDuiItemClick(const DuiNotify &Notify);
 	void OnDuiItemMouseEnter(const DuiNotify &Notify);
@@ -63,7 +63,7 @@ CDUIComboxWnd::~CDUIComboxWnd()
 	UnInit();
 
 	m_pOwner = NULL;
-	m_pWndManagerOwner = NULL;
+	m_pWndOwner = NULL;
 	m_pComboxView = NULL;
 
 	return;
@@ -71,11 +71,11 @@ CDUIComboxWnd::~CDUIComboxWnd()
 
 void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 {
-	if (NULL == m_pOwner || NULL == pComboxView || IsWindow(GetHWND())) return;
+	if (NULL == m_pOwner || NULL == pComboxView || IsWindow(GetWndHandle())) return;
 
-	m_pWndManagerOwner = static_cast<CDUIWndManager*>(m_pOwner->GetWndManager());
+	m_pWndOwner = static_cast<CDUIWnd*>(m_pOwner->GetWndOwner());
 
-	if (NULL == m_pWndManagerOwner)
+	if (NULL == m_pWndOwner)
 	{
 		assert(false);
 		return;
@@ -84,19 +84,19 @@ void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 	m_pComboxView = pComboxView;
 
 	//create
-	Create(m_pWndManagerOwner->GetWndHandle(), GetClass(), WS_POPUP, WS_EX_TOOLWINDOW);
+	Create(m_pWndOwner->GetWndHandle(), GetClass(), WS_POPUP, WS_EX_TOOLWINDOW);
 
 	//comboxview
-	m_pWndManager->AttachRootCtrl(m_pComboxView);
-	m_pWndManager->SetCaptionHeight(0);
-	m_pWndManager->SetWndInitSize(0, 0);
-	m_pWndManager->SetWndMinSize(0, 0);
-	m_pWndManager->SetWndMaxSize(0, 0);
+	AttachRootCtrl(m_pComboxView);
+	SetCaptionHeight(0);
+	SetWndInitSize(0, 0);
+	SetWndMinSize(0, 0);
+	SetWndMaxSize(0, 0);
 	m_pOwner->Select(true);
 
 	//dropsize
 	CDUIRect rcWnd;
-	GetWindowRect(m_pWndManagerOwner->GetWndHandle(), &rcWnd);
+	::GetWindowRect(m_pWndOwner->GetWndHandle(), &rcWnd);
 	m_pComboxView->SetPadding(0, 0, 0, 0);
 	m_pComboxView->RefreshView();
 	CDUISize szTotalRange = m_pComboxView->GetTotalRange();
@@ -138,7 +138,7 @@ void CDUIComboxWnd::UnInit()
 {
 	Close();
 
-	if (m_pOwner && m_pWndManagerOwner)
+	if (m_pOwner)
 	{
 		m_pOwner->Select(false);
 		m_pOwner->Invalidate();
@@ -157,7 +157,7 @@ void CDUIComboxWnd::UnInit()
 		}
 	}
 
-	m_pWndManager->DetachRootCtrl();
+	DetachRootCtrl();
 
 	return;
 }
@@ -169,16 +169,16 @@ CMMString CDUIComboxWnd::GetDuiName() const
 
 void CDUIComboxWnd::OnFinalMessage()
 {
-	m_pWndManager->DetachRootCtrl();
+	DetachRootCtrl();
 
 	__super::OnFinalMessage();
 
 	return;
 }
 
-LRESULT CDUIComboxWnd::OnKillFocus(WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDUIComboxWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 {
-	LRESULT lRes = __super::OnKillFocus(wParam, lParam, bHandled);
+	LRESULT lRes = __super::OnKillFocus(wParam, lParam);
 
 	UnInit();
 
@@ -187,7 +187,7 @@ LRESULT CDUIComboxWnd::OnKillFocus(WPARAM wParam, LPARAM lParam, bool &bHandled)
 
 void CDUIComboxWnd::OnDuiWndInited(const DuiNotify &Notify)
 {
-	if (NULL == m_pWndManagerOwner || NULL == m_pComboxView || NULL == m_pOwner) return;
+	if (NULL == m_pComboxView || NULL == m_pOwner) return;
 
 	if (m_pComboxView)
 	{
@@ -321,7 +321,7 @@ void CDUIComboxWnd::OnNotify(const DuiNotify &Notify)
 	__super::OnNotify(Notify);
 
 	if (m_pOwner
-		&& m_pWndManagerOwner
+		&& m_pWndOwner
 		&& (Notify.pNotifyCtrl == m_pComboxView || m_pComboxView->VerifyChild(Notify.pNotifyCtrl)))
 	{
 		DuiNotify NotifyOwner = Notify;
@@ -329,7 +329,7 @@ void CDUIComboxWnd::OnNotify(const DuiNotify &Notify)
 		NotifyOwner.DuiNotifyExtend.Combox.pComboxCtrl = m_pOwner;
 		NotifyOwner.DuiNotifyExtend.Combox.nIndexItem = Notify.DuiNotifyExtend.ListView.nIndexItem;
 		NotifyOwner.pNotifyCtrl = Notify.pNotifyCtrl == m_pComboxView ? m_pOwner : NotifyOwner.pNotifyCtrl;
-		m_pWndManagerOwner->SendNotify(NotifyOwner);
+		m_pWndOwner->SendNotify(NotifyOwner);
 	}
 
 	return;
@@ -358,7 +358,7 @@ CDUIComboxCtrl::~CDUIComboxCtrl(void)
 	return;
 }
 
-bool CDUIComboxCtrl::RegisterControlListen(IDUIInterface *pIControlListen)
+bool CDUIComboxCtrl::RegisterControlListen(IDuiInterface *pIControlListen)
 {
 	if (NULL == pIControlListen || false == __super::RegisterControlListen(pIControlListen)) return false;
 
@@ -370,7 +370,7 @@ bool CDUIComboxCtrl::RegisterControlListen(IDUIInterface *pIControlListen)
 	return true;
 }
 
-bool CDUIComboxCtrl::UnRegisterControlListen(IDUIInterface *pIControlListen)
+bool CDUIComboxCtrl::UnRegisterControlListen(IDuiInterface *pIControlListen)
 {
 	if (NULL == pIControlListen || false == __super::UnRegisterControlListen(pIControlListen)) return false;
 
@@ -403,38 +403,6 @@ void CDUIComboxCtrl::OnDpiChanged(int nScalePre)
 	if (m_pEditCtrl)
 	{
 		m_pEditCtrl->OnDpiChanged(nScalePre);
-	}
-
-	return;
-}
-
-void CDUIComboxCtrl::OnResourceDelete(CDUIResourceBase *pResourceObj)
-{
-	__super::OnResourceDelete(pResourceObj);
-
-	if (m_pShowListView)
-	{
-		m_pShowListView->OnResourceDelete(pResourceObj);
-	}
-	if (m_pEditCtrl)
-	{
-		m_pEditCtrl->OnResourceDelete(pResourceObj);
-	}
-
-	return;
-}
-
-void CDUIComboxCtrl::OnResourceSwitch(int nIndexRes)
-{
-	__super::OnResourceSwitch(nIndexRes);
-
-	if (m_pShowListView)
-	{
-		m_pShowListView->OnResourceSwitch(nIndexRes);
-	}
-	if (m_pEditCtrl)
-	{
-		m_pEditCtrl->OnResourceSwitch(nIndexRes);
 	}
 
 	return;
@@ -477,9 +445,11 @@ UINT CDUIComboxCtrl::InitCtrlID()
 	return GetCtrlID();
 }
 
-void CDUIComboxCtrl::RefreshCtrlID()
+void CDUIComboxCtrl::RefreshCtrlID(bool bSelfSingle)
 {
-	__super::RefreshCtrlID();
+	__super::RefreshCtrlID(bSelfSingle);
+
+	if (bSelfSingle) return;
 
 	if (m_pEditCtrl)
 	{
@@ -489,13 +459,13 @@ void CDUIComboxCtrl::RefreshCtrlID()
 	return;
 }
 
-bool CDUIComboxCtrl::SetWndManager(CDUIWndManager *pWndManager)
+bool CDUIComboxCtrl::SetWndOwner(CDUIWnd *pWndOwner)
 {
-	if (false == __super::SetWndManager(pWndManager)) return false;
+	if (false == __super::SetWndOwner(pWndOwner)) return false;
 
 	if (m_pEditCtrl)
 	{
-		m_pEditCtrl->SetWndManager(m_pWndManager);
+		m_pEditCtrl->SetWndOwner(m_pWndOwner);
 	}
 
 	return true;
@@ -542,6 +512,13 @@ void CDUIComboxCtrl::SetVisible(bool bVisible)
 	}
 
 	return;
+}
+
+CMMString CDUIComboxCtrl::GetText()
+{
+	if (m_pEditCtrl && m_pEditCtrl->IsVisible()) return m_pEditCtrl->GetText();
+
+	return __super::GetText();
 }
 
 bool CDUIComboxCtrl::SetText(LPCTSTR lpszText)
@@ -804,8 +781,8 @@ void CDUIComboxCtrl::RemoveAll()
 
 bool CDUIComboxCtrl::Active()
 {
-	if (NULL == m_pWndManager) return false;
-	if (NULL == m_pComboxWindow || IsWindow(m_pComboxWindow->GetHWND())) return false;
+	if (NULL == m_pWndOwner) return false;
+	if (NULL == m_pComboxWindow || IsWindow(m_pComboxWindow->GetWndHandle())) return false;
 	if (false == CDUICheckBoxCtrl::Active()) return false;
 
 	if (NULL == m_pShowListView)
@@ -814,7 +791,7 @@ bool CDUIComboxCtrl::Active()
 
 		if (NULL == m_pShowListView)
 		{
-			MessageBox(m_pWndManager->GetWndHandle(), _T("please select bind UI of ComboxView£¬it must be listviewctrl"), NULL, NULL);
+			MessageBox(m_pWndOwner->GetWndHandle(), _T("please select bind UI of ComboxView£¬it must be listviewctrl"), NULL, NULL);
 			return false;
 		}
 	}
@@ -827,14 +804,14 @@ bool CDUIComboxCtrl::Active()
 	Notify.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_Combox;
 	Notify.DuiNotifyExtend.Combox.pComboxCtrl = this;
 	Notify.pNotifyCtrl = this;
-	m_pWndManager->SendNotify(Notify);
+	m_pWndOwner->SendNotify(Notify);
 
 	return true;
 }
 
 bool CDUIComboxCtrl::UnActive()
 {
-	if (NULL == m_pComboxWindow || false == IsWindow(m_pComboxWindow->GetHWND())) return false;
+	if (NULL == m_pComboxWindow || false == IsWindow(m_pComboxWindow->GetWndHandle())) return false;
 
 	m_pComboxWindow->UnInit();
 
@@ -843,7 +820,7 @@ bool CDUIComboxCtrl::UnActive()
 
 bool CDUIComboxCtrl::IsActive() const
 {
-	return m_pComboxWindow && IsWindow(m_pComboxWindow->GetHWND());
+	return m_pComboxWindow && IsWindow(m_pComboxWindow->GetWndHandle());
 }
 
 void CDUIComboxCtrl::InitProperty()
@@ -873,47 +850,47 @@ void CDUIComboxCtrl::InitComplete()
 		m_pEditCtrl->SetBindCtrl(this);
 		m_pEditCtrl->SetVisible(IsEditEnable());
 
-		if (false == m_AttributeTextStyle.empty())
+		if (false == m_AttributeTextStyle.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyle(m_AttributeTextStyle.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleNormal.empty())
+		if (false == m_AttributeTextStyleNormal.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleNormal(m_AttributeTextStyleNormal.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleHot.empty())
+		if (false == m_AttributeTextStyleHot.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleHot(m_AttributeTextStyleHot.GetTextStyle());
 		}
-		if (false == m_AttributeTextStylePushed.empty())
+		if (false == m_AttributeTextStylePushed.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStylePushed(m_AttributeTextStylePushed.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleFocus.empty())
+		if (false == m_AttributeTextStyleFocus.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleFocus(m_AttributeTextStyleFocus.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleDisabled.empty())
+		if (false == m_AttributeTextStyleDisabled.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleDisabled(m_AttributeTextStyleDisabled.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleSelNormal.empty())
+		if (false == m_AttributeTextStyleSelNormal.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleNormal(m_AttributeTextStyleSelNormal.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleSelHot.empty())
+		if (false == m_AttributeTextStyleSelHot.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleHot(m_AttributeTextStyleSelHot.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleSelPushed.empty())
+		if (false == m_AttributeTextStyleSelPushed.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStylePushed(m_AttributeTextStyleSelPushed.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleSelFocus.empty())
+		if (false == m_AttributeTextStyleSelFocus.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleFocus(m_AttributeTextStyleSelFocus.GetTextStyle());
 		}
-		if (false == m_AttributeTextStyleSelDisabled.empty())
+		if (false == m_AttributeTextStyleSelDisabled.IsEmpty())
 		{
 			m_pEditCtrl->SetTextStyleDisabled(m_AttributeTextStyleSelDisabled.GetTextStyle());
 		}
@@ -924,11 +901,9 @@ void CDUIComboxCtrl::InitComplete()
 
 void CDUIComboxCtrl::PaintText(HDC hDC)
 {
-	if (m_pEditCtrl)
+	if (m_pEditCtrl && m_pEditCtrl->IsVisible())
 	{
-		if (m_pEditCtrl->IsVisible()) return;
-
-		SetText(m_pEditCtrl->GetText());
+		return;
 	}
 
 	return __super::PaintText(hDC);

@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////
 class CSvgImageView 
 	: public CDUINotifyPump
-	, public IDUIPreMessage
+	, public IDuiPreMessage
 {
 	DuiDeclare_Message_Map()
 

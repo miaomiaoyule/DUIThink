@@ -17,7 +17,7 @@ class CDUIAttributeCombox;
 class CDUIAttributeSize;
 class CDUIAttributeColor;
 class CDUIAttributeTextStyle;
-class CDUIWndManager;
+class CDUIWnd;
 class CDUIResourceBase;
 class CDUIImageBase;
 class CDUIFontBase;
@@ -27,12 +27,12 @@ class CDUIControlBase;
 class CDUICheckBoxCtrl;
 class CDUIContainerCtrl;
 class CDUITabLayoutCtrl;
-class CDUIWndManager;
 class CDUITreeNodeCtrl;
 class CDUITreeViewCtrl;
 class CDUIWkeBrowserCtrl;
 class CDUIComboxCtrl;
 class CDUIScrollBarCtrl;
+class CDUILayoutView;
 
 //////////////////////////////////////////////////////////////////////////
 #define DUI_WNDSTYLE_CONTAINER			(0)
@@ -77,12 +77,12 @@ class CDUIScrollBarCtrl;
 #define DuiFind_MeFirst					0x00000040
 
 //////////////////////////////////////////////////////////////////////////
-#define DuiDpiScaleCtrl(x)				(m_pWndManager ? m_pWndManager->GetDpiObj().Scale(x) : (x))
-#define DuiDpiScaleBackCtrl(x)			(m_pWndManager ? m_pWndManager->GetDpiObj().ScaleBack(x) : (x))
-#define DuiDpiScaleVerifyCtrl(xTarget, xScaleBack) (m_pWndManager ? m_pWndManager->GetDpiObj().ScaleVerify(xTarget, xScaleBack) : (xScaleBack))
-#define DuiDpiScaleWnd(x)				(m_pWndManager ? m_pWndManager->GetDpiObj().Scale(x) : (x))
-#define DuiDpiScaleBackWnd(x)			(m_pWndManager ? m_pWndManager->GetDpiObj().ScaleBack(x) : (x))
-#define DuiDpiScaleVerifyWnd(xTarget, xScaleBack) (m_pWndManager ? m_pWndManager->GetDpiObj().ScaleVerify(xTarget, xScaleBack) : (xScaleBack))
+#define DuiDpiScaleCtrl(x)				(m_pWndOwner ? m_pWndOwner->GetDpiObj().Scale(x) : (x))
+#define DuiDpiScaleBackCtrl(x)			(m_pWndOwner ? m_pWndOwner->GetDpiObj().ScaleBack(x) : (x))
+#define DuiDpiScaleVerifyCtrl(xTarget, xScaleBack) (m_pWndOwner ? m_pWndOwner->GetDpiObj().ScaleVerify(xTarget, xScaleBack) : (xScaleBack))
+#define DuiDpiScaleWnd(x)				(m_pWndOwner ? m_pWndOwner->GetDpiObj().Scale(x) : (x))
+#define DuiDpiScaleBackWnd(x)			(m_pWndOwner ? m_pWndOwner->GetDpiObj().ScaleBack(x) : (x))
+#define DuiDpiScaleVerifyWnd(xTarget, xScaleBack) (m_pWndOwner ? m_pWndOwner->GetDpiObj().ScaleVerify(xTarget, xScaleBack) : (xScaleBack))
 
 /////////////////////////////////////////////////////////////////////////////////////
 #define DUIBGR(b,g,r)					((DWORD)((((DWORD)(BYTE)(b))<<16) | (((WORD)((BYTE)(g))<<8) | (BYTE)(r))))
@@ -136,7 +136,7 @@ extern ZRESULT UnzipItem(HZIPDT hz, int index, void *dst, unsigned int len, DWOR
 
 //find ctrl
 #define Dui_DDX_Control(ClassName, Variant, CtrlID)\
-	Variant = MMInterfaceHelper(ClassName, m_pWndManager->FindControl(CtrlID));
+	Variant = MMInterfaceHelper(ClassName, FindControl(CtrlID));
 
 //hash
 namespace std
@@ -163,10 +163,6 @@ public:\
 public:\
 	static CDUIAttributeObject * CreateAttributeObj();
 
-#define DuiDeclare_CreateWndManager(ClassName)\
-public:\
-	static CDUIWndManager * CreateWndManagerObj();
-
 //implement
 #define DuiImplement_CreateControl(ClassName)\
  CDUIControlBase * ClassName::CreateControlObj()\
@@ -178,10 +174,6 @@ public:\
 
 #define DuiImplement_CreateAttribute(ClassName)\
 	CDUIAttributeObject * ClassName::CreateAttributeObj()\
-{ return new ClassName(); }
-
-#define DuiImplement_CreateWndManager(ClassName)\
-	CDUIWndManager * ClassName::CreateWndManagerObj()\
 { return new ClassName(); }
 
 /////////////////////////////////////////////////////////////////////////////////////

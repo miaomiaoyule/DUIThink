@@ -61,11 +61,11 @@ void CDUICheckBoxCtrl::Select(bool bSelect, bool bNotify)
 
 	m_AttributeIsSelected.SetValue(bSelect);
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
 		if (bNotify)
 		{
-			m_pWndManager->SendNotify(this, DuiNotify_SelectChanged);
+			m_pWndOwner->SendNotify(this, DuiNotify_SelectChanged);
 		}
 	}
 
@@ -383,7 +383,7 @@ void CDUICheckBoxCtrl::PaintStatusColorSelected(HDC hDC)
 		pAttribute = &m_AttributeColorSelNormal;
 	}
 
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeColorSelNormal : pAttribute;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeColorSelNormal : pAttribute;
 	if (NULL == pAttribute) return;
 
 	CDUIRect rcBorderRound = GetRoundCorner();
@@ -426,7 +426,7 @@ void CDUICheckBoxCtrl::PaintStatusImageSelected(HDC hDC)
 		pAttribute = &m_AttributeImageSelNormal;
 	}
 
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeImageSelNormal : pAttribute;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeImageSelNormal : pAttribute;
 	if (NULL == pAttribute) return;
 
 	pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint);
@@ -437,7 +437,7 @@ void CDUICheckBoxCtrl::PaintStatusImageSelected(HDC hDC)
 void CDUICheckBoxCtrl::PaintTextSelected(HDC hDC)
 {
 	CMMString strText = GetText();
-	if (strText.empty() || NULL == m_pWndManager) return;
+	if (strText.empty() || NULL == m_pWndOwner) return;
 
 	CDUIRect rcRange = GetAbsoluteRect();
 	CDUIRect rcTextPadding = GetTextPadding();
@@ -471,11 +471,11 @@ void CDUICheckBoxCtrl::PaintTextSelected(HDC hDC)
 		pAttribute = &m_AttributeTextStyleSelNormal;
 	}
 
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleSelNormal : pAttribute;
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleSelNormal : pAttribute;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
 	if (NULL == pAttribute) return;
 
-	pAttribute->Draw(hDC, rcRange, strText, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), IsShadowText());
+	pAttribute->Draw(hDC, rcRange, strText, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), IsShadowText());
 
 	return;
 }

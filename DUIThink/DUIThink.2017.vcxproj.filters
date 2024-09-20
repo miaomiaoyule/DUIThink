@@ -156,9 +156,6 @@
     <ClInclude Include="DUIUtils\Utils.h">
       <Filter>DUIUtils</Filter>
     </ClInclude>
-    <ClInclude Include="DUIManager\DUIWndManager.h">
-      <Filter>DUIManager</Filter>
-    </ClInclude>
     <ClInclude Include="DUICore\DUIRender.h">
       <Filter>DUICore</Filter>
     </ClInclude>
@@ -324,6 +321,12 @@
     <ClInclude Include="DUIControl\DUIWaterCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>
+    <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeCtrlID.h">
+      <Filter>DUIAttribute\DUINumber</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUINotifyPump.h">
+      <Filter>DUICore</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -411,9 +414,6 @@
       <Filter>DUIManager</Filter>
     </ClCompile>
     <ClCompile Include="DUIManager\DUIGlobal.cpp">
-      <Filter>DUIManager</Filter>
-    </ClCompile>
-    <ClCompile Include="DUIManager\DUIWndManager.cpp">
       <Filter>DUIManager</Filter>
     </ClCompile>
     <ClCompile Include="DUIResource\DUIFontBase.cpp">
@@ -553,6 +553,12 @@
     </ClCompile>
     <ClCompile Include="DUIControl\DUIWaterCtrl.cpp">
       <Filter>DUIControl</Filter>
+    </ClCompile>
+    <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeCtrlID.cpp">
+      <Filter>DUIAttribute\DUINumber</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUINotifyPump.cpp">
+      <Filter>DUICore</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

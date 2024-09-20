@@ -46,7 +46,6 @@ class DUITHINK_API CDUIGlobal
 	friend class CFontResView;
 	friend class CColorResView;
 	friend class CColorGridWnd;
-	friend class CDUIWndManager;
 	friend class CDUIAttributeObject;
 	friend class CDUIAttriImageSection;
 	friend class CDUIAttributeTextStyle;
@@ -59,15 +58,17 @@ class DUITHINK_API CDUIGlobal
 	friend class CDUIAttributeRect;
 	friend class CDUIAttributeSize;
 	friend class CDUIAttriTabSelect;
+	friend class CDUIAttributeCtrlID;
 	friend class CDUIPropertyObject;
 	friend class CDUIImageBase;
 	friend class CDUIPreview;
+	friend class CDUIWnd;
 	friend class CControlView;
 	friend class CVSManager;
 	friend class CDlgWizardVariant;
 	friend class CDlgWizardNotify;
 	friend class CDUIPropertyGridProperty;
-	friend class CControlNotifyView;
+	friend class CNotifyView;
 	friend class CDTDesignerApp;
 
 private:
@@ -96,11 +97,12 @@ private:
 	MapDuiImageBase						m_mapResourceImage;
 	VecDuiFile							m_vecDui;
 	MapDuiModelStore					m_mapModelStore;
-	MapDuiControlID						m_mapControlID;
 
 	//attribute
 	bool								m_bAttriWaitSave = false;
 	MapAttributeName					m_mapAttriNameValue;
+	MapDuiControlID						m_mapControlIDValue;
+	MapDuiControlID						m_mapControlIDSave;
 	UnorderMapDuiAttributeRichText		m_mapAttriRichTextValue;
 	MapDuiAttributeRichText				m_mapAttriRichTextSave;
 	UnorderMapDuiAttributeText			m_mapAttriTextValue;
@@ -124,7 +126,7 @@ private:
 	CMMThreadPool						m_ThreadPool;
 	CMMDpi								m_DpiInfo;
 	std::vector<HMODULE>				m_vecModuleExtendDll;
-	MapWndManager						m_mapWndManager;
+	MapWnd								m_mapWnd;
 	HINSTANCE							m_hInstance = NULL;
 	HINSTANCE							m_hInstanceResource = NULL;
 	enDuiFileResType					m_DuiFileResType = DuiFileResType_File;
@@ -229,7 +231,7 @@ public:
 
 	//dui
 public:
-	CDUIControlBase * LoadDui(const CMMString &strName, CDUIWndManager *pWndManager = NULL);
+	CDUIControlBase * LoadDui(const CMMString &strName, CDUIWnd *pWnd = NULL);
 
 	//ui manager
 protected:
@@ -242,7 +244,6 @@ protected:
 	CMMString FindCtrlID(UINT uCtrlID);
 	UINT GenerateCtrlID();
 	CMMString GenerateCtrlID(CDUIControlBase *pControl);
-	bool ModifyCtrlID(UINT uIDOld, UINT uIDNew, CDUIControlBase *pControl);
 	bool ModifyCtrlID(CMMString strCtrlIDOld, CMMString strCtrlIDNew, CDUIControlBase *pControl);
 	
 	//dui
@@ -255,12 +256,12 @@ protected:
 	CMMString CreateCalendar();
 	CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
 	CDUIControlBase * ParseDui(LPCTSTR lpszXml);
-	bool SaveDui(LPCTSTR lpszName, CDUIWndManager *pWndManager);
-	CMMString SaveDui(CDUIPropertyObject *pProp, bool bIncludeChild = true);
+	bool SaveDui(LPCTSTR lpszName, CDUIWnd *pWnd);
+	CMMString SaveDui(CDUIPropertyObject *pPropObj, bool bIncludeChild = true);
 	bool ExtractResourceData(vector<BYTE> &vecData, CMMString strFile);
 	
 	//refresh
-	bool RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pProp);
+	bool RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pPropObj);
 
 	//module
 protected:
@@ -333,14 +334,14 @@ protected:
 	void OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t uID);
 	bool SaveAttriValue(tinyxml2::XMLDocument &xmlDoc);
 
-	//WndManager
-	void AddWndManager(CDUIWndManager *pWndManager);
-	MapWndManager GetWndManagerAll();
-	tagDuiFile GetWndManagerInfo(CDUIWndManager *pWndManager);
-	void RenameWndManager(const CMMString &strNameOld, const CMMString &strNameNew);
-	void RenameWndManager(CDUIWndManager *pWndManager, const CMMString &strNameNew);
-	void SetWndManagerDuiType(CDUIWndManager *pWndManager, enDuiType DuiType);
-	void RemoveWndManager(CDUIWndManager *pWndManager);
+	//Wnd
+	void AddWnd(CDUIWnd *pWnd);
+	MapWnd GetWndAll();
+	tagDuiFile GetWndInfo(CDUIWnd *pWnd);
+	void RenameWnd(const CMMString &strNameOld, const CMMString &strNameNew);
+	void RenameWnd(CDUIWnd *pWnd, const CMMString &strNameNew);
+	void SetWndDuiType(CDUIWnd *pWnd, enDuiType DuiType);
+	void RemoveWnd(CDUIWnd *pWnd);
 
 	//release
 	void ReleaseResource();
@@ -365,15 +366,7 @@ public:
 	static void PerformNotifyChildAdd(CDUIPropertyObject *pPropertyObj, CDUIControlBase *pChild);
 	static void PerformNotifyChildRemove(CDUIPropertyObject *pPropertyObj, CDUIControlBase *pChild);
 	static void PerformNotifyVisibleChange(CDUIPropertyObject *pPropertyObj);
-	static void PerformResourceDelete(CDUIControlBase *pControl, CDUIResourceBase *pResourceObj);
-	static void PerformResourceSwitch(CDUIControlBase *pControl, int nIndexRes);
-	static bool PerformAddAttributeBuffer(CDUIPropertyObject *pPropertyObj, tinyxml2::XMLElement *pNodeXml);
 	static VecDuiRichTextItem ParseVecRichTextItem(LPCSTR lpszValue);
-	static VecAttributeGroup GetAttributeGroup(CDUIPropertyObject *pPropertyObj);
-	static int GetAttributeGroupIndex(CDUIAttributeGroup *pAttributeGroup);
-	static void SetAttributeGroupIndex(CDUIAttributeGroup *pAttributeGroup, int nIndex);
-	static CDUIAttributeObject * GetAttributeObj(CDUIPropertyObject *pPropertyObj, LPCTSTR lpszName);
-	static bool CreateAttributeForDesign(CDUIAttributeObject **ppAttribute, enDuiAttributeType attributeType, LPCTSTR lpszName, LPCTSTR lpszDescribe);
 };
 
 //////////////////////////////////////////////////////////////////////////

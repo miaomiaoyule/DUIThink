@@ -2,7 +2,7 @@
 #include "DUIGlobal.h"
 
 //////////////////////////////////////////////////////////////////////////
-#define DuiInitCtrlIDItem(CtrlID) m_mapControlID[CtrlID] = _T(#CtrlID)
+#define DuiInitCtrlIDItem(CtrlID) m_mapControlIDValue[CtrlID] = _T(#CtrlID)
 
 //////////////////////////////////////////////////////////////////////////
 CDUIGlobal::CDUIGlobal(void)
@@ -600,7 +600,7 @@ void CDUIGlobal::SetHSL(bool bUseHSL, short H, short S, short L)
 	return;
 }
 
-CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWndManager *pWndManager)
+CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWnd *pWnd)
 {
 	//has
 	auto FindIt = find_if(m_vecDui.begin(), m_vecDui.end(), [&](tagDuiFile &DuiFile)
@@ -627,7 +627,7 @@ CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWndManager *
 	if (NULL == pRootCtrl)
 	{
 		CMMString strFileFull = GetDuiPath(DuiType) + FindIt->strFile;
-		pRootCtrl = CDUIXmlPack::LoadDui(strFileFull, pWndManager);
+		pRootCtrl = CDUIXmlPack::LoadDui(strFileFull, pWnd);
 
 		if (NULL == pRootCtrl) return NULL;
 
@@ -637,10 +637,10 @@ CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWndManager *
 			m_mapModelStore[strName] = pRootCtrl->Clone();
 		}
 	}
-	if (pWndManager)
+	if (pWnd)
 	{
-		RenameWndManager(pWndManager, strName);
-		SetWndManagerDuiType(pWndManager, DuiType);
+		RenameWnd(pWnd, strName);
+		SetWndDuiType(pWnd, DuiType);
 	}
 
 	return pRootCtrl;
@@ -657,7 +657,7 @@ bool CDUIGlobal::SaveProject()
 	SetResVersion(DuiResVersion_Max);
 
 	return CDUIXmlPack::SaveProject(m_strProjectPath, m_strProjectName, m_mapResourceFont, \
-		m_mapResourceImage, m_mapResourceColor, m_vecDui, m_mapWndManager, m_mapControlID, m_strFontResDefault);
+		m_mapResourceImage, m_mapResourceColor, m_vecDui, m_mapWnd, m_strFontResDefault);
 }
 
 bool CDUIGlobal::CloseProject(bool bSaveProject)
@@ -688,21 +688,18 @@ bool CDUIGlobal::CloseProject(bool bSaveProject)
 
 void CDUIGlobal::AddCtrlID(UINT uCtrlID, CMMString strCtrlID)
 {
-	if (m_mapControlID.find(uCtrlID) != m_mapControlID.end()) return;
+	if ((0 < uCtrlID && uCtrlID < Dui_CtrlIDInner_Finish)
+		|| m_mapControlIDValue.find(uCtrlID) != m_mapControlIDValue.end()) return;
 
-	m_mapControlID[uCtrlID] = strCtrlID;
+	m_mapControlIDValue[uCtrlID] = strCtrlID;
 	m_uMaxControlID = max(uCtrlID, m_uMaxControlID);
-
-#ifdef DUI_DESIGN
-	CDUIXmlPack::SaveCtrlID(m_mapControlID);
-#endif
 
 	return;
 }
 
 UINT CDUIGlobal::FindCtrlID(CMMString strCtrlID)
 {
-	for (auto &Item : m_mapControlID)
+	for (auto &Item : m_mapControlIDValue)
 	{
 		if (Item.second == strCtrlID) return Item.first;
 	}
@@ -712,8 +709,8 @@ UINT CDUIGlobal::FindCtrlID(CMMString strCtrlID)
 
 CMMString CDUIGlobal::FindCtrlID(UINT uCtrlID)
 {
-	auto FindIt = m_mapControlID.find(uCtrlID);
-	if (FindIt == m_mapControlID.end()) return _T("");
+	auto FindIt = m_mapControlIDValue.find(uCtrlID);
+	if (FindIt == m_mapControlIDValue.end()) return _T("");
 
 	return FindIt->second;
 }
@@ -741,50 +738,6 @@ CMMString CDUIGlobal::GenerateCtrlID(CDUIControlBase *pControl)
 	return strCtrlID;
 }
 
-bool CDUIGlobal::ModifyCtrlID(UINT uIDOld, UINT uIDNew, CDUIControlBase *pControl)
-{
-	if (NULL == pControl) return false;
-
-	//max id
-	if (uIDNew <= Dui_CtrlIDInner_Finish)
-	{
-		return true;
-	}
-
-	//has old
-	auto FindIt = m_mapControlID.find(uIDOld);
-	if (FindIt == m_mapControlID.end())
-	{
-		AddCtrlID(uIDNew, GenerateCtrlID(pControl));
-
-		return true;
-	}
-
-	//has new
-	CMMString strCtrlID = FindIt->second;
-	FindIt = m_mapControlID.find(uIDNew);
-	if (FindIt != m_mapControlID.end()
-		&& false == FindIt->second.empty())
-	{
-		return true;
-	}
-
-	//ctrlid
-	if (strCtrlID.empty())
-	{
-		strCtrlID = GenerateCtrlID(pControl);
-	}
-
-	m_mapControlID[uIDNew] = strCtrlID;
-	m_uMaxControlID = max(uIDNew, m_uMaxControlID);
-
-#ifdef DUI_DESIGN
-	return CDUIXmlPack::SaveCtrlID(m_mapControlID);
-#else
-	return true;
-#endif
-}
-
 bool CDUIGlobal::ModifyCtrlID(CMMString strCtrlIDOld, CMMString strCtrlIDNew, CDUIControlBase *pControl)
 {
 	if (strCtrlIDNew.empty()) return false;
@@ -798,14 +751,14 @@ bool CDUIGlobal::ModifyCtrlID(CMMString strCtrlIDOld, CMMString strCtrlIDNew, CD
 	}
 
 	//modify
-	for (auto &Item : m_mapControlID)
+	for (auto &Item : m_mapControlIDValue)
 	{
 		if (Item.second == strCtrlIDOld)
 		{
 			Item.second = strCtrlIDNew;
 
 #ifdef DUI_DESIGN
-			return CDUIXmlPack::SaveCtrlID(m_mapControlID);
+			return CDUIXmlPack::SaveCtrlID(m_mapControlIDValue);
 #else
 			return true;
 #endif
@@ -830,10 +783,10 @@ CMMString CDUIGlobal::CreateDlg()
 	strFile = strName + _T(".xml");
 
 	//control
-	CDUIWndManager *pWndManager = new CDUIWndManager();
+	CDUIWnd *pWnd = new CDUIWnd();
 	CMMString strFileModel = CMMString(Dui_FolderUIModel) + _T("\\") + Dui_FileModelDlgXml;
 	DuiFileResType_File == GetDuiFileResType() ? strFileModel = CMMService::GetWorkDirectory() + _T("\\") + strFileModel : strFileModel;
-	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWndManager));
+	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWnd));
 	if (NULL == pRootCtrl)
 	{
 		pRootCtrl = new CDUIContainerCtrl;
@@ -841,11 +794,11 @@ CMMString CDUIGlobal::CreateDlg()
 		pRootCtrl->SetBkColor({ Name_ColorDefault });
 	}
 
-	if (NULL == pWndManager || NULL == pRootCtrl) return _T("");
+	if (NULL == pWnd || NULL == pRootCtrl) return _T("");
 
-	pWndManager->AttachRootCtrl(pRootCtrl);
-	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_Dlg) + strFile, pWndManager);
-	MMSafeDelete(pWndManager);
+	pWnd->AttachRootCtrl(pRootCtrl);
+	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_Dlg) + strFile, pWnd);
+	MMSafeDelete(pWnd);
 
 	AddDui(DuiType_Dlg, strName, strFile);
 
@@ -867,10 +820,10 @@ CMMString CDUIGlobal::CreateView()
 	strFile = strName + _T(".xml");
 
 	//control
-	CDUIWndManager *pWndManager = new CDUIWndManager();
+	CDUIWnd *pWnd = new CDUIWnd();
 	CMMString strFileModel = CMMString(Dui_FolderUIModel) + _T("\\") + Dui_FileModelViewXml;
 	DuiFileResType_File == GetDuiFileResType() ? strFileModel = CMMService::GetWorkDirectory() + _T("\\") + strFileModel : strFileModel;
-	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWndManager));
+	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWnd));
 	if (pRootCtrl)
 	{
 		pRootCtrl->RefreshCtrlID();
@@ -881,13 +834,13 @@ CMMString CDUIGlobal::CreateView()
 		pRootCtrl->SetBkColor({ Name_ColorDefault });
 	}
 
-	if (NULL == pWndManager || NULL == pRootCtrl) return _T("");
+	if (NULL == pWnd || NULL == pRootCtrl) return _T("");
 
-	pWndManager->Init();
+	pWnd->Init();
 	pRootCtrl->Init();
-	pWndManager->AttachRootCtrl(pRootCtrl);
-	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_View) + strFile, pWndManager);
-	MMSafeDelete(pWndManager);
+	pWnd->AttachRootCtrl(pRootCtrl);
+	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_View) + strFile, pWnd);
+	MMSafeDelete(pWnd);
 
 	AddDui(DuiType_View, strName, strFile);
 
@@ -909,12 +862,12 @@ CMMString CDUIGlobal::CreateModelListItem()
 	strFile += strName + _T(".xml");
 
 	//control
-	CDUIWndManager *pWndManager = new CDUIWndManager();
+	CDUIWnd *pWnd = new CDUIWnd();
 	CDUIListItemCtrl *pRootCtrl = new CDUIListItemCtrl;
 
-	if (NULL == pWndManager || NULL == pRootCtrl) return _T("");
+	if (NULL == pWnd || NULL == pRootCtrl) return _T("");
 
-	pWndManager->Init();
+	pWnd->Init();
 	pRootCtrl->Init();
 	pRootCtrl->SetPadding(0, 0, 0, 0);
 	pRootCtrl->SetFixedHeight(30);
@@ -925,9 +878,9 @@ CMMString CDUIGlobal::CreateModelListItem()
 	tagDuiTextStyle TextStyle;
 	TextStyle.dwTextStyle |= DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS;
 	pRootCtrl->SetTextStyle(TextStyle);
-	pWndManager->AttachRootCtrl(pRootCtrl);
-	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_ModelListItem) + strFile, pWndManager);
-	MMSafeDelete(pWndManager);
+	pWnd->AttachRootCtrl(pRootCtrl);
+	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_ModelListItem) + strFile, pWnd);
+	MMSafeDelete(pWnd);
 
 	AddDui(DuiType_ModelListItem, strName, strFile);
 
@@ -949,18 +902,18 @@ CMMString CDUIGlobal::CreateModelTreeNode()
 	strFile += strName + _T(".xml");
 
 	//control
-	CDUIWndManager *pWndManager = new CDUIWndManager();
+	CDUIWnd *pWnd = new CDUIWnd();
 	CDUITreeNodeCtrl *pRootCtrl = new CDUITreeNodeCtrl;
 
-	if (NULL == pWndManager || NULL == pRootCtrl) return _T("");
+	if (NULL == pWnd || NULL == pRootCtrl) return _T("");
 
-	pWndManager->Init();
+	pWnd->Init();
 	pRootCtrl->Init();
 	pRootCtrl->SetPadding(0, 0, 0, 0);
 	pRootCtrl->SetFixedHeight(30);
-	pWndManager->AttachRootCtrl(pRootCtrl);
-	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_ModelTreeNode) + strFile, pWndManager);
-	MMSafeDelete(pWndManager);
+	pWnd->AttachRootCtrl(pRootCtrl);
+	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_ModelTreeNode) + strFile, pWnd);
+	MMSafeDelete(pWnd);
 
 	AddDui(DuiType_ModelTreeNode, strName, strFile);
 
@@ -983,10 +936,10 @@ CMMString CDUIGlobal::CreateMenu(bool bSubMenu)
 	strFile = strName + _T(".xml");
 
 	//control
-	CDUIWndManager *pWndManager = new CDUIWndManager();
+	CDUIWnd *pWnd = new CDUIWnd();
 	CMMString strFileModel = CMMString(Dui_FolderUIModel) + _T("\\") + Dui_FileModelMenuXml;
 	DuiFileResType_File == GetDuiFileResType() ? strFileModel = CMMService::GetWorkDirectory() + _T("\\") + strFileModel : strFileModel;
-	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWndManager));
+	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWnd));
 	if (NULL == pRootCtrl)
 	{
 		pRootCtrl = new CDUIMenuCtrl;
@@ -994,12 +947,12 @@ CMMString CDUIGlobal::CreateMenu(bool bSubMenu)
 		pRootCtrl->SetBkColor({ Name_ColorDefault });
 	}
 
-	if (NULL == pWndManager || NULL == pRootCtrl) return _T("");
+	if (NULL == pWnd || NULL == pRootCtrl) return _T("");
 
-	pWndManager->AttachRootCtrl(pRootCtrl);
-	pWndManager->SetCaptionHeight(0);
-	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_Menu) + strFile, pWndManager);
-	MMSafeDelete(pWndManager);
+	pWnd->AttachRootCtrl(pRootCtrl);
+	pWnd->SetCaptionHeight(0);
+	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_Menu) + strFile, pWnd);
+	MMSafeDelete(pWnd);
 
 	AddDui(DuiType_Menu, strName, strFile);
 
@@ -1022,10 +975,10 @@ CMMString CDUIGlobal::Create3DMenu()
 	strFile = strName + _T(".xml");
 
 	//control
-	CDUIWndManager *pWndManager = new CDUIWndManager();
+	CDUIWnd *pWnd = new CDUIWnd();
 	CMMString strFileModel = CMMString(Dui_FolderUIModel) + _T("\\") + Dui_FileModel3DMenuXml;
 	DuiFileResType_File == GetDuiFileResType() ? strFileModel = CMMService::GetWorkDirectory() + _T("\\") + strFileModel : strFileModel;
-	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWndManager));
+	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWnd));
 	if (NULL == pRootCtrl)
 	{
 		pRootCtrl = new CDUIRotateMenuCtrl;
@@ -1033,11 +986,11 @@ CMMString CDUIGlobal::Create3DMenu()
 		pRootCtrl->SetBkColor({ Name_ColorDefault });
 	}
 
-	if (NULL == pWndManager || NULL == pRootCtrl) return _T("");
+	if (NULL == pWnd || NULL == pRootCtrl) return _T("");
 
-	pWndManager->AttachRootCtrl(pRootCtrl);
-	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_3DMenu) + strFile, pWndManager);
-	MMSafeDelete(pWndManager);
+	pWnd->AttachRootCtrl(pRootCtrl);
+	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_3DMenu) + strFile, pWnd);
+	MMSafeDelete(pWnd);
 
 	AddDui(DuiType_3DMenu, strName, strFile);
 
@@ -1060,10 +1013,10 @@ CMMString CDUIGlobal::CreateCalendar()
 	strFile = strName + _T(".xml");
 
 	//control
-	CDUIWndManager *pWndManager = new CDUIWndManager();
+	CDUIWnd *pWnd = new CDUIWnd();
 	CMMString strFileModel = CMMString(Dui_FolderUIModel) + _T("\\") + Dui_FileModelCalendarXml;
 	DuiFileResType_File == GetDuiFileResType() ? strFileModel = CMMService::GetWorkDirectory() + _T("\\") + strFileModel : strFileModel;
-	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWndManager));
+	CDUIContainerCtrl *pRootCtrl = MMDynamicPtr(CDUIContainerCtrl, CDUIXmlPack::LoadDui(strFileModel, pWnd));
 	if (NULL == pRootCtrl)
 	{
 		pRootCtrl = new CDUICalendarCtrl;
@@ -1071,11 +1024,11 @@ CMMString CDUIGlobal::CreateCalendar()
 		pRootCtrl->SetBkColor({ Name_ColorDefault });
 	}
 
-	if (NULL == pWndManager || NULL == pRootCtrl) return _T("");
+	if (NULL == pWnd || NULL == pRootCtrl) return _T("");
 
-	pWndManager->AttachRootCtrl(pRootCtrl);
-	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_Calendar) + strFile, pWndManager);
-	MMSafeDelete(pWndManager);
+	pWnd->AttachRootCtrl(pRootCtrl);
+	CDUIXmlPack::SaveXmlUI(GetDuiPath(DuiType_Calendar) + strFile, pWnd);
+	MMSafeDelete(pWnd);
 
 	AddDui(DuiType_Calendar, strName, strFile);
 
@@ -1096,7 +1049,7 @@ CDUIControlBase * CDUIGlobal::ParseDui(LPCTSTR lpszXml)
 	return CDUIXmlPack::ParseDui(lpszXml);
 }
 
-bool CDUIGlobal::SaveDui(LPCTSTR lpszName, CDUIWndManager *pWndManager)
+bool CDUIGlobal::SaveDui(LPCTSTR lpszName, CDUIWnd *pWnd)
 {
 	auto FindIt = m_mapModelStore.find(lpszName);
 	if (FindIt != m_mapModelStore.end())
@@ -1108,12 +1061,12 @@ bool CDUIGlobal::SaveDui(LPCTSTR lpszName, CDUIWndManager *pWndManager)
 	CMMString strFile;
 	strFile = GetDuiFileFull(lpszName);
 
-	return CDUIXmlPack::SaveXmlUI(strFile, pWndManager);
+	return CDUIXmlPack::SaveXmlUI(strFile, pWnd);
 }
 
-CMMString CDUIGlobal::SaveDui(CDUIPropertyObject *pProp, bool bIncludeChild)
+CMMString CDUIGlobal::SaveDui(CDUIPropertyObject *pPropObj, bool bIncludeChild)
 {
-	return CDUIXmlPack::SaveDui(pProp, bIncludeChild);
+	return CDUIXmlPack::SaveDui(pPropObj, bIncludeChild);
 }
 
 bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
@@ -1178,11 +1131,11 @@ bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
 	return true;
 }
 
-bool CDUIGlobal::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pProp)
+bool CDUIGlobal::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pPropObj)
 {
-	if (NULL == pNodeXml || NULL == pProp) return false;
+	if (NULL == pNodeXml || NULL == pPropObj) return false;
 
-	return CDUIXmlPack::RefreshAttibute(pNodeXml, pProp);
+	return CDUIXmlPack::RefreshAttibute(pNodeXml, pPropObj);
 }
 
 CMMThreadPool * CDUIGlobal::GetThreadPool()
@@ -1569,7 +1522,7 @@ bool CDUIGlobal::RenameDui(const CMMString &strNameOld, const CMMString &strName
 	}
 
 	//wndmanager
-	RenameWndManager(strNameOld, strNameNew);
+	RenameWnd(strNameOld, strNameNew);
 
 	SaveProject();
 
@@ -1683,11 +1636,11 @@ void CDUIGlobal::OnDpiChanged(int nScalePre)
 	{
 		std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-		for (auto WndManager : m_mapWndManager)
+		for (auto Wnd : m_mapWnd)
 		{
-			if (NULL == WndManager.first) continue;
+			if (NULL == Wnd.first) continue;
 
-			WndManager.first->OnDpiChanged(nScalePre);
+			Wnd.first->OnDpiChanged(nScalePre);
 		}
 	}
 
@@ -1717,11 +1670,11 @@ void CDUIGlobal::OnResourceDelete(CDUIResourceBase *pResourceObj)
 	{
 		std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-		for (auto WndManager : m_mapWndManager)
+		for (auto Wnd : m_mapWnd)
 		{
-			if (NULL == WndManager.first) continue;
+			if (NULL == Wnd.first) continue;
 
-			//WndManager.first->OnResourceDelete(pResourceObj);
+			Wnd.first->Invalidate();
 		}
 	}
 
@@ -1734,11 +1687,11 @@ void CDUIGlobal::OnResourceSwitch(int nIndexRes)
 	{
 		std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-		for (auto WndManager : m_mapWndManager)
+		for (auto Wnd : m_mapWnd)
 		{
-			if (NULL == WndManager.first) continue;
+			if (NULL == Wnd.first) continue;
 
-			WndManager.first->OnResourceSwitch(nIndexRes);
+			Wnd.first->Invalidate();
 		}
 	}
 
@@ -2910,6 +2863,12 @@ void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t uID)
 
 	switch (AttriType)
 	{
+		case DuiAttribute_CtrlID:
+		{
+			DuiAttriReadValue(uID, m_mapControlIDSave, m_mapControlIDValue);
+
+			break;
+		}
 		case DuiAttribute_RichText:
 		{
 			DuiAttriReadValue(uID, m_mapAttriRichTextSave, m_mapAttriRichTextValue);
@@ -2980,10 +2939,10 @@ bool CDUIGlobal::SaveAttriValue(tinyxml2::XMLDocument &xmlDoc)
 
 	m_mapModelStore.clear();
 
-	//load attribute
+	//load dui
 	for (auto Dui : m_vecDui)
 	{
-		CDUIWndManager WndManger;
+		CDUIWnd WndManger;
 		CDUIControlBase *pControl = LoadDui(Dui.strName, &WndManger);
 
 		MMSafeDelete(pControl);
@@ -3003,6 +2962,11 @@ bool CDUIGlobal::SaveAttriValue(tinyxml2::XMLDocument &xmlDoc)
 
 	m_bAttriWaitSave = false;
 
+	//ctrl id
+	CDUIXmlPack::SaveCtrlID(m_mapControlIDSave);
+	m_mapControlIDValue = m_mapControlIDSave;
+
+	//attribute
 	tinyxml2::XMLElement *pNode = xmlDoc.NewElement((LPCSTR)CT2CA(CDUIAttributeObject().GetClass()));
 	SaveAttriName(pNode);
 	xmlDoc.LinkEndChild(pNode);
@@ -3047,50 +3011,51 @@ bool CDUIGlobal::SaveAttriValue(tinyxml2::XMLDocument &xmlDoc)
 	m_mapAttriPositionSave.clear();
 	m_mapAttriRectSave.clear();
 	m_mapAttriImageSectionSave.clear();
+	m_mapControlIDSave.clear();
 
 	return true;
 }
 
-void CDUIGlobal::AddWndManager(CDUIWndManager *pWndManager)
+void CDUIGlobal::AddWnd(CDUIWnd *pWnd)
 {
-	if (NULL == pWndManager) return;
+	if (NULL == pWnd) return;
 
 	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-	auto FindIt = m_mapWndManager.find(pWndManager);
-	if (FindIt != m_mapWndManager.end()) return;
+	auto FindIt = m_mapWnd.find(pWnd);
+	if (FindIt != m_mapWnd.end()) return;
 
-	m_mapWndManager[pWndManager] = { DuiType_Dlg, _T("") };
+	m_mapWnd[pWnd] = { DuiType_Dlg, _T("") };
 
 	return;
 }
 
-MapWndManager CDUIGlobal::GetWndManagerAll()
+MapWnd CDUIGlobal::GetWndAll()
 {
 	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-	return m_mapWndManager;
+	return m_mapWnd;
 }
 
-tagDuiFile CDUIGlobal::GetWndManagerInfo(CDUIWndManager *pWndManager)
+tagDuiFile CDUIGlobal::GetWndInfo(CDUIWnd *pWnd)
 {
 	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-	auto FindIt = m_mapWndManager.find(pWndManager);
-	if (FindIt == m_mapWndManager.end()) return {};
+	auto FindIt = m_mapWnd.find(pWnd);
+	if (FindIt == m_mapWnd.end()) return {};
 
 	return FindIt->second;
 }
 
-void CDUIGlobal::RenameWndManager(const CMMString &strNameOld, const CMMString &strNameNew)
+void CDUIGlobal::RenameWnd(const CMMString &strNameOld, const CMMString &strNameNew)
 {
 	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-	auto FindIt = find_if(m_mapWndManager.begin(), m_mapWndManager.end(), [&](const std::pair<CDUIWndManager*, tagDuiFile> &WndManager)
+	auto FindIt = find_if(m_mapWnd.begin(), m_mapWnd.end(), [&](const std::pair<CDUIWnd*, tagDuiFile> &Wnd)
 	{
-		return WndManager.second.strName == strNameOld;
+		return Wnd.second.strName == strNameOld;
 	});
-	if (FindIt != m_mapWndManager.end())
+	if (FindIt != m_mapWnd.end())
 	{
 		FindIt->second.strName = strNameNew;
 	}
@@ -3098,38 +3063,38 @@ void CDUIGlobal::RenameWndManager(const CMMString &strNameOld, const CMMString &
 	return;
 }
 
-void CDUIGlobal::RenameWndManager(CDUIWndManager *pWndManager, const CMMString &strNameNew)
+void CDUIGlobal::RenameWnd(CDUIWnd *pWnd, const CMMString &strNameNew)
 {
 	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-	auto FindIt = m_mapWndManager.find(pWndManager);
-	if (FindIt == m_mapWndManager.end()) return;
+	auto FindIt = m_mapWnd.find(pWnd);
+	if (FindIt == m_mapWnd.end()) return;
 
 	FindIt->second.strName = strNameNew;
 
 	return;
 }
 
-void CDUIGlobal::SetWndManagerDuiType(CDUIWndManager *pWndManager, enDuiType DuiType)
+void CDUIGlobal::SetWndDuiType(CDUIWnd *pWnd, enDuiType DuiType)
 {
 	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-	auto FindIt = m_mapWndManager.find(pWndManager);
-	if (FindIt == m_mapWndManager.end()) return;
+	auto FindIt = m_mapWnd.find(pWnd);
+	if (FindIt == m_mapWnd.end()) return;
 
 	FindIt->second.DuiType = DuiType;
 
 	return;
 }
 
-void CDUIGlobal::RemoveWndManager(CDUIWndManager *pWndManager)
+void CDUIGlobal::RemoveWnd(CDUIWnd *pWnd)
 {
 	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-	auto FindIt = m_mapWndManager.find(pWndManager);
-	if (FindIt == m_mapWndManager.end()) return;
+	auto FindIt = m_mapWnd.find(pWnd);
+	if (FindIt == m_mapWnd.end()) return;
 
-	m_mapWndManager.erase(FindIt);
+	m_mapWnd.erase(FindIt);
 
 	return;
 }
@@ -3153,12 +3118,12 @@ void CDUIGlobal::ReleaseResource()
 #endif
 
 	m_uMaxControlID = Dui_CtrlIDInner_Finish;
-	MapDuiControlID mapControlID = m_mapControlID;
+	MapDuiControlID mapControlID = m_mapControlIDValue;
 	for (auto ControlIDItem : mapControlID)
 	{
 		if (ControlIDItem.first < Dui_CtrlIDInner_Finish) continue;
 
-		m_mapControlID.erase(ControlIDItem.first);
+		m_mapControlIDValue.erase(ControlIDItem.first);
 	}
 
 	return;
@@ -3238,7 +3203,7 @@ void CDUIGlobal::ReleaseDui()
 	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
 	m_vecDui.clear();
-	m_mapWndManager.clear();
+	m_mapWnd.clear();
 
 	for (auto ModelStoreItem : m_mapModelStore)
 	{
@@ -3276,7 +3241,7 @@ void CDUIGlobal::MessageLoop()
 				assert(false);
 				MMTRACE(_T("EXCEPTION: %s(%d)\n"), __FILET__, __LINE__);
 #ifdef _DEBUG
-				throw "CDUIWndManager::MessageLoop";
+				throw "CDUIWnd::MessageLoop";
 #endif
 			}
 		}
@@ -3287,16 +3252,18 @@ void CDUIGlobal::MessageLoop()
 
 bool CDUIGlobal::TranslateMessage(const LPMSG pMsg)
 {
-	LRESULT lRes = 0;
-	MapWndManager mapWndManager = CDUIGlobal::GetInstance()->GetWndManagerAll();
-	for (auto &Item : mapWndManager)
+	bool bHandled = false;
+	MapWnd mapWnd = CDUIGlobal::GetInstance()->GetWndAll();
+	for (auto &Item : mapWnd)
 	{
-		CDUIWndManager *pWndManager = static_cast<CDUIWndManager*>(Item.first);
-		if (NULL == pWndManager) continue;
+		CDUIWnd *pWnd = static_cast<CDUIWnd*>(Item.first);
+		if (NULL == pWnd) continue;
 
-		if (pMsg->hwnd == pWndManager->GetWndHandle())
+		if (pMsg->hwnd == pWnd->GetWndHandle())
 		{
-			if (pWndManager->OnPreWndMessage(pMsg->message, pMsg->wParam, pMsg->lParam, lRes)) return true;
+			pWnd->OnPreWndMessage(pMsg->message, pMsg->wParam, pMsg->lParam, bHandled);
+
+			if (bHandled) return true;
 
 			return false;
 		}

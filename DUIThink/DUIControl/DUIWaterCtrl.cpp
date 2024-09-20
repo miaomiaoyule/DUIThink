@@ -147,8 +147,8 @@ void CDUIWaterCtrl::PaintWater(HDC hDC)
 
 void CDUIWaterCtrl::InitWater()
 {
-	if (NULL == m_pWndManager
-		|| NULL == m_pWndManager->GetRootCtrl()) return;
+	if (NULL == m_pWndOwner
+		|| NULL == m_pWndOwner->GetRootCtrl()) return;
 
 	UnInitWater();
 
@@ -162,7 +162,7 @@ void CDUIWaterCtrl::InitWater()
 	m_pRippleBmp->Ripple.vecBufferRipple2.resize(m_pRippleBmp->Ripple.szBmpBuffer.cx * m_pRippleBmp->Ripple.szBmpBuffer.cy);
 	m_pRippleBmp->vecBmpSwap.resize(m_pRippleBmp->Ripple.szBmpBuffer.cx * m_pRippleBmp->Ripple.szBmpBuffer.cy);
 	m_pRippleBmp->vecBmpDest.resize(m_pRippleBmp->Ripple.szBmpBuffer.cx * m_pRippleBmp->Ripple.szBmpBuffer.cy);
-	m_pRippleBmp->hBitmapSwap = CDUIRenderEngine::CreateARGB32Bitmap(m_pWndManager->GetWndDC(), 1, 1, NULL);
+	m_pRippleBmp->hBitmapSwap = CDUIRenderEngine::CreateARGB32Bitmap(m_pWndOwner->GetWndDC(), 1, 1, NULL);
 
 	return;
 }

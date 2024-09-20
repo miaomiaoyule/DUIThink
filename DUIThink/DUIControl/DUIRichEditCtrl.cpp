@@ -47,7 +47,7 @@ LONG DYtoHimetricY(LONG dy, LONG lPerInchY)
 
 HRESULT InitDefaultCharFormat(CDUIRichEditCtrl *pOwnerCtrl, CHARFORMAT2W *pCharFormat)
 {
-	if (NULL == pOwnerCtrl || NULL == pOwnerCtrl->GetWndManager() || NULL == pCharFormat) return S_FALSE;
+	if (NULL == pOwnerCtrl || NULL == pOwnerCtrl->GetWndOwner() || NULL == pCharFormat) return S_FALSE;
 
 	ZeroMemory(pCharFormat, sizeof(CHARFORMAT2W));
 
@@ -66,7 +66,7 @@ HRESULT InitDefaultCharFormat(CDUIRichEditCtrl *pOwnerCtrl, CHARFORMAT2W *pCharF
 
 	pCharFormat->cbSize = sizeof(CHARFORMAT2W);
 	pCharFormat->crTextColor = RGB(GetBValue(dwColor), GetGValue(dwColor), GetRValue(dwColor));
-	LONG yPixPerInch = GetDeviceCaps(pOwnerCtrl->GetWndManager()->GetWndDC(), LOGPIXELSY);
+	LONG yPixPerInch = GetDeviceCaps(pOwnerCtrl->GetWndOwner()->GetWndDC(), LOGPIXELSY);
 	pCharFormat->yHeight = -lf.lfHeight * LY_PER_INCH / yPixPerInch;
 	pCharFormat->yOffset = 0;
 	pCharFormat->dwEffects = 0;
@@ -306,8 +306,8 @@ void CDUITextHost::SetClientRect(CDUIRect rcClient)
 
 	m_rcClient = rcClient;
 
-	LONG lPerInchX = ::GetDeviceCaps(m_pOwnerCtrl->GetWndManager()->GetWndDC(), LOGPIXELSX);
-	LONG lPerInchY = ::GetDeviceCaps(m_pOwnerCtrl->GetWndManager()->GetWndDC(), LOGPIXELSY);
+	LONG lPerInchX = ::GetDeviceCaps(m_pOwnerCtrl->GetWndOwner()->GetWndDC(), LOGPIXELSX);
+	LONG lPerInchY = ::GetDeviceCaps(m_pOwnerCtrl->GetWndOwner()->GetWndDC(), LOGPIXELSY);
 	m_szExtent.cx = DXtoHimetricX(m_rcClient.GetWidth(), lPerInchX);
 	m_szExtent.cy = DYtoHimetricY(m_rcClient.GetHeight(), lPerInchY);
 
@@ -320,14 +320,14 @@ void CDUITextHost::SetClientRect(CDUIRect rcClient)
 void CDUITextHost::SetFont(HFONT hFont)
 {
 	if (NULL == m_pOwnerCtrl
-		|| NULL == m_pOwnerCtrl->GetWndManager()
+		|| NULL == m_pOwnerCtrl->GetWndOwner()
 		|| NULL == hFont
 		|| NULL == m_pTextService) return;
 
 	LOGFONT lf = {};
 	::GetObject(hFont, sizeof(LOGFONT), &lf);
 
-	LONG yPixPerInch = ::GetDeviceCaps(m_pOwnerCtrl->GetWndManager()->GetWndDC(), LOGPIXELSY);
+	LONG yPixPerInch = ::GetDeviceCaps(m_pOwnerCtrl->GetWndOwner()->GetWndDC(), LOGPIXELSY);
 	m_CharFormat.yHeight = -lf.lfHeight * LY_PER_INCH / yPixPerInch;
 
 	if (lf.lfWeight >= FW_BOLD) m_CharFormat.dwEffects |= CFE_BOLD;
@@ -468,7 +468,7 @@ bool CDUITextHost::OnSetCursor(CDUIPoint pt)
 	// Is this in our rectangle?
 	if (m_rcClient.PtInRect(pt))
 	{
-		HDC hDC = m_pOwnerCtrl->GetWndManager()->GetWndDC();
+		HDC hDC = m_pOwnerCtrl->GetWndOwner()->GetWndDC();
 
 		return SUCCEEDED(m_pTextService->OnTxSetCursor(DVASPECT_CONTENT, -1, NULL, NULL, hDC, NULL, &m_rcClient, pt.x, pt.y));
 	}
@@ -478,7 +478,7 @@ bool CDUITextHost::OnSetCursor(CDUIPoint pt)
 
 HDC CDUITextHost::TxGetDC()
 {
-	return m_pOwnerCtrl ? m_pOwnerCtrl->GetWndManager()->GetWndDC() : NULL;
+	return m_pOwnerCtrl ? m_pOwnerCtrl->GetWndOwner()->GetWndDC() : NULL;
 }
 
 int CDUITextHost::TxReleaseDC(HDC hdc)
@@ -581,39 +581,39 @@ void CDUITextHost::TxViewChange(BOOL fUpdate)
 
 BOOL CDUITextHost::TxCreateCaret(HBITMAP hBmp, int nWidth, int nHeight)
 {
-	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndManager()) return false;
+	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return false;
 
-	return m_pOwnerCtrl->GetWndManager()->CreateCaret(hBmp, nWidth, nHeight);
+	return m_pOwnerCtrl->GetWndOwner()->CreateCaret(hBmp, nWidth, nHeight);
 }
 
 BOOL CDUITextHost::TxShowCaret(BOOL fShow)
 {
-	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndManager()) return false;
+	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return false;
 
-	m_pOwnerCtrl->GetWndManager()->ShowCaret(TRUE == fShow);
+	m_pOwnerCtrl->GetWndOwner()->ShowCaret(TRUE == fShow);
 
 	return true;
 }
 
 BOOL CDUITextHost::TxSetCaretPos(INT x, INT y)
 {
-	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndManager()) return false;
+	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return false;
 
-	m_pOwnerCtrl->GetWndManager()->SetCaretPos(CDUIPoint(x, y));
+	m_pOwnerCtrl->GetWndOwner()->SetCaretPos(CDUIPoint(x, y));
 
 	return true;
 }
 
 BOOL CDUITextHost::TxSetTimer(UINT idTimer, UINT uTimeout)
 {
-	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndManager()) return false;
+	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return false;
 
 	return m_pOwnerCtrl->SetTimer(idTimer, uTimeout);
 }
 
 void CDUITextHost::TxKillTimer(UINT idTimer)
 {
-	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndManager()) return;
+	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return;
 
 	m_pOwnerCtrl->KillTimer(idTimer);
 
@@ -627,15 +627,15 @@ void CDUITextHost::TxScrollWindowEx(INT dx, INT dy, LPCRECT lprcScroll, LPCRECT 
 
 void CDUITextHost::TxSetCapture(BOOL fCapture)
 {
-	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndManager()) return;
+	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return;
 
 	if (fCapture)
 	{
-		m_pOwnerCtrl->GetWndManager()->SetCapture();
+		m_pOwnerCtrl->GetWndOwner()->SetCapture();
 	}
 	else
 	{
-		m_pOwnerCtrl->GetWndManager()->ReleaseCapture();
+		m_pOwnerCtrl->GetWndOwner()->ReleaseCapture();
 	}
 
 	return;
@@ -659,16 +659,16 @@ void CDUITextHost::TxSetCursor(HCURSOR hcur, BOOL fText)
 
 BOOL CDUITextHost::TxScreenToClient(LPPOINT lppt)
 {
-	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndManager()) return false;
+	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return false;
 
-	return ::ScreenToClient(m_pOwnerCtrl->GetWndManager()->GetWndHandle(), lppt);
+	return ::ScreenToClient(m_pOwnerCtrl->GetWndOwner()->GetWndHandle(), lppt);
 }
 
 BOOL CDUITextHost::TxClientToScreen(LPPOINT lppt)
 {
-	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndManager()) return false;
+	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return false;
 
-	return ::ClientToScreen(m_pOwnerCtrl->GetWndManager()->GetWndHandle(), lppt);
+	return ::ClientToScreen(m_pOwnerCtrl->GetWndOwner()->GetWndHandle(), lppt);
 }
 
 HRESULT CDUITextHost::TxActivate(LONG *plOldState)
@@ -857,9 +857,9 @@ CDUIRichEditCtrl::CDUIRichEditCtrl(void)
 
 CDUIRichEditCtrl::~CDUIRichEditCtrl(void)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->RemovePreMessagePtr(this);
+		m_pWndOwner->RemovePreMessagePtr(this);
 	}
 	if (m_pTextHost)
 	{
@@ -873,12 +873,12 @@ CDUIRichEditCtrl::~CDUIRichEditCtrl(void)
 
 LRESULT CDUIRichEditCtrl::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
 {
-	if (NULL == m_pWndManager) return 0;
+	if (NULL == m_pWndOwner) return 0;
 
 	if (uMsg == WM_IME_COMPOSITION)
 	{
 		//解决微软输入法位置异常的问题
-		HIMC hIMC = ImmGetContext(GetWndManager()->GetWndHandle());
+		HIMC hIMC = ImmGetContext(GetWndOwner()->GetWndHandle());
 		if (hIMC)
 		{
 			//Set composition window position near caret position
@@ -891,7 +891,7 @@ LRESULT CDUIRichEditCtrl::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lPara
 			Composition.ptCurrentPos.y = point.y;
 			ImmSetCompositionWindow(hIMC, &Composition);
 
-			ImmReleaseContext(GetWndManager()->GetWndHandle(), hIMC);
+			ImmReleaseContext(GetWndOwner()->GetWndHandle(), hIMC);
 		}
 
 		return 0;
@@ -1057,7 +1057,7 @@ void CDUIRichEditCtrl::RefreshView()
 			SIZEL szExtent = { -1, -1 };
 			m_pTextHost->GetTextServices()->TxGetNaturalSize(
 				DVASPECT_CONTENT,
-				GetWndManager()->GetWndDC(),
+				GetWndOwner()->GetWndDC(),
 				NULL,
 				NULL,
 				TXTNS_FITTOCONTENT,
@@ -1689,7 +1689,7 @@ long CDUIRichEditCtrl::GetStyle()
 	if (IsPasswordMode()) lStyle |= ES_PASSWORD;
 
 	tagDuiTextStyle TextStyle = {};
-	if (false == m_AttributeTextStyleNormal.empty()) TextStyle = GetTextStyleNormal();
+	if (false == m_AttributeTextStyleNormal.IsEmpty()) TextStyle = GetTextStyleNormal();
 	if (TextStyle.dwTextStyle & DT_LEFT)
 	{
 		lStyle &= ~(ES_CENTER | ES_RIGHT);
@@ -2388,7 +2388,7 @@ void CDUIRichEditCtrl::OnDuiWndManagerAttach()
 {
 	__super::OnDuiWndManagerAttach();
 
-	if (NULL == GetWndManager() || m_pTextHost) return;
+	if (NULL == GetWndOwner() || m_pTextHost) return;
 
 	//create
 	CMMString strText = m_AttributeText.GetValue();
@@ -2402,7 +2402,7 @@ void CDUIRichEditCtrl::OnDuiWndManagerAttach()
 		LRESULT lResult;
 		m_pTextHost->GetTextServices()->TxSendMessage(EM_SETLANGOPTIONS, 0, 0, &lResult);
 		m_pTextHost->OnTxInPlaceActivate(NULL);
-		m_pWndManager->AddPreMessagePtr(this);
+		m_pWndOwner->AddPreMessagePtr(this);
 
 		ConstructTextStyle();
 
@@ -2416,9 +2416,9 @@ void CDUIRichEditCtrl::OnDuiWndManagerDetach()
 {
 	__super::OnDuiWndManagerDetach();
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->RemovePreMessagePtr(this);
+		m_pWndOwner->RemovePreMessagePtr(this);
 	}
 
 	return;
@@ -2438,7 +2438,7 @@ void CDUIRichEditCtrl::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
 
 LRESULT CDUIRichEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 {
-	if (NULL == m_pWndManager) return 0;
+	if (NULL == m_pWndOwner) return 0;
 
 	__super::OnDuiContextMenu(Msg);
 
@@ -2470,8 +2470,8 @@ LRESULT CDUIRichEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	EnableMenuItem(hPopMenu, ID_RICH_PASTE, MF_BYCOMMAND | uReadonly);
 
 	CDUIPoint ptScreen = Msg.ptMouse;
-	::ClientToScreen(m_pWndManager->GetWndHandle(), &ptScreen);
-	TrackPopupMenu(hPopMenu, TPM_RIGHTBUTTON, ptScreen.x, ptScreen.y, 0, m_pWndManager->GetWndHandle(), NULL);
+	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptScreen);
+	TrackPopupMenu(hPopMenu, TPM_RIGHTBUTTON, ptScreen.x, ptScreen.y, 0, m_pWndOwner->GetWndHandle(), NULL);
 	DestroyMenu(hPopMenu);
 
 	return lRes;
@@ -2537,7 +2537,7 @@ LRESULT CDUIRichEditCtrl::OnDuiCommand(const DuiMessage &Msg)
 
 void CDUIRichEditCtrl::OnTxNotify(DWORD iNotify, void *pv)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	switch (iNotify)
 	{
@@ -2554,13 +2554,13 @@ void CDUIRichEditCtrl::OnTxNotify(DWORD iNotify, void *pv)
 		{
 			if (pv)                        // Fill out NMHDR portion of pv   
 			{
-				LONG nId = GetWindowLong(m_pWndManager->GetWndHandle(), GWL_ID);
+				LONG nId = GetWindowLong(m_pWndOwner->GetWndHandle(), GWL_ID);
 				NMHDR *phdr = (NMHDR *)pv;
-				phdr->hwndFrom = m_pWndManager->GetWndHandle();
+				phdr->hwndFrom = m_pWndOwner->GetWndHandle();
 				phdr->idFrom = nId;
 				phdr->code = iNotify;
 
-				if (SendMessage(m_pWndManager->GetWndHandle(), WM_NOTIFY, (WPARAM)nId, (LPARAM)pv))
+				if (SendMessage(m_pWndOwner->GetWndHandle(), WM_NOTIFY, (WPARAM)nId, (LPARAM)pv))
 				{
 					//hr = S_FALSE;   
 				}
@@ -2646,7 +2646,7 @@ void CDUIRichEditCtrl::PaintStatusImage(HDC hDC)
 		pAttribute = &m_AttributeImageNormal;
 	}
 
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeImageNormal : pAttribute;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeImageNormal : pAttribute;
 	if (NULL == pAttribute) return;
 
 	pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint);
@@ -2668,12 +2668,12 @@ void CDUIRichEditCtrl::PaintText(HDC hDC)
 		if (strTipText.empty()) return;
 
 		CDUIAttributeTextStyle *pAttribute = (m_nControlStatus & ControlStatus_Hot) ? &m_AttributeTextStyleTipTextHot : &m_AttributeTextStyleTipTextNormal;
-		NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleTipTextNormal : pAttribute;
-		NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleTipTextNormal : pAttribute;
+		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
 
 		if (NULL == pAttribute) return;
 
-		pAttribute->Draw(hDC, rcRichEdit, strTipText, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), false);
+		pAttribute->Draw(hDC, rcRichEdit, strTipText, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), false);
 
 		return;
 	}
@@ -2700,7 +2700,7 @@ void CDUIRichEditCtrl::PaintText(HDC hDC)
 	SIZEL szExtent = { -1, -1 };
 	m_pTextHost->GetTextServices()->TxGetNaturalSize(
 		DVASPECT_CONTENT,
-		m_pWndManager->GetWndDC(),
+		m_pWndOwner->GetWndDC(),
 		NULL,
 		NULL,
 		TXTNS_FITTOCONTENT,
@@ -2724,7 +2724,7 @@ void CDUIRichEditCtrl::ConstructTextStyle()
 	if (false == IsEnabled())
 	{
 		CDUIAttributeTextStyle *pAttribute = &m_AttributeTextStyleDisabled;
-		NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
 		m_pTextHost->SetFont(pAttribute ? pAttribute->GetFont() : NULL);
 		m_pTextHost->SetColor(pAttribute ? pAttribute->GetTextColor() : 0);
 
@@ -2735,7 +2735,7 @@ void CDUIRichEditCtrl::ConstructTextStyle()
 	if (IsFocused())
 	{
 		CDUIAttributeTextStyle *pAttribute = &m_AttributeTextStyleFocus;
-		NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
 		m_pTextHost->SetFont(pAttribute ? pAttribute->GetFont() : NULL);
 		m_pTextHost->SetColor(pAttribute ? pAttribute->GetTextColor() : 0);
 
@@ -2746,7 +2746,7 @@ void CDUIRichEditCtrl::ConstructTextStyle()
 	if (m_nControlStatus & ControlStatus_Hot)
 	{
 		CDUIAttributeTextStyle *pAttribute = &m_AttributeTextStyleHot;
-		if (pAttribute && false == pAttribute->empty())
+		if (pAttribute && false == pAttribute->IsEmpty())
 		{
 			m_pTextHost->SetFont(pAttribute->GetFont());
 			m_pTextHost->SetColor(pAttribute->GetTextColor());

@@ -17,9 +17,9 @@ CSvgImageView::~CSvgImageView()
 {
 	if (m_pSvgImageViewCtrl)
 	{
-		if (m_pSvgImageViewCtrl->GetWndManager())
+		if (m_pSvgImageViewCtrl->GetWndOwner())
 		{
-			m_pSvgImageViewCtrl->GetWndManager()->RemoveINotify(this);
+			m_pSvgImageViewCtrl->GetWndOwner()->RemoveINotify(this);
 		}
 	}
 
@@ -51,9 +51,9 @@ void CSvgImageView::Attach(CDUIContainerCtrl *pViewBase)
 
 	if (NULL == m_pSvgImageViewCtrl) return;
 
-	if (m_pSvgImageViewCtrl->GetWndManager())
+	if (m_pSvgImageViewCtrl->GetWndOwner())
 	{
-		m_pSvgImageViewCtrl->GetWndManager()->AddINotify(this);
+		m_pSvgImageViewCtrl->GetWndOwner()->AddINotify(this);
 	}
 
 	CMMSvg::GetInstance()->Init();
@@ -67,7 +67,7 @@ void CSvgImageView::Attach(CDUIContainerCtrl *pViewBase)
 
 	m_strTip = m_pStaticSvgImageCtrl->GetText();
 	
-	DragAcceptFiles(m_pSvgImageViewCtrl->GetWndManager()->GetWndHandle(), m_pSvgImageViewCtrl->IsVisible());
+	DragAcceptFiles(m_pSvgImageViewCtrl->GetWndOwner()->GetWndHandle(), m_pSvgImageViewCtrl->IsVisible());
 
 	return;
 }
@@ -89,10 +89,10 @@ void CSvgImageView::OnDuiValueChangedDpiScale(const DuiNotify &Notify)
 void CSvgImageView::OnDuiVisibleChangedSvgImageView(const DuiNotify &Notify)
 {
 	if (NULL == m_pSvgImageViewCtrl 
-		|| NULL == m_pSvgImageViewCtrl->GetWndManager()
+		|| NULL == m_pSvgImageViewCtrl->GetWndOwner()
 		|| m_pSvgImageViewCtrl != Notify.pNotifyCtrl) return;
 
-	DragAcceptFiles(m_pSvgImageViewCtrl->GetWndManager()->GetWndHandle(), m_pSvgImageViewCtrl->IsVisible());
+	DragAcceptFiles(m_pSvgImageViewCtrl->GetWndOwner()->GetWndHandle(), m_pSvgImageViewCtrl->IsVisible());
 
 	return;
 }
@@ -101,10 +101,10 @@ void CSvgImageView::OnWMDropFile(WPARAM wParam, LPARAM lParam)
 {
 	if (NULL == m_pSvgImageViewCtrl
 		|| NULL == m_pStaticSvgImageCtrl
-		|| NULL == m_pSvgImageViewCtrl->GetWndManager()->GetWndHandle()) return;
+		|| NULL == m_pSvgImageViewCtrl->GetWndOwner()->GetWndHandle()) return;
 
 	//activate us first !
-	SetActiveWindow(m_pSvgImageViewCtrl->GetWndManager()->GetWndHandle());
+	SetActiveWindow(m_pSvgImageViewCtrl->GetWndOwner()->GetWndHandle());
 
 	HDROP hDropInfo = (HDROP)wParam;
 

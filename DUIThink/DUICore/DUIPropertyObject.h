@@ -11,7 +11,7 @@ class CUICommandElement;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIPropertyObject INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIPropertyObject = { 0x5BF13A7D,0xB9B7,0x4198,0xA3,0x98,0x88,0xF7,0x25,0xCF,0xC1,0x2E };
-class DUITHINK_API CDUIPropertyObject : public IDUIPropertyObject
+class DUITHINK_API CDUIPropertyObject : public IDuiPropertyObject
 {
 	friend class CDUIGlobal;
 	friend class CUICommandElement;
@@ -41,8 +41,8 @@ protected:
 protected:
 	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
 	VecControlListen GetControlListen() override;
-	bool RegisterControlListen(IDUIInterface *pIControlListen) override;
-	bool UnRegisterControlListen(IDUIInterface *pIControlListen) override;
+	bool RegisterControlListen(IDuiInterface *pIControlListen) override;
+	bool UnRegisterControlListen(IDuiInterface *pIControlListen) override;
 
 	//method 
 	//** you forbid override **//
@@ -54,6 +54,10 @@ public:
 public:
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
 	virtual CMMString GetDescribe() const;
+	virtual CDUIAttributeObject * GetAttributeObj(LPCTSTR lpszName);
+	virtual int GetAttributeGroupIndex(CDUIAttributeGroup *pAttributeGroup);
+	virtual void SetAttributeGroupIndex(CDUIAttributeGroup *pAttributeGroup, int nIndex);
+	virtual VecAttributeGroup GetAttributeGroup();
 
 	//property
 	//** you forbid override **//
@@ -62,7 +66,7 @@ public:
 	virtual UINT InitCtrlID();
 	virtual int GetScale();
 	virtual const CMMDpi & GetDpiObj();
-	virtual CDUIWndManager * GetWndManager();
+	virtual CDUIWnd * GetWndOwner();
 
 	//property 
 	//** you can override if you need, but you should execute this class first **//
@@ -76,6 +80,7 @@ protected:
 protected:
 	bool CreateGroupAttribute(CDUIAttributeGroup &AttriGroup, LPCTSTR lpszName);
 	bool CreateAttribute(CDUIAttributeObject &Attribute, LPCTSTR lpszName, LPCTSTR lpszDescribe, CDUIAttributeGroup *pAttriGroup);
+	bool AddAttributeBuffer(tinyxml2::XMLElement *pNodeXml);
 
 	//xml
 	//** you forbid override **//

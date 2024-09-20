@@ -10,9 +10,9 @@ CDUIVerticalLayoutCtrl::CDUIVerticalLayoutCtrl(void)
 
 CDUIVerticalLayoutCtrl::~CDUIVerticalLayoutCtrl(void)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->RemoveINotify(m_pAnimateDrag);
+		m_pWndOwner->RemoveINotify(m_pAnimateDrag);
 	}
 
 	MMSafeDelete(m_pAnimateDrag);
@@ -52,15 +52,15 @@ void CDUIVerticalLayoutCtrl::SetAnimateDrag(bool bAnimateDrag)
 	{
 		m_pAnimateDrag = new CDUIAnimationDrag(this, DragType_V);
 	}
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
 		if (IsAnimateDrag())
 		{
-			m_pWndManager->AddINotify(m_pAnimateDrag);
+			m_pWndOwner->AddINotify(m_pAnimateDrag);
 		}
 		else
 		{
-			m_pWndManager->RemoveINotify(m_pAnimateDrag);
+			m_pWndOwner->RemoveINotify(m_pAnimateDrag);
 		}
 	}
 
@@ -375,9 +375,9 @@ void CDUIVerticalLayoutCtrl::OnDuiWndManagerAttach()
 {
 	__super::OnDuiWndManagerAttach();
 
-	if (m_pWndManager && m_pAnimateDrag)
+	if (m_pWndOwner && m_pAnimateDrag)
 	{
-		m_pWndManager->AddINotify(m_pAnimateDrag);
+		m_pWndOwner->AddINotify(m_pAnimateDrag);
 	}
 	
 	return;
@@ -385,9 +385,9 @@ void CDUIVerticalLayoutCtrl::OnDuiWndManagerAttach()
 
 void CDUIVerticalLayoutCtrl::OnDuiWndManagerDetach()
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->RemoveINotify(m_pAnimateDrag);
+		m_pWndOwner->RemoveINotify(m_pAnimateDrag);
 	}
 
 	return __super::OnDuiWndManagerDetach();

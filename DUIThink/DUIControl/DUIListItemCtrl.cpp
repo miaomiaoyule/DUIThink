@@ -613,7 +613,7 @@ bool CDUIListItemCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg
 
 	__super::OnDuiLButtonUp(pt, Msg);
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
 		SendNotify(DuiNotify_ItemButtonUp, Msg.wParam, Msg.lParam);
 
@@ -856,7 +856,7 @@ void CDUIListItemCtrl::InitComplete()
 
 void CDUIListItemCtrl::PaintText(HDC hDC)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	//text
 	CMMString strText = GetText();
@@ -868,7 +868,7 @@ void CDUIListItemCtrl::PaintText(HDC hDC)
 
 	CDUIRect rcRange = GetTextRange();
 
-	pAttribute->Draw(hDC, rcRange, strText, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), false);
+	pAttribute->Draw(hDC, rcRange, strText, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), false);
 
 	return;
 }
@@ -904,16 +904,16 @@ void CDUIListItemCtrl::PaintItemColor(HDC hDC)
 			pAttribute = ListInfo.pAttributeItemStatusColorNormal;
 		}
 	}
-	if ((NULL == pAttribute || pAttribute->empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& true == IsSelected()
 		&& ListInfo.pAttributeItemStatusColorSelNormal
-		&& false == ListInfo.pAttributeItemStatusColorSelNormal->empty())
+		&& false == ListInfo.pAttributeItemStatusColorSelNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemStatusColorSelNormal;
 	}
-	if ((NULL == pAttribute || pAttribute->empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& ListInfo.pAttributeItemStatusColorNormal
-		&& false == ListInfo.pAttributeItemStatusColorNormal->empty())
+		&& false == ListInfo.pAttributeItemStatusColorNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemStatusColorNormal;
 	}
@@ -955,16 +955,16 @@ void CDUIListItemCtrl::PaintItemImage(HDC hDC)
 			pAttribute = ListInfo.pAttributeItemStatusImageNormal;
 		}
 	}
-	if ((NULL == pAttribute || pAttribute->empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& true == IsSelected()
 		&& ListInfo.pAttributeItemStatusImageSelNormal
-		&& false == ListInfo.pAttributeItemStatusImageSelNormal->empty())
+		&& false == ListInfo.pAttributeItemStatusImageSelNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemStatusImageSelNormal;
 	}
-	if ((NULL == pAttribute || pAttribute->empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& ListInfo.pAttributeItemStatusImageNormal
-		&& false == ListInfo.pAttributeItemStatusImageNormal->empty())
+		&& false == ListInfo.pAttributeItemStatusImageNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemStatusImageNormal;
 	}
@@ -1047,7 +1047,7 @@ void CDUIListItemCtrl::PaintLineOnTileType(HDC hDC)
 
 void CDUIListItemCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPARAM lParam, CMMString strTextOld)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	DuiNotify Notify;
 	Notify.NotifyType = NotifyType;
@@ -1058,7 +1058,7 @@ void CDUIListItemCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPA
 	Notify.DuiNotifyExtend.ListView.nIndexItem = GetIndex();
 	Notify.DuiNotifyExtend.ListView.strTextOld = strTextOld;
 
-	m_pWndManager->SendNotify(Notify);
+	m_pWndOwner->SendNotify(Notify);
 
 	return;
 }
@@ -1145,7 +1145,7 @@ CDUIAttributeTextStyle * CDUIListItemCtrl::GetAttributeTextStyleCur()
 	CDUIAttributeTextStyle *pAttribute = NULL;
 	auto ListInfo = GetItemStyleInfo();
 
-	if (false == m_AttributeTextStyle.empty())
+	if (false == m_AttributeTextStyle.IsEmpty())
 	{
 		pAttribute = &m_AttributeTextStyle;
 	}
@@ -1175,16 +1175,16 @@ CDUIAttributeTextStyle * CDUIListItemCtrl::GetAttributeTextStyleCur()
 			pAttribute = ListInfo.pAttributeItemTextStyleNormal;
 		}
 	}
-	if ((NULL == pAttribute || pAttribute->empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& true == IsSelected()
 		&& ListInfo.pAttributeItemTextStyleSelNormal
-		&& false == ListInfo.pAttributeItemTextStyleSelNormal->empty())
+		&& false == ListInfo.pAttributeItemTextStyleSelNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemTextStyleSelNormal;
 	}
-	if ((NULL == pAttribute || pAttribute->empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
 		&& ListInfo.pAttributeItemTextStyleNormal
-		&& false == ListInfo.pAttributeItemTextStyleNormal->empty())
+		&& false == ListInfo.pAttributeItemTextStyleNormal->IsEmpty())
 	{
 		pAttribute = ListInfo.pAttributeItemTextStyleNormal;
 	}

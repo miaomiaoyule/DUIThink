@@ -226,15 +226,15 @@ CDUIControlBase * CDUIAnimationDrag::GetDragingCtrl()
 void CDUIAnimationDrag::OnDragMoveBegin(CDUIControlBase *pDragCtrl)
 {
 	if (NULL == pDragCtrl 
-		|| NULL == pDragCtrl->GetWndManager()
+		|| NULL == pDragCtrl->GetWndOwner()
 		|| NULL == m_pBindContainerCtrl
-		|| NULL == m_pBindContainerCtrl->GetWndManager()
+		|| NULL == m_pBindContainerCtrl->GetWndOwner()
 		|| pDragCtrl->GetParent() != m_pBindContainerCtrl)
 	{
 		ASSERT(false); return;
 	}
 
-	CDUIWndManager *pWndManager = m_pBindContainerCtrl->GetWndManager();
+	CDUIWnd *pWndManager = m_pBindContainerCtrl->GetWndOwner();
 	if (NULL == pWndManager) return;
 	
 	//prepare
@@ -258,7 +258,7 @@ void CDUIAnimationDrag::OnDragMoveBegin(CDUIControlBase *pDragCtrl)
 	}
 
 	m_pDragingCtrl = pDragCtrl;
-	m_ptMouseLast = m_pDragingCtrl->GetWndManager()->GetMousePosLast();
+	m_ptMouseLast = m_pDragingCtrl->GetWndOwner()->GetMousePosLast();
 
 	//start
 	StartAnimation(Dui_TimerAnimate_ID, Dui_TimerAnimate_Elapse, ANIMATE_FRAME, true);
@@ -270,10 +270,10 @@ void CDUIAnimationDrag::OnDragMoveBegin(CDUIControlBase *pDragCtrl)
 
 void CDUIAnimationDrag::OnDragMoving(CDUIControlBase *pDragCtrl)
 {
-	if (NULL == m_pBindContainerCtrl || NULL == pDragCtrl || NULL == pDragCtrl->GetWndManager()) return;
+	if (NULL == m_pBindContainerCtrl || NULL == pDragCtrl || NULL == pDragCtrl->GetWndOwner()) return;
 	if (m_pDragingCtrl != pDragCtrl || pDragCtrl->GetParent() != m_pBindContainerCtrl) return;
 
-	CDUIWndManager *pWndManager = m_pDragingCtrl->GetWndManager();
+	CDUIWnd *pWndManager = m_pDragingCtrl->GetWndOwner();
 	SIZE szOffset = {};
 	POINT ptMouse = pWndManager->GetMousePosLast();
 	CDUIRect rcDragCtrl = m_pDragingCtrl->GetAbsoluteRect();
@@ -335,7 +335,7 @@ void CDUIAnimationDrag::OnDragMoveEnd(CDUIControlBase *pDragCtrl)
 {
 	if (NULL == m_pBindContainerCtrl || NULL == m_pDragingCtrl || (m_pDragingCtrl != pDragCtrl && m_pBindContainerCtrl != pDragCtrl->GetParent())) return;
 	
-	CDUIWndManager *pWndManager = m_pBindContainerCtrl->GetWndManager();
+	CDUIWnd *pWndManager = m_pBindContainerCtrl->GetWndOwner();
 	if (NULL == pWndManager) return;
 
 	StopAnimation(Dui_TimerAnimate_ID);
@@ -355,7 +355,7 @@ void CDUIAnimationDrag::OnDragMoveEnd(CDUIControlBase *pDragCtrl)
 
 void CDUIAnimationDrag::OnAnimationStep(int nAnimationID, int nTotalFrame, int nCurFrame)
 {
-	if (NULL == m_pBindContainerCtrl || NULL == m_pBindContainerCtrl->GetWndManager()) return;
+	if (NULL == m_pBindContainerCtrl || NULL == m_pBindContainerCtrl->GetWndOwner()) return;
 
 	for (int nIndex = m_vecPosDest.size() - 1; nIndex >= 0; nIndex--)
 	{
@@ -398,7 +398,7 @@ void CDUIAnimationDrag::OnAnimationStep(int nAnimationID, int nTotalFrame, int n
 	}
 
 	m_pBindContainerCtrl->Invalidate();
-	UpdateWindow(m_pBindContainerCtrl->GetWndManager()->GetWndHandle());
+	UpdateWindow(m_pBindContainerCtrl->GetWndOwner()->GetWndHandle());
 
 	return;
 }
@@ -406,13 +406,13 @@ void CDUIAnimationDrag::OnAnimationStep(int nAnimationID, int nTotalFrame, int n
 void CDUIAnimationDrag::OnDuiWinDragEnter(const DuiNotify &Notify)
 {
 	if (NULL == m_pBindContainerCtrl
-		|| NULL == m_pBindContainerCtrl->GetWndManager()
+		|| NULL == m_pBindContainerCtrl->GetWndOwner()
 		|| Notify.pNotifyCtrl != m_pBindContainerCtrl
 		|| false == m_pBindContainerCtrl->IsAnimateDrag()
-		|| NULL == m_pBindContainerCtrl->GetWndManager()->GetDropData()
+		|| NULL == m_pBindContainerCtrl->GetWndOwner()->GetDropData()
 		|| m_pDragingCtrl) return;
 
-	CDUIWndManager *pWndManager = m_pBindContainerCtrl->GetWndManager();
+	CDUIWnd *pWndManager = m_pBindContainerCtrl->GetWndOwner();
 	const tagDuiDropData *pDropData = pWndManager->GetDropData();
 	if (pDropData->vecPIDL.size() <= 0) return;
 	if (false == ::PtInRect(&m_pBindContainerCtrl->GetAbsoluteRect(), pWndManager->GetMousePosLast())) return;
@@ -457,7 +457,7 @@ void CDUIAnimationDrag::OnDuiWinDragEnter(const DuiNotify &Notify)
 void CDUIAnimationDrag::OnDuiWinDragLeave(const DuiNotify &Notify)
 {
 	if (NULL == m_pBindContainerCtrl
-		|| NULL == m_pBindContainerCtrl->GetWndManager()
+		|| NULL == m_pBindContainerCtrl->GetWndOwner()
 		|| NULL == m_pDragingCtrl
 		|| Notify.pNotifyCtrl != m_pBindContainerCtrl) return;
 
@@ -479,11 +479,11 @@ void CDUIAnimationDrag::OnDuiWinDragLeave(const DuiNotify &Notify)
 void CDUIAnimationDrag::OnDuiWinDragOver(const DuiNotify &Notify)
 {
 	if (NULL == m_pBindContainerCtrl
-		|| NULL == m_pBindContainerCtrl->GetWndManager()
+		|| NULL == m_pBindContainerCtrl->GetWndOwner()
 		|| NULL == m_pDragingCtrl
 		|| Notify.pNotifyCtrl != m_pBindContainerCtrl) return;
 
-	if (false == ::PtInRect(&m_pBindContainerCtrl->GetAbsoluteRect(), m_pBindContainerCtrl->GetWndManager()->GetMousePosLast())) return;
+	if (false == ::PtInRect(&m_pBindContainerCtrl->GetAbsoluteRect(), m_pBindContainerCtrl->GetWndOwner()->GetMousePosLast())) return;
 
 	OnDragMoving(m_pDragingCtrl);
 
@@ -494,9 +494,9 @@ void CDUIAnimationDrag::OnDuiWinDrop(const DuiNotify &Notify)
 {
 	if (IsAnimateDraging()
 		&& m_pDragingCtrl
-		&& m_pDragingCtrl->GetWndManager())
+		&& m_pDragingCtrl->GetWndOwner())
 	{
-		m_pDragingCtrl->GetWndManager()->PostNotify(m_pDragingCtrl->GetWndManager()->GetRootCtrl(), DuiNotify_WinDragFinish, 0, 0);
+		m_pDragingCtrl->GetWndOwner()->PostNotify(m_pDragingCtrl->GetWndOwner()->GetRootCtrl(), DuiNotify_WinDragFinish, 0, 0);
 	}
 
 	return;
@@ -505,7 +505,7 @@ void CDUIAnimationDrag::OnDuiWinDrop(const DuiNotify &Notify)
 void CDUIAnimationDrag::OnDuiWinDragFinish(const DuiNotify &Notify)
 {
 	if (NULL == m_pBindContainerCtrl
-		|| NULL == m_pBindContainerCtrl->GetWndManager()
+		|| NULL == m_pBindContainerCtrl->GetWndOwner()
 		|| NULL == m_pDragingCtrl) return;
 
 	OnDragMoveEnd(m_pDragingCtrl);
@@ -1022,7 +1022,7 @@ void CDUIAnimationWnd::StartAnimationWnd(bool bShow/* = true*/)
 	CDUIContainerCtrl *pRootCtrl = GetRootCtrl();
 	if (NULL == pRootCtrl) return;
 
-	CDUIWndManager *pWndManager = pRootCtrl->GetWndManager();
+	CDUIWnd *pWndManager = pRootCtrl->GetWndOwner();
 	if (NULL == pWndManager) return;
 
 	m_bShow = bShow;
@@ -1117,7 +1117,7 @@ void CDUIAnimationWnd::StopAnimationWnd()
 	CDUIContainerCtrl *pRootCtrl = GetRootCtrl();
 	if (NULL == pRootCtrl) return;
 
-	CDUIWndManager *pWndManager = pRootCtrl->GetWndManager();
+	CDUIWnd *pWndManager = pRootCtrl->GetWndOwner();
 	if (NULL == pWndManager) return;
 
 	m_bAnimating = false;

@@ -127,9 +127,9 @@ CDUIThinkEditCtrl::CDUIThinkEditCtrl()
 
 CDUIThinkEditCtrl::~CDUIThinkEditCtrl()
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->RemovePreMessagePtr(this);
+		m_pWndOwner->RemovePreMessagePtr(this);
 	}
 
 	MMSafeDelete(m_pBmpShadowText);
@@ -139,14 +139,14 @@ CDUIThinkEditCtrl::~CDUIThinkEditCtrl()
 
 LRESULT CDUIThinkEditCtrl::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
 {
-	if (NULL == m_pWndManager) return 0;
+	if (NULL == m_pWndOwner) return 0;
 
 	if (WM_IME_COMPOSITION == uMsg
 		|| WM_KEYDOWN == uMsg)
 	{
 		if (IsFocused())
 		{
-			HIMC hImc = ::ImmGetContext(m_pWndManager->GetWndHandle());
+			HIMC hImc = ::ImmGetContext(m_pWndOwner->GetWndHandle());
 			if (hImc)
 			{
 				//pos
@@ -176,7 +176,7 @@ LRESULT CDUIThinkEditCtrl::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lPar
 
 				} while (false);
 				
-				ImmReleaseContext(m_pWndManager->GetWndHandle(), hImc);
+				ImmReleaseContext(m_pWndOwner->GetWndHandle(), hImc);
 			}
 
 			return 0;
@@ -238,12 +238,25 @@ void CDUIThinkEditCtrl::RefreshView()
 {
 	__super::RefreshView();
 
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
+
+	//caret count
+	CDUISize szSelChar;
+	if (m_nCaretRow != m_nCaretRowFrom || m_nCaretColumn != m_nCaretColumnFrom)
+	{
+		szSelChar = GetSel();
+	}
 
 	//measure
 	tagDuiTextStyle TextStyle = GetTextStyleActive();
 	CDUIRect rcMeasure;
 	PerformMeasureString(m_vecRichTextItem, TextStyle, m_mapLineVecRichTextDraw, rcMeasure);
+
+	//caret pos
+	if (m_nCaretRow != m_nCaretRowFrom || m_nCaretColumn != m_nCaretColumnFrom)
+	{
+		SetSel(szSelChar.cx, szSelChar.cy);
+	}
 
 	//range pos
 	PerformAdjustScrollPos(rcMeasure);
@@ -281,8 +294,8 @@ bool CDUIThinkEditCtrl::DoPaint(HDC hDC, bool bGenerateBmp)
 	if (false == __super::DoPaint(hDC, bGenerateBmp)) return false;
 
 	//caret timer
-	if (m_pWndManager 
-		&& false == m_pWndManager->FindTimer(this, Dui_TimerCaret_ID)
+	if (m_pWndOwner 
+		&& false == m_pWndOwner->FindTimer(this, Dui_TimerCaret_ID)
 		&& IsFocused())
 	{
 		SetTimer(Dui_TimerCaret_ID, Dui_TimerCaret_Elapse);
@@ -303,7 +316,7 @@ bool CDUIThinkEditCtrl::DoPaint(HDC hDC, bool bGenerateBmp)
 
 CDUISize CDUIThinkEditCtrl::MeasureString(LPCTSTR lpszText)
 {
-	if (NULL == m_pWndManager) return {};
+	if (NULL == m_pWndOwner) return {};
 
 	tagDuiTextStyle TextStyle = GetTextStyleNormal();
 	CDUIRect rcMeasure;
@@ -321,7 +334,7 @@ CDUISize CDUIThinkEditCtrl::MeasureString(LPCTSTR lpszText)
 
 CDUISize CDUIThinkEditCtrl::MeasureString(VecDuiRichTextBase vecRichTextBase)
 {
-	if (NULL == m_pWndManager) return {};
+	if (NULL == m_pWndOwner) return {};
 
 	VecDuiRichTextItem vecRichTextItem;
 	for (auto &RichTextBase : vecRichTextBase)
@@ -638,15 +651,15 @@ CDUIRect CDUIThinkEditCtrl::GetCaretPos()
 		m_nCaretColumn = -1;
 	}
 
-	m_nCaretSelFromRow = min(m_nCaretSelFromRow, (int)m_mapLineVecRichTextDraw.size() - 1);
-	if (m_nCaretSelFromRow < 0 || m_nCaretSelFromRow >= m_mapLineVecRichTextDraw.size())
+	m_nCaretRowFrom = min(m_nCaretRowFrom, (int)m_mapLineVecRichTextDraw.size() - 1);
+	if (m_nCaretRowFrom < 0 || m_nCaretRowFrom >= m_mapLineVecRichTextDraw.size())
 	{
-		m_nCaretSelFromRow = -1;
-		m_nCaretSelFromColumn = -1;
+		m_nCaretRowFrom = -1;
+		m_nCaretColumnFrom = -1;
 	}
-	else if (m_nCaretSelFromColumn < 0 || m_nCaretSelFromColumn >= m_mapLineVecRichTextDraw[m_nCaretSelFromRow].size())
+	else if (m_nCaretColumnFrom < 0 || m_nCaretColumnFrom >= m_mapLineVecRichTextDraw[m_nCaretRowFrom].size())
 	{
-		m_nCaretSelFromColumn = -1;
+		m_nCaretColumnFrom = -1;
 	}
 
 	//pre measure
@@ -665,46 +678,18 @@ CDUIRect CDUIThinkEditCtrl::GetCaretPos()
 	}
 
 	//caret pos
+	CDUIRect rcCaret;
 	VecDuiRichTextDraw LineVecRichTextDraw = m_mapLineVecRichTextDraw[m_nCaretRow];
-	CDUIRect rcCaret = LineVecRichTextDraw[0].rcDraw;
-	rcCaret.right = rcCaret.left + 1;
-	rcCaret.top = rcCaret.bottom - rcMeasure.GetHeight();
 	if (m_nCaretColumn < 0)
 	{
 		CDUIRect rcText = LineVecRichTextDraw[0].rcDraw;
-		rcCaret.Offset(rcText.left - rcCaret.left, rcText.bottom - rcCaret.GetHeight() - rcCaret.top);
+		rcCaret = { rcText.left, rcText.top, rcText.left + 1, rcText.bottom };
 	}
 	else
 	{
 		CDUIRect rcText = LineVecRichTextDraw[m_nCaretColumn].rcDraw;
-		rcCaret.Offset(rcText.right - rcCaret.left, rcText.bottom - rcCaret.GetHeight() - rcCaret.top);
+		rcCaret = { rcText.right, rcText.top, rcText.right + 1, rcText.bottom };
 	}
-
-	//scroll
-	CDUIRect rcRange = GetTextRange();
-	CDUISize szScrollPos = GetScrollPos();
-	if (rcCaret.left < rcRange.left && m_szScrollRange.cx > 0)
-	{
-		szScrollPos.cx -= (rcRange.left - rcCaret.left);
-		rcCaret.Offset(rcRange.left - rcCaret.left, 0);
-	}
-	if (rcCaret.left > rcRange.right && m_szScrollRange.cx > 0)
-	{
-		szScrollPos.cx += (rcCaret.left - rcRange.right);
-		rcCaret.Offset(-(rcCaret.left - rcRange.right), 0);
-	}
-	if (rcCaret.top < rcRange.top && m_szScrollRange.cy > 0)
-	{
-		szScrollPos.cy -= (rcRange.top - rcCaret.top);
-		rcCaret.Offset(0, rcRange.top - rcCaret.top);
-	}
-	if (rcCaret.bottom > rcRange.bottom && m_szScrollRange.cy > 0)
-	{
-		szScrollPos.cy += (rcCaret.bottom - rcRange.bottom);
-		rcCaret.Offset(0, -(rcCaret.bottom - rcRange.bottom));
-	}
-
-	SetScrollPos(szScrollPos);
 
 	return rcCaret;
 }
@@ -713,8 +698,8 @@ void CDUIThinkEditCtrl::SetCaretPos(int nRow, int nColumn)
 {
 	m_nCaretRow = nRow;
 	m_nCaretColumn = nColumn;
-	m_nCaretSelFromRow = nRow;
-	m_nCaretSelFromColumn = nColumn;
+	m_nCaretRowFrom = nRow;
+	m_nCaretColumnFrom = nColumn;
 
 	PerformAdjustCaret();
 
@@ -803,7 +788,7 @@ CDUISize CDUIThinkEditCtrl::GetScrollRange()
 
 CMMString CDUIThinkEditCtrl::GetSelectString()
 {
-	if (NULL == m_pWndManager || m_mapLineVecRichTextDraw.empty()) return _T("");
+	if (NULL == m_pWndOwner || m_mapLineVecRichTextDraw.empty()) return _T("");
 
 	//from target
 	int nRowFrom = 0;
@@ -847,7 +832,7 @@ CMMString CDUIThinkEditCtrl::GetSelectString()
 
 CDUIRect CDUIThinkEditCtrl::GetSelectRange()
 {
-	if (NULL == m_pWndManager || m_mapLineVecRichTextDraw.empty()) return {};
+	if (NULL == m_pWndOwner || m_mapLineVecRichTextDraw.empty()) return {};
 
 	//from target
 	int nRowFrom = 0;
@@ -894,10 +879,39 @@ CDUIRect CDUIThinkEditCtrl::GetSelectRange()
 	return rcRange;
 }
 
+CDUISize CDUIThinkEditCtrl::GetSel()
+{
+	CDUISize szSelChar;
+	int nRowFrom = -1;
+	int nColumnFrom = -1;
+	int nRowTarget = -1;
+	int nColumnTarget = -1;
+	PerformCalcSelect(nRowFrom, nColumnFrom, nRowTarget, nColumnTarget);
+	if (0 <= nRowFrom && nRowFrom < m_mapLineVecRichTextDraw.size())
+	{
+		for (int nRow = 0; nRow < nRowFrom; nRow++)
+		{
+			szSelChar.cx += m_mapLineVecRichTextDraw[nRow].size();
+		}
+
+		szSelChar.cx += (nColumnFrom >= 0 ? nColumnFrom : 0);
+	}
+	if (0 <= nRowTarget && nRowTarget < m_mapLineVecRichTextDraw.size())
+	{
+		for (int nRow = 0; nRow < nRowTarget; nRow++)
+		{
+			szSelChar.cy += m_mapLineVecRichTextDraw[nRow].size();
+		}
+
+		szSelChar.cy += (nColumnTarget > 0 ? nColumnTarget : 0);
+	}
+
+	return szSelChar;
+}
+
 void CDUIThinkEditCtrl::SetSel(long nStartChar, long nEndChar)
 {
 	if (m_mapLineVecRichTextDraw.size() <= 0) return;
-	if (-1 == nStartChar && -1 == nEndChar) return SetSelAll();
 
 	nStartChar = max(0, nStartChar);
 	nEndChar = max(0, nEndChar);
@@ -905,8 +919,8 @@ void CDUIThinkEditCtrl::SetSel(long nStartChar, long nEndChar)
 
 	m_nCaretRow = -1;
 	m_nCaretColumn = -1;
-	m_nCaretSelFromRow = -1;
-	m_nCaretSelFromColumn = -1;
+	m_nCaretRowFrom = -1;
+	m_nCaretColumnFrom = -1;
 
 	for (int nLine = 0; nLine < m_mapLineVecRichTextDraw.size(); nLine++)
 	{
@@ -916,13 +930,13 @@ void CDUIThinkEditCtrl::SetSel(long nStartChar, long nEndChar)
 			&& -1 == m_nCaretRow)
 		{
 			m_nCaretRow = nLine;
-			m_nCaretColumn = 0 == nStartChar ? -1 : nStartChar - 1;
+			m_nCaretColumn = nStartChar - 1;
 		}
 		if (LineVecRichTextDraw.size() > nEndChar
-			&& -1 == m_nCaretSelFromRow)
+			&& -1 == m_nCaretRowFrom)
 		{
-			m_nCaretSelFromRow = nLine;
-			m_nCaretSelFromColumn = 0 == nEndChar ? -1 : nEndChar - 1;
+			m_nCaretRowFrom = nLine;
+			m_nCaretColumnFrom = nEndChar;
 
 			break;
 		}
@@ -942,8 +956,8 @@ void CDUIThinkEditCtrl::SetSelAll()
 
 	m_nCaretRow = 0;
 	m_nCaretColumn = -1;
-	m_nCaretSelFromRow = m_mapLineVecRichTextDraw.size() - 1;
-	m_nCaretSelFromColumn = m_mapLineVecRichTextDraw[m_nCaretSelFromRow].size() - 1;
+	m_nCaretRowFrom = m_mapLineVecRichTextDraw.size() - 1;
+	m_nCaretColumnFrom = m_mapLineVecRichTextDraw[m_nCaretRowFrom].size() - 1;
 
 	PerformAdjustCaret();
 
@@ -997,7 +1011,7 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName
 			{
 				for (auto &RichTextItemDraw : It->second)
 				{
-					LineVecRichTextDraw.insert(LineVecRichTextDraw.begin() + nIndexInsert, RichTextItemDraw);
+					LineVecRichTextDraw.insert(LineVecRichTextDraw.begin() + nIndexInsert++, RichTextItemDraw);
 				}
 			}
 		};
@@ -1055,7 +1069,6 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName
 	//history
 	History.nCaretRowNext = m_nCaretRow;
 	History.nCaretColumnNext = m_nCaretColumn;
-
 	if (bHistory)
 	{
 		PerformAddHistory(History);
@@ -1266,22 +1279,14 @@ bool CDUIThinkEditCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 
 bool CDUIThinkEditCtrl::OnDuiSetFocus()
 {
-	if (NULL == m_pWndManager) return false;
+	if (NULL == m_pWndOwner) return false;
 	if (false == __super::OnDuiSetFocus()) return false;
 
 	//pre edit
 	g_vecDuiRichTextPreEdit = GetRichTextItem();
 
 	//active
-	HWND hWndForground = GetForegroundWindow();
-	DWORD dwProIDForground = ::GetWindowThreadProcessId(hWndForground, NULL);
-	DWORD dwProIDCur = ::GetCurrentThreadId();
-
-	::AttachThreadInput(dwProIDCur, dwProIDForground, TRUE);
-	::SetActiveWindow(m_pWndManager->GetWndHandle());
-	::BringWindowToTop(m_pWndManager->GetWndHandle());
-	::SetForegroundWindow(m_pWndManager->GetWndHandle());
-	::AttachThreadInput(dwProIDCur, dwProIDForground, FALSE);
+	CDUIWnd::ForegroundWindow(m_pWndOwner->GetWndHandle());
 
 	//edit
 	RefreshView();
@@ -1290,8 +1295,8 @@ bool CDUIThinkEditCtrl::OnDuiSetFocus()
 	{
 		SetSelAll();
 
-		m_bMouseDownFocus = (CDUIWndManager::MapKeyState() & MK_LBUTTON)
-			|| (CDUIWndManager::MapKeyState() & MK_RBUTTON);
+		m_bMouseDownFocus = (CDUIWnd::MapKeyState() & MK_LBUTTON)
+			|| (CDUIWnd::MapKeyState() & MK_RBUTTON);
 	}
 
 	return true;
@@ -1300,12 +1305,16 @@ bool CDUIThinkEditCtrl::OnDuiSetFocus()
 bool CDUIThinkEditCtrl::OnDuiKillFocus()
 {
 	if (false == __super::OnDuiKillFocus()) return false;
-	if (NULL == m_pWndManager) return false;
+	if (NULL == m_pWndOwner) return false;
 
 	KillTimer(Dui_TimerCaret_ID);
-	m_pWndManager->ShowCaret(false);
+	m_pWndOwner->ShowCaret(false);
 	m_bShowCaret = false;
 	m_szScrollPos = {};
+	m_nCaretRow = -1;
+	m_nCaretColumn = -1;
+	m_nCaretRowFrom = -1;
+	m_nCaretColumnFrom = -1;
 
 	do
 	{
@@ -1332,7 +1341,7 @@ bool CDUIThinkEditCtrl::OnDuiKillFocus()
 	if (g_vecDuiRichTextPreEdit != GetRichTextItem()
 		&& false == IsReadOnly())
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_Edited);
+		m_pWndOwner->SendNotify(this, DuiNotify_Edited);
 	}
 
 	return true;
@@ -1342,9 +1351,9 @@ void CDUIThinkEditCtrl::OnDuiWndManagerAttach()
 {
 	__super::OnDuiWndManagerAttach();
 
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
-	m_pWndManager->AddPreMessagePtr(this);
+	m_pWndOwner->AddPreMessagePtr(this);
 
 	return;
 }
@@ -1353,9 +1362,9 @@ void CDUIThinkEditCtrl::OnDuiWndManagerDetach()
 {
 	__super::OnDuiWndManagerDetach();
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->RemovePreMessagePtr(this);
+		m_pWndOwner->RemovePreMessagePtr(this);
 	}
 
 	return;
@@ -1435,13 +1444,13 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 	{
 		case VK_LEFT:
 		{
-			PerformMoveCaretHoriz(true, CDUIWndManager::MapKeyState() & MK_SHIFT);
+			PerformMoveCaretHoriz(true, CDUIWnd::MapKeyState() & MK_SHIFT);
 
 			break;
 		}
 		case VK_RIGHT:
 		{
-			PerformMoveCaretHoriz(false, CDUIWndManager::MapKeyState() & MK_SHIFT);
+			PerformMoveCaretHoriz(false, CDUIWnd::MapKeyState() & MK_SHIFT);
 
 			break;
 		}
@@ -1459,8 +1468,8 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		}
 		case VK_BACK:
 		{
-			if (m_nCaretRow == m_nCaretSelFromRow
-				&& m_nCaretColumn == m_nCaretSelFromColumn
+			if (m_nCaretRow == m_nCaretRowFrom
+				&& m_nCaretColumn == m_nCaretColumnFrom
 				&& false == IsReadOnly())
 			{
 				int nRowPre = m_nCaretRow;
@@ -1468,8 +1477,8 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 
 				PerformMoveCaretHoriz(true);
 
-				m_nCaretSelFromRow = nRowPre;
-				m_nCaretSelFromColumn = nColumnPre;
+				m_nCaretRowFrom = nRowPre;
+				m_nCaretColumnFrom = nColumnPre;
 			}
 
 			PerformClearSelect();
@@ -1479,7 +1488,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		case 'A':
 		case 'a':
 		{
-			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			if (CDUIWnd::MapKeyState() & MK_CONTROL)
 			{
 				SetSelAll();
 			}
@@ -1489,7 +1498,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		case 'Z':
 		case 'z':
 		{
-			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			if (CDUIWnd::MapKeyState() & MK_CONTROL)
 			{
 				Undo();
 			}
@@ -1499,7 +1508,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		case 'Y':
 		case 'y':
 		{
-			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			if (CDUIWnd::MapKeyState() & MK_CONTROL)
 			{
 				Redo();
 			}
@@ -1509,7 +1518,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		case 'X':
 		case 'x':
 		{
-			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			if (CDUIWnd::MapKeyState() & MK_CONTROL)
 			{
 				Copy();
 
@@ -1521,7 +1530,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		case 'C':
 		case 'c':
 		{
-			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			if (CDUIWnd::MapKeyState() & MK_CONTROL)
 			{
 				Copy();
 			}
@@ -1531,7 +1540,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 		case 'V':
 		case 'v':
 		{
-			if (CDUIWndManager::MapKeyState() & MK_CONTROL)
+			if (CDUIWnd::MapKeyState() & MK_CONTROL)
 			{
 				Paste();
 			}
@@ -1611,7 +1620,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiChar(const DuiMessage &Msg)
 
 LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 {
-	if (NULL == m_pWndManager) return 0;
+	if (NULL == m_pWndOwner) return 0;
 
 	__super::OnDuiContextMenu(Msg);
 
@@ -1640,8 +1649,8 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	EnableMenuItem(hPopMenu, ID_MENU_PASTE, MF_BYCOMMAND | uReadonly);
 
 	CDUIPoint ptScreen = Msg.ptMouse;
-	::ClientToScreen(m_pWndManager->GetWndHandle(), &ptScreen);
-	TrackPopupMenu(hPopMenu, TPM_RIGHTBUTTON, ptScreen.x, ptScreen.y, 0, m_pWndManager->GetWndHandle(), NULL);
+	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptScreen);
+	TrackPopupMenu(hPopMenu, TPM_RIGHTBUTTON, ptScreen.x, ptScreen.y, 0, m_pWndOwner->GetWndHandle(), NULL);
 	DestroyMenu(hPopMenu);
 
 	return 0;
@@ -1707,13 +1716,13 @@ LRESULT CDUIThinkEditCtrl::OnDuiCommand(const DuiMessage &Msg)
 
 LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 {
-	if (NULL == m_pWndManager) return 0;
+	if (NULL == m_pWndOwner) return 0;
 
 	__super::OnDuiImeComPosition(Msg);
 
 	//emoji
 	CMMString strBuff;
-	HIMC hImc = ::ImmGetContext(m_pWndManager->GetWndHandle());
+	HIMC hImc = ::ImmGetContext(m_pWndOwner->GetWndHandle());
 	if (hImc)
 	{
 		int nLen = ImmGetCompositionString(hImc, GCS_COMPSTR, NULL, NULL);
@@ -1730,7 +1739,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 			}
 		}
 
-		ImmReleaseContext(m_pWndManager->GetWndHandle(), hImc);
+		ImmReleaseContext(m_pWndOwner->GetWndHandle(), hImc);
 	}
 
 	return 0;
@@ -1789,7 +1798,7 @@ void CDUIThinkEditCtrl::InitComplete()
 
 void CDUIThinkEditCtrl::PaintText(HDC hDC)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	//normal
 	CDUIRect rcRange = GetTextRange();
@@ -1828,8 +1837,8 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 		pAttribute = &m_AttributeTextStyleNormal;
 	}
 
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
-	NULL == pAttribute || pAttribute->empty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
+	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyle : pAttribute;
 	if (NULL == pAttribute) return;
 
 	tagDuiTextStyle TextStyle = pAttribute->GetTextStyle();
@@ -1848,7 +1857,7 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 			RichTextInfo.vecRichTextItem.back().strText = strTipText[n];
 		}
 
-		CDUIRenderEngine::DrawRichText(hDC, rcRange, RichTextInfo, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), GetRichTextLineSpace());
+		CDUIRenderEngine::DrawRichText(hDC, rcRange, RichTextInfo, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace());
 
 		return;
 	}
@@ -1891,7 +1900,7 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 
 				CDUIRect rcDraw(0, 0, rcRange.GetWidth(), rcRange.GetHeight());
 				CDUIMemDC MemDC(hDC, rcDraw, false);
-				CDUIRenderEngine::DrawRichText(MemDC, rcDraw, RichTextInfo, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
+				CDUIRenderEngine::DrawRichText(MemDC, rcDraw, RichTextInfo, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
 				CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcDraw.GetWidth(), rcDraw);
 				m_pBmpShadowText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
 			}
@@ -1904,13 +1913,13 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 		}
 
 		//normal
-		CDUIRenderEngine::DrawRichText(hDC, rcRange, RichTextInfo, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
+		CDUIRenderEngine::DrawRichText(hDC, rcRange, RichTextInfo, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
 
 		return;
 	}
 
 	//focus
-	CDUIRenderEngine::DrawRichText(hDC, rcRange, m_mapLineVecRichTextDraw, TextStyle.dwTextStyle, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType());
+	CDUIRenderEngine::DrawRichText(hDC, rcRange, m_mapLineVecRichTextDraw, TextStyle.dwTextStyle, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType());
 
 	return;
 }
@@ -1968,7 +1977,7 @@ void CDUIThinkEditCtrl::PaintSelectBk(HDC hDC)
 void CDUIThinkEditCtrl::PaintCaret(HDC hDC)
 {
 	CDUIAttributeTextStyle *pAttribute = GetAttributeTextStyleActive();
-	if (NULL == pAttribute) return;
+	if (NULL == pAttribute || false == IsFocused()) return;
 
 	CDUIColorBase *pColorBase = pAttribute->GetColorBaseCur();
 	CDUIRect rcCaret = GetCaretPos();
@@ -2072,7 +2081,7 @@ void CDUIThinkEditCtrl::PerformMeasureString(IN VecDuiRichTextItem vecRichTextIt
 	CDUIRect rcItem = rcRange;
 	RichTextInfo.IsWordBreak() ? rcItem.bottom += 9999 : rcItem.right += 9999;
 	rcMeasure = CDUIRect(rcItem.left, rcItem.top, rcItem.left, rcItem.top);
-	CDUIRenderHelp::MeasureRichText(m_pWndManager->GetWndDC(), RichTextInfo, mapLineVecRichTextDraw, rcMeasure, rcItem, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), GetRichTextLineSpace());
+	CDUIRenderHelp::MeasureRichText(m_pWndOwner->GetWndDC(), RichTextInfo, mapLineVecRichTextDraw, rcMeasure, rcItem, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace());
 	CDUIRenderHelp::AdjustRichText(RichTextInfo, rcRange, mapLineVecRichTextDraw, rcMeasure);
 
 	return;
@@ -2080,7 +2089,7 @@ void CDUIThinkEditCtrl::PerformMeasureString(IN VecDuiRichTextItem vecRichTextIt
 
 void CDUIThinkEditCtrl::PerformHitText(CDUIPoint pt, bool bFromMouseDown)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	CDUIRect rcPos = GetTextPositionVisible();
 	bool bHitBottom = pt.y > rcPos.bottom;
@@ -2164,15 +2173,14 @@ void CDUIThinkEditCtrl::PerformHitText(CDUIPoint pt, bool bFromMouseDown)
 
 	//caret pos
 	CDUIRect rcCaret = GetCaretPos();
-
-	m_pWndManager->CreateCaret(NULL, rcCaret.GetWidth(), rcCaret.GetHeight());
-	m_pWndManager->SetCaretPos({ rcCaret.left, rcCaret.top });
+	m_pWndOwner->CreateCaret(NULL, rcCaret.GetWidth(), rcCaret.GetHeight());
+	m_pWndOwner->SetCaretPos({ rcCaret.left, rcCaret.top });
 	m_bShowCaret = true;
 
 	if (bFromMouseDown)
 	{
-		m_nCaretSelFromRow = m_nCaretRow;
-		m_nCaretSelFromColumn = m_nCaretColumn;
+		m_nCaretRowFrom = m_nCaretRow;
+		m_nCaretColumnFrom = m_nCaretColumn;
 	}
 
 	return;
@@ -2180,7 +2188,7 @@ void CDUIThinkEditCtrl::PerformHitText(CDUIPoint pt, bool bFromMouseDown)
 
 void CDUIThinkEditCtrl::PerformMoveCaretHoriz(bool bLeft, bool bSelect, bool bAdjustWordWrap)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	do
 	{
@@ -2235,8 +2243,8 @@ void CDUIThinkEditCtrl::PerformMoveCaretHoriz(bool bLeft, bool bSelect, bool bAd
 	//hit
 	if (false == bSelect)
 	{
-		m_nCaretSelFromRow = m_nCaretRow;
-		m_nCaretSelFromColumn = m_nCaretColumn;
+		m_nCaretRowFrom = m_nCaretRow;
+		m_nCaretColumnFrom = m_nCaretColumn;
 	}
 
 	//caret
@@ -2251,21 +2259,21 @@ void CDUIThinkEditCtrl::PerformMoveCaretHoriz(bool bLeft, bool bSelect, bool bAd
 
 		m_bShowCaret = true;
 		Invalidate();
-		UpdateWindow(m_pWndManager->GetWndHandle());
+		UpdateWindow(m_pWndOwner->GetWndHandle());
 
 		return;
 	}
 
 	m_bShowCaret = true;
 	Invalidate();
-	UpdateWindow(m_pWndManager->GetWndHandle());
+	UpdateWindow(m_pWndOwner->GetWndHandle());
 
 	return;
 }
 
 void CDUIThinkEditCtrl::PerformMoveCaretVert(bool bUp)
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	int nCaretRowPre = m_nCaretRow;
 
@@ -2306,11 +2314,11 @@ void CDUIThinkEditCtrl::PerformMoveCaretVert(bool bUp)
 	if (m_nCaretRow < 0 || m_nCaretRow >= m_mapLineVecRichTextDraw.size()) return;
 
 	//shift
-	bool bSelect = 0 != (CDUIWndManager::MapKeyState() & MK_SHIFT);
+	bool bSelect = 0 != (CDUIWnd::MapKeyState() & MK_SHIFT);
 	if (false == bSelect)
 	{
-		m_nCaretSelFromRow = m_nCaretRow;
-		m_nCaretSelFromColumn = m_nCaretColumn;
+		m_nCaretRowFrom = m_nCaretRow;
+		m_nCaretColumnFrom = m_nCaretColumn;
 	}
 
 	//caret
@@ -2338,14 +2346,14 @@ void CDUIThinkEditCtrl::PerformMoveCaretVert(bool bUp)
 
 	m_bShowCaret = true;
 	Invalidate();
-	UpdateWindow(m_pWndManager->GetWndHandle());
+	UpdateWindow(m_pWndOwner->GetWndHandle());
 
 	return;
 }
 
 void CDUIThinkEditCtrl::PerformClearSelect(bool bHistory)
 {
-	if (NULL == m_pWndManager || IsReadOnly()) return;
+	if (NULL == m_pWndOwner || IsReadOnly()) return;
 
 	//from target
 	int nRowFrom = 0;
@@ -2354,7 +2362,9 @@ void CDUIThinkEditCtrl::PerformClearSelect(bool bHistory)
 	int nColumnTarget = 0;
 	PerformCalcSelect(nRowFrom, nColumnFrom, nRowTarget, nColumnTarget);
 
-	if (nRowFrom < 0 || nRowFrom >= m_mapLineVecRichTextDraw.size()) return;
+	if (nRowFrom < 0 
+		|| nRowFrom >= m_mapLineVecRichTextDraw.size()
+		|| (nRowFrom == nRowTarget && nColumnFrom == nColumnTarget)) return;
 
 	//history
 	if (bHistory)
@@ -2419,9 +2429,9 @@ void CDUIThinkEditCtrl::PerformClearSelect(bool bHistory)
 
 	//caret
 	m_nCaretRow = nRowFrom;
-	m_nCaretSelFromRow = nRowFrom;
+	m_nCaretRowFrom = nRowFrom;
 	m_nCaretColumn = nColumnFrom;
-	m_nCaretSelFromColumn = nColumnFrom;
+	m_nCaretColumnFrom = nColumnFrom;
 
 	//refresh
 	PerformAdjustRichText();
@@ -2434,13 +2444,36 @@ void CDUIThinkEditCtrl::PerformClearSelect(bool bHistory)
 
 void CDUIThinkEditCtrl::PerformAdjustCaret()
 {
-	if (NULL == m_pWndManager) return;
+	if (NULL == m_pWndOwner) return;
 
 	CDUIRect rcCaret = GetCaretPos();
 
+	//scroll ensure visible
+	CDUIRect rcRange = GetTextRange();
+	CDUISize szScrollPos = GetScrollPos();
+	if (rcCaret.left < rcRange.left)
+	{
+		szScrollPos.cx -= (rcRange.left - rcCaret.left);
+	}
+	if (rcCaret.left > rcRange.right)
+	{
+		szScrollPos.cx += (rcCaret.left - rcRange.right);
+	}
+	if (rcCaret.top < rcRange.top)
+	{
+		szScrollPos.cy -= (rcRange.top - rcCaret.top);
+	}
+	if (rcCaret.bottom > rcRange.bottom)
+	{
+		szScrollPos.cy += (rcCaret.bottom - rcRange.bottom);
+	}
+
+	SetScrollPos(szScrollPos);
+	rcCaret = GetCaretPos();
+
 	if (IsFocused())
 	{
-		m_pWndManager->SetCaretPos({ rcCaret.left, rcCaret.top });
+		m_pWndOwner->SetCaretPos({ rcCaret.left, rcCaret.top });
 	}
 
 	return;
@@ -2462,32 +2495,34 @@ void CDUIThinkEditCtrl::PerformAdjustRichText()
 	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
 	for (auto &LineVecRichTextDraw : m_mapLineVecRichTextDraw)
 	{
-		for (int n = 0; n < LineVecRichTextDraw.second.size(); n++)
+		for (int n = 0; n < LineVecRichTextDraw.second.size();)
 		{
 			tagDuiRichTextDraw &RichTextDrawItem = LineVecRichTextDraw.second[n];
+
+			//next line
+			bool bOverRight = nLeft + RichTextDrawItem.rcDraw.GetWidth() > rcRange.right;
+			bool bWordWrap = _T('\n') == RichTextDrawItem.strText.Left(0) || _T('\r') == RichTextDrawItem.strText.Left(0);
+			if ((bOverRight || bWordWrap)
+				&& false == bSingleLine
+				&& 0 != nLineHeight)
+			{
+				nLeft = rcRange.left;
+				nTop = nTop + nLineHeight;
+				nLineHeight = 0;
+				nLine++;
+
+				continue;
+			}
+		
 			RichTextDrawItem.rcDraw.Offset(nLeft - RichTextDrawItem.rcDraw.left, nTop - RichTextDrawItem.rcDraw.top);
 			mapLineVecRichTextDraw[nLine].push_back(RichTextDrawItem);
 
 			nLeft += RichTextDrawItem.rcDraw.GetWidth();
 			nLineHeight = max(nLineHeight, RichTextDrawItem.rcDraw.GetHeight());
 			rcMeasure.right = max(rcMeasure.right, nLeft);
-			rcMeasure.bottom = max(rcMeasure.bottom, nTop + nLineHeight);
+			rcMeasure.bottom = max(rcMeasure.bottom, nTop + nLineHeight);	
 
-			//next line
-			if (n + 1 < LineVecRichTextDraw.second.size())
-			{
-				tagDuiRichTextDraw &RichTextDrawItemNext = LineVecRichTextDraw.second[n + 1];
-				bool bOverRight = nLeft + RichTextDrawItemNext.rcDraw.GetWidth() > rcRange.right;
-				bool bWordWrap = _T('\n') == RichTextDrawItemNext.strText.Left(0) || _T('\r') == RichTextDrawItemNext.strText.Left(0);
-				if ((bOverRight || bWordWrap) 
-					&& false == bSingleLine)
-				{
-					nLeft = rcRange.left;
-					nTop = nTop + nLineHeight;
-					nLineHeight = 0;
-					nLine++;
-				}
-			}
+			n++;
 		}
 	}
 
@@ -2518,19 +2553,22 @@ void CDUIThinkEditCtrl::PerformAdjustScrollPos(CDUIRect rcMeasure)
 
 void CDUIThinkEditCtrl::PerformCalcSelect(OUT int &nRowFrom, OUT int &nColumnFrom, OUT int &nRowTarget, OUT int &nColumnTarget)
 {
-	nRowFrom = m_nCaretSelFromRow;
-	nColumnFrom = m_nCaretSelFromColumn;
-	nRowTarget = m_nCaretRow;
-	nColumnTarget = m_nCaretColumn;
+	if (m_nCaretRow == m_nCaretRowFrom && m_nCaretColumn == m_nCaretColumnFrom)
+	{
+		nRowFrom = m_nCaretRowFrom;
+		nColumnFrom = m_nCaretColumnFrom;
+		nRowTarget = m_nCaretRow;
+		nColumnTarget = m_nCaretColumn;
 
-	if (m_nCaretRow == m_nCaretSelFromRow && m_nCaretColumn == m_nCaretSelFromColumn) return;
+		return;
+	}
 
-	nRowFrom = min(m_nCaretRow, m_nCaretSelFromRow);
-	nRowTarget = max(m_nCaretRow, m_nCaretSelFromRow);
-	nColumnFrom = nRowFrom == m_nCaretRow ? m_nCaretColumn : m_nCaretSelFromColumn;
-	nColumnTarget = nRowFrom == m_nCaretRow ? m_nCaretSelFromColumn : m_nCaretColumn;
-	nColumnFrom = nRowFrom == nRowTarget ? min(m_nCaretColumn, m_nCaretSelFromColumn) : nColumnFrom;
-	nColumnTarget = nRowFrom == nRowTarget ? max(m_nCaretColumn, m_nCaretSelFromColumn) : nColumnTarget;
+	nRowFrom = min(m_nCaretRow, m_nCaretRowFrom);
+	nRowTarget = max(m_nCaretRow, m_nCaretRowFrom);
+	nColumnFrom = nRowFrom == m_nCaretRow ? m_nCaretColumn : m_nCaretColumnFrom;
+	nColumnTarget = nRowFrom == m_nCaretRow ? m_nCaretColumnFrom : m_nCaretColumn;
+	nColumnFrom = nRowFrom == nRowTarget ? min(m_nCaretColumn, m_nCaretColumnFrom) : nColumnFrom;
+	nColumnTarget = nRowFrom == nRowTarget ? max(m_nCaretColumn, m_nCaretColumnFrom) : nColumnTarget;
 
 	return;
 }

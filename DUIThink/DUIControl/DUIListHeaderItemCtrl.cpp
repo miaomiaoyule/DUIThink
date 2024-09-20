@@ -89,11 +89,27 @@ void CDUIListHeaderItemCtrl::SetSepScale(float fScale)
 	if (fScale == GetSepScale()) return;
 
 	m_AttributeSepScale.SetValue(fScale);
+
+	return;
 }
 
 RECT CDUIListHeaderItemCtrl::GetSepRect()
 {
 	return m_rcSep;
+}
+
+vector<CMMString> CDUIListHeaderItemCtrl::GetColorResSwitchSep()
+{
+	return m_AttributeSepColor.GetColorResSwitch();
+}
+
+void CDUIListHeaderItemCtrl::SetColorResSwitchSep(const vector<CMMString> &vecResSwitch)
+{
+	m_AttributeSepColor.SetColorResSwitch(vecResSwitch);
+
+	Invalidate();
+
+	return;
 }
 
 void CDUIListHeaderItemCtrl::SetFixedWidth(int nWidth)
@@ -147,6 +163,23 @@ void CDUIListHeaderItemCtrl::RefreshView()
 
 	CalcSepRect();
 
+	//refresh subitem
+	CDUIRect rcThis = GetAbsoluteRect();
+	if (rcThis != m_rcThisLast)
+	{
+		m_rcThisLast = rcThis;
+
+		if (m_pOwner)
+		{
+			CDUIListViewCtrl *pListView = m_pOwner->GetOwner();
+
+			if (pListView)
+			{
+				pListView->NeedRefreshView();
+			}
+		}
+	}
+
 	return;
 }
 
@@ -161,9 +194,9 @@ bool CDUIListHeaderItemCtrl::SetText(LPCTSTR lpszText)
 
 	m_AttributeText.SetValue(lpszText);
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_TextChanged);
+		m_pWndOwner->SendNotify(this, DuiNotify_TextChanged);
 	}
 
 	Invalidate();
@@ -268,7 +301,7 @@ void CDUIListHeaderItemCtrl::PaintStatusColor(HDC hDC)
 	{
 		pAttribute = &m_AttributeColorHot;
 	}
-	else if (IsFocused() && false == m_AttributeColorFocus.empty())
+	else if (IsFocused() && false == m_AttributeColorFocus.IsEmpty())
 	{
 		pAttribute = &m_AttributeColorFocus;
 	}
@@ -303,7 +336,7 @@ void CDUIListHeaderItemCtrl::PaintStatusImage(HDC hDC)
 	{
 		pAttribute = &m_AttributeImageHot;
 	}
-	else if (IsFocused() && false == m_AttributeImageFocus.empty())
+	else if (IsFocused() && false == m_AttributeImageFocus.IsEmpty())
 	{
 		pAttribute = &m_AttributeImageFocus;
 	}
@@ -326,7 +359,7 @@ void CDUIListHeaderItemCtrl::PaintStatusImage(HDC hDC)
 
 void CDUIListHeaderItemCtrl::PaintText(HDC hDC)
 {
-	if (NULL == m_pOwner || NULL == m_pWndManager) return;
+	if (NULL == m_pOwner || NULL == m_pWndOwner) return;
 
 	CDUIAttributeTextStyle *pAttribute = &m_AttributeTextStyle;
 	if (NULL == pAttribute) return;
@@ -335,7 +368,7 @@ void CDUIListHeaderItemCtrl::PaintText(HDC hDC)
 	CMMString strText = GetText();
 	if (strText.empty()) return;
 
-	if (false == m_AttributeTextStyle.empty()
+	if (false == m_AttributeTextStyle.IsEmpty()
 		&& 0 == (m_nControlStatus & ControlStatus_Hot))
 	{
 		pAttribute = &m_AttributeTextStyle;
@@ -343,16 +376,16 @@ void CDUIListHeaderItemCtrl::PaintText(HDC hDC)
 
 	CDUIRect rcRange = GetTextRange();
 
-	pAttribute->Draw(hDC, rcRange, strText, m_pWndManager->IsGdiplusRenderText(), m_pWndManager->GetGdiplusRenderTextType(), false);
+	pAttribute->Draw(hDC, rcRange, strText, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), false);
 
 	return;
 }
 
 bool CDUIListHeaderItemCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_HeadItemButtonDown, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_HeadItemButtonDown, Msg.wParam, Msg.lParam);
 	}
 	if (m_rcSep.PtInRect(pt))
 	{
@@ -373,13 +406,13 @@ bool CDUIListHeaderItemCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessag
 
 	__super::OnDuiLButtonUp(pt, Msg);
 
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_HeadItemButtonUp, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_HeadItemButtonUp, Msg.wParam, Msg.lParam);
 
 		if (bClick)
 		{
-			m_pWndManager->SendNotify(this, DuiNotify_HeadItemClick, Msg.wParam, Msg.lParam);
+			m_pWndOwner->SendNotify(this, DuiNotify_HeadItemClick, Msg.wParam, Msg.lParam);
 		}
 	}
 
@@ -451,29 +484,6 @@ void CDUIListHeaderItemCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessa
 	Invalidate();
 
 	return __super::OnDuiMouseLeave(pt, Msg);
-}
-
-void CDUIListHeaderItemCtrl::OnDuiSize(CDUIRect rcParentAbs)
-{
-	CDUIRect rcThis = GetAbsoluteRect();
-
-	__super::OnDuiSize(rcParentAbs);
-
-	//refresh subitem
-	if (rcThis != GetAbsoluteRect())
-	{
-		if (m_pOwner)
-		{
-			CDUIListViewCtrl *pListView = m_pOwner->GetOwner();
-
-			if (pListView)
-			{
-				pListView->NeedRefreshView();
-			}
-		}
-	}
-
-	return;
 }
 
 void CDUIListHeaderItemCtrl::CalcSepRect()

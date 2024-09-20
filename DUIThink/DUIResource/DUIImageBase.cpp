@@ -419,14 +419,7 @@ bool CDUIImageBase::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 
 	if (0 == strcmp(lpszName, Dui_Resource_Key_ImagePath))
 	{
-		if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_3)
-		{
-			m_strImageFile = lpszValue;
-		}
-		else
-		{
-			m_strImageFile = CA2CT(lpszValue, CP_UTF8);
-		}
+		m_strImageFile = CA2CT(lpszValue, CP_UTF8);
 
 		return true;
 	}

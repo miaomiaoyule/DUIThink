@@ -39,10 +39,13 @@ protected:
 	CMMTrayIcon							m_TrayIcon;
 	bool								m_bShowTrayIcon = true;
 
+	//dialog
+protected:
+	CDlgChatTip *						m_pDlgChatTip = NULL;
+
 	//override
 protected:
 	LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
-	LRESULT OnWndCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) override;
 	void OnFindControl() override;
 	void OnInitDialog() override;
 

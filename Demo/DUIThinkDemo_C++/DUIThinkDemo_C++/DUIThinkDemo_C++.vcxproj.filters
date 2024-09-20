@@ -126,6 +126,9 @@
     <ClInclude Include="Define.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DlgChatTip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="Usage\SvgImage\SvgImageView.h">
       <Filter>Usage\SvgImage</Filter>
     </ClInclude>

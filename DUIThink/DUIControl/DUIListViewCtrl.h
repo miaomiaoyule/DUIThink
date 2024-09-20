@@ -110,18 +110,13 @@ protected:
 
 	//override
 protected:
-	bool RegisterControlListen(IDUIInterface *pIControlListen) override;
-	bool UnRegisterControlListen(IDUIInterface *pIControlListen) override;
+	bool RegisterControlListen(IDuiInterface *pIControlListen) override;
+	bool UnRegisterControlListen(IDuiInterface *pIControlListen) override;
 
 	//override
 protected:
 	void OnDpiChanged(int nScalePre) override;
 	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
-
-	//override
-protected:
-	void OnResourceDelete(CDUIResourceBase *pResourceObj) override;
-	void OnResourceSwitch(int nIndexRes) override;
 
 	//method
 public:
@@ -131,8 +126,8 @@ public:
 
 	//basic
 	UINT InitCtrlID() override;
-	void RefreshCtrlID() override;
-	bool SetWndManager(CDUIWndManager *pWndManager) override;
+	void RefreshCtrlID(bool bSelfSingle = false) override;
+	bool SetWndOwner(CDUIWnd *pWndOwner) override;
 	void SetVisible(bool bVisible = true) override;
 	void SetAnimateDrag(bool bAnimateDrag) override;
 

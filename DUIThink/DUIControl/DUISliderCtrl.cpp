@@ -275,8 +275,8 @@ void CDUISliderCtrl::PaintStatusColor(HDC hDC)
 		pAttribute = &m_AttributeColorThumbNormal;
 	}
 
-	if ((NULL == pAttribute || pAttribute->empty())
-		&& false == m_AttributeColorThumbNormal.empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
+		&& false == m_AttributeColorThumbNormal.IsEmpty())
 	{
 		pAttribute = &m_AttributeColorThumbNormal;
 	}
@@ -306,8 +306,8 @@ void CDUISliderCtrl::PaintStatusImage(HDC hDC)
 		pAttribute = &m_AttributeImageThumbNormal;
 	}
 
-	if ((NULL == pAttribute || pAttribute->empty())
-		&& false == m_AttributeImageThumbNormal.empty())
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
+		&& false == m_AttributeImageThumbNormal.IsEmpty())
 	{
 		pAttribute = &m_AttributeImageThumbNormal;
 	}
@@ -339,9 +339,9 @@ bool CDUISliderCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 
 bool CDUISliderCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (m_pWndManager)
+	if (m_pWndOwner)
 	{
-		m_pWndManager->SendNotify(this, DuiNotify_MouseMove, Msg.wParam, Msg.lParam);
+		m_pWndOwner->SendNotify(this, DuiNotify_MouseMove, Msg.wParam, Msg.lParam);
 	}
 	if (0 == (m_nControlStatus & ControlStatus_Pushed) && m_rcCurThumb.PtInRect(pt))
 	{

@@ -45,7 +45,7 @@ VecControlListen CDUIPropertyObject::GetControlListen()
 #endif
 }
 
-bool CDUIPropertyObject::RegisterControlListen(IDUIInterface *pIControlListen)
+bool CDUIPropertyObject::RegisterControlListen(IDuiInterface *pIControlListen)
 {
 	if (NULL == pIControlListen) return false;
 
@@ -58,7 +58,7 @@ bool CDUIPropertyObject::RegisterControlListen(IDUIInterface *pIControlListen)
 	return true;
 }
 
-bool CDUIPropertyObject::UnRegisterControlListen(IDUIInterface *pIControlListen)
+bool CDUIPropertyObject::UnRegisterControlListen(IDuiInterface *pIControlListen)
 {
 	if (NULL == pIControlListen) return false;
 
@@ -89,6 +89,55 @@ CMMString CDUIPropertyObject::GetDescribe() const
 	return Dui_Prop_Object;
 }
 
+CDUIAttributeObject * CDUIPropertyObject::GetAttributeObj(LPCTSTR lpszName)
+{
+	for (auto &pAttributeGroup : m_vecAttributeGroup)
+	{
+		if (NULL == pAttributeGroup) break;
+
+		auto vecAttribute = pAttributeGroup->GetVecAttribute();
+		for (auto pAttribute : vecAttribute)
+		{
+			if (0 == lstrcmp(pAttribute->GetAttributeName(), lpszName))
+			{
+				return pAttribute;
+			}
+		}
+	}
+
+	return NULL;
+}
+
+int CDUIPropertyObject::GetAttributeGroupIndex(CDUIAttributeGroup *pAttributeGroup)
+{
+	for (int n = 0; n < m_vecAttributeGroup.size(); n++)
+	{
+		if (m_vecAttributeGroup[n] == pAttributeGroup) return n;
+	}
+
+	return -1;
+}
+
+void CDUIPropertyObject::SetAttributeGroupIndex(CDUIAttributeGroup *pAttributeGroup, int nIndex)
+{
+	if (NULL == pAttributeGroup) return;
+
+	int nIndexPre = GetAttributeGroupIndex(pAttributeGroup);
+	if (-1 == nIndexPre) return;
+
+	nIndex = min(max(0, nIndex), m_vecAttributeGroup.size() - 1);
+	nIndex = nIndex < nIndexPre ? nIndex : nIndex - 1;
+	m_vecAttributeGroup.erase(m_vecAttributeGroup.begin() + nIndexPre);
+	m_vecAttributeGroup.insert(m_vecAttributeGroup.begin() + nIndex, pAttributeGroup);
+
+	return;
+}
+
+VecAttributeGroup CDUIPropertyObject::GetAttributeGroup()
+{
+	return m_vecAttributeGroup;
+}
+
 int CDUIPropertyObject::GetScale()
 {
 	return 100;
@@ -99,7 +148,7 @@ const CMMDpi & CDUIPropertyObject::GetDpiObj()
 	return CDUIGlobal::GetInstance()->GetDpiObj();
 }
 
-CDUIWndManager * CDUIPropertyObject::GetWndManager()
+CDUIWnd * CDUIPropertyObject::GetWndOwner()
 {
 	return NULL;
 }
@@ -159,16 +208,6 @@ bool CDUIPropertyObject::CreateAttribute(CDUIAttributeObject &Attribute, LPCTSTR
 {	
 	if (NULL == pAttriGroup) return false;
 
-	//same
-#ifdef DUI_DESIGN
-	if (CDUIGlobal::GetAttributeObj(this, lpszName))
-	{
-		MessageBox(NULL, _T("Attribute Name Same"), NULL, NULL);
-
-		return false;
-	}
-#endif
-
 	//create
 	auto FindIt = false == m_mapAttributeBuffer.empty() ? m_mapAttributeBuffer.find(lpszName) : m_mapAttributeBuffer.end();
 	if (FindIt != m_mapAttributeBuffer.end())
@@ -185,6 +224,15 @@ bool CDUIPropertyObject::CreateAttribute(CDUIAttributeObject &Attribute, LPCTSTR
 
 	//group
 	pAttriGroup->AddAttribute(&Attribute);
+
+	return true;
+}
+
+bool CDUIPropertyObject::AddAttributeBuffer(tinyxml2::XMLElement *pNodeXml)
+{
+	if (NULL == pNodeXml) return false;
+
+	m_mapAttributeBuffer[pNodeXml->Name()] = pNodeXml;
 
 	return true;
 }
@@ -267,53 +315,6 @@ void CDUIGlobal::PerformNotifyVisibleChange(CDUIPropertyObject *pPropertyObj)
 	return;
 }
 
-void CDUIGlobal::PerformResourceDelete(CDUIControlBase *pControl, CDUIResourceBase *pResourceObj)
-{
-	if (NULL == pResourceObj) return;
-
-	//self
-	for (auto pAttributeGroup : pControl->m_vecAttributeGroup)
-	{
-		if (NULL == pAttributeGroup) break;
-
-		auto vecAttribute = pAttributeGroup->GetVecAttribute();
-		for (auto pAttribute : vecAttribute)
-		{
-			//pAttribute->OnResourceDelete(pResourceObj);
-		}
-	}
-
-	return;
-}
-
-void CDUIGlobal::PerformResourceSwitch(CDUIControlBase *pControl, int nIndexRes)
-{
-	if (NULL == pControl) return;
-
-	//self
-	for (auto pAttributeGroup : pControl->m_vecAttributeGroup)
-	{
-		if (NULL == pAttributeGroup) break;
-
-		auto vecAttribute = pAttributeGroup->GetVecAttribute();
-		for (auto pAttribute : vecAttribute)
-		{
-			//pAttribute->OnResourceSwitch(nIndexRes);
-		}
-	}
-
-	return;
-}
-
-bool CDUIGlobal::PerformAddAttributeBuffer(CDUIPropertyObject *pPropertyObj, tinyxml2::XMLElement *pNodeXml)
-{
-	if (NULL == pPropertyObj || NULL == pNodeXml) return false;
-
-	pPropertyObj->m_mapAttributeBuffer[pNodeXml->Name()] = pNodeXml;
-
-	return true;
-}
-
 VecDuiRichTextItem CDUIGlobal::ParseVecRichTextItem(LPCSTR lpszValue)
 {
 	VecDuiRichTextItem vecRichTextItem;
@@ -341,21 +342,7 @@ VecDuiRichTextItem CDUIGlobal::ParseVecRichTextItem(LPCSTR lpszValue)
 			{
 				if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriRichTextItemFontRes))
 				{
-					switch (CDUIGlobal::GetInstance()->GetResVersion())
-					{
-						case DuiResVersion_0:
-						{
-							RichTextItem.vecFontResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), (";"));
-
-							break;
-						}
-						default:
-						{
-							RichTextItem.vecFontResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), (";"), CP_UTF8);
-
-							break;
-						}
-					}
+					RichTextItem.vecFontResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), (";"), CP_UTF8);
 					
 					continue;
 				}
@@ -367,21 +354,7 @@ VecDuiRichTextItem CDUIGlobal::ParseVecRichTextItem(LPCSTR lpszValue)
 				}
 				if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriRichTextItemText))
 				{
-					switch (CDUIGlobal::GetInstance()->GetResVersion())
-					{
-						case DuiResVersion_0:
-						{
-							RichTextItem.strText = pNodeAttribute->Value();
-
-							break;
-						}
-						default:
-						{
-							RichTextItem.strText = CA2CT(pNodeAttribute->Value(), CP_UTF8);
-
-							break;
-						}
-					}
+					RichTextItem.strText = CA2CT(pNodeAttribute->Value(), CP_UTF8);
 
 					continue;
 				}
@@ -395,183 +368,6 @@ VecDuiRichTextItem CDUIGlobal::ParseVecRichTextItem(LPCSTR lpszValue)
 	} while (false);
 
 	return vecRichTextItem;
-}
-
-VecAttributeGroup CDUIGlobal::GetAttributeGroup(CDUIPropertyObject *pPropertyObj)
-{
-	if (NULL == pPropertyObj) return {};
-
-	return pPropertyObj->m_vecAttributeGroup;
-}
-
-int CDUIGlobal::GetAttributeGroupIndex(CDUIAttributeGroup *pAttributeGroup)
-{
-	if (NULL == pAttributeGroup) return -1;
-
-	CDUIPropertyObject *pPropertyObj = pAttributeGroup->GetOwner();
-	if (NULL == pPropertyObj) return -1;
-
-	auto &vecAttributeGroup = pPropertyObj->m_vecAttributeGroup;
-	for (int n = 0; n < vecAttributeGroup.size(); n++)
-	{
-		if (vecAttributeGroup[n] == pAttributeGroup) return n;
-	}
-
-	return -1;
-}
-
-void CDUIGlobal::SetAttributeGroupIndex(CDUIAttributeGroup *pAttributeGroup, int nIndex)
-{
-	if (NULL == pAttributeGroup) return;
-
-	CDUIPropertyObject *pPropertyObj = pAttributeGroup->GetOwner();
-	if (NULL == pPropertyObj) return;
-
-	int nIndexPre = GetAttributeGroupIndex(pAttributeGroup);
-	if (-1 == nIndexPre) return;
-
-	auto &vecAttributeGroup = pPropertyObj->m_vecAttributeGroup;
-	nIndex = min(max(0, nIndex), vecAttributeGroup.size() - 1);
-	vecAttributeGroup.erase(vecAttributeGroup.begin() + nIndexPre);
-	vecAttributeGroup.insert(vecAttributeGroup.begin() + nIndex, pAttributeGroup);
-
-	return;
-}
-
-CDUIAttributeObject * CDUIGlobal::GetAttributeObj(CDUIPropertyObject *pPropertyObj, LPCTSTR lpszName)
-{
-	if (NULL == pPropertyObj) return NULL;
-
-	for (auto &pAttributeGroup : pPropertyObj->m_vecAttributeGroup)
-	{
-		if (NULL == pAttributeGroup) break;
-
-		auto vecAttribute = pAttributeGroup->GetVecAttribute();
-		for (auto pAttribute : vecAttribute)
-		{
-			if (lstrcmp(pAttribute->GetAttributeName(), lpszName) == 0)
-			{
-				return pAttribute;
-			}
-		}
-	}
-
-	return NULL;
-}
-
-bool CDUIGlobal::CreateAttributeForDesign(CDUIAttributeObject **ppAttribute, enDuiAttributeType attributeType, LPCTSTR lpszName, LPCTSTR lpszDescribe)
-{
-	if (*ppAttribute) return false;
-
-	switch (attributeType)
-	{
-		case DuiAttribute_Group:
-		{
-			*ppAttribute = new CDUIAttributeGroup;
-			break;
-		}
-		case DuiAttribute_Position:
-		{
-			*ppAttribute = new CDUIAttributePosition;
-			break;
-		}
-		case DuiAttribute_ImageSection:
-		{
-			*ppAttribute = new CDUIAttriImageSection;
-			break;
-		}
-		case DuiAttribute_Long:
-		{
-			*ppAttribute = new CDUIAttributeLong;
-			break;
-		}
-		case DuiAttribute_Float:
-		{
-			*ppAttribute = new CDUIAttributeFloat;
-			break;
-		}
-		case DuiAttribute_Text:
-		{
-			*ppAttribute = new CDUIAttributeText;
-			break;
-		}
-		case DuiAttribute_TextStyle:
-		{
-			*ppAttribute = new CDUIAttributeTextStyle;
-			break;
-		}
-		case DuiAttribute_RichText:
-		{
-			*ppAttribute = new CDUIAttributeRichText;
-			break;
-		}
-		case DuiAttribute_Color:
-		{
-			*ppAttribute = new CDUIAttributeColor;
-			break;
-		}
-		case DuiAttribute_ColorSwitch:
-		{
-			*ppAttribute = new CDUIAttributeColorSwitch;
-			break;
-		}
-		case DuiAttribute_Bool:
-		{
-			*ppAttribute = new CDUIAttributeBool;
-			break;
-		}
-		case DuiAttribute_Combox:
-		{
-			*ppAttribute = new CDUIAttributeCombox;
-			break;
-		}
-		case DuiAttribute_Cursor:
-		{
-			*ppAttribute = new CDUIAttributeCursor;
-			break;
-		}
-		case DuiAttribute_ModelSelect:
-		{
-			*ppAttribute = new CDUIAttriModelSelect;
-			break;
-		}
-		case DuiAttribute_ViewSelect:
-		{
-			*ppAttribute = new CDUIAttriViewSelect;
-			break;
-		}
-		case DuiAttribute_TabSelect:
-		{
-			*ppAttribute = new CDUIAttriTabSelect;
-			break;
-		}
-		case DuiAttribute_Size:
-		{
-			*ppAttribute = new CDUIAttributeSize;
-			break;
-		}
-		case DuiAttribute_Rect:
-		{
-			*ppAttribute = new CDUIAttributeRect;
-			break;
-		}
-		case DuiAttribute_HotKey:
-		{
-			*ppAttribute = new CDUIAttributeHotKey;
-			break;
-		}
-		default:
-		{
-			return false;
-			break;
-		}
-	}
-
-	if (*ppAttribute == NULL) return false;
-	(*ppAttribute)->SetAttributeName(lpszName);
-	(*ppAttribute)->SetAttributeDescr(lpszDescribe);
-
-	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////

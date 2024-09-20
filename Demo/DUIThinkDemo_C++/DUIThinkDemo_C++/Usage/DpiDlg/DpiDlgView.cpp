@@ -17,9 +17,9 @@ CDpiDlgView::~CDpiDlgView()
 {
 	if (m_pDpiDlgViewCtrl)
 	{
-		if (m_pDpiDlgViewCtrl->GetWndManager())
+		if (m_pDpiDlgViewCtrl->GetWndOwner())
 		{
-			m_pDpiDlgViewCtrl->GetWndManager()->RemoveINotify(this);
+			m_pDpiDlgViewCtrl->GetWndOwner()->RemoveINotify(this);
 		}
 	}
 
@@ -32,9 +32,9 @@ void CDpiDlgView::Attach(CDUIContainerCtrl *pViewBase)
 
 	if (NULL == m_pDpiDlgViewCtrl) return;
 
-	if (m_pDpiDlgViewCtrl->GetWndManager())
+	if (m_pDpiDlgViewCtrl->GetWndOwner())
 	{
-		m_pDpiDlgViewCtrl->GetWndManager()->AddINotify(this);
+		m_pDpiDlgViewCtrl->GetWndOwner()->AddINotify(this);
 	}
 
 	//ctrl
@@ -58,9 +58,9 @@ void CDpiDlgView::OnDuiWndInited(const DuiNotify &Notify)
 
 void CDpiDlgView::OnDuiClickDpiDlg1(const DuiNotify &Notify)
 {
-	if (NULL == m_pDpiDlgViewCtrl || NULL == m_pDpiDlgViewCtrl->GetWndManager()) return;
+	if (NULL == m_pDpiDlgViewCtrl || NULL == m_pDpiDlgViewCtrl->GetWndOwner()) return;
 
-	auto pIWndManager = m_pDpiDlgViewCtrl->GetWndManager();
+	auto pIWndManager = m_pDpiDlgViewCtrl->GetWndOwner();
 
 	CMMString strCmdLine;
 	strCmdLine = strCmdLine + _T(" /") + Name_DpiDlgKey + _T(" DlgDpi");

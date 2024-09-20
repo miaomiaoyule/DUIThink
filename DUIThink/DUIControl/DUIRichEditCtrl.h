@@ -12,7 +12,7 @@ class CDUITextHost;
 static const GUID IID_CDUIRichEditCtrl = { 0x5F2106BF,0xD35E,0x47A9,0xBF,0xC3,0x5A,0x54,0x29,0x7D,0x77,0xD6 };
 class DUITHINK_API CDUIRichEditCtrl
 	: public CDUIContainerCtrl
-	, public IDUIPreMessage
+	, public IDuiPreMessage
 {
 	friend class CDUITextHost;
 

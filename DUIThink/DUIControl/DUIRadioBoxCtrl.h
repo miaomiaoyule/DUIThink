@@ -13,7 +13,7 @@ static const GUID IID_CDUIRadioBoxCtrl = { 0xFD007C41,0xDC4E,0x4298,0xB0,0x16,0x
 class DUITHINK_API CDUIRadioBoxCtrl
 	: public CDUICheckBoxCtrl
 {
-	friend class CDUIWndManager;
+	friend class CDUIWnd;
 
 	DuiDeclare_CreateControl(CDUIRadioBoxCtrl)
 	MMDeclare_ClassName(CDUIRadioBoxCtrl)
@@ -72,7 +72,7 @@ protected:
 	//active tab
 	virtual void PerformActiveBindTabPage();
 	//unsel other
-	virtual void PerformUnSelOther();
+	virtual void PerformUnSelOther(bool bNotify);
 };
 
 typedef std::vector<CDUIRadioBoxCtrl*> VecDuiRadioBoxCtrl;

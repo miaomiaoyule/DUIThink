@@ -15,9 +15,9 @@ CRadioBoxView::~CRadioBoxView()
 {
 	if (m_pRadioBoxViewCtrl)
 	{
-		if (m_pRadioBoxViewCtrl->GetWndManager())
+		if (m_pRadioBoxViewCtrl->GetWndOwner())
 		{
-			m_pRadioBoxViewCtrl->GetWndManager()->RemoveINotify(this);
+			m_pRadioBoxViewCtrl->GetWndOwner()->RemoveINotify(this);
 		}
 	}
 
@@ -30,9 +30,9 @@ void CRadioBoxView::Attach(CDUIContainerCtrl *pViewBase)
 	
 	if (NULL == m_pRadioBoxViewCtrl) return;
 
-	if (m_pRadioBoxViewCtrl->GetWndManager())
+	if (m_pRadioBoxViewCtrl->GetWndOwner())
 	{
-		m_pRadioBoxViewCtrl->GetWndManager()->AddINotify(this);
+		m_pRadioBoxViewCtrl->GetWndOwner()->AddINotify(this);
 	}
 
 	//ctrl

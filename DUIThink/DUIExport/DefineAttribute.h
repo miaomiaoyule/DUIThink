@@ -28,6 +28,7 @@ enum enDuiAttributeType
 	DuiAttribute_Size,
 	DuiAttribute_Rect,
 	DuiAttribute_HotKey,
+	DuiAttribute_CtrlID,
 	DuiAttribute_Count
 };
 
