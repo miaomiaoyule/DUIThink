@@ -492,7 +492,7 @@ void CDUIControlBase::MovePosition(SIZE szOffset)
 	return;
 }
 
-bool CDUIControlBase::SetAbsoluteRect(CDUIRect &rcAbsolute)
+bool CDUIControlBase::SetAbsoluteRect(CDUIRect rcAbsolute)
 {
 	if (rcAbsolute == GetAbsoluteRect()) return false;
 

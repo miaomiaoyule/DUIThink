@@ -67,7 +67,7 @@ CMMString CDUIStaticCtrl::GetDescribe() const
 	return Dui_Ctrl_Static;
 }
 
-bool CDUIStaticCtrl::SetAbsoluteRect(CDUIRect &rcAbsolute)
+bool CDUIStaticCtrl::SetAbsoluteRect(CDUIRect rcAbsolute)
 {
 	NeedMeasureSize();
 

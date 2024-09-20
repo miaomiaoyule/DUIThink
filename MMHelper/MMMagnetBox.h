@@ -6,23 +6,16 @@
 //////////////////////////////////////////////////////////////////////////
 //code by 城南花已开 2020-1-25 QQ:284168136
 //////////////////////////////////////////////////////////////////////////
-
-#include <vector>
-#include <unordered_map>
-#include <Windows.h>
-#include <assert.h>
-#include <atltypes.h>
-
-#define MagnetType_None				(0x00)
-#define MagnetType_Left				(0x01)
-#define MagnetType_Top				(0x02)
-#define MagnetType_Right			(0x04)
-#define MagnetType_Bottom			(0x08)
+#define MagnetType_None					(0x00)
+#define MagnetType_Left					(0x01)
+#define MagnetType_Top					(0x02)
+#define MagnetType_Right				(0x04)
+#define MagnetType_Bottom				(0x08)
 
 typedef std::unordered_map<int, CRect> MapMagnetBox;
 
 //////////////////////////////////////////////////////////////////////////
-class CMagnetBox
+class MMHELPER_API CMagnetBox
 {
 	struct tagMagnetBox : public CRect
 	{
@@ -45,23 +38,27 @@ class CMagnetBox
 	};
 
 public:
-	CMagnetBox() {}
+	CMagnetBox();
 	virtual ~CMagnetBox() {}
 
 protected:
 	MapMagnetBox					m_mapMagnetBox;
 	tagFindMagnetBox				m_CurBoxMagnetInfo;
-	bool							m_bBoxMoving = false;
+	int								m_nMagnetType = MagnetType_Left | MagnetType_Top | MagnetType_Right | MagnetType_Bottom;
+	int								m_nMagnetValue = 12;
+	bool							m_bBoxMovingX = false;
+	bool							m_bBoxMovingY = false;
 	CPoint							m_ptPullTotal = {};
+	CRect							m_rcPullTotal = {};
 
 public:
 	void PushBox(int nIndex, CRect rcBox);
 	void RemoveAt(int nIndex);
 	void RemoveAll();
-	void SceneInit();
+	void SceneInit(int nMagnetType = MagnetType_Left | MagnetType_Top | MagnetType_Right | MagnetType_Bottom, int nMagnetValue = 12);
 
 	CRect MoveBox(int nIndex, IN CPoint ptOffset);
-	CRect StretchBox(int nIndex, IN CRect rcStretch);
+	CRect StretchBox(int nIndex, IN CRect rcStretch, OUT bool &bMagnet);
 
 	//help
 protected:

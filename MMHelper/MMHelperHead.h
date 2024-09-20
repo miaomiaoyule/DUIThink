@@ -144,6 +144,7 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMDisplayer.h"
 #include "MMTrayIcon.h"
 #include "MMEncrypt.h"
+#include "MMMagnetBox.h"
 #include "MMServiceModel/MMServiceMsg.h"
 #include "MMServiceModel/MMServiceItem.h"
 #include "MMServiceModel/MMTimerPower.h"

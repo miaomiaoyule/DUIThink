@@ -178,7 +178,7 @@ public:
 	// Returns:   	bool
 	// Parameter: 	CDUIRect & rcAbsolute
 	//************************************
-	virtual bool SetAbsoluteRect(CDUIRect &rcAbsolute);
+	virtual bool SetAbsoluteRect(CDUIRect rcAbsolute);
 	virtual CDUIRect GetAbsoluteRect();
 	virtual bool IsFloat();
 	virtual void SetFloat(bool bFloat);

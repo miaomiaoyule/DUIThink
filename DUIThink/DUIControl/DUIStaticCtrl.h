@@ -49,7 +49,7 @@ public:
 	CMMString GetDescribe() const override;
 
 	//layout
-	bool SetAbsoluteRect(CDUIRect &rcAbsolute) override; 
+	bool SetAbsoluteRect(CDUIRect rcAbsolute) override; 
 	void SetMinWidth(long lWidth) override;
 	void SetMaxWidth(long lWidth) override;
 	void SetMinHeight(long lHeight) override;

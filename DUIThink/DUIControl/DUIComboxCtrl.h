@@ -55,6 +55,7 @@ public:
 	void RefreshCtrlID(bool bSelfSingle = false) override;
 	bool SetWndOwner(CDUIWnd *pWndOwner) override;
 	void SetVisible(bool bVisible = true) override;
+	CMMString GetText() override;
 	bool SetText(LPCTSTR lpszText) override;
 
 	//refresh

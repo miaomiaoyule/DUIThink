@@ -514,6 +514,13 @@ void CDUIComboxCtrl::SetVisible(bool bVisible)
 	return;
 }
 
+CMMString CDUIComboxCtrl::GetText()
+{
+	if (m_pEditCtrl && m_pEditCtrl->IsVisible()) return m_pEditCtrl->GetText();
+
+	return __super::GetText();
+}
+
 bool CDUIComboxCtrl::SetText(LPCTSTR lpszText)
 {
 	if (false == __super::SetText(lpszText)) return false;
@@ -894,11 +901,9 @@ void CDUIComboxCtrl::InitComplete()
 
 void CDUIComboxCtrl::PaintText(HDC hDC)
 {
-	if (m_pEditCtrl)
+	if (m_pEditCtrl && m_pEditCtrl->IsVisible())
 	{
-		if (m_pEditCtrl->IsVisible()) return;
-
-		SetText(m_pEditCtrl->GetText());
+		return;
 	}
 
 	return __super::PaintText(hDC);
