@@ -17,6 +17,7 @@ typedef std::unordered_map<int, CRect> MapMagnetBox;
 //////////////////////////////////////////////////////////////////////////
 class MMHELPER_API CMMMagnetBox
 {
+public:
 	struct tagMagnetBox : public CRect
 	{
 		int							nIndex = -1;
@@ -52,10 +53,11 @@ protected:
 	CRect							m_rcPullTotal = {};
 
 public:
+	void SceneInit(int nMagnetType = MagnetType_Left | MagnetType_Top | MagnetType_Right | MagnetType_Bottom, int nMagnetValue = 12);
 	void PushBox(int nIndex, CRect rcBox);
 	void RemoveAt(int nIndex);
 	void RemoveAll();
-	void SceneInit(int nMagnetType = MagnetType_Left | MagnetType_Top | MagnetType_Right | MagnetType_Bottom, int nMagnetValue = 12);
+	tagFindMagnetBox GetNearestMagnetBox(int nIndex);
 
 	CRect MoveBox(int nIndex, IN CPoint ptOffset);
 	CRect StretchBox(int nIndex, IN CRect rcStretch, OUT bool &bMagnet);

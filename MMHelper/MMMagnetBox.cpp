@@ -9,6 +9,20 @@ CMMMagnetBox::CMMMagnetBox()
 
 }
 
+void CMMMagnetBox::SceneInit(int nMagnetType, int nMagnetValue)
+{
+	m_nMagnetType = nMagnetType;
+	m_nMagnetValue = max(1, nMagnetValue);
+	m_CurBoxMagnetInfo = {};
+	m_bBoxMovingX = false;
+	m_bBoxMovingY = false;
+	m_ptPullTotal = {};
+	m_rcPullTotal = {};
+	m_mapMagnetBox.clear();
+
+	return;
+}
+
 void CMMMagnetBox::PushBox(int nIndex, CRect rcBox)
 {
 	m_mapMagnetBox[nIndex] = rcBox;
@@ -30,18 +44,12 @@ void CMMMagnetBox::RemoveAll()
 	return;
 }
 
-void CMMMagnetBox::SceneInit(int nMagnetType, int nMagnetValue)
+CMMMagnetBox::tagFindMagnetBox CMMMagnetBox::GetNearestMagnetBox(int nIndex)
 {
-	m_nMagnetType = nMagnetType;
-	m_nMagnetValue = max(1, nMagnetValue);
-	m_CurBoxMagnetInfo = {};
-	m_bBoxMovingX = false;
-	m_bBoxMovingY = false;
-	m_ptPullTotal = {};
-	m_rcPullTotal = {};
-	m_mapMagnetBox.clear();
+	tagFindMagnetBox FindMagnetBox = {};
+	FindNearestMagnetBox(nIndex, MagnetType_None, MagnetType_None, FindMagnetBox);
 
-	return;
+	return FindMagnetBox;
 }
 
 CRect CMMMagnetBox::MoveBox(int nIndex, IN CPoint ptOffset)
