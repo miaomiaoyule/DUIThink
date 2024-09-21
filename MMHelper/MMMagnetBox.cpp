@@ -219,7 +219,7 @@ bool CMagnetBox::MoveOffset(int nIndex, IN CPoint ptOffset, OUT CPoint &ptOffset
 			m_ptPullTotal.x += ptOffset.x;
 
 			if ((-1 != m_CurBoxMagnetInfo.rcBoxLeft.nIndex || -1 != m_CurBoxMagnetInfo.rcBoxRight.nIndex)
-				&& abs(m_ptPullTotal.x) < m_nMagnetValue)
+				&& abs(m_ptPullTotal.x) <= m_nMagnetValue)
 			{
 				ptOffset.x = 0;
 
@@ -239,7 +239,7 @@ bool CMagnetBox::MoveOffset(int nIndex, IN CPoint ptOffset, OUT CPoint &ptOffset
 			m_ptPullTotal.y += ptOffset.y;
 
 			if ((-1 != m_CurBoxMagnetInfo.rcBoxTop.nIndex || -1 != m_CurBoxMagnetInfo.rcBoxBottom.nIndex)
-				&& abs(m_ptPullTotal.y) < m_nMagnetValue)
+				&& abs(m_ptPullTotal.y) <= m_nMagnetValue)
 			{
 				ptOffset.y = 0;
 
@@ -276,8 +276,8 @@ bool CMagnetBox::StretchOffset(int nIndex, IN CRect rcStretch, OUT CRect &rcStre
 			m_rcPullTotal.right += rcStretch.right;
 
 			if ((0 == m_rcPullTotal.left && 0 == m_rcPullTotal.right)
-				|| (0 != m_rcPullTotal.left && -1 != m_CurBoxMagnetInfo.rcBoxLeft.nIndex && abs(m_rcPullTotal.left) < MAX_OFFSET_MAGNET)
-				|| (0 != m_rcPullTotal.right && -1 != m_CurBoxMagnetInfo.rcBoxRight.nIndex && abs(m_rcPullTotal.right) < MAX_OFFSET_MAGNET))
+				|| (0 != m_rcPullTotal.left && -1 != m_CurBoxMagnetInfo.rcBoxLeft.nIndex && abs(m_rcPullTotal.left) < m_nMagnetValue)
+				|| (0 != m_rcPullTotal.right && -1 != m_CurBoxMagnetInfo.rcBoxRight.nIndex && abs(m_rcPullTotal.right) < m_nMagnetValue))
 			{
 				rcStretch.left = rcStretch.right = 0;
 
@@ -299,8 +299,8 @@ bool CMagnetBox::StretchOffset(int nIndex, IN CRect rcStretch, OUT CRect &rcStre
 			m_rcPullTotal.bottom += rcStretch.bottom;
 
 			if ((0 == m_rcPullTotal.top && 0 == m_rcPullTotal.bottom)
-				|| (0 != m_rcPullTotal.top && -1 != m_CurBoxMagnetInfo.rcBoxTop.nIndex && abs(m_rcPullTotal.top) < MAX_OFFSET_MAGNET)
-				|| (0 != m_rcPullTotal.bottom && -1 != m_CurBoxMagnetInfo.rcBoxBottom.nIndex && abs(m_rcPullTotal.bottom) < MAX_OFFSET_MAGNET))
+				|| (0 != m_rcPullTotal.top && -1 != m_CurBoxMagnetInfo.rcBoxTop.nIndex && abs(m_rcPullTotal.top) < m_nMagnetValue)
+				|| (0 != m_rcPullTotal.bottom && -1 != m_CurBoxMagnetInfo.rcBoxBottom.nIndex && abs(m_rcPullTotal.bottom) < m_nMagnetValue))
 			{
 				rcStretch.top = rcStretch.bottom = 0;
 
@@ -337,7 +337,7 @@ void CMagnetBox::FindNearestMagnetBox(int nIndex, int nMoveDirection, int nBorde
 	CRect rcBox = FindIt->second;
 	for (auto &BoxItem : m_mapMagnetBox)
 	{
-		if(BoxItem.first == nIndex) continue;
+		if (BoxItem.first == nIndex) continue;
 
 		CRect rcBoxItem = BoxItem.second;
 
@@ -345,7 +345,8 @@ void CMagnetBox::FindNearestMagnetBox(int nIndex, int nMoveDirection, int nBorde
 		if (MagnetType_None == nMoveDirection)
 		{
 			//left
-			if (-1 == FindMagnetBox.rcBoxLeft.nIndex 
+			if ((m_nMagnetType & MagnetType_Left) 
+				&& -1 == FindMagnetBox.rcBoxLeft.nIndex
 				&& (rcBox.left == rcBoxItem.left || MIN_OFFSET_MAGNET == rcBox.left - rcBoxItem.right))
 			{
 				FindMagnetBox.rcBoxLeft = rcBoxItem;
@@ -353,7 +354,8 @@ void CMagnetBox::FindNearestMagnetBox(int nIndex, int nMoveDirection, int nBorde
 				FindMagnetBox.rcBoxLeft.MagnetType = rcBox.left == rcBoxItem.left ? MagnetType_Left : MagnetType_Right;
 			}
 			//top
-			if (-1 == FindMagnetBox.rcBoxTop.nIndex
+			if ((m_nMagnetType & MagnetType_Top) 
+				&& -1 == FindMagnetBox.rcBoxTop.nIndex
 				&& (rcBox.top == rcBoxItem.top || MIN_OFFSET_MAGNET == rcBox.top - rcBoxItem.bottom))
 			{
 				FindMagnetBox.rcBoxTop = rcBoxItem;
@@ -361,7 +363,8 @@ void CMagnetBox::FindNearestMagnetBox(int nIndex, int nMoveDirection, int nBorde
 				FindMagnetBox.rcBoxTop.MagnetType = rcBox.top == rcBoxItem.top ? MagnetType_Top : MagnetType_Bottom;
 			}
 			//right
-			if (-1 == FindMagnetBox.rcBoxRight.nIndex
+			if ((m_nMagnetType & MagnetType_Right)
+				&& -1 == FindMagnetBox.rcBoxRight.nIndex
 				&& (MIN_OFFSET_MAGNET == rcBoxItem.left - rcBox.right || rcBoxItem.right == rcBox.right))
 			{
 				FindMagnetBox.rcBoxRight = rcBoxItem;
@@ -369,7 +372,8 @@ void CMagnetBox::FindNearestMagnetBox(int nIndex, int nMoveDirection, int nBorde
 				FindMagnetBox.rcBoxRight.MagnetType = rcBoxItem.right == rcBox.right ? MagnetType_Right : MagnetType_Left;
 			}
 			//bottom
-			if (-1 == FindMagnetBox.rcBoxBottom.nIndex
+			if ((m_nMagnetType & MagnetType_Bottom)
+				&& -1 == FindMagnetBox.rcBoxBottom.nIndex
 				&& (MIN_OFFSET_MAGNET == rcBoxItem.top - rcBox.bottom || rcBoxItem.bottom == rcBox.bottom))
 			{
 				FindMagnetBox.rcBoxBottom = rcBoxItem;
@@ -381,22 +385,22 @@ void CMagnetBox::FindNearestMagnetBox(int nIndex, int nMoveDirection, int nBorde
 		}
 
 		//left direction
-		if (nMoveDirection & MagnetType_Left)
+		if ((nMoveDirection & MagnetType_Left) && (m_nMagnetType & MagnetType_Left))
 		{
 			VerifyBoxLeftDirection(BoxItem.first, rcBoxItem, rcBox, nBorderNearest, FindMagnetBox);
 		}
 		//top direction
-		if (nMoveDirection & MagnetType_Top)
+		if ((nMoveDirection & MagnetType_Top) && (m_nMagnetType & MagnetType_Top))
 		{
 			VerifyBoxTopDirection(BoxItem.first, rcBoxItem, rcBox, nBorderNearest, FindMagnetBox);
 		}
 		//right direction
-		if (nMoveDirection & MagnetType_Right)
+		if ((nMoveDirection & MagnetType_Right) && (m_nMagnetType & MagnetType_Right))
 		{
 			VerifyBoxRightDirection(BoxItem.first, rcBoxItem, rcBox, nBorderNearest, FindMagnetBox);
 		}
 		//bottom direction
-		if (nMoveDirection & MagnetType_Bottom)
+		if ((nMoveDirection & MagnetType_Bottom) && (m_nMagnetType & MagnetType_Bottom))
 		{
 			VerifyBoxBottomDirection(BoxItem.first, rcBoxItem, rcBox, nBorderNearest, FindMagnetBox);
 		}
@@ -411,15 +415,15 @@ void CMagnetBox::VerifyBoxLeftDirection(int nIndex, CRect rcBoxItem, CRect rcBox
 	auto &FindBoxLeft = FindMagnetBox.rcBoxLeft;
 	if (nBorderNearest & MagnetType_Left)
 	{
-		if ((rcBoxItem.right <= rcBox.left && rcBoxItem.right + MAX_OFFSET_MAGNET >= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Left == FindBoxLeft.MagnetType && rcBoxItem.right > FindBoxLeft.left)))
-			|| (rcBoxItem.right <= rcBox.left && rcBoxItem.right + MAX_OFFSET_MAGNET >= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Right == FindBoxLeft.MagnetType && rcBoxItem.right > FindBoxLeft.right))))
+		if ((rcBoxItem.right <= rcBox.left && rcBoxItem.right + m_nMagnetValue >= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Left == FindBoxLeft.MagnetType && rcBoxItem.right > FindBoxLeft.left)))
+			|| (rcBoxItem.right <= rcBox.left && rcBoxItem.right + m_nMagnetValue >= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Right == FindBoxLeft.MagnetType && rcBoxItem.right > FindBoxLeft.right))))
 		{
 			FindBoxLeft = rcBoxItem;
 			FindBoxLeft.nIndex = nIndex;
 			FindBoxLeft.MagnetType = MagnetType_Right;
 		}
-		if ((rcBoxItem.left <= rcBox.left && rcBoxItem.left + MAX_OFFSET_MAGNET >= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Left == FindBoxLeft.MagnetType && rcBoxItem.left > FindBoxLeft.left)))
-			|| (rcBoxItem.left <= rcBox.left && rcBoxItem.left + MAX_OFFSET_MAGNET >= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Right == FindBoxLeft.MagnetType && rcBoxItem.left > FindBoxLeft.right))))
+		if ((rcBoxItem.left <= rcBox.left && rcBoxItem.left + m_nMagnetValue >= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Left == FindBoxLeft.MagnetType && rcBoxItem.left > FindBoxLeft.left)))
+			|| (rcBoxItem.left <= rcBox.left && rcBoxItem.left + m_nMagnetValue >= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Right == FindBoxLeft.MagnetType && rcBoxItem.left > FindBoxLeft.right))))
 		{
 			FindBoxLeft = rcBoxItem;
 			FindBoxLeft.nIndex = nIndex;
@@ -431,15 +435,15 @@ void CMagnetBox::VerifyBoxLeftDirection(int nIndex, CRect rcBoxItem, CRect rcBox
 	auto &FindBoxRight = FindMagnetBox.rcBoxRight;
 	if (nBorderNearest & MagnetType_Right)
 	{
-		if ((rcBoxItem.right <= rcBox.right && rcBoxItem.right + MAX_OFFSET_MAGNET >= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Left == FindBoxRight.MagnetType && rcBoxItem.right > FindBoxRight.left)))
-			|| (rcBoxItem.right <= rcBox.right && rcBoxItem.right + MAX_OFFSET_MAGNET >= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Right == FindBoxRight.MagnetType && rcBoxItem.right > FindBoxRight.right))))
+		if ((rcBoxItem.right <= rcBox.right && rcBoxItem.right + m_nMagnetValue >= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Left == FindBoxRight.MagnetType && rcBoxItem.right > FindBoxRight.left)))
+			|| (rcBoxItem.right <= rcBox.right && rcBoxItem.right + m_nMagnetValue >= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Right == FindBoxRight.MagnetType && rcBoxItem.right > FindBoxRight.right))))
 		{
 			FindBoxRight = rcBoxItem;
 			FindBoxRight.nIndex = nIndex;
 			FindBoxRight.MagnetType = MagnetType_Right;
 		}
-		if ((rcBoxItem.left <= rcBox.right && rcBoxItem.left + MAX_OFFSET_MAGNET >= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Left == FindBoxRight.MagnetType && rcBoxItem.left > FindBoxRight.left)))
-			|| (rcBoxItem.left <= rcBox.right && rcBoxItem.left + MAX_OFFSET_MAGNET >= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Right == FindBoxRight.MagnetType && rcBoxItem.left > FindBoxRight.right))))
+		if ((rcBoxItem.left <= rcBox.right && rcBoxItem.left + m_nMagnetValue >= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Left == FindBoxRight.MagnetType && rcBoxItem.left > FindBoxRight.left)))
+			|| (rcBoxItem.left <= rcBox.right && rcBoxItem.left + m_nMagnetValue >= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Right == FindBoxRight.MagnetType && rcBoxItem.left > FindBoxRight.right))))
 		{
 			FindBoxRight = rcBoxItem;
 			FindBoxRight.nIndex = nIndex;
@@ -473,15 +477,15 @@ void CMagnetBox::VerifyBoxRightDirection(int nIndex, CRect rcBoxItem, CRect rcBo
 	auto &FindBoxRight = FindMagnetBox.rcBoxRight;
 	if (nBorderNearest & MagnetType_Right)
 	{
-		if ((rcBoxItem.left >= rcBox.right && rcBoxItem.left - MAX_OFFSET_MAGNET <= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Left == FindBoxRight.MagnetType && rcBoxItem.left < FindBoxRight.left)))
-			|| (rcBoxItem.left >= rcBox.right && rcBoxItem.left - MAX_OFFSET_MAGNET <= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Right == FindBoxRight.MagnetType && rcBoxItem.left < FindBoxRight.right))))
+		if ((rcBoxItem.left >= rcBox.right && rcBoxItem.left - m_nMagnetValue <= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Left == FindBoxRight.MagnetType && rcBoxItem.left < FindBoxRight.left)))
+			|| (rcBoxItem.left >= rcBox.right && rcBoxItem.left - m_nMagnetValue <= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Right == FindBoxRight.MagnetType && rcBoxItem.left < FindBoxRight.right))))
 		{
 			FindBoxRight = rcBoxItem;
 			FindBoxRight.nIndex = nIndex;
 			FindBoxRight.MagnetType = MagnetType_Left;
 		}
-		if ((rcBoxItem.right >= rcBox.right && rcBoxItem.right - MAX_OFFSET_MAGNET <= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Left == FindBoxRight.MagnetType && rcBoxItem.right > FindBoxRight.left)))
-			|| (rcBoxItem.right >= rcBox.right && rcBoxItem.right - MAX_OFFSET_MAGNET <= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Right == FindBoxRight.MagnetType && rcBoxItem.right > FindBoxRight.right))))
+		if ((rcBoxItem.right >= rcBox.right && rcBoxItem.right - m_nMagnetValue <= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Left == FindBoxRight.MagnetType && rcBoxItem.right > FindBoxRight.left)))
+			|| (rcBoxItem.right >= rcBox.right && rcBoxItem.right - m_nMagnetValue <= rcBox.right && (-1 == FindBoxRight.nIndex || (MagnetType_Right == FindBoxRight.MagnetType && rcBoxItem.right > FindBoxRight.right))))
 		{
 			FindBoxRight = rcBoxItem;
 			FindBoxRight.nIndex = nIndex;
@@ -493,15 +497,15 @@ void CMagnetBox::VerifyBoxRightDirection(int nIndex, CRect rcBoxItem, CRect rcBo
 	auto &FindBoxLeft = FindMagnetBox.rcBoxLeft;
 	if (nBorderNearest & MagnetType_Left)
 	{
-		if ((rcBoxItem.right >= rcBox.left && rcBoxItem.right - MAX_OFFSET_MAGNET <= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Left == FindBoxLeft.MagnetType && rcBoxItem.right < FindBoxLeft.left)))
-			|| (rcBoxItem.right >= rcBox.left && rcBoxItem.right - MAX_OFFSET_MAGNET <= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Right == FindBoxLeft.MagnetType && rcBoxItem.right < FindBoxLeft.right))))
+		if ((rcBoxItem.right >= rcBox.left && rcBoxItem.right - m_nMagnetValue <= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Left == FindBoxLeft.MagnetType && rcBoxItem.right < FindBoxLeft.left)))
+			|| (rcBoxItem.right >= rcBox.left && rcBoxItem.right - m_nMagnetValue <= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Right == FindBoxLeft.MagnetType && rcBoxItem.right < FindBoxLeft.right))))
 		{
 			FindBoxLeft = rcBoxItem;
 			FindBoxLeft.nIndex = nIndex;
 			FindBoxLeft.MagnetType = MagnetType_Right;
 		}
-		if ((rcBoxItem.left >= rcBox.left && rcBoxItem.left - MAX_OFFSET_MAGNET <= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Left == FindBoxLeft.MagnetType && rcBoxItem.left < FindBoxLeft.left)))
-			|| (rcBoxItem.left >= rcBox.left && rcBoxItem.left - MAX_OFFSET_MAGNET <= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Right == FindBoxLeft.MagnetType && rcBoxItem.left < FindBoxLeft.right))))
+		if ((rcBoxItem.left >= rcBox.left && rcBoxItem.left - m_nMagnetValue <= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Left == FindBoxLeft.MagnetType && rcBoxItem.left < FindBoxLeft.left)))
+			|| (rcBoxItem.left >= rcBox.left && rcBoxItem.left - m_nMagnetValue <= rcBox.left && (-1 == FindBoxLeft.nIndex || (MagnetType_Right == FindBoxLeft.MagnetType && rcBoxItem.left < FindBoxLeft.right))))
 		{
 			FindBoxLeft = rcBoxItem;
 			FindBoxLeft.nIndex = nIndex;
@@ -535,15 +539,15 @@ void CMagnetBox::VerifyBoxTopDirection(int nIndex, CRect rcBoxItem, CRect rcBox,
 	auto &FindBoxTop = FindMagnetBox.rcBoxTop;
 	if (nBorderNearest & MagnetType_Top)
 	{
-		if ((rcBoxItem.bottom <= rcBox.top && rcBoxItem.bottom + MAX_OFFSET_MAGNET >= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Top == FindBoxTop.MagnetType && rcBoxItem.bottom > FindBoxTop.top)))
-			|| (rcBoxItem.bottom <= rcBox.top && rcBoxItem.bottom + MAX_OFFSET_MAGNET >= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Bottom == FindBoxTop.MagnetType && rcBoxItem.bottom > FindBoxTop.bottom))))
+		if ((rcBoxItem.bottom <= rcBox.top && rcBoxItem.bottom + m_nMagnetValue >= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Top == FindBoxTop.MagnetType && rcBoxItem.bottom > FindBoxTop.top)))
+			|| (rcBoxItem.bottom <= rcBox.top && rcBoxItem.bottom + m_nMagnetValue >= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Bottom == FindBoxTop.MagnetType && rcBoxItem.bottom > FindBoxTop.bottom))))
 		{
 			FindBoxTop = rcBoxItem;
 			FindBoxTop.nIndex = nIndex;
 			FindBoxTop.MagnetType = MagnetType_Bottom;
 		}
-		if ((rcBoxItem.top <= rcBox.top && rcBoxItem.top + MAX_OFFSET_MAGNET >= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Top == FindBoxTop.MagnetType && rcBoxItem.top > FindBoxTop.top)))
-			|| (rcBoxItem.top <= rcBox.top && rcBoxItem.top + MAX_OFFSET_MAGNET >= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Bottom == FindBoxTop.MagnetType && rcBoxItem.top > FindBoxTop.bottom))))
+		if ((rcBoxItem.top <= rcBox.top && rcBoxItem.top + m_nMagnetValue >= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Top == FindBoxTop.MagnetType && rcBoxItem.top > FindBoxTop.top)))
+			|| (rcBoxItem.top <= rcBox.top && rcBoxItem.top + m_nMagnetValue >= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Bottom == FindBoxTop.MagnetType && rcBoxItem.top > FindBoxTop.bottom))))
 		{
 			FindBoxTop = rcBoxItem;
 			FindBoxTop.nIndex = nIndex;
@@ -555,15 +559,15 @@ void CMagnetBox::VerifyBoxTopDirection(int nIndex, CRect rcBoxItem, CRect rcBox,
 	auto &FindBoxBottom = FindMagnetBox.rcBoxBottom;
 	if (nBorderNearest & MagnetType_Bottom)
 	{
-		if ((rcBoxItem.bottom <= rcBox.bottom && rcBoxItem.bottom + MAX_OFFSET_MAGNET >= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Top == FindBoxBottom.MagnetType && rcBoxItem.bottom > FindBoxBottom.top)))
-			|| (rcBoxItem.bottom <= rcBox.bottom && rcBoxItem.bottom + MAX_OFFSET_MAGNET >= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Bottom == FindBoxBottom.MagnetType && rcBoxItem.bottom > FindBoxBottom.bottom))))
+		if ((rcBoxItem.bottom <= rcBox.bottom && rcBoxItem.bottom + m_nMagnetValue >= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Top == FindBoxBottom.MagnetType && rcBoxItem.bottom > FindBoxBottom.top)))
+			|| (rcBoxItem.bottom <= rcBox.bottom && rcBoxItem.bottom + m_nMagnetValue >= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Bottom == FindBoxBottom.MagnetType && rcBoxItem.bottom > FindBoxBottom.bottom))))
 		{
 			FindBoxBottom = rcBoxItem;
 			FindBoxBottom.nIndex = nIndex;
 			FindBoxBottom.MagnetType = MagnetType_Bottom;
 		}
-		if ((rcBoxItem.top <= rcBox.bottom && rcBoxItem.top + MAX_OFFSET_MAGNET >= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Top == FindBoxBottom.MagnetType && rcBoxItem.top > FindBoxBottom.top)))
-			|| (rcBoxItem.top <= rcBox.bottom && rcBoxItem.top + MAX_OFFSET_MAGNET >= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Bottom == FindBoxBottom.MagnetType && rcBoxItem.top > FindBoxBottom.bottom))))
+		if ((rcBoxItem.top <= rcBox.bottom && rcBoxItem.top + m_nMagnetValue >= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Top == FindBoxBottom.MagnetType && rcBoxItem.top > FindBoxBottom.top)))
+			|| (rcBoxItem.top <= rcBox.bottom && rcBoxItem.top + m_nMagnetValue >= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Bottom == FindBoxBottom.MagnetType && rcBoxItem.top > FindBoxBottom.bottom))))
 		{
 			FindBoxBottom = rcBoxItem;
 			FindBoxBottom.nIndex = nIndex;
@@ -597,15 +601,15 @@ void CMagnetBox::VerifyBoxBottomDirection(int nIndex, CRect rcBoxItem, CRect rcB
 	auto &FindBoxBottom = FindMagnetBox.rcBoxBottom;
 	if (nBorderNearest & MagnetType_Bottom)
 	{
-		if ((rcBoxItem.top >= rcBox.bottom && rcBoxItem.top - MAX_OFFSET_MAGNET <= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Top == FindBoxBottom.MagnetType && rcBoxItem.top < FindBoxBottom.top)))
-			|| (rcBoxItem.top >= rcBox.bottom && rcBoxItem.top - MAX_OFFSET_MAGNET <= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Bottom == FindBoxBottom.MagnetType && rcBoxItem.top < FindBoxBottom.bottom))))
+		if ((rcBoxItem.top >= rcBox.bottom && rcBoxItem.top - m_nMagnetValue <= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Top == FindBoxBottom.MagnetType && rcBoxItem.top < FindBoxBottom.top)))
+			|| (rcBoxItem.top >= rcBox.bottom && rcBoxItem.top - m_nMagnetValue <= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Bottom == FindBoxBottom.MagnetType && rcBoxItem.top < FindBoxBottom.bottom))))
 		{
 			FindBoxBottom = rcBoxItem;
 			FindBoxBottom.nIndex = nIndex;
 			FindBoxBottom.MagnetType = MagnetType_Top;
 		}
-		if ((rcBoxItem.bottom >= rcBox.bottom && rcBoxItem.bottom - MAX_OFFSET_MAGNET <= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Top == FindBoxBottom.MagnetType && rcBoxItem.bottom < FindBoxBottom.top)))
-			|| (rcBoxItem.bottom >= rcBox.bottom && rcBoxItem.bottom - MAX_OFFSET_MAGNET <= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Bottom == FindBoxBottom.MagnetType && rcBoxItem.bottom < FindBoxBottom.bottom))))
+		if ((rcBoxItem.bottom >= rcBox.bottom && rcBoxItem.bottom - m_nMagnetValue <= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Top == FindBoxBottom.MagnetType && rcBoxItem.bottom < FindBoxBottom.top)))
+			|| (rcBoxItem.bottom >= rcBox.bottom && rcBoxItem.bottom - m_nMagnetValue <= rcBox.bottom && (-1 == FindBoxBottom.nIndex || (MagnetType_Bottom == FindBoxBottom.MagnetType && rcBoxItem.bottom < FindBoxBottom.bottom))))
 		{
 			FindBoxBottom = rcBoxItem;
 			FindBoxBottom.nIndex = nIndex;
@@ -617,15 +621,15 @@ void CMagnetBox::VerifyBoxBottomDirection(int nIndex, CRect rcBoxItem, CRect rcB
 	auto &FindBoxTop = FindMagnetBox.rcBoxTop;
 	if (nBorderNearest & MagnetType_Top)
 	{
-		if ((rcBoxItem.bottom >= rcBox.top && rcBoxItem.bottom - MAX_OFFSET_MAGNET <= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Top == FindBoxTop.MagnetType && rcBoxItem.bottom > FindBoxTop.top)))
-			|| (rcBoxItem.bottom >= rcBox.top && rcBoxItem.bottom - MAX_OFFSET_MAGNET <= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Bottom == FindBoxTop.MagnetType && rcBoxItem.bottom > FindBoxTop.bottom))))
+		if ((rcBoxItem.bottom >= rcBox.top && rcBoxItem.bottom - m_nMagnetValue <= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Top == FindBoxTop.MagnetType && rcBoxItem.bottom > FindBoxTop.top)))
+			|| (rcBoxItem.bottom >= rcBox.top && rcBoxItem.bottom - m_nMagnetValue <= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Bottom == FindBoxTop.MagnetType && rcBoxItem.bottom > FindBoxTop.bottom))))
 		{
 			FindBoxTop = rcBoxItem;
 			FindBoxTop.nIndex = nIndex;
 			FindBoxTop.MagnetType = MagnetType_Bottom;
 		}
-		if ((rcBoxItem.top >= rcBox.top && rcBoxItem.top - MAX_OFFSET_MAGNET <= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Top == FindBoxTop.MagnetType && rcBoxItem.top > FindBoxTop.top)))
-			|| (rcBoxItem.top >= rcBox.top && rcBoxItem.top - MAX_OFFSET_MAGNET <= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Bottom == FindBoxTop.MagnetType && rcBoxItem.top > FindBoxTop.bottom))))
+		if ((rcBoxItem.top >= rcBox.top && rcBoxItem.top - m_nMagnetValue <= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Top == FindBoxTop.MagnetType && rcBoxItem.top > FindBoxTop.top)))
+			|| (rcBoxItem.top >= rcBox.top && rcBoxItem.top - m_nMagnetValue <= rcBox.top && (-1 == FindBoxTop.nIndex || (MagnetType_Bottom == FindBoxTop.MagnetType && rcBoxItem.top > FindBoxTop.bottom))))
 		{
 			FindBoxTop = rcBoxItem;
 			FindBoxTop.nIndex = nIndex;
