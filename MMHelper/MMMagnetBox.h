@@ -15,7 +15,7 @@
 typedef std::unordered_map<int, CRect> MapMagnetBox;
 
 //////////////////////////////////////////////////////////////////////////
-class MMHELPER_API CMagnetBox
+class MMHELPER_API CMMMagnetBox
 {
 	struct tagMagnetBox : public CRect
 	{
@@ -38,8 +38,8 @@ class MMHELPER_API CMagnetBox
 	};
 
 public:
-	CMagnetBox();
-	virtual ~CMagnetBox() {}
+	CMMMagnetBox();
+	virtual ~CMMMagnetBox() {}
 
 protected:
 	MapMagnetBox					m_mapMagnetBox;
