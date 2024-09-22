@@ -37,3 +37,8 @@ bool CDUIPoint::operator == (const CDUIPoint &pt) const
 {
 	return x == pt.x && y == pt.y;
 }
+
+bool CDUIPoint::operator != (const CDUIPoint &pt) const
+{
+	return x != pt.x || y != pt.y;
+}

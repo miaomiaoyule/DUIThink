@@ -15,6 +15,7 @@ public:
 	void Offset(int xOffset, int yOffset);
 
 	bool operator == (const CDUIPoint &pt) const;
+	bool operator != (const CDUIPoint &pt) const;
 };
 
 //////////////////////////////////////////////////////////////////////////
