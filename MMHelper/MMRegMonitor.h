@@ -5,7 +5,7 @@
 
 //inner
 //////////////////////////////////////////////////////////////////////////
-struct M_RegMonitor_Start : public tagMMServiceMsg
+struct M_MMRegMonitor_Start : public tagMMServiceMsg
 {
 };
 
@@ -46,7 +46,7 @@ public:
 	//override
 protected:
 	void OnMessage(PtrMMServiceMsg pMessage) override;
-	void OnSubStart(std::shared_ptr<M_RegMonitor_Start> pRecvData);
+	void OnSubStart(std::shared_ptr<M_MMRegMonitor_Start> pRecvData);
 };
 
 //////////////////////////////////////////////////////////////////////////

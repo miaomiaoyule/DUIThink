@@ -26,7 +26,7 @@ bool CMMRegMonitor::Init()
 {
 	if (false == __super::Init()) return false;
 
-	auto pMessage = std::make_shared<M_RegMonitor_Start>();
+	auto pMessage = std::make_shared<M_MMRegMonitor_Start>();
 	Send(this, pMessage);
 
 	m_ThreadPool.Run(1);
@@ -83,15 +83,15 @@ void CMMRegMonitor::UnRegisterNotify(IMMRegNotify *pIMMRegNotify)
 
 void CMMRegMonitor::OnMessage(PtrMMServiceMsg pMessage)
 {
-	if (typeid(*pMessage) == typeid(M_RegMonitor_Start))
+	if (typeid(*pMessage) == typeid(M_MMRegMonitor_Start))
 	{
-		return OnSubStart(std::static_pointer_cast<M_RegMonitor_Start>(pMessage));
+		return OnSubStart(std::static_pointer_cast<M_MMRegMonitor_Start>(pMessage));
 	}
 
 	return;
 }
 
-void CMMRegMonitor::OnSubStart(std::shared_ptr<M_RegMonitor_Start> pRecvData)
+void CMMRegMonitor::OnSubStart(std::shared_ptr<M_MMRegMonitor_Start> pRecvData)
 {
 	while (false == IsStop() && m_hKeyMonitor)
 	{
