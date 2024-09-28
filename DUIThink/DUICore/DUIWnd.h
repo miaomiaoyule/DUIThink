@@ -15,7 +15,6 @@ class DUITHINK_API CDUIWnd
 	, public CMMDragDrop
 #endif
 {
-	friend class CDUIWnd;
 	friend class CDUIGlobal;
 	friend class CDUIXmlPack;
 	friend class CDesignerView;

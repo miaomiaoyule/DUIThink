@@ -459,7 +459,7 @@ HWND CDUIWnd::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwE
 	HINSTANCE hInstance = CDUIGlobal::GetInstance()->GetInstanceHandle();
 	m_hWndParent = hWndParent;
 	m_ptCreate = { x, y };
-	m_hWnd = ::CreateWindowEx(dwExStyle, GetClass(), lpszName, dwStyle, x, y, cx, cy, hWndParent, hMenu, hInstance, this);
+	m_hWnd = ::CreateWindowEx(dwExStyle, GetClass(), lpszName, dwStyle, x, y, cx, cy, hWndParent, hMenu, hInstance, MMStaticPtr(CDUIWnd, this));
 	ASSERT(m_hWnd != NULL);
 	return m_hWnd;
 }
@@ -2031,7 +2031,7 @@ LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		case WM_SYSCOMMAND:
 		{
-			return OnSysCommand(wParam, lParam); 
+			return OnSysCommand(wParam, lParam);
 		}
 		case WM_LBUTTONDOWN:
 		{
