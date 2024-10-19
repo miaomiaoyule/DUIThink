@@ -41,9 +41,15 @@ public:
 	virtual bool DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nBorderSize);
 	virtual bool DrawRound(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, bool bHSLAdjust = false);
 	virtual bool DrawRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, bool bHSLAdjust = false, CDUISize szBreakTop = {});
-	virtual bool DrawLine(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid, bool bHSLAdjust = false);
+	virtual bool DrawLine(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid, bool bHSLAdjust = false, bool bRotateCanvas = false);
+	virtual bool DrawParallelogram(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid);
+	virtual bool DrawRhomb(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid);
+	virtual bool DrawEllipse(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid);
 	virtual bool FillRect(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust = false, ARGB dwColorGradient = 0);
 	virtual bool FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, bool bHSLAdjust = false, ARGB dwColorGradient = 0);
+	virtual bool FillParallelogram(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust = false, ARGB dwColorGradient = 0);
+	virtual bool FillRhomb(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust = false, ARGB dwColorGradient = 0);
+	virtual bool FillEllipse(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust = false, ARGB dwColorGradient = 0);
 
 	//color
 	virtual bool IsEmpty() override;

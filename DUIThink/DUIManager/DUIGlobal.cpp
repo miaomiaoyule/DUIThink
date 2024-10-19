@@ -2309,7 +2309,7 @@ tagDuiCombox CDUIGlobal::GetAttriCombox(uint32_t uValueID)
 
 uint32_t CDUIGlobal::SetAttriCombox(const tagDuiCombox &AttriCombox)
 {
-	uint32_t uID = AttriCombox.GetID();
+	uint32_t uID = ((tagDuiCombox&)AttriCombox).GetID();
 	DuiAttriModifyValue(AttriCombox, m_mapAttriComboxValue, uID);
 
 	return uID;

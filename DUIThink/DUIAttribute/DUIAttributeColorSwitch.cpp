@@ -138,6 +138,42 @@ bool CDUIAttributeColorSwitch::DrawLine(HDC hDC, const CDUIRect &rcPaint, int nB
 	return true;
 }
 
+bool CDUIAttributeColorSwitch::DrawParallelogram(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle)
+{
+	if (nBorderSize <= 0) return false;
+
+	DWORD dwColor = GetColorValue();
+	if (0 == dwColor) return false;
+
+	CDUIRenderEngine::DrawParallelogram(hDC, rcPaint, nBorderSize, dwColor, LineStyle);
+
+	return true;
+}
+
+bool CDUIAttributeColorSwitch::DrawRhomb(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle)
+{
+	if (nBorderSize <= 0) return false;
+
+	DWORD dwColor = GetColorValue();
+	if (0 == dwColor) return false;
+
+	CDUIRenderEngine::DrawRhomb(hDC, rcPaint, nBorderSize, dwColor, LineStyle);
+
+	return true;
+}
+
+bool CDUIAttributeColorSwitch::DrawEllipse(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle)
+{
+	if (nBorderSize <= 0) return false;
+
+	DWORD dwColor = GetColorValue();
+	if (0 == dwColor) return false;
+
+	CDUIRenderEngine::DrawEllipse(hDC, rcPaint, nBorderSize, dwColor, LineStyle);
+
+	return true;
+}
+
 bool CDUIAttributeColorSwitch::FillRect(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust, ARGB dwColorGradient)
 {
 	DWORD dwColor = GetColorValue();
@@ -178,6 +214,72 @@ bool CDUIAttributeColorSwitch::FillRoundRect(HDC hDC, const CDUIRect &rcPaint, i
 	}
 
 	CDUIRenderEngine::FillRoundRect(hDC, rcPaint, rcRound, nBorderSize, dwColor, dwColorGradient);
+
+	return true;
+}
+
+bool CDUIAttributeColorSwitch::FillParallelogram(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust, ARGB dwColorGradient)
+{
+	DWORD dwColor = GetColorValue();
+	if (0 == dwColor) return false;
+
+	if (bHSLAdjust)
+	{
+		short H, S, L;
+		CDUIGlobal::GetInstance()->GetHSL(&H, &S, &L);
+		dwColor = CDUIRenderEngine::AdjustColor(dwColor, H, S, L);
+
+		if (0 != dwColorGradient)
+		{
+			dwColorGradient = CDUIRenderEngine::AdjustColor(dwColorGradient, H, S, L);
+		}
+	}
+
+	CDUIRenderEngine::FillParallelogram(hDC, rcPaint, dwColor, dwColorGradient);
+
+	return true;
+}
+
+bool CDUIAttributeColorSwitch::FillRhomb(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust, ARGB dwColorGradient)
+{
+	DWORD dwColor = GetColorValue();
+	if (0 == dwColor) return false;
+
+	if (bHSLAdjust)
+	{
+		short H, S, L;
+		CDUIGlobal::GetInstance()->GetHSL(&H, &S, &L);
+		dwColor = CDUIRenderEngine::AdjustColor(dwColor, H, S, L);
+
+		if (0 != dwColorGradient)
+		{
+			dwColorGradient = CDUIRenderEngine::AdjustColor(dwColorGradient, H, S, L);
+		}
+	}
+
+	CDUIRenderEngine::FillRhomb(hDC, rcPaint, dwColor, dwColorGradient);
+
+	return true;
+}
+
+bool CDUIAttributeColorSwitch::FillEllipse(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust, ARGB dwColorGradient)
+{
+	DWORD dwColor = GetColorValue();
+	if (0 == dwColor) return false;
+
+	if (bHSLAdjust)
+	{
+		short H, S, L;
+		CDUIGlobal::GetInstance()->GetHSL(&H, &S, &L);
+		dwColor = CDUIRenderEngine::AdjustColor(dwColor, H, S, L);
+
+		if (0 != dwColorGradient)
+		{
+			dwColorGradient = CDUIRenderEngine::AdjustColor(dwColorGradient, H, S, L);
+		}
+	}
+
+	CDUIRenderEngine::FillEllipse(hDC, rcPaint, dwColor, dwColorGradient);
 
 	return true;
 }

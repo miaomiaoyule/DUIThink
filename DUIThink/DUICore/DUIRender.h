@@ -37,8 +37,14 @@ public:
 	static void DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void DrawRound(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, DWORD dwPenColor);
 	static void DrawRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop = {});
+	static void DrawParallelogram(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
+	static void DrawRhomb(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
+	static void DrawEllipse(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void FillRect(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient = 0);
 	static void FillRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, DWORD dwColor, DWORD dwColorGradient = 0);
+	static void FillParallelogram(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient = 0);
+	static void FillRhomb(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient = 0);
+	static void FillEllipse(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient = 0);
 
 	//draw text
 	static void DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle, bool bGdiplusRender = false, Gdiplus::TextRenderingHint RenderType = TextRenderingHintSystemDefault, bool bCeilFloat = true, bool bShadow = false);

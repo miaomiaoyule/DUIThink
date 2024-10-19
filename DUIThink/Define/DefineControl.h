@@ -4,8 +4,14 @@
 #pragma once					
 
 //////////////////////////////////////////////////////////////////////////
+#ifdef DUI_DESIGN
 #define DuiInitAttriVisible(Attri, Visible) { Attri.SetVisible(Visible); }
 #define DuiModifyAttriDescribe(Attri, Describe) { Attri.SetAttributeDescr(Describe); }
+#else
+#define DuiInitAttriVisible(Attri, Visible)
+#define DuiModifyAttriDescribe(Attri, Describe)
+#endif
+
 #define DuiModifyAttriName(Attri, Name) { Attri.SetAttributeName(Name); }
 #define DuiGetAttriGroupIndex(Attri) (CDUIGlobal::GetAttributeGroupIndex(&Attri))
 #define DuiSetAttriGroupIndex(Attri, nIndex) (CDUIGlobal::SetAttributeGroupIndex(&Attri, nIndex))

@@ -15,6 +15,19 @@ CDUIControlBase::CDUIControlBase(void)
 		static tagDuiCombox AttriCombox;
 		if (AttriCombox.vecItem.empty())
 		{
+			AttriCombox.vecItem.push_back({ Round_Normal, _T("Normal") });
+			AttriCombox.vecItem.push_back({ Round_Parallelogram, _T("Parallelogram") });
+			AttriCombox.vecItem.push_back({ Round_Rhomb, _T("Rhomb") });
+			AttriCombox.vecItem.push_back({ Round_Ellipse, _T("Ellipse") });
+		}
+
+		m_AttributeRoundType.SetCombox(AttriCombox);
+		m_AttributeRoundType.SelectItem(Round_Normal - Round_Normal);
+	}
+	{
+		static tagDuiCombox AttriCombox;
+		if (AttriCombox.vecItem.empty())
+		{
 			AttriCombox.vecItem.push_back({ LineStyle_Null, _T("Null") });
 			AttriCombox.vecItem.push_back({ LineStyle_Solid, _T("Solid") });
 			AttriCombox.vecItem.push_back({ LineStyle_Dash, _T("Dash") });
@@ -24,7 +37,7 @@ CDUIControlBase::CDUIControlBase(void)
 		}
 
 		m_AttributeBorderStyle.SetCombox(AttriCombox);
-		m_AttributeBorderStyle.SelectItem(LineStyle_Solid);
+		m_AttributeBorderStyle.SelectItem(LineStyle_Solid - LineStyle_Solid);
 	}
 	{
 		static tagDuiCombox AttriCombox;
@@ -45,7 +58,7 @@ CDUIControlBase::CDUIControlBase(void)
 		}
 
 		m_AttributeCursor.SetCombox(AttriCombox);
-		m_AttributeCursor.SelectItem(Cursor_Arrow);
+		m_AttributeCursor.SelectItem(Cursor_Arrow - Cursor_Arrow);
 	}
 
 	return;
@@ -914,6 +927,22 @@ void CDUIControlBase::SetForeImageSection(const tagDuiImageSection &ImageSection
 	return;
 }
 
+enDuiRoundType CDUIControlBase::GetRoundType()
+{
+	return (enDuiRoundType)m_AttributeRoundType.GetCurSelItem();
+}
+
+void CDUIControlBase::SetRoundType(enDuiRoundType RoundType)
+{
+	if (RoundType == GetRoundType()) return;
+
+	m_AttributeRoundType.SelectItem(RoundType);
+
+	Invalidate();
+
+	return;
+}
+
 CDUIRect CDUIControlBase::GetRoundCorner()
 {
 	return m_AttributeRoundCorner.GetValue();
@@ -1697,6 +1726,7 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeIsColorHSL, _T("IsColorHSL"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeImageBack, _T("ImageBack"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeImageFore, _T("ImageFore"), _T(""), m_AttributeGroupBk);
+	DuiCreateAttribute(m_AttributeRoundType, _T("RoundType"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeRoundCorner, _T("RoundCorner"), _T(""), m_AttributeGroupBk);
 
 	DuiCreateGroupAttribute(m_AttributeGroupBorder, _T("Border"));
@@ -1735,6 +1765,26 @@ void CDUIControlBase::InitComplete()
 
 void CDUIControlBase::PaintBkColor(HDC hDC)
 {
+	enDuiRoundType RoundType = GetRoundType();
+	if (Round_Parallelogram == RoundType)
+	{
+		m_AttributeColorBk.FillParallelogram(hDC, m_rcAbsolute, IsColorHSL(), GetGradientColor());
+
+		return;
+	}
+	if (Round_Rhomb == RoundType)
+	{
+		m_AttributeColorBk.FillRhomb(hDC, m_rcAbsolute, IsColorHSL(), GetGradientColor());
+
+		return;
+	}
+	if (Round_Ellipse == RoundType)
+	{
+		m_AttributeColorBk.FillEllipse(hDC, m_rcAbsolute, IsColorHSL(), GetGradientColor());
+
+		return;
+	}
+	
 	CDUIRect rcBorderRound = GetRoundCorner();
 	if (rcBorderRound.left > 0 
 		|| rcBorderRound.top > 0
@@ -1875,12 +1925,36 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeColorBorder : NULL;
 	if (NULL == pAttribute) return;
 
+	//info
 	CDUIRect rcBorderLine = GetBorderLine();
 	CDUIRect rcBorderRound = GetRoundCorner();
 	CDUISize szBreakTop = GetBorderBreakTop();
 	int nSize = max(rcBorderLine.left, rcBorderLine.top);
 	nSize = max(nSize, rcBorderLine.right);
 	nSize = max(nSize, rcBorderLine.bottom);
+	
+	//round
+	enDuiRoundType RoundType = GetRoundType();
+	if (Round_Parallelogram == RoundType)
+	{
+		pAttribute->DrawParallelogram(hDC, GetBorderRect(), nSize, GetBorderStyle());
+
+		return;
+	}
+	if (Round_Rhomb == RoundType)
+	{
+		pAttribute->DrawRhomb(hDC, GetBorderRect(), nSize, GetBorderStyle());
+
+		return;
+	}
+	if (Round_Ellipse == RoundType)
+	{
+		pAttribute->DrawEllipse(hDC, GetBorderRect(), nSize, GetBorderStyle());
+
+		return;
+	}
+
+	//normal
 	if (rcBorderRound.left > 0
 		|| rcBorderRound.top > 0
 		|| rcBorderRound.right > 0

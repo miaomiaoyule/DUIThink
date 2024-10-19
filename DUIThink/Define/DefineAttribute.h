@@ -89,7 +89,11 @@
 { \
 	do \
 	{ \
-		Store[ID] = Value; \
+		auto FindIt = Store.find(ID); \
+		if (FindIt == Store.end()) \
+		{ \
+			Store[ID] = Value; \
+		} \
 \
 	} while (false); \
 }
