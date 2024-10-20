@@ -41,7 +41,7 @@ public:
 	virtual bool DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nBorderSize);
 	virtual bool DrawRound(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, bool bHSLAdjust = false);
 	virtual bool DrawRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, bool bHSLAdjust = false, CDUISize szBreakTop = {});
-	virtual bool DrawLine(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid, bool bHSLAdjust = false, bool bRotateCanvas = false);
+	virtual bool DrawLine(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid, bool bHSLAdjust = false);
 	virtual bool DrawParallelogram(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid);
 	virtual bool DrawRhomb(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid);
 	virtual bool DrawEllipse(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid);

@@ -221,6 +221,12 @@ bool CDUIControlBase::SetCtrlID(UINT uID)
 	if (uID == GetCtrlID()) return true;
 #endif
 
+	//info
+	if (m_pWndOwner)
+	{
+		m_pWndOwner->UnInitControlIDHash(this);
+	}
+
 	//value
 	m_AttributeCtrlID.SetValue(uID);
 
@@ -233,7 +239,6 @@ bool CDUIControlBase::SetCtrlID(UINT uID)
 	//info
 	if (m_pWndOwner)
 	{
-		m_pWndOwner->UnInitControlIDHash(this);
 		m_pWndOwner->InitControlIDHash(this);
 		m_pWndOwner->SendNotify(this, DuiNotify_CtrlIDChanged);
 	}
@@ -1949,7 +1954,10 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	}
 	if (Round_Ellipse == RoundType)
 	{
-		pAttribute->DrawEllipse(hDC, GetBorderRect(), nSize, GetBorderStyle());
+		CDUIRect rcBorder = GetBorderRect();
+		rcBorder.right -= nSize;
+		rcBorder.bottom -= nSize;
+		pAttribute->DrawEllipse(hDC, rcBorder, nSize, GetBorderStyle());
 
 		return;
 	}
