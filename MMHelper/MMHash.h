@@ -3,6 +3,8 @@
 
 #pragma once
 
+class CMMString;
+
 //////////////////////////////////////////////////////////////////////////
 const static uint32_t MM_FNV_offset_basis = 2166136261U;
 const static uint32_t MM_FNV_prime = 16777619U;

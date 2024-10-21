@@ -87,21 +87,8 @@
 //MMHELPER_API CMMString operator+(const TCHAR ch, const CMMString &src);
 //MMHELPER_API CMMString operator+(LPCTSTR lpszStr, const CMMString &src);
 //MMHELPER_API bool operator == (LPCTSTR lpszStr, const CMMString &src);
-//
-//
-////////////////////////////////////////////////////////////////////////////
-//namespace std
-//{
-//	template<> struct hash<CMMString>
-//	{
-//		std::size_t operator()(const CMMString &str) const
-//		{
-//			return _Fnv1a_append_bytes(_FNV_offset_basis, (const unsigned char*)str.GetBuffer(0), sizeof(TCHAR) * str.length());
-//		}
-//	};
-//}
 
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 class CMMString : 
 #ifdef UNICODE
 	public std::wstring
@@ -316,7 +303,7 @@ public:
 
 		return *this;
 	}
-	bool empty() const noexcept
+	bool empty() const
 	{
 		return (length() > 0 && _T('\0') == at(0)) || __super::empty();
 	}
@@ -448,6 +435,18 @@ public:
 		return 0 != lstrcmp(strLeft, lpszRight);
 	}
 };
+
+//hash
+namespace std
+{
+	template<> struct hash<CMMString>
+	{
+		inline uint32_t operator()(const CMMString &str) const
+		{
+			return CMMHash::GetHash(str);
+		}
+	};
+}
 
 //////////////////////////////////////////////////////////////////////////
 

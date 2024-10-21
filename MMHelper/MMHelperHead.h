@@ -126,6 +126,7 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 //////////////////////////////////////////////////////////////////////////////////
 //导出文件
 #include "MMDefine.h"
+#include "MMHash.h"
 #include "MMString.h"
 #include "MMModule.h"
 #include "MMFile.h"
@@ -137,7 +138,6 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMAsyncObject.h"
 #include "MMProcess.h"
 #include "MMDpi.h"
-#include "MMHash.h"
 #include "MMReDirection.h"
 #include "MMVersion.h"
 #include "MMSvg.h"

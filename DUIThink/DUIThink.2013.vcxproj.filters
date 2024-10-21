@@ -156,9 +156,6 @@
     <ClInclude Include="DUIUtils\Utils.h">
       <Filter>DUIUtils</Filter>
     </ClInclude>
-    <ClInclude Include="DUIManager\DUIWndManager.h">
-      <Filter>DUIManager</Filter>
-    </ClInclude>
     <ClInclude Include="DUICore\DUIRender.h">
       <Filter>DUICore</Filter>
     </ClInclude>
@@ -230,9 +227,6 @@
     </ClInclude>
     <ClInclude Include="DUIExport\DefineResource.h">
       <Filter>DUIExport</Filter>
-    </ClInclude>
-    <ClInclude Include="DUIControl\DUIWkeBrowserCtrl.h">
-      <Filter>DUIControl</Filter>
     </ClInclude>
     <ClInclude Include="DUIExport\IDUIFactory.h">
       <Filter>DUIExport</Filter>
@@ -336,6 +330,12 @@
     <ClInclude Include="DUIControl\DUIWaterCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>
+    <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeCtrlID.h">
+      <Filter>DUIAttribute\DUINumber</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUINotifyPump.h">
+      <Filter>DUICore</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -425,9 +425,6 @@
     <ClCompile Include="DUIManager\DUIGlobal.cpp">
       <Filter>DUIManager</Filter>
     </ClCompile>
-    <ClCompile Include="DUIManager\DUIWndManager.cpp">
-      <Filter>DUIManager</Filter>
-    </ClCompile>
     <ClCompile Include="DUIResource\DUIFontBase.cpp">
       <Filter>DUIResource</Filter>
     </ClCompile>
@@ -472,9 +469,6 @@
     </ClCompile>
     <ClCompile Include="DUICore\DUIWnd.cpp">
       <Filter>DUICore</Filter>
-    </ClCompile>
-    <ClCompile Include="DUIControl\DUIWkeBrowserCtrl.cpp">
-      <Filter>DUIControl</Filter>
     </ClCompile>
     <ClCompile Include="DUIControl\DUIAnimateCtrl.cpp">
       <Filter>DUIControl</Filter>
@@ -568,6 +562,12 @@
     </ClCompile>
     <ClCompile Include="DUIControl\DUIWaterCtrl.cpp">
       <Filter>DUIControl</Filter>
+    </ClCompile>
+    <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeCtrlID.cpp">
+      <Filter>DUIAttribute\DUINumber</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUINotifyPump.cpp">
+      <Filter>DUICore</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

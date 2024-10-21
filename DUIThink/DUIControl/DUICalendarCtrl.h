@@ -54,7 +54,7 @@ protected:
 	CDUIAttributeTextStyle				m_AttributeTextStyleCurMonthDay = DT_SINGLELINE | DT_END_ELLIPSIS | DT_CENTER | DT_VCENTER;
 	CDUIAttributeTextStyle				m_AttributeTextStyleHotMonthDay = DT_SINGLELINE | DT_END_ELLIPSIS | DT_CENTER | DT_VCENTER;
 	CDUIAttributeTextStyle				m_AttributeTextStyleToday = DT_SINGLELINE | DT_END_ELLIPSIS | DT_CENTER | DT_VCENTER;
-	CDUIAttributeText					m_AttributeTextWeekDay[Dui_Count_WeekDay] = { _T("星期一"), _T("星期二"), _T("星期三"), _T("星期四"), _T("星期五"), _T("星期六"), _T("星期天"), };
+	CDUIAttributeText					m_AttributeTextWeekDay[Dui_Count_WeekDay];
 
 	//variant
 protected:

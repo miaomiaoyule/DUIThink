@@ -138,18 +138,6 @@ extern ZRESULT UnzipItem(HZIPDT hz, int index, void *dst, unsigned int len, DWOR
 #define Dui_DDX_Control(ClassName, Variant, CtrlID)\
 	Variant = MMInterfaceHelper(ClassName, FindControl(CtrlID));
 
-//hash
-namespace std
-{
-	template<> struct hash<CMMString>
-	{
-		inline uint32_t operator()(const CMMString &str) const
-		{
-			return CMMHash::GetHash(str);
-		}
-	};
-}
-
 //declare
 #define DuiDeclare_CreateControl(ClassName)\
 public:\

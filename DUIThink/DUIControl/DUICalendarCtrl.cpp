@@ -232,6 +232,14 @@ CDUICalendarCtrl::CDUICalendarCtrl(void)
 	m_AttributeWeekStyle.SetCombox(AttriCombox);
 	m_AttributeWeekStyle.SelectItem(CalendarWeek_FirstMonday);
 
+	m_AttributeTextWeekDay[0] = CDUIAttributeText(_T("星期一"));
+	m_AttributeTextWeekDay[1] = CDUIAttributeText(_T("星期二"));
+	m_AttributeTextWeekDay[2] = CDUIAttributeText(_T("星期三"));
+	m_AttributeTextWeekDay[3] = CDUIAttributeText(_T("星期四"));
+	m_AttributeTextWeekDay[4] = CDUIAttributeText(_T("星期五"));
+	m_AttributeTextWeekDay[5] = CDUIAttributeText(_T("星期六"));
+	m_AttributeTextWeekDay[6] = CDUIAttributeText(_T("星期天"));
+
 	return;
 }
 
