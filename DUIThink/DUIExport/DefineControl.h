@@ -102,6 +102,15 @@ typedef CDUIControlBase* (CALLBACK* FindControlProc)(CDUIControlBase*, LPVOID pD
 #define Dui_CtrlIDInner_Finish						(100000)
 
 //////////////////////////////////////////////////////////////////////////
+//round type
+enum enDuiRoundType
+{
+	Round_Normal,
+	Round_Parallelogram,
+	Round_Rhomb,
+	Round_Ellipse,
+};
+
 //mouse cursor
 enum enDuiCursor
 {

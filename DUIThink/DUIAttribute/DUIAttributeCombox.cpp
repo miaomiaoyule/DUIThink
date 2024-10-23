@@ -103,8 +103,14 @@ CMMString CDUIAttributeCombox::GetCurSelDescribe()
 
 void CDUIAttributeCombox::SetCurSelIndex(int nIndex)
 {
-	tagDuiCombox AttriCombox = GetCombox();
+	if (NULL == GetOwner())
+	{
+		m_nCurSel = nIndex;
 
+		return;
+	}
+
+	tagDuiCombox AttriCombox = GetCombox();
 	if (nIndex < 0 || nIndex >= AttriCombox.vecItem.size() || m_nCurSel == nIndex) return;
 
 	m_nCurSel = nIndex;
@@ -164,7 +170,10 @@ bool CDUIAttributeCombox::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 
 	if (0 == strcmp(lpszName, Dui_Key_AttriObjValueID))
 	{
-		m_uValueHash = strtoul(lpszValue, NULL, 10);
+		if (0 == m_uValueHash)
+		{
+			m_uValueHash = strtoul(lpszValue, NULL, 10);
+		}
 
 #ifdef DUI_DESIGN
 		CDUIGlobal::GetInstance()->OnAttriValueIDRead(GetAttributeType(), GetValueID());

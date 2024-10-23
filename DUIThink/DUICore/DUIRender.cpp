@@ -136,13 +136,45 @@ static BOOL WINAPI AlphaBitBlt(HDC hDC, int nDestX, int nDestY, int dwWidth, int
 
 static void ConstructRoundPath(const CDUIRect &rcDraw, const CDUIRect &rcRound, int nLineSize, Gdiplus::GraphicsPath &Path)
 {
-	Path.AddArc(rcDraw.right - rcRound.top * 2 - nLineSize, rcDraw.top, rcRound.top * 2, rcRound.top * 2, 270, 90); //”“…œ‘≤Ω«
-	Path.AddLine(rcDraw.right - nLineSize, rcDraw.top + rcRound.top, rcDraw.right - nLineSize, rcDraw.bottom - rcRound.right); //”“≤‡ ˙œﬂ
-	Path.AddArc(rcDraw.right - rcRound.right * 2 - nLineSize, rcDraw.bottom - rcRound.right * 2 - nLineSize, rcRound.right * 2, rcRound.right * 2, 0, 90); //”“œ¬‘≤Ω«
-	Path.AddLine(rcDraw.right - rcRound.right, rcDraw.bottom - nLineSize, rcDraw.left + rcRound.bottom, rcDraw.bottom - nLineSize); //µ◊≤ø∫·œﬂ
-	Path.AddArc(rcDraw.left, rcDraw.bottom - rcRound.bottom * 2 - nLineSize, rcRound.bottom * 2, rcRound.bottom * 2, 90, 90); //◊Ûœ¬‘≤Ω«
-	Path.AddLine(rcDraw.left, rcDraw.bottom - rcRound.bottom, rcDraw.left, rcDraw.top + rcRound.left); //◊Û≤‡ ˙œﬂ
-	Path.AddArc(rcDraw.left, rcDraw.top, rcRound.left * 2, rcRound.left * 2, 180, 90); //◊Û…œ‘≤Ω«
+	Path.AddArc(rcDraw.right - rcRound.top * 2 - nLineSize, rcDraw.top, rcRound.top * 2, rcRound.top * 2, 270, 90); //top right 
+	Path.AddLine(rcDraw.right - nLineSize, rcDraw.top + rcRound.top, rcDraw.right - nLineSize, rcDraw.bottom - rcRound.right); //right 
+	Path.AddArc(rcDraw.right - rcRound.right * 2 - nLineSize, rcDraw.bottom - rcRound.right * 2 - nLineSize, rcRound.right * 2, rcRound.right * 2, 0, 90); //right bottom
+	Path.AddLine(rcDraw.right - rcRound.right, rcDraw.bottom - nLineSize, rcDraw.left + rcRound.bottom, rcDraw.bottom - nLineSize); //bottom
+	Path.AddArc(rcDraw.left, rcDraw.bottom - rcRound.bottom * 2 - nLineSize, rcRound.bottom * 2, rcRound.bottom * 2, 90, 90); //left bottom
+	Path.AddLine(rcDraw.left, rcDraw.bottom - rcRound.bottom, rcDraw.left, rcDraw.top + rcRound.left); //left
+	Path.AddArc(rcDraw.left, rcDraw.top, rcRound.left * 2, rcRound.left * 2, 180, 90); //left top
+
+	return;
+}
+
+static void ConstructParallelogramPath(const CDUIRect &rcDraw, int nRound, int nLineSize, Gdiplus::GraphicsPath &Path)
+{
+	nRound = min(nRound, rcDraw.GetWidth());
+	Path.AddLine(rcDraw.left + nRound, rcDraw.top, rcDraw.right, rcDraw.top); //top
+	Path.AddLine(rcDraw.right - nLineSize, rcDraw.top, rcDraw.right - nLineSize - nRound, rcDraw.bottom); //right
+	Path.AddLine(rcDraw.right - nRound, rcDraw.bottom - nLineSize, rcDraw.left, rcDraw.bottom - nLineSize); //bottom
+	Path.AddLine(rcDraw.left, rcDraw.bottom, rcDraw.left + nRound, rcDraw.top); //left
+	
+	return;
+}
+
+static void ConstructRhombPath(const CDUIRect &rcDraw, int nLineSize, Gdiplus::GraphicsPath &Path)
+{
+	Path.AddLine(rcDraw.left + rcDraw.GetWidth() / 2 - 1, rcDraw.top + nLineSize / 2, rcDraw.right, rcDraw.top + rcDraw.GetHeight() / 2); //top
+	Path.AddLine(rcDraw.right, rcDraw.top + rcDraw.GetHeight() / 2, rcDraw.right - rcDraw.GetWidth() / 2, rcDraw.bottom - nLineSize); //right
+	Path.AddLine(rcDraw.right - rcDraw.GetWidth() / 2, rcDraw.bottom - nLineSize, rcDraw.left, rcDraw.bottom - rcDraw.GetHeight() / 2); //bottom
+	Path.AddLine(rcDraw.left, rcDraw.bottom - rcDraw.GetHeight() / 2, rcDraw.left + rcDraw.GetWidth() / 2 + 1, rcDraw.top + nLineSize / 2); //left
+
+	return;
+}
+
+static void ConstructRhombPoints(const CDUIRect &rcDraw, int nLineSize, std::vector<Gdiplus::Point> &vecPoint)
+{
+	vecPoint.clear();
+	vecPoint.push_back({ rcDraw.left + rcDraw.GetWidth() / 2, rcDraw.top });
+	vecPoint.push_back({ rcDraw.right, rcDraw.top + rcDraw.GetHeight() / 2 });
+	vecPoint.push_back({ rcDraw.left + rcDraw.GetWidth() / 2, rcDraw.bottom - nLineSize });
+	vecPoint.push_back({ rcDraw.left, rcDraw.top + rcDraw.GetHeight() / 2 });
 
 	return;
 }
@@ -978,6 +1010,61 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUI
 	return;
 }
 
+void CDUIRenderEngine::DrawParallelogram(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle)
+{
+	Gdiplus::Graphics Gp(hDC);
+	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
+	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+
+	//path
+	CDUIRect rcDraw = rcItem;
+	Gdiplus::GraphicsPath Path;
+	ConstructParallelogramPath(rcDraw, rcDraw.GetWidth() / 3, nLineSize, Path);
+
+	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
+	Pen.SetAlignment(Gdiplus::PenAlignmentInset);
+	Pen.SetDashStyle((Gdiplus::DashStyle)LineStyle);
+	Gp.DrawPath(&Pen, &Path);
+
+	return;
+}
+
+void CDUIRenderEngine::DrawRhomb(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle)
+{
+	Gdiplus::Graphics Gp(hDC);
+	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
+	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+
+	//path
+	CDUIRect rcDraw = rcItem;
+	Gdiplus::GraphicsPath Path;
+	ConstructRhombPath(rcDraw, nLineSize, Path);
+
+	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
+	Pen.SetAlignment(Gdiplus::PenAlignmentInset);
+	Pen.SetDashStyle((Gdiplus::DashStyle)LineStyle);
+	Gp.DrawPath(&Pen, &Path);
+
+	return;
+}
+
+void CDUIRenderEngine::DrawEllipse(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle)
+{
+	Gdiplus::Graphics Gp(hDC);
+	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
+	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+
+	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
+	Pen.SetAlignment(Gdiplus::PenAlignmentInset);
+	Pen.SetDashStyle((Gdiplus::DashStyle)LineStyle);
+	Gp.DrawEllipse(&Pen, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
+
+	return;
+}
+
 void CDUIRenderEngine::FillRect(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient)
 {
 	if (dwColor <= 0x00ffffff) return;
@@ -1029,6 +1116,95 @@ void CDUIRenderEngine::FillRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUI
 	}
 
 	Gp.FillPath(pBrush, &Path);
+
+	MMSafeDelete(pBrush);
+
+	return;
+}
+
+void CDUIRenderEngine::FillParallelogram(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient)
+{
+	if (dwColor <= 0x00ffffff) return;
+
+	Gdiplus::Graphics Gp(hDC);
+	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+
+	//adjust
+	CDUIRect rcDraw = rcItem;
+
+	//path
+	Gdiplus::GraphicsPath Path;
+	ConstructParallelogramPath(rcDraw, rcDraw.GetWidth() / 3, 0, Path);
+
+	//draw
+	Gdiplus::Brush *pBrush = NULL;
+	if (0 != dwColorGradient)
+	{
+		pBrush = new Gdiplus::LinearGradientBrush(Gdiplus::Point(rcItem.left, rcItem.top), Gdiplus::Point(rcItem.right, rcItem.bottom), dwColor, dwColorGradient);
+	}
+	else
+	{
+		pBrush = new Gdiplus::SolidBrush(dwColor);
+	}
+
+	Gp.FillPath(pBrush, &Path);
+
+	MMSafeDelete(pBrush);
+
+	return;
+}
+
+void CDUIRenderEngine::FillRhomb(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient)
+{
+	if (dwColor <= 0x00ffffff) return;
+
+	Gdiplus::Graphics Gp(hDC);
+	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+
+	//adjust
+	CDUIRect rcDraw = rcItem;
+
+	//path
+	Gdiplus::GraphicsPath Path;
+	ConstructRhombPath(rcDraw, 0, Path);
+
+	//draw
+	Gdiplus::Brush *pBrush = NULL;
+	if (0 != dwColorGradient)
+	{
+		pBrush = new Gdiplus::LinearGradientBrush(Gdiplus::Point(rcItem.left, rcItem.top), Gdiplus::Point(rcItem.right, rcItem.bottom), dwColor, dwColorGradient);
+	}
+	else
+	{
+		pBrush = new Gdiplus::SolidBrush(dwColor);
+	}
+
+	Gp.FillPath(pBrush, &Path);
+
+	MMSafeDelete(pBrush);
+
+	return;
+}
+
+void CDUIRenderEngine::FillEllipse(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient)
+{
+	if (dwColor <= 0x00ffffff) return;
+
+	Gdiplus::Graphics Gp(hDC);
+	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+
+	//draw
+	Gdiplus::Brush *pBrush = NULL;
+	if (0 != dwColorGradient)
+	{
+		pBrush = new Gdiplus::LinearGradientBrush(Gdiplus::Point(rcItem.left, rcItem.top), Gdiplus::Point(rcItem.right, rcItem.bottom), dwColor, dwColorGradient);
+	}
+	else
+	{
+		pBrush = new Gdiplus::SolidBrush(dwColor);
+	}
+
+	Gp.FillEllipse(pBrush, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
 
 	MMSafeDelete(pBrush);
 

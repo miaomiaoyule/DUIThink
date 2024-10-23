@@ -59,6 +59,7 @@ protected:
 	CDUIAttributeBool					m_AttributeIsColorHSL;
 	CDUIAttriImageSection				m_AttributeImageBack;
 	CDUIAttriImageSection				m_AttributeImageFore;
+	CDUIAttributeCombox					m_AttributeRoundType;
 	CDUIAttributeRect					m_AttributeRoundCorner;
 
 	//border
@@ -233,6 +234,8 @@ public:
 	virtual void SetBkImage(std::vector<CMMString> vecImageRes);
 	virtual tagDuiImageSection GetForeImageSection();
 	virtual void SetForeImageSection(const tagDuiImageSection &ImageSection);
+	virtual enDuiRoundType GetRoundType();
+	virtual void SetRoundType(enDuiRoundType RoundType);
 	virtual CDUIRect GetRoundCorner();
 	virtual void SetRoundCorner(const CDUIRect &rcRoundCorner);
 	virtual Gdiplus::Bitmap * GetCustomBmpBack() const;

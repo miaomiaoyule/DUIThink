@@ -315,8 +315,9 @@ typedef vector<tagDuiComboxItem> VecDuiComboxItem;
 struct tagDuiCombox
 {
 	VecDuiComboxItem					vecItem;
+	uint32_t							uID = 0;
 
-	uint32_t GetID() const;
+	uint32_t GetID();
 };
 
 template<> struct hash<tagDuiCombox>
@@ -334,9 +335,14 @@ template<> struct hash<tagDuiCombox>
 	}
 };
 
-inline uint32_t tagDuiCombox::GetID() const
+inline uint32_t tagDuiCombox::GetID()
 {
-	return hash<tagDuiCombox>()(*this);
+	if (0 == uID)
+	{
+		uID = hash<tagDuiCombox>()(*this);
+	}
+
+	return uID;
 }
 
 //////////////////////////////////////////////////////////////////////////
