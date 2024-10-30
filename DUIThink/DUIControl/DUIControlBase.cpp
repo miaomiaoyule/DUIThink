@@ -1202,7 +1202,7 @@ bool CDUIControlBase::OnDraw(HDC hDC, const RECT &rcPaint, bool bGenerateBmp)
 	if (false == ::IntersectRect(&m_rcPaint, &rcPaint, &m_rcAbsolute)) return false;
 
 	CDUIRenderClip Clip;
-	CDUIRenderClip::GenerateClip(hDC, m_rcPaint, Clip);
+	Clip.GenerateClip(hDC, m_rcPaint);
 
 	DoPaint(hDC, bGenerateBmp);
 
@@ -1981,12 +1981,14 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	if (rcBorderLine.left > 0)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
+		rcBorderDraw.left += rcBorderLine.left / 2;
 		rcBorderDraw.right = rcBorderDraw.left;
 		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.left, GetBorderStyle(), IsColorHSL());
 	}
 	if (rcBorderLine.top > 0)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
+		rcBorderDraw.top += rcBorderLine.top / 2;
 		rcBorderDraw.bottom = rcBorderDraw.top;
 		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.top, GetBorderStyle(), IsColorHSL());
 	}
@@ -1994,6 +1996,7 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
 		rcBorderDraw.left = rcBorderDraw.right - rcBorderLine.right;
+		rcBorderDraw.left += rcBorderLine.right / 2;
 		rcBorderDraw.right = rcBorderDraw.left;
 		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.right, GetBorderStyle(), IsColorHSL());
 	}
@@ -2001,6 +2004,7 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	{
 		CDUIRect rcBorderDraw = m_rcAbsolute;
 		rcBorderDraw.top = rcBorderDraw.bottom - rcBorderLine.bottom;
+		rcBorderDraw.top += rcBorderLine.bottom / 2;
 		rcBorderDraw.bottom = rcBorderDraw.top;
 		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.bottom, GetBorderStyle(), IsColorHSL());
 	}
