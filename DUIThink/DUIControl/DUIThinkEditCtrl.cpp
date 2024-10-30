@@ -306,7 +306,7 @@ bool CDUIThinkEditCtrl::DoPaint(HDC hDC, bool bGenerateBmp)
 	CDUIRect rcPaint;
 	IntersectRect(&rcPaint, &m_rcPaint, &rcRange);
 	CDUIRenderClip Clip;
-	CDUIRenderClip::GenerateClip(hDC, rcPaint, Clip);
+	Clip.GenerateClip(hDC, rcPaint);
 
 	//caret
 	PaintCaret(hDC);
@@ -1808,7 +1808,7 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 	CDUIRect rcPaint;
 	IntersectRect(&rcPaint, &m_rcPaint, &rcRange);
 	CDUIRenderClip Clip;
-	CDUIRenderClip::GenerateClip(hDC, rcPaint, Clip);
+	Clip.GenerateClip(hDC, rcPaint);
 
 	//textstyle
 	CDUIAttributeTextStyle *pAttribute = NULL;

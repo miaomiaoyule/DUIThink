@@ -903,7 +903,7 @@ void CDUITreeViewCtrl::PaintLine(HDC hDC)
 		if (false == IntersectRect(&rcLayout, &m_rcPaint, &rcLayout)) return;
 
 		CDUIRenderClip Clip;
-		CDUIRenderClip::GenerateClip(hDC, rcLayout, Clip);
+		Clip.GenerateClip(hDC, rcLayout);
 
 		CDUIRect rcTemp;
 		for (int n = 0; n < GetChildCount(); n++)

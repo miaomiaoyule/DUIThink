@@ -4,70 +4,60 @@
 /////////////////////////////////////////////////////////////////////////////////////
 CDUIRenderClip::~CDUIRenderClip()
 {
-	if (NULL == hDC) return;
+	if (NULL == m_hDC) return;
 
-	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
-	ASSERT(::GetObjectType(hRgn) == OBJ_REGION);
-	ASSERT(::GetObjectType(hOldRgn) == OBJ_REGION);
-	::SelectClipRgn(hDC, hOldRgn);
-	MMSafeDeleteObject(hOldRgn);
-	MMSafeDeleteObject(hRgn);
-
-	return;
-}
-
-void CDUIRenderClip::GenerateClip(HDC hDC, RECT rc, CDUIRenderClip &clip)
-{
-	RECT rcClip = {};
-	::GetClipBox(hDC, &rcClip);
-	clip.hOldRgn = ::CreateRectRgnIndirect(&rcClip);
-	clip.hRgn = ::CreateRectRgnIndirect(&rc);
-	::ExtSelectClipRgn(hDC, clip.hRgn, RGN_AND);
-	clip.hDC = hDC;
-	clip.rcItem = rc;
+	ASSERT(::GetObjectType(m_hDC) == OBJ_DC || ::GetObjectType(m_hDC) == OBJ_MEMDC);
+	ASSERT(::GetObjectType(m_hRgn) == OBJ_REGION);
+	ASSERT(::GetObjectType(m_hOldRgn) == OBJ_REGION);
+	::SelectClipRgn(m_hDC, m_hOldRgn);
+	MMSafeDeleteObject(m_hOldRgn);
+	MMSafeDeleteObject(m_hRgn);
 
 	return;
 }
 
-void CDUIRenderClip::GenerateRoundClip(HDC hDC, RECT rc, RECT rcItem, int width, int height, CDUIRenderClip &clip)
+void CDUIRenderClip::GenerateClip(HDC hDC, RECT rcPaint)
 {
+	m_hDC = hDC;
 	RECT rcClip = {};
 	::GetClipBox(hDC, &rcClip);
-	clip.hOldRgn = ::CreateRectRgnIndirect(&rcClip);
-	clip.hRgn = ::CreateRectRgnIndirect(&rc);
+	m_hOldRgn = ::CreateRectRgnIndirect(&rcClip);
+	m_hRgn = ::CreateRectRgnIndirect(&rcPaint);
+	::SelectClipRgn(hDC, m_hRgn);
+	
+	return;
+}
+
+void CDUIRenderClip::GenerateRoundClip(HDC hDC, RECT rcPaint, RECT rcItem, int width, int height)
+{
+	m_hDC = hDC;
+	RECT rcClip = {};
+	::GetClipBox(hDC, &rcClip);
+	m_hOldRgn = ::CreateRectRgnIndirect(&rcClip);
+	m_hRgn = ::CreateRectRgnIndirect(&rcPaint);
 	HRGN hRgnItem = ::CreateRoundRectRgn(rcItem.left, rcItem.top, rcItem.right + 1, rcItem.bottom + 1, width, height);
-	::CombineRgn(clip.hRgn, clip.hRgn, hRgnItem, RGN_AND);
-	::ExtSelectClipRgn(hDC, clip.hRgn, RGN_AND);
-	clip.hDC = hDC;
-	clip.rcItem = rc;
+	::CombineRgn(m_hRgn, m_hRgn, hRgnItem, RGN_AND);
+	::SelectClipRgn(hDC, m_hRgn);
 	MMSafeDeleteObject(hRgnItem);
+
+	return;
 }
 
-void CDUIRenderClip::GenerateEllipseClip(HDC hDC, RECT rcPaint, RECT rcItem, CDUIRenderClip &clip)
+void CDUIRenderClip::GenerateEllipseClip(HDC hDC, RECT rcPaint, RECT rcItem)
 {
+	m_hDC = hDC;
 	RECT rcClip = {};
 	::GetClipBox(hDC, &rcClip);
 
-	clip.hOldRgn = ::CreateEllipticRgnIndirect(&rcClip);
-	clip.hRgn = ::CreateEllipticRgnIndirect(&rcPaint);
+	m_hOldRgn = ::CreateEllipticRgnIndirect(&rcClip);
+	m_hRgn = ::CreateEllipticRgnIndirect(&rcPaint);
 	HRGN hRgnItem = ::CreateEllipticRgnIndirect(&rcItem);
 
-	::CombineRgn(clip.hRgn, clip.hRgn, hRgnItem, RGN_AND);
-	::ExtSelectClipRgn(hDC, clip.hRgn, RGN_AND);
-
-	clip.hDC = hDC;
-	clip.rcItem = rcPaint;
+	::CombineRgn(m_hRgn, m_hRgn, hRgnItem, RGN_AND);
+	::SelectClipRgn(hDC, m_hRgn);
 	MMSafeDeleteObject(hRgnItem);
-}
 
-void CDUIRenderClip::UseOldClipBegin(HDC hDC, CDUIRenderClip &clip)
-{
-	::SelectClipRgn(hDC, clip.hOldRgn);
-}
-
-void CDUIRenderClip::UseOldClipEnd(HDC hDC, CDUIRenderClip &clip)
-{
-	::SelectClipRgn(hDC, clip.hRgn);
+	return;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -855,6 +845,7 @@ void CDUIRenderEngine::DrawLine(HDC hDC, const CDUIRect &rcItem, int nLineSize, 
 
 	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
 	Pen.SetDashStyle((Gdiplus::DashStyle)LineStyle);
+	Pen.SetAlignment(Gdiplus::PenAlignmentInset);
 	Gp.DrawLine(&Pen, rcItem.left, rcItem.top, rcItem.right, rcItem.bottom);
 
 	return;

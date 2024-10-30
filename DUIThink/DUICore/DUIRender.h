@@ -8,16 +8,13 @@ class DUITHINK_API CDUIRenderClip
 {
 public:
 	~CDUIRenderClip();
-	RECT rcItem = {};
-	HDC hDC = NULL;
-	HRGN hRgn = NULL;
-	HRGN hOldRgn = NULL;
+	HDC									m_hDC = NULL;
+	HRGN								m_hRgn = NULL;
+	HRGN								m_hOldRgn = NULL;
 
-	static void GenerateClip(HDC hDC, RECT rc, CDUIRenderClip &clip);
-	static void GenerateRoundClip(HDC hDC, RECT rc, RECT rcItem, int width, int height, CDUIRenderClip &clip);
-	static void GenerateEllipseClip(HDC hDC, RECT rcPaint, RECT rcItem, CDUIRenderClip &clip);
-	static void UseOldClipBegin(HDC hDC, CDUIRenderClip &clip);
-	static void UseOldClipEnd(HDC hDC, CDUIRenderClip &clip);
+	void GenerateClip(HDC hDC, RECT rcPaint);
+	void GenerateRoundClip(HDC hDC, RECT rcPaint, RECT rcItem, int width, int height);
+	void GenerateEllipseClip(HDC hDC, RECT rcPaint, RECT rcItem);
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
