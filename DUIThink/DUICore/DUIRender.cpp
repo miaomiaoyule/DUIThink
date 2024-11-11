@@ -171,7 +171,7 @@ static void ConstructRhombPoints(const CDUIRect &rcDraw, int nLineSize, std::vec
 
 /////////////////////////////////////////////////////////////////////////////////////
 void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-	BYTE cbAlpha, bool bAlpha, bool bHole, bool bTiledX, bool bTiledY)
+	BYTE cbAlpha, bool bAlpha, bool bHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (NULL == hDC || NULL == hBitmap) return;
@@ -186,8 +186,12 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 	static LPALPHABLEND lpAlphaBlend = AlphaBlend;
 	if (NULL == lpAlphaBlend) lpAlphaBlend = AlphaBitBlt;
 
-	HDC hCloneDC = ::CreateCompatibleDC(hDC);
-	HBITMAP hOldBitmap = (HBITMAP)::SelectObject(hCloneDC, hBitmap);
+	//scene
+	bool bRoundPaint = (rcRound.left > 0 || rcRound.top > 0 || rcRound.right > 0 || rcRound.bottom > 0);
+	CDUIMemDC *pMemDC = bRoundPaint ? new CDUIMemDC(hDC, rcItem, CDUIRect(0, 0, rcItem.left + rcItem.GetWidth(), rcItem.top + rcItem.GetHeight())) : NULL;
+	HDC hDCPaint = pMemDC ? *pMemDC : hDC;
+	HDC hDCClone = ::CreateCompatibleDC(hDC);
+	HBITMAP hBmpOldClone = (HBITMAP)::SelectObject(hDCClone, hBitmap);
 	int nSaveDC = SaveDC(hDC);
 
 	//draw
@@ -203,13 +207,13 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 		{
 			if (bAlphaBlend)
 			{
-				lpAlphaBlend(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(),
-					hCloneDC, rcBmpPart.left, rcBmpPart.top, rcBmpPart.GetWidth(), rcBmpPart.GetHeight(), bf);
+				lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(),
+					hDCClone, rcBmpPart.left, rcBmpPart.top, rcBmpPart.GetWidth(), rcBmpPart.GetHeight(), bf);
 			}
 			else
 			{
-				::BitBlt(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), \
-					hCloneDC, rcBmpPart.left, rcBmpPart.top, SRCCOPY);
+				::BitBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), \
+					hDCClone, rcBmpPart.left, rcBmpPart.top, SRCCOPY);
 			}
 		}
 	}
@@ -231,14 +235,14 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 				{
 					if (bAlphaBlend)
 					{
-						lpAlphaBlend(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+						lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 							rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
 							rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, \
 							rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, bf);
 					}
 					else
 					{
-						::StretchBlt(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+						::StretchBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 							rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
 							rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, \
 							rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, SRCCOPY);
@@ -276,12 +280,12 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 
 							if (bAlphaBlend)
 							{
-								lpAlphaBlend(hDC, lDestLeft, lDestTop, lDestRight - lDestLeft, lDestBottom - lDestTop, hCloneDC,
+								lpAlphaBlend(hDCPaint, lDestLeft, lDestTop, lDestRight - lDestLeft, lDestBottom - lDestTop, hDCClone,
 									rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, lDrawWidth, lDrawHeight, bf);
 							}
 							else
 							{
-								::BitBlt(hDC, lDestLeft, lDestTop, lDestRight - lDestLeft, lDestBottom - lDestTop, hCloneDC, \
+								::BitBlt(hDCPaint, lDestLeft, lDestTop, lDestRight - lDestLeft, lDestBottom - lDestTop, hDCClone, \
 									rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, SRCCOPY);
 							}
 						}
@@ -306,14 +310,14 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 						}
 						if (bAlphaBlend)
 						{
-							lpAlphaBlend(hDC, lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.GetHeight(),
-								hCloneDC, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+							lpAlphaBlend(hDCPaint, lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.GetHeight(),
+								hDCClone, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
 								lDrawWidth, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, bf);
 						}
 						else
 						{
-							::StretchBlt(hDC, lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.GetHeight(),
-								hCloneDC, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+							::StretchBlt(hDCPaint, lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.GetHeight(),
+								hDCClone, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
 								lDrawWidth, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, SRCCOPY);
 						}
 					}
@@ -337,14 +341,14 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 						}
 						if (bAlphaBlend)
 						{
-							lpAlphaBlend(hDC, rcDest.left, lDestTop, rcDest.GetWidth(), lDestBottom - lDestTop,
-								hCloneDC, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+							lpAlphaBlend(hDCPaint, rcDest.left, lDestTop, rcDest.GetWidth(), lDestBottom - lDestTop,
+								hDCClone, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
 								rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, lDrawHeight, bf);
 						}
 						else
 						{
-							::StretchBlt(hDC, rcDest.left, lDestTop, rcDest.GetWidth(), lDestBottom - lDestTop,
-								hCloneDC, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+							::StretchBlt(hDCPaint, rcDest.left, lDestTop, rcDest.GetWidth(), lDestBottom - lDestTop,
+								hDCClone, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
 								rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, lDrawHeight, SRCCOPY);
 						}
 					}
@@ -363,12 +367,12 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 			{
 				if (bAlphaBlend)
 				{
-					lpAlphaBlend(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.left, rcBmpPart.top, rcCorner.left, rcCorner.top, bf);
 				}
 				else
 				{
-					::StretchBlt(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					::StretchBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.left, rcBmpPart.top, rcCorner.left, rcCorner.top, SRCCOPY);
 				}
 			}
@@ -384,13 +388,13 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 			{
 				if (bAlphaBlend)
 				{
-					lpAlphaBlend(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.left, rcBmpPart.top + rcCorner.top,
 						rcCorner.left, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, bf);
 				}
 				else
 				{
-					::StretchBlt(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					::StretchBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.left, rcBmpPart.top + rcCorner.top,
 						rcCorner.left, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, SRCCOPY);
 				}
@@ -407,13 +411,13 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 			{
 				if (bAlphaBlend)
 				{
-					lpAlphaBlend(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.left + rcCorner.left, rcBmpPart.top,
 						rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, rcCorner.top, bf);
 				}
 				else
 				{
-					::StretchBlt(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					::StretchBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.left + rcCorner.left, rcBmpPart.top,
 						rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, rcCorner.top, SRCCOPY);
 				}
@@ -430,13 +434,13 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 			{
 				if (bAlphaBlend)
 				{
-					lpAlphaBlend(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.right - rcCorner.right, rcBmpPart.bottom - rcCorner.bottom,
 						rcCorner.right, rcCorner.bottom, bf);
 				}
 				else
 				{
-					::StretchBlt(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					::StretchBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.right - rcCorner.right, rcBmpPart.bottom - rcCorner.bottom,
 						rcCorner.right, rcCorner.bottom, SRCCOPY);
 				}
@@ -453,13 +457,13 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 			{
 				if (bAlphaBlend)
 				{
-					lpAlphaBlend(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.right - rcCorner.right, rcBmpPart.top + rcCorner.top,
 						rcCorner.right, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, bf);
 				}
 				else
 				{
-					::StretchBlt(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					::StretchBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.right - rcCorner.right, rcBmpPart.top + rcCorner.top,
 						rcCorner.right, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, SRCCOPY);
 				}
@@ -476,13 +480,13 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 			{
 				if (bAlphaBlend)
 				{
-					lpAlphaBlend(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.left + rcCorner.left, rcBmpPart.bottom - rcCorner.bottom, \
 						rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, rcCorner.bottom, bf);
 				}
 				else
 				{
-					::StretchBlt(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					::StretchBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.left + rcCorner.left, rcBmpPart.bottom - rcCorner.bottom, \
 						rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, rcCorner.bottom, SRCCOPY);
 				}
@@ -499,12 +503,12 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 			{
 				if (bAlphaBlend)
 				{
-					lpAlphaBlend(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.right - rcCorner.right, rcBmpPart.top, rcCorner.right, rcCorner.top, bf);
 				}
 				else
 				{
-					::StretchBlt(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					::StretchBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.right - rcCorner.right, rcBmpPart.top, rcCorner.right, rcCorner.top, SRCCOPY);
 				}
 			}
@@ -520,39 +524,74 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 			{
 				if (bAlphaBlend)
 				{
-					lpAlphaBlend(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.left, rcBmpPart.bottom - rcCorner.bottom, rcCorner.left, rcCorner.bottom, bf);
 				}
 				else
 				{
-					::StretchBlt(hDC, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hCloneDC, \
+					::StretchBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
 						rcBmpPart.left, rcBmpPart.bottom - rcCorner.bottom, rcCorner.left, rcCorner.bottom, SRCCOPY);
 				}
 			}
 		}
 	}
 
-	::SelectObject(hCloneDC, hOldBitmap);
-	MMSafeDeleteDC(hCloneDC);
+	::SelectObject(hDCClone, hBmpOldClone);
+	MMSafeDeleteDC(hDCClone);
 	RestoreDC(hDC, nSaveDC);
+
+	//round
+	if (bRoundPaint)
+	{
+		do
+		{
+			Gdiplus::Bitmap *pBmp = GetAlphaBitmap(CopyBitmap(hDCPaint, rcItem));
+			if (NULL == pBmp) break;
+
+			DrawImage(hDC, pBmp, rcItem, rcRound);
+
+			MMSafeDelete(pBmp);
+
+		} while (false);
+		
+		pMemDC->ResetDC();
+	}
+
+	MMSafeDelete(pMemDC);
 
 	return;
 }
 
-void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem)
+void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcRound)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (NULL == hDC || NULL == pBmp) return;
 
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
-	Gp.DrawImage(pBmp, Gdiplus::Rect(rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight()), 0, 0, pBmp->GetWidth(), pBmp->GetHeight(), UnitPixel);
+	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+
+	if (rcRound.left > 0
+		|| rcRound.top > 0
+		|| rcRound.right > 0
+		|| rcRound.bottom > 0)
+	{
+		Gdiplus::GraphicsPath Path;
+		ConstructRoundPath(rcItem, rcRound, 0, Path);
+
+		Gdiplus::TextureBrush Brush(pBmp);
+		Gp.FillPath(&Brush, &Path);
+	}
+	else
+	{
+		Gp.DrawImage(pBmp, Gdiplus::Rect(rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight()), 0, 0, pBmp->GetWidth(), pBmp->GetHeight(), UnitPixel);
+	}
 
 	return;
 }
 
 void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-	BYTE cbAlpha, bool bAlpha, bool bHole, bool bTiledX, bool bTiledY)
+	BYTE cbAlpha, bool bAlpha, bool bHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (NULL == hDC || NULL == pBmp) return;
@@ -562,8 +601,13 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	CDUIRect rcDest;
 	if (false == IntersectRect(&rcTemp, &rcItem, &rcPaint)) return;
 
+	//scene
+	bool bRoundPaint = (rcRound.left > 0 || rcRound.top > 0 || rcRound.right > 0 || rcRound.bottom > 0);
+	CDUIMemDC *pMemDC = bRoundPaint ? new CDUIMemDC(hDC, rcItem, CDUIRect(0, 0, rcItem.left + rcItem.GetWidth(), rcItem.top + rcItem.GetHeight())) : NULL;
+	HDC hDCPaint = pMemDC ? *pMemDC : hDC;
+
 	//info
-	Gdiplus::Graphics Gp(hDC);
+	Gdiplus::Graphics Gp(hDCPaint);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 	//Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 	//Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
@@ -796,6 +840,25 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 			}
 		}
 	}
+
+	//round
+	if (bRoundPaint)
+	{
+		do
+		{
+			Gdiplus::Bitmap *pBmp = GetAlphaBitmap(CopyBitmap(hDCPaint, rcItem));
+			if (NULL == pBmp) break;
+
+			DrawImage(hDC, pBmp, rcItem, rcRound);
+
+			MMSafeDelete(pBmp);
+
+		} while (false);
+
+		pMemDC->ResetDC();
+	}
+
+	MMSafeDelete(pMemDC);
 
 	return;
 }
@@ -1659,16 +1722,16 @@ HBITMAP CDUIRenderEngine::GenerateBitmap(CDUIWnd *pWnd, CDUIControlBase *pContro
 	AdjustImage(hPaintBitmap, dwFilterColor, 0);
 
 	LPBYTE pBmpBits = NULL;
-	HDC hCloneDC = ::CreateCompatibleDC(pWnd->GetWndDC());
+	HDC hDCClone = ::CreateCompatibleDC(pWnd->GetWndDC());
 	HBITMAP hBitmap = CreateARGB32Bitmap(pWnd->GetWndDC(), rcItem.GetWidth(), rcItem.GetHeight(), &pBmpBits);
-	ASSERT(hCloneDC);
+	ASSERT(hDCClone);
 	ASSERT(hBitmap);
 	if (hBitmap != NULL)
 	{
-		HBITMAP hOldBitmap = (HBITMAP)::SelectObject(hCloneDC, hBitmap);
-		::BitBlt(hCloneDC, 0, 0, rcItem.GetWidth(), rcItem.GetHeight(), hPaintDC, rcItem.left, rcItem.top, SRCCOPY);
-		::SelectObject(hCloneDC, hOldBitmap);
-		MMSafeDeleteDC(hCloneDC);
+		HBITMAP hOldBitmap = (HBITMAP)::SelectObject(hDCClone, hBitmap);
+		::BitBlt(hDCClone, 0, 0, rcItem.GetWidth(), rcItem.GetHeight(), hPaintDC, rcItem.left, rcItem.top, SRCCOPY);
+		::SelectObject(hDCClone, hOldBitmap);
+		MMSafeDeleteDC(hDCClone);
 		::GdiFlush();
 	}
 
@@ -1978,10 +2041,7 @@ CDUIMemDC::~CDUIMemDC(void)
 			m_hMemDC, 0, 0, SRCCOPY);
 	}
 
-	SelectObject(m_hMemDC, m_hOldBitmap);
-	MMSafeDeleteObject(m_hBitmap);
-	MMSafeDeleteObject(m_hMemDC);
-	m_pBmpBits = NULL;
+	ResetDC();
 
 	return;
 }
@@ -1989,6 +2049,20 @@ CDUIMemDC::~CDUIMemDC(void)
 CDUIMemDC::operator HDC() const
 {
 	return m_hMemDC;
+}
+
+void CDUIMemDC::ResetDC()
+{
+	if (m_hMemDC)
+	{
+		SelectObject(m_hMemDC, m_hOldBitmap);
+	}
+	
+	MMSafeDeleteObject(m_hBitmap);
+	MMSafeDeleteObject(m_hMemDC);
+	m_pBmpBits = NULL;
+
+	return;
 }
 
 HDC CDUIMemDC::GetSrcHDC()

@@ -235,7 +235,8 @@ void CDUITabLayoutCtrl::RemoveAll()
 
 bool CDUITabLayoutCtrl::Select(int nIndex)
 {
-	if (nIndex == GetCurSel()) return true;
+	CDUIControlBase *pChild = GetChildAt(nIndex);
+	if (nIndex == GetCurSel() && pChild && pChild->IsVisible()) return true;
 
 	SelectItem(nIndex);
 

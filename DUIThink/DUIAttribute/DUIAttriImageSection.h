@@ -31,8 +31,8 @@ public:
 
 public:
 	//render
-	virtual void Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled = false);
-	virtual void Draw(CDUIImageBase *pImageBase, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled = false);
+	virtual void Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled = false, const CDUIRect &rcRound = {});
+	virtual void Draw(CDUIImageBase *pImageBase, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled = false, const CDUIRect &rcRound = {});
 	virtual void DrawAnimate(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, const tagDuiAnimateImageInfo &AnimateImageInfo, int nFrameCur, const CDUIRect &rcRound = {});
 
 	virtual bool IsEmpty();

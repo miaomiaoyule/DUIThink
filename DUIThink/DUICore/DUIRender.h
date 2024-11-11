@@ -24,10 +24,10 @@ class DUITHINK_API CDUIRenderEngine
 public:
 	//draw argb
 	static void DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-		BYTE cbAlpha = 255, bool bAlpha = false, bool bHole = false, bool bTiledX = false, bool bTiledY = false);
-	static void DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem);
+		BYTE cbAlpha = 255, bool bAlpha = false, bool bHole = false, bool bTiledX = false, bool bTiledY = false, const CDUIRect &rcRound = {});
+	static void DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcRound = {});
 	static void DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-		BYTE cbAlpha = 255, bool bAlpha = false, bool bHole = false, bool bTiledX = false, bool bTiledY = false);
+		BYTE cbAlpha = 255, bool bAlpha = false, bool bHole = false, bool bTiledX = false, bool bTiledY = false, const CDUIRect &rcRound = {});
 	static void DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, const CDUIRect &rcItem, int nFrameCur, const CDUIRect &rcRound = {});
 	static void DrawLine(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop = {}, enDuiLineStyle LineStyle = LineStyle_Solid);
@@ -93,6 +93,7 @@ public:
 public:
 	operator HDC() const;
 
+	void ResetDC();
 	HDC GetSrcHDC();
 	HDC GetMemHDC();
 	HBITMAP GetMemBitmap();

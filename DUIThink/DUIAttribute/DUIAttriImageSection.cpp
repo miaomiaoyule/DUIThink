@@ -26,7 +26,7 @@ LPVOID CDUIAttriImageSection::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 	return __super::QueryInterface(Guid, dwQueryVer);
 }
 
-void CDUIAttriImageSection::Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled)
+void CDUIAttriImageSection::Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled, const CDUIRect &rcRound)
 {
 	CDUIImageBase *pImageBaseCur = GetCurImageBase();
 	if (NULL == pImageBaseCur || NULL == m_pOwner) return;
@@ -34,12 +34,12 @@ void CDUIAttriImageSection::Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect
 	//info
 	tagDuiImageSection ImageSection = GetImageSection();
 	
-	Draw(pImageBaseCur, ImageSection, hDC, rcItem, rcPaint, bDisabled);
+	Draw(pImageBaseCur, ImageSection, hDC, rcItem, rcPaint, bDisabled, rcRound);
 
 	return;
 }
 
-void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled)
+void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled, const CDUIRect &rcRound)
 {
 	if (NULL == pImageBase) return;
 
@@ -80,12 +80,12 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 		if (pWnd->IsGdiplusRenderImage())
 		{
 			CDUIRenderEngine::DrawImage(hDC, pBmp, rcDest, rcPaint, rcSource,
-				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
+				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY, rcRound);
 		}
 		else
 		{
 			CDUIRenderEngine::DrawImage(hDC, hBitmap, rcDest, rcPaint, rcSource,
-				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY);
+				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY, rcRound);
 		}
 
 		//move right
@@ -150,7 +150,7 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 		ImageSection.ImageSourceType = ImageSource_Custom;
 		ImageSection.mapSourceCustomScale[100] = rcSource;
 
-		Draw(pImageBaseCur, ImageSection, hDC, rcItem, rcPaint);
+		Draw(pImageBaseCur, ImageSection, hDC, rcItem, rcPaint, false, rcRound);
 	}
 
 	return;
@@ -300,9 +300,13 @@ CDUIRect CDUIAttriImageSection::GetSource(tagDuiImageSection ImageSection)
 			{
 				rcSource = ImageSection.mapSourceCustomScale[GetScale()];
 			}
+			else if (ImageSection.mapSourceCustomScale.find(100) != ImageSection.mapSourceCustomScale.end())
+			{
+				rcSource = ImageSection.mapSourceCustomScale[100];
+			}
 			else
 			{
-				rcSource = DuiDpiScaleAttri(CDUIRect());
+				rcSource = CDUIRect(0, 0, pImageBase->GetWidth(), pImageBase->GetHeight());
 			}
 
 			break;
