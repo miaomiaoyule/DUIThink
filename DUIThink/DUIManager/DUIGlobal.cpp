@@ -1150,7 +1150,7 @@ void CDUIGlobal::LoadPublicResource()
 	{
 		auto pImageBase = new CDUIImageBase(lpszImage[0], lpszImage[1]);
 		pImageBase->SetDesign(true);
-		if (false == CDUIGlobal::GetInstance()->AddResource(pImageBase))
+		if (false == AddResource(pImageBase))
 		{
 			MMSafeDelete(pImageBase);
 		}
@@ -1161,7 +1161,7 @@ void CDUIGlobal::LoadPublicResource()
 	{
 		auto pColorBase = new CDUIColorBase(lpszColor, _tcstoul(lpszColor, NULL, 16));
 		pColorBase->SetDesign(true);
-		if (false == CDUIGlobal::GetInstance()->AddResource(pColorBase))
+		if (false == AddResource(pColorBase))
 		{
 			MMSafeDelete(pColorBase);
 		}
@@ -1173,7 +1173,7 @@ void CDUIGlobal::LoadPublicResource()
 		CMMString strName = CDUIFontBase::FormatFontDescribe(lgFont.lfFaceName, lgFont.lfHeight, lgFont.lfWeight, lgFont.lfItalic, lgFont.lfUnderline, lgFont.lfStrikeOut);
 		auto pFontBase = new CDUIFontBase(strName, lgFont.lfFaceName, lgFont.lfHeight, lgFont.lfWeight, lgFont.lfItalic, lgFont.lfUnderline, lgFont.lfStrikeOut);
 		pFontBase->SetDesign(true);
-		if (false == CDUIGlobal::GetInstance()->AddResource(pFontBase))
+		if (false == AddResource(pFontBase))
 		{
 			MMSafeDelete(pFontBase);
 		}
@@ -1354,6 +1354,29 @@ bool CDUIGlobal::AddResource(CDUIResourceBase *pResourceObj)
 	return false;
 }
 
+bool CDUIGlobal::RegisterResourceCallBack(IDuiResourceCallBack *pIResourceCallBack)
+{
+	if (NULL == pIResourceCallBack) return false;
+
+	if (find(m_vecIResourceCallBack.begin(), m_vecIResourceCallBack.end(), pIResourceCallBack) != m_vecIResourceCallBack.end()) return false;
+
+	m_vecIResourceCallBack.push_back(pIResourceCallBack);
+
+	return true;
+}
+
+bool CDUIGlobal::UnRegisterResourceCallBack(IDuiResourceCallBack *pIResourceCallBack)
+{
+	if (NULL == pIResourceCallBack) return false;
+
+	auto FindIt = find(m_vecIResourceCallBack.begin(), m_vecIResourceCallBack.end(), pIResourceCallBack);
+	if (FindIt == m_vecIResourceCallBack.end()) return false;
+
+	m_vecIResourceCallBack.erase(FindIt);
+
+	return true;
+}
+
 bool CDUIGlobal::AddFontResource(CDUIFontBase *pResourceObj)
 {
 	if (NULL == pResourceObj) return false;
@@ -1374,6 +1397,9 @@ bool CDUIGlobal::AddFontResource(CDUIFontBase *pResourceObj)
 		m_strFontResDefault = pResourceObj ? pResourceObj->GetResourceName() : _T("");
 	}
 
+	//notify
+	OnResourceAdd(pResourceObj);
+
 	return true;
 }
 
@@ -1391,6 +1417,9 @@ bool CDUIGlobal::AddImageResource(CDUIImageBase *pResourceObj)
 
 	m_mapResourceImage[pResourceObj->GetResourceName()] = pResourceObj;
 
+	//notify
+	OnResourceAdd(pResourceObj);
+
 	return true;
 }
 
@@ -1407,6 +1436,9 @@ bool CDUIGlobal::AddColorResource(CDUIColorBase *pResourceObj)
 	}
 
 	m_mapResourceColor[pResourceObj->GetResourceName()] = pResourceObj;
+
+	//notify
+	OnResourceAdd(pResourceObj);
 
 	return true;
 }
@@ -1502,7 +1534,7 @@ bool CDUIGlobal::RenameDui(const CMMString &strNameOld, const CMMString &strName
 	enDuiType DuiType = FindDuiOld->DuiType;
 	CMMString strFile = FindDuiOld->strFile;
 
-	CMMString strFileOld = CDUIGlobal::GetInstance()->GetDuiFileFull(strNameOld);
+	CMMString strFileOld = GetDuiFileFull(strNameOld);
 	CMMString strFileNameNew = strNameNew + _T(".xml");
 	CMMString strFileNew = GetDuiPath(DuiType) + strFileNameNew;
 
@@ -1663,9 +1695,24 @@ void CDUIGlobal::OnDpiChanged(int nScalePre)
 	return;
 }
 
-void CDUIGlobal::OnResourceDelete(CDUIResourceBase *pResourceObj)
+void CDUIGlobal::OnResourceAdd(CDUIResourceBase *pResourceObj)
 {
-	if (NULL == pResourceObj) return;
+	if (false == IsLoadProject()) return;
+
+	for (int n = 0; n < m_vecIResourceCallBack.size(); n++)
+	{
+		IDuiResourceCallBack *pIResourceCallBack = m_vecIResourceCallBack[n];
+		if (NULL == pIResourceCallBack) continue;
+
+		pIResourceCallBack->OnResourceAdd(pResourceObj);
+	}
+
+	return;
+}
+
+void CDUIGlobal::OnResourceRemove(CDUIResourceBase *pResourceObj)
+{
+	if (NULL == pResourceObj || false == IsLoadProject()) return;
 
 	{
 		std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
@@ -1675,6 +1722,13 @@ void CDUIGlobal::OnResourceDelete(CDUIResourceBase *pResourceObj)
 			if (NULL == Wnd.first) continue;
 
 			Wnd.first->Invalidate();
+		}
+		for (int n = 0; n < m_vecIResourceCallBack.size(); n++)
+		{
+			IDuiResourceCallBack *pIResourceCallBack = m_vecIResourceCallBack[n];
+			if (NULL == pIResourceCallBack) continue;
+
+			pIResourceCallBack->OnResourceRemove(pResourceObj);
 		}
 	}
 
@@ -3142,7 +3196,7 @@ void CDUIGlobal::ReleaseFontResource()
 			continue;
 		}
 
-		OnResourceDelete(ResourceIt->second);
+		OnResourceRemove(ResourceIt->second);
 
 		MMSafeDelete(ResourceIt->second);
 
@@ -3165,7 +3219,7 @@ void CDUIGlobal::ReleaseImageResource()
 			continue;
 		}
 
-		OnResourceDelete(ResourceIt->second);
+		OnResourceRemove(ResourceIt->second);
 
 		MMSafeDelete(ResourceIt->second);
 
@@ -3188,7 +3242,7 @@ void CDUIGlobal::ReleaseColorResource()
 			continue;
 		}
 
-		OnResourceDelete(ResourceIt->second);
+		OnResourceRemove(ResourceIt->second);
 
 		MMSafeDelete(ResourceIt->second);
 

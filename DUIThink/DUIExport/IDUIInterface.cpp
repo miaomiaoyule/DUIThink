@@ -19,3 +19,11 @@ LPVOID IDuiPropertyObject::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 }
 
 //////////////////////////////////////////////////////////////////////////
+LPVOID IDuiResourceCallBack::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
+{
+	QUERYINTERFACE(IDuiResourceCallBack, Guid, dwQueryVer);
+
+	return __super::QueryInterface(Guid, dwQueryVer);
+}
+
+//////////////////////////////////////////////////////////////////////////

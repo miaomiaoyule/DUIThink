@@ -97,6 +97,7 @@ private:
 	MapDuiImageBase						m_mapResourceImage;
 	VecDuiFile							m_vecDui;
 	MapDuiModelStore					m_mapModelStore;
+	VecIDuiResourceCallBack				m_vecIResourceCallBack;
 
 	//attribute
 	bool								m_bAttriWaitSave = false;
@@ -184,6 +185,8 @@ public:
 
 	//method resource
 public:
+	bool RegisterResourceCallBack(IDuiResourceCallBack *pIResourceCallBack);
+	bool UnRegisterResourceCallBack(IDuiResourceCallBack *pIResourceCallBack);
 	bool AddResource(CDUIResourceBase *pResourceObj);
 
 	int GetFontResourceCount();
@@ -291,7 +294,8 @@ protected:
 	bool RemoveDui(const CMMString &strName);
 	void SetFontResDefault(const CMMString &strName);
 	void OnDpiChanged(int nScalePre);
-	void OnResourceDelete(CDUIResourceBase *pResourceObj);
+	void OnResourceAdd(CDUIResourceBase *pResourceObj);
+	void OnResourceRemove(CDUIResourceBase *pResourceObj);
 	void OnResourceSwitch(int nIndexRes);
 
 	//attribute

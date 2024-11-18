@@ -61,5 +61,18 @@ interface IDuiControlCallBack
 typedef std::vector<IDuiControlCallBack*> VecIDuiControlCallBack;
 
 //////////////////////////////////////////////////////////////////////////
+//resource change
+#define VER_IDuiResourceCallBack INTERFACE_VERSION(1,1)
+static const GUID IID_IDuiResourceCallBack = { 0x8E679207,0x6CDB,0x49E2,0x9C,0x4E,0xC5,0x85,0x38,0xDC,0x3D,0xA6 };
+interface DUITHINK_API IDuiResourceCallBack : public IDuiInterface
+{
+	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
+	virtual void OnResourceAdd(CDUIResourceBase *pResourceObj) = NULL;
+	virtual void OnResourceRemove(CDUIResourceBase *pResourceObj) = NULL;
+};
+
+typedef std::vector<IDuiResourceCallBack*> VecIDuiResourceCallBack;
+
+//////////////////////////////////////////////////////////////////////////
 
 #endif
