@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Version Version="4"/>
+
+<SkinRes SkinFile="SkinRes.xml"/>
+
+<FontRes FontFile="FontRes.xml" Default="微软雅黑-字号:12-粗细:400-非斜体-无下划线-无删除线"/>
+
+<ColorRes ColorFile="ColorRes.xml"/>
+
+<Attribute AttributeFile="Attribute.xml"/>
+
+<ResourceCtrlID CtrlIDFile="ResourceCtrlID.h"/>
+
+<DirectUI DuiName="DlgMain" DuiType="0" DuiFile="DlgMain.xml"/>

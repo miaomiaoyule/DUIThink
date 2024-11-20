@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDUIImageBase ResName="00aa0c4320b93631ab3c223604ead431" Path="00aa0c4320b93631ab3c223604ead431.svg"/>
+
+<CDUIImageBase ResName="7d2d28d80d4ae06acb4fdbde429448e6" Path="7d2d28d80d4ae06acb4fdbde429448e6.svg"/>
+
+<CDUIImageBase ResName="78e3f697df85275aa8d384ca6fc0e288" Path="78e3f697df85275aa8d384ca6fc0e288.svg"/>
+
+<CDUIImageBase ResName="679ce05ac8c35bbf83f596e895ab711b" Path="679ce05ac8c35bbf83f596e895ab711b.svg"/>
+
+<CDUIImageBase ResName="a11919e102077f40302da55fb9150440" Path="a11919e102077f40302da55fb9150440.svg"/>
+
+<CDUIImageBase ResName="bc0fbf502b38884f440135ddae40016d" Path="bc0fbf502b38884f440135ddae40016d.svg"/>
+
+<CDUIImageBase ResName="d259fcbecaa9d2a22d19848daff9d4c6" Path="d259fcbecaa9d2a22d19848daff9d4c6.svg"/>
+
+<CDUIImageBase ResName="dropdown-arrow" Path="dropdown-arrow.svg"/>
+
+<CDUIImageBase ResName="f683b8d7029b1af17b115c10a63c435d" Path="f683b8d7029b1af17b115c10a63c435d.svg"/>
+
+<CDUIImageBase ResName="green-flag" Path="green-flag.svg"/>
+
+<CDUIImageBase ResName="repeat" Path="repeat.svg"/>
+
+<CDUIImageBase ResName="rotate-left" Path="rotate-left.svg"/>
+
+<CDUIImageBase ResName="rotate-right" Path="rotate-right.svg"/>
+
+<CDUIImageBase ResName="zoom-in" Path="zoom-in.svg"/>
+
+<CDUIImageBase ResName="zoom-out" Path="zoom-out.svg"/>
+
+<CDUIImageBase ResName="zoom-reset" Path="zoom-reset.svg"/>
+
+<CDUIImageBase ResName="无标题" Path="无标题.svg"/>
+
+<CDUIImageBase ResName="文件" Path="文件.svg"/>
+
+<CDUIImageBase ResName="编辑" Path="编辑.svg"/>
+
+<CDUIImageBase ResName="插件" Path="插件.svg"/>
+
+<CDUIImageBase ResName="高级" Path="高级.svg"/>
+
+<CDUIImageBase ResName="造型" Path="造型.svg"/>
+
+<CDUIImageBase ResName="代码" Path="代码.svg"/>
+
+<CDUIImageBase ResName="声音" Path="声音.svg"/>
+
+<CDUIImageBase ResName="停止" Path="停止.svg"/>
+
+<CDUIImageBase ResName="暂停" Path="暂停.svg"/>
+
+<CDUIImageBase ResName="正常大小" Path="正常大小.svg"/>
+
+<CDUIImageBase ResName="缩小舞台" Path="缩小舞台.svg"/>
+
+<CDUIImageBase ResName="事件模块" Path="事件模块.png"/>
+
+<CDUIImageBase ResName="外观模块" Path="外观模块.png"/>
+
+<CDUIImageBase ResName="运动模块" Path="运动模块.png"/>
+
+<CDUIImageBase ResName="声音模块" Path="声音模块.png"/>
+
+<CDUIImageBase ResName="外观" Path="外观.png"/>

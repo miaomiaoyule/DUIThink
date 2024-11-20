@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDUIAttributeObject>
+    <a ValueID="7515601" Name="ItemInitCount"/>
+    <a ValueID="24118108" Name="ImageUpBtnHot"/>
+    <a ValueID="43247758" Name="ImageFocus"/>
+    <a ValueID="51365347" Name="ColorMonthNormal"/>
+    <a ValueID="64622580" Name="Radio"/>
+    <a ValueID="71321594" Name="Days"/>
+    <a ValueID="86153144" Name="AutoCalcHeight"/>
+    <a ValueID="104566201" Name="ColorSelNormal"/>
+    <a ValueID="105104680" Name="IconExpand"/>
+    <a ValueID="112109689" Name="Thursday"/>
+    <a ValueID="115543876" Name="SepImage"/>
+    <a ValueID="132720835" Name="SwitchTileItemSize"/>
+    <a ValueID="156713040" Name="ColorFocusBorder"/>
+    <a ValueID="159619629" Name="ColorGrooveHot"/>
+    <a ValueID="189400591" Name="BindTabCtrlID"/>
+    <a ValueID="196633818" Name="MinSize"/>
+    <a ValueID="226849529" Name="ColorDownBtnNormal"/>
+    <a ValueID="230184151" Name="TextStyleOtherMonthDay"/>
+    <a ValueID="240975275" Name="ColorNormal"/>
+    <a ValueID="246882623" Name="SelectIconSelHot"/>
+    <a ValueID="248201647" Name="ScrollSpeed"/>
+    <a ValueID="251447217" Name="ClockCenterDot"/>
+    <a ValueID="263501462" Name="BorderStyle"/>
+    <a ValueID="264191722" Name="UpDownBtnFixedWidth"/>
+    <a ValueID="281035142" Name="SelectIconFixedWidth"/>
+    <a ValueID="284494279" Name="ImageDownBtnPushed"/>
+    <a ValueID="311735907" Name="TextStyleWeek"/>
+    <a ValueID="313708474" Name="ImageSelect"/>
+    <a ValueID="353547694" Name="IsSelected"/>
+    <a ValueID="354988239" Name="TextStyleDisabled"/>
+    <a ValueID="374562364" Name="ToolTipBkColor"/>
+    <a ValueID="404125566" Name="UpDownBtnVertFixedHeight"/>
+    <a ValueID="407727115" Name="TextStyleFocus"/>
+    <a ValueID="423824075" Name="ExpandIconHot"/>
+    <a ValueID="429095716" Name="ItemStatus"/>
+    <a ValueID="455031563" Name="VScrollBarPushItemRange"/>
+    <a ValueID="468533267" Name="ReadOnly"/>
+    <a ValueID="496404337" Name="Sunday"/>
+    <a ValueID="524138477" Name="ThumbHoriz"/>
+    <a ValueID="525613808" Name="SelectedStatus"/>
+    <a ValueID="528471489" Name="ImageNormal"/>
+    <a ValueID="540625834" Name="MaxValue"/>
+    <a ValueID="554639627" Name="ThumbVertInsetRight"/>
+    <a ValueID="567243614" Name="AnimateDrag"/>
+    <a ValueID="575841218" Name="ImageLeftBtnNormal"/>
+    <a ValueID="583520677" Name="IconNormal"/>
+    <a ValueID="631143898" Name="ListViewType"/>
+    <a ValueID="696372805" Name="AutoCalcItemHeight"/>
+    <a ValueID="702564252" Name="Friday"/>
+    <a ValueID="706931591" Name="SwitchListItemHeight"/>
+    <a ValueID="722973517" Name="AnimationElapse"/>
+    <a ValueID="729007824" Name="ScrollSelect"/>
+    <a ValueID="750574505" Name="ImageMouseDragSel"/>
+    <a ValueID="754018692" Name="ItemColorSelNormal"/>
+    <a ValueID="759529727" Name="ExpandIconPushed"/>
+    <a ValueID="769055984" Name="ExpandIconFixedWidth"/>
+    <a ValueID="811014879" Name="ImageThumbNormal"/>
+    <a ValueID="829793926" Name="UserTag"/>
+    <a ValueID="864961386" Name="ColorUpBtnPushed"/>
+    <a ValueID="888955372" Name="ColorBorder"/>
+    <a ValueID="890313559" Name="ItemImageDisabled"/>
+    <a ValueID="895583555" Name="DownBtnStatus"/>
+    <a ValueID="897332187" Name="ThumbHorizInsetTop"/>
+    <a ValueID="904156404" Name="AngleStart"/>
+    <a ValueID="929225012" Name="ColorFocus"/>
+    <a ValueID="941015503" Name="ColorPushed"/>
+    <a ValueID="941882107" Name="Transparent"/>
+    <a ValueID="948073447" Name="AngleFinish"/>
+    <a ValueID="954825237" Name="ColorThumbHot"/>
+    <a ValueID="958813594" Name="ImageLeftBtnHot"/>
+    <a ValueID="959863038" Name="AnimationFrame"/>
+    <a ValueID="962913047" Name="SelectIconFixedHeight"/>
+    <a ValueID="969962749" Name="Select"/>
+    <a ValueID="973985924" Name="AutoCalcChildPaddingH"/>
+    <a ValueID="1001943700" Name="Mouse"/>
+    <a ValueID="1011815964" Name="ImageHotDayBk"/>
+    <a ValueID="1012701937" Name="TextPadding"/>
+    <a ValueID="1044572729" Name="TileType"/>
+    <a ValueID="1051148224" Name="RenderImage"/>
+    <a ValueID="1068630995" Name="ImageSelNormal"/>
+    <a ValueID="1072697150" Name="ToolTipWidth"/>
+    <a ValueID="1077108295" Name="ItemSizeMin"/>
+    <a ValueID="1083288300" Name="UpDownBtnHorizFixedWidth"/>
+    <a ValueID="1104787808" Name="EditEnable"/>
+    <a ValueID="1119955899" Name="TreeNode"/>
+    <a ValueID="1133562293" Name="SepWidth"/>
+    <a ValueID="1150052358" Name="AutoPlay"/>
+    <a ValueID="1188922545" Name="NumberMinLimit"/>
+    <a ValueID="1192647177" Name="Combox"/>
+    <a ValueID="1203792897" Name="AutoCalcWidth"/>
+    <a ValueID="1214686012" Name="WndAlpha"/>
+    <a ValueID="1217392378" Name="UpDownBtnVertInsetRight"/>
+    <a ValueID="1219441033" Name="MinWidth"/>
+    <a ValueID="1234111880" Name="RoundCorner"/>
+    <a ValueID="1241218982" Name="TextStyleSelNormal"/>
+    <a ValueID="1245487980" Name="ImageSelFocus"/>
+    <a ValueID="1254935209" Name="DpiPadding"/>
+    <a ValueID="1260035270" Name="AnimateSelSwitchType"/>
+    <a ValueID="1272299471" Name="LeftFromRange"/>
+    <a ValueID="1288689843" Name="ColorMonthHot"/>
+    <a ValueID="1299694894" Name="ItemColorNormal"/>
+    <a ValueID="1305214978" Name="UpDownBtnHorizInsetTop"/>
+    <a ValueID="1308014568" Name="ChildPaddingV"/>
+    <a ValueID="1335560700" Name="Enable"/>
+    <a ValueID="1359056443" Name="AnimateWater"/>
+    <a ValueID="1363474076" Name="IP"/>
+    <a ValueID="1376900667" Name="WantReturn"/>
+    <a ValueID="1386558658" Name="ExpandEnable"/>
+    <a ValueID="1403668076" Name="RotateClockWise"/>
+    <a ValueID="1404323419" Name="TextStyleYearHot"/>
+    <a ValueID="1407487721" Name="ImageBack"/>
+    <a ValueID="1415130338" Name="ShowRowLine"/>
+    <a ValueID="1419808995" Name="ExpandDbClick"/>
+    <a ValueID="1425710943" Name="NumberMaxLimit"/>
+    <a ValueID="1425733087" Name="UseVertScrollBar"/>
+    <a ValueID="1456646046" Name="ThumbVert"/>
+    <a ValueID="1460721325" Name="ColorSlipNormal"/>
+    <a ValueID="1465087397" Name="Monday"/>
+    <a ValueID="1481462606" Name="UpDownBtnHorizInsetBottom"/>
+    <a ValueID="1488248981" Name="TextStyleSelDisabled"/>
+    <a ValueID="1490720074" Name="AngleSpaceMin"/>
+    <a ValueID="1494443624" Name="ID"/>
+    <a ValueID="1509392691" Name="ChildIndent"/>
+    <a ValueID="1525998706" Name="ImageDisabled"/>
+    <a ValueID="1534191365" Name="TipText"/>
+    <a ValueID="1537209853" Name="HeaderHeight"/>
+    <a ValueID="1545882272" Name="Saturday"/>
+    <a ValueID="1558195428" Name="SelectIconLeftPadding"/>
+    <a ValueID="1560491724" Name="TextStyleTipTextNormal"/>
+    <a ValueID="1562268894" Name="ItemImageSelNormal"/>
+    <a ValueID="1567699858" Name="HasExpandMenu"/>
+    <a ValueID="1581935127" Name="MaxWidth"/>
+    <a ValueID="1582518964" Name="UpBtnStatus"/>
+    <a ValueID="1593441695" Name="ThumbHorizInsetBottom"/>
+    <a ValueID="1622402275" Name="AnimationType"/>
+    <a ValueID="1622832114" Name="RenderText"/>
+    <a ValueID="1645832614" Name="ChildPaddingH"/>
+    <a ValueID="1656064637" Name="ItemColorDisabled"/>
+    <a ValueID="1669632540" Name="ImageTodayBk"/>
+    <a ValueID="1690286845" Name="IsColorHSL"/>
+    <a ValueID="1696392251" Name="ClockMinute"/>
+    <a ValueID="1702528961" Name="UpDownBtnVertInsetLeft"/>
+    <a ValueID="1718039917" Name="ColorGrooveNormal"/>
+    <a ValueID="1718533353" Name="ColorBk"/>
+    <a ValueID="1721815347" Name="Slip"/>
+    <a ValueID="1723369924" Name="AutoCalcItemWidth"/>
+    <a ValueID="1723539081" Name="BorderRect"/>
+    <a ValueID="1728987606" Name="ColorLine"/>
+    <a ValueID="1733426185" Name="ItemTextStyleHot"/>
+    <a ValueID="1751457334" Name="LineColor"/>
+    <a ValueID="1755541041" Name="ScrollBarSpeedModel"/>
+    <a ValueID="1804536179" Name="ProgressValue"/>
+    <a ValueID="1819271306" Name="RichTextLineSpace"/>
+    <a ValueID="1827950572" Name="ItemColorSelHot"/>
+    <a ValueID="1835427015" Name="ImageSlipNormal"/>
+    <a ValueID="1846774511" Name="BorderLine"/>
+    <a ValueID="1850352994" Name="WndLayered"/>
+    <a ValueID="1861705740" Name="SaveSelection"/>
+    <a ValueID="1877431087" Name="GdiplusRenderType"/>
+    <a ValueID="1899292753" Name="AutoSelAll"/>
+    <a ValueID="1905203064" Name="ColorLeftRightBtnNormal"/>
+    <a ValueID="1909138281" Name="ItemTextStyleNormal"/>
+    <a ValueID="1932406091" Name="SelectIconSelPushed"/>
+    <a ValueID="1946296364" Name="ImageFore"/>
+    <a ValueID="1957798085" Name="GroupName"/>
+    <a ValueID="1977116604" Name="TextStyleNormal"/>
+    <a ValueID="2004871229" Name="ItemText"/>
+    <a ValueID="2005978194" Name="ListView"/>
+    <a ValueID="2016743765" Name="ImageSelDayBk"/>
+    <a ValueID="2018838331" Name="UpDownBtnRightPadding"/>
+    <a ValueID="2031817053" Name="ColorSelPushed"/>
+    <a ValueID="2033145691" Name="IconExpandRPadding"/>
+    <a ValueID="2044014953" Name="TextStyleIPDot"/>
+    <a ValueID="2061077558" Name="ItemImageSelHot"/>
+    <a ValueID="2089988886" Name="Tuesday"/>
+    <a ValueID="2091422593" Name="WndMaxSize"/>
+    <a ValueID="2113593189" Name="ClockHour"/>
+    <a ValueID="2118409610" Name="AutoCalcChildPaddingV"/>
+    <a ValueID="2145860318" Name="TextStyleSelHot"/>
+    <a ValueID="2154100381" Name="ColorDownBtnPushed"/>
+    <a ValueID="2172261055" Name="GroupID"/>
+    <a ValueID="2173295662" Name="AllowBeep"/>
+    <a ValueID="2179379800" Name="ToolTipTextColor"/>
+    <a ValueID="2179434486" Name="ColorUpBtnHot"/>
+    <a ValueID="2198759042" Name="NumberOnly"/>
+    <a ValueID="2204219396" Name="Position"/>
+    <a ValueID="2213229631" Name="SelectSingle"/>
+    <a ValueID="2214337866" Name="CurValue"/>
+    <a ValueID="2216167159" Name="MouseThrough"/>
+    <a ValueID="2222147537" Name="PasswordMode"/>
+    <a ValueID="2242355170" Name="TextStyleSelPushed"/>
+    <a ValueID="2246850513" Name="TextStyleSelFocus"/>
+    <a ValueID="2269161860" Name="TextStyleHot"/>
+    <a ValueID="2291533848" Name="AngleSpace"/>
+    <a ValueID="2293282031" Name="TextStyle"/>
+    <a ValueID="2304075667" Name="ImageDownBtnNormal"/>
+    <a ValueID="2321446639" Name="SelectIconSelNormal"/>
+    <a ValueID="2335748026" Name="ActiveUrl"/>
+    <a ValueID="2366519471" Name="ImageThumbHot"/>
+    <a ValueID="2405712143" Name="RangeInset"/>
+    <a ValueID="2458228886" Name="ExpandIconVisible"/>
+    <a ValueID="2468958774" Name="ShowColumnLine"/>
+    <a ValueID="2494150159" Name="WndMinSize"/>
+    <a ValueID="2512295936" Name="ImageSelDisabled"/>
+    <a ValueID="2512882039" Name="ListType"/>
+    <a ValueID="2519767457" Name="ColorThumbPushed"/>
+    <a ValueID="2521333858" Name="GdiplusRenderText"/>
+    <a ValueID="2533105219" Name="SelectIndex"/>
+    <a ValueID="2538090971" Name="SlipInsetToGroove"/>
+    <a ValueID="2549170266" Name="ItemTextStyleDisabled"/>
+    <a ValueID="2580315373" Name="ItemEditEnable"/>
+    <a ValueID="2580437616" Name="ColorSelect"/>
+    <a ValueID="2580848617" Name="ItemSizeMax"/>
+    <a ValueID="2586145869" Name="WndResizeTrack"/>
+    <a ValueID="2591226392" Name="ColorDisabled"/>
+    <a ValueID="2596345713" Name="Border"/>
+    <a ValueID="2603345339" Name="Animation"/>
+    <a ValueID="2619478223" Name="ColorSelDayBk"/>
+    <a ValueID="2650537223" Name="ControlBase"/>
+    <a ValueID="2660822745" Name="Status"/>
+    <a ValueID="2680069547" Name="TextStyleYearNormal"/>
+    <a ValueID="2682257945" Name="ColorSelHot"/>
+    <a ValueID="2688595173" Name="SelectDbClick"/>
+    <a ValueID="2708546029" Name="ColorSlipHot"/>
+    <a ValueID="2716310092" Name="ItemImageHot"/>
+    <a ValueID="2719741112" Name="Scroll"/>
+    <a ValueID="2727639017" Name="ClickTransmit"/>
+    <a ValueID="2732594542" Name="SepColor"/>
+    <a ValueID="2764103981" Name="EditTextPadding"/>
+    <a ValueID="2770656695" Name="ThumbVertFixedHeight"/>
+    <a ValueID="2774869240" Name="ControlCursor"/>
+    <a ValueID="2804621609" Name="SelectIconPushed"/>
+    <a ValueID="2815667433" Name="ExpandIconSelHot"/>
+    <a ValueID="2839621730" Name="RoundSize"/>
+    <a ValueID="2850572913" Name="Spin"/>
+    <a ValueID="2851914516" Name="IconCheckedLPadding"/>
+    <a ValueID="2855220295" Name="ImageGrooveNormal"/>
+    <a ValueID="2861888627" Name="UseListHeader"/>
+    <a ValueID="2866314829" Name="SelectIconHot"/>
+    <a ValueID="2867269405" Name="WndRoundCorner"/>
+    <a ValueID="2881586551" Name="ImageGrooveHot"/>
+    <a ValueID="2889517934" Name="Back"/>
+    <a ValueID="2893759913" Name="Edit"/>
+    <a ValueID="2900642705" Name="RichEdit"/>
+    <a ValueID="2915516148" Name="ImageUpBtnNormal"/>
+    <a ValueID="2936014705" Name="ExpandIconFixedHeight"/>
+    <a ValueID="2954905243" Name="ItemTextStyleSelHot"/>
+    <a ValueID="2957535060" Name="TextStyleTipTextHot"/>
+    <a ValueID="2973533981" Name="Separation"/>
+    <a ValueID="2981364566" Name="CustomData"/>
+    <a ValueID="2991916924" Name="UseHorizScrollBar"/>
+    <a ValueID="2995763632" Name="MinHeight"/>
+    <a ValueID="3001047751" Name="RotateMenu"/>
+    <a ValueID="3010605281" Name="ImageRightBtnNormal"/>
+    <a ValueID="3031159413" Name="ColorThumbNormal"/>
+    <a ValueID="3054593410" Name="Header"/>
+    <a ValueID="3058516296" Name="TextStylePushed"/>
+    <a ValueID="3076868397" Name="ExpandIconSelPushed"/>
+    <a ValueID="3082782014" Name="WndInfo"/>
+    <a ValueID="3105960201" Name="IconChecked"/>
+    <a ValueID="3107289661" Name="Clock"/>
+    <a ValueID="3113504464" Name="SelectIconVisible"/>
+    <a ValueID="3135764606" Name="ItemModelInitCount"/>
+    <a ValueID="3145700481" Name="ImageHot"/>
+    <a ValueID="3164255727" Name="TopFromRange"/>
+    <a ValueID="3201664855" Name="WndInitSize"/>
+    <a ValueID="3215896032" Name="SequenceFrameSpeed"/>
+    <a ValueID="3238865033" Name="ExpandIconSelNormal"/>
+    <a ValueID="3278547748" Name="ItemImageNormal"/>
+    <a ValueID="3301540328" Name="LineMenu"/>
+    <a ValueID="3310741939" Name="UseScaleItem"/>
+    <a ValueID="3319217182" Name="ColorUpBtnNormal"/>
+    <a ValueID="3324297333" Name="ImagePushed"/>
+    <a ValueID="3325254836" Name="WinDragEnable"/>
+    <a ValueID="3332400408" Name="ProgressType"/>
+    <a ValueID="3332720564" Name="MaxSize"/>
+    <a ValueID="3336759419" Name="ImageThumbPushed"/>
+    <a ValueID="3346323001" Name="WndCaptionHeight"/>
+    <a ValueID="3353812708" Name="ItemTextPadding"/>
+    <a ValueID="3364524344" Name="RichText"/>
+    <a ValueID="3366520549" Name="HScrollBarPushItemRange"/>
+    <a ValueID="3391297402" Name="SequenceFrameSize"/>
+    <a ValueID="3410354762" Name="PasswordChar"/>
+    <a ValueID="3411839462" Name="ColorTodayBk"/>
+    <a ValueID="3415312965" Name="WinDropEnable"/>
+    <a ValueID="3418341620" Name="ColorYearHot"/>
+    <a ValueID="3419369444" Name="EditTextType"/>
+    <a ValueID="3438510196" Name="ComboxView"/>
+    <a ValueID="3442560775" Name="ImageSelPushed"/>
+    <a ValueID="3442627739" Name="SepScale"/>
+    <a ValueID="3442938720" Name="ToolTip"/>
+    <a ValueID="3445297835" Name="DesktopEdit"/>
+    <a ValueID="3465918460" Name="UserData"/>
+    <a ValueID="3504014736" Name="GdiplusRenderImage"/>
+    <a ValueID="3518044079" Name="UpDownBtnVert"/>
+    <a ValueID="3532243014" Name="ItemColorHot"/>
+    <a ValueID="3549313089" Name="ContextMenu"/>
+    <a ValueID="3560440610" Name="ExpandIconLeftPadding"/>
+    <a ValueID="3564977014" Name="BorderRoundSize"/>
+    <a ValueID="3567101531" Name="ColorHot"/>
+    <a ValueID="3578797870" Name="WeekStyle"/>
+    <a ValueID="3646604713" Name="ImageAnimate"/>
+    <a ValueID="3686892259" Name="Visible"/>
+    <a ValueID="3689634295" Name="ImageSlipHot"/>
+    <a ValueID="3701753049" Name="ColorDownBtnHot"/>
+    <a ValueID="3705467127" Name="TextStyleCurMonthDay"/>
+    <a ValueID="3709180973" Name="ScrollMinSpeed"/>
+    <a ValueID="3719105321" Name="GrooveInsetToBorder"/>
+    <a ValueID="3741398122" Name="ColorSelDisabled"/>
+    <a ValueID="3752630788" Name="UpDownBtnHoriz"/>
+    <a ValueID="3773614027" Name="Shadow"/>
+    <a ValueID="3789300566" Name="Menu"/>
+    <a ValueID="3790068587" Name="ItemTextStyleSelNormal"/>
+    <a ValueID="3795418709" Name="ThumbHorizFixedWidth"/>
+    <a ValueID="3828897272" Name="IconNormalLPadding"/>
+    <a ValueID="3852786540" Name="HeaderVisible"/>
+    <a ValueID="3863049091" Name="Groove"/>
+    <a ValueID="3882991163" Name="Line"/>
+    <a ValueID="3890129174" Name="ColorGradient"/>
+    <a ValueID="3920212713" Name="MaxChar"/>
+    <a ValueID="3942732790" Name="ColorSelFocus"/>
+    <a ValueID="3943650118" Name="WeekHeight"/>
+    <a ValueID="3968007366" Name="TreeExpandIcon"/>
+    <a ValueID="3968762704" Name="Text"/>
+    <a ValueID="3986528544" Name="3DRotateMenu"/>
+    <a ValueID="3987153997" Name="SelectIconNormal"/>
+    <a ValueID="4016953780" Name="BindTabCtrlIndex"/>
+    <a ValueID="4028170565" Name="ClockDial"/>
+    <a ValueID="4030001272" Name="TextStyleHotMonthDay"/>
+    <a ValueID="4031544620" Name="ComboxSize"/>
+    <a ValueID="4040424860" Name="MoveType"/>
+    <a ValueID="4065887736" Name="ThumbVertInsetLeft"/>
+    <a ValueID="4070960940" Name="ColorYearNormal"/>
+    <a ValueID="4074711451" Name="ExpandIconNormal"/>
+    <a ValueID="4088157969" Name="ExpandViewDuiName"/>
+    <a ValueID="4091660724" Name="TextStyleMonthHot"/>
+    <a ValueID="4101480478" Name="MaxHeight"/>
+    <a ValueID="4114930785" Name="ImageRightBtnHot"/>
+    <a ValueID="4115973795" Name="ImageDownBtnHot"/>
+    <a ValueID="4130135373" Name="ClockSecond"/>
+    <a ValueID="4131205488" Name="ImageUpBtnPushed"/>
+    <a ValueID="4147702782" Name="ChildPadding"/>
+    <a ValueID="4147920319" Name="ThumbStatus"/>
+    <a ValueID="4158556915" Name="LeftRightBtnSize"/>
+    <a ValueID="4187213415" Name="Wednesday"/>
+    <a ValueID="4191158892" Name="TextStyleMonthNormal"/>
+    <a ValueID="4224544729" Name="HotKey"/>
+    <a ValueID="4226636527" Name="ItemModel"/>
+    <a ValueID="4238086040" Name="TextStyleToday"/>
+    <a ValueID="4253584108" Name="MultiSelect"/>
+    <a ValueID="4268241251" Name="ImageSelHot"/>
+    <a ValueID="4293292655" Name="WaveHeight"/>
+    <a ValueID="4293325286" Name="ColorHotDayBk"/>
+    <a ValueID="4293683104" Name="ColorLeftRightBtnHot"/>
+</CDUIAttributeObject>
+
+<CDUIAttributeRichText>
+    <a ValueID="9155585" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xffffffff;&quot; Text=&quot;1&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xffffffff;&quot; Text=&quot;0&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="32800" LineLimit="-1"/>
+    <a ValueID="535172535" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;2&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="32800" LineLimit="-1"/>
+    <a ValueID="1516803380" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;9&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;9&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;9&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="32800" LineLimit="-1"/>
+    <a ValueID="2293420233" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;-&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;1&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;0&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="32800" LineLimit="-1"/>
+    <a ValueID="2658713146" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;你&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;好&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;！&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="32800" LineLimit="-1"/>
+    <a ValueID="4243273944" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xffffffff;&quot; Text=&quot;角&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xffffffff;&quot; Text=&quot;色&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xffffffff;&quot; Text=&quot;1&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="32800" LineLimit="-1"/>
+    <a ValueID="4244781460" VecRichTextItem="&lt;VecRichTextItem&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;1&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;0&quot;/&gt;
+    &lt;RichTextItem FontRes=&quot;微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;&quot; ColorRes=&quot;0xff0a0a0a;&quot; Text=&quot;0&quot;/&gt;
+&lt;/VecRichTextItem&gt;
+" Style="32800" LineLimit="-1"/>
+</CDUIAttributeRichText>
+
+<CDUIAttributeText>
+    <a ValueID="102896159" Text="缩小舞台"/>
+    <a ValueID="133270283" Text="RadioGroupRight"/>
+    <a ValueID="134547284" Text="登录"/>
+    <a ValueID="196847670" Text="插件"/>
+    <a ValueID="330924256" Text="%"/>
+    <a ValueID="401248746" Text="你好！"/>
+    <a ValueID="411112890" Text="高级"/>
+    <a ValueID="540583503" Text="造型"/>
+    <a ValueID="662516122" Text="将音量设为"/>
+    <a ValueID="673658237" Text="左转"/>
+    <a ValueID="847460997" Text="度"/>
+    <a ValueID="865628253" Text="暂停"/>
+    <a ValueID="1041916113" Text="步"/>
+    <a ValueID="1083736326" Text="停止"/>
+    <a ValueID="1168277109" Text="将音量增加"/>
+    <a ValueID="1388808356" Text="秒"/>
+    <a ValueID="1401041699" Text="移动"/>
+    <a ValueID="1631571913" Text="角色1"/>
+    <a ValueID="1633143166" Text="保存到电脑"/>
+    <a ValueID="1675440068" Text="10"/>
+    <a ValueID="1744935929" Text="查找"/>
+    <a ValueID="1780247350" Text="右转"/>
+    <a ValueID="1830269017" Text="-10"/>
+    <a ValueID="1973417357" Text="外观"/>
+    <a ValueID="2042544299" Text="RadioGroupTitle"/>
+    <a ValueID="2113044559" Text="2"/>
+    <a ValueID="2221031194" Text="DlgDuiThink"/>
+    <a ValueID="2451910302" Text="运动"/>
+    <a ValueID="2634589304" Text="说"/>
+    <a ValueID="3143649820" Text="y"/>
+    <a ValueID="3237311346" Text="编辑"/>
+    <a ValueID="3250383556" Text="运行"/>
+    <a ValueID="3297362600" Text="确定"/>
+    <a ValueID="3379828181" Text="代码"/>
+    <a ValueID="3389893742" Text="正常大小"/>
+    <a ValueID="3510636916" Text="999"/>
+    <a ValueID="3575947779" Text="加入Scratch创世界"/>
+    <a ValueID="3632616192" Text="事件"/>
+    <a ValueID="3781346437" Text="x"/>
+    <a ValueID="3875488104" Text="舞台"/>
+    <a ValueID="3905285087" Text="声音"/>
+    <a ValueID="3979189865" Text="文件"/>
+    <a ValueID="3982058493" Text="设置"/>
+    <a ValueID="4135252756" Text="100"/>
+    <a ValueID="4230377357" Text="取消"/>
+</CDUIAttributeText>
+
+<CDUIAttributeTextStyle>
+    <a ValueID="822910582" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff727272;" Style="32805"/>
+    <a ValueID="1250430820" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xffffffff;" Style="32804"/>
+    <a ValueID="1360104618" FontRes="微软雅黑-字号:18-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xffffffff;" Style="32805"/>
+    <a ValueID="1448568652" FontRes="" ColorRes="0xffffffff;" Style="32805"/>
+    <a ValueID="1888127437" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xffffffff;" Style="32805"/>
+    <a ValueID="2086265269" FontRes="" ColorRes="0xffffffff;" Style="32804"/>
+    <a ValueID="2635039908" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff0a0a0a;" Style="32805"/>
+    <a ValueID="2694332390" FontRes="微软雅黑-字号:18-粗细:700-非斜体-无下划线-无删除线;" ColorRes="0xff727272;" Style="32804"/>
+    <a ValueID="2994611648" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xffffffff;" Style="32800"/>
+    <a ValueID="3272736525" FontRes="微软雅黑-字号:14-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff0a0a0a;" Style="32804"/>
+    <a ValueID="3322486658" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xffcccccc;" Style="32804"/>
+    <a ValueID="3373697050" FontRes="微软雅黑-字号:16-粗细:400-非斜体-无下划线-无删除线;" ColorRes="0xff727272;" Style="32809"/>
+</CDUIAttributeTextStyle>
+
+<CDUIAttributeColorSwitch>
+    <a ValueID="312093120" ColorRes="0xffead7e4;"/>
+    <a ValueID="367973110" ColorRes="0xffff4c4c;"/>
+    <a ValueID="709235218" ColorRes="0xffffbf00;"/>
+    <a ValueID="838912894" ColorRes="0xffcccccc;"/>
+    <a ValueID="908945938" ColorRes="0xffbababf;"/>
+    <a ValueID="1189719787" ColorRes="0xffe6f0ff;"/>
+    <a ValueID="1223263664" ColorRes="0xfff0f0f0;"/>
+    <a ValueID="1434868700" ColorRes="0xff727176;"/>
+    <a ValueID="2521000721" ColorRes="0xffd9e3f2;"/>
+    <a ValueID="2562778206" ColorRes="0xffe9eef2;"/>
+    <a ValueID="2592418999" ColorRes="0xff4c97ff;"/>
+    <a ValueID="2951770043" ColorRes="0xffd94141;"/>
+    <a ValueID="3574593318" ColorRes="0xffffffff;"/>
+    <a ValueID="3578915998" ColorRes="0xff9966ff;"/>
+    <a ValueID="3628813171" ColorRes="0xffcf63cf;"/>
+    <a ValueID="4264317596" ColorRes="0xff252429;"/>
+</CDUIAttributeColorSwitch>
+
+<CDUIAttributeCombox>
+    <a ValueID="1488323796" Item5="[5]Null" Item0="[0]Solid" Item1="[1]Dash" Item2="[2]Dot" Item3="[3]DashDot" Item4="[4]DashDotDot"/>
+    <a ValueID="1884515023" Item0="[0]ProgressHoriz" Item1="[1]ProgressVert"/>
+    <a ValueID="2648091639" Item0="[0]MovePositive" Item1="[1]MoveReverse"/>
+</CDUIAttributeCombox>
+
+<CDUIAttributePosition>
+    <a ValueID="9845046" Position="0-0-5-0-70-10-0-0-0"/>
+    <a ValueID="44920829" Position="0-0-0-0-100-10-0-0-0"/>
+    <a ValueID="63380338" Position="0-0-0-0-710-10-0-0-0"/>
+    <a ValueID="141442454" Position="0-0-0-0-50-12-0-0-50"/>
+    <a ValueID="209235317" Position="0-0-0-0-0-10-30-0-129"/>
+    <a ValueID="393114591" Position="0-0-1-2-0-10-0-0-0"/>
+    <a ValueID="419730387" Position="0-0-0-0-0-10-0-0-258"/>
+    <a ValueID="421901658" Position="0-0-10-10-43-12-0-0-30"/>
+    <a ValueID="469012880" Position="0-0-10-0-14-10-0-0-0"/>
+    <a ValueID="487233442" Position="0-1-10-30-50-10-0-0-0"/>
+    <a ValueID="562336121" Position="1-0-0-0-0-10-141-0-0"/>
+    <a ValueID="673735732" Position="0-0-10-0-143-10-10-0-60"/>
+    <a ValueID="766958153" Position="0-0-22-10-63-12-0-0-30"/>
+    <a ValueID="782410529" Position="0-1-20-20-40-10-0-0-0"/>
+    <a ValueID="830423997" Position="0-0-0-0-76-10-0-0-0"/>
+    <a ValueID="849293944" Position="0-1-0-0-94-10-0-0-0"/>
+    <a ValueID="868133592" Position="0-0-0-0-0-10-30-0-186"/>
+    <a ValueID="902258474" Position="0-1-0-0-100-11-0-0-34"/>
+    <a ValueID="990416211" Position="0-0-10-0-119-10-10-0-60"/>
+    <a ValueID="1200519617" Position="0-1-0-120-100-11-0-0-34"/>
+    <a ValueID="1225589368" Position="0-0-10-5-45-12-0-0-30"/>
+    <a ValueID="1375259055" Position="0-0-0-0-120-10-0-0-0"/>
+    <a ValueID="1383750071" Position="0-0-10-0-162-10-10-0-60"/>
+    <a ValueID="1546261016" Position="0-0-0-0-400-10-0-0-0"/>
+    <a ValueID="1575834820" Position="0-0-5-0-371-10-0-0-0"/>
+    <a ValueID="1600191095" Position="0-1-0-0-50-12-0-0-50"/>
+    <a ValueID="1629784062" Position="0-0-0-10-12-10-0-0-0"/>
+    <a ValueID="1647867032" Position="0-1-20-0-160-10-0-0-0"/>
+    <a ValueID="1669999769" Position="0-0-10-0-182-10-10-0-60"/>
+    <a ValueID="1751321762" Position="0-0-15-0-20-12-0-0-20"/>
+    <a ValueID="1766631022" Position="0-0-30-0-7-12-0-0-26"/>
+    <a ValueID="2058495007" Position="0-2-0-0-130-10-16-0-40"/>
+    <a ValueID="2199554640" Position="0-0-22-0-63-12-0-0-30"/>
+    <a ValueID="2204671962" Position="0-0-0-0-0-10-27-0-30"/>
+    <a ValueID="2233384788" Position="0-0-10-10-0-10-8-0-0"/>
+    <a ValueID="2243344562" Position="0-1-0-5-50-12-0-0-50"/>
+    <a ValueID="2244800025" Position="0-0-11-0-157-10-26-18-21"/>
+    <a ValueID="2336337540" Position="0-0-0-0-130-10-20-0-0"/>
+    <a ValueID="2444169499" Position="0-0-0-1-0-10-0-0-68"/>
+    <a ValueID="2526006807" Position="0-0-10-0-24-12-0-0-24"/>
+    <a ValueID="2534446423" Position="0-1-0-0-24-12-0-0-24"/>
+    <a ValueID="2641605142" Position="0-0-7-0-40-12-0-0-30"/>
+    <a ValueID="2716282802" Position="0-2-10-0-50-10-0-0-0"/>
+    <a ValueID="2737936153" Position="0-0-10-10-14-10-0-0-0"/>
+    <a ValueID="2895405161" Position="0-0-10-0-124-10-10-0-75"/>
+    <a ValueID="2900966574" Position="1-0-0-0-0-10-72-18-69"/>
+    <a ValueID="3086879907" Position="0-0-5-0-24-12-0-0-24"/>
+    <a ValueID="3221534916" Position="0-1-0-0-9-10-0-0-0"/>
+    <a ValueID="3229936915" Position="0-0-0-0-120-10-0-0-150"/>
+    <a ValueID="3251708016" Position="0-0-0-0-0-10-0-0-150"/>
+    <a ValueID="3295380381" Position="0-0-10-0-153-10-10-0-60"/>
+    <a ValueID="3350695351" Position="0-0-10-0-28-10-0-0-0"/>
+    <a ValueID="3358080037" Position="0-0-10-0-0-10-10-0-32"/>
+    <a ValueID="3363278231" Position="0-2-0-0-30-10-10-0-30"/>
+    <a ValueID="3365006585" Position="0-0-0-0-0-10-0-0-72"/>
+    <a ValueID="3379976787" Position="0-1-25-0-7-12-0-0-26"/>
+    <a ValueID="3409602188" Position="0-0-0-0-0-10-0-0-0"/>
+    <a ValueID="3488053357" Position="0-1-523-0-400-10-0-0-0"/>
+    <a ValueID="3588651087" Position="0-0-0-0-0-10-0-0-30"/>
+    <a ValueID="3617327329" Position="0-0-0-0-0-10-10-0-40"/>
+    <a ValueID="3684043426" Position="0-0-10-0-70-10-0-0-0"/>
+    <a ValueID="3841068158" Position="0-0-10-10-0-10-0-0-192"/>
+    <a ValueID="4234396983" Position="0-0-10-0-29-12-0-0-30"/>
+    <a ValueID="4276260349" Position="1-0-0-0-0-10-0-0-0"/>
+</CDUIAttributePosition>
+
+<CDUIAttributeRect>
+    <a ValueID="58450096" Value="0,0,0,0"/>
+    <a ValueID="119154235" Value="30,0,0,0"/>
+    <a ValueID="168737160" Value="10,0,10,0"/>
+    <a ValueID="696146713" Value="0,0,0,1"/>
+    <a ValueID="1302268026" Value="20,0,0,0"/>
+    <a ValueID="1427914320" Value="5,5,5,5"/>
+    <a ValueID="1926287568" Value="1,1,1,1"/>
+    <a ValueID="1956806840" Value="20,20,0,0"/>
+    <a ValueID="2340448608" Value="15,15,15,15"/>
+    <a ValueID="3246933181" Value="0,0,0,5"/>
+    <a ValueID="3452915441" Value="0,10,0,0"/>
+    <a ValueID="3500968960" Value="20,20,20,20"/>
+    <a ValueID="3577405232" Value="2,0,2,0"/>
+    <a ValueID="3610623824" Value="10,10,10,10"/>
+    <a ValueID="3930612000" Value="0,1,1,0"/>
+    <a ValueID="4029450276" Value="15,0,0,0"/>
+    <a ValueID="4110601993" Value="0,0,1,0"/>
+</CDUIAttributeRect>
+
+<CDUIAttriImageSection>
+    <a ValueID="100363525" ImageRes="{11F140C1-5089-416A-AFC8-FAF0BC31DCFC};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="101635763" ImageRes="高级;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,1024,1024" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="135851879" ImageRes="{11F140C1-5089-416A-AFC8-FAF0BC31DCFC};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="568252095" ImageRes="{328E1955-BA65-4F32-9FD0-A6183785595B};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,336,34" Alpha="255" Mask="4278190080" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="598253783" ImageRes="{982B9EAD-50CE-49C7-9332-896DC826A32E};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="4" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="729408103" ImageRes="声音模块;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,130,60" Alpha="255" Mask="0" Corner="50,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="814427978" ImageRes="{E3B96193-7CF7-4D67-BB8A-99961F2A6DAA};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="834387963" ImageRes="{88D041B7-27A9-4819-9986-BF3A631B2A36};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="2" PartType="0" PartAll="1" PartSel="1" Source="0,0,9,20" Alpha="255" Mask="0" Corner="0,5,0,5" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="868007016" ImageRes="{E3B96193-7CF7-4D67-BB8A-99961F2A6DAA};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1133711105" ImageRes="{A07E93B2-3D41-41DC-A03A-5E56339BAD2C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="2" PartType="0" PartAll="1" PartSel="1" Source="9,0,18,20" Alpha="255" Mask="0" Corner="0,5,0,5" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1200450896" ImageRes="文件;" HAlign="1" VAlign="3" HOffset="15" VOffset="0" SourceType="0" PartType="1" PartAll="3" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1295607535" ImageRes="rotate-right;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1501703251" ImageRes="无标题;" HAlign="1" VAlign="3" HOffset="15" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1620878730" ImageRes="造型;" HAlign="1" VAlign="3" HOffset="30" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1645648037" ImageRes="暂停;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1671365317" ImageRes="事件模块;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,117,60" Alpha="255" Mask="0" Corner="50,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1714332585" ImageRes="{E3B96193-7CF7-4D67-BB8A-99961F2A6DAA};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1748818512" ImageRes="编辑;" HAlign="1" VAlign="3" HOffset="15" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="1990753660" ImageRes="dropdown-arrow;" HAlign="2" VAlign="3" HOffset="10" VOffset="0" SourceType="0" PartType="1" PartAll="3" PartSel="1" Source="0,0,12,8" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2089732844" ImageRes="{66EB709C-5356-4559-894B-CE733B57AFB3};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2120395195" ImageRes="文件;" HAlign="1" VAlign="3" HOffset="15" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2162805222" ImageRes="{11F140C1-5089-416A-AFC8-FAF0BC31DCFC};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2195044921" ImageRes="green-flag;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2281349839" ImageRes="{66EB709C-5356-4559-894B-CE733B57AFB3};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2390124026" ImageRes="声音;" HAlign="1" VAlign="3" HOffset="30" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2464470221" ImageRes="{328E1955-BA65-4F32-9FD0-A6183785595B};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,336,34" Alpha="255" Mask="4278190080" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2515638651" ImageRes="外观;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2745080165" ImageRes="f683b8d7029b1af17b115c10a63c435d;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,32,32" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2799453795" ImageRes="{54D213E5-B49F-4A54-A5AC-7B3EE84ABE6C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2853156482" ImageRes="rotate-left;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,24,24" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2910614432" ImageRes="{A07E93B2-3D41-41DC-A03A-5E56339BAD2C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="2" PartType="0" PartAll="1" PartSel="1" Source="0,0,9,20" Alpha="255" Mask="0" Corner="0,5,0,5" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="2934482382" ImageRes="{66EB709C-5356-4559-894B-CE733B57AFB3};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="3" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3031328864" ImageRes="代码;" HAlign="1" VAlign="3" HOffset="30" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3080418161" ImageRes="缩小舞台;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3219511254" ImageRes="{3901AB19-D453-4EE1-A2B2-0EE5701B9A9A};" HAlign="1" VAlign="3" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="4" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3248570317" ImageRes="{A07E93B2-3D41-41DC-A03A-5E56339BAD2C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="2" PartType="0" PartAll="1" PartSel="1" Source="18,0,27,20" Alpha="255" Mask="0" Corner="0,5,0,5" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3368053000" ImageRes="高级;" HAlign="1" VAlign="3" HOffset="15" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3373899155" ImageRes="编辑;" HAlign="1" VAlign="3" HOffset="15" VOffset="0" SourceType="0" PartType="1" PartAll="3" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3490643815" ImageRes="{1BB8AA78-A0FE-48B6-8807-2890C92B994E};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,32,32" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3536753482" ImageRes="正常大小;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,20,20" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3766402158" ImageRes="插件;" HAlign="1" VAlign="3" HOffset="15" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3970236076" ImageRes="679ce05ac8c35bbf83f596e895ab711b;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,14,14" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3973480361" ImageRes="停止;" HAlign="3" VAlign="3" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,18,18" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3991981800" ImageRes="无标题;" HAlign="1" VAlign="3" HOffset="15" VOffset="0" SourceType="0" PartType="1" PartAll="3" PartSel="3" Source="0,0,0,0" Alpha="255" Mask="0" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="3994560016" ImageRes="运动模块;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,0,0" Alpha="255" Mask="0" Corner="50,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4049752577" ImageRes="{54D213E5-B49F-4A54-A5AC-7B3EE84ABE6C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="1" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4095464412" ImageRes="外观模块;" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="0" PartType="0" PartAll="1" PartSel="1" Source="0,0,124,60" Alpha="255" Mask="0" Corner="50,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4163398676" ImageRes="{328E1955-BA65-4F32-9FD0-A6183785595B};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,336,34" Alpha="255" Mask="4278190080" Corner="20,0,20,0" Hole="0" TiledX="0" TiledY="0"/>
+    <a ValueID="4185735778" ImageRes="{54D213E5-B49F-4A54-A5AC-7B3EE84ABE6C};" HAlign="0" VAlign="0" HOffset="0" VOffset="0" SourceType="1" PartType="0" PartAll="4" PartSel="2" Source="0,0,96,24" Alpha="255" Mask="4278190080" Corner="0,0,0,0" Hole="0" TiledX="0" TiledY="0"/>
+</CDUIAttriImageSection>
