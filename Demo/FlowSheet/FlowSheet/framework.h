@@ -15,14 +15,14 @@
 #include <tchar.h>
 #include <cmath>
 
-#include "../../../../DirectUI/DUIThink/DUIThink/DUIThinkHead.h"
+#include "../../../DUIThink/DUIThinkHead.h"
 
 #ifdef _DEBUG
-	#pragma comment(lib, "../../../../DirectUI/DUIThink/lib/MMHelper.2017D.lib")
-	#pragma comment(lib, "../../../../DirectUI/DUIThink/lib/DUIThink.2017D.lib")
+	#pragma comment(lib, "../../../lib/MMHelper.2017D.lib")
+	#pragma comment(lib, "../../../lib/DUIThink.2017D.lib")
 #else
-	#pragma comment(lib, "../../../../DirectUI/DUIThink/lib/MMHelper.2017.lib")
-	#pragma comment(lib, "../../../../DirectUI/DUIThink/lib/DUIThink.2017.lib")
+	#pragma comment(lib, "../../../lib/MMHelper.2017.lib")
+	#pragma comment(lib, "../../../lib/DUIThink.2017.lib")
 #endif
 
 #include "../FlowSheet.DuiProj/ResourceCtrlID.h"
