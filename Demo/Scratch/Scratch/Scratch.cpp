@@ -18,7 +18,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #ifdef _DEBUG
     CDUIGlobal::GetInstance()->LoadProjectFromFile(_T("../Scratch.DuiProj/Scratch.DuiProj"));
 #else
-    CDUIGlobal::GetInstance()->LoadProjectFromFile(_T("Scratch.DuiProj/Scratch.DuiProj"));
+    CDUIGlobal::GetInstance()->LoadProjectFromFile(_T("../Scratch.DuiProj/Scratch.DuiProj"));
 #endif
 
     CDlgMain DlgMain;

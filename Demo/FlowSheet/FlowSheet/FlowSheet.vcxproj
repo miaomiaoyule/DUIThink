@@ -104,7 +104,7 @@ copy "..\..\..\bin\DUIThink.2017D.dll" "$(SolutionDir)$(Configuration)"</Command
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../../../DirectUI/DUIThink/DUIThink</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../../DUIThink</AdditionalLibraryDirectories>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>

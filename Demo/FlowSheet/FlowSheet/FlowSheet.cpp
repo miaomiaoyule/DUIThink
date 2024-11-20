@@ -18,7 +18,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #ifdef _DEBUG
     CDUIGlobal::GetInstance()->LoadProjectFromFile(_T("../FlowSheet.DuiProj/FlowSheet.DuiProj"));
 #else
-    CDUIGlobal::GetInstance()->LoadProjectFromFile(_T("FlowSheet.DuiProj/FlowSheet.DuiProj"));
+    CDUIGlobal::GetInstance()->LoadProjectFromFile(_T("../FlowSheet.DuiProj/FlowSheet.DuiProj"));
 #endif
 
     CDlgMain DlgMain;
