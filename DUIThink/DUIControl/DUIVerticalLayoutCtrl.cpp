@@ -240,7 +240,7 @@ void CDUIVerticalLayoutCtrl::RefreshView()
 		{
 			nTileY += nChildPaddingV;
 		}
-		if (IsAutoCalcChildPaddingV())
+		if (IsAutoCalcChildPaddingV() && nTileY != rcRangeLayout.top)
 		{
 			nTileY += nDynamicChildPaddingV;
 
@@ -279,7 +279,7 @@ void CDUIVerticalLayoutCtrl::RefreshView()
 		{
 			nTileY -= nChildPaddingV;
 		}
-		if (IsAutoCalcChildPaddingV())
+		if (IsAutoCalcChildPaddingV() && nTileY != rcRangeLayout.bottom)
 		{
 			nTileY -= nDynamicChildPaddingV;
 

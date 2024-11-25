@@ -236,7 +236,7 @@ void CDUIHorizontalLayoutCtrl::RefreshView()
 		{
 			nTileX += nChildPaddingH;
 		}
-		if (IsAutoCalcChildPaddingH())
+		if (IsAutoCalcChildPaddingH() && nTileX != rcRangeLayout.left)
 		{
 			nTileX += nDynamicChildPaddingH;
 		
@@ -275,7 +275,7 @@ void CDUIHorizontalLayoutCtrl::RefreshView()
 		{
 			nTileX -= nChildPaddingH;
 		}
-		if (IsAutoCalcChildPaddingH())
+		if (IsAutoCalcChildPaddingH() && nTileX != rcRangeLayout.right)
 		{
 			nTileX -= nDynamicChildPaddingH;
 
