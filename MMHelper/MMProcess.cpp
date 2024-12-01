@@ -153,3 +153,105 @@ bool CMMProcess::IsWow64Process(HANDLE hProcess)
 
 	return bWow64Process;
 }
+
+CMMString CMMProcess::GetProcessName(DWORD dwProcessID)
+{
+	PROCESSENTRY32 Pe32 = {};
+	Pe32.dwSize = sizeof(PROCESSENTRY32);
+	HANDLE hSnapshot = ::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (INVALID_HANDLE_VALUE == hSnapshot)
+	{
+		return _T("");
+	}
+
+	BOOL bMore = ::Process32First(hSnapshot, &Pe32);
+	while (bMore)
+	{
+		if (dwProcessID == Pe32.th32ProcessID)
+		{
+			::CloseHandle(hSnapshot);
+
+			return Pe32.szExeFile;
+		}
+
+		bMore = ::Process32Next(hSnapshot, &Pe32);
+	}
+
+	::CloseHandle(hSnapshot);
+
+	return _T("");
+}
+
+bool CMMProcess::GetProcessCmdline(HANDLE hProcess, CMMString &strCmdLine)
+{
+	typedef ULONG KPRIORITY;
+	typedef struct _PROCESS_BASIC_INFORMATION {
+		NTSTATUS ExitStatus;
+		PPEB PebBaseAddress;
+		ULONG_PTR AffinityMask;
+		KPRIORITY BasePriority;
+		ULONG_PTR UniqueProcessId;
+		ULONG_PTR InheritedFromUniqueProcessId;
+	} PROCESS_BASIC_INFORMATION;
+
+	typedef __kernel_entry NTSTATUS
+	(NTAPI * PNtQueryInformationProcess)(
+		IN HANDLE ProcessHandle,
+		IN PROCESSINFOCLASS ProcessInformationClass,
+		OUT PVOID ProcessInformation,
+		IN ULONG ProcessInformationLength,
+		OUT PULONG ReturnLength OPTIONAL
+		);
+
+	PROCESS_BASIC_INFORMATION pbi = { 0 };
+	PEB                       peb = {};
+	//PROCESS_PARAMETERS        ProcParam;
+	SIZE_T                    dwDummy;
+	DWORD                     dwSize;
+	LPVOID                    lpAddress;
+	RTL_USER_PROCESS_PARAMETERS para;
+
+	//获取信息
+	HMODULE hModule = LoadLibrary(_T("ntdll.dll"));
+	if (NULL == hModule) return false;
+
+	PNtQueryInformationProcess pNtQueryInformationProcess = (PNtQueryInformationProcess)GetProcAddress(hModule, "NtQueryInformationProcess");
+	if (0 != pNtQueryInformationProcess(hProcess, ProcessBasicInformation, (PVOID)&pbi, sizeof(pbi), NULL))
+	{
+		int nError = GetLastError();
+		FreeLibrary(hModule);
+		return false;
+	}
+	if (pbi.PebBaseAddress == nullptr)
+	{
+		//do somthing 
+	}
+	if (FALSE == ReadProcessMemory(hProcess, pbi.PebBaseAddress, &peb, sizeof(peb), &dwDummy))
+	{
+		int nError = GetLastError();
+		FreeLibrary(hModule);
+		return false;
+	}
+	if (FALSE == ReadProcessMemory(hProcess, peb.ProcessParameters, &para, sizeof(para), &dwDummy))
+	{
+		int nError = GetLastError();
+		FreeLibrary(hModule);
+		return false;
+	}
+
+	lpAddress = para.CommandLine.Buffer;
+	dwSize = para.CommandLine.Length;
+	std::vector<TCHAR> vecCmdLine;
+	vecCmdLine.resize(dwSize + 1);
+	if (FALSE == ReadProcessMemory(hProcess, lpAddress, (LPVOID)vecCmdLine.data(), dwSize, &dwDummy))
+	{
+		int nError = GetLastError();
+		FreeLibrary(hModule);
+		return false;
+	}
+
+	strCmdLine = vecCmdLine.data();
+	FreeLibrary(hModule);
+
+	return true;
+}

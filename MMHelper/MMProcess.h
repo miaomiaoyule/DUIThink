@@ -44,6 +44,9 @@ public:
 	// Parameter: 	HANDLE hProcess
 	//************************************
 	static bool IsWow64Process(HANDLE hProcess);
+
+	static CMMString GetProcessName(DWORD dwProcessID);
+	static bool GetProcessCmdline(HANDLE hProcess, CMMString &strCmdLine);
 };
 
 #endif
