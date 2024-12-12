@@ -382,8 +382,8 @@ void CDUIListHeaderCtrl::InitComplete()
 				auto pImageBaseCheckBoxUnSelect = CDUIGlobal::GetInstance()->GetImageResource(ImageSection.vecImageResSwitch[0]);
 				if (NULL == pImageBaseCheckBoxUnSelect) break;
 
-				m_pCheckSelectCtrl->SetFixedWidth(pImageBaseCheckBoxUnSelect->GetWidth() / ImageSection.cbPartAll);
-				m_pCheckSelectCtrl->SetFixedHeight(pImageBaseCheckBoxUnSelect->GetHeight());
+				m_pCheckSelectCtrl->SetFixedWidth(pImageBaseCheckBoxUnSelect->GetWidth(GetScale()) / ImageSection.cbPartAll);
+				m_pCheckSelectCtrl->SetFixedHeight(pImageBaseCheckBoxUnSelect->GetHeight(GetScale()));
 				m_pHeaderItemSelectCtrl->InsertChild(m_pCheckSelectCtrl);
 			}
 

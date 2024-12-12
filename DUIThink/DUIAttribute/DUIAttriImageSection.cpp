@@ -46,9 +46,9 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 	CDUIWnd *pWnd = GetOwnerWnd();
 	if (NULL == pWnd) return;
 
-	bool bScale = pImageBase->IsScale();
+	bool bScale = pImageBase->IsScale(GetScale());
 	bool bAlpha = pImageBase->IsAlpha();
-	HBITMAP hBitmap = pImageBase->GetHandle();
+	HBITMAP hBitmap = pImageBase->GetHandle(GetScale());
 
 	//source
 	CDUIRect rcSource = GetSource(ImageSection);
@@ -69,7 +69,7 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 	}
 	if (pWnd->IsGdiplusRenderImage())
 	{
-		pBmp = hBitmap != pImageBase->GetHandle() ? CDUIRenderEngine::GetAlphaBitmap(hBitmap) : pImageBase->GetBitmap();
+		pBmp = hBitmap != pImageBase->GetHandle(GetScale()) ? CDUIRenderEngine::GetAlphaBitmap(hBitmap) : pImageBase->GetBitmap(GetScale());
 	}
 	do
 	{
@@ -101,7 +101,7 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 
 	} while (HorizImageAlign_Tile == ImageSection.HorizImageAlign && VertImageAlign_Tile == ImageSection.VertImageAlign);
 
-	if (hBitmap != pImageBase->GetHandle())
+	if (hBitmap != pImageBase->GetHandle(GetScale()))
 	{
 		MMSafeDeleteObject(hBitmap);
 		MMSafeDelete(pBmp);
@@ -116,7 +116,7 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 	if (NULL == pImageBaseCur) return;
 
 	//dest
-	CDUIRect rcSource = { 0, 0, pImageBaseCur->GetWidth(), pImageBaseCur->GetHeight() };
+	CDUIRect rcSource = { 0, 0, pImageBaseCur->GetWidth(GetScale()), pImageBaseCur->GetHeight(GetScale()) };
 	CDUIRect rcDest = GetDest(rcSource, rcItem);
 	rcDest.Offset(rcItem.left, rcItem.top);
 	IntersectRect(&rcDest, &rcDest, &rcItem);
@@ -124,7 +124,7 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 	//gif
 	if (AnimateImage_Gif == AnimateImageInfo.AnimateImageType)
 	{
-		Gdiplus::Bitmap *pBmpAnimate = pImageBaseCur->GetAnimateImage();
+		Gdiplus::Bitmap *pBmpAnimate = pImageBaseCur->GetAnimateImage(GetScale());
 		if (NULL == pBmpAnimate) return;
 
 		CDUIRenderEngine::DrawAnimateImage(hDC, pBmpAnimate, rcDest, nFrameCur, rcRound);
@@ -140,8 +140,8 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 	{
 		tagDuiImageSection ImageSection = GetImageSection();
 
-		int nRow = nFrameCur / (pImageBaseCur->GetWidth() / szSequenceFrameSize.cx);
-		int nColumn = nFrameCur % (pImageBaseCur->GetWidth() / szSequenceFrameSize.cx);
+		int nRow = nFrameCur / (pImageBaseCur->GetWidth(GetScale()) / szSequenceFrameSize.cx);
+		int nColumn = nFrameCur % (pImageBaseCur->GetWidth(GetScale()) / szSequenceFrameSize.cx);
 		CDUIRect rcSource;
 		rcSource.left = szSequenceFrameSize.cx * nColumn;
 		rcSource.top = szSequenceFrameSize.cy * nRow;
@@ -194,14 +194,14 @@ int CDUIAttriImageSection::GetCurImageWidth()
 {
 	CDUIImageBase *pImageBase = GetCurImageBase();
 
-	return pImageBase ? pImageBase->GetWidth() : 0;
+	return pImageBase ? pImageBase->GetWidth(GetScale()) : 0;
 }
 
 int CDUIAttriImageSection::GetCurImageHeight()
 {
 	CDUIImageBase *pImageBase = GetCurImageBase();
 
-	return pImageBase ? pImageBase->GetHeight() : 0;
+	return pImageBase ? pImageBase->GetHeight(GetScale()) : 0;
 }
 
 void CDUIAttriImageSection::SetImageResSwitch(const vector<CMMString> &vecImageResSwitch)
@@ -252,16 +252,13 @@ CDUIRect CDUIAttriImageSection::GetSource(tagDuiImageSection ImageSection)
 		return {};
 	}
 
-	//info
-	bool bScale = pImageBase->IsScale();
-
 	CDUIRect rcSource;
 	switch (ImageSection.ImageSourceType)
 	{
 		case ImageSource_Normal:
 		{
-			rcSource.right = pImageBase->GetWidth();
-			rcSource.bottom = pImageBase->GetHeight();
+			rcSource.right = pImageBase->GetWidth(GetScale());
+			rcSource.bottom = pImageBase->GetHeight(GetScale());
 
 			break;
 		}
@@ -276,15 +273,15 @@ CDUIRect CDUIAttriImageSection::GetSource(tagDuiImageSection ImageSection)
 			int nWidth = 0, nHeight = 0;
 			if (false == ImageSection.bPartVert)
 			{
-				nWidth = pImageBase->GetWidth() / ImageSection.cbPartAll;
-				nHeight = pImageBase->GetHeight();
+				nWidth = pImageBase->GetWidth(GetScale()) / ImageSection.cbPartAll;
+				nHeight = pImageBase->GetHeight(GetScale());
 				rcSource.right = nWidth * ImageSection.cbPartSel;
 				rcSource.bottom = nHeight;
 			}
 			else
 			{
-				nHeight = pImageBase->GetHeight() / ImageSection.cbPartAll;
-				nWidth = pImageBase->GetWidth();
+				nHeight = pImageBase->GetHeight(GetScale()) / ImageSection.cbPartAll;
+				nWidth = pImageBase->GetWidth(GetScale());
 				rcSource.bottom = nHeight * ImageSection.cbPartSel;
 				rcSource.right = nWidth;
 			}
@@ -306,7 +303,7 @@ CDUIRect CDUIAttriImageSection::GetSource(tagDuiImageSection ImageSection)
 			}
 			else
 			{
-				rcSource = CDUIRect(0, 0, pImageBase->GetWidth(), pImageBase->GetHeight());
+				rcSource = CDUIRect(0, 0, pImageBase->GetWidth(GetScale()), pImageBase->GetHeight(GetScale()));
 			}
 
 			break;

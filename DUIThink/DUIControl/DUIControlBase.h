@@ -126,6 +126,7 @@ public:
 	virtual UINT GetControlFlags() ;
 	virtual CDUIControlBase * Clone(bool bIncludeChild = true, bool bRefreshCtrlID = true);
 	virtual int GetScale() override;
+	virtual const CMMDpi & GetDpiObj() override;
 	virtual int GetControlCallBackCount();
 	virtual IDuiControlCallBack * GetControlCallBack(int nIndex);
 	virtual void RegisterControlCallBack(IDuiControlCallBack *pCallBack);

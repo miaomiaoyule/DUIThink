@@ -24,15 +24,7 @@ CDUIImageBase::CDUIImageBase(LPCTSTR lpszResName, LPCTSTR lpszImageFile)
 
 CDUIImageBase::~CDUIImageBase(void)
 {
-	//image
-	MMSafeDelete(m_pBitmap);
-	MMSafeDeleteObject(m_hBitmap);
-	m_pBits = NULL;
-
-	//animate
-	MMSafeDelete(m_pImageAnimate);
-	m_vecPropertyItem.clear();
-	m_nFrameCount = 0;
+	ReleaseResource();
 
 	return;
 }
@@ -78,108 +70,130 @@ void CDUIImageBase::SetImageFile(LPCTSTR lpszImageFile)
 
 	m_strImageFile = lpszImageFile;
 
-	MMSafeDelete(m_pBitmap);
-	MMSafeDeleteObject(m_hBitmap);
-	m_pBits = NULL;
-	m_nWidth = 0;
-	m_nHeight = 0;
-	m_bAlpha = false;
-
-	ConstructResource(m_nScale);
+	ReleaseResource();
 
 	return;
 }
 
-HBITMAP CDUIImageBase::GetHandle()
+HBITMAP CDUIImageBase::GetHandle(int nScale)
 {
-	if (NULL == m_hBitmap)
-	{
-		ConstructResource(CDUIGlobal::GetInstance()->GetScale());
-	}
-
-	return m_hBitmap;
+	return GetImageInfo(nScale).hBitmap;
 }
 
-HBITMAP CDUIImageBase::CloneHandle()
+HBITMAP CDUIImageBase::CloneHandle(int nScale)
 {
-	HBITMAP hBmpSrc = GetHandle();
-	if (NULL == hBmpSrc || NULL == m_pBits) return NULL;
+	tagDuiImageInfo &BmpSrc = GetImageInfo(nScale);
+	if (NULL == BmpSrc.hBitmap || NULL == BmpSrc.pBits) return NULL;
 
 	LPBYTE pDest = NULL;
-	HBITMAP hBitmap = CDUIRenderEngine::CreateARGB32Bitmap(NULL, m_nWidth, m_nHeight, &pDest, NULL == m_pImageAnimate);
+	HBITMAP hBitmap = CDUIRenderEngine::CreateARGB32Bitmap(NULL, BmpSrc.nWidth, BmpSrc.nHeight, &pDest, NULL == BmpSrc.pImageAnimate);
 	if (NULL == hBitmap)
 	{
 		assert(false);
 		return NULL;
 	}
 
-	for (int i = 0; i < m_nHeight; i++)
+	for (int i = 0; i < BmpSrc.nHeight; i++)
 	{
-		CopyMemory(pDest + m_nWidth * 4 * i, m_pBits + m_nWidth * 4 * i, m_nWidth * 4);
+		CopyMemory(pDest + BmpSrc.nWidth * 4 * i, BmpSrc.pBits + BmpSrc.nWidth * 4 * i, BmpSrc.nWidth * 4);
 	}
 
 	return hBitmap;
 }
 
-Gdiplus::Bitmap * CDUIImageBase::GetBitmap()
+Gdiplus::Bitmap * CDUIImageBase::GetBitmap(int nScale)
 {
-	if (NULL == m_pBitmap)
+	GetImageInfo(nScale);
+
+	if (m_mapDpiImageInfo[nScale].hBitmap && NULL == m_mapDpiImageInfo[nScale].pBitmap)
 	{
-		m_pBitmap = CDUIRenderEngine::GetAlphaBitmap(GetHandle());
+		m_mapDpiImageInfo[nScale].pBitmap = CDUIRenderEngine::GetAlphaBitmap(m_mapDpiImageInfo[nScale].hBitmap);
+	}
+	else if (NULL == m_mapDpiImageInfo[100].pBitmap)
+	{
+		m_mapDpiImageInfo[100].pBitmap = CDUIRenderEngine::GetAlphaBitmap(m_mapDpiImageInfo[100].hBitmap);
 	}
 
-	return m_pBitmap;
+	return GetImageInfo(nScale).pBitmap;
 }
 
-Gdiplus::Bitmap * CDUIImageBase::CloneBitmap()
+Gdiplus::Bitmap * CDUIImageBase::CloneBitmap(int nScale)
 {
-	return CDUIRenderEngine::GetAlphaBitmap(GetHandle());
+	return CDUIRenderEngine::GetAlphaBitmap(GetHandle(nScale));
 }
 
-Gdiplus::Bitmap * CDUIImageBase::GetAnimateImage()
+Gdiplus::Bitmap * CDUIImageBase::GetAnimateImage(int nScale)
 {
-	if (NULL == GetHandle()) return NULL;
+	if (NULL == GetHandle(nScale)) return NULL;
 
-	return m_pImageAnimate;
+	return GetImageInfo(nScale).pImageAnimate;
 }
 
-tagDuiAnimateImageInfo CDUIImageBase::GetAnimateImageInfo()
+tagDuiImageInfo CDUIImageBase::GetImageInfo(int nScale)
 {
-	if (NULL == GetHandle()) return {};
-	if (NULL == m_pImageAnimate) return tagDuiAnimateImageInfo();
+	if (NULL == m_mapDpiImageInfo[nScale].hBitmap)
+	{
+		ConstructResource(nScale);
+	}
+
+	return m_mapDpiImageInfo[nScale].hBitmap ? m_mapDpiImageInfo[nScale] : m_mapDpiImageInfo[100];
+}
+
+tagDuiAnimateImageInfo CDUIImageBase::GetAnimateImageInfo(int nScale)
+{
+	if (NULL == GetHandle(nScale)) return {};
+
+	tagDuiImageInfo &ImageInfo = GetImageInfo(nScale);
+	if (NULL == ImageInfo.pImageAnimate) return tagDuiAnimateImageInfo();
 
 	tagDuiAnimateImageInfo AnimateImageInfo;
-	AnimateImageInfo.AnimateImageType = m_nFrameCount > 0 ? AnimateImage_Gif : AnimateImage_None;
-	AnimateImageInfo.nFrameCount = m_nFrameCount;
-	AnimateImageInfo.vecGifPropertyItem = m_vecPropertyItem;
+	AnimateImageInfo.AnimateImageType = ImageInfo.nFrameCount > 0 ? AnimateImage_Gif : AnimateImage_None;
+	AnimateImageInfo.nFrameCount = ImageInfo.nFrameCount;
+	AnimateImageInfo.vecGifPropertyItem = ImageInfo.vecPropertyItem;
 
 	return AnimateImageInfo;
 }
 
-int CDUIImageBase::GetWidth()
+int CDUIImageBase::GetWidth(int nScale)
 {
-	GetHandle();
-
-	return m_nWidth;
+	return GetImageInfo(nScale).nWidth;
 }
 
-int CDUIImageBase::GetHeight()
+int CDUIImageBase::GetHeight(int nScale)
 {
-	GetHandle();
-
-	return m_nHeight;
+	return GetImageInfo(nScale).nHeight;
 }
 
 bool CDUIImageBase::IsAlpha()
 {
-	GetHandle();
-
-	return m_bAlpha;
+	return GetImageInfo(100).bAlpha;
 }
 
-bool CDUIImageBase::IsScale()
+bool CDUIImageBase::IsScale(int nScale)
 {
-	return m_bScale;
+	return m_mapDpiImageInfo[nScale].hBitmap;
+}
+
+void CDUIImageBase::ReleaseResource()
+{
+	for (auto &ImageInfoItem : m_mapDpiImageInfo)
+	{
+		auto &ImageInfo = ImageInfoItem.second;
+
+		//image
+		MMSafeDelete(ImageInfo.pBitmap);
+		MMSafeDeleteObject(ImageInfo.hBitmap);
+		ImageInfo.pBits = NULL;
+
+		//animate
+		MMSafeDelete(ImageInfo.pImageAnimate);
+		ImageInfo.vecPropertyItem.clear();
+		ImageInfo.nFrameCount = 0;
+	}
+
+	m_mapDpiImageInfo.clear();
+
+	return;
 }
 
 bool CDUIImageBase::SetResourceName(const CMMString &strName)
@@ -204,20 +218,19 @@ bool CDUIImageBase::SetResourceName(const CMMString &strName)
 
 void CDUIImageBase::ConstructResource(int nScale)
 {
-	if (m_hBitmap && m_nScale == nScale) return;
+	if (m_mapDpiImageInfo[nScale].hBitmap) return;
 	if (m_strImageFile.empty()) return;
 
 	//release image
-	MMSafeDelete(m_pBitmap);
-	MMSafeDeleteObject(m_hBitmap);
-	m_pBits = NULL;
-	m_nScale = nScale;
-	m_bScale = false;
+	MMSafeDelete(m_mapDpiImageInfo[nScale].pBitmap);
+	MMSafeDeleteObject(m_mapDpiImageInfo[nScale].hBitmap);
+	m_mapDpiImageInfo[nScale].pBits = NULL;
 	
 	//release animate
-	MMSafeDelete(m_pImageAnimate);
-	m_vecPropertyItem.clear();
-	m_nFrameCount = 0;
+	MMSafeDelete(m_mapDpiImageInfo[nScale].pImageAnimate);
+	m_mapDpiImageInfo[nScale].vecPropertyItem.clear();
+	m_mapDpiImageInfo[nScale].nFrameCount = 0;
+	m_mapDpiImageInfo.erase(nScale);
 
 	//type
 	CMMString strExt;
@@ -244,9 +257,11 @@ void CDUIImageBase::ConstructResource(int nScale)
 	{
 		if (CDUIGlobal::GetInstance()->ExtractResourceData(vecData, strFile) && false == vecData.empty())
 		{
-			m_bScale = 100 != nScale;
-
 			break;
+		}
+		if (false == bSvgFile && m_mapDpiImageInfo[100].hBitmap)
+		{
+			return;
 		}
 		if (bSvgFile)
 		{
@@ -263,6 +278,8 @@ void CDUIImageBase::ConstructResource(int nScale)
 			return;
 		}
 
+		nScale = 100;
+
 	} while (false);
 
 	//parse
@@ -276,9 +293,11 @@ void CDUIImageBase::ConstructResource(int nScale)
 	//svg
 	if (bSvgFile)
 	{
-		CMMSvg::GetInstance()->ParseImage(vecData, nScale, m_hBitmap, m_nWidth, m_nHeight, &m_pBits);
+		tagDuiImageInfo ImageInfo = {};
+		CMMSvg::GetInstance()->ParseImage(vecData, nScale, ImageInfo.hBitmap, ImageInfo.nWidth, ImageInfo.nHeight, &ImageInfo.pBits);
 
-		m_bAlpha = true;
+		ImageInfo.bAlpha = true;
+		m_mapDpiImageInfo[nScale] = ImageInfo;
 
 		return;
 	}
@@ -308,33 +327,36 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 		return false;
 	}
 
-	m_pImageAnimate = Gdiplus::Bitmap::FromStream(pIStream);
+	tagDuiImageInfo ImageInfo = {};
+	ImageInfo.pImageAnimate = Gdiplus::Bitmap::FromStream(pIStream);
 	pIStream->Release();
 	::GlobalUnlock(hMem);
 
 	//init
-	if (NULL == m_pImageAnimate) return false;
+	if (NULL == ImageInfo.pImageAnimate) return false;
 
-	UINT nCount = m_pImageAnimate->GetFrameDimensionsCount();
+	UINT nCount = ImageInfo.pImageAnimate->GetFrameDimensionsCount();
 	std::vector<GUID> vecDimensionID;
 	vecDimensionID.resize(nCount);
 
-	m_pImageAnimate->GetFrameDimensionsList(vecDimensionID.data(), nCount);
-	m_nFrameCount = m_pImageAnimate->GetFrameCount(vecDimensionID.data());
+	ImageInfo.pImageAnimate->GetFrameDimensionsList(vecDimensionID.data(), nCount);
+	ImageInfo.nFrameCount = ImageInfo.pImageAnimate->GetFrameCount(vecDimensionID.data());
 
-	int nSize = m_pImageAnimate->GetPropertyItemSize(PropertyTagFrameDelay);
-	m_vecPropertyItem.resize(nSize);
-	m_pImageAnimate->GetPropertyItem(PropertyTagFrameDelay, nSize, m_vecPropertyItem.data());
+	int nSize = ImageInfo.pImageAnimate->GetPropertyItemSize(PropertyTagFrameDelay);
+	ImageInfo.vecPropertyItem.resize(nSize);
+	ImageInfo.pImageAnimate->GetPropertyItem(PropertyTagFrameDelay, nSize, ImageInfo.vecPropertyItem.data());
 
 	//info
 	BITMAP BmpInfo = {};
 	GUID pageGuid = Gdiplus::FrameDimensionTime;
-	m_pImageAnimate->SelectActiveFrame(&pageGuid, 0);
-	m_pImageAnimate->GetHBITMAP(Color(0, 0, 0, 0), &m_hBitmap);
-	GetObject(m_hBitmap, sizeof(BmpInfo), &BmpInfo);
-	m_pBits = (LPBYTE)BmpInfo.bmBits;
-	m_nWidth = m_pImageAnimate->GetWidth();
-	m_nHeight = m_pImageAnimate->GetHeight();
+	ImageInfo.pImageAnimate->SelectActiveFrame(&pageGuid, 0);
+	ImageInfo.pImageAnimate->GetHBITMAP(Color(0, 0, 0, 0), &ImageInfo.hBitmap);
+	GetObject(ImageInfo.hBitmap, sizeof(BmpInfo), &BmpInfo);
+	ImageInfo.pBits = (LPBYTE)BmpInfo.bmBits;
+	ImageInfo.nWidth = ImageInfo.pImageAnimate->GetWidth();
+	ImageInfo.nHeight = ImageInfo.pImageAnimate->GetHeight();
+
+	m_mapDpiImageInfo[nScale] = ImageInfo;
 
 	return true;
 }
@@ -404,11 +426,11 @@ bool CDUIImageBase::ConstructBitmap(LPBYTE pPixel, int nWidth, int nHeight, int 
 		}
 	}
 
-	m_hBitmap = hBitmap;
-	m_pBits = pDest;
-	m_nWidth = nWidth;
-	m_nHeight = nHeight;
-	m_bAlpha = bAlphaChannel;
+	m_mapDpiImageInfo[nScale].hBitmap = hBitmap;
+	m_mapDpiImageInfo[nScale].pBits = pDest;
+	m_mapDpiImageInfo[nScale].nWidth = nWidth;
+	m_mapDpiImageInfo[nScale].nHeight = nHeight;
+	m_mapDpiImageInfo[nScale].bAlpha = bAlphaChannel;
 
 	return true;
 }

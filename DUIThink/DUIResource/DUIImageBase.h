@@ -26,21 +26,7 @@ public:
 	//variant
 protected:
 	CMMString							m_strImageFile;
-
-	//image
-	Gdiplus::Bitmap *					m_pBitmap = NULL;
-	HBITMAP								m_hBitmap = NULL;
-	LPBYTE								m_pBits = NULL;
-	int									m_nScale = 0;
-	int									m_nWidth = 0;
-	int									m_nHeight = 0;
-	bool								m_bAlpha = false;
-	bool								m_bScale = false;
-
-	//animate
-	Gdiplus::Bitmap *					m_pImageAnimate = NULL;
-	int									m_nFrameCount = 0;
-	std::vector<Gdiplus::PropertyItem>	m_vecPropertyItem;							//帧与帧之间间隔时间
+	MapDuiDpiImageInfo					m_mapDpiImageInfo;
 
 	//override
 public:
@@ -53,19 +39,21 @@ public:
 	virtual CMMString GetImageFile();
 	virtual CMMString GetImageFileName();
 	virtual void SetImageFile(LPCTSTR lpszImageFile);
-	virtual HBITMAP GetHandle();
-	virtual HBITMAP CloneHandle();
-	virtual Gdiplus::Bitmap * GetBitmap();
-	virtual Gdiplus::Bitmap * CloneBitmap();
-	virtual Gdiplus::Bitmap * GetAnimateImage();
-	virtual tagDuiAnimateImageInfo GetAnimateImageInfo();
-	virtual int GetWidth();
-	virtual int GetHeight();
+	virtual HBITMAP GetHandle(int nScale = 100);
+	virtual HBITMAP CloneHandle(int nScale = 100);
+	virtual Gdiplus::Bitmap * GetBitmap(int nScale = 100);
+	virtual Gdiplus::Bitmap * CloneBitmap(int nScale = 100);
+	virtual Gdiplus::Bitmap * GetAnimateImage(int nScale = 100);
+	virtual tagDuiImageInfo GetImageInfo(int nScale = 100);
+	virtual tagDuiAnimateImageInfo GetAnimateImageInfo(int nScale = 100);
+	virtual int GetWidth(int nScale = 100);
+	virtual int GetHeight(int nScale = 100);
 	virtual bool IsAlpha();
-	virtual bool IsScale();
+	virtual bool IsScale(int nScale = 100);
 
 	//help
 protected:
+	void ReleaseResource();
 	bool SetResourceName(const CMMString &strName);
 	void ConstructResource(int nScale = 100) override;
 	bool ConstructAnimate(std::vector<BYTE> &vecData, int nScale);

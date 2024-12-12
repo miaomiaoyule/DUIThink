@@ -100,10 +100,10 @@ HFONT CDUIAttributeTextStyle::GetFont()
 	{
 		CDUIFontBase *pFontBase = CDUIGlobal::GetInstance()->GetFontResDefault();
 
-		return pFontBase ? pFontBase->GetHandle() : NULL;
+		return pFontBase ? pFontBase->GetHandle(GetScale()) : NULL;
 	}
 
-	return pFontBaseCur->GetHandle();
+	return pFontBaseCur->GetHandle(GetScale());
 }
 
 int CDUIAttributeTextStyle::GetFontSize()

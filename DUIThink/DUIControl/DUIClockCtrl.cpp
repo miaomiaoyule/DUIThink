@@ -168,18 +168,18 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 	CDUIImageBase *pImageBase = m_AttributeImageClockHour.GetCurImageBase();
 	if (pImageBase)
 	{
-		Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap();
+		Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap(GetScale());
 		if (pBitmap)
 		{
 			Gdiplus::Matrix matrixH(1, 0, 0, 1, ptCenter.x, ptCenter.y);
 			Gdiplus::Point pointsH[] =
 			{
 				Point(0, 0),
-				Point(pImageBase->GetWidth(), 0),
-				Point(0, pImageBase->GetHeight())
+				Point(pImageBase->GetWidth(GetScale()), 0),
+				Point(0, pImageBase->GetHeight(GetScale()))
 			};
 			matrixH.Rotate(SystemTime.wHour * 30 + SystemTime.wMinute * 1.0 / 2.0);
-			matrixH.Translate(-pImageBase->GetWidth() / 2, -pImageBase->GetHeight() / 2);
+			matrixH.Translate(-pImageBase->GetWidth(GetScale()) / 2, -pImageBase->GetHeight(GetScale()) / 2);
 			matrixH.TransformPoints(pointsH, 3);
 			Gp.DrawImage(pBitmap, pointsH, 3);
 		}
@@ -189,18 +189,18 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 	pImageBase = m_AttributeImageClockMinute.GetCurImageBase();
 	if (pImageBase)
 	{
-		Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap();
+		Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap(GetScale());
 		if (pBitmap)
 		{
 			Gdiplus::Matrix matrixM(1, 0, 0, 1, ptCenter.x, ptCenter.y);	
 			Gdiplus::Point pointsM[] = 
 			{ 
 				Point(0, 0), 
-				Point(pImageBase->GetWidth(),0),
-				Point(0, pImageBase->GetHeight())
+				Point(pImageBase->GetWidth(GetScale()),0),
+				Point(0, pImageBase->GetHeight(GetScale()))
 			};
 			matrixM.Rotate(SystemTime.wMinute * 6);
-			matrixM.Translate(-pImageBase->GetWidth() / 2, -pImageBase->GetHeight() / 2);
+			matrixM.Translate(-pImageBase->GetWidth(GetScale()) / 2, -pImageBase->GetHeight(GetScale()) / 2);
 			matrixM.TransformPoints(pointsM, 3);
 			Gp.DrawImage(pBitmap, pointsM, 3);
 		}
@@ -210,18 +210,18 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 	pImageBase = m_AttributeImageClockSecond.GetCurImageBase();
 	if (pImageBase)
 	{
-		Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap();
+		Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap(GetScale());
 		if (pBitmap)
 		{
 			Gdiplus::Matrix matrixS(1, 0, 0, 1, ptCenter.x, ptCenter.y);
 			Gdiplus::Point pointsS[] = 
 			{ 
 				Point(0, 0),
-				Point(pImageBase->GetWidth(), 0),
-				Point(0, pImageBase->GetHeight())
+				Point(pImageBase->GetWidth(GetScale()), 0),
+				Point(0, pImageBase->GetHeight(GetScale()))
 			};
 			matrixS.Rotate(SystemTime.wSecond * 6);
-			matrixS.Translate(-pImageBase->GetWidth() / 2, -pImageBase->GetHeight() / 2);
+			matrixS.Translate(-pImageBase->GetWidth(GetScale()) / 2, -pImageBase->GetHeight(GetScale()) / 2);
 			matrixS.TransformPoints(pointsS, 3);
 			Gp.DrawImage(pBitmap, pointsS, 3);
 		}

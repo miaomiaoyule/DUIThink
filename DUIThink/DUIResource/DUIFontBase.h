@@ -22,10 +22,9 @@ public:
 
 	//组件变量
 protected:
-	HFONT								m_hFont = NULL;
 	CMMString							m_strFontName;
+	std::unordered_map<int, HFONT>		m_mapDpiFont;
 	int									m_nSize = 0;
-	int									m_nScale = 0;
 	LONG								m_lWeight = 0;
 	bool								m_bItalic = false;
 	bool								m_bUnderline = false;
@@ -39,7 +38,7 @@ public:
 	//method
 public:
 	enDuiResType GetResourceType() const override;
-	virtual HFONT GetHandle();
+	virtual HFONT GetHandle(int nScale = 100);
 	virtual CMMString GetFontName();
 	virtual void SetFontName(LPCTSTR lpszName);
 	virtual int GetSize();

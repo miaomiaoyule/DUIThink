@@ -295,7 +295,7 @@ void CDUICheckBoxCtrl::InitNormalSkin()
 	tagDuiTextStyle TextStyle;
 	TextStyle.dwTextStyle |= DT_VCENTER;
 	SetText(strText);
-	SetTextPadding({ pImageBaseCheckBoxUnSelect->GetWidth() / 4, 0, 0, 0 });
+	SetTextPadding({ pImageBaseCheckBoxUnSelect->GetWidth(GetScale()) / 4, 0, 0, 0 });
 	CDUIStaticCtrl::SetTextStyle(TextStyle);
 
 	return;

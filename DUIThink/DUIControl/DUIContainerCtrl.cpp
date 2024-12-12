@@ -425,7 +425,7 @@ void CDUIContainerCtrl::SetUseHorizScrollBar(bool bUseHorizScrollBar)
 
 		if (pImageBaseHScrollBk && pImageBaseHScrollThumb)
 		{
-			pScrollBarCtrl->SetFixedHeight(pImageBaseHScrollBk->GetHeight());
+			pScrollBarCtrl->SetFixedHeight(pImageBaseHScrollBk->GetHeight(GetScale()));
 			pScrollBarCtrl->SetUpDownBtnHorizFixedWidth(0);
 
 			{
@@ -500,14 +500,14 @@ void CDUIContainerCtrl::SetUseVertScrollBar(bool bUseVertScrollBar)
 
 		if (pImageBaseVScrollBk && pImageBaseVScrollThumb)
 		{
-			pScrollBarCtrl->SetFixedWidth(pImageBaseVScrollBk->GetWidth());
+			pScrollBarCtrl->SetFixedWidth(pImageBaseVScrollBk->GetWidth(GetScale()));
 			pScrollBarCtrl->SetUpDownBtnVertFixedHeight(0);
 
 			{
 				tagDuiImageSection ImageSection;
 				ImageSection.ImageSourceType = ImageSource_Custom;
 				ImageSection.vecImageResSwitch.push_back(pImageBaseVScrollBk->GetResourceName());
-				ImageSection.mapSourceCustomScale[100] = { 0, 0, pImageBaseVScrollBk->GetWidth(), pImageBaseVScrollBk->GetHeight() };
+				ImageSection.mapSourceCustomScale[100] = { 0, 0, pImageBaseVScrollBk->GetWidth(GetScale()), pImageBaseVScrollBk->GetHeight(GetScale()) };
 				ImageSection.rcCorner = { 0, 5, 0, 5 };
 				pScrollBarCtrl->SetImageSectionGrooveHot(ImageSection);
 			}
@@ -515,14 +515,14 @@ void CDUIContainerCtrl::SetUseVertScrollBar(bool bUseVertScrollBar)
 				tagDuiImageSection ImageSection;
 				ImageSection.ImageSourceType = ImageSource_Custom;
 				ImageSection.vecImageResSwitch.push_back(pImageBaseVScrollThumb->GetResourceName());
-				ImageSection.mapSourceCustomScale[100] = { 0, 0, pImageBaseVScrollThumb->GetWidth() / 3, pImageBaseVScrollThumb->GetHeight() };
+				ImageSection.mapSourceCustomScale[100] = { 0, 0, pImageBaseVScrollThumb->GetWidth(GetScale()) / 3, pImageBaseVScrollThumb->GetHeight(GetScale()) };
 				ImageSection.rcCorner = { 0, 5, 0, 5 };
 				pScrollBarCtrl->SetImageSectionThumbNormal(ImageSection);
 
-				ImageSection.mapSourceCustomScale[100] = { pImageBaseVScrollThumb->GetWidth() / 3, 0, pImageBaseVScrollThumb->GetWidth() / 3 * 2, pImageBaseVScrollThumb->GetHeight() };
+				ImageSection.mapSourceCustomScale[100] = { pImageBaseVScrollThumb->GetWidth(GetScale()) / 3, 0, pImageBaseVScrollThumb->GetWidth(GetScale()) / 3 * 2, pImageBaseVScrollThumb->GetHeight(GetScale()) };
 				pScrollBarCtrl->SetImageSectionThumbHot(ImageSection);
 
-				ImageSection.mapSourceCustomScale[100] = { pImageBaseVScrollThumb->GetWidth() / 3 * 2, 0, pImageBaseVScrollThumb->GetWidth() / 3 * 3, pImageBaseVScrollThumb->GetHeight() };
+				ImageSection.mapSourceCustomScale[100] = { pImageBaseVScrollThumb->GetWidth(GetScale()) / 3 * 2, 0, pImageBaseVScrollThumb->GetWidth(GetScale()) / 3 * 3, pImageBaseVScrollThumb->GetHeight(GetScale()) };
 				pScrollBarCtrl->SetImageSectionThumbPushed(ImageSection);
 			}
 		}

@@ -25,7 +25,12 @@ CDUIFontBase::CDUIFontBase(LPCTSTR lpszResName, LPCTSTR lpszFontName, int nSize,
 
 CDUIFontBase::~CDUIFontBase(void)
 {
-	MMSafeDeleteObject(m_hFont);
+	for (auto &FontItem : m_mapDpiFont)
+	{
+		MMSafeDeleteObject(FontItem.second);
+	}
+
+	m_mapDpiFont.clear();
 
 	return;
 }
@@ -42,14 +47,14 @@ enDuiResType CDUIFontBase::GetResourceType() const
 	return DuiResType_Font;
 }
 
-HFONT CDUIFontBase::GetHandle()
+HFONT CDUIFontBase::GetHandle(int nScale)
 {
-	if (NULL == m_hFont)
+	if (NULL == m_mapDpiFont[nScale])
 	{
-		ConstructResource(CDUIGlobal::GetInstance()->GetScale());
+		ConstructResource(nScale);
 	}
 
-	return m_hFont;
+	return m_mapDpiFont[nScale];
 }
 
 CMMString CDUIFontBase::GetFontName()
@@ -57,7 +62,6 @@ CMMString CDUIFontBase::GetFontName()
 	return m_strFontName;
 }
 
-//字体名字
 void CDUIFontBase::SetFontName(LPCTSTR lpszName)
 {
 	if (lpszName == GetFontName()) return;
@@ -69,16 +73,14 @@ void CDUIFontBase::SetFontName(LPCTSTR lpszName)
 	return;
 }
 
-//字号大小
 int CDUIFontBase::GetSize()
 {
 	//pre gethandle m_nScale is 0
 	GetHandle();
 
-	return MulDiv(m_nSize, m_nScale, 100);
+	return MulDiv(m_nSize, 100, 100);
 }
 
-//字号大小
 void CDUIFontBase::SetSize(int nSize)
 {
 	if (nSize == GetSize()) return;
@@ -90,13 +92,11 @@ void CDUIFontBase::SetSize(int nSize)
 	return;
 }
 
-//是否粗体
 LONG CDUIFontBase::GetWeight()
 {
 	return m_lWeight;
 }
 
-//设置粗体
 void CDUIFontBase::SetWeight(LONG lWeight)
 {
 	if (lWeight == GetWeight()) return;
@@ -166,13 +166,12 @@ void CDUIFontBase::SetStrikeOut(bool bStrikeOut)
 	return;
 }
 
-//construct
 void CDUIFontBase::ConstructResource(int nScale)
 {
-	if (m_hFont && m_nScale == nScale) return;
+	if (m_mapDpiFont[nScale]) return;
 
 	//release
-	MMSafeDeleteObject(m_hFont);
+	MMSafeDeleteObject(m_mapDpiFont[nScale]);
 
 	//create
 	LOGFONT lf = {};
@@ -185,8 +184,7 @@ void CDUIFontBase::ConstructResource(int nScale)
 	lf.lfItalic = m_bItalic;
 	lf.lfUnderline = m_bUnderline;
 	lf.lfStrikeOut = m_bStrikeOut;
-	m_hFont = ::CreateFontIndirect(&lf);
-	m_nScale = nScale;
+	m_mapDpiFont[nScale] = ::CreateFontIndirect(&lf);
 
 	/*if (m_DefaultFontInfo.tm.tmHeight == 0)
 	{

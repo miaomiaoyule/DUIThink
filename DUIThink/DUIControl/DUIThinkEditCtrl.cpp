@@ -167,7 +167,7 @@ LRESULT CDUIThinkEditCtrl::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lPar
 					CDUIFontBase *pFontBase = pTextStyle->GetFontBaseCur();
 					if (NULL == pFontBase) break;
 
-					HFONT hFont = pFontBase->GetHandle();
+					HFONT hFont = pFontBase->GetHandle(GetScale());
 					if (NULL == hFont) break;
 
 					LOGFONT LogFont = {};
@@ -273,9 +273,9 @@ void CDUIThinkEditCtrl::RefreshView()
 			if (RichTextItem_Image != RichTextDrawItem.ItemType) continue;
 
 			CDUIImageBase *pImageBase = CDUIGlobal::GetInstance()->GetImageResource(RichTextDrawItem.strImageResName);
-			if (NULL == pImageBase || NULL == pImageBase->GetAnimateImage()) continue;
+			if (NULL == pImageBase || NULL == pImageBase->GetAnimateImage(GetScale())) continue;
 
-			auto AnimateImageInfo = pImageBase->GetAnimateImageInfo();
+			auto AnimateImageInfo = pImageBase->GetAnimateImageInfo(GetScale());
 			if (RichTextDrawItem.nAnimateFrameCur < 0 || RichTextDrawItem.nAnimateFrameCur >= AnimateImageInfo.nFrameCount) continue;
 
 			RichTextDrawItem.nAnimateElapseCur = ((long*)AnimateImageInfo.vecGifPropertyItem[0].value)[RichTextDrawItem.nAnimateFrameCur] * 10;
@@ -1381,9 +1381,9 @@ void CDUIThinkEditCtrl::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
 				if (RichTextItem_Image != RichTextDrawItem.ItemType) continue;
 
 				CDUIImageBase *pImageBase = CDUIGlobal::GetInstance()->GetImageResource(RichTextDrawItem.strImageResName);
-				if (NULL == pImageBase || NULL == pImageBase->GetAnimateImage()) continue;
+				if (NULL == pImageBase || NULL == pImageBase->GetAnimateImage(GetScale())) continue;
 
-				auto AnimateImageInfo = pImageBase->GetAnimateImageInfo();
+				auto AnimateImageInfo = pImageBase->GetAnimateImageInfo(GetScale());
 				if (AnimateImageInfo.nFrameCount <= 0) continue;
 
 				RichTextDrawItem.nAnimateElapseCur -= Dui_TimerThinkEditAnimate_Elapse;
