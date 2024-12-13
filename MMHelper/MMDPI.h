@@ -26,9 +26,9 @@ public:
 
 	//variant
 private:
-	static int							m_nScaleFactor;
-	static int							m_nScaleFactorSDA;
-	static enMMPROCESS_DPI_AWARENESS		m_ProcessDPIAwareness;
+	int									m_nScaleFactor = 0;
+	int									m_nScaleFactorSDA = 0;
+	static enMMPROCESS_DPI_AWARENESS	m_ProcessDPIAwareness;
 
 	//method
 public:

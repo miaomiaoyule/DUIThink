@@ -7,8 +7,6 @@ typedef HRESULT(WINAPI *LPGetProcessDpiAwareness)(_In_  HANDLE hprocess, _Out_ e
 typedef HRESULT(WINAPI *LPGetDpiForMonitor)(_In_ HMONITOR hmonitor, _In_ enMMMONITOR_DPI_TYPE dpiType, _Out_ UINT *dpiX, _Out_ UINT *dpiY);
 
 //////////////////////////////////////////////////////////////////////////
-int CMMDpi::m_nScaleFactor = 0;
-int CMMDpi::m_nScaleFactorSDA = 0;
 enMMPROCESS_DPI_AWARENESS CMMDpi::m_ProcessDPIAwareness = MMPROCESS_PER_MONITOR_DPI_AWARE;
 
 CMMDpi::CMMDpi()
