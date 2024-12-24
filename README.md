@@ -50,7 +50,7 @@ QQ群：885314879
 # English introduction DUIThink
 DUIThink is a free and open source DirectUI interface library for Windows, which contains a complete set of desktop software development components. It is not so much an interface library as a development framework. The functional components are (thread pool, file operation, iocp network model, file listening, registry listening, file dragging, command line parsing, magnetic algorithm, memory pool, resolution conversion, string operation, etc.). You can use this framework directly to develop any desktop application you want.
 * * *
-Official website: http://49.235.209.245/ 
+Official website: http://49.235.209.245/  
 QQ group: 885314879  
 Video tutorial: https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1  
 
