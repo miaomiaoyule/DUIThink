@@ -22,10 +22,9 @@ public:
 
 	//组件变量
 protected:
-	HFONT								m_hFont = NULL;
 	CMMString							m_strFontName;
+	std::unordered_map<int, HFONT>		m_mapDpiFont;
 	int									m_nSize = 0;
-	int									m_nScale = 0;
 	LONG								m_lWeight = 0;
 	bool								m_bItalic = false;
 	bool								m_bUnderline = false;
@@ -39,10 +38,10 @@ public:
 	//method
 public:
 	enDuiResType GetResourceType() const override;
-	virtual HFONT GetHandle();
+	virtual HFONT GetHandle(int nScale = 100);
 	virtual CMMString GetFontName();
 	virtual void SetFontName(LPCTSTR lpszName);
-	virtual int GetSize();
+	virtual int GetSize(int nScale);
 	virtual void SetSize(int nSize);
 	virtual LONG GetWeight();
 	virtual void SetWeight(LONG lWeight);
@@ -57,8 +56,8 @@ public:
 
 	//help
 protected:
-	//construct
 	void ConstructResource(int nScale = 100) override;
+	void ReleaseResource() override;
 	bool SetAttribute(LPCSTR lpszName, LPCSTR lpszValue) override;
 	bool SaveAttribute(tinyxml2::XMLElement *pNode) override;
 	void OnDpiChanged(int nScale) override;

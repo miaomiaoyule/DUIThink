@@ -55,7 +55,7 @@ HRESULT InitDefaultCharFormat(CDUIRichEditCtrl *pOwnerCtrl, CHARFORMAT2W *pCharF
 	CDUIFontBase *pFontDefault = CDUIGlobal::GetInstance()->GetFontResDefault();
 	HFONT hFont = pOwnerCtrl->GetFontNormal();
 	NULL == hFont ? hFont = pOwnerCtrl->GetFont() : NULL;
-	NULL == hFont && pFontDefault ? hFont = pFontDefault->GetHandle() : NULL;
+	NULL == hFont && pFontDefault ? hFont = pFontDefault->GetHandle(pOwnerCtrl->GetScale()) : NULL;
 
 	LOGFONT lf = {};
 	::GetObject(hFont, sizeof(LOGFONT), &lf);

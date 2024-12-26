@@ -169,6 +169,11 @@ int CDUIControlBase::GetScale()
 	return m_pWndOwner ? m_pWndOwner->GetScale() : 100;
 }
 
+const CMMDpi & CDUIControlBase::GetDpiObj()
+{
+	return m_pWndOwner ? m_pWndOwner->GetDpiObj() : __super::GetDpiObj();
+}
+
 int CDUIControlBase::GetControlCallBackCount()
 {
 	return m_vecIControlCallBack.size();

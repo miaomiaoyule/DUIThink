@@ -262,14 +262,14 @@ void CDUIAnimateCtrl::ConstructAnimateImageInfo()
 	CDUIImageBase *pImageBase = m_AttributeImageAnimate.GetCurImageBase();
 	if (NULL == pImageBase) return;
 
-	m_AnimateImageInfo = pImageBase->GetAnimateImageInfo();
+	m_AnimateImageInfo = pImageBase->GetAnimateImageInfo(GetScale());
 	if (AnimateImage_None == m_AnimateImageInfo.AnimateImageType)
 	{
 		CDUISize szItem = GetSequenceFrameSize();
 		if (szItem.cx <= 0 || szItem.cy <= 0) return;
 
 		m_AnimateImageInfo.AnimateImageType = AnimateImage_SequenceFrame;
-		m_AnimateImageInfo.nFrameCount = (pImageBase->GetWidth() / szItem.cx) * (pImageBase->GetHeight() / szItem.cy);
+		m_AnimateImageInfo.nFrameCount = (pImageBase->GetWidth(GetScale()) / szItem.cx) * (pImageBase->GetHeight(GetScale()) / szItem.cy);
 		m_AnimateImageInfo.nSequenceFrameSpeed = GetSequenceFrameSpeed();
 		m_AnimateImageInfo.szSequenceFrameSize = szItem;
 	}

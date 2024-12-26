@@ -80,9 +80,9 @@ class CDUILayoutView;
 #define DuiDpiScaleCtrl(x)				(m_pWndOwner ? m_pWndOwner->GetDpiObj().Scale(x) : (x))
 #define DuiDpiScaleBackCtrl(x)			(m_pWndOwner ? m_pWndOwner->GetDpiObj().ScaleBack(x) : (x))
 #define DuiDpiScaleVerifyCtrl(xTarget, xScaleBack) (m_pWndOwner ? m_pWndOwner->GetDpiObj().ScaleVerify(xTarget, xScaleBack) : (xScaleBack))
-#define DuiDpiScaleWnd(x)				(m_pWndOwner ? m_pWndOwner->GetDpiObj().Scale(x) : (x))
-#define DuiDpiScaleBackWnd(x)			(m_pWndOwner ? m_pWndOwner->GetDpiObj().ScaleBack(x) : (x))
-#define DuiDpiScaleVerifyWnd(xTarget, xScaleBack) (m_pWndOwner ? m_pWndOwner->GetDpiObj().ScaleVerify(xTarget, xScaleBack) : (xScaleBack))
+#define DuiDpiScaleWnd(x)				(GetDpiObj().Scale(x))
+#define DuiDpiScaleBackWnd(x)			(GetDpiObj().ScaleBack(x))
+#define DuiDpiScaleVerifyWnd(xTarget, xScaleBack) (GetDpiObj().ScaleVerify(xTarget, xScaleBack))
 
 /////////////////////////////////////////////////////////////////////////////////////
 #define DUIBGR(b,g,r)					((DWORD)((((DWORD)(BYTE)(b))<<16) | (((WORD)((BYTE)(g))<<8) | (BYTE)(r))))

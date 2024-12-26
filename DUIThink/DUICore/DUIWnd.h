@@ -68,6 +68,7 @@ protected:
 	bool								m_bSubWindow = false;
 	CDUIPoint							m_ptCreate = {};
 	UINT								m_uCtrlIDClose = 0;
+	CMMDpi								m_DpiInfo;
 
 	//paint
 	HDC									m_hDCPaint = NULL;

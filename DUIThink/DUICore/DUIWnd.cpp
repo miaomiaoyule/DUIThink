@@ -24,6 +24,8 @@ CDUIWnd::CDUIWnd(LPCTSTR lpszDuiName, HWND hWndParent)
 {
 	__super::Init();
 
+	SetDpi(CDUIGlobal::GetInstance()->GetDpi());
+
 	CDUIGlobal::GetInstance()->AddWnd(this);
 
 	return;
@@ -1221,7 +1223,7 @@ SIZE CDUIWnd::GetWndInitSize()
 
 void CDUIWnd::SetWndInitSize(int cx, int cy)
 {
-	if (GetWndInitSize() == CDUISize(cx, cy)) return;
+	if (GetWndInitSize() == DuiDpiScaleWnd(CDUISize(cx, cy))) return;
 
 	m_AttributeWndInitSize.SetValue(cx, cy);
 
@@ -1238,7 +1240,7 @@ SIZE CDUIWnd::GetWndMinSize()
 void CDUIWnd::SetWndMinSize(int cx, int cy)
 {
 	ASSERT(cx >= 0 && cy >= 0);
-	if (GetWndMinSize() == CDUISize(cx, cy)) return;
+	if (GetWndMinSize() == DuiDpiScaleWnd(CDUISize(cx, cy))) return;
 
 	m_AttributeWndMinSize.SetValue(cx, cy);
 
@@ -1255,7 +1257,7 @@ SIZE CDUIWnd::GetWndMaxSize()
 void CDUIWnd::SetWndMaxSize(int cx, int cy)
 {
 	ASSERT(cx >= 0 && cy >= 0);
-	if (GetWndMaxSize() == CDUISize(cx, cy)) return;
+	if (GetWndMaxSize() == DuiDpiScaleWnd(CDUISize(cx, cy))) return;
 
 	m_AttributeWndMaxSize.SetValue(cx, cy);
 
@@ -1285,7 +1287,7 @@ int CDUIWnd::GetCaptionHeight()
 
 void CDUIWnd::SetCaptionHeight(int nHeight)
 {
-	if (nHeight == GetCaptionHeight()) return;
+	if (DuiDpiScaleWnd(nHeight) == GetCaptionHeight()) return;
 
 	m_AttributeWndCaptionHeight.SetValue(nHeight);
 
@@ -1294,7 +1296,7 @@ void CDUIWnd::SetCaptionHeight(int nHeight)
 
 const CMMDpi & CDUIWnd::GetDpiObj()
 {
-	return CDUIPropertyObject::GetDpiObj();
+	return m_DpiInfo;
 }
 
 int CDUIWnd::GetDpi()
@@ -1304,7 +1306,14 @@ int CDUIWnd::GetDpi()
 
 bool CDUIWnd::SetDpi(int nDpi)
 {
-	return CDUIGlobal::GetInstance()->SetDpi(nDpi);
+	if (nDpi == GetDpi()) return true;
+
+ 	m_DpiInfo.SetDpi(nDpi);
+
+	AdjustWndSize();
+	AdjustWndPos();
+
+	return true;
 }
 
 int CDUIWnd::GetScale()
@@ -2302,7 +2311,8 @@ LRESULT CDUIWnd::OnNcCalcSize(WPARAM wParam, LPARAM lParam)
 	}
 
 	if (::IsZoomed(m_hWnd))
-	{	// 最大化时，计算当前显示器最适合宽高度
+	{	
+		// 最大化时，计算当前显示器最适合宽高度
 		MONITORINFO oMonitor = {};
 		oMonitor.cbSize = sizeof(oMonitor);
 		::GetMonitorInfo(::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST), &oMonitor);
@@ -3400,6 +3410,7 @@ void CDUIWnd::OnDuiDelayDelete()
 void CDUIWnd::OnDpiChanged(int nScalePre)
 {
 	nScalePre = max(100, nScalePre);
+	SetDpi(CDUIGlobal::GetInstance()->GetDpi());
 
 	//wndsize
 	if (false == ::IsZoomed(GetWndHandle()))
@@ -3424,6 +3435,8 @@ void CDUIWnd::OnDpiChanged(int nScalePre)
 
 void CDUIWnd::AdjustWndSize()
 {
+	if (false == IsWindow(m_hWnd)) return;
+
 	CDUISize szWndInit = GetWndInitSize();
 	if (szWndInit.cx > 0 && szWndInit.cy > 0)
 	{

@@ -197,6 +197,22 @@ typedef std::vector<tagDuiRichTextDraw> VecDuiRichTextDraw;
 typedef std::map<int, VecDuiRichTextDraw> MapLineVecDuiRichTextDraw;
 
 //////////////////////////////////////////////////////////////////////////
+struct tagDuiImageInfo
+{
+	//normal
+	Gdiplus::Bitmap *					pBitmap = NULL;
+	HBITMAP								hBitmap = NULL;
+	LPBYTE								pBits = NULL;
+	int									nWidth = 0;
+	int									nHeight = 0;
+	bool								bAlpha = false;
+
+	//animate
+	Gdiplus::Bitmap *					pImageAnimate = NULL;
+	int									nFrameCount = 0;
+	std::vector<Gdiplus::PropertyItem>	vecPropertyItem;							//帧与帧之间间隔时间
+};
+
 struct tagDuiAnimateImageInfo
 {
 	enDuiAnimateImageType				AnimateImageType = AnimateImage_None;
@@ -206,6 +222,7 @@ struct tagDuiAnimateImageInfo
 	std::vector<Gdiplus::PropertyItem>	vecGifPropertyItem;
 };
 
+typedef std::unordered_map<int, tagDuiImageInfo> MapDuiDpiImageInfo;
 typedef std::vector<tagDuiAnimateImageInfo> VecDuiAnimateImageInfo;
 
 //////////////////////////////////////////////////////////////////////////
