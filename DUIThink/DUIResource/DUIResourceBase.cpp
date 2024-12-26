@@ -69,8 +69,12 @@ bool CDUIResourceBase::SetResourceName(const CMMString &strName)
 	return true;
 }
 
-//construct
 void CDUIResourceBase::ConstructResource(int nDpi)
+{
+	return;
+}
+
+void CDUIResourceBase::ReleaseResource()
 {
 	return;
 }

@@ -1223,7 +1223,7 @@ SIZE CDUIWnd::GetWndInitSize()
 
 void CDUIWnd::SetWndInitSize(int cx, int cy)
 {
-	if (GetWndInitSize() == CDUISize(cx, cy)) return;
+	if (GetWndInitSize() == DuiDpiScaleWnd(CDUISize(cx, cy))) return;
 
 	m_AttributeWndInitSize.SetValue(cx, cy);
 
@@ -1240,7 +1240,7 @@ SIZE CDUIWnd::GetWndMinSize()
 void CDUIWnd::SetWndMinSize(int cx, int cy)
 {
 	ASSERT(cx >= 0 && cy >= 0);
-	if (GetWndMinSize() == CDUISize(cx, cy)) return;
+	if (GetWndMinSize() == DuiDpiScaleWnd(CDUISize(cx, cy))) return;
 
 	m_AttributeWndMinSize.SetValue(cx, cy);
 
@@ -1257,7 +1257,7 @@ SIZE CDUIWnd::GetWndMaxSize()
 void CDUIWnd::SetWndMaxSize(int cx, int cy)
 {
 	ASSERT(cx >= 0 && cy >= 0);
-	if (GetWndMaxSize() == CDUISize(cx, cy)) return;
+	if (GetWndMaxSize() == DuiDpiScaleWnd(CDUISize(cx, cy))) return;
 
 	m_AttributeWndMaxSize.SetValue(cx, cy);
 
@@ -1287,7 +1287,7 @@ int CDUIWnd::GetCaptionHeight()
 
 void CDUIWnd::SetCaptionHeight(int nHeight)
 {
-	if (nHeight == GetCaptionHeight()) return;
+	if (DuiDpiScaleWnd(nHeight) == GetCaptionHeight()) return;
 
 	m_AttributeWndCaptionHeight.SetValue(nHeight);
 

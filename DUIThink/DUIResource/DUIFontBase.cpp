@@ -25,12 +25,7 @@ CDUIFontBase::CDUIFontBase(LPCTSTR lpszResName, LPCTSTR lpszFontName, int nSize,
 
 CDUIFontBase::~CDUIFontBase(void)
 {
-	for (auto &FontItem : m_mapDpiFont)
-	{
-		MMSafeDeleteObject(FontItem.second);
-	}
-
-	m_mapDpiFont.clear();
+	ReleaseResource();
 
 	return;
 }
@@ -73,20 +68,21 @@ void CDUIFontBase::SetFontName(LPCTSTR lpszName)
 	return;
 }
 
-int CDUIFontBase::GetSize()
+int CDUIFontBase::GetSize(int nScale)
 {
 	//pre gethandle m_nScale is 0
-	GetHandle();
+	GetHandle(nScale);
 
-	return MulDiv(m_nSize, 100, 100);
+	return MulDiv(m_nSize, nScale, 100);
 }
 
 void CDUIFontBase::SetSize(int nSize)
 {
-	if (nSize == GetSize()) return;
+	if (nSize == GetSize(100)) return;
 
 	m_nSize = nSize;
 
+	ReleaseResource();
 	ConstructResource();
 
 	return;
@@ -192,6 +188,18 @@ void CDUIFontBase::ConstructResource(int nScale)
 	::GetTextMetrics(m_hDCPaint, &m_DefaultFontInfo.tm);
 	::SelectObject(m_hDCPaint, hOldFont);
 	}*/
+
+	return;
+}
+
+void CDUIFontBase::ReleaseResource()
+{
+	for (auto &FontItem : m_mapDpiFont)
+	{
+		MMSafeDeleteObject(FontItem.second);
+	}
+
+	m_mapDpiFont.clear();
 
 	return;
 }

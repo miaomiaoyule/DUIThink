@@ -113,10 +113,10 @@ int CDUIAttributeTextStyle::GetFontSize()
 	{
 		CDUIFontBase *pFontBase = CDUIGlobal::GetInstance()->GetFontResDefault();
 
-		return pFontBase ? pFontBase->GetSize() : 0;
+		return pFontBase ? pFontBase->GetSize(GetScale()) : 0;
 	}
 
-	return pFontBaseCur->GetSize();
+	return pFontBaseCur->GetSize(GetScale());
 }
 
 LPCTSTR CDUIAttributeTextStyle::GetFontResName()

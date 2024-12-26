@@ -41,7 +41,7 @@ public:
 	virtual HFONT GetHandle(int nScale = 100);
 	virtual CMMString GetFontName();
 	virtual void SetFontName(LPCTSTR lpszName);
-	virtual int GetSize();
+	virtual int GetSize(int nScale);
 	virtual void SetSize(int nSize);
 	virtual LONG GetWeight();
 	virtual void SetWeight(LONG lWeight);
@@ -56,8 +56,8 @@ public:
 
 	//help
 protected:
-	//construct
 	void ConstructResource(int nScale = 100) override;
+	void ReleaseResource() override;
 	bool SetAttribute(LPCSTR lpszName, LPCSTR lpszValue) override;
 	bool SaveAttribute(tinyxml2::XMLElement *pNode) override;
 	void OnDpiChanged(int nScale) override;
