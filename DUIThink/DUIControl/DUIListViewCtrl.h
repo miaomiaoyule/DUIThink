@@ -232,6 +232,7 @@ public:
 	bool RemoveAt(int nIndex) override;
 	void RemoveAll() override;
 	int TranslateIndex(CDUIPoint pt) override;
+	void EnsureVisible(int nIndex, bool bCenter = false) override;
 	virtual CDUIPoint TranslateRowColumn(int nIndex);
 
 	//item property
@@ -286,9 +287,6 @@ public:
 	virtual void SetShowRowLine(bool bShowLine = false);
 	virtual bool IsShowColumnLine();
 	virtual void SetShowColumnLine(bool bShowLine = false);
-
-	//scroll
-	virtual void EnsureVisible(int nIndex, bool bCenter = false);
 
 	//sort
 	virtual bool SortItems(PLVCompareFunc pfnCompare, UINT_PTR dwData);

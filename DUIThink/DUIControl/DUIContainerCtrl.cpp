@@ -814,6 +814,32 @@ CDUIScrollBarCtrl * CDUIContainerCtrl::GetVertScrollBar() const
 	return m_pVertScrollBarCtrl;
 }
 
+void CDUIContainerCtrl::EnsureVisible(int nIndex, bool bCenter)
+{
+	CDUIControlBase *pChild = GetChildAt(nIndex);
+	if (NULL == pChild) return;
+
+	//target
+	CDUIRect rcChild = pChild->GetAbsoluteRect();
+	CDUISize szScrollPos = GetScrollPos();
+	CDUISize szScrollRange = GetScrollRange();
+	CDUIRect rcItemRange = GetLayoutRangeOfItem();
+	if (bCenter)
+	{
+		rcItemRange.top = rcItemRange.top + rcItemRange.GetHeight() / 2 - rcChild.GetHeight() / 2;
+		rcItemRange.bottom = rcItemRange.top + rcChild.GetHeight();
+	}
+
+	//scroll pos
+	if (rcChild.left < rcItemRange.left) szScrollPos.cx -= rcItemRange.left - rcChild.left;
+	else if (rcChild.right > rcItemRange.right) szScrollPos.cx -= rcItemRange.right - rcChild.right;
+	if (rcChild.top < rcItemRange.top) szScrollPos.cy -= rcItemRange.top - rcChild.top;
+	else if (rcChild.bottom > rcItemRange.bottom) szScrollPos.cy -= rcItemRange.bottom - rcChild.bottom;
+	SetScrollPos(szScrollPos);
+
+	return;
+}
+
 int CDUIContainerCtrl::GetChildCount() const
 {
 	return m_vecChilds.size();

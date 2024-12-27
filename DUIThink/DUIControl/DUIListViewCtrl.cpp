@@ -1462,6 +1462,116 @@ int CDUIListViewCtrl::TranslateIndex(CDUIPoint pt)
 	return __super::TranslateIndex(pt);
 }
 
+void CDUIListViewCtrl::EnsureVisible(int nIndex, bool bCenter)
+{
+	CDUIListItemCtrl *pItem = GetChildAt(nIndex);
+	if (NULL == pItem) return;
+
+	//target
+	CDUISize szScrollPos = GetScrollPos();
+	CDUISize szScrollRange = GetScrollRange();
+	CDUIRect rcItemRange = GetLayoutRangeOfItem();
+	enDuiListViewType ListViewType = GetListViewType();
+	if (bCenter)
+	{
+		switch (ListViewType)
+		{
+			case ListView_List:
+			{
+				rcItemRange.top = rcItemRange.top + rcItemRange.GetHeight() / 2 - GetSwitchListItemHeight() / 2;
+				rcItemRange.bottom = rcItemRange.top + GetSwitchListItemHeight();
+
+				break;
+			}
+			case ListView_TileH:
+			{
+				rcItemRange.top = rcItemRange.top + rcItemRange.GetHeight() / 2 - GetSwitchTileItemSize().cy / 2;
+				rcItemRange.bottom = rcItemRange.top + GetSwitchTileItemSize().cy;
+
+				break;
+			}
+			case ListView_TileV:
+			{
+				rcItemRange.left = rcItemRange.left + rcItemRange.GetWidth() / 2 - GetSwitchTileItemSize().cx / 2;
+				rcItemRange.right = rcItemRange.left + GetSwitchTileItemSize().cx;
+
+				break;
+			}
+			default:
+				break;
+		}
+	}
+
+	//scroll pos
+	if (m_nFirstShowIndex <= nIndex && nIndex <= m_nLastShowIndex)
+	{
+		RECT rcItem = pItem->GetAbsoluteRect();
+
+		if (rcItemRange.RcInRect(rcItem)) return;
+
+		if (rcItem.left < rcItemRange.left) szScrollPos.cx -= rcItemRange.left - rcItem.left;
+		else if (rcItem.right > rcItemRange.right) szScrollPos.cx -= rcItemRange.right - rcItem.right;
+		if (rcItem.top < rcItemRange.top) szScrollPos.cy -= rcItemRange.top - rcItem.top;
+		else if (rcItem.bottom > rcItemRange.bottom) szScrollPos.cy -= rcItemRange.bottom - rcItem.bottom;
+		SetScrollPos(szScrollPos);
+
+		return;
+	}
+
+	szScrollPos.cx = 0;
+	szScrollPos.cy = 0;
+
+	//list
+	if (ListView_List == ListViewType)
+	{
+		for (int n = 0; n < nIndex; n++)
+		{
+			CDUIListItemCtrl *pItem = GetChildAt(n);
+			if (NULL == pItem || false == pItem->IsVisible()) continue;
+
+			int nFixedHeight = pItem->GetFixedHeight();
+			nFixedHeight = (nFixedHeight <= 0 ? GetSwitchListItemHeight() : nFixedHeight);
+			szScrollPos.cy += nFixedHeight;
+			szScrollPos.cy += GetChildPaddingV();
+		}
+	}
+	//tileh
+	else if (ListView_TileH == ListViewType && GetColumnCount() > 0)
+	{
+		int nRow = (nIndex + GetColumnCount() - 1) / GetColumnCount();
+		for (int n = 0; n < nRow; n++)
+		{
+			szScrollPos.cy += GetSwitchTileItemSize().cy;
+			szScrollPos.cy += GetChildPaddingV();
+		}
+	}
+	if (ListView_List == ListViewType || ListView_TileH == ListViewType)
+	{
+		szScrollPos.cy = max(0, szScrollPos.cy - rcItemRange.GetHeight());
+		szScrollPos.cy = bCenter ? min(szScrollRange.cy, szScrollPos.cy + rcItemRange.GetHeight() / 2) : szScrollPos.cy;
+		SetScrollPos(szScrollPos);
+
+		return;
+	}
+
+	//tilev
+	if (GetRowCount() > 0)
+	{
+		int nColumn = (nIndex + GetRowCount() - 1) / GetRowCount();
+		for (int n = 0; n < nColumn; n++)
+		{
+			szScrollPos.cx += GetSwitchTileItemSize().cx;
+			szScrollPos.cx += GetChildPaddingH();
+		}
+	}
+
+	szScrollPos.cx = max(0, szScrollPos.cx - rcItemRange.GetWidth());
+	szScrollPos.cx = bCenter ? min(szScrollRange.cx, szScrollPos.cx + rcItemRange.GetWidth() / 2) : szScrollPos.cx;
+	SetScrollPos(szScrollPos);
+
+	return;
+}
+
 CDUIPoint CDUIListViewCtrl::TranslateRowColumn(int nIndex)
 {
 	CDUIPoint ptRowColumn(-1, -1);
@@ -1813,116 +1923,6 @@ void CDUIListViewCtrl::SetShowColumnLine(bool bShowLine)
 	m_AttributeShowColumnLine.SetValue(bShowLine);
 
 	Invalidate();
-
-	return;
-}
-
-void CDUIListViewCtrl::EnsureVisible(int nIndex, bool bCenter)
-{
-	CDUIListItemCtrl *pItem = GetChildAt(nIndex);
-	if (NULL == pItem) return;
-
-	//target
-	CDUISize szScrollPos = GetScrollPos();
-	CDUISize szScrollRange = GetScrollRange();
-	CDUIRect rcItemRange = GetLayoutRangeOfItem();
-	enDuiListViewType ListViewType = GetListViewType();
-	if (bCenter)
-	{
-		switch (ListViewType)
-		{
-			case ListView_List:
-			{
-				rcItemRange.top = rcItemRange.top + rcItemRange.GetHeight() / 2 - GetSwitchListItemHeight() / 2;
-				rcItemRange.bottom = rcItemRange.top + GetSwitchListItemHeight();
-
-				break;
-			}
-			case ListView_TileH:
-			{
-				rcItemRange.top = rcItemRange.top + rcItemRange.GetHeight() / 2 - GetSwitchTileItemSize().cy / 2;
-				rcItemRange.bottom = rcItemRange.top + GetSwitchTileItemSize().cy;
-
-				break;
-			}
-			case ListView_TileV:
-			{
-				rcItemRange.left = rcItemRange.left + rcItemRange.GetWidth() / 2 - GetSwitchTileItemSize().cx / 2;
-				rcItemRange.right = rcItemRange.left + GetSwitchTileItemSize().cx;
-
-				break;
-			}
-			default:
-				break;
-		}
-	}
-
-	//scroll pos
-	if (m_nFirstShowIndex <= nIndex && nIndex <= m_nLastShowIndex)
-	{
-		RECT rcItem = pItem->GetAbsoluteRect();
-
-		if (rcItemRange.RcInRect(rcItem)) return;
-
-		if (rcItem.left < rcItemRange.left) szScrollPos.cx -= rcItemRange.left - rcItem.left;
-		else if (rcItem.right > rcItemRange.right) szScrollPos.cx -= rcItemRange.right - rcItem.right;
-		if (rcItem.top < rcItemRange.top) szScrollPos.cy -= rcItemRange.top - rcItem.top;
-		else if (rcItem.bottom > rcItemRange.bottom) szScrollPos.cy -= rcItemRange.bottom - rcItem.bottom;
-		SetScrollPos(szScrollPos);
-
-		return;
-	}
-
-	szScrollPos.cx = 0;
-	szScrollPos.cy = 0;
-
-	//list
-	if (ListView_List == ListViewType)
-	{
-		for (int n = 0; n < nIndex; n++)
-		{
-			CDUIListItemCtrl *pItem = GetChildAt(n);
-			if (NULL == pItem || false == pItem->IsVisible()) continue;
-
-			int nFixedHeight = pItem->GetFixedHeight();
-			nFixedHeight = (nFixedHeight <= 0 ? GetSwitchListItemHeight() : nFixedHeight);
-			szScrollPos.cy += nFixedHeight;
-			szScrollPos.cy += GetChildPaddingV();
-		}
-	}
-	//tileh
-	else if (ListView_TileH == ListViewType && GetColumnCount() > 0)
-	{
-		int nRow = (nIndex + GetColumnCount() - 1) / GetColumnCount();
-		for (int n = 0; n < nRow; n++)
-		{
-			szScrollPos.cy += GetSwitchTileItemSize().cy;
-			szScrollPos.cy += GetChildPaddingV();
-		}
-	}
-	if (ListView_List == ListViewType || ListView_TileH == ListViewType)
-	{
-		szScrollPos.cy = max(0, szScrollPos.cy - rcItemRange.GetHeight());
-		szScrollPos.cy = bCenter ? min(szScrollRange.cy, szScrollPos.cy + rcItemRange.GetHeight() / 2) : szScrollPos.cy;
-		SetScrollPos(szScrollPos);
-
-		return;
-	}
-
-	//tilev
-	if (GetRowCount() > 0)
-	{
-		int nColumn = (nIndex + GetRowCount() - 1) / GetRowCount();
-		for (int n = 0; n < nColumn; n++)
-		{
-			szScrollPos.cx += GetSwitchTileItemSize().cx;
-			szScrollPos.cx += GetChildPaddingH();
-		}
-	}
-
-	szScrollPos.cx = max(0, szScrollPos.cx - rcItemRange.GetWidth());
-	szScrollPos.cx = bCenter ? min(szScrollRange.cx, szScrollPos.cx + rcItemRange.GetWidth() / 2) : szScrollPos.cx;
-	SetScrollPos(szScrollPos);
 
 	return;
 }

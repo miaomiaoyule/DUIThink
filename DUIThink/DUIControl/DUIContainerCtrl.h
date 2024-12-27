@@ -135,6 +135,7 @@ public:
 	virtual void EnableScrollBar(bool bEnableHorizontal = true, bool bEnableVertical = true);
 	virtual CDUIScrollBarCtrl * GetHorizScrollBar() const override;
 	virtual CDUIScrollBarCtrl * GetVertScrollBar() const override;
+	virtual void EnsureVisible(int nIndex, bool bCenter = false);
 
 	//child
 	virtual int GetChildCount() const;
