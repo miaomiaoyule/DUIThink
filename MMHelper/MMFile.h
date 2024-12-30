@@ -154,11 +154,25 @@ public:
 	static std::vector<CMMString> GetFilesOfDir(IN LPCTSTR lpszDirFull);
 
 	//************************************
-	// Description:	return file version
+	// Description:	write string to file
 	// Parameter: 	LPCTSTR lpszFileFull 例：C:\Text.txt 
 	// Parameter: 	CMMString &strData 
 	//************************************
 	static bool WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool bClearOld = false);
+	
+	//************************************
+	// Description:	write byte to file
+	// Parameter: 	LPCTSTR lpszFileFull 例：C:\Text.txt 
+	// Parameter: 	std::vector<BYTE> &vecData 
+	//************************************
+	static bool WriteFileData(IN LPCTSTR lpszFileFull, IN std::vector<BYTE> &vecData, bool bClearOld = false);
+	
+	//************************************
+	// Description:	write byte to file
+	// Parameter: 	LPCTSTR lpszFileFull 例：C:\Text.txt 
+	// Parameter: 	std::vector<BYTE> &vecData 
+	//************************************
+	static bool WriteFileData(IN LPCTSTR lpszFileFull, IN std::vector<BYTE> &vecData, int nOffsetOfFirst = 0);
 
 	//************************************
 	// Description:	递归清除路径下的含有特定名字的文件
@@ -195,6 +209,13 @@ public:
 	//																		L"all", L"*.jpg;*.jpeg;*.bmp;*.png;*.mp4"
 	//************************************
 	static bool OperatorSelectFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT std::vector<CMMString> &vecFileSelect);
+
+	//************************************
+	// Description:	select folder
+	// Parameter: 	HWND hWndParent
+	//																	
+	//************************************
+	static bool OperatorSelectFolder(HWND hWndParent, OUT CMMString &strFolderSelect);
 };
 
 //////////////////////////////////////////////////////////////////////////

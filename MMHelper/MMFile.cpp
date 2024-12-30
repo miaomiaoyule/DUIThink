@@ -804,6 +804,8 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 	pFile = bClearOld ? fopen(CT2CA(lpszFileFull), "w+") : fopen(CT2CA(lpszFileFull), "at");
 	if (NULL == pFile) return false;
 
+	fseek(pFile, 0, SEEK_END);
+
 	switch (FileEncoe)
 	{
 		case FileEncode_UTF8_Bom:
@@ -855,6 +857,38 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 			break;
 		}
 	}
+
+	fclose(pFile);
+	pFile = NULL;
+
+	return true;
+}
+
+bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN std::vector<BYTE> &vecData, bool bClearOld)
+{
+	if (vecData.empty()) return false;
+
+	FILE *pFile = bClearOld ? fopen(CT2CA(lpszFileFull), "wb+") : fopen(CT2CA(lpszFileFull), "ab+");
+	if (NULL == pFile) return false;
+
+	fseek(pFile, 0, SEEK_END);
+	fwrite(vecData.data(), vecData.size(), 1, pFile);
+
+	fclose(pFile);
+	pFile = NULL;
+
+	return true;
+}
+
+bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN std::vector<BYTE> &vecData, int nOffsetOfFirst)
+{
+	if (vecData.empty()) return false;
+
+	FILE *pFile = fopen(CT2CA(lpszFileFull), "ab+");
+	if (NULL == pFile) return false;
+
+	fseek(pFile, nOffsetOfFirst, SEEK_SET);
+	fwrite(vecData.data(), vecData.size(), 1, pFile);
 
 	fclose(pFile);
 	pFile = NULL;
@@ -946,8 +980,8 @@ bool CMMFile::OperatorFileOrFolder(CMMString strSrc, CMMString strDest, int nOpe
 bool CMMFile::OperatorSaveToFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT CMMString &strFileSave)
 {
 	CComPtr<IFileSaveDialog> pIFileSaveDialog = NULL;
-	HRESULT hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_PPV_ARGS(&pIFileSaveDialog));
-	if (false == SUCCEEDED(hr)) return false;
+	HRESULT hRes = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_PPV_ARGS(&pIFileSaveDialog));
+	if (false == SUCCEEDED(hRes)) return false;
 
 	//filter
 	std::vector<COMDLG_FILTERSPEC> vecFilter;
@@ -964,12 +998,12 @@ bool CMMFile::OperatorSaveToFile(HWND hWndParent, std::unordered_map<CMMString, 
 
 	//res
 	CComPtr<IShellItem> pItem = NULL;
-	hr = pIFileSaveDialog->GetResult(&pItem);
-	if (false == SUCCEEDED(hr)) return false;
+	hRes = pIFileSaveDialog->GetResult(&pItem);
+	if (false == SUCCEEDED(hRes)) return false;
 
 	LPWSTR szPath = NULL;
-	hr = pItem->GetDisplayName(SIGDN_DESKTOPABSOLUTEPARSING, &szPath);
-	if (SUCCEEDED(hr) && szPath)
+	hRes = pItem->GetDisplayName(SIGDN_DESKTOPABSOLUTEPARSING, &szPath);
+	if (SUCCEEDED(hRes) && szPath)
 	{
 		strFileSave = szPath;
 
@@ -982,8 +1016,8 @@ bool CMMFile::OperatorSaveToFile(HWND hWndParent, std::unordered_map<CMMString, 
 bool CMMFile::OperatorSelectFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT std::vector<CMMString> &vecFileSelect)
 {
 	CComPtr<IFileOpenDialog> pIFileOpenDialog = NULL;
-	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pIFileOpenDialog));
-	if (false == SUCCEEDED(hr)) return false;
+	HRESULT hRes = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pIFileOpenDialog));
+	if (false == SUCCEEDED(hRes)) return false;
 
 	//filter
 	std::vector<COMDLG_FILTERSPEC> vecFilter;
@@ -1003,8 +1037,8 @@ bool CMMFile::OperatorSelectFile(HWND hWndParent, std::unordered_map<CMMString, 
 
 	//res
 	CComPtr<IShellItemArray> pItems = NULL;
-	hr = pIFileOpenDialog->GetResults(&pItems);
-	if (false == SUCCEEDED(hr)) return false;
+	hRes = pIFileOpenDialog->GetResults(&pItems);
+	if (false == SUCCEEDED(hRes)) return false;
 	
 	DWORD dwCount = 0;
 	if (false == SUCCEEDED(pItems->GetCount(&dwCount))) return false;
@@ -1019,8 +1053,8 @@ bool CMMFile::OperatorSelectFile(HWND hWndParent, std::unordered_map<CMMString, 
 			//if (SUCCEEDED(pItem->GetAttributes(SFGAO_LINK, &dwAttrs)) && (dwAttrs & SFGAO_LINK)) continue;
 			
 			LPWSTR szPath = NULL;
-			hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &szPath);
-			if (SUCCEEDED(hr) && szPath)
+			hRes = pItem->GetDisplayName(SIGDN_FILESYSPATH, &szPath);
+			if (SUCCEEDED(hRes) && szPath)
 			{
 				vecFileSelect.push_back(szPath);
 				
@@ -1028,6 +1062,34 @@ bool CMMFile::OperatorSelectFile(HWND hWndParent, std::unordered_map<CMMString, 
 			}
 		}
 	}
+
+	return true;
+}
+
+bool CMMFile::OperatorSelectFolder(HWND hWndParent, OUT CMMString &strFolderSelect)
+{
+	CComPtr<IFileDialog> pIFileDialog = NULL;
+	HRESULT hRes = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pIFileDialog));
+	if (false == SUCCEEDED(hRes)) return false;
+
+	pIFileDialog->SetOptions(FOS_PICKFOLDERS);
+	pIFileDialog->Show(hWndParent);
+
+	CComPtr<IShellItem> pFolderItem = NULL;
+	hRes = pIFileDialog->GetResult(&pFolderItem);
+	if (false == SUCCEEDED(hRes)) return false;
+
+	LPWSTR szFolderPath = NULL;
+	hRes = pFolderItem->GetDisplayName(SIGDN_FILESYSPATH, &szFolderPath);
+	if (false == SUCCEEDED(hRes))
+	{
+		::CoTaskMemFree(szFolderPath);
+
+		return false;
+	}
+
+	strFolderSelect = szFolderPath;
+	::CoTaskMemFree(szFolderPath);
 
 	return true;
 }
