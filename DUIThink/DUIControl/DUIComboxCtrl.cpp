@@ -35,7 +35,7 @@ protected:
 	void OnFinalMessage() override;
 	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam) override;
 	void OnDuiWndInited(const DuiNotify &Notify);
-	void OnDuiItemClick(const DuiNotify &Notify);
+	void OnDuiItemSelected(const DuiNotify &Notify);
 	void OnDuiItemMouseEnter(const DuiNotify &Notify);
 	void OnDuiItemMouseLeave(const DuiNotify &Notify);
 	void OnDuiTimer(const DuiNotify &Notify);
@@ -47,7 +47,7 @@ MMImplement_ClassName(CDUIComboxWnd)
 
 DuiBegin_Message_Map(CDUIComboxWnd, CDUIWnd)
 	Dui_On_Notify(DuiNotify_WndInited, OnDuiWndInited)
-	Dui_On_Notify(DuiNotify_ItemClick, OnDuiItemClick)
+	Dui_On_Notify(DuiNotify_ItemSelected, OnDuiItemSelected)
 	Dui_On_Notify(DuiNotify_ItemMouseEnter, OnDuiItemMouseEnter)
 	Dui_On_Notify(DuiNotify_ItemMouseLeave, OnDuiItemMouseLeave)
 	Dui_On_Timer()
@@ -197,7 +197,7 @@ void CDUIComboxWnd::OnDuiWndInited(const DuiNotify &Notify)
 	return;
 }
 
-void CDUIComboxWnd::OnDuiItemClick(const DuiNotify &Notify)
+void CDUIComboxWnd::OnDuiItemSelected(const DuiNotify &Notify)
 {
 	if (NULL == m_pComboxView
 		|| NULL == m_pOwner
