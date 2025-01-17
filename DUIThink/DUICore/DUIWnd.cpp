@@ -33,6 +33,8 @@ CDUIWnd::CDUIWnd(LPCTSTR lpszDuiName, HWND hWndParent)
 
 CDUIWnd::~CDUIWnd()
 {
+	OnDuiDelayDelete();
+
 	CDUIAnimationWnd::UnInit();
 	CDUIGlobal::GetInstance()->RemoveWnd(this);
 
@@ -849,8 +851,6 @@ CDUIContainerCtrl * CDUIWnd::GetRootCtrl()
 CDUIContainerCtrl * CDUIWnd::DetachRootCtrl()
 {
 	CDUIGlobal::PerformNotifyChildRemove(this, m_pRootCtrl);
-
-	OnDuiDelayDelete();
 
 	CDUIContainerCtrl *pRootCtrl = m_pRootCtrl;
 	if (pRootCtrl)
