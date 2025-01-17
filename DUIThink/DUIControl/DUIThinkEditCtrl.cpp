@@ -376,9 +376,7 @@ bool CDUIThinkEditCtrl::SetText(LPCTSTR lpszText)
 	CMMString strText = __super::GetText();
 	for (int n = 0; n < strText.length(); n++)
 	{
-		int nEmoji = CDUIGlobal::IsEmoji(strText[n]);
-		CMMString strTextSub = CMMString(strText.c_str() + n, max(1, nEmoji));
-		nEmoji > 0 ? n += (nEmoji - 1) : 0;
+		MMEmojiExtract(strText, n);
 
 		vecRichTextItem.push_back(tagDuiRichTextItem());
 		vecRichTextItem.back().strText = strTextSub;
@@ -423,9 +421,7 @@ bool CDUIThinkEditCtrl::SetRichTextItem(const VecDuiRichTextItem &vecRichTextIte
 			}
 			for (int n = 0; n < RichTextItem.strText.length(); n++)
 			{
-				int nEmoji = CDUIGlobal::IsEmoji(RichTextItem.strText[n]);
-				CMMString strTextSub = CMMString(RichTextItem.strText.c_str() + n, max(1, nEmoji));
-				nEmoji > 0 ? n += (nEmoji - 1) : 0;
+				MMEmojiExtract(RichTextItem.strText, n);
 
 				vecRichTextItemAdjust.push_back(tagDuiRichTextItem());
 				vecRichTextItemAdjust.back().strText = strTextSub;
@@ -1729,14 +1725,20 @@ LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 		strBuff = CMMString(_T('\0'), nLen + 1);
 		ImmGetCompositionString(hImc, GCS_COMPSTR, strBuff.GetBuffer(), strBuff.length());
 		
+		bool bHaveEmoji = false;
 		for (int n = 0; n < strBuff.length(); n++)
 		{
-			if (CDUIGlobal::IsEmoji(strBuff[n]) > 0)
+			MMEmojiExtract(strBuff, n);
+			if (nEmoji > 0)
 			{
-				SetReplaceSel(strBuff);
+				bHaveEmoji = true;
 
-				ImmNotifyIME(hImc, NI_COMPOSITIONSTR, CPS_CANCEL, NULL);
+				SetReplaceSel(strTextSub);
 			}
+		}
+		if (bHaveEmoji)
+		{
+			ImmNotifyIME(hImc, NI_COMPOSITIONSTR, CPS_CANCEL, NULL);
 		}
 
 		ImmReleaseContext(m_pWndOwner->GetWndHandle(), hImc);
@@ -2045,8 +2047,10 @@ void CDUIThinkEditCtrl::PerformMeasureString(IN LPCTSTR lpszText, IN tagDuiTextS
 	CMMString strText = lpszText;
 	for (int n = 0; n < strText.length(); n++)
 	{
+		MMEmojiExtract(strText, n);
+
 		vecRichTextItem.push_back(tagDuiRichTextItem());
-		vecRichTextItem.back().strText = IsPasswordMode() ? GetPasswordChar() : strText[n];
+		vecRichTextItem.back().strText = IsPasswordMode() ? GetPasswordChar() : strTextSub;
 	}
 
 	PerformMeasureString(vecRichTextItem, TextStyle, mapLineVecRichTextDraw, rcMeasure);
