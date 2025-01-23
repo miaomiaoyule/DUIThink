@@ -437,7 +437,10 @@ void CDUIButtonCtrl::PaintStatusImage(HDC hDC)
 
 void CDUIButtonCtrl::PaintText(HDC hDC)
 {
-	if (GetText().empty() || NULL == m_pWndOwner) return;
+	if (GetText().empty() || NULL == m_pWndOwner)
+	{
+		return __super::PaintText(hDC);
+	}
 
 	CDUIRect rcRange = GetTextRange();
 
