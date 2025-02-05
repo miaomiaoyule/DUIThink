@@ -91,6 +91,8 @@ using namespace std;
 void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 
 //////////////////////////////////////////////////////////////////////////
+#define MMSvgEnable
+#ifdef MMSvgEnable
 #include "../ThirdDepend/svg/Include/svg.h"
 
 #ifdef _DEBUG
@@ -121,6 +123,7 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 		#pragma comment(lib, "../lib/svg.lib")
 		#endif
 	#endif
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////

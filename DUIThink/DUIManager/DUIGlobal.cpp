@@ -92,7 +92,9 @@ bool CDUIGlobal::UnInit()
 	CloseProject();
 
 	//third
+#ifdef MMSvgEnable
 	CMMSvg::GetInstance()->UnInit();
+#endif
 
 	//extend dll
 	for (HMODULE hDllModule : m_vecModuleExtendDll)

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MMSvg.h"
 
+#ifdef MMSvgEnable
+
 //////////////////////////////////////////////////////////////////////////
 resvg_options *							g_pResvgOptions = NULL;
 
@@ -134,3 +136,5 @@ bool CMMSvg::ParseImage(IN const std::vector<BYTE> &vecData, IN int nScale, OUT 
 
 	return true;
 }
+
+#endif

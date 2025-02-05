@@ -293,11 +293,13 @@ void CDUIImageBase::ConstructResource(int nScale)
 	//svg
 	if (bSvgFile)
 	{
+#ifdef MMSvgEnable
 		tagDuiImageInfo ImageInfo = {};
 		CMMSvg::GetInstance()->ParseImage(vecData, nScale, ImageInfo.hBitmap, ImageInfo.nWidth, ImageInfo.nHeight, &ImageInfo.pBits);
 
 		ImageInfo.bAlpha = true;
 		m_mapDpiImageInfo[nScale] = ImageInfo;
+#endif
 
 		return;
 	}

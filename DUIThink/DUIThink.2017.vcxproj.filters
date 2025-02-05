@@ -560,6 +560,9 @@
     <ClCompile Include="DUICore\DUINotifyPump.cpp">
       <Filter>DUICore</Filter>
     </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DUIThink.rc">

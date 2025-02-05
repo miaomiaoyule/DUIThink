@@ -1587,6 +1587,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DUIAttribute\DUIAttributeBool.cpp" />
     <ClCompile Include="DUIAttribute\DUIAttributeColor.cpp" />
     <ClCompile Include="DUIAttribute\DUIAttributeColorSwitch.cpp" />

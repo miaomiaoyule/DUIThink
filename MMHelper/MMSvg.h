@@ -1,3 +1,4 @@
+#ifdef MMSvgEnable
 #ifndef __MM_SVG_H__
 #define __MM_SVG_H__
 
@@ -47,4 +48,4 @@ public:
 //////////////////////////////////////////////////////////////////////////
 
 #endif
-
+#endif
