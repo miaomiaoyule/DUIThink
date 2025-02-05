@@ -46,6 +46,7 @@
     <a ValueID="567243614" Name="AnimateDrag"/>
     <a ValueID="575841218" Name="ImageLeftBtnNormal"/>
     <a ValueID="583520677" Name="IconNormal"/>
+    <a ValueID="599954175" Name="RoundType"/>
     <a ValueID="631143898" Name="ListViewType"/>
     <a ValueID="696372805" Name="AutoCalcItemHeight"/>
     <a ValueID="702564252" Name="Friday"/>
