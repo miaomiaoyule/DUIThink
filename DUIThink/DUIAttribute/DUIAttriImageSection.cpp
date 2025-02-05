@@ -113,7 +113,7 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, const tagDuiAnimateImageInfo &AnimateImageInfo, int nFrameCur, const CDUIRect &rcRound)
 {
 	CDUIImageBase *pImageBaseCur = GetCurImageBase();
-	if (NULL == pImageBaseCur) return;
+	if (NULL == pImageBaseCur || NULL == pImageBaseCur->GetHandle(GetScale())) return;
 
 	//dest
 	CDUIRect rcSource = { 0, 0, pImageBaseCur->GetWidth(GetScale()), pImageBaseCur->GetHeight(GetScale()) };

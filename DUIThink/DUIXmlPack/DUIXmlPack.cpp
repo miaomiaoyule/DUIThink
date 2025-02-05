@@ -838,7 +838,7 @@ void CDUIXmlPack::EncryptXmlFile(CMMString strFile)
 	//copy
 #ifdef DUI_DESIGN 
 #ifdef _DEBUG
-	CMMString strPath, strFileName;
+	/*CMMString strPath, strFileName;
 	CMMFile::ParseFilePathName(strFile, strPath, strFileName);
 
 	CMMString strName, strExt;
@@ -847,7 +847,7 @@ void CDUIXmlPack::EncryptXmlFile(CMMString strFile)
 	CMMString strFileCopy = CMMService::GetUserDataPath(Name_AppDUIThink) + _T("Copy\\");
 	SHCreateDirectory(NULL, strFileCopy);
 	strFileCopy += strName + _T(".") + strExt;
-	CopyFile(strFile, strFileCopy, false);
+	CopyFile(strFile, strFileCopy, false);*/
 #endif
 #endif
 
