@@ -1146,9 +1146,9 @@ CMMThreadPool * CDUIGlobal::GetThreadPool()
 void CDUIGlobal::LoadPublicResource()
 {
 	//image
-	for (auto lpszImage : g_szPublicImage)
+	for (auto ImageItem : g_szPublicImage)
 	{
-		auto pImageBase = new CDUIImageBase(lpszImage[0], lpszImage[1]);
+		auto pImageBase = new CDUIImageBase(ImageItem.first, ImageItem.second);
 		pImageBase->SetDesign(true);
 		if (false == AddResource(pImageBase))
 		{

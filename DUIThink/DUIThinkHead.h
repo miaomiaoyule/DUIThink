@@ -103,8 +103,7 @@ using namespace tinyxml2;
 #endif
 #endif
 
-//////
-#include "../Global/Global.h"
+//////////////////////////////////////////////////////////////////////////
 #include "Define/DefineBase.h"
 #include "Define/DefineControl.h"
 #include "Define/DefineResource.h"
