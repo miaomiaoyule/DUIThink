@@ -132,7 +132,7 @@ CDUIThinkEditCtrl::~CDUIThinkEditCtrl()
 		m_pWndOwner->RemovePreMessagePtr(this);
 	}
 
-	MMSafeDelete(m_pBmpShadowText);
+	MMSafeDelete(m_pBmpText);
 
 	return;
 }
@@ -284,7 +284,7 @@ void CDUIThinkEditCtrl::RefreshView()
 		}
 	}
 
-	MMSafeDelete(m_pBmpShadowText);
+	MMSafeDelete(m_pBmpText);
 
 	return;
 }
@@ -667,10 +667,20 @@ CDUIRect CDUIThinkEditCtrl::GetCaretPos()
 	if (m_nCaretRow < 0 || m_nCaretRow >= m_mapLineVecRichTextDraw.size())
 	{
 		CDUIRect rcRange = GetTextRange();
-		rcRange.right = rcRange.left + 1;
-		rcRange.bottom = rcRange.top + rcMeasure.GetHeight();
+		CDUIRect rcCaret = rcRange;
+		rcCaret.right = rcCaret.left + 1;
+		rcCaret.bottom = rcCaret.top + rcMeasure.GetHeight();
 
-		return rcRange;
+		if (DT_CENTER & TextStyle.dwTextStyle)
+		{
+			rcCaret.Offset(rcRange.left + rcRange.GetWidth() / 2 - rcCaret.left, 0);
+		}
+		if (DT_VCENTER & TextStyle.dwTextStyle)
+		{
+			rcCaret.Offset(0, rcRange.top + rcRange.GetHeight() / 2 - (rcCaret.top + rcCaret.GetHeight() / 2));
+		}
+
+		return rcCaret;
 	}
 
 	//caret pos
@@ -1088,12 +1098,12 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName
 
 bool CDUIThinkEditCtrl::CanUndo()
 {
-	return 0 <= m_nIndexHistory && m_nIndexHistory < m_queHistory.size();
+	return 0 <= m_nIndexHistory && m_nIndexHistory < m_queHistory.size() && false == IsReadOnly();
 }
 
 bool CDUIThinkEditCtrl::CanRedo()
 {
-	return m_nIndexHistory < (int)m_queHistory.size() - 1;
+	return -1 <= m_nIndexHistory && m_nIndexHistory < (int)m_queHistory.size() - 1 && false == IsReadOnly();
 }
 
 void CDUIThinkEditCtrl::Undo()
@@ -1143,6 +1153,8 @@ void CDUIThinkEditCtrl::Cut()
 
 void CDUIThinkEditCtrl::Paste()
 {
+	if (IsReadOnly()) return;
+
 	auto vecFile = CMMService::GetClipboardFile();
 
 	//text
@@ -1475,6 +1487,19 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 
 				m_nCaretRowFrom = nRowPre;
 				m_nCaretColumnFrom = nColumnPre;
+			}
+
+			PerformClearSelect();
+
+			break;
+		}
+		case VK_DELETE:
+		{
+			if (m_nCaretRow == m_nCaretRowFrom
+				&& m_nCaretColumn == m_nCaretColumnFrom
+				&& false == IsReadOnly())
+			{
+				PerformMoveCaretHoriz(false);
 			}
 
 			PerformClearSelect();
@@ -1894,21 +1919,21 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 		//shadow bmp
 		if (IsShadowText())
 		{
-			if (NULL == m_pBmpShadowText 
-				|| m_pBmpShadowText->GetWidth() != rcRange.GetWidth() 
-				|| m_pBmpShadowText->GetHeight() != rcRange.GetHeight())
+			if (NULL == m_pBmpText 
+				|| m_pBmpText->GetWidth() != rcRange.GetWidth() 
+				|| m_pBmpText->GetHeight() != rcRange.GetHeight())
 			{
-				MMSafeDelete(m_pBmpShadowText);
+				MMSafeDelete(m_pBmpText);
 
 				CDUIRect rcDraw(0, 0, rcRange.GetWidth(), rcRange.GetHeight());
 				CDUIMemDC MemDC(hDC, rcDraw, false);
 				CDUIRenderEngine::DrawRichText(MemDC, rcDraw, RichTextInfo, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
 				CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcDraw.GetWidth(), rcDraw);
-				m_pBmpShadowText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
+				m_pBmpText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
 			}
-			if (m_pBmpShadowText)
+			if (m_pBmpText)
 			{
-				CDUIRenderEngine::DrawImage(hDC, m_pBmpShadowText, rcRange);
+				CDUIRenderEngine::DrawImage(hDC, m_pBmpText, rcRange);
 			}
 
 			return;
@@ -1984,6 +2009,48 @@ void CDUIThinkEditCtrl::PaintCaret(HDC hDC)
 	CDUIColorBase *pColorBase = pAttribute->GetColorBaseCur();
 	CDUIRect rcCaret = GetCaretPos();
 	CDUIRenderEngine::FillRect(hDC, rcCaret, m_bShowCaret ? (pColorBase ? pColorBase->GetColor() : 0xff000000) : 0x00000000);
+
+	return;
+}
+
+void CDUIThinkEditCtrl::PaintExtractBmpText(HDC hDC, tagDuiRichText RichTextInfo, CDUIRect rcRange, tagDuiTextStyle TextStyle)
+{
+	if (NULL == m_pBmpText
+		|| m_pBmpText->GetWidth() != rcRange.GetWidth()
+		|| m_pBmpText->GetHeight() != rcRange.GetHeight()
+		|| m_pWndOwner->IsWndLayered())
+	{
+		MMSafeDelete(m_pBmpText);
+
+		CDUIRect rcDraw(0, 0, rcRange.GetWidth(), rcRange.GetHeight());
+		CDUIMemDC MemDC(hDC, rcDraw, false);
+
+		if (false == IsFocused())
+		{
+			CDUIRenderEngine::DrawRichText(MemDC, rcDraw, RichTextInfo, false, m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
+		}
+		else
+		{
+			MapLineVecDuiRichTextDraw mapLineVecRichTextDraw = m_mapLineVecRichTextDraw;
+			for (auto &LineVecRichTextDraw : mapLineVecRichTextDraw)
+			{
+				for (auto &RichTextDrawItem : LineVecRichTextDraw.second)
+				{
+					RichTextDrawItem.rcDraw.Offset(-rcRange.left, -rcRange.top);
+				}
+			}
+
+			CDUIRenderEngine::DrawRichText(MemDC, rcDraw, mapLineVecRichTextDraw, TextStyle.dwTextStyle, false, m_pWndOwner->GetGdiplusRenderTextType());
+		}
+
+		CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcDraw.GetWidth(), rcDraw);
+		m_pBmpText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
+		MemDC.ResetDC();
+	}
+	if (m_pBmpText)
+	{
+		CDUIRenderEngine::DrawImage(hDC, m_pBmpText, rcRange);
+	}
 
 	return;
 }

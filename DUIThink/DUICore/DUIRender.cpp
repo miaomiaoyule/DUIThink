@@ -1404,13 +1404,13 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 			}
 			if (bCeilFloat)
 			{
-				rcItem.bottom = rcItem.top + ceil(bounds.Height);
 				rcItem.right = rcItem.left + ceil(bounds.Width);
+				rcItem.bottom = rcItem.top + ceil(bounds.Height);
 			}
 			else
 			{
-				rcItem.bottom = rcItem.top + (long)round(bounds.Height);
 				rcItem.right = rcItem.left + (long)round(bounds.Width);
+				rcItem.bottom = rcItem.top + (long)round(bounds.Height);
 			}
 		}
 		else
@@ -2030,15 +2030,18 @@ CDUIMemDC::CDUIMemDC(HDC hDC, const CDUIRect rcDest, bool bCopyBitmap)
 
 CDUIMemDC::~CDUIMemDC(void)
 {
-	if (false == m_bFromStart)
+	if (m_hMemDC)
 	{
-		::BitBlt(m_hDC, m_rcDest.left, m_rcDest.top, m_rcDest.GetWidth(), m_rcDest.GetHeight(),
-			m_hMemDC, m_rcDest.left, m_rcDest.top, SRCCOPY);
-	}
-	else
-	{
-		::BitBlt(m_hDC, m_rcDest.left, m_rcDest.top, m_rcDest.GetWidth(), m_rcDest.GetHeight(),
-			m_hMemDC, 0, 0, SRCCOPY);
+		if (false == m_bFromStart)
+		{
+			::BitBlt(m_hDC, m_rcDest.left, m_rcDest.top, m_rcDest.GetWidth(), m_rcDest.GetHeight(),
+				m_hMemDC, m_rcDest.left, m_rcDest.top, SRCCOPY);
+		}
+		else
+		{
+			::BitBlt(m_hDC, m_rcDest.left, m_rcDest.top, m_rcDest.GetWidth(), m_rcDest.GetHeight(),
+				m_hMemDC, 0, 0, SRCCOPY);
+		}
 	}
 
 	ResetDC();
