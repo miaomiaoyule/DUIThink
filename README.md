@@ -42,7 +42,7 @@ QQ群：885314879
 - 7、复制ui到另一个视图里，无需重复制作ui  
 - 8、支持开发者自定义控件  
 - 9、实时预览窗体各dpi效果  
-下载：http://121.5.53.246/DTDesigner2.0.zip  
+下载：http://49.235.209.245/DTDesigner2.0.zip  
  
    
   
@@ -91,4 +91,4 @@ Video tutorial: https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7
 - 7、Copy the ui to another view, no need to make the ui again
 - 8、support developer custom controls
 - 9、real-time preview of the dpi effect of the form  
-Download: http://121.5.53.246/DTDesigner2.0.zip
+Download: http://49.235.209.245/DTDesigner2.0.zip
