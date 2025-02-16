@@ -792,6 +792,26 @@ std::vector<CMMString> CMMFile::GetFilesOfDir(IN LPCTSTR lpszDirFull)
 	return vecFiles;
 }
 
+uint64_t CMMFile::GetFolderSize(IN LPCTSTR lpszDirFull)
+{
+	uint64_t uSize = 0;
+	auto vecFiles = GetFilesOfDir(lpszDirFull);
+	for (CMMString strFile : vecFiles)
+	{
+		strFile = CMMString(lpszDirFull) + _T('\\') + strFile;
+		if (GetFileAttributes(strFile) & FILE_ATTRIBUTE_DIRECTORY)
+		{
+			uSize += GetFolderSize(strFile);
+		}
+		else
+		{
+			uSize += GetFileSize(strFile);
+		}
+	}
+
+	return uSize;
+}
+
 bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool bClearOld)
 {
 	FILE *pFile = fopen(CT2CA(lpszFileFull), "rb");

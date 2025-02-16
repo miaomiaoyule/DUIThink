@@ -154,6 +154,12 @@ public:
 	static std::vector<CMMString> GetFilesOfDir(IN LPCTSTR lpszDirFull);
 
 	//************************************
+	// Description:	get size of dir
+	// Parameter: 	LPCTSTR lpszDirFull Àý£ºC:\windows
+	//************************************
+	static uint64_t GetFolderSize(IN LPCTSTR lpszDirFull);
+
+	//************************************
 	// Description:	write string to file
 	// Parameter: 	LPCTSTR lpszFileFull Àý£ºC:\Text.txt 
 	// Parameter: 	CMMString &strData 
