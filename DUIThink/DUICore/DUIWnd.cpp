@@ -2229,6 +2229,10 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 
 	//root
 	CDUIContainerCtrl *pRootCtrl = dynamic_cast<CDUIContainerCtrl*>(CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), this));
+	if (NULL == pRootCtrl)
+	{
+		OutputDebugString(CDUIGlobal::GetInstance()->GetDuiLastError());
+	}
 
 	//init
 	CMMDragDrop::UnRegister();

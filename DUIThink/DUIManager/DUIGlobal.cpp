@@ -609,7 +609,12 @@ CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWnd *pWnd)
 	{
 		return DuiFile.strName == strName;
 	});
-	if (FindIt == m_vecDui.end()) return NULL;
+	if (FindIt == m_vecDui.end())
+	{
+		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]²»´æÔÚ"), strName.c_str()));
+
+		return NULL;
+	}
 
 	enDuiType DuiType = FindIt->DuiType;
 	CDUIControlBase *pRootCtrl = NULL;
