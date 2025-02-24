@@ -1339,6 +1339,10 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 		{
 			stringFormat.SetTrimming(Gdiplus::StringTrimmingEllipsisCharacter);
 		}
+		if ((dwTextStyle & DT_PATH_ELLIPSIS) != 0)
+		{
+			stringFormat.SetTrimming(Gdiplus::StringTrimmingEllipsisPath);
+		}
 
 		int formatFlags = 0;
 		if ((dwTextStyle & DT_NOCLIP) != 0)

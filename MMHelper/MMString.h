@@ -346,12 +346,16 @@ public:
 	}
 	CMMString & operator = (LPCSTR lpszRight)
 	{
+		if (NULL == lpszRight) return *this;
+
 		__super::operator = ((LPCTSTR)CA2CT(lpszRight));
 
 		return *this;
 	}
 	CMMString & operator = (LPCTSTR lpszRight)
 	{
+		if (NULL == lpszRight) return *this;
+
 		__super::operator = (lpszRight);
 
 		return *this;
