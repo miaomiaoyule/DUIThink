@@ -955,7 +955,7 @@ void CDUIControlBase::SetRoundType(enDuiRoundType RoundType)
 
 CDUIRect CDUIControlBase::GetRoundCorner()
 {
-	return m_AttributeRoundCorner.GetValue();
+	return DuiDpiScaleCtrl(m_AttributeRoundCorner.GetValue());
 }
 
 void CDUIControlBase::SetRoundCorner(const CDUIRect &rcRoundCorner)

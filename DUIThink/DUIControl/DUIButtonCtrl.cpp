@@ -411,7 +411,12 @@ void CDUIButtonCtrl::PaintStatusColor(HDC hDC)
 		|| rcBorderRound.right > 0
 		|| rcBorderRound.bottom > 0)
 	{
-		pAttribute->FillRoundRect(hDC, m_rcAbsolute, 0, rcBorderRound, IsColorHSL());
+		CDUIRect rcBorder = GetBorderLine();
+		int nSize = max(rcBorder.left, rcBorder.top);
+		nSize = max(nSize, rcBorder.right);
+		nSize = max(nSize, rcBorder.bottom);
+
+		pAttribute->FillRoundRect(hDC, m_rcAbsolute, nSize, rcBorderRound, IsColorHSL());
 
 		return;
 	}
