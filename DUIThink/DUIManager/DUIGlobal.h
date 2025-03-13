@@ -296,6 +296,7 @@ protected:
 	void OnDpiChanged(int nScalePre);
 	void OnResourceAdd(CDUIResourceBase *pResourceObj);
 	void OnResourceRemove(CDUIResourceBase *pResourceObj);
+	void OnResourceRename(CDUIResourceBase *pResourceObj, const CMMString &strNameOld);
 	void OnResourceSwitch(int nIndexRes);
 
 	//attribute

@@ -4,7 +4,37 @@
 #pragma once
 #pragma pack(1)
 
-class CDUICalendarWnd;
+//////////////////////////////////////////////////////////////////////////
+class DUITHINK_API CDUICalendarWnd : public CDUIWnd
+{
+	MMDeclare_ClassName()
+
+public:
+	CDUICalendarWnd(CMMString strDuiName);
+	virtual ~CDUICalendarWnd();
+
+protected:
+	CDUIPoint							m_ptTrack;
+	CDUICalendarCtrl *					m_pShowCalendarView = NULL;
+
+public:
+	void Init(HWND hWndParent);
+	void Init(HWND hWndParent, CDUIPoint ptTrack);
+	void UnInit();
+
+	CDUICalendarCtrl * GetCalendarCtrl();
+
+protected:
+	LRESULT OnCreate(WPARAM wParam, LPARAM lParam) override;
+	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam) override;
+	LRESULT OnKeyDown(WPARAM /*wParam*/, LPARAM /*lParam*/) override;
+	LRESULT OnClose(WPARAM /*wParam*/, LPARAM /*lParam*/) override;
+	LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/) override;
+
+protected:
+	void AdjustCalendar();
+};
+
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUICalendarCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUICalendarCtrl = { 0xA6D76CAA,0xF4CD,0x47F1,0xAD,0x6E,0xB1,0xFF,0x9A,0xE0,0x8B,0xB9 };

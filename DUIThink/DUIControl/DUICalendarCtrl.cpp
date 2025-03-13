@@ -11,37 +11,6 @@
 #define CALENDAR_DAY_START				(1)
 
 //////////////////////////////////////////////////////////////////////////
-class CDUICalendarWnd : public CDUIWnd
-{
-	MMDeclare_ClassName()
-
-public:
-	CDUICalendarWnd(CMMString strDuiName);
-	virtual ~CDUICalendarWnd();
-
-protected:
-	CDUIPoint							m_ptTrack;
-	CDUICalendarCtrl *					m_pShowCalendarView = NULL;
-
-public:
-	void Init(HWND hWndParent);
-	void Init(HWND hWndParent, CDUIPoint ptTrack);
-	void UnInit();
-
-	CDUICalendarCtrl * GetCalendarCtrl();
-
-protected:
-	LRESULT OnCreate(WPARAM wParam, LPARAM lParam) override;
-	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam) override;
-	LRESULT OnKeyDown(WPARAM /*wParam*/, LPARAM /*lParam*/) override;
-	LRESULT OnClose(WPARAM /*wParam*/, LPARAM /*lParam*/) override;
-	LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/) override;
-
-protected:
-	void AdjustCalendar();
-};
-
-//////////////////////////////////////////////////////////////////////////
 MMImplement_ClassName(CDUICalendarWnd)
 
 CDUICalendarWnd::CDUICalendarWnd(CMMString strDuiName)

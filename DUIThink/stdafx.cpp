@@ -7,11 +7,11 @@
 // TODO: 在 STDAFX.H 中
 // 引用任何所需的附加头文件，而不是在此文件中引用
 
-tagDuiMenuCmd						g_DuiMenuCmd;
-CDUIMenuWnd *						g_pDuiMenuWndRoot = NULL;
+tagDuiMenuCmd							g_DuiMenuCmd;
+CDUIMenuWnd *							g_pDuiMenuWndRoot = NULL;
 
-tagDuiCalendarCmd					g_DuiCalendarCmd;
-CDUICalendarWnd *					g_pDuiCalendarWnd = NULL;
+tagDuiCalendarCmd						g_DuiCalendarCmd;
+CDUICalendarWnd *						g_pDuiCalendarWnd = NULL;
 
 //////////////////////////////////////////////////////////////////////////
-IDUIWndNotify *						g_pIDuiWndNotify = NULL;
+IDUIWndNotify *							g_pIDuiWndNotify = NULL;

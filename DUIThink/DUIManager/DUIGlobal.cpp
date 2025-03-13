@@ -1490,6 +1490,8 @@ bool CDUIGlobal::RenameFontResource(const CMMString &strNameOld, const CMMString
 		m_strFontResDefault = strNameNew;
 	}
 
+	OnResourceRename(pFontBaseOld, strNameOld);
+
 	return true;
 }
 
@@ -1504,6 +1506,8 @@ bool CDUIGlobal::RenameImageResource(const CMMString &strNameOld, const CMMStrin
 
 	m_mapResourceImage.erase(strNameOld);
 	m_mapResourceImage[strNameNew] = pImageBaseOld;
+
+	OnResourceRename(pImageBaseOld, strNameOld);
 
 	return true;
 }
@@ -1520,6 +1524,8 @@ bool CDUIGlobal::RenameColorResource(const CMMString &strNameOld, const CMMStrin
 
 	m_mapResourceColor.erase(strNameOld);
 	m_mapResourceColor[strNameNew] = pColorBaseOld;
+
+	OnResourceRename(pColorBaseOld, strNameOld);
 
 	return true;
 }
@@ -1574,6 +1580,8 @@ bool CDUIGlobal::RemoveFontResource(const CMMString &strName)
 	if (FindIt == m_mapResourceFont.end()) return true;
 	if (NULL == FindIt->second || FindIt->second->IsDesign()) return false;
 	
+	OnResourceRemove(FindIt->second);
+
 	MMSafeDelete(FindIt->second);
 	m_mapResourceFont.erase(FindIt);
 
@@ -1602,8 +1610,11 @@ bool CDUIGlobal::RemoveImageResource(const CMMString &strName)
 	CMMString strImage = pImageBase->GetImageFileFull();
 	if (true == PathFileExists(strImage) && false == DeleteFile(strImage))
 	{
+		assert(false);
 		return false;
 	}
+
+	OnResourceRemove(pImageBase);
 
 	MMSafeDelete(pImageBase);
 
@@ -1615,6 +1626,8 @@ bool CDUIGlobal::RemoveColorResource(const CMMString &strName)
 	auto FindIt = m_mapResourceColor.find(strName);
 	if (FindIt == m_mapResourceColor.end()) return true;
 	if (NULL == FindIt->second || FindIt->second->IsDesign()) return false;
+
+	OnResourceRemove(FindIt->second);
 
 	MMSafeDelete(FindIt->second);
 	m_mapResourceColor.erase(FindIt);
@@ -1736,6 +1749,25 @@ void CDUIGlobal::OnResourceRemove(CDUIResourceBase *pResourceObj)
 			if (NULL == pIResourceCallBack) continue;
 
 			pIResourceCallBack->OnResourceRemove(pResourceObj);
+		}
+	}
+
+	return;
+}
+
+void CDUIGlobal::OnResourceRename(CDUIResourceBase *pResourceObj, const CMMString &strNameOld)
+{
+	if (NULL == pResourceObj || false == IsLoadProject()) return;
+
+	{
+		std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+
+		for (int n = 0; n < m_vecIResourceCallBack.size(); n++)
+		{
+			IDuiResourceCallBack *pIResourceCallBack = m_vecIResourceCallBack[n];
+			if (NULL == pIResourceCallBack) continue;
+
+			pIResourceCallBack->OnResourceRename(pResourceObj, strNameOld);
 		}
 	}
 
