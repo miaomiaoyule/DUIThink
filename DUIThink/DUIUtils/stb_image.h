@@ -416,6 +416,7 @@ typedef unsigned char stbi_uc;
 extern "C" {
 #endif
 
+#define STB_IMAGE_STATIC
 #ifdef STB_IMAGE_STATIC
 #define STBIDEF static
 #else
