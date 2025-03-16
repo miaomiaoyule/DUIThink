@@ -906,7 +906,6 @@ bool CDUIListViewCtrl::IsSelected(int nIndex)
 
 bool CDUIListViewCtrl::SelectItem(int nIndex, bool bTakeFocus)
 {
-	if (IsSelected(nIndex)) return true;
 	if (nIndex < 0)
 	{
 		UnSelectAllItems();
@@ -915,14 +914,15 @@ bool CDUIListViewCtrl::SelectItem(int nIndex, bool bTakeFocus)
 	}
 
 	//single
-	if (false == IsMultiSelect() && 0 == (CDUIWnd::MapKeyState() & MK_CONTROL))
+	if (false == IsMultiSelect() 
+		&& (0 == (CDUIWnd::MapKeyState() & MK_CONTROL) || (GetKeyState('V') & 0x01)))
 	{
 		UnSelectItem(nIndex, true);
 	}
 
 	CDUIListItemCtrl *pItem = GetChildAt(nIndex);
-	if (pItem == NULL) return false;
-	if (false == pItem->Select(true)) return false;
+	if (pItem == NULL || false == pItem->Select(true)) return false;
+	if (IsSelected(nIndex)) return true;
 
 	m_nCurSel = nIndex;
 	m_vecSelItem.push_back(pItem);
@@ -1967,20 +1967,18 @@ bool CDUIListViewCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Ms
 {
 	if (IsScrollSelect() && false == IsMultiSelect())
 	{
-		switch ((int)(short)HIWORD(Msg.wParam))
+		//direction
+		int nWheelDelta = (int)(short)HIWORD(Msg.wParam);
+		int nWheelCount = abs(nWheelDelta / WHEEL_DELTA);
+		bool bPositive = nWheelDelta > 0;
+
+		if (bPositive)
 		{
-			case WHEEL_DELTA:
-			{
-				SelectItem(FindSelectable(VK_UP));
-
-				break;
-			}
-			case -WHEEL_DELTA:
-			{
-				SelectItem(FindSelectable(VK_DOWN));
-
-				break;
-			}
+			SelectItem(FindSelectable(VK_UP));
+		}
+		else
+		{
+			SelectItem(FindSelectable(VK_DOWN));
 		}
 
 		CDUIControlBase::OnDuiMouseWheel(pt, Msg);

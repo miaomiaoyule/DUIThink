@@ -1260,24 +1260,22 @@ bool CDUIThinkEditCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 {
 	if (GetScrollRange().cy <= 0) return __super::OnDuiMouseWheel(pt, Msg);
 
-	switch ((int)(short)HIWORD(Msg.wParam))
+	//direction
+	int nWheelDelta = (int)(short)HIWORD(Msg.wParam);
+	int nWheelCount = abs(nWheelDelta / WHEEL_DELTA);
+	bool bPositive = nWheelDelta > 0;
+
+	if (bPositive)
 	{
-		case WHEEL_DELTA:
-		{
-			CDUISize szScrollPos = GetScrollPos();
-			szScrollPos.cy -= GetLineRange(0).GetHeight();
-			SetScrollPos(szScrollPos);
-
-			break;
-		}
-		case -WHEEL_DELTA:
-		{
-			CDUISize szScrollPos = GetScrollPos();
-			szScrollPos.cy += GetLineRange(0).GetHeight();
-			SetScrollPos(szScrollPos);
-
-			break;
-		}
+		CDUISize szScrollPos = GetScrollPos();
+		szScrollPos.cy -= GetLineRange(0).GetHeight();
+		SetScrollPos(szScrollPos);
+	}
+	else
+	{
+		CDUISize szScrollPos = GetScrollPos();
+		szScrollPos.cy += GetLineRange(0).GetHeight();
+		SetScrollPos(szScrollPos);
 	}
 
 	__super::OnDuiMouseWheel(pt, Msg);

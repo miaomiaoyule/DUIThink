@@ -611,7 +611,7 @@ CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWnd *pWnd)
 	});
 	if (FindIt == m_vecDui.end())
 	{
-		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]不存在"), strName.c_str()));
+		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]不存在\n"), strName.c_str()));
 
 		return NULL;
 	}

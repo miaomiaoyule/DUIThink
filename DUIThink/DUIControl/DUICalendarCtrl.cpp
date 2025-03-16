@@ -879,20 +879,18 @@ void CDUICalendarCtrl::OnDuiMouseWheel(const DuiNotify &Notify)
 {
 	if (Notify.pNotifyCtrl != m_pListDayCtrl1 && Notify.pNotifyCtrl != m_pListDayCtrl2) return;
 
-	switch ((int)(short)HIWORD(Notify.wParam))
+	//direction
+	int nWheelDelta = (int)(short)HIWORD(Notify.wParam);
+	int nWheelCount = abs(nWheelDelta / WHEEL_DELTA);
+	bool bPositive = nWheelDelta > 0;
+
+	if (bPositive)
 	{
-		case WHEEL_DELTA:
-		{
-			SwitchYearMonth(true);
-
-			break;
-		}
-		case -WHEEL_DELTA:
-		{
-			SwitchYearMonth(false);
-
-			break;
-		}
+		SwitchYearMonth(true);
+	}
+	else
+	{
+		SwitchYearMonth(false);
 	}
 
 	return;
