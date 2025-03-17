@@ -274,13 +274,13 @@ void CDUIListViewCtrl::RefreshView()
 		&& GetTotalRange().cx != GetFixedWidth()
 		&& DuiDpiScaleBackCtrl(GetTotalRange().cx) != DuiDpiScaleBackCtrl(GetFixedWidth()))
 	{
-		SetFixedWidth(GetTotalRange().cx);
+		SetFixedWidth(DuiDpiScaleBackCtrl(GetTotalRange().cx));
 	}
 	if (IsAutoCalcHeight() 
 		&& GetTotalRange().cy != GetFixedHeight()
 		&& DuiDpiScaleBackCtrl(GetTotalRange().cy) != DuiDpiScaleBackCtrl(GetFixedHeight()))
 	{
-		SetFixedHeight(GetTotalRange().cy);
+		SetFixedHeight(DuiDpiScaleBackCtrl(GetTotalRange().cy));
 	}
 
 	CDUIControlBase::RefreshView();
