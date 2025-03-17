@@ -917,7 +917,26 @@ void CDUIListItemCtrl::PaintItemColor(HDC hDC)
 	{
 		pAttribute = ListInfo.pAttributeItemStatusColorNormal;
 	}
-	if (NULL == pAttribute) return;
+	if (NULL == pAttribute)
+	{
+		return;
+	}
+
+	CDUIRect rcBorderRound = GetRoundCorner();
+	if (rcBorderRound.left > 0
+		|| rcBorderRound.top > 0
+		|| rcBorderRound.right > 0
+		|| rcBorderRound.bottom > 0)
+	{
+		CDUIRect rcBorder = GetBorderLine();
+		int nSize = max(rcBorder.left, rcBorder.top);
+		nSize = max(nSize, rcBorder.right);
+		nSize = max(nSize, rcBorder.bottom);
+
+		pAttribute->FillRoundRect(hDC, GetBackRange(), nSize, rcBorderRound, IsColorHSL());
+
+		return;
+	}
 
 	pAttribute->FillRect(hDC, GetBackRange(), IsColorHSL());
 
