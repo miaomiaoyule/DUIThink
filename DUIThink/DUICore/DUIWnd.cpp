@@ -2344,10 +2344,10 @@ LRESULT CDUIWnd::OnNcHitTest(WPARAM wParam, LPARAM lParam)
 	GetCursorPos(&pt);
 	::ScreenToClient(m_hWnd, &pt);
 
-	RECT rcClient;
+	CDUIRect rcClient;
 	::GetClientRect(m_hWnd, &rcClient);
 
-	if (!::IsZoomed(m_hWnd))
+	if (false == ::IsZoomed(m_hWnd) && rcClient.PtInRect(pt))
 	{
 		RECT rcSizeBox = GetResizeTrack();
 		if (pt.y < rcClient.top + rcSizeBox.top)
