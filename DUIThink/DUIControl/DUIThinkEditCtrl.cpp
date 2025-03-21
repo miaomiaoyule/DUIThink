@@ -2570,7 +2570,7 @@ void CDUIThinkEditCtrl::PerformAdjustRichText()
 
 			//next line
 			bool bOverRight = nLeft + RichTextDrawItem.rcDraw.GetWidth() > rcRange.right;
-			bool bWordWrap = _T('\n') == RichTextDrawItem.strText.Left(0) || _T('\r') == RichTextDrawItem.strText.Left(0);
+			bool bWordWrap = _T('\n') == RichTextDrawItem.strText.Left(1) || _T('\r') == RichTextDrawItem.strText.Left(1);
 			if ((bOverRight || bWordWrap)
 				&& false == bSingleLine
 				&& 0 != nLineHeight)
