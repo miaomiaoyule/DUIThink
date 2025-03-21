@@ -1,3 +1,4 @@
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #ifndef __MM_REGMONITOR_H__
 #define __MM_REGMONITOR_H__
 
@@ -51,4 +52,5 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
+#endif
 #endif

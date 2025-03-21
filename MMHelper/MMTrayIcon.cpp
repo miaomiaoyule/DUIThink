@@ -1,6 +1,7 @@
 ﻿#include "StdAfx.h"
 #include "MMTrayIcon.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 CMMTrayIcon::CMMTrayIcon(void)
 {
@@ -293,3 +294,6 @@ RECT CMMTrayIcon::GetTrayIconPos(HWND hWndOwner)
 
 	return rcPos;
 }
+
+//////////////////////////////////////////////////////////////////////////
+#endif

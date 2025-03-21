@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MMDropSource.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 STDMETHODIMP CMMDropSource::QueryInterface(/* [in] */ REFIID riid, /* [iid_is][out] */ void __RPC_FAR *__RPC_FAR *ppvObject) 
 {
@@ -59,3 +60,5 @@ STDMETHODIMP CMMDropSource::GiveFeedback(
 
 	return S_OK;
 }
+
+#endif

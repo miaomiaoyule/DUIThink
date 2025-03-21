@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MMFile.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 #define FILEKIND(ext, type) mapFileType[ext] = type
 
@@ -1093,3 +1094,5 @@ bool CMMFile::OperatorSelectFolder(HWND hWndParent, OUT CMMString &strFolderSele
 
 	return true;
 }
+
+#endif

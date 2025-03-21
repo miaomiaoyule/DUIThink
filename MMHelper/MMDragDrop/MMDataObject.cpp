@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MMDataObject.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 IEnumFormatEtc::IEnumFormatEtc(const FormatEtcArray& ArrFE) 
 	: m_cRefCount(0)
@@ -377,3 +378,5 @@ HRESULT STDMETHODCALLTYPE CMMDataObject::EnumDAdvise(
 	//ATLTRACE ("CMMDataObject::EnumDAdvise\n");
 	return OLE_E_ADVISENOTSUPPORTED;
 }
+
+#endif

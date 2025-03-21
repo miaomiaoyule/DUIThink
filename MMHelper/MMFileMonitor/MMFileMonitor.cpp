@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "MMFileMonitor.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #define MSG_MONITOR_TASK				(WM_USER + 999)
 #define MSG_MONITOR_BEGIN				(WM_USER + 1000)
 
@@ -350,3 +351,5 @@ LRESULT CMMFileMonitor::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, b
 
 	return 0;
 }
+
+#endif

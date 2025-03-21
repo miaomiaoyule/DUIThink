@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MMProcess.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 bool CMMProcess::CreateFileLink(CMMString strFileFull, CMMString strPathTo, CMMString strNameLink)
 {
@@ -255,3 +256,5 @@ bool CMMProcess::GetProcessCmdline(HANDLE hProcess, CMMString &strCmdLine)
 
 	return true;
 }
+
+#endif

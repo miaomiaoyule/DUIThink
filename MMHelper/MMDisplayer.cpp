@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MMDisplayer.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hDCMonitor, LPRECT lprcMonitor, LPARAM dwData)
 {
@@ -653,4 +654,4 @@ CMMRectF CMMDisplayer::PerformAdjustPosition(IN CMMRectF rcAbsOfMonitor)
 	return rcAbsOfMonitor;
 }
 
-
+#endif

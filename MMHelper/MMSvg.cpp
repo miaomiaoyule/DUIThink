@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MMSvg.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 resvg_options *							g_pResvgOptions = NULL;
 
@@ -134,3 +135,6 @@ bool CMMSvg::ParseImage(IN const std::vector<BYTE> &vecData, IN int nScale, OUT 
 
 	return true;
 }
+
+//////////////////////////////////////////////////////////////////////////
+#endif

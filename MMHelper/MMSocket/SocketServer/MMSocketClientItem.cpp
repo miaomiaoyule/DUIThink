@@ -2,6 +2,7 @@
 #include "MMSocketClientItem.h"
 #include "WebSocket/SHA1.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 COverLapped::COverLapped(enOperationType OperationType)
 	: m_OperationType(OperationType)
@@ -800,3 +801,5 @@ void CMMSocketClientItem::DecryptBufferWS(std::vector<BYTE> &vecBuffer)
 
 	//return wDataSize;
 }
+
+#endif

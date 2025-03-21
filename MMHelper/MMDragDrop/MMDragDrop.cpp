@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "MMDragDrop.h"
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #include <strsafe.h>
 
 //////////////////////////////////////////////////////////////////////////
@@ -202,3 +204,5 @@ bool CMMDragDrop::QueryDrop(DWORD dwKeyState, LPDWORD pdwEffect)
 }
 #endif
 //////////////////////////////////////////////////////////////////////////
+
+#endif

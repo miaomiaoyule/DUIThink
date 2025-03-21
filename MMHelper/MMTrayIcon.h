@@ -1,4 +1,5 @@
-﻿#ifndef __MM_TRAYICON_H__
+﻿#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+#ifndef __MM_TRAYICON_H__
 #define __MM_TRAYICON_H__
 
 #pragma once
@@ -41,5 +42,6 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-#endif // 
+#endif 
+#endif
 

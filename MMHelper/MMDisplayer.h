@@ -1,3 +1,4 @@
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #ifndef __MM_DISPLAYER_H__
 #define __MM_DISPLAYER_H__
 
@@ -213,5 +214,6 @@ public:
 	static CMMRectF PerformAdjustPosition(IN CMMRectF rcAbsOfMonitor);
 };
 
+#endif
 #endif
 

@@ -1,3 +1,4 @@
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #ifndef __MM_PROCESS_H__
 #define __MM_PROCESS_H__
 
@@ -49,4 +50,5 @@ public:
 	static bool GetProcessCmdline(HANDLE hProcess, CMMString &strCmdLine);
 };
 
+#endif
 #endif

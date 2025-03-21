@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "MMTCPSocketServer.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 #define TIME_DETECT_ID					(1989)
 #define TIME_DETECT_ELAPSE				(20000)								//º‡≤‚ ±º‰
@@ -835,3 +836,4 @@ bool CMMTCPSocketServer::ValidClientItem(CMMSocketClientItem *pClientItem)
 Implement_MMCreateModule(MMTCPSocketServer);
 
 //////////////////////////////////////////////////////////////////////////
+#endif

@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 #include "MMService.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib, "Ws2_32.lib")
 
 //////////////////////////////////////////////////////////////////////////////////
-
-//状态信息
 struct tagAstatInfo
 {
 	ADAPTER_STATUS					AdapterStatus;						//网卡状态
@@ -14,8 +14,6 @@ struct tagAstatInfo
 };
 
 //////////////////////////////////////////////////////////////////////////////////
-
-//构造函数
 CMMService::CMMService()
 {
 }
@@ -1000,4 +998,6 @@ bool CMMService::GetImportIDEx(TCHAR szMachineID[Len_Machine_ID], TCHAR szCPUID[
 
 	return true;
 }
+
 //////////////////////////////////////////////////////////////////////////////////
+#endif

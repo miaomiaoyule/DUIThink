@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "MMVersion.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 #define _WIN32_WINNT_NT4                    0x0400
 #define _WIN32_WINNT_WIN2K                  0x0500
@@ -200,3 +201,5 @@ bool CMMVersion::IsWindowsServer()
 	
 	return false == VerifyVersionInfoW(&osvi, VER_PRODUCT_TYPE, dwlConditionMask);
 }
+
+#endif

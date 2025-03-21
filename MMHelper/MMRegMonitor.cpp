@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MMRegMonitor.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 CMMRegMonitor::CMMRegMonitor(HKEY hKeyMain, CMMString strKeySub)
 	: CMMServiceItem(&m_ThreadPool)
@@ -112,3 +113,6 @@ void CMMRegMonitor::OnSubStart(std::shared_ptr<M_MMRegMonitor_Start> pRecvData)
 
 	return;
 }
+
+//////////////////////////////////////////////////////////////////////////
+#endif

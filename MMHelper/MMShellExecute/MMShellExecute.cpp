@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "MMShellExecute.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 CMMShellExecute::CMMShellExecute()
 	: CMMServiceItem(&m_ThreadPool)
@@ -314,3 +315,5 @@ void CMMShellExecute::OnSubOpenMode(PtrMsgMMShellExecuteOpenMode pRecvData)
 	//return hr;
 	return;
 }
+
+#endif

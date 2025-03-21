@@ -1,6 +1,7 @@
 #include "Stdafx.h"
 #include "MMTCPSocketClient.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////						
 #define WM_SOCKET_EVENT					(WM_USER + 1989)	
 #define WM_SOCKET_SEND					(WM_USER + 1990)
@@ -698,3 +699,4 @@ LRESULT CMMTCPSocketClient::OnSubSocketEventClose(WPARAM wParam, LPARAM lParam)
 Implement_MMCreateModule(MMTCPSocketClient);
 
 //////////////////////////////////////////////////////////////////////////
+#endif

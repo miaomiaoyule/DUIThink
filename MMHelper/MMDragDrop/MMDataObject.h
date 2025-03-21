@@ -1,3 +1,4 @@
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #ifndef __MM_DATAOBJECT_H__
 #define __MM_DATAOBJECT_H__
 
@@ -94,4 +95,5 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
+#endif
 #endif

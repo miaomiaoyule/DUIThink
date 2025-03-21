@@ -1,6 +1,9 @@
 #ifndef __MM_HELPER_H__
 #define __MM_HELPER_H__
 
+#define __LINUX__
+//#define __APPLE__
+
 //////////////////////////////////////////////////////////////////////////
 //导出定义
 #ifndef MMHELPER_API
