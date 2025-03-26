@@ -32,6 +32,12 @@ void CDUIListItemCtrl::OnNotify(CDUIControlBase *pControl, const DuiNotify &Noti
 	{
 		switch (Notify.NotifyType)
 		{
+			case DuiNotify_KillFocus:
+			{
+				m_pEditTextCtrl->SetVisible(false);
+
+				break;
+			}
 			case DuiNotify_Edited:
 			{
 				CMMString strTextOld = GetText();
@@ -577,8 +583,10 @@ void CDUIListItemCtrl::PerformEditText()
 	CDUIAttributeTextStyle *pAttribute = GetAttributeTextStyleCur();
 	if (NULL == pAttribute) return;
 
+	tagDuiTextStyle TextStyle = pAttribute->GetTextStyle();
+	TextStyle.vecColorResSwitch = { Name_ColorBlack };
 	m_pEditTextCtrl->SetText(GetText());
-	m_pEditTextCtrl->SetTextStyle(pAttribute->GetTextStyle());
+	m_pEditTextCtrl->SetTextStyle(TextStyle);
 	m_pEditTextCtrl->SetFloat(true);
 	m_pEditTextCtrl->SetPadding(GetTextPadding());
 	m_pEditTextCtrl->SetVisible(true);

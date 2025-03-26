@@ -532,8 +532,6 @@ void CDUITreeNodeCtrl::PerformEditText()
 		m_pEditTextCtrl->SetBkColor({ Name_ColorWhite });
 		m_pEditTextCtrl->SetAutoSelAll(true);
 		m_pHorizContainerCtrl->InsertChild(m_pEditTextCtrl);
-
-		return;
 	}
 
 	m_pEditTextCtrl->RegisterControlCallBack(this);
