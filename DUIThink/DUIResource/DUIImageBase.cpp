@@ -143,7 +143,7 @@ tagDuiAnimateImageInfo CDUIImageBase::GetAnimateImageInfo(int nScale)
 {
 	if (NULL == GetHandle(nScale)) return {};
 
-	tagDuiImageInfo &ImageInfo = GetImageInfo(nScale);
+	tagDuiImageInfo ImageInfo = GetImageInfo(nScale);
 	if (NULL == ImageInfo.pImageAnimate) return tagDuiAnimateImageInfo();
 
 	tagDuiAnimateImageInfo AnimateImageInfo;
@@ -171,6 +171,8 @@ bool CDUIImageBase::IsAlpha()
 
 bool CDUIImageBase::IsScale(int nScale)
 {
+	GetImageInfo(nScale);
+
 	return m_mapDpiImageInfo[nScale].hBitmap;
 }
 

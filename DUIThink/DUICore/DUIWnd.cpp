@@ -1308,10 +1308,16 @@ bool CDUIWnd::SetDpi(int nDpi)
 {
 	if (nDpi == GetDpi()) return true;
 
+	int nDpiPre = GetDpi();
  	m_DpiInfo.SetDpi(nDpi);
 
 	AdjustWndSize();
 	AdjustWndPos();
+
+	if (m_pRootCtrl)
+	{
+		m_pRootCtrl->OnDpiChanged(nDpiPre);
+	}
 
 	return true;
 }
