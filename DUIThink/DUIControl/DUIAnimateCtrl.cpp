@@ -271,10 +271,11 @@ void CDUIAnimateCtrl::ConstructAnimateImageInfo()
 	CDUIImageBase *pImageBase = m_AttributeImageAnimate.GetCurImageBase();
 	if (NULL == pImageBase) return;
 
+	m_AnimateImageInfo = pImageBase->GetAnimateImageInfo(GetScale());
+
 	CDUISize szItem = GetSequenceFrameSize();
 	if (szItem.cx <= 0 || szItem.cy <= 0) return;
 
-	m_AnimateImageInfo = pImageBase->GetAnimateImageInfo(GetScale());
 	pImageBase->IsScale(GetScale()) ? szItem = DuiDpiScaleCtrl(szItem) : szItem;
 	m_AnimateImageInfo.AnimateImageType = AnimateImage_SequenceFrame;
 	m_AnimateImageInfo.nFrameCount = (pImageBase->GetWidth(GetScale()) / szItem.cx) * (pImageBase->GetHeight(GetScale()) / szItem.cy);
