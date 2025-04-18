@@ -4148,7 +4148,6 @@ typedef struct
 HZIPDT OpenZipU(void *z, unsigned int len, DWORD flags, const LPCTSTR pPassword)
 {
 #ifdef _UNICODE
-	//载入密码读资源
 	DWORD dwMinSize = 0;
 	LPSTR lpszStr = NULL;
 	dwMinSize = WideCharToMultiByte(CP_OEMCP, NULL, pPassword, -1, NULL, 0, NULL, FALSE);
