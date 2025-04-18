@@ -171,7 +171,7 @@ static void ConstructRhombPoints(const CDUIRect &rcDraw, int nLineSize, std::vec
 
 /////////////////////////////////////////////////////////////////////////////////////
 void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-	BYTE cbAlpha, bool bAlpha, bool bHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound)
+	BYTE cbAlpha, bool bAlpha, bool bHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (NULL == hDC || NULL == hBitmap) return;
@@ -205,16 +205,55 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 		rcDest = rcItem;
 		if (::IntersectRect(&rcTemp, &rcPaint, &rcDest))
 		{
-			if (bAlphaBlend)
+			do
 			{
-				lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(),
-					hDCClone, rcBmpPart.left, rcBmpPart.top, rcBmpPart.GetWidth(), rcBmpPart.GetHeight(), bf);
-			}
-			else
-			{
-				::BitBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), \
-					hDCClone, rcBmpPart.left, rcBmpPart.top, SRCCOPY);
-			}
+				if (Round_Normal == RoundType)
+				{
+					if (bAlphaBlend)
+					{
+						lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(),
+							hDCClone, rcBmpPart.left, rcBmpPart.top, rcBmpPart.GetWidth(), rcBmpPart.GetHeight(), bf);
+					}
+					else
+					{
+						::BitBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), \
+							hDCClone, rcBmpPart.left, rcBmpPart.top, SRCCOPY);
+					}
+
+					break;
+				}
+
+				Gdiplus::Graphics Gp(hDCPaint);
+				Gdiplus::Bitmap *pBmp = GetAlphaBitmap(hBitmap);
+				Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmp);
+				Gdiplus::GraphicsPath Path;
+				switch (RoundType)
+				{
+					case Round_Parallelogram:
+					{
+						ConstructParallelogramPath(rcItem, rcItem.GetWidth() / 3, 0, Path);
+						Gp.FillPath(&BrushBmp, &Path);
+
+						break;
+					}
+					case Round_Rhomb:
+					{
+						ConstructRhombPath(rcItem, 0, Path);
+						Gp.FillPath(&BrushBmp, &Path);
+
+						break;
+					}
+					case Round_Ellipse:
+					{
+						Gp.FillEllipse(&BrushBmp, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
+
+						break;
+					}
+				}
+
+				MMSafeDelete(pBmp);
+
+			} while (false);
 		}
 	}
 	else
@@ -562,7 +601,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 	return;
 }
 
-void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcRound)
+void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcRound, enDuiRoundType RoundType)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (NULL == hDC || NULL == pBmp) return;
@@ -571,27 +610,62 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 
-	if (rcRound.left > 0
-		|| rcRound.top > 0
-		|| rcRound.right > 0
-		|| rcRound.bottom > 0)
+	do
 	{
-		Gdiplus::GraphicsPath Path;
-		ConstructRoundPath(rcItem, rcRound, 0, Path);
+		if (Round_Normal == RoundType)
+		{
+			if (rcRound.left > 0
+				|| rcRound.top > 0
+				|| rcRound.right > 0
+				|| rcRound.bottom > 0)
+			{
+				Gdiplus::GraphicsPath Path;
+				ConstructRoundPath(rcItem, rcRound, 0, Path);
 
-		Gdiplus::TextureBrush Brush(pBmp);
-		Gp.FillPath(&Brush, &Path);
-	}
-	else
-	{
-		Gp.DrawImage(pBmp, Gdiplus::Rect(rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight()), 0, 0, pBmp->GetWidth(), pBmp->GetHeight(), UnitPixel);
-	}
+				Gdiplus::TextureBrush Brush(pBmp);
+				Gp.FillPath(&Brush, &Path);
+			}
+			else
+			{
+				Gp.DrawImage(pBmp, Gdiplus::Rect(rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight()), 0, 0, pBmp->GetWidth(), pBmp->GetHeight(), UnitPixel);
+			}
+
+			break;
+		}
+
+		Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmp);
+		Gdiplus::GraphicsPath Path;
+		switch (RoundType)
+		{
+			case Round_Parallelogram:
+			{
+				ConstructParallelogramPath(rcItem, rcItem.GetWidth() / 3, 0, Path);
+				Gp.FillPath(&BrushBmp, &Path);
+
+				break;
+			}
+			case Round_Rhomb:
+			{
+				ConstructRhombPath(rcItem, 0, Path);
+				Gp.FillPath(&BrushBmp, &Path);
+
+				break;
+			}
+			case Round_Ellipse:
+			{
+				Gp.FillEllipse(&BrushBmp, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
+
+				break;
+			}
+		}
+
+	} while (false);
 
 	return;
 }
 
 void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-	BYTE cbAlpha, bool bAlpha, bool bHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound)
+	BYTE cbAlpha, bool bAlpha, bool bHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (NULL == hDC || NULL == pBmp) return;
@@ -620,8 +694,43 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 		rcDest = rcItem;
 		if (::IntersectRect(&rcTemp, &rcPaint, &rcDest))
 		{
-			Gp.DrawImage(pBmp, Gdiplus::Rect(rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight()),
-				rcBmpPart.left, rcBmpPart.top, rcBmpPart.GetWidth(), rcBmpPart.GetHeight(), UnitPixel);
+			do
+			{
+				if (Round_Normal == RoundType)
+				{
+					Gp.DrawImage(pBmp, Gdiplus::Rect(rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight()),
+						rcBmpPart.left, rcBmpPart.top, rcBmpPart.GetWidth(), rcBmpPart.GetHeight(), UnitPixel);
+
+					break;
+				}
+
+				Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmp);
+				Gdiplus::GraphicsPath Path;
+				switch (RoundType)
+				{
+					case Round_Parallelogram:
+					{
+						ConstructParallelogramPath(rcItem, rcItem.GetWidth() / 3, 0, Path);
+						Gp.FillPath(&BrushBmp, &Path);
+
+						break;
+					}
+					case Round_Rhomb:
+					{
+						ConstructRhombPath(rcItem, 0, Path);
+						Gp.FillPath(&BrushBmp, &Path);
+
+						break;
+					}
+					case Round_Ellipse:
+					{
+						Gp.FillEllipse(&BrushBmp, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
+
+						break;
+					}
+				}
+
+			} while (false);
 		}
 	}
 	else
@@ -863,7 +972,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	return;
 }
 
-void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, const CDUIRect &rcItem, int nFrameCur, const CDUIRect &rcRound)
+void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, const CDUIRect &rcItem, int nFrameCur, const CDUIRect &rcRound, enDuiRoundType RoundType)
 {
 	if (NULL == pBmpAnimate) return;
 
@@ -882,13 +991,41 @@ void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, c
 		Gdiplus::Bitmap *pBmpClone = GenerateBitmap(pBmpAnimate, CDUISize(rcItem.GetWidth(), rcItem.GetHeight()));
 		if (NULL == pBmpClone) return;
 
+		Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmpClone);
+
 		//path
 		Gdiplus::GraphicsPath Path;
-		ConstructRoundPath(rcItem, rcRound, 0, Path);
+		switch (RoundType)
+		{
+			case Round_Parallelogram:
+			{
+				ConstructParallelogramPath(rcItem, rcItem.GetWidth() / 3, 0, Path);
+				Gp.FillPath(&BrushBmp, &Path);
 
-		Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmpClone);
-		Gp.FillPath(&BrushBmp, &Path);
+				break;
+			}
+			case Round_Rhomb:
+			{
+				ConstructRhombPath(rcItem, 0, Path);
+				Gp.FillPath(&BrushBmp, &Path);
 
+				break;
+			}
+			case Round_Ellipse:
+			{
+				Gp.FillEllipse(&BrushBmp, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
+
+				break;
+			}
+			default:
+			{
+				ConstructRoundPath(rcItem, rcRound, 0, Path);
+				Gp.FillPath(&BrushBmp, &Path);
+
+				break;
+			}
+		}
+		
 		MMSafeDelete(pBmpClone);
 
 		return;

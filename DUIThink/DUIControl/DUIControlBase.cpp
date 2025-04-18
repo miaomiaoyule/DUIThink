@@ -1818,8 +1818,24 @@ void CDUIControlBase::PaintBkColor(HDC hDC)
 
 void CDUIControlBase::PaintBkImage(HDC hDC)
 {
-	m_AttributeImageBack.Draw(hDC, m_rcAbsolute, m_rcPaint);
-
+	enDuiRoundType RoundType = GetRoundType();
+	if (Round_Parallelogram == RoundType)
+	{
+		m_AttributeImageBack.DrawParallelogram(hDC, m_rcAbsolute, m_rcPaint, false);
+	}
+	else if (Round_Rhomb == RoundType)
+	{
+		m_AttributeImageBack.DrawRhomb(hDC, m_rcAbsolute, m_rcPaint, false);
+	}
+	else if (Round_Ellipse == RoundType)
+	{
+		m_AttributeImageBack.DrawEllipse(hDC, m_rcAbsolute, m_rcPaint, false);
+	}
+	else
+	{
+		CDUIRect rcBorderRound = GetRoundCorner();
+		m_AttributeImageBack.Draw(hDC, m_rcAbsolute, m_rcPaint, false, rcBorderRound);
+	}
 	if (m_pBmpCustomBack)
 	{
 		int nDestWidth = 0, nDestHeight = 0;
