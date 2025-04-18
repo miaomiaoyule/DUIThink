@@ -1819,6 +1819,7 @@ void CDUIControlBase::PaintBkColor(HDC hDC)
 void CDUIControlBase::PaintBkImage(HDC hDC)
 {
 	enDuiRoundType RoundType = GetRoundType();
+	CDUIRect rcBorderRound = GetRoundCorner(); 
 	if (Round_Parallelogram == RoundType)
 	{
 		m_AttributeImageBack.DrawParallelogram(hDC, m_rcAbsolute, m_rcPaint, false);
@@ -1833,7 +1834,6 @@ void CDUIControlBase::PaintBkImage(HDC hDC)
 	}
 	else
 	{
-		CDUIRect rcBorderRound = GetRoundCorner();
 		m_AttributeImageBack.Draw(hDC, m_rcAbsolute, m_rcPaint, false, rcBorderRound);
 	}
 	if (m_pBmpCustomBack)
@@ -1915,7 +1915,7 @@ void CDUIControlBase::PaintBkImage(HDC hDC)
 			rcDest = GetAbsoluteRect();
 		}
 
-		CDUIRenderEngine::DrawImage(hDC, m_pBmpCustomBack, rcDest);
+		CDUIRenderEngine::DrawImage(hDC, m_pBmpCustomBack, rcDest, rcBorderRound, RoundType);
 	}
 
 	return;

@@ -958,7 +958,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 			Gdiplus::Bitmap *pBmp = GetAlphaBitmap(CopyBitmap(hDCPaint, rcItem));
 			if (NULL == pBmp) break;
 
-			DrawImage(hDC, pBmp, rcItem, rcRound);
+			DrawImage(hDC, pBmp, rcItem, rcRound, RoundType);
 
 			MMSafeDelete(pBmp);
 
