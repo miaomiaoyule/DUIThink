@@ -11,6 +11,7 @@ CDUIStaticCtrl::CDUIStaticCtrl(void)
 
 CDUIStaticCtrl::~CDUIStaticCtrl(void)
 {
+	return;
 }
 
 bool CDUIStaticCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)

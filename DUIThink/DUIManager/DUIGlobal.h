@@ -97,6 +97,7 @@ private:
 	MapDuiImageBase						m_mapResourceImage;
 	VecDuiFile							m_vecDui;
 	MapDuiModelStore					m_mapModelStore;
+	MapShadowText						m_mapShadowText;
 	VecIDuiResourceCallBack				m_vecIResourceCallBack;
 
 	//attribute
@@ -227,6 +228,9 @@ public:
 	HINSTANCE GetResourceDll();
 	HZIPDT GetResourceZipHandle();
 	enDuiFileResType GetDuiFileResType();
+
+	//shadow text
+	Gdiplus::Bitmap * GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle);
 	
 	//hsl
 	void GetHSL(short *H, short *S, short *L);

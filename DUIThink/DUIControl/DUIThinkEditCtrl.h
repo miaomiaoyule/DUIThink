@@ -51,7 +51,6 @@ protected:
 	int									m_nCaretColumnFrom = -1;
 	int									m_nIndexHistory = -1;
 	QueDuiThinkEditHistory				m_queHistory;
-	Gdiplus::Bitmap *					m_pBmpText = NULL;
 
 	//override
 protected:
@@ -167,7 +166,6 @@ protected:
 	void PaintText(HDC hDC) override;
 	virtual void PaintSelectBk(HDC hDC);
 	virtual void PaintCaret(HDC hDC);
-	virtual void PaintExtractBmpText(HDC hDC, tagDuiRichText RichTextInfo, CDUIRect rcRange, tagDuiTextStyle TextStyle);
 
 	//help
 protected:

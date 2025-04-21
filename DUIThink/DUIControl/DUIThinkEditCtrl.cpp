@@ -132,8 +132,6 @@ CDUIThinkEditCtrl::~CDUIThinkEditCtrl()
 		m_pWndOwner->RemovePreMessagePtr(this);
 	}
 
-	MMSafeDelete(m_pBmpText);
-
 	return;
 }
 
@@ -283,8 +281,6 @@ void CDUIThinkEditCtrl::RefreshView()
 			SetTimer(Dui_TimerAnimate_ID, Dui_TimerThinkEditAnimate_Elapse);
 		}
 	}
-
-	MMSafeDelete(m_pBmpText);
 
 	return;
 }
@@ -1914,29 +1910,6 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 			}
 		}
 
-		//shadow bmp
-		if (IsShadowText())
-		{
-			if (NULL == m_pBmpText 
-				|| m_pBmpText->GetWidth() != rcRange.GetWidth() 
-				|| m_pBmpText->GetHeight() != rcRange.GetHeight())
-			{
-				MMSafeDelete(m_pBmpText);
-
-				CDUIRect rcDraw(0, 0, rcRange.GetWidth(), rcRange.GetHeight());
-				CDUIMemDC MemDC(hDC, rcDraw, false);
-				CDUIRenderEngine::DrawRichText(MemDC, rcDraw, RichTextInfo, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
-				CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcDraw.GetWidth(), rcDraw);
-				m_pBmpText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
-			}
-			if (m_pBmpText)
-			{
-				CDUIRenderEngine::DrawImage(hDC, m_pBmpText, rcRange);
-			}
-
-			return;
-		}
-
 		//normal
 		CDUIRenderEngine::DrawRichText(hDC, rcRange, RichTextInfo, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
 
@@ -2007,48 +1980,6 @@ void CDUIThinkEditCtrl::PaintCaret(HDC hDC)
 	CDUIColorBase *pColorBase = pAttribute->GetColorBaseCur();
 	CDUIRect rcCaret = GetCaretPos();
 	CDUIRenderEngine::FillRect(hDC, rcCaret, m_bShowCaret ? (pColorBase ? pColorBase->GetColor() : 0xff000000) : 0x00000000);
-
-	return;
-}
-
-void CDUIThinkEditCtrl::PaintExtractBmpText(HDC hDC, tagDuiRichText RichTextInfo, CDUIRect rcRange, tagDuiTextStyle TextStyle)
-{
-	if (NULL == m_pBmpText
-		|| m_pBmpText->GetWidth() != rcRange.GetWidth()
-		|| m_pBmpText->GetHeight() != rcRange.GetHeight()
-		|| m_pWndOwner->IsWndLayered())
-	{
-		MMSafeDelete(m_pBmpText);
-
-		CDUIRect rcDraw(0, 0, rcRange.GetWidth(), rcRange.GetHeight());
-		CDUIMemDC MemDC(hDC, rcDraw, false);
-
-		if (false == IsFocused())
-		{
-			CDUIRenderEngine::DrawRichText(MemDC, rcDraw, RichTextInfo, false, m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
-		}
-		else
-		{
-			MapLineVecDuiRichTextDraw mapLineVecRichTextDraw = m_mapLineVecRichTextDraw;
-			for (auto &LineVecRichTextDraw : mapLineVecRichTextDraw)
-			{
-				for (auto &RichTextDrawItem : LineVecRichTextDraw.second)
-				{
-					RichTextDrawItem.rcDraw.Offset(-rcRange.left, -rcRange.top);
-				}
-			}
-
-			CDUIRenderEngine::DrawRichText(MemDC, rcDraw, mapLineVecRichTextDraw, TextStyle.dwTextStyle, false, m_pWndOwner->GetGdiplusRenderTextType());
-		}
-
-		CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcDraw.GetWidth(), rcDraw);
-		m_pBmpText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
-		MemDC.ResetDC();
-	}
-	if (m_pBmpText)
-	{
-		CDUIRenderEngine::DrawImage(hDC, m_pBmpText, rcRange);
-	}
 
 	return;
 }

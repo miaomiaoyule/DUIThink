@@ -37,7 +37,7 @@ protected:
 	//variant
 protected:
 	bool								m_bNeedMeasureSize = true;
-
+	
 	//override
 protected:
 	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;

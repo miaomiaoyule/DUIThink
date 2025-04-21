@@ -24,7 +24,7 @@ void CDUIRenderClip::GenerateClip(HDC hDC, RECT rcPaint)
 	m_hOldRgn = ::CreateRectRgnIndirect(&rcClip);
 	m_hRgn = ::CreateRectRgnIndirect(&rcPaint);
 	::SelectClipRgn(hDC, m_hRgn);
-	
+
 	return;
 }
 
@@ -144,7 +144,7 @@ static void ConstructParallelogramPath(const CDUIRect &rcDraw, int nRound, int n
 	Path.AddLine(rcDraw.right - nLineSize, rcDraw.top, rcDraw.right - nLineSize - nRound, rcDraw.bottom); //right
 	Path.AddLine(rcDraw.right - nRound, rcDraw.bottom - nLineSize, rcDraw.left, rcDraw.bottom - nLineSize); //bottom
 	Path.AddLine(rcDraw.left, rcDraw.bottom, rcDraw.left + nRound, rcDraw.top); //left
-	
+
 	return;
 }
 
@@ -187,157 +187,66 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 	if (NULL == lpAlphaBlend) lpAlphaBlend = AlphaBitBlt;
 
 	//scene
-	bool bRoundPaint = (rcRound.left > 0 || rcRound.top > 0 || rcRound.right > 0 || rcRound.bottom > 0);
+	bool bRoundPaint = (rcRound.left > 0 || rcRound.top > 0 || rcRound.right > 0 || rcRound.bottom > 0 || Round_Normal != RoundType);
 	CDUIMemDC *pMemDC = bRoundPaint ? new CDUIMemDC(hDC, rcItem, CDUIRect(0, 0, rcItem.left + rcItem.GetWidth(), rcItem.top + rcItem.GetHeight())) : NULL;
 	HDC hDCPaint = pMemDC ? *pMemDC : hDC;
 	HDC hDCClone = ::CreateCompatibleDC(hDC);
 	HBITMAP hBmpOldClone = (HBITMAP)::SelectObject(hDCClone, hBitmap);
-	int nSaveDC = SaveDC(hDC);
+	int nSaveDC = SaveDC(hDCPaint);
 
 	//draw
 	bool bAlphaBlend = (lpAlphaBlend && (bAlpha || cbAlpha < 255));
 	BLENDFUNCTION bf = { AC_SRC_OVER, 0, cbAlpha, AC_SRC_ALPHA };
 
-	if (rcItem.GetWidth() == rcBmpPart.GetWidth() \
-		&& rcItem.GetHeight() == rcBmpPart.GetHeight() \
-		&& rcCorner.left == 0 && rcCorner.right == 0 && rcCorner.top == 0 && rcCorner.bottom == 0)
+	//middle
+	if (false == bHole)
 	{
-		rcDest = rcItem;
-		if (::IntersectRect(&rcTemp, &rcPaint, &rcDest))
+		do
 		{
-			do
+			rcDest.Offset(rcItem.left - rcDest.left, rcItem.top - rcDest.top);
+			rcDest.left += rcCorner.left;
+			rcDest.top += rcCorner.top;
+			rcDest.right = rcItem.right - rcCorner.right;
+			rcDest.bottom = rcItem.bottom - rcCorner.bottom;
+			if (false == ::IntersectRect(&rcTemp, &rcPaint, &rcDest)) break;
+
+			if (false == bTiledX && false == bTiledY)
 			{
-				if (Round_Normal == RoundType)
+				if (bAlphaBlend)
 				{
-					if (bAlphaBlend)
-					{
-						lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(),
-							hDCClone, rcBmpPart.left, rcBmpPart.top, rcBmpPart.GetWidth(), rcBmpPart.GetHeight(), bf);
-					}
-					else
-					{
-						::BitBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), \
-							hDCClone, rcBmpPart.left, rcBmpPart.top, SRCCOPY);
-					}
-
-					break;
+					lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
+						rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+						rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, \
+						rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, bf);
+				}
+				else
+				{
+					::StretchBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
+						rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+						rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, \
+						rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, SRCCOPY);
 				}
 
-				Gdiplus::Graphics Gp(hDCPaint);
-				Gdiplus::Bitmap *pBmp = GetAlphaBitmap(hBitmap);
-				Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmp);
-				Gdiplus::GraphicsPath Path;
-				switch (RoundType)
-				{
-					case Round_Parallelogram:
-					{
-						ConstructParallelogramPath(rcItem, rcItem.GetWidth() / 3, 0, Path);
-						Gp.FillPath(&BrushBmp, &Path);
+				break;
+			}
 
-						break;
-					}
-					case Round_Rhomb:
-					{
-						ConstructRhombPath(rcItem, 0, Path);
-						Gp.FillPath(&BrushBmp, &Path);
-
-						break;
-					}
-					case Round_Ellipse:
-					{
-						Gp.FillEllipse(&BrushBmp, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
-
-						break;
-					}
-				}
-
-				MMSafeDelete(pBmp);
-
-			} while (false);
-		}
-	}
-	else
-	{
-		//middle
-		if (false == bHole)
-		{
-			do
+			if (bTiledX && bTiledY)
 			{
-				rcDest.Offset(rcItem.left - rcDest.left, rcItem.top - rcDest.top);
-				rcDest.left += rcCorner.left;
-				rcDest.top += rcCorner.top;
-				rcDest.right = rcItem.right - rcCorner.right;
-				rcDest.bottom = rcItem.bottom - rcCorner.bottom;
-				if (false == ::IntersectRect(&rcTemp, &rcPaint, &rcDest)) break;
-
-				if (!bTiledX && !bTiledY)
+				LONG lWidth = rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right;
+				LONG lHeight = rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom;
+				int iTimesX = (rcDest.GetWidth() + lWidth - 1) / lWidth;
+				int iTimesY = (rcDest.GetHeight() + lHeight - 1) / lHeight;
+				for (int j = 0; j < iTimesY; ++j)
 				{
-					if (bAlphaBlend)
+					LONG lDestTop = rcDest.top + lHeight * j;
+					LONG lDestBottom = rcDest.top + lHeight * (j + 1);
+					LONG lDrawHeight = lHeight;
+					if (lDestBottom > rcDest.bottom)
 					{
-						lpAlphaBlend(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
-							rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
-							rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, \
-							rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, bf);
+						lDrawHeight -= lDestBottom - rcDest.bottom;
+						lDestBottom = rcDest.bottom;
 					}
-					else
-					{
-						::StretchBlt(hDCPaint, rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight(), hDCClone, \
-							rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
-							rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, \
-							rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, SRCCOPY);
-					}
-
-					break;
-				}
-
-				if (bTiledX && bTiledY)
-				{
-					LONG lWidth = rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right;
-					LONG lHeight = rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom;
-					int iTimesX = (rcDest.GetWidth() + lWidth - 1) / lWidth;
-					int iTimesY = (rcDest.GetHeight() + lHeight - 1) / lHeight;
-					for (int j = 0; j < iTimesY; ++j)
-					{
-						LONG lDestTop = rcDest.top + lHeight * j;
-						LONG lDestBottom = rcDest.top + lHeight * (j + 1);
-						LONG lDrawHeight = lHeight;
-						if (lDestBottom > rcDest.bottom)
-						{
-							lDrawHeight -= lDestBottom - rcDest.bottom;
-							lDestBottom = rcDest.bottom;
-						}
-						for (int i = 0; i < iTimesX; ++i)
-						{
-							LONG lDestLeft = rcDest.left + lWidth * i;
-							LONG lDestRight = rcDest.left + lWidth * (i + 1);
-							LONG lDrawWidth = lWidth;
-							if (lDestRight > rcDest.right)
-							{
-								lDrawWidth -= lDestRight - rcDest.right;
-								lDestRight = rcDest.right;
-							}
-
-							if (bAlphaBlend)
-							{
-								lpAlphaBlend(hDCPaint, lDestLeft, lDestTop, lDestRight - lDestLeft, lDestBottom - lDestTop, hDCClone,
-									rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, lDrawWidth, lDrawHeight, bf);
-							}
-							else
-							{
-								::BitBlt(hDCPaint, lDestLeft, lDestTop, lDestRight - lDestLeft, lDestBottom - lDestTop, hDCClone, \
-									rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, SRCCOPY);
-							}
-						}
-					}
-
-					break;
-				}
-
-				if (bTiledX)
-				{
-					LONG lWidth = rcBmpPart.right - rcBmpPart.left - rcCorner.left - rcCorner.right;
-					int iTimes = (rcDest.GetWidth() + lWidth - 1) / lWidth;
-					for (int i = 0; i < iTimes; ++i)
+					for (int i = 0; i < iTimesX; ++i)
 					{
 						LONG lDestLeft = rcDest.left + lWidth * i;
 						LONG lDestRight = rcDest.left + lWidth * (i + 1);
@@ -347,55 +256,89 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 							lDrawWidth -= lDestRight - rcDest.right;
 							lDestRight = rcDest.right;
 						}
+
 						if (bAlphaBlend)
 						{
-							lpAlphaBlend(hDCPaint, lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.GetHeight(),
-								hDCClone, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
-								lDrawWidth, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, bf);
+							lpAlphaBlend(hDCPaint, lDestLeft, lDestTop, lDestRight - lDestLeft, lDestBottom - lDestTop, hDCClone,
+								rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, lDrawWidth, lDrawHeight, bf);
 						}
 						else
 						{
-							::StretchBlt(hDCPaint, lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.GetHeight(),
-								hDCClone, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
-								lDrawWidth, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, SRCCOPY);
+							::BitBlt(hDCPaint, lDestLeft, lDestTop, lDestRight - lDestLeft, lDestBottom - lDestTop, hDCClone, \
+								rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, SRCCOPY);
 						}
 					}
-
-					break;
 				}
 
-				//bTiledY
+				break;
+			}
+
+			if (bTiledX)
+			{
+				LONG lWidth = rcBmpPart.right - rcBmpPart.left - rcCorner.left - rcCorner.right;
+				int iTimes = (rcDest.GetWidth() + lWidth - 1) / lWidth;
+				for (int i = 0; i < iTimes; ++i)
 				{
-					LONG lHeight = rcBmpPart.bottom - rcBmpPart.top - rcCorner.top - rcCorner.bottom;
-					int iTimes = (rcDest.GetHeight() + lHeight - 1) / lHeight;
-					for (int i = 0; i < iTimes; ++i)
+					LONG lDestLeft = rcDest.left + lWidth * i;
+					LONG lDestRight = rcDest.left + lWidth * (i + 1);
+					LONG lDrawWidth = lWidth;
+					if (lDestRight > rcDest.right)
 					{
-						LONG lDestTop = rcDest.top + lHeight * i;
-						LONG lDestBottom = rcDest.top + lHeight * (i + 1);
-						LONG lDrawHeight = lHeight;
-						if (lDestBottom > rcDest.bottom)
-						{
-							lDrawHeight -= lDestBottom - rcDest.bottom;
-							lDestBottom = rcDest.bottom;
-						}
-						if (bAlphaBlend)
-						{
-							lpAlphaBlend(hDCPaint, rcDest.left, lDestTop, rcDest.GetWidth(), lDestBottom - lDestTop,
-								hDCClone, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
-								rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, lDrawHeight, bf);
-						}
-						else
-						{
-							::StretchBlt(hDCPaint, rcDest.left, lDestTop, rcDest.GetWidth(), lDestBottom - lDestTop,
-								hDCClone, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
-								rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, lDrawHeight, SRCCOPY);
-						}
+						lDrawWidth -= lDestRight - rcDest.right;
+						lDestRight = rcDest.right;
+					}
+					if (bAlphaBlend)
+					{
+						lpAlphaBlend(hDCPaint, lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.GetHeight(),
+							hDCClone, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+							lDrawWidth, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, bf);
+					}
+					else
+					{
+						::StretchBlt(hDCPaint, lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.GetHeight(),
+							hDCClone, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+							lDrawWidth, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, SRCCOPY);
 					}
 				}
 
-			} while (false);
-		}
+				break;
+			}
 
+			//bTiledY
+			{
+				LONG lHeight = rcBmpPart.bottom - rcBmpPart.top - rcCorner.top - rcCorner.bottom;
+				int iTimes = (rcDest.GetHeight() + lHeight - 1) / lHeight;
+				for (int i = 0; i < iTimes; ++i)
+				{
+					LONG lDestTop = rcDest.top + lHeight * i;
+					LONG lDestBottom = rcDest.top + lHeight * (i + 1);
+					LONG lDrawHeight = lHeight;
+					if (lDestBottom > rcDest.bottom)
+					{
+						lDrawHeight -= lDestBottom - rcDest.bottom;
+						lDestBottom = rcDest.bottom;
+					}
+					if (bAlphaBlend)
+					{
+						lpAlphaBlend(hDCPaint, rcDest.left, lDestTop, rcDest.GetWidth(), lDestBottom - lDestTop,
+							hDCClone, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+							rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, lDrawHeight, bf);
+					}
+					else
+					{
+						::StretchBlt(hDCPaint, rcDest.left, lDestTop, rcDest.GetWidth(), lDestBottom - lDestTop,
+							hDCClone, rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+							rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, lDrawHeight, SRCCOPY);
+					}
+				}
+			}
+
+		} while (false);
+	}
+
+	//corner
+	if (rcCorner.left > 0 || rcCorner.right > 0 || rcCorner.top > 0 || rcCorner.bottom > 0)
+	{
 		//left-top
 		if (rcCorner.left > 0 && rcCorner.top > 0)
 		{
@@ -577,7 +520,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 
 	::SelectObject(hDCClone, hBmpOldClone);
 	MMSafeDeleteDC(hDCClone);
-	RestoreDC(hDC, nSaveDC);
+	RestoreDC(hDCPaint, nSaveDC);
 
 	//round
 	if (bRoundPaint)
@@ -587,12 +530,12 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 			Gdiplus::Bitmap *pBmp = GetAlphaBitmap(CopyBitmap(hDCPaint, rcItem));
 			if (NULL == pBmp) break;
 
-			DrawImage(hDC, pBmp, rcItem, rcRound);
+			DrawImage(hDC, pBmp, rcItem, rcRound, RoundType);
 
 			MMSafeDelete(pBmp);
 
 		} while (false);
-		
+
 		pMemDC->ResetDC();
 	}
 
@@ -670,13 +613,23 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (NULL == hDC || NULL == pBmp) return;
 
+	//no nine grid and roundpaint
+	bool bRoundPaint = (rcRound.left > 0 || rcRound.top > 0 || rcRound.right > 0 || rcRound.bottom > 0 || Round_Normal != RoundType);
+	if (bRoundPaint
+		&& false == bHole
+		&& false == bTiledX
+		&& false == bTiledY
+		&& rcCorner.left == 0 && rcCorner.right == 0 && rcCorner.top == 0 && rcCorner.bottom == 0)
+	{
+		return DrawImage(hDC, pBmp, rcItem, rcRound, RoundType);
+	}
+
 	//verify
 	CDUIRect rcTemp;
 	CDUIRect rcDest;
 	if (false == IntersectRect(&rcTemp, &rcItem, &rcPaint)) return;
 
 	//scene
-	bool bRoundPaint = (rcRound.left > 0 || rcRound.top > 0 || rcRound.right > 0 || rcRound.bottom > 0);
 	CDUIMemDC *pMemDC = bRoundPaint ? new CDUIMemDC(hDC, rcItem, CDUIRect(0, 0, rcItem.left + rcItem.GetWidth(), rcItem.top + rcItem.GetHeight())) : NULL;
 	HDC hDCPaint = pMemDC ? *pMemDC : hDC;
 
@@ -686,117 +639,45 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	//Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 	//Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 
-	//draw
-	if (rcItem.GetWidth() == rcBmpPart.GetWidth() \
-		&& rcItem.GetHeight() == rcBmpPart.GetHeight() \
-		&& rcCorner.left == 0 && rcCorner.right == 0 && rcCorner.top == 0 && rcCorner.bottom == 0)
+	//draw middle
+	if (false == bHole)
 	{
-		rcDest = rcItem;
-		if (::IntersectRect(&rcTemp, &rcPaint, &rcDest))
+		do
 		{
-			do
+			rcDest.Offset(rcItem.left - rcDest.left, rcItem.top - rcDest.top);
+			rcDest.left += rcCorner.left;
+			rcDest.top += rcCorner.top;
+			rcDest.right = rcItem.right - rcCorner.right;
+			rcDest.bottom = rcItem.bottom - rcCorner.bottom;
+			if (false == ::IntersectRect(&rcTemp, &rcPaint, &rcDest)) break;
+
+			if (false == bTiledX && false == bTiledY)
 			{
-				if (Round_Normal == RoundType)
-				{
-					Gp.DrawImage(pBmp, Gdiplus::Rect(rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight()),
-						rcBmpPart.left, rcBmpPart.top, rcBmpPart.GetWidth(), rcBmpPart.GetHeight(), UnitPixel);
+				Gp.DrawImage(pBmp, Gdiplus::Rect(rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight()), \
+					rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+					rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, \
+					rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, UnitPixel);
 
-					break;
-				}
+				break;
+			}
 
-				Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmp);
-				Gdiplus::GraphicsPath Path;
-				switch (RoundType)
-				{
-					case Round_Parallelogram:
-					{
-						ConstructParallelogramPath(rcItem, rcItem.GetWidth() / 3, 0, Path);
-						Gp.FillPath(&BrushBmp, &Path);
-
-						break;
-					}
-					case Round_Rhomb:
-					{
-						ConstructRhombPath(rcItem, 0, Path);
-						Gp.FillPath(&BrushBmp, &Path);
-
-						break;
-					}
-					case Round_Ellipse:
-					{
-						Gp.FillEllipse(&BrushBmp, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
-
-						break;
-					}
-				}
-
-			} while (false);
-		}
-	}
-	else
-	{
-		//middle
-		if (false == bHole)
-		{
-			do
+			if (bTiledX && bTiledY)
 			{
-				rcDest.Offset(rcItem.left - rcDest.left, rcItem.top - rcDest.top);
-				rcDest.left += rcCorner.left;
-				rcDest.top += rcCorner.top;
-				rcDest.right = rcItem.right - rcCorner.right;
-				rcDest.bottom = rcItem.bottom - rcCorner.bottom;
-				if (false == ::IntersectRect(&rcTemp, &rcPaint, &rcDest)) break;
-
-				if (!bTiledX && !bTiledY)
+				LONG lWidth = rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right;
+				LONG lHeight = rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom;
+				int iTimesX = (rcDest.GetWidth() + lWidth - 1) / lWidth;
+				int iTimesY = (rcDest.GetHeight() + lHeight - 1) / lHeight;
+				for (int j = 0; j < iTimesY; ++j)
 				{
-					Gp.DrawImage(pBmp, Gdiplus::Rect(rcDest.left, rcDest.top, rcDest.GetWidth(), rcDest.GetHeight()), \
-						rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
-						rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, \
-						rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, UnitPixel);
-
-					break;
-				}
-
-				if (bTiledX && bTiledY)
-				{
-					LONG lWidth = rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right;
-					LONG lHeight = rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom;
-					int iTimesX = (rcDest.GetWidth() + lWidth - 1) / lWidth;
-					int iTimesY = (rcDest.GetHeight() + lHeight - 1) / lHeight;
-					for (int j = 0; j < iTimesY; ++j)
+					LONG lDestTop = rcDest.top + lHeight * j;
+					LONG lDestBottom = rcDest.top + lHeight * (j + 1);
+					LONG lDrawHeight = lHeight;
+					if (lDestBottom > rcDest.bottom)
 					{
-						LONG lDestTop = rcDest.top + lHeight * j;
-						LONG lDestBottom = rcDest.top + lHeight * (j + 1);
-						LONG lDrawHeight = lHeight;
-						if (lDestBottom > rcDest.bottom)
-						{
-							lDrawHeight -= lDestBottom - rcDest.bottom;
-							lDestBottom = rcDest.bottom;
-						}
-						for (int i = 0; i < iTimesX; ++i)
-						{
-							LONG lDestLeft = rcDest.left + lWidth * i;
-							LONG lDestRight = rcDest.left + lWidth * (i + 1);
-							LONG lDrawWidth = lWidth;
-							if (lDestRight > rcDest.right)
-							{
-								lDrawWidth -= lDestRight - rcDest.right;
-								lDestRight = rcDest.right;
-							}
-
-							Gp.DrawImage(pBmp, Gdiplus::Rect(lDestLeft, lDestTop, lDestRight - lDestLeft, lDestBottom - lDestTop),
-								rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, lDrawWidth, lDrawHeight, UnitPixel);
-						}
+						lDrawHeight -= lDestBottom - rcDest.bottom;
+						lDestBottom = rcDest.bottom;
 					}
-
-					break;
-				}
-
-				if (bTiledX)
-				{
-					LONG lWidth = rcBmpPart.right - rcBmpPart.left - rcCorner.left - rcCorner.right;
-					int iTimes = (rcDest.GetWidth() + lWidth - 1) / lWidth;
-					for (int i = 0; i < iTimes; ++i)
+					for (int i = 0; i < iTimesX; ++i)
 					{
 						LONG lDestLeft = rcDest.left + lWidth * i;
 						LONG lDestRight = rcDest.left + lWidth * (i + 1);
@@ -806,40 +687,66 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 							lDrawWidth -= lDestRight - rcDest.right;
 							lDestRight = rcDest.right;
 						}
-						
-						Gp.DrawImage(pBmp, Gdiplus::Rect(lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.GetHeight()),
-							rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
-							lDrawWidth, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, UnitPixel);
 
+						Gp.DrawImage(pBmp, Gdiplus::Rect(lDestLeft, lDestTop, lDestRight - lDestLeft, lDestBottom - lDestTop),
+							rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, lDrawWidth, lDrawHeight, UnitPixel);
 					}
-
-					break;
 				}
 
-				//bTiledY
+				break;
+			}
+
+			if (bTiledX)
+			{
+				LONG lWidth = rcBmpPart.right - rcBmpPart.left - rcCorner.left - rcCorner.right;
+				int iTimes = (rcDest.GetWidth() + lWidth - 1) / lWidth;
+				for (int i = 0; i < iTimes; ++i)
 				{
-					LONG lHeight = rcBmpPart.bottom - rcBmpPart.top - rcCorner.top - rcCorner.bottom;
-					int iTimes = (rcDest.GetHeight() + lHeight - 1) / lHeight;
-					for (int i = 0; i < iTimes; ++i)
+					LONG lDestLeft = rcDest.left + lWidth * i;
+					LONG lDestRight = rcDest.left + lWidth * (i + 1);
+					LONG lDrawWidth = lWidth;
+					if (lDestRight > rcDest.right)
 					{
-						LONG lDestTop = rcDest.top + lHeight * i;
-						LONG lDestBottom = rcDest.top + lHeight * (i + 1);
-						LONG lDrawHeight = lHeight;
-						if (lDestBottom > rcDest.bottom)
-						{
-							lDrawHeight -= lDestBottom - rcDest.bottom;
-							lDestBottom = rcDest.bottom;
-						}
-						
-						Gp.DrawImage(pBmp, Gdiplus::Rect(rcDest.left, lDestTop, rcDest.GetWidth(), lDestBottom - lDestTop),
-							rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
-							rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, lDrawHeight, UnitPixel);
+						lDrawWidth -= lDestRight - rcDest.right;
+						lDestRight = rcDest.right;
 					}
+
+					Gp.DrawImage(pBmp, Gdiplus::Rect(lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.GetHeight()),
+						rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+						lDrawWidth, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, UnitPixel);
+
 				}
 
-			} while (false);
-		}
+				break;
+			}
 
+			//bTiledY
+			{
+				LONG lHeight = rcBmpPart.bottom - rcBmpPart.top - rcCorner.top - rcCorner.bottom;
+				int iTimes = (rcDest.GetHeight() + lHeight - 1) / lHeight;
+				for (int i = 0; i < iTimes; ++i)
+				{
+					LONG lDestTop = rcDest.top + lHeight * i;
+					LONG lDestBottom = rcDest.top + lHeight * (i + 1);
+					LONG lDrawHeight = lHeight;
+					if (lDestBottom > rcDest.bottom)
+					{
+						lDrawHeight -= lDestBottom - rcDest.bottom;
+						lDestBottom = rcDest.bottom;
+					}
+
+					Gp.DrawImage(pBmp, Gdiplus::Rect(rcDest.left, lDestTop, rcDest.GetWidth(), lDestBottom - lDestTop),
+						rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
+						rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right, lDrawHeight, UnitPixel);
+				}
+			}
+
+		} while (false);
+	}
+
+	//draw corner
+	if (rcCorner.left > 0 || rcCorner.right > 0 || rcCorner.top > 0 || rcCorner.bottom > 0)
+	{
 		//left-top
 		if (rcCorner.left > 0 && rcCorner.top > 0)
 		{
@@ -981,9 +888,9 @@ void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, c
 
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-	
+
 	//round image
-	if (rcRound.left > 0 
+	if (rcRound.left > 0
 		|| rcRound.top > 0
 		|| rcRound.right > 0
 		|| rcRound.bottom > 0)
@@ -1025,14 +932,14 @@ void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, c
 				break;
 			}
 		}
-		
+
 		MMSafeDelete(pBmpClone);
 
 		return;
 	}
 
 	Gp.DrawImage(pBmpAnimate, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
-	
+
 	return;
 }
 
@@ -1173,7 +1080,7 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUI
 		{
 			Path.AddLine(rcDraw.left + rcRound.left, rcDraw.top, rcDraw.right - rcRound.top, rcDraw.top);
 		}
-		
+
 		//round path
 		ConstructRoundPath(rcDraw, rcRound, nLineSize, Path);
 
@@ -1411,9 +1318,10 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 	//shadow
 	if (bShadow)
 	{
-//#ifdef _DLL
+		//#ifdef _DLL
 		do
 		{
+			if (dwTextStyle & DT_CALCRECT)
 			{
 				int nSaveDC = SaveDC(hDC);
 				::SetBkMode(hDC, TRANSPARENT);
@@ -1423,40 +1331,25 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 				::SelectObject(hDC, hFontOld);
 				RestoreDC(hDC, nSaveDC);
 
-				if (dwTextStyle & DT_CALCRECT)
-				{
-					rcItem.right += 4;
-					rcItem.bottom += 4;
-				}
+				rcItem.right += 4;
+				rcItem.bottom += 4;
+				
+				break;
+			}
+
+			//find
+			Gdiplus::Bitmap *pBmpText = CDUIGlobal::GetInstance()->GetShadowTextBmp(rcItem, hFont, lpszText, dwTextColor, dwTextStyle);
+			if (pBmpText)
+			{
+				DrawImage(hDC, pBmpText, rcItem);
 
 				break;
 			}
 
-			LPBYTE pBmpBits = NULL;
-			HDC hMemDC = ::CreateCompatibleDC(hDC);
-			HBITMAP hBitmap = CDUIRenderEngine::CreateARGB32Bitmap(hDC, rcItem.GetWidth(), rcItem.GetHeight(), &pBmpBits);
-			if (NULL == hMemDC || NULL == hBitmap || NULL == pBmpBits) break;
-
-			CDUIRect rcDraw(0, 0, rcItem.GetWidth(), rcItem.GetHeight());
-			HBITMAP hBmpOld = (HBITMAP)SelectObject(hMemDC, hBitmap);
-			::SetBkMode(hMemDC, TRANSPARENT);
-			HFONT hFontOld = (HFONT)::SelectObject(hMemDC, hFont);
-			::DrawShadowText(hMemDC, lpszText, -1, &rcDraw, dwTextStyle | DT_NOPREFIX, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)), RGB(0, 0, 0), 2, 2);
-
-			BLENDFUNCTION Blend = { AC_SRC_OVER, 0, 255, AC_SRC_ALPHA };
-			RestorePixelAlpha(pBmpBits, rcDraw.GetWidth(), rcDraw);
-			AlphaBitBlt(hDC, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight(),
-				hMemDC, rcDraw.left, rcDraw.top, rcDraw.GetWidth(), rcDraw.GetHeight(), Blend);
-
-			::SelectObject(hMemDC, hFontOld);
-			::SelectObject(hMemDC, hBmpOld);
-			MMSafeDeleteObject(hBitmap);
-			MMSafeDeleteDC(hMemDC);
-
 		} while (false);
 
 		return;
-//#endif
+		//#endif
 	}
 
 	//gdiplus
@@ -2028,7 +1921,7 @@ bool CDUIRenderEngine::SaveImage(HBITMAP hBitmap, CMMString strFile, bool bAlpah
 	{
 		ImageFormat = Gdiplus::ImageFormatBMP;
 	}
-	else if(0 == strExt.CompareNoCase(_T("emf")))
+	else if (0 == strExt.CompareNoCase(_T("emf")))
 	{
 		ImageFormat = Gdiplus::ImageFormatEMF;
 	}
@@ -2201,9 +2094,9 @@ void CDUIMemDC::ResetDC()
 	{
 		SelectObject(m_hMemDC, m_hOldBitmap);
 	}
-	
+
 	MMSafeDeleteObject(m_hBitmap);
-	MMSafeDeleteObject(m_hMemDC);
+	MMSafeDeleteDC(m_hMemDC);
 	m_pBmpBits = NULL;
 
 	return;

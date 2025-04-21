@@ -23,7 +23,7 @@ public:
 
 	//²Ã¼ô
 	CDUIRect RectClip(const CDUIRect& rcModal, const CDUIRect& rect);
-	bool Empty();
+	bool Empty() const;
 	void Clear();
 	bool PtInRect(const CDUIPoint &pt);
 	bool RcInRect(const CDUIRect &rc);
