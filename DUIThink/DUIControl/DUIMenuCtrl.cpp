@@ -833,6 +833,9 @@ void CDUIMenuItemCtrl::CalcItemRect()
 	CDUIRect rcSourceChecked = m_AttributeIconChecked.GetSource();
 	CDUIRect rcSourceNormal = m_AttributeIconNormal.GetSource();
 	CDUIRect rcSourceExpand = m_AttributeIconExpand.GetSource();
+	m_rcIconChecked.Clear();
+	m_rcIconNormal.Clear();
+	m_rcIconExpand.Clear();
 	if (false == rcSourceChecked.Empty())
 	{
 		m_rcIconChecked = GetAbsoluteRect();
