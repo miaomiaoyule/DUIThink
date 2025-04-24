@@ -1067,8 +1067,6 @@ CMMString CDUIControlBase::GetToolTip()
 
 void CDUIControlBase::SetToolTip(LPCTSTR pstrText)
 {
-	if (MMInvalidString(pstrText) || _tcscmp(GetToolTip(), pstrText) == 0) return;
-
 	CMMString strTemp(pstrText);
 	strTemp.Replace(_T("<n>"), _T("\r\n"));
 	m_AttributeToolTip.SetValue(strTemp);
