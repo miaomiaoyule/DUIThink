@@ -1169,6 +1169,34 @@ void CDUIWnd::SetToolTipHoverTime(int nTime)
 	m_nToolTipHoverTime = nTime;
 }
 
+void CDUIWnd::RefreshToolTip(CMMString strToolTip)
+{
+	m_bRefreshToolTipNeeded = false;
+	m_strToolTip = strToolTip;
+
+	HINSTANCE hInst = CDUIGlobal::GetInstance()->GetInstanceHandle();
+	::ZeroMemory(&m_ToolTip, sizeof(m_ToolTip));
+	m_ToolTip.cbSize = sizeof(m_ToolTip);
+	m_ToolTip.uFlags = TTF_IDISHWND;
+	m_ToolTip.hwnd = m_hWnd;
+	m_ToolTip.uId = (UINT_PTR)m_hWnd;
+	m_ToolTip.hinst = hInst;
+	m_ToolTip.lpszText = const_cast<LPTSTR>((LPCTSTR)strToolTip);
+	m_ToolTip.rect = m_pHoverCtrl->GetAbsoluteRect();
+	if (NULL == m_hWndTooltip)
+	{
+		m_hWndTooltip = ::CreateWindowEx(0, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, m_hWnd, NULL, hInst, NULL);
+		::SendMessage(m_hWndTooltip, TTM_ADDTOOL, 0, (LPARAM)&m_ToolTip);
+	}
+	::SendMessage(m_hWndTooltip, TTM_SETMAXTIPWIDTH, 0, m_pHoverCtrl->GetToolTipWidth());
+	::SendMessage(m_hWndTooltip, TTM_SETTIPBKCOLOR, RGB(DUIARGBGetR(m_pHoverCtrl->GetToolTipBkColor()), DUIARGBGetG(m_pHoverCtrl->GetToolTipBkColor()), DUIARGBGetB(m_pHoverCtrl->GetToolTipBkColor())), 0);
+	::SendMessage(m_hWndTooltip, TTM_SETTIPTEXTCOLOR, RGB(DUIARGBGetR(m_pHoverCtrl->GetToolTipTextColor()), DUIARGBGetG(m_pHoverCtrl->GetToolTipTextColor()), DUIARGBGetB(m_pHoverCtrl->GetToolTipTextColor())), 0);
+	::SendMessage(m_hWndTooltip, TTM_SETTOOLINFO, 0, (LPARAM)&m_ToolTip);
+	::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, TRUE, (LPARAM)&m_ToolTip);
+
+	return;
+}
+
 void CDUIWnd::Invalidate()
 {
 	if (NULL == m_hWnd) return;
@@ -2245,7 +2273,7 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 	m_hDCPaint = ::GetDC(m_hWnd);
 	m_uTimerID = 0x1000;
 	m_bMouseTracking = false;
-	m_bRefreshToolTip = false;
+	m_bRefreshToolTipNeeded = false;
 	m_bRefreshViewNeeded = false;
 	m_bPostedAppMsg = false;
 	m_bFirstLayout = true;
@@ -2714,7 +2742,7 @@ LRESULT CDUIWnd::OnMouseMove(WPARAM wParam, LPARAM lParam)
 
 		//hover
 		m_pHoverCtrl = pControl;
-		m_bRefreshToolTip = true;
+		m_bRefreshToolTipNeeded = true;
 
 		if (m_pHoverCtrl)
 		{
@@ -2754,30 +2782,9 @@ LRESULT CDUIWnd::OnMouseHover(WPARAM wParam, LPARAM lParam)
 	//track modify
 	CMMString strToolTip = m_pHoverCtrl->GetToolTip();
 	if (strToolTip.empty()) return lRes;
-	if (false == m_bRefreshToolTip && m_strToolTip == strToolTip) return lRes;
+	if (false == m_bRefreshToolTipNeeded && m_strToolTip == strToolTip) return lRes;
 
-	m_bRefreshToolTip = false;
-	m_strToolTip = strToolTip;
-
-	HINSTANCE hInst = CDUIGlobal::GetInstance()->GetInstanceHandle();
-	::ZeroMemory(&m_ToolTip, sizeof(m_ToolTip));
-	m_ToolTip.cbSize = sizeof(m_ToolTip);
-	m_ToolTip.uFlags = TTF_IDISHWND;
-	m_ToolTip.hwnd = m_hWnd;
-	m_ToolTip.uId = (UINT_PTR)m_hWnd;
-	m_ToolTip.hinst = hInst;
-	m_ToolTip.lpszText = const_cast<LPTSTR>((LPCTSTR)strToolTip);
-	m_ToolTip.rect = m_pHoverCtrl->GetAbsoluteRect();
-	if (NULL == m_hWndTooltip)
-	{
-		m_hWndTooltip = ::CreateWindowEx(0, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, m_hWnd, NULL, hInst, NULL);
-		::SendMessage(m_hWndTooltip, TTM_ADDTOOL, 0, (LPARAM)&m_ToolTip);
-	}
-	::SendMessage(m_hWndTooltip, TTM_SETMAXTIPWIDTH, 0, m_pHoverCtrl->GetToolTipWidth());
-	::SendMessage(m_hWndTooltip, TTM_SETTIPBKCOLOR, RGB(DUIARGBGetR(m_pHoverCtrl->GetToolTipBkColor()), DUIARGBGetG(m_pHoverCtrl->GetToolTipBkColor()), DUIARGBGetB(m_pHoverCtrl->GetToolTipBkColor())), 0);
-	::SendMessage(m_hWndTooltip, TTM_SETTIPTEXTCOLOR, RGB(DUIARGBGetR(m_pHoverCtrl->GetToolTipTextColor()), DUIARGBGetG(m_pHoverCtrl->GetToolTipTextColor()), DUIARGBGetB(m_pHoverCtrl->GetToolTipTextColor())), 0);
-	::SendMessage(m_hWndTooltip, TTM_SETTOOLINFO, 0, (LPARAM)&m_ToolTip);
-	::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, TRUE, (LPARAM)&m_ToolTip);
+	RefreshToolTip(strToolTip);
 
 	return lRes;
 }
@@ -2807,7 +2814,7 @@ LRESULT CDUIWnd::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	}
 
 	m_pHoverCtrl = NULL;
-	m_bRefreshToolTip = true;
+	m_bRefreshToolTipNeeded = true;
 
 	//Ã· æ¥∞ÃÂ
 	if (m_hWndTooltip) ::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, false, (LPARAM)&m_ToolTip);

@@ -88,7 +88,7 @@ protected:
 	POINT								m_ptMousePosLast;
 	POINT								m_ptMousePosDown;
 	bool								m_bMouseTracking = false;
-	bool								m_bRefreshToolTip = false;
+	bool								m_bRefreshToolTipNeeded = false;
 	bool								m_bRefreshViewNeeded = false;
 	bool								m_bPostedAppMsg = false;
 	bool								m_bFirstLayout = true;
@@ -218,6 +218,7 @@ public:
 	virtual HWND GetToolTipWindow() const;
 	virtual int GetToolTipHoverTime() const;
 	virtual void SetToolTipHoverTime(int nTime);
+	virtual void RefreshToolTip(CMMString strToolTip);
 
 	//refresh
 	virtual void Invalidate();
