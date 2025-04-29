@@ -217,7 +217,7 @@ void CDUIKLineChartCtrl::PaintBkColor(HDC hDC)
 			rcLine.bottom == rcLine.top ? rcLine.bottom = rcLine.top + 1 : rcLine.bottom;
 			rcLine.left += rcLine.GetWidth() / 2;
 			rcLine.right = rcLine.left;
-			m_AttributeColorGrid.DrawLine(hDC, rcLine, 1);
+			CDUIRenderEngine::DrawLine(hDC, rcLine, 1, _tcstoul(strColor, NULL, 16));
 		}
 
 		//date
