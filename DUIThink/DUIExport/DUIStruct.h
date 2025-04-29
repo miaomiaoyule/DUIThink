@@ -547,6 +547,18 @@ struct tagDuiDropData
 };
 
 //////////////////////////////////////////////////////////////////////////
+struct tagDuiKLineChartItem
+{
+	SYSTEMTIME							tDate = {};
+	float								fStart = 0.0f;
+	float								fFinish = 0.0f;
+	float								fHigh = 0.0f;
+	float								fLow = 0.0f;
+};
+
+typedef std::vector<tagDuiKLineChartItem> VecDuiKLineChartItem;
+
+//////////////////////////////////////////////////////////////////////////
 typedef std::unordered_map<CDUIWnd*, tagDuiFile> MapWnd;
 
 //////////////////////////////////////////////////////////////////////////

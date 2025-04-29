@@ -117,7 +117,7 @@ LPVOID CDUIControlBase::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 
 CMMString CDUIControlBase::GetDescribe() const
 {
-	return Dui_Ctrl_Control;
+	return Dui_Ctrl_Base;
 }
 
 UINT CDUIControlBase::GetControlFlags()

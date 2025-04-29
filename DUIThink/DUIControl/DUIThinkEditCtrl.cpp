@@ -222,7 +222,7 @@ LPVOID CDUIThinkEditCtrl::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 
 CMMString CDUIThinkEditCtrl::GetDescribe() const
 {
-	return _T("ThinkEditCtrl");
+	return Dui_Ctrl_ThinkEdit;
 }
 
 void CDUIThinkEditCtrl::Invalidate()

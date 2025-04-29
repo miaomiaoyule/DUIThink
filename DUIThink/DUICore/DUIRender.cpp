@@ -949,6 +949,7 @@ void CDUIRenderEngine::DrawLine(HDC hDC, const CDUIRect &rcItem, int nLineSize, 
 
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 
 	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
 	Pen.SetDashStyle((Gdiplus::DashStyle)LineStyle);

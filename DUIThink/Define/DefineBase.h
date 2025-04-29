@@ -7,6 +7,9 @@
 #define Key_ResourceEncrypt				(0x19890527)
 
 //////////////////////////////////////////////////////////////////////////
+#define DUIRegisterCreateControl(class_name)\
+	CDUIFactory::GetInstance()->RegistControlClass((#class_name), (DUICreateControlObj)class_name::CreateControlObj);
+
 #define DUIRegisterCreateResource(class_name)\
 	CDUIFactory::GetInstance()->RegistResourceClass((#class_name), (DUICreateResourceObj)class_name::CreateResourceObj);
 

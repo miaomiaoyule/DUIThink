@@ -327,6 +327,9 @@
     <ClInclude Include="DUICore\DUINotifyPump.h">
       <Filter>DUICore</Filter>
     </ClInclude>
+    <ClInclude Include="DUIControl\DUIKLineChartCtrl.h">
+      <Filter>DUIControl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -562,6 +565,9 @@
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DUIControl\DUIKLineChartCtrl.cpp">
+      <Filter>DUIControl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,3 +1,6 @@
+#ifndef __DUITHINKEDITCTRL_H__
+#define __DUITHINKEDITCTRL_H__
+
 #pragma once
 #pragma pack(1)
 
@@ -190,3 +193,4 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()
+#endif

@@ -219,6 +219,13 @@ enum enDuiRichTextItemType
 	RichTextItem_Image,
 };
 
+enum enDuiKLineChartType
+{
+	KLineChart_Day,
+	KLineChart_Week,
+	KLineChart_Month,
+};
+
 //////////////////////////////////////////////////////////////////////////
 
 #endif
