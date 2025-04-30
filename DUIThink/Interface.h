@@ -21,13 +21,13 @@ interface DUITHINK_API IControlListen : public IDuiInterface
 
 //////////////////////////////////////////////////////////////////////////
 //wnd
-#define VER_IDUIWndNotify INTERFACE_VERSION(1,1)
-static const GUID IID_IDUIWndNotify = { 0xC78CF794,0x6ABD,0x4688,0x92,0x1C,0xC9,0xD7,0xEF,0x23,0x6C,0x2D };
-interface DUITHINK_API IDUIWndNotify : public IDuiInterface
+#define VER_IDuiWndNotify INTERFACE_VERSION(1,1)
+static const GUID IID_IDuiWndNotify = { 0xC78CF794,0x6ABD,0x4688,0x92,0x1C,0xC9,0xD7,0xEF,0x23,0x6C,0x2D };
+interface DUITHINK_API IDuiWndNotify : public IDuiInterface
 {
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
 	virtual void OnDuiWndCreate(CDUIWnd *pWnd) = NULL;
-	virtual void OnDuiWndClose(CDUIWnd *pWnd) = NULL;
+	virtual void OnDuiWndDestroy(CDUIWnd *pWnd) = NULL;
 	virtual void OnDuiWndPaint(CDUIWnd *pWnd) {}
 	virtual void OnDuiWndSize(CDUIWnd *pWnd) {}
 };

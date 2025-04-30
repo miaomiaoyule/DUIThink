@@ -48,4 +48,4 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-extern IDUIWndNotify *					g_pIDuiWndNotify;
+extern IDuiWndNotify *					g_pIDuiWndNotify;

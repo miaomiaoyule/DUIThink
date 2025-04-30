@@ -3402,14 +3402,14 @@ bool CDUIGlobal::TranslateMessage(const LPMSG pMsg)
 	return false;
 }
 
-void CDUIGlobal::RegisterWndNotify(IDUIWndNotify *pIDuiWndNotify)
+void CDUIGlobal::RegisterWndNotify(IDuiWndNotify *pIDuiWndNotify)
 {
 	g_pIDuiWndNotify = pIDuiWndNotify;
 
 	return;
 }
 
-void CDUIGlobal::UnRegisterWndNotify(IDUIWndNotify *pIDuiWndNotify)
+void CDUIGlobal::UnRegisterWndNotify(IDuiWndNotify *pIDuiWndNotify)
 {
 	if (g_pIDuiWndNotify != pIDuiWndNotify) return;
 

@@ -366,8 +366,8 @@ public:
 
 	//static help
 public:
-	static void RegisterWndNotify(IDUIWndNotify *pIDuiWndNotify);
-	static void UnRegisterWndNotify(IDUIWndNotify *pIDuiWndNotify);
+	static void RegisterWndNotify(IDuiWndNotify *pIDuiWndNotify);
+	static void UnRegisterWndNotify(IDuiWndNotify *pIDuiWndNotify);
 	static int IsEmoji(TCHAR ch);
 
 	//static help

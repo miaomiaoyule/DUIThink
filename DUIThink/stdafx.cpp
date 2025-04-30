@@ -14,4 +14,4 @@ tagDuiCalendarCmd						g_DuiCalendarCmd;
 CDUICalendarWnd *						g_pDuiCalendarWnd = NULL;
 
 //////////////////////////////////////////////////////////////////////////
-IDUIWndNotify *							g_pIDuiWndNotify = NULL;
+IDuiWndNotify *							g_pIDuiWndNotify = NULL;

@@ -10,9 +10,9 @@ LPVOID IControlListen ::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 }
 
 //////////////////////////////////////////////////////////////////////////
-LPVOID IDUIWndNotify::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
+LPVOID IDuiWndNotify::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
-	QUERYINTERFACE(IDUIWndNotify, Guid, dwQueryVer);
+	QUERYINTERFACE(IDuiWndNotify, Guid, dwQueryVer);
 
 	return __super::QueryInterface(Guid, dwQueryVer);
 }

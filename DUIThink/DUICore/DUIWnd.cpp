@@ -596,11 +596,6 @@ void CDUIWnd::Close(UINT nRet)
 
 	PostMessage(WM_CLOSE, (WPARAM)nRet, 0L);
 
-	if (g_pIDuiWndNotify)
-	{
-		g_pIDuiWndNotify->OnDuiWndClose(this);
-	}
-
 	return;
 }
 
@@ -2321,7 +2316,7 @@ LRESULT CDUIWnd::OnDestroy(WPARAM wParam, LPARAM lParam)
 {
 	if (g_pIDuiWndNotify)
 	{
-		g_pIDuiWndNotify->OnDuiWndClose(this);
+		g_pIDuiWndNotify->OnDuiWndDestroy(this);
 	}
 
 	return OnOldWndProc(WM_DESTROY, wParam, lParam);
@@ -3344,6 +3339,11 @@ void CDUIWnd::OnFinalMessage()
 	m_hWnd = NULL;
 	m_OldWndProc = NULL;
 	m_bSubWindow = false;
+
+	if (g_pIDuiWndNotify)
+	{
+		g_pIDuiWndNotify->OnDuiWndDestroy(this);
+	}
 
 	return;
 }
