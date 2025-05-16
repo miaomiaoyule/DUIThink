@@ -14,7 +14,7 @@ CDUIKLineChartCtrl::CDUIKLineChartCtrl()
 	SYSTEMTIME DateCur;
 	GetLocalTime(&DateCur);
 	float fStart = 5.0f;
-	for (int n = 0; n < 1000; n++)
+	for (int n = 0; n < 100; n++)
 	{
 		CTime tDateCur(DateCur);
 		tDateCur -= CTimeSpan(n, 0, 0, 0);
