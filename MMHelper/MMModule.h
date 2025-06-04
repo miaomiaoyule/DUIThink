@@ -345,6 +345,8 @@ public:
 	CMMSafeIDL(IDL pIDL)
 	{
 		m_pIDL = pIDL;
+
+		return;
 	}
 	virtual ~CMMSafeIDL()
 	{
@@ -354,10 +356,14 @@ public:
 		}
 
 		m_pIDL = NULL;
+
+		return;
 	}
 	CMMSafeIDL(CMMSafeIDL &Copy)
 	{
-		this->operator=(Copy);
+		this->operator = (Copy.Get());
+
+		return;
 	}
 
 	//variant
@@ -382,16 +388,40 @@ public:
 	}
 	CMMSafeIDL & operator = (CMMSafeIDL &Right)
 	{
-		if (m_pIDL)
-		{
-			CoTaskMemFree((LPVOID)m_pIDL);
-			m_pIDL = NULL;
-		}
-		if (Right.Get())
-		{
-			m_pIDL = ILCloneFull(Right.Get());
-		}
+		this->operator = (Right.Get());
 	}
+};
+
+//////////////////////////////////////////////////////////////////////////
+class CMMSafeModule
+{
+public:
+	CMMSafeModule(CMMString strModuleFile)
+	{
+		m_hModule = LoadLibrary(strModuleFile);
+
+		return;
+	}
+	virtual ~CMMSafeModule()
+	{
+		if (m_hModule)
+		{
+			FreeLibrary(m_hModule);
+
+			m_hModule = NULL;
+		}
+
+		return;
+	}
+
+	//variant
+protected:
+	HMODULE								m_hModule = NULL;
+
+	//method
+public:
+	HMODULE Get() { return m_hModule; }
+	operator HMODULE() { return m_hModule; }
 };
 
 //////////////////////////////////////////////////////////////////////////
