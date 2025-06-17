@@ -272,11 +272,7 @@ bool CDUITextHost::Init(CDUIRichEditCtrl *pOwnerCtrl)
 
 		//create
 		PCreateTextServices pFuncCreateTextServices = NULL;
-#ifdef _UNICODE
-		HMODULE hModule = LoadLibrary(_T("Msftedit.dll"));
-#else
 		HMODULE hModule = LoadLibrary(_T("Riched20.dll"));
-#endif
 		if (hModule)
 		{
 			pFuncCreateTextServices = (PCreateTextServices)GetProcAddress(hModule, "CreateTextServices");
