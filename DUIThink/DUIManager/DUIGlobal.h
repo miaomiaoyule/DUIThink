@@ -184,8 +184,16 @@ public:
 	int GetScale();
 	bool SetScale(int nScale);
 
+	//ui
+	CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
+	CDUIControlBase * ParseDui(LPCTSTR lpszXml);
+
 	//method resource
 public:
+	//data
+	bool ExtractResourceData(vector<BYTE> &vecData, CMMString strFile);
+
+	//res obj
 	bool RegisterResourceCallBack(IDuiResourceCallBack *pIResourceCallBack);
 	bool UnRegisterResourceCallBack(IDuiResourceCallBack *pIResourceCallBack);
 	bool AddResource(CDUIResourceBase *pResourceObj);
@@ -222,7 +230,7 @@ public:
 	CMMString GetSkinPath();
 	CMMString GetDuiPath(enDuiType DuiType);
 
-	//resource
+	//res info
 	HINSTANCE GetInstanceHandle();
 	CMMString GetInstancePath();
 	HINSTANCE GetResourceDll();
@@ -261,11 +269,8 @@ protected:
 	CMMString CreateMenu(bool bSubMenu);
 	CMMString Create3DMenu();
 	CMMString CreateCalendar();
-	CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
-	CDUIControlBase * ParseDui(LPCTSTR lpszXml);
 	bool SaveDui(LPCTSTR lpszName, CDUIWnd *pWnd);
 	CMMString SaveDui(CDUIPropertyObject *pPropObj, bool bIncludeChild = true);
-	bool ExtractResourceData(vector<BYTE> &vecData, CMMString strFile);
 	
 	//refresh
 	bool RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pPropObj);

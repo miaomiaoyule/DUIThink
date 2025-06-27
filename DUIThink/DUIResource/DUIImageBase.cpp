@@ -317,24 +317,8 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 	if (vecData.size() <= 0) return false;
 
 	//create
-	HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, vecData.size());
-	BYTE *pMem = (BYTE*)::GlobalLock(hMem);
-
-	CopyMemory(pMem, vecData.data(), vecData.size());
-
-	IStream *pIStream = NULL;
-	::CreateStreamOnHGlobal(hMem, TRUE, &pIStream);
-	if (NULL == pIStream)
-	{
-		::GlobalUnlock(hMem);
-
-		return false;
-	}
-
 	tagDuiImageInfo ImageInfo = {};
-	ImageInfo.pImageAnimate = Gdiplus::Bitmap::FromStream(pIStream);
-	pIStream->Release();
-	::GlobalUnlock(hMem);
+	ImageInfo.pImageAnimate = CDUIRenderEngine::GenerateBitmap(vecData);
 
 	//init
 	if (NULL == ImageInfo.pImageAnimate) return false;

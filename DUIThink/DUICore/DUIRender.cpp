@@ -1816,6 +1816,29 @@ Bitmap * CDUIRenderEngine::GenerateBitmap(Bitmap *pBmp, const CDUISize szGenerat
 	return pBmpGenerate;
 }
 
+Bitmap * CDUIRenderEngine::GenerateBitmap(const std::vector<BYTE> &vecFileData)
+{
+	HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, vecFileData.size());
+	BYTE *pMem = (BYTE*)::GlobalLock(hMem);
+
+	CopyMemory(pMem, vecFileData.data(), vecFileData.size());
+
+	IStream *pIStream = NULL;
+	::CreateStreamOnHGlobal(hMem, TRUE, &pIStream);
+	if (NULL == pIStream)
+	{
+		::GlobalUnlock(hMem);
+
+		return NULL;
+	}
+
+	Bitmap *pBmp = Gdiplus::Bitmap::FromStream(pIStream);
+	pIStream->Release();
+	::GlobalUnlock(hMem);
+
+	return pBmp;
+}
+
 HBITMAP CDUIRenderEngine::CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFilterColor)
 {
 	LPBYTE pBmpBits = NULL;

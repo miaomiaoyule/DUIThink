@@ -137,6 +137,7 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMMiniDumper.h"
 #include "MMService.h"
 #include "MMCommandLine.h"
+#include "MMResource.h"
 #include "MMMD5CheckSum.h"
 #include "MMAsyncObject.h"
 #include "MMProcess.h"

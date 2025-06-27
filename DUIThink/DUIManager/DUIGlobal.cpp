@@ -302,6 +302,20 @@ bool CDUIGlobal::SetScale(int nScale)
 	return SetDpi(MulDiv(nScale, 96, 100));
 }
 
+CDUIControlBase * CDUIGlobal::ParseDui(tinyxml2::XMLElement *pNodeXml)
+{
+	if (NULL == pNodeXml) return NULL;
+
+	return CDUIXmlPack::ParseDui(pNodeXml);
+}
+
+CDUIControlBase * CDUIGlobal::ParseDui(LPCTSTR lpszXml)
+{
+	if (NULL == lpszXml) return NULL;
+
+	return CDUIXmlPack::ParseDui(lpszXml);
+}
+
 int CDUIGlobal::GetFontResourceCount()
 {
 	return m_mapResourceFont.size();
@@ -1079,20 +1093,6 @@ CMMString CDUIGlobal::CreateCalendar()
 	return strName;
 }
 
-CDUIControlBase * CDUIGlobal::ParseDui(tinyxml2::XMLElement *pNodeXml)
-{
-	if (NULL == pNodeXml) return NULL;
-
-	return CDUIXmlPack::ParseDui(pNodeXml);
-}
-
-CDUIControlBase * CDUIGlobal::ParseDui(LPCTSTR lpszXml)
-{
-	if (NULL == lpszXml) return NULL;
-
-	return CDUIXmlPack::ParseDui(lpszXml);
-}
-
 bool CDUIGlobal::SaveDui(LPCTSTR lpszName, CDUIWnd *pWnd)
 {
 	auto FindIt = m_mapModelStore.find(lpszName);
@@ -1111,68 +1111,6 @@ bool CDUIGlobal::SaveDui(LPCTSTR lpszName, CDUIWnd *pWnd)
 CMMString CDUIGlobal::SaveDui(CDUIPropertyObject *pPropObj, bool bIncludeChild)
 {
 	return CDUIXmlPack::SaveDui(pPropObj, bIncludeChild);
-}
-
-bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
-{
-	do
-	{
-		//full path
-		if (strFile.length() >= 2 && strFile[1] == _T(':')) break;
-
-		//zip
-		if (DuiFileResType_Zip == GetDuiFileResType()
-			|| DuiFileResType_ResZip == GetDuiFileResType())
-		{
-			HZIPDT hz = (HZIPDT)GetResourceZipHandle();
-			if (NULL == hz) break;
-
-			ZIPENTRYDT ze = {};
-			int i = 0;
-
-			strFile.Replace(_T("\\"), _T("/"));
-			if (0 != FindZipItem(hz, strFile, true, &i, &ze)) break;
-
-			DWORD dwSize = ze.unc_size;
-			if (0 == dwSize) return false;
-
-			vecData.resize(dwSize);
-			int res = UnzipItem(hz, i, vecData.data(), dwSize, 3);
-			if (0x00000000 != res && 0x00000600 != res)
-			{
-				vecData.clear();
-				return false;
-			}
-		}
-
-	} while (false);
-
-	//file
-	if (DuiFileResType_File == GetDuiFileResType() || vecData.empty())
-	{
-		//full path
-		if (strFile.length() < 2 || strFile[1] != _T(':'))
-		{
-			strFile = GetProjectPath() + strFile;
-		}
-
-		HANDLE hFile = ::CreateFile(strFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (INVALID_HANDLE_VALUE == hFile) return false;
-
-		DWORD dwSize = ::GetFileSize(hFile, NULL);
-		DWORD dwRead = 0;
-		vecData.resize(dwSize);
-		::ReadFile(hFile, vecData.data(), dwSize, &dwRead, NULL);
-		::CloseHandle(hFile);
-
-		if (dwRead != dwSize)
-		{
-			vecData.clear();
-			return false;
-		}
-	}
-
-	return true;
 }
 
 bool CDUIGlobal::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pPropObj)
@@ -1396,6 +1334,68 @@ bool CDUIGlobal::AddResource(CDUIResourceBase *pResourceObj)
 	}
 
 	return false;
+}
+
+bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
+{
+	do
+	{
+		//full path
+		if (strFile.length() >= 2 && strFile[1] == _T(':')) break;
+
+		//zip
+		if (DuiFileResType_Zip == GetDuiFileResType()
+			|| DuiFileResType_ResZip == GetDuiFileResType())
+		{
+			HZIPDT hz = (HZIPDT)GetResourceZipHandle();
+			if (NULL == hz) break;
+
+			ZIPENTRYDT ze = {};
+			int i = 0;
+
+			strFile.Replace(_T("\\"), _T("/"));
+			if (0 != FindZipItem(hz, strFile, true, &i, &ze)) break;
+
+			DWORD dwSize = ze.unc_size;
+			if (0 == dwSize) return false;
+
+			vecData.resize(dwSize);
+			int res = UnzipItem(hz, i, vecData.data(), dwSize, 3);
+			if (0x00000000 != res && 0x00000600 != res)
+			{
+				vecData.clear();
+				return false;
+			}
+		}
+
+	} while (false);
+
+	//file
+	if (DuiFileResType_File == GetDuiFileResType() || vecData.empty())
+	{
+		//full path
+		if (strFile.length() < 2 || strFile[1] != _T(':'))
+		{
+			strFile = GetProjectPath() + strFile;
+		}
+
+		HANDLE hFile = ::CreateFile(strFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (INVALID_HANDLE_VALUE == hFile) return false;
+
+		DWORD dwSize = ::GetFileSize(hFile, NULL);
+		DWORD dwRead = 0;
+		vecData.resize(dwSize);
+		::ReadFile(hFile, vecData.data(), dwSize, &dwRead, NULL);
+		::CloseHandle(hFile);
+
+		if (dwRead != dwSize)
+		{
+			vecData.clear();
+			return false;
+		}
+	}
+
+	return true;
 }
 
 bool CDUIGlobal::RegisterResourceCallBack(IDuiResourceCallBack *pIResourceCallBack)

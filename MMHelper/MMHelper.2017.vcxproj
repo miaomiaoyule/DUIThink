@@ -691,6 +691,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClInclude Include="MMProcess.h" />
     <ClInclude Include="MMReDirection.h" />
     <ClInclude Include="MMRegMonitor.h" />
+    <ClInclude Include="MMResource.h" />
     <ClInclude Include="MMService.h" />
     <ClInclude Include="MMServiceModel\MMServiceItem.h" />
     <ClInclude Include="MMServiceModel\MMServiceMsg.h" />
@@ -786,6 +787,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClCompile Include="MMProcess.cpp" />
     <ClCompile Include="MMReDirection.cpp" />
     <ClCompile Include="MMRegMonitor.cpp" />
+    <ClCompile Include="MMResource.cpp" />
     <ClCompile Include="MMService.cpp" />
     <ClCompile Include="MMServiceModel\MMServiceItem.cpp" />
     <ClCompile Include="MMServiceModel\MMThreadPool.cpp" />

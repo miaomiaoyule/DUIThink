@@ -135,7 +135,8 @@ bool CMMServiceItem::Execute(PtrMMServiceMsg pMessage)
 			auto pFuncIt = m_pData->mapTimeFunc.find(pTimeMsg->uTimerID);
 			if (pFuncIt != m_pData->mapTimeFunc.end())
 			{
-				(pFuncIt->second)();
+				FuncTimer pFuncTimer = pFuncIt->second;
+				pFuncTimer();
 			}
 		}
 		else
