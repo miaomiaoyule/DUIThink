@@ -201,18 +201,8 @@ bool CDUIGlobal::LoadProjectFromResZip(HINSTANCE hResModule, LPCTSTR lpszZipName
 	m_hInstanceResource = hResModule;
 
 	//load res
-	HRSRC hResource = ::FindResource(GetResourceDll(), lpszZipName, lpszResType);
-	if (NULL == hResource) return false;
-
-	DWORD dwSize = ::SizeofResource(GetResourceDll(), hResource);
-	if (0 == dwSize) return false;
-
-	HGLOBAL hGlobal = ::LoadResource(GetResourceDll(), hResource);
-	if (NULL == hGlobal) return false;
-
-	m_vecZipData.resize(dwSize);
-	::CopyMemory(m_vecZipData.data(), (LPBYTE)::LockResource(hGlobal), dwSize);
-	::FreeResource(hGlobal);
+	CMMResource Resource;
+	Resource.Load(GetResourceDll(), lpszZipName, lpszResType, m_vecZipData);
 
 	//unzip
 	if (m_hResourceZip)
