@@ -1359,6 +1359,16 @@ bool CDUIWnd::SetScale(int nScale)
 	return true;
 }
 
+HBITMAP CDUIWnd::GetBackgroundBmp()
+{
+	return m_hBmpBackground;
+}
+
+LPBYTE CDUIWnd::GetBackgroundBits()
+{
+	return m_pBmpBackgroundBits;
+}
+
 bool CDUIWnd::CreateCaret(HBITMAP hBmp, int nWidth, int nHeight)
 {
 	if (false == IsWindow(m_hWnd)) return false;

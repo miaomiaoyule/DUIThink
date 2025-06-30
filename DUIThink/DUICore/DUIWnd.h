@@ -245,6 +245,8 @@ public:
 	virtual bool SetDpi(int nDpi);
 	virtual int GetScale() override;
 	virtual bool SetScale(int nScale);
+	virtual HBITMAP GetBackgroundBmp();
+	virtual LPBYTE GetBackgroundBits();
 
 	//caret
 	virtual bool CreateCaret(HBITMAP hBmp, int nWidth, int nHeight);
