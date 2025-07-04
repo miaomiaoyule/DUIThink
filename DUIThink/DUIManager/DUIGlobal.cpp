@@ -202,7 +202,7 @@ bool CDUIGlobal::LoadProjectFromResZip(HINSTANCE hResModule, LPCTSTR lpszZipName
 
 	//load res
 	CMMResource Resource;
-	Resource.Load(GetResourceDll(), lpszZipName, lpszResType, m_vecZipData);
+	Resource.Load(GetResourceDll(), lpszResType, lpszZipName, m_vecZipData);
 
 	//unzip
 	if (m_hResourceZip)
