@@ -46,7 +46,7 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 	if (IsWindow(m_hWnd) || NULL == m_pShowMenuView) return;
 
 	//init view
-	if (m_pShowMenuView && NULL == MMInterfaceHelper(CDUIRotateMenuCtrl, m_pShowMenuView))
+	if (NULL == MMInterfaceHelper(CDUIRotateMenuCtrl, m_pShowMenuView))
 	{
 		m_pShowMenuView->UnSelectAllItems();
 	}
@@ -60,6 +60,12 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 	}
 
 	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW, m_ptTrack.x, m_ptTrack.y);
+
+	CDUIMenuCtrl *pRootMenuCtrl = GetMenuView();
+	if (pRootMenuCtrl)
+	{
+		pRootMenuCtrl->RefreshView();
+	}
 
 	return;
 }
@@ -808,8 +814,7 @@ void CDUIMenuItemCtrl::InitExpandMenu(bool bActive)
 	strName = CDUIGlobal::GetInstance()->CreateMenu(true);
 	m_AttributeExpandViewDuiName.SetValue(strName);
 
-	MMSafeDelete(m_pExpandMenuWnd);
-	m_pExpandMenuWnd = new CDUIMenuWnd(this, strName);
+	LoadExpandMenu();
 
 	if (bActive)
 	{
