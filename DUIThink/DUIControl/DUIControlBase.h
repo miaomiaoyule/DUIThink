@@ -346,6 +346,9 @@ protected:
 	virtual void PaintText(HDC hDC);
 	virtual void PaintBorder(HDC hDC);
 
+	virtual void PaintColorAttribute(HDC hDC, CDUIAttributeColorSwitch *pAttribute);
+	virtual void PaintImageAttribute(HDC hDC, CDUIAttriImageSection *pAttribute, bool bDisablePallete);
+
 	//help
 	//** you can override if you need, but you'd better not do that **//
 protected:

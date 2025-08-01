@@ -405,24 +405,8 @@ void CDUIButtonCtrl::PaintStatusColor(HDC hDC)
 		return;
 	}
 
-	CDUIRect rcBorderRound = GetRoundCorner();
-	if (rcBorderRound.left > 0
-		|| rcBorderRound.top > 0
-		|| rcBorderRound.right > 0
-		|| rcBorderRound.bottom > 0)
-	{
-		CDUIRect rcBorder = GetBorderLine();
-		int nSize = max(rcBorder.left, rcBorder.top);
-		nSize = max(nSize, rcBorder.right);
-		nSize = max(nSize, rcBorder.bottom);
-
-		pAttribute->FillRoundRect(hDC, m_rcAbsolute, nSize, rcBorderRound, IsColorHSL());
-
-		return;
-	}
-
-	pAttribute->FillRect(hDC, m_rcAbsolute, IsColorHSL());
-
+	PaintColorAttribute(hDC, pAttribute);
+	
 	return;
 }
 
@@ -432,10 +416,17 @@ void CDUIButtonCtrl::PaintStatusImage(HDC hDC)
 
 	CDUIAttriImageSection *pAttribute = GetAttributeStatusImage();
 
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeImageNormal : pAttribute;
-	if (NULL == pAttribute) return;
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
+		&& false == m_AttributeImageNormal.IsEmpty())
+	{
+		pAttribute = &m_AttributeImageNormal;
+	}
+	if (NULL == pAttribute)
+	{
+		return;
+	}
 
-	pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint, false == IsEnabled() && pAttribute != &m_AttributeImageDisabled);
+	PaintImageAttribute(hDC, pAttribute, false == IsEnabled() && pAttribute != &m_AttributeImageDisabled);
 
 	return;
 }

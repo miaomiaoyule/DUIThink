@@ -383,21 +383,17 @@ void CDUICheckBoxCtrl::PaintStatusColorSelected(HDC hDC)
 		pAttribute = &m_AttributeColorSelNormal;
 	}
 
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeColorSelNormal : pAttribute;
-	if (NULL == pAttribute) return;
-
-	CDUIRect rcBorderRound = GetRoundCorner();
-	if (rcBorderRound.left > 0 
-		|| rcBorderRound.top > 0
-		|| rcBorderRound.right > 0
-		|| rcBorderRound.bottom > 0)
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
+		&& false == m_AttributeColorSelNormal.IsEmpty())
 	{
-		pAttribute->FillRoundRect(hDC, m_rcAbsolute, 0, rcBorderRound, IsColorHSL());
-
+		pAttribute = &m_AttributeColorSelNormal;
+	}
+	if (NULL == pAttribute)
+	{
 		return;
 	}
 
-	pAttribute->FillRect(hDC, m_rcAbsolute, IsColorHSL());
+	PaintColorAttribute(hDC, pAttribute);
 
 	return;
 }
@@ -426,10 +422,17 @@ void CDUICheckBoxCtrl::PaintStatusImageSelected(HDC hDC)
 		pAttribute = &m_AttributeImageSelNormal;
 	}
 
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeImageSelNormal : pAttribute;
-	if (NULL == pAttribute) return;
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
+		&& false == m_AttributeImageSelNormal.IsEmpty())
+	{
+		pAttribute = &m_AttributeImageSelNormal;
+	}
+	if (NULL == pAttribute)
+	{
+		return;
+	}
 
-	pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint);
+	PaintImageAttribute(hDC, pAttribute, false == IsEnabled() && pAttribute != &m_AttributeImageDisabled);
 
 	return;
 }

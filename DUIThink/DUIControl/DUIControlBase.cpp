@@ -1773,43 +1773,7 @@ void CDUIControlBase::InitComplete()
 
 void CDUIControlBase::PaintBkColor(HDC hDC)
 {
-	enDuiRoundType RoundType = GetRoundType();
-	if (Round_Parallelogram == RoundType)
-	{
-		m_AttributeColorBk.FillParallelogram(hDC, m_rcAbsolute, IsColorHSL(), GetGradientColor());
-
-		return;
-	}
-	if (Round_Rhomb == RoundType)
-	{
-		m_AttributeColorBk.FillRhomb(hDC, m_rcAbsolute, IsColorHSL(), GetGradientColor());
-
-		return;
-	}
-	if (Round_Ellipse == RoundType)
-	{
-		m_AttributeColorBk.FillEllipse(hDC, m_rcAbsolute, IsColorHSL(), GetGradientColor());
-
-		return;
-	}
-	
-	CDUIRect rcBorderRound = GetRoundCorner();
-	if (rcBorderRound.left > 0 
-		|| rcBorderRound.top > 0
-		|| rcBorderRound.right > 0
-		|| rcBorderRound.bottom > 0)
-	{
-		CDUIRect rcBorder = GetBorderLine();
-		int nSize = max(rcBorder.left, rcBorder.top);
-		nSize = max(nSize, rcBorder.right);
-		nSize = max(nSize, rcBorder.bottom);
-
-		m_AttributeColorBk.FillRoundRect(hDC, GetBorderRect(), nSize, rcBorderRound, IsColorHSL(), GetGradientColor());
-	
-		return;
-	}
-	
-	m_AttributeColorBk.FillRect(hDC, m_rcAbsolute, IsColorHSL(), GetGradientColor());
+	PaintColorAttribute(hDC, &m_AttributeColorBk);
 
 	return;
 }
@@ -1818,22 +1782,8 @@ void CDUIControlBase::PaintBkImage(HDC hDC)
 {
 	enDuiRoundType RoundType = GetRoundType();
 	CDUIRect rcBorderRound = GetRoundCorner(); 
-	if (Round_Parallelogram == RoundType)
-	{
-		m_AttributeImageBack.DrawParallelogram(hDC, m_rcAbsolute, m_rcPaint, false);
-	}
-	else if (Round_Rhomb == RoundType)
-	{
-		m_AttributeImageBack.DrawRhomb(hDC, m_rcAbsolute, m_rcPaint, false);
-	}
-	else if (Round_Ellipse == RoundType)
-	{
-		m_AttributeImageBack.DrawEllipse(hDC, m_rcAbsolute, m_rcPaint, false);
-	}
-	else
-	{
-		m_AttributeImageBack.Draw(hDC, m_rcAbsolute, m_rcPaint, false, rcBorderRound);
-	}
+	PaintImageAttribute(hDC, &m_AttributeImageBack, false);
+
 	if (m_pBmpCustomBack)
 	{
 		int nDestWidth = 0, nDestHeight = 0;
@@ -2026,6 +1976,77 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 		rcBorderDraw.top += rcBorderLine.bottom / 2;
 		rcBorderDraw.bottom = rcBorderDraw.top;
 		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.bottom, GetBorderStyle(), IsColorHSL());
+	}
+
+	return;
+}
+
+void CDUIControlBase::PaintColorAttribute(HDC hDC, CDUIAttributeColorSwitch *pAttribute)
+{
+	if (NULL == hDC || NULL == pAttribute) return;
+
+	enDuiRoundType RoundType = GetRoundType();
+	if (Round_Parallelogram == RoundType)
+	{
+		pAttribute->FillParallelogram(hDC, GetBorderRect(), IsColorHSL(), GetGradientColor());
+
+		return;
+	}
+	if (Round_Rhomb == RoundType)
+	{
+		pAttribute->FillRhomb(hDC, GetBorderRect(), IsColorHSL(), GetGradientColor());
+
+		return;
+	}
+	if (Round_Ellipse == RoundType)
+	{
+		pAttribute->FillEllipse(hDC, GetBorderRect(), IsColorHSL(), GetGradientColor());
+
+		return;
+	}
+
+	CDUIRect rcBorderRound = GetRoundCorner();
+	if (rcBorderRound.left > 0
+		|| rcBorderRound.top > 0
+		|| rcBorderRound.right > 0
+		|| rcBorderRound.bottom > 0)
+	{
+		CDUIRect rcBorder = GetBorderLine();
+		int nSize = max(rcBorder.left, rcBorder.top);
+		nSize = max(nSize, rcBorder.right);
+		nSize = max(nSize, rcBorder.bottom);
+
+		pAttribute->FillRoundRect(hDC, GetBorderRect(), nSize, rcBorderRound, IsColorHSL(), GetGradientColor());
+
+		return;
+	}
+
+	pAttribute->FillRect(hDC, GetBorderRect(), IsColorHSL(), GetGradientColor());
+
+	return;
+}
+
+void CDUIControlBase::PaintImageAttribute(HDC hDC, CDUIAttriImageSection *pAttribute, bool bDisablePallete)
+{
+	if (NULL == hDC || NULL == pAttribute) return;
+
+	enDuiRoundType RoundType = GetRoundType();
+	CDUIRect rcBorderRound = GetRoundCorner();
+	if (Round_Parallelogram == RoundType)
+	{
+		pAttribute->DrawParallelogram(hDC, GetBorderRect(), m_rcPaint, bDisablePallete);
+	}
+	else if (Round_Rhomb == RoundType)
+	{
+		pAttribute->DrawRhomb(hDC, GetBorderRect(), m_rcPaint, bDisablePallete);
+	}
+	else if (Round_Ellipse == RoundType)
+	{
+		pAttribute->DrawEllipse(hDC, GetBorderRect(), m_rcPaint, bDisablePallete);
+	}
+	else
+	{
+		pAttribute->Draw(hDC, GetBorderRect(), m_rcPaint, bDisablePallete, rcBorderRound);
 	}
 
 	return;
