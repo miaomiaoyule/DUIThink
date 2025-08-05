@@ -35,7 +35,7 @@ class DUITHINK_API CDUIGlobal
 	friend class CDUIRotateMenuCtrl;
 	friend class CDUICalendarWnd;
 	friend class CDUIXmlPack;
-	friend class CDuiOperatorHistory;
+	friend class COperatorHistory;
 	friend class CUICommandElement;
 	friend class CDesignerView;
 	friend class CProjectView;

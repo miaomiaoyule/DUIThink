@@ -1192,6 +1192,57 @@ void CDUIWnd::RefreshToolTip(CMMString strToolTip)
 	return;
 }
 
+void CDUIWnd::RefreshLayout()
+{
+	CDUIRect rcClient;
+	::GetClientRect(m_hWnd, &rcClient);
+
+	//layout
+	bool bNeedLayoutMsg = false;
+	if (false == IsRefreshViewNeeded()) return;
+	if (NULL == m_pRootCtrl || rcClient.Empty() || ::IsIconic(m_hWnd)) return;
+
+	m_bRefreshViewNeeded = false;
+
+	if (m_pRootCtrl && m_pRootCtrl->IsRefreshViewNeeded())
+	{
+		m_pRootCtrl->OnDuiSize(rcClient);
+		bNeedLayoutMsg = true;
+	}
+	else
+	{
+		m_vecFoundControls.clear();
+		m_pRootCtrl->FindControl(__FindControlsFromUpdate, nullptr, DuiFind_Visible | DuiFind_MeFirst | DuiFind_UpdateTest);
+		for (auto pControl : m_vecFoundControls)
+		{
+			pControl->OnDuiSize(pControl->GetModalParentRect());
+		}
+	}
+
+	if (m_bFirstLayout)
+	{
+		SendNotify(m_pRootCtrl, DuiNotify_WndInited, 0, 0);
+	}
+	if (bNeedLayoutMsg)
+	{
+		SendNotify(m_pRootCtrl, DuiNotify_WndLayout, 0, 0);
+	}
+	if (m_bFirstLayout)
+	{
+		//animation wnd
+#ifndef DUI_DESIGN
+		if (AnimateWnd_None != GetAnimateWndType())
+		{
+			StartAnimationWnd();
+		}
+#endif
+	}
+
+	m_bFirstLayout = false;
+
+	return;
+}
+
 void CDUIWnd::Invalidate()
 {
 	if (NULL == m_hWnd) return;
@@ -3496,57 +3547,6 @@ void CDUIWnd::AdjustImagesHSL()
 	}*/
 
 	Invalidate();
-
-	return;
-}
-
-void CDUIWnd::RefreshLayout()
-{
-	CDUIRect rcClient;
-	::GetClientRect(m_hWnd, &rcClient);
-
-	//layout
-	bool bNeedLayoutMsg = false;
-	if (false == IsRefreshViewNeeded()) return;
-	if (NULL == m_pRootCtrl || rcClient.Empty() || ::IsIconic(m_hWnd)) return;
-
-	m_bRefreshViewNeeded = false;
-
-	if (m_pRootCtrl && m_pRootCtrl->IsRefreshViewNeeded())
-	{
-		m_pRootCtrl->OnDuiSize(rcClient);
-		bNeedLayoutMsg = true;
-	}
-	else
-	{
-		m_vecFoundControls.clear();
-		m_pRootCtrl->FindControl(__FindControlsFromUpdate, nullptr, DuiFind_Visible | DuiFind_MeFirst | DuiFind_UpdateTest);
-		for (auto pControl : m_vecFoundControls)
-		{
-			pControl->OnDuiSize(pControl->GetModalParentRect());
-		}
-	}
-
-	if (m_bFirstLayout)
-	{
-		SendNotify(m_pRootCtrl, DuiNotify_WndInited, 0, 0);
-	}
-	if (bNeedLayoutMsg)
-	{
-		SendNotify(m_pRootCtrl, DuiNotify_WndLayout, 0, 0);
-	}
-	if (m_bFirstLayout)
-	{
-		//animation wnd
-#ifndef DUI_DESIGN
-		if (AnimateWnd_None != GetAnimateWndType())
-		{
-			StartAnimationWnd();
-		}
-#endif
-	}
-
-	m_bFirstLayout = false;
 
 	return;
 }

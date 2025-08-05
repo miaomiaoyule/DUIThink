@@ -19,7 +19,7 @@ class DUITHINK_API CDUIWnd
 	friend class CDUIXmlPack;
 	friend class CDesignerView;
 	friend class CControlView;
-	friend class CDuiLayoutView;
+	friend class CLayoutView;
 	friend class CDUIContainerCtrl;
 	friend class CDlgLogon;
 
@@ -221,6 +221,7 @@ public:
 	virtual void RefreshToolTip(CMMString strToolTip);
 
 	//refresh
+	virtual void RefreshLayout();
 	virtual void Invalidate();
 	virtual bool IsRefreshViewNeeded() const;
 	virtual void NeedRefreshView();
@@ -379,7 +380,6 @@ protected:
 	void OnDpiChanged(int nScalePre);
 	void AdjustWndSize();
 	void AdjustImagesHSL();
-	void RefreshLayout();
 	void DelayDelete(CDUIControlBase *pControl);
 	void DispatchNotifyAsyn();
 	void PostAppMsg();
