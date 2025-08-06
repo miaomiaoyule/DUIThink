@@ -125,7 +125,10 @@ static LPCTSTR g_szPublicColor[] =
 
 static LOGFONT g_PublicFont[] =
 {
+	{ 8, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
+	{ 8, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
 	{ 12, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
+	{ 12, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
 	{ 14, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
 	{ 14, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
 	{ 16, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
