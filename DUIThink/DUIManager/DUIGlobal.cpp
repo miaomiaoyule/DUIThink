@@ -1162,6 +1162,8 @@ void CDUIGlobal::LoadPublicResource()
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_DlgCaption);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_DlgLogo);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_DlgTitle);
+	DuiInitCtrlIDItem(Dui_CtrlIDInner_DragTmp);
+	DuiInitCtrlIDItem(Dui_CtrlIDInner_ListItemEdit);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_ListItemSelect);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_HeaderItemSelect);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_HeaderItemCheck);

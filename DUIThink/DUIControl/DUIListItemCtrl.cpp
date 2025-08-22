@@ -1153,11 +1153,15 @@ CDUIRect CDUIListItemCtrl::GetTextRange()
 	rcRange.top += rcTextPadding.top;
 	rcRange.bottom -= rcTextPadding.bottom;
 
-	rcTextPadding = m_pOwner->GetItemTextPadding();
-	rcRange.left += rcTextPadding.left;
-	rcRange.right -= rcTextPadding.right;
-	rcRange.top += rcTextPadding.top;
-	rcRange.bottom -= rcTextPadding.bottom;
+	//model owner is null
+	if (m_pOwner)
+	{
+		rcTextPadding = m_pOwner->GetItemTextPadding();
+		rcRange.left += rcTextPadding.left;
+		rcRange.right -= rcTextPadding.right;
+		rcRange.top += rcTextPadding.top;
+		rcRange.bottom -= rcTextPadding.bottom;
+	}
 
 	rcRange.CheckRect();
 
