@@ -12,6 +12,8 @@
 
 //////////////////////////////////////////////////////////////////////////
 MMImplement_ClassName(CDUICalendarWnd)
+DuiBegin_Message_Map(CDUICalendarWnd, CDUINotifyPump)
+DuiEnd_Message_Map()
 
 CDUICalendarWnd::CDUICalendarWnd(CMMString strDuiName)
 	: CDUIWnd(strDuiName)
@@ -183,6 +185,7 @@ MMImplement_ClassName(CDUICalendarCtrl)
 DuiBegin_Message_Map(CDUICalendarCtrl, CDUINotifyPump)
 	Dui_On_Notify(DuiNotify_MouseWheel, OnDuiMouseWheel)
 	Dui_On_Notify(DuiNotify_ItemSelected, OnDuiItemSelected)
+	Dui_On_Notify(DuiNotify_ItemClick, OnDuiItemClick)
 	Dui_On_Notify_Ctrl(DuiNotify_Click, Dui_CtrlIDInner_CalendarBtnLeft, OnDuiBtnLeft)
 	Dui_On_Notify_Ctrl(DuiNotify_Click, Dui_CtrlIDInner_CalendarBtnRight, OnDuiBtnRight)
 	Dui_On_Notify_Ctrl(DuiNotify_Click, Dui_CtrlIDInner_CalendarBtnYear, OnDuiBtnYear)
@@ -914,6 +917,30 @@ void CDUICalendarCtrl::OnDuiItemSelected(const DuiNotify &Notify)
 	return;
 }
 
+void CDUICalendarCtrl::OnDuiItemClick(const DuiNotify &Notify)
+{
+	if (NULL == m_pListDayCtrl1 || NULL == m_pListDayCtrl2) return;
+	if (m_pListDayCtrl1 != Notify.pNotifyCtrl && m_pListDayCtrl2 != Notify.pNotifyCtrl) return;
+
+	CDUIListViewCtrl *pListDays = m_pListDayCtrl1 == Notify.pNotifyCtrl ? m_pListDayCtrl1 : m_pListDayCtrl2;
+	CDUIListItemCtrl *pDay = pListDays->GetChildAt(pListDays->GetCurSel());
+
+	if (NULL == pDay) return;
+
+	m_CalendarCmd.bSelected = true;
+	m_CalendarCmd.tTimeSelected.wYear = ParseYear(pDay->GetTag());
+	m_CalendarCmd.tTimeSelected.wMonth = ParseMonth(pDay->GetTag());
+	m_CalendarCmd.tTimeSelected.wDay = ParseDay(pDay->GetTag());
+	g_DuiCalendarCmd = m_CalendarCmd;
+
+	if (g_pDuiCalendarWnd)
+	{
+		g_pDuiCalendarWnd->UnInit();
+	}
+
+	return;
+}
+
 void CDUICalendarCtrl::OnDuiBtnLeft(const DuiNotify &Notify)
 {
 	if (m_pBtnLeftCtrl != Notify.pNotifyCtrl) return;
@@ -938,74 +965,7 @@ void CDUICalendarCtrl::OnDuiBtnYear(const DuiNotify &Notify)
 		|| NULL == m_pBtnYearCtrl
 		|| Notify.pNotifyCtrl != m_pBtnYearCtrl) return;
 
-	CDUIMenuWnd YearWnd;
-	MMSafeDelete(g_pDuiMenuWndRoot);
-	g_pDuiMenuWndRoot = &YearWnd;
-	g_DuiMenuCmd = {};
-
-	SYSTEMTIME SysTime = {};
-	GetLocalTime(&SysTime);
-
-	CDUISize szYear = m_AttributeTextStyleYearNormal.MeasureString(_T("9999"));
-	szYear.cx += 1;
-	tagDuiTextStyle TextStyleNormal = m_AttributeTextStyleYearNormal.GetTextStyle();
-	tagDuiTextStyle TextStyleHot = m_AttributeTextStyleYearHot.GetTextStyle();
-	TextStyleNormal.dwTextStyle |= (DT_VCENTER | DT_CENTER);
-	TextStyleHot.dwTextStyle |= (DT_VCENTER | DT_CENTER);
-
-	//menu view
-	CDUIMenuCtrl *pYearView = new CDUIMenuCtrl();
-	pYearView->Init();
-	pYearView->SetBkColor({ Name_ColorDefault });
-	pYearView->SetItemTextStyleNormal(TextStyleNormal);
-	pYearView->SetItemTextStyleHot(TextStyleHot);
-	pYearView->SetItemTextStyleSelNormal(TextStyleNormal);
-	pYearView->SetItemTextStyleSelHot(TextStyleNormal);
-	pYearView->SetItemStatusColorResSwitchNormal(m_AttributeColorYearNormal.GetColorResSwitch());
-	pYearView->SetItemStatusColorResSwitchHot(m_AttributeColorYearHot.GetColorResSwitch());
-	pYearView->SetItemStatusColorResSwitchSelNormal({ Name_ColorSelBk });
-	pYearView->SetSwitchTileItemSize(szYear);
-	pYearView->SetChildPadding(5, 5);
-	pYearView->SwitchListViewType(enDuiListViewType::ListView_TileH);
-	pYearView->CDUIListViewCtrl::InsertChild((CALENDAR_COUNT_YEAR));
-	for (int nYear = SysTime.wYear - CALENDAR_COUNT_YEAR / 2; nYear < SysTime.wYear + (CALENDAR_COUNT_YEAR + 2 - 1) / 2; nYear++)
-	{
-		CDUIMenuItemCtrl *pYear = pYearView->GetMenuItem(nYear - (SysTime.wYear - CALENDAR_COUNT_YEAR / 2));
-		pYear->SetText(CMMStrHelp::Format(_T("%d"), nYear));
-		pYear->SetTag(ConstructDate(nYear, ParseMonth(m_pBtnYearCtrl->GetTag()), 1));
-
-		if (nYear == ParseYear(m_pBtnYearCtrl->GetTag()))
-		{
-			pYear->SetBkColor({ Name_ColorSelBk });
-		}
-	}
-
-	//size
-	CDUISize szWnd;
-	szWnd.cx = szYear.cx * sqrt(CALENDAR_COUNT_YEAR) + pYearView->GetChildPaddingH() * sqrt(CALENDAR_COUNT_YEAR);
-	szWnd.cy = szYear.cy * sqrt(CALENDAR_COUNT_YEAR) + pYearView->GetChildPaddingV() * sqrt(CALENDAR_COUNT_YEAR);
-	YearWnd.SetGdiplusRenderText(true);
-	YearWnd.SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
-	YearWnd.SetWndInitSize(szWnd.cx, szWnd.cy);
-	YearWnd.SetWndLayered(true);
-	YearWnd.SetCaptionHeight(0);
-
-	//pos
-	CDUIPoint ptTrack(m_pBtnYearCtrl->GetAbsoluteRect().left, m_pBtnYearCtrl->GetAbsoluteRect().top);
-	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptTrack);
-	ptTrack.Offset(-szWnd.cx, m_pBtnYearCtrl->GetHeight() / 2 - szWnd.cy / 2);
-
-	YearWnd.SetMenuView(pYearView);
-	YearWnd.Init(m_pWndOwner->GetWndHandle(), ptTrack);
-	YearWnd.DoBlock();
-
-	//select
-	if (g_DuiMenuCmd.uMenuTag)
-	{
-		SwitchYearMonth(ParseYear(g_DuiMenuCmd.uMenuTag), ParseMonth(g_DuiMenuCmd.uMenuTag));
-	}
-
-	g_pDuiMenuWndRoot = NULL;
+	PopupYearMonthWnd(true);
 
 	return;
 }
@@ -1016,73 +976,8 @@ void CDUICalendarCtrl::OnDuiBtnMonth(const DuiNotify &Notify)
 		|| NULL == m_pBtnMonthCtrl
 		|| Notify.pNotifyCtrl != m_pBtnMonthCtrl) return;
 
-	CDUIMenuWnd MonthWnd;
-	MMSafeDelete(g_pDuiMenuWndRoot);
-	g_pDuiMenuWndRoot = &MonthWnd;
-	g_DuiMenuCmd = {};
-
-	SYSTEMTIME SysTime = {};
-	GetLocalTime(&SysTime);
-
-	CDUISize szMonth = m_AttributeTextStyleMonthNormal.MeasureString(_T("1989"));
-	tagDuiTextStyle TextStyleNormal = m_AttributeTextStyleMonthNormal.GetTextStyle();
-	tagDuiTextStyle TextStyleHot = m_AttributeTextStyleMonthHot.GetTextStyle();
-	TextStyleNormal.dwTextStyle |= (DT_VCENTER | DT_CENTER);
-	TextStyleHot.dwTextStyle |= (DT_VCENTER | DT_CENTER);
-
-	//menu view
-	CDUIMenuCtrl *pMonthView = new CDUIMenuCtrl();
-	pMonthView->Init();
-	pMonthView->SetBkColor({ Name_ColorDefault });
-	pMonthView->SetItemTextStyleNormal(TextStyleNormal);
-	pMonthView->SetItemTextStyleHot(TextStyleHot);
-	pMonthView->SetItemTextStyleSelNormal(TextStyleNormal);
-	pMonthView->SetItemTextStyleSelHot(TextStyleNormal);
-	pMonthView->SetItemStatusColorResSwitchNormal(m_AttributeColorMonthNormal.GetColorResSwitch());
-	pMonthView->SetItemStatusColorResSwitchHot(m_AttributeColorMonthHot.GetColorResSwitch());
-	pMonthView->SetItemStatusColorResSwitchSelNormal({ Name_ColorSelBk });
-	pMonthView->SetSwitchTileItemSize(szMonth);
-	pMonthView->SetChildPadding(0, 5);
-	pMonthView->SwitchListViewType(enDuiListViewType::ListView_TileH);
-	pMonthView->CDUIListViewCtrl::InsertChild((CALENDAR_COUNT_MONTH));
-	pMonthView->SetUseListHeader(false);
-	for (int nMonth = 1; nMonth <= CALENDAR_COUNT_MONTH; nMonth++)
-	{
-		CDUIMenuItemCtrl *pMonth = pMonthView->GetMenuItem(nMonth - 1);
-		pMonth->SetText(CMMStrHelp::Format(_T("%d"), nMonth));
-		pMonth->SetTag(ConstructDate(ParseYear(m_pBtnMonthCtrl->GetTag()), nMonth, 1));
-
-		if (nMonth == ParseMonth(m_pBtnMonthCtrl->GetTag()))
-		{
-			pMonth->SetBkColor({ Name_ColorSelBk });
-		}
-	}
-
-	//size
-	CDUISize szWnd(szMonth.cx * 4, szMonth.cy * 3 + pMonthView->GetChildPaddingV() * 3);
-	MonthWnd.SetGdiplusRenderText(true);
-	MonthWnd.SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
-	MonthWnd.SetWndInitSize(szWnd.cx, szWnd.cy);
-	MonthWnd.SetWndLayered(true);
-	MonthWnd.SetCaptionHeight(0);
-
-	//pos
-	CDUIPoint ptTrack(m_pBtnMonthCtrl->GetAbsoluteRect().right, m_pBtnMonthCtrl->GetAbsoluteRect().top);
-	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptTrack);
-	ptTrack.Offset(0, m_pBtnMonthCtrl->GetHeight() / 2 - szWnd.cy / 2);
-
-	MonthWnd.SetMenuView(pMonthView);
-	MonthWnd.Init(m_pWndOwner->GetWndHandle(), ptTrack);
-	MonthWnd.DoBlock();
-
-	//select
-	if (g_DuiMenuCmd.uMenuTag)
-	{
-		SwitchYearMonth(ParseYear(g_DuiMenuCmd.uMenuTag), ParseMonth(g_DuiMenuCmd.uMenuTag));
-	}
-
-	g_pDuiMenuWndRoot = NULL;
-
+	PopupYearMonthWnd(false);
+	
 	return;
 }
 
@@ -1582,6 +1477,103 @@ void CDUICalendarCtrl::SwitchYearMonth(int nYear, int nMonth)
 
 	m_pTabSwitchCtrl->SetChildIndex(pVertJumpCtrl, 0);
 	m_pTabSwitchCtrl->Select(0);
+
+	return;
+}
+
+void CDUICalendarCtrl::PopupYearMonthWnd(bool bYear)
+{
+	CDUIMenuWnd PopupWnd;
+	MMSafeDelete(g_pDuiMenuWndRoot);
+	g_pDuiMenuWndRoot = &PopupWnd;
+	g_DuiMenuCmd = {};
+
+	SYSTEMTIME SysTime = {};
+	GetLocalTime(&SysTime);
+
+	CDUISize szItem = bYear ? m_AttributeTextStyleYearNormal.MeasureString(_T("9999")) : m_AttributeTextStyleMonthNormal.MeasureString(_T("9999"));
+	szItem.cx += 1;
+	tagDuiTextStyle TextStyleNormal = bYear ? m_AttributeTextStyleYearNormal.GetTextStyle() : m_AttributeTextStyleMonthNormal.GetTextStyle();
+	tagDuiTextStyle TextStyleHot = bYear ? m_AttributeTextStyleYearHot.GetTextStyle() : m_AttributeTextStyleMonthHot.GetTextStyle();
+	TextStyleNormal.dwTextStyle |= (DT_VCENTER | DT_CENTER);
+	TextStyleHot.dwTextStyle |= (DT_VCENTER | DT_CENTER);
+
+	//menu view
+	CDUIMenuCtrl *pPopupView = new CDUIMenuCtrl();
+	pPopupView->Init();
+	pPopupView->SetBkColor({ Name_ColorDefault });
+	pPopupView->SetItemTextStyleNormal(TextStyleNormal);
+	pPopupView->SetItemTextStyleHot(TextStyleHot);
+	pPopupView->SetItemTextStyleSelNormal(TextStyleNormal);
+	pPopupView->SetItemTextStyleSelHot(TextStyleNormal);
+	pPopupView->SetItemStatusColorResSwitchNormal(bYear ? m_AttributeColorYearNormal.GetColorResSwitch() : m_AttributeColorMonthNormal.GetColorResSwitch());
+	pPopupView->SetItemStatusColorResSwitchHot(bYear ? m_AttributeColorYearHot.GetColorResSwitch() : m_AttributeColorMonthHot.GetColorResSwitch());
+	pPopupView->SetItemStatusColorResSwitchSelNormal({ Name_ColorSelBk });
+	pPopupView->SetSwitchTileItemSize(szItem);
+	pPopupView->SetChildPadding(bYear ? 5 : 0, 5);
+	pPopupView->SwitchListViewType(enDuiListViewType::ListView_TileH);
+	pPopupView->SetUseListHeader(false);
+	if (bYear)
+	{
+		pPopupView->CDUIListViewCtrl::InsertChild((CALENDAR_COUNT_YEAR));
+		for (int nYear = SysTime.wYear - CALENDAR_COUNT_YEAR / 2; nYear < SysTime.wYear + (CALENDAR_COUNT_YEAR + 1) / 2; nYear++)
+		{
+			CDUIMenuItemCtrl *pYear = pPopupView->GetMenuItem(nYear - (SysTime.wYear - CALENDAR_COUNT_YEAR / 2));
+			pYear->SetText(CMMStrHelp::Format(_T("%d"), nYear));
+			pYear->SetTag(ConstructDate(nYear, ParseMonth(m_pBtnYearCtrl->GetTag()), 1));
+
+			if (nYear == ParseYear(m_pBtnYearCtrl->GetTag()))
+			{
+				pYear->SetBkColor({ Name_ColorSelBk });
+			}
+		}
+	}
+	else
+	{
+		pPopupView->CDUIListViewCtrl::InsertChild((CALENDAR_COUNT_MONTH));	
+		for (int nMonth = 1; nMonth <= CALENDAR_COUNT_MONTH; nMonth++)
+		{
+			CDUIMenuItemCtrl *pMonth = pPopupView->GetMenuItem(nMonth - 1);
+			pMonth->SetText(CMMStrHelp::Format(_T("%d"), nMonth));
+			pMonth->SetTag(ConstructDate(ParseYear(m_pBtnMonthCtrl->GetTag()), nMonth, 1));
+
+			if (nMonth == ParseMonth(m_pBtnMonthCtrl->GetTag()))
+			{
+				pMonth->SetBkColor({ Name_ColorSelBk });
+			}
+		}
+	}
+
+	//size
+	CDUISize szWnd;
+	szWnd.cx = szItem.cx * sqrt(pPopupView->GetChildCount()) + pPopupView->GetChildPaddingH() * sqrt(pPopupView->GetChildCount());
+	szWnd.cy = szItem.cy * sqrt(pPopupView->GetChildCount()) + pPopupView->GetChildPaddingV() * sqrt(pPopupView->GetChildCount());
+	PopupWnd.SetGdiplusRenderText(true);
+	PopupWnd.SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
+	PopupWnd.SetWndInitSize(szWnd.cx, szWnd.cy);
+	PopupWnd.SetWndLayered(true);
+	PopupWnd.SetCaptionHeight(0);
+
+	//pos
+	CDUIButtonCtrl *pBtnClickCtrl = bYear ? m_pBtnYearCtrl : m_pBtnMonthCtrl;
+	CDUIPoint ptTrack(pBtnClickCtrl->GetAbsoluteRect().left, pBtnClickCtrl->GetAbsoluteRect().top);
+	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptTrack);
+	ptTrack.Offset(-szWnd.cx, pBtnClickCtrl->GetHeight() / 2 - szWnd.cy / 2);
+
+	PopupWnd.SetMenuView(pPopupView);
+	PopupWnd.Init(m_pWndOwner->GetWndHandle(), ptTrack);
+	PopupWnd.DoBlock();
+
+	//select
+	if (g_DuiMenuCmd.uMenuTag)
+	{
+		SwitchYearMonth(ParseYear(g_DuiMenuCmd.uMenuTag), ParseMonth(g_DuiMenuCmd.uMenuTag));
+	}
+
+	//focus
+	SetFocus();
+
+	g_pDuiMenuWndRoot = NULL;
 
 	return;
 }

@@ -39,7 +39,7 @@ int CMMDpi::GetDpiOfMonitor(HMONITOR hMonitor)
 			if (S_OK != hr)
 			{
 				int nError = GetLastError();
-				CMMString strTip = CMMStrHelp::Format(_T("GetDpiForMonitor failed, LastError:[%d]"), nError);
+				CMMString strTip = CMMStrHelp::Format(_T("GetDpiForMonitor Failed, LastError:[%d]"), nError);
 				MessageBox(nullptr, strTip.c_str(), _T("Notification"), MB_OK);
 			}
 		}

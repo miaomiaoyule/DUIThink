@@ -8,15 +8,18 @@
 class DUITHINK_API CDUICalendarWnd : public CDUIWnd
 {
 	MMDeclare_ClassName()
+	DuiDeclare_Message_Map()
 
 public:
 	CDUICalendarWnd(CMMString strDuiName);
 	virtual ~CDUICalendarWnd();
 
+	//variant
 protected:
 	CDUIPoint							m_ptTrack;
 	CDUICalendarCtrl *					m_pShowCalendarView = NULL;
 
+	//method
 public:
 	void Init(HWND hWndParent);
 	void Init(HWND hWndParent, CDUIPoint ptTrack);
@@ -24,6 +27,7 @@ public:
 
 	CDUICalendarCtrl * GetCalendarCtrl();
 
+	//message
 protected:
 	LRESULT OnCreate(WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam) override;
@@ -31,6 +35,10 @@ protected:
 	LRESULT OnClose(WPARAM /*wParam*/, LPARAM /*lParam*/) override;
 	LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/) override;
 
+	//notify
+protected:
+
+	//help
 protected:
 	void AdjustCalendar();
 };
@@ -200,6 +208,7 @@ protected:
 protected:
 	void OnDuiMouseWheel(const DuiNotify &Notify);
 	void OnDuiItemSelected(const DuiNotify &Notify);
+	void OnDuiItemClick(const DuiNotify &Notify);
 	void OnDuiBtnLeft(const DuiNotify &Notify);
 	void OnDuiBtnRight(const DuiNotify &Notify);
 	void OnDuiBtnYear(const DuiNotify &Notify);
@@ -232,6 +241,7 @@ protected:
 protected:
 	void SwitchYearMonth(bool bPre);
 	void SwitchYearMonth(int nYear, int nMonth);
+	void PopupYearMonthWnd(bool bYear);
 };
 
 //////////////////////////////////////////////////////////////////////////

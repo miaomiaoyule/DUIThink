@@ -1511,9 +1511,8 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIAttribute\DUIAttributeRect.h" />
     <ClInclude Include="DUIAttribute\DUIAttributeSize.h" />
     <ClInclude Include="DUIAttribute\DUIAttriImageSection.h" />
-    <ClInclude Include="DUIAttribute\DUIAttriModelSelect.h" />
-    <ClInclude Include="DUIAttribute\DUIAttriTabSelect.h" />
-    <ClInclude Include="DUIAttribute\DUIAttriViewSelect.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeDuiSelect.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeTabSelect.h" />
     <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeCtrlID.h" />
     <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeFloat.h" />
     <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeLong.h" />
@@ -1601,9 +1600,8 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUIAttribute\DUIAttributeRect.cpp" />
     <ClCompile Include="DUIAttribute\DUIAttributeSize.cpp" />
     <ClCompile Include="DUIAttribute\DUIAttriImageSection.cpp" />
-    <ClCompile Include="DUIAttribute\DUIAttriModelSelect.cpp" />
-    <ClCompile Include="DUIAttribute\DUIAttriTabSelect.cpp" />
-    <ClCompile Include="DUIAttribute\DUIAttriViewSelect.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeDuiSelect.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeTabSelect.cpp" />
     <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeCtrlID.cpp" />
     <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeFloat.cpp" />
     <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeLong.cpp" />

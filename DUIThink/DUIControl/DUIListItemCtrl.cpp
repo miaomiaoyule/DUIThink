@@ -542,7 +542,7 @@ RECT CDUIListItemCtrl::GetTextPadding()
 
 void CDUIListItemCtrl::SetTextPadding(RECT rcPadding)
 {
-	if (rcPadding == GetTextPadding()) return;
+	if (DuiDpiScaleCtrl(rcPadding) == GetTextPadding()) return;
 
 	m_AttributeTextPadding.SetValue(rcPadding);
 

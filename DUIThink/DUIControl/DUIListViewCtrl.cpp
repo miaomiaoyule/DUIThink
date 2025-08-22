@@ -7,6 +7,10 @@ MMImplement_ClassName(CDUIListViewCtrl)
 
 CDUIListViewCtrl::CDUIListViewCtrl(void)
 {
+	//model
+	m_AttributeItemModel.SetDuiType(DuiType_ModelListItem);
+
+	//list view type
 	static tagDuiCombox AttriCombox;
 	if (AttriCombox.vecItem.empty())
 	{
@@ -481,7 +485,7 @@ int CDUIListViewCtrl::GetSwitchListItemHeight()
 
 void CDUIListViewCtrl::SetSwitchListItemHeight(int nHeight)
 {
-	if (nHeight <= 0 || nHeight == GetSwitchListItemHeight()) return;
+	if (nHeight <= 0 || DuiDpiScaleCtrl(nHeight) == GetSwitchListItemHeight()) return;
 
 	m_AttributeSwitchListItemHeight.SetValue(nHeight);
 
@@ -733,7 +737,7 @@ CDUISize CDUIListViewCtrl::GetSwitchTileItemSize()
 
 void CDUIListViewCtrl::SetSwitchTileItemSize(CDUISize szItem)
 {
-	if (szItem.cx <= 0 || szItem.cy <= 0 || szItem == GetSwitchTileItemSize()) return;
+	if (szItem.cx <= 0 || szItem.cy <= 0 || DuiDpiScaleCtrl(szItem) == GetSwitchTileItemSize()) return;
 
 	m_AttributeSwitchTileItemSize.SetValue(szItem);
 

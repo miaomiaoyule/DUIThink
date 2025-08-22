@@ -1209,7 +1209,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 	if (false == bRes)
 	{
 		assert(false);
-		CMMString strWarning = CMMStrHelp::Format(_T("Failed of load [%s]，Please Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
+		CMMString strWarning = CMMStrHelp::Format(_T("Failed of Load [%s]，Please Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
 		MessageBox(NULL, strWarning, NULL, NULL);
 
 		return;
@@ -1580,7 +1580,7 @@ bool CDUIGlobal::RenameDui(const CMMString &strNameOld, const CMMString &strName
 
 	if (false == MoveFile(strFileOld, strFileNew))
 	{
-		MessageBox(NULL, _T("error because same filename。"), _T("提示"), MB_ICONINFORMATION);
+		MessageBox(NULL, _T("Error Because Same Filename。"), _T("提示"), MB_ICONINFORMATION);
 		return false;
 	}
 
@@ -3014,8 +3014,7 @@ void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t uID)
 			break;
 		}
 		case DuiAttribute_Combox:
-		case DuiAttribute_ModelSelect:
-		case DuiAttribute_ViewSelect:
+		case DuiAttribute_DuiSelect:
 		case DuiAttribute_TabSelect:
 		{
 			DuiAttriReadValue(uID, m_mapAttriComboxSave, m_mapAttriComboxValue);

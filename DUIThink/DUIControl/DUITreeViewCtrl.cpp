@@ -7,6 +7,9 @@ MMImplement_ClassName(CDUITreeViewCtrl)
 
 CDUITreeViewCtrl::CDUITreeViewCtrl(void)
 {
+	m_AttributeItemModel.SetDuiType(DuiType_ModelTreeNode);
+
+	return;
 }
 
 CDUITreeViewCtrl::~CDUITreeViewCtrl(void)

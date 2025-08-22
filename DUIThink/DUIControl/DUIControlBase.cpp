@@ -641,10 +641,10 @@ CDUIRect CDUIControlBase::GetPadding()
 void CDUIControlBase::SetPadding(long lLeft, long lTop, long lRight, long lBottom)
 {
 	CDUIRect rcPadding = GetPadding();
-	if (lLeft == rcPadding.left
-		&& lTop == rcPadding.top
-		&& lRight == rcPadding.right
-		&& lBottom == rcPadding.bottom) return;
+	if ((IsDpiPadding() ? DuiDpiScaleCtrl(lLeft) == rcPadding.left : lLeft == rcPadding.left)
+		&& (IsDpiPadding() ? DuiDpiScaleCtrl(lTop) == rcPadding.top : lTop == rcPadding.top)
+		&& (IsDpiPadding() ? DuiDpiScaleCtrl(lRight) == rcPadding.right : lRight == rcPadding.right)
+		&& (IsDpiPadding() ? DuiDpiScaleCtrl(lBottom) == rcPadding.bottom : lBottom == rcPadding.bottom)) return;
 
 	m_AttributePosition.SetLeftAlignValue(lLeft);
 	m_AttributePosition.SetTopAlignValue(lTop);
@@ -762,7 +762,7 @@ long CDUIControlBase::GetMinWidth()
 
 void CDUIControlBase::SetMinWidth(long lWidth)
 {
-	if (lWidth < 0 || lWidth == GetMinWidth()) return;
+	if (lWidth < 0 || DuiDpiScaleCtrl(lWidth) == GetMinWidth()) return;
 
 	m_AttributeMinSize.SetValue(lWidth, m_AttributeMinSize.GetValue().cy);
 
@@ -778,7 +778,7 @@ long CDUIControlBase::GetMaxWidth()
 
 void CDUIControlBase::SetMaxWidth(long lWidth)
 {
-	if (lWidth < 0 || lWidth == GetMaxWidth()) return;
+	if (lWidth < 0 || DuiDpiScaleCtrl(lWidth) == GetMaxWidth()) return;
 
 	m_AttributeMaxSize.SetValue(lWidth, m_AttributeMaxSize.GetValue().cy);
 
@@ -794,7 +794,7 @@ long CDUIControlBase::GetMinHeight()
 
 void CDUIControlBase::SetMinHeight(long lHeight)
 {
-	if (lHeight < 0 || lHeight == GetMinHeight()) return;
+	if (lHeight < 0 || DuiDpiScaleCtrl(lHeight) == GetMinHeight()) return;
 
 	m_AttributeMinSize.SetValue(m_AttributeMinSize.GetValue().cx, lHeight);
 
@@ -810,7 +810,7 @@ long CDUIControlBase::GetMaxHeight()
 
 void CDUIControlBase::SetMaxHeight(long lHeight)
 {
-	if (lHeight < 0 || lHeight == GetMaxHeight()) return;
+	if (lHeight < 0 || DuiDpiScaleCtrl(lHeight) == GetMaxHeight()) return;
 
 	m_AttributeMaxSize.SetValue(m_AttributeMaxSize.GetValue().cx, lHeight);
 
@@ -960,7 +960,7 @@ CDUIRect CDUIControlBase::GetRoundCorner()
 
 void CDUIControlBase::SetRoundCorner(const CDUIRect &rcRoundCorner)
 {
-	if (rcRoundCorner == GetRoundCorner()) return;
+	if (DuiDpiScaleCtrl(rcRoundCorner) == GetRoundCorner()) return;
 
 	m_AttributeRoundCorner.SetValue(rcRoundCorner);
 

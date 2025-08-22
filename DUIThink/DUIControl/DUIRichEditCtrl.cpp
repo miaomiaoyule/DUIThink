@@ -1483,7 +1483,7 @@ RECT CDUIRichEditCtrl::GetTextPadding()
 
 void CDUIRichEditCtrl::SetTextPadding(RECT rcPadding)
 {
-	if (rcPadding == GetTextPadding()) return;
+	if (DuiDpiScaleCtrl(rcPadding) == GetTextPadding()) return;
 
 	m_AttributeTextPadding.SetValue(rcPadding);
 

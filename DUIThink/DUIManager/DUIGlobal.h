@@ -11,13 +11,9 @@ typedef std::map<UINT, CMMString> MapDuiControlID;
 LPCTSTR DUITHINK_API DUI__TraceMsg(UINT uMsg);
 
 //////////////////////////////////////////////////////////////////////////
-class CDUIOperatorHistory;
 class CDTDesignerView;
 class CProjectView;
 class CPropertiesView;
-class CDlgDefaultAttribList;
-class CDTDesignerDoc;
-class CDUIWndImageList;
 class CImageResView;
 class CFontResView;
 class CColorGridWnd;
@@ -28,24 +24,12 @@ class DUITHINK_API CDUIGlobal
 	, public CMMServiceItem
 {
 	friend class CDUIControlBase;
-	friend class CDUIControlObject;
 	friend class CDUIContainerCtrl;
 	friend class CDUIMenuItemCtrl;
 	friend class CDUIMenuWnd;
 	friend class CDUIRotateMenuCtrl;
 	friend class CDUICalendarWnd;
 	friend class CDUIXmlPack;
-	friend class COperatorHistory;
-	friend class CUICommandElement;
-	friend class CDesignerView;
-	friend class CProjectView;
-	friend class CPropertiesView;
-	friend class CDlgDefaultAttribList;
-	friend class CDesignerTitle;
-	friend class CImageResView;
-	friend class CFontResView;
-	friend class CColorResView;
-	friend class CColorGridWnd;
 	friend class CDUIAttributeObject;
 	friend class CDUIAttriImageSection;
 	friend class CDUIAttributeTextStyle;
@@ -57,17 +41,25 @@ class DUITHINK_API CDUIGlobal
 	friend class CDUIAttributeHotKey;
 	friend class CDUIAttributeRect;
 	friend class CDUIAttributeSize;
-	friend class CDUIAttriTabSelect;
+	friend class CDUIAttributeTabSelect;
 	friend class CDUIAttributeCtrlID;
 	friend class CDUIPropertyObject;
 	friend class CDUIImageBase;
-	friend class CDUIPreview;
 	friend class CDUIWnd;
+	friend class COperatorHistory;
+	friend class CUICommandElement;
+	friend class CDesignerView;
+	friend class CProjectView;
+	friend class CPropertiesView;
+	friend class CDesignerTitle;
+	friend class CImageResView;
+	friend class CFontResView;
+	friend class CColorResView;
+	friend class CColorGridWnd;
 	friend class CControlView;
 	friend class CVSManager;
 	friend class CDlgWizardVariant;
 	friend class CDlgWizardNotify;
-	friend class CDUIPropertyGridProperty;
 	friend class CNotifyView;
 	friend class CDTDesignerApp;
 

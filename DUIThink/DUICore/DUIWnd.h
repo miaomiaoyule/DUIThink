@@ -109,6 +109,7 @@ protected:
 	CDUIControlBase *					m_pEventCtrl = NULL;
 	CDUIControlBase *					m_pWinDragCtrl = NULL;
 	CDUIControlBase *					m_pWinDragEnterCtrl = NULL;
+	VecDuiControlBase					m_vecMouseEnterCtrl;
 
 	//drop
 	tagDuiDropData						m_DropData;

@@ -15,7 +15,18 @@ if (pCtrl \
 && (NULL == MMInterfaceHelper(CDUIEditCtrl, pCtrl) || m_pFocusCtrl != pCtrl) \
 && (NULL == MMInterfaceHelper(CDUIRichEditCtrl, pCtrl) || m_pFocusCtrl != pCtrl)) \
 	{ \
-		pCtrl->GetOwnerModelCtrl()->Func(pt, Msg);\
+		if (CMMString(_T("OnDuiMouseEnter")) == #Func) \
+		{ \
+			if (std::find(m_vecMouseEnterCtrl.begin(), m_vecMouseEnterCtrl.end(), pCtrl->GetOwnerModelCtrl()) == m_vecMouseEnterCtrl.end()) \
+			{ \
+				m_vecMouseEnterCtrl.push_back(pCtrl->GetOwnerModelCtrl()); \
+				pCtrl->GetOwnerModelCtrl()->Func(pt, Msg); \
+			} \
+		} \
+		else \
+		{ \
+			pCtrl->GetOwnerModelCtrl()->Func(pt, Msg); \
+		} \
 	} \
 }
 

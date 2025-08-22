@@ -341,7 +341,11 @@ MMImplement_ClassName(CDUIComboxCtrl)
 
 CDUIComboxCtrl::CDUIComboxCtrl(void)
 {
+	m_AttributeComboxView.SetDuiType(DuiType_View);
+
 	m_pComboxWindow = new CDUIComboxWnd(this);
+
+	return;
 }
 
 CDUIComboxCtrl::~CDUIComboxCtrl(void)
@@ -791,7 +795,7 @@ bool CDUIComboxCtrl::Active()
 
 		if (NULL == m_pShowListView)
 		{
-			MessageBox(m_pWndOwner->GetWndHandle(), _T("please select bind UI of ComboxView£¬it must be listviewctrl"), NULL, NULL);
+			MessageBox(m_pWndOwner->GetWndHandle(), _T("Please Select Bind UI of ComboxView£¬It Must Be ListviewCtrl"), NULL, NULL);
 			return false;
 		}
 	}

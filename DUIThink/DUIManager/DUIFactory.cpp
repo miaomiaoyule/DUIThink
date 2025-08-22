@@ -60,9 +60,8 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateAttribute(CDUIAttributeBool);
 	DUIInner_RegisterCreateAttribute(CDUIAttributeCombox);
 	DUIInner_RegisterCreateAttribute(CDUIAttributeCursor);
-	DUIInner_RegisterCreateAttribute(CDUIAttriModelSelect);
-	DUIInner_RegisterCreateAttribute(CDUIAttriViewSelect);
-	DUIInner_RegisterCreateAttribute(CDUIAttriTabSelect);
+	DUIInner_RegisterCreateAttribute(CDUIAttributeDuiSelect);
+	DUIInner_RegisterCreateAttribute(CDUIAttributeTabSelect);
 	DUIInner_RegisterCreateAttribute(CDUIAttributeSize);
 	DUIInner_RegisterCreateAttribute(CDUIAttributeRect);
 	DUIInner_RegisterCreateAttribute(CDUIAttributeHotKey);

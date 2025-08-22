@@ -27,7 +27,7 @@ protected:
 	//radio
 	CDUIAttributeGroup					m_AttributeGroupRadio;
 	CDUIAttributeText					m_AttributeGroupName = _T("0");
-	CDUIAttriTabSelect					m_AttributeBindTabCtrlID;
+	CDUIAttributeTabSelect				m_AttributeBindTabCtrlID;
 	CDUIAttributeLong					m_AttributeBindTabCtrlIndex = -1;
 
 	//override

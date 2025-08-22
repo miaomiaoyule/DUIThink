@@ -863,6 +863,7 @@ CDUIContainerCtrl * CDUIWnd::DetachRootCtrl()
 
 	m_ptMousePosLast = {};
 
+	m_vecMouseEnterCtrl.clear();
 	m_mapControl.clear();
 	m_vecAsynNotify.clear();
 	RemoveAllRadioBoxGroup();
@@ -911,6 +912,7 @@ void CDUIWnd::ReapControl(CDUIControlBase *pControl)
 	if (pControl == m_pWinDragCtrl) m_pWinDragCtrl = NULL;
 	if (pControl == m_pWinDragEnterCtrl) m_pWinDragEnterCtrl = NULL;
 
+	m_vecMouseEnterCtrl.erase(std::remove(m_vecMouseEnterCtrl.begin(), m_vecMouseEnterCtrl.end(), pControl), m_vecMouseEnterCtrl.end());
 	m_mapControl.erase(pControl->GetCtrlID());
 
 	KillTimer(pControl);
@@ -2392,34 +2394,6 @@ LRESULT CDUIWnd::OnNcActivate(WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIWnd::OnNcCalcSize(WPARAM wParam, LPARAM lParam)
 {
-	LPRECT pRect = NULL;
-
-	if (wParam == TRUE)
-	{
-		LPNCCALCSIZE_PARAMS pParam = (LPNCCALCSIZE_PARAMS)lParam;
-		pRect = &pParam->rgrc[0];
-	}
-	else
-	{
-		pRect = (LPRECT)lParam;
-	}
-
-	if (::IsZoomed(m_hWnd))
-	{	
-		// 最大化时，计算当前显示器最适合宽高度
-		MONITORINFO oMonitor = {};
-		oMonitor.cbSize = sizeof(oMonitor);
-		::GetMonitorInfo(::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST), &oMonitor);
-		CDUIRect rcWork = oMonitor.rcWork;
-		CDUIRect rcMonitor = oMonitor.rcMonitor;
-		rcWork.Offset(-oMonitor.rcMonitor.left, -oMonitor.rcMonitor.top);
-
-		pRect->left = pRect->top = 0;
-		pRect->right = pRect->left + rcWork.GetWidth();
-		pRect->bottom = pRect->top + rcWork.GetHeight();
-		return WVR_REDRAW;
-	}
-
 	return 0;
 }
 
@@ -2781,27 +2755,36 @@ LRESULT CDUIWnd::OnMouseMove(WPARAM wParam, LPARAM lParam)
 		}
 
 		//leave
-		if (m_pHoverCtrl)
+		if (m_hWndTooltip)
 		{
-			DuiMessage msgLeave = {};
-			msgLeave.wParam = DuiMsg.wParam;
-			msgLeave.lParam = DuiMsg.lParam;
-			msgLeave.pMsgCtrl = m_pHoverCtrl;
-			m_pHoverCtrl->OnDuiMouseLeave(pt, msgLeave);
-			Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseLeave, pt, msgLeave, false);
+			::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, false, (LPARAM)&m_ToolTip);
+		}
+		auto vecMouseEnterCtrl = m_vecMouseEnterCtrl;
+		for (int n = vecMouseEnterCtrl.size() - 1; n >= 0; n--)
+		{
+			CDUIControlBase *pControl = vecMouseEnterCtrl[n];
+			if (NULL == pControl) continue;
 
-			if (m_hWndTooltip)
+			CDUIRect rcCtrl = pControl->GetAbsoluteRect();
+			if (false == rcCtrl.PtInRect(pt))
 			{
-				::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, false, (LPARAM)&m_ToolTip);
+				DuiMessage msgLeave = {};
+				msgLeave.wParam = DuiMsg.wParam;
+				msgLeave.lParam = DuiMsg.lParam;
+				msgLeave.pMsgCtrl = pControl;
+				pControl->OnDuiMouseLeave(pt, msgLeave);
+
+				m_vecMouseEnterCtrl.erase(std::remove(m_vecMouseEnterCtrl.begin(), m_vecMouseEnterCtrl.end(), pControl), m_vecMouseEnterCtrl.end());
 			}
 		}
 
 		//hover
 		m_pHoverCtrl = pControl;
 		m_bRefreshToolTipNeeded = true;
-
-		if (m_pHoverCtrl)
+		if (m_pHoverCtrl && std::find(m_vecMouseEnterCtrl.begin(), m_vecMouseEnterCtrl.end(), m_pHoverCtrl) == m_vecMouseEnterCtrl.end())
 		{
+			m_vecMouseEnterCtrl.push_back(m_pHoverCtrl);
+
 			//enter
 			DuiMsg.pMsgCtrl = pControl;
 			m_pHoverCtrl->OnDuiMouseEnter(pt, DuiMsg);
@@ -2852,25 +2835,18 @@ LRESULT CDUIWnd::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	msgLeave.wParam = wParam;
 	msgLeave.lParam = MAKELPARAM(-1, -1);
 
-	if (m_pCaptureCtrl)
+	for (int n = m_vecMouseEnterCtrl.size() - 1; n >= 0; n--)
 	{
-		msgLeave.pMsgCtrl = m_pCaptureCtrl;
-		m_pCaptureCtrl->OnDuiMouseLeave(pt, msgLeave);
+		CDUIControlBase *pControl = m_vecMouseEnterCtrl[n];
+		if (NULL == pControl) continue;
 
-		//model
-		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiMouseLeave, pt, msgLeave, false);
-	}
-	if (m_pHoverCtrl)
-	{
-		msgLeave.pMsgCtrl = m_pHoverCtrl;
+		msgLeave.pMsgCtrl = pControl;
 		msgLeave.pMsgCtrl->OnDuiMouseLeave(pt, msgLeave);
-
-		//model
-		Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseLeave, pt, msgLeave, false);
 	}
 
 	m_pHoverCtrl = NULL;
 	m_bRefreshToolTipNeeded = true;
+	m_vecMouseEnterCtrl.clear();
 
 	//提示窗体
 	if (m_hWndTooltip) ::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, false, (LPARAM)&m_ToolTip);

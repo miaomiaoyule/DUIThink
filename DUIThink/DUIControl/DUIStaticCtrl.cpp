@@ -357,7 +357,7 @@ RECT CDUIStaticCtrl::GetTextPadding()
 
 void CDUIStaticCtrl::SetTextPadding(RECT rcPadding)
 {
-	if (rcPadding == GetTextPadding()) return;
+	if (DuiDpiScaleCtrl(rcPadding) == GetTextPadding()) return;
 
 	m_AttributeTextPadding.SetValue(rcPadding);
 

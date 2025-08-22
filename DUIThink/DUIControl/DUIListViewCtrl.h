@@ -30,7 +30,7 @@ protected:
 	CDUIAttributeCombox					m_AttributeListViewType;
 	CDUIAttributeBool					m_AttributeMultiSel;
 	CDUIAttributeBool					m_AttributeScrollSelect;
-	CDUIAttriModelSelect				m_AttributeItemModel;
+	CDUIAttributeDuiSelect				m_AttributeItemModel;
 	CDUIAttributeLong					m_AttributeItemModelInitCount;
 	CDUIAttriImageSection				m_AttributeImageMouseDragSel;
 
