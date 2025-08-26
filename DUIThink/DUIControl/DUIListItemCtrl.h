@@ -41,6 +41,13 @@ protected:
 	void OnRelease(CDUIControlBase *pControl) override;
 	void OnSize(CDUIControlBase *pControl) override;
 
+	//diable method, because first child is checkicon, second child is edit.
+	//traverse user custom child use GetChildCountUser()¡¢GetChildAtUser()¡¢RemoveAtUser().
+protected:
+	int GetChildCount() const override;
+	CDUIControlBase * GetChildAt(int nIndex) const override;
+	bool RemoveAt(int nIndex) override;
+
 	//method
 public:
 	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
@@ -90,8 +97,10 @@ public:
 	//child
 	bool InsertChild(CDUIControlBase *pChild, int nPos = -1) override;
 	bool Remove(CDUIControlBase *pControl) override;
-	bool RemoveAt(int nIndex) override;
 	void RemoveAll() override;
+	virtual bool RemoveAtUser(int nIndex);
+	virtual int GetChildCountUser() const;
+	virtual CDUIControlBase * GetChildAtUser(int nIndex) const;
 
 	//refresh
 	void RefreshView() override;

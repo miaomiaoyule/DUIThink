@@ -950,7 +950,7 @@ CDUIControlBase * CDUIContainerCtrl::DetachChild(CDUIControlBase *pControl)
 
 int CDUIContainerCtrl::GetChildIndex(CDUIControlBase *pChild) const
 {
-	if (pChild == NULL) return -1;
+	if (NULL == pChild) return -1;
 
 	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
 	{
@@ -1074,27 +1074,7 @@ void CDUIContainerCtrl::SetAutoCalcChildPaddingV(bool bAuto)
 
 bool CDUIContainerCtrl::Remove(CDUIControlBase *pControl)
 {
-	int nIndex = GetChildIndex(pControl);
-	if (-1 == nIndex || nIndex >= GetChildCount()) return false;
-
-	//control notify
-	CDUIGlobal::PerformNotifyChildRemove(this, pControl);
-
-	//delete
-	m_vecChilds.erase(m_vecChilds.begin() + nIndex);
-
-	if (m_pWndOwner)
-	{
-		m_pWndOwner->DelayDelete(pControl);
-	}
-	else
-	{
-		MMSafeDelete(pControl);
-	}
-
-	NeedRefreshView();
-
-	return true;
+	return RemoveAt(GetChildIndex(pControl));
 }
 
 bool CDUIContainerCtrl::RemoveAt(int nIndex)

@@ -87,6 +87,23 @@ void CDUIListItemCtrl::OnSize(CDUIControlBase *pControl)
 	return;
 }
 
+int CDUIListItemCtrl::GetChildCount() const
+{
+	return __super::GetChildCount();
+}
+
+CDUIControlBase * CDUIListItemCtrl::GetChildAt(int nIndex) const
+{
+	return __super::GetChildAt(nIndex);
+}
+
+bool CDUIListItemCtrl::RemoveAt(int nIndex)
+{
+	if (nIndex < 2) return false;
+
+	return __super::RemoveAt(nIndex);
+}
+
 LPVOID CDUIListItemCtrl::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
 	QUERYINTERFACE(CDUIListItemCtrl, Guid, dwQueryVer);
@@ -402,13 +419,6 @@ bool CDUIListItemCtrl::Remove(CDUIControlBase *pControl)
 	return __super::Remove(pControl);
 }
 
-bool CDUIListItemCtrl::RemoveAt(int nIndex)
-{
-	if (0 == nIndex) return false;
-
-	return __super::RemoveAt(nIndex);
-}
-
 void CDUIListItemCtrl::RemoveAll()
 {
 	for (int n = GetChildCount() - 1; n >= 0; n--)
@@ -420,6 +430,21 @@ void CDUIListItemCtrl::RemoveAll()
 	}
 
 	return;
+}
+
+bool CDUIListItemCtrl::RemoveAtUser(int nIndex)
+{
+	return RemoveAt(nIndex + 2);
+}
+
+int CDUIListItemCtrl::GetChildCountUser() const
+{
+	return max(GetChildCount() - 2, 0);
+}
+
+CDUIControlBase * CDUIListItemCtrl::GetChildAtUser(int nIndex) const
+{
+	return GetChildAt(nIndex + 2);
 }
 
 void CDUIListItemCtrl::RefreshView()
@@ -553,31 +578,7 @@ void CDUIListItemCtrl::SetTextPadding(RECT rcPadding)
 
 void CDUIListItemCtrl::PerformEditText()
 {
-	//create
-	if (NULL == m_pEditTextCtrl)
-	{
-		do
-		{
-			m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, FindSubControlThisView(Dui_CtrlIDInner_ListItemEdit));
-			if (m_pEditTextCtrl) break;
-
-			m_pEditTextCtrl = new CDUIThinkEditCtrl;
-			m_pEditTextCtrl->Init();
-			m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
-			m_pEditTextCtrl->SetVisible(false);
-			m_pEditTextCtrl->SetBorderLine({ 1,1,1,1 });
-			m_pEditTextCtrl->SetBkColor({ Name_ColorWhite });
-			m_pEditTextCtrl->SetAutoSelAll(true);
-			InsertChild(m_pEditTextCtrl, 1);
-
-		} while (false);
-	}
-	if (NULL == m_pEditTextCtrl)
-	{
-		return;
-	}
-
-	m_pEditTextCtrl->RegisterControlCallBack(this);
+	if (NULL == m_pEditTextCtrl) return;
 
 	//edit
 	CDUIAttributeTextStyle *pAttribute = GetAttributeTextStyleCur();
@@ -845,6 +846,16 @@ void CDUIListItemCtrl::InitComplete()
 		do
 		{
 			m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, FindSubControlThisView(Dui_CtrlIDInner_ListItemEdit));
+			if (m_pEditTextCtrl) break;
+
+			m_pEditTextCtrl = new CDUIThinkEditCtrl;
+			m_pEditTextCtrl->Init();
+			m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
+			m_pEditTextCtrl->SetVisible(false);
+			m_pEditTextCtrl->SetBorderLine({ 1,1,1,1 });
+			m_pEditTextCtrl->SetBkColor({ Name_ColorWhite });
+			m_pEditTextCtrl->SetAutoSelAll(true);
+			InsertChild(m_pEditTextCtrl, 1);
 
 		} while (false);
 	}

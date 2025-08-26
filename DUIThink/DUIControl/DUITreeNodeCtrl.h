@@ -48,7 +48,12 @@ protected:
 	//override
 protected:
 	void SetOwner(CDUIListViewCtrl *pOwner) override;
-
+	
+	//diable method, because first child is checkicon, second child is edit, third is expandicon.
+	//traverse user custom child use GetChildCountUser()¡¢GetChildAtUser()¡¢RemoveAtUser().
+protected:
+	bool RemoveAt(int nIndex) override;
+	
 	//method
 public:
 	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
@@ -56,18 +61,20 @@ public:
 
 	//refresh
 	void NeedParentRefreshView() override;
+	void RefreshView() override;
+	void RefreshSubItem() override;
 
 	//override
 	CDUITreeNodeCtrl * GetPrevSiblingCtrl() override;
 	CDUITreeNodeCtrl * GetNextSiblingCtrl() override;
 	bool InsertChild(CDUIControlBase *pChild, int nPos = -1) override;
 	bool Remove(CDUIControlBase *pControl) override;
-	bool RemoveAt(int nIndex) override;
 	void RemoveAll() override;
-	void RefreshView() override;
-	void RefreshSubItem() override;
 
 	//listitem
+	bool RemoveAtUser(int nIndex) override;
+	int GetChildCountUser() const override;
+	CDUIControlBase * GetChildAtUser(int nIndex) const override;
 	void EnsureVisible(bool bCenter = false) override;
 	bool IsSelected() const override;
 	bool Select(bool bSelect = true) override;
@@ -81,7 +88,6 @@ public:
 	void SetImageSectionSelIconSelNormal(const tagDuiImageSection &ImageSection) override;
 	void SetImageSectionSelIconSelHot(const tagDuiImageSection &ImageSection) override;
 	void SetImageSectionSelIconSelPushed(const tagDuiImageSection &ImageSection) override;
-	void PerformEditText() override;
 
 	//treenode property
 	virtual bool IsExpandEnable();
