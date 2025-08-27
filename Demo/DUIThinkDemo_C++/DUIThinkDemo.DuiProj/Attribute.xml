@@ -30,6 +30,7 @@
     <a ValueID="313708474" Name="ImageSelect"/>
     <a ValueID="353547694" Name="IsSelected"/>
     <a ValueID="354988239" Name="TextStyleDisabled"/>
+    <a ValueID="364221642" Name="TextStylePrice"/>
     <a ValueID="374562364" Name="ToolTipBkColor"/>
     <a ValueID="404125566" Name="UpDownBtnVertFixedHeight"/>
     <a ValueID="407727115" Name="TextStyleFocus"/>
@@ -51,6 +52,7 @@
     <a ValueID="696372805" Name="AutoCalcItemHeight"/>
     <a ValueID="702564252" Name="Friday"/>
     <a ValueID="706931591" Name="SwitchListItemHeight"/>
+    <a ValueID="707380100" Name="DateTime"/>
     <a ValueID="722973517" Name="AnimationElapse"/>
     <a ValueID="729007824" Name="ScrollSelect"/>
     <a ValueID="750574505" Name="ImageMouseDragSel"/>
@@ -59,6 +61,7 @@
     <a ValueID="769055984" Name="ExpandIconFixedWidth"/>
     <a ValueID="811014879" Name="ImageThumbNormal"/>
     <a ValueID="829793926" Name="UserTag"/>
+    <a ValueID="833778400" Name="ColorGrid"/>
     <a ValueID="864961386" Name="ColorUpBtnPushed"/>
     <a ValueID="888955372" Name="ColorBorder"/>
     <a ValueID="890313559" Name="ItemImageDisabled"/>
@@ -160,6 +163,7 @@
     <a ValueID="1850352994" Name="WndLayered"/>
     <a ValueID="1861705740" Name="SaveSelection"/>
     <a ValueID="1877431087" Name="GdiplusRenderType"/>
+    <a ValueID="1882504043" Name="TextStyleDate"/>
     <a ValueID="1899292753" Name="AutoSelAll"/>
     <a ValueID="1905203064" Name="ColorLeftRightBtnNormal"/>
     <a ValueID="1909138281" Name="ItemTextStyleNormal"/>
@@ -247,6 +251,7 @@
     <a ValueID="2900642705" Name="RichEdit"/>
     <a ValueID="2915516148" Name="ImageUpBtnNormal"/>
     <a ValueID="2936014705" Name="ExpandIconFixedHeight"/>
+    <a ValueID="2946229454" Name="BindCalendarDui"/>
     <a ValueID="2954905243" Name="ItemTextStyleSelHot"/>
     <a ValueID="2957535060" Name="TextStyleTipTextHot"/>
     <a ValueID="2973533981" Name="Separation"/>
@@ -269,6 +274,7 @@
     <a ValueID="3201664855" Name="WndInitSize"/>
     <a ValueID="3215896032" Name="SequenceFrameSpeed"/>
     <a ValueID="3238865033" Name="ExpandIconSelNormal"/>
+    <a ValueID="3268580748" Name="KLineChart"/>
     <a ValueID="3278547748" Name="ItemImageNormal"/>
     <a ValueID="3301540328" Name="LineMenu"/>
     <a ValueID="3310741939" Name="UseScaleItem"/>
@@ -328,6 +334,7 @@
     <a ValueID="3986528544" Name="3DRotateMenu"/>
     <a ValueID="3987153997" Name="SelectIconNormal"/>
     <a ValueID="4016953780" Name="BindTabCtrlIndex"/>
+    <a ValueID="4022373040" Name="BtnSize"/>
     <a ValueID="4028170565" Name="ClockDial"/>
     <a ValueID="4030001272" Name="TextStyleHotMonthDay"/>
     <a ValueID="4031544620" Name="ComboxSize"/>
