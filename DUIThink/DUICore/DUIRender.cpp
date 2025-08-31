@@ -21,8 +21,11 @@ void CDUIRenderClip::GenerateClip(HDC hDC, RECT rcPaint)
 	m_hDC = hDC;
 	RECT rcClip = {};
 	::GetClipBox(hDC, &rcClip);
+
 	m_hOldRgn = ::CreateRectRgnIndirect(&rcClip);
 	m_hRgn = ::CreateRectRgnIndirect(&rcPaint);
+
+	::CombineRgn(m_hRgn, m_hRgn, m_hOldRgn, RGN_AND);
 	::SelectClipRgn(hDC, m_hRgn);
 
 	return;
@@ -33,10 +36,13 @@ void CDUIRenderClip::GenerateRoundClip(HDC hDC, RECT rcPaint, RECT rcItem, int w
 	m_hDC = hDC;
 	RECT rcClip = {};
 	::GetClipBox(hDC, &rcClip);
+
 	m_hOldRgn = ::CreateRectRgnIndirect(&rcClip);
 	m_hRgn = ::CreateRectRgnIndirect(&rcPaint);
-	HRGN hRgnItem = ::CreateRoundRectRgn(rcItem.left, rcItem.top, rcItem.right + 1, rcItem.bottom + 1, width, height);
+	HRGN hRgnItem = ::CreateRoundRectRgn(rcItem.left, rcItem.top, rcItem.right, rcItem.bottom, width, height);
+
 	::CombineRgn(m_hRgn, m_hRgn, hRgnItem, RGN_AND);
+	::CombineRgn(m_hRgn, m_hRgn, m_hOldRgn, RGN_AND);
 	::SelectClipRgn(hDC, m_hRgn);
 	MMSafeDeleteObject(hRgnItem);
 
@@ -54,6 +60,7 @@ void CDUIRenderClip::GenerateEllipseClip(HDC hDC, RECT rcPaint, RECT rcItem)
 	HRGN hRgnItem = ::CreateEllipticRgnIndirect(&rcItem);
 
 	::CombineRgn(m_hRgn, m_hRgn, hRgnItem, RGN_AND);
+	::CombineRgn(m_hRgn, m_hRgn, m_hOldRgn, RGN_AND);
 	::SelectClipRgn(hDC, m_hRgn);
 	MMSafeDeleteObject(hRgnItem);
 
