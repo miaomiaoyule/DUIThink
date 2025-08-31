@@ -1988,26 +1988,34 @@ void CDUIControlBase::PaintColorAttribute(HDC hDC, CDUIAttributeColorSwitch *pAt
 {
 	if (NULL == hDC || NULL == pAttribute) return;
 
-	//because clip uninclude bottom, but draw has bottom
 	CDUIRect rcBorderRect = GetBorderRect();
-	rcBorderRect.right--;
-	rcBorderRect.bottom--;
-
 	enDuiRoundType RoundType = GetRoundType();
 	if (Round_Parallelogram == RoundType)
 	{
+		//because clip uninclude bottom, but draw has bottom
+		rcBorderRect.right--;
+		rcBorderRect.bottom--;
+
 		pAttribute->FillParallelogram(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
 
 		return;
 	}
 	if (Round_Rhomb == RoundType)
 	{
+		//because clip uninclude bottom, but draw has bottom
+		rcBorderRect.right--;
+		rcBorderRect.bottom--;
+
 		pAttribute->FillRhomb(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
 
 		return;
 	}
 	if (Round_Ellipse == RoundType)
 	{
+		//because clip uninclude bottom, but draw has bottom
+		rcBorderRect.right--;
+		rcBorderRect.bottom--;
+
 		pAttribute->FillEllipse(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
 
 		return;
@@ -2019,6 +2027,10 @@ void CDUIControlBase::PaintColorAttribute(HDC hDC, CDUIAttributeColorSwitch *pAt
 		|| rcBorderRound.right > 0
 		|| rcBorderRound.bottom > 0)
 	{
+		//because clip uninclude bottom, but draw has bottom
+		rcBorderRect.right--;
+		rcBorderRect.bottom--;
+
 		//make sure color in border inset
 		CDUIRect rcBorder = GetBorderLine();
 		int nSize = max(rcBorder.left, rcBorder.top);
