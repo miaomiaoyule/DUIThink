@@ -481,8 +481,6 @@ void CDUIListHeaderItemCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessa
 {
 	m_nSepStatus &= ~ControlStatus_Hot;
 
-	Invalidate();
-
 	return __super::OnDuiMouseLeave(pt, Msg);
 }
 

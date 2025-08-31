@@ -706,8 +706,6 @@ bool CDUIListItemCtrl::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Ms
 
 	SendNotify(DuiNotify_ItemMouseEnter, Msg.wParam, Msg.lParam);
 
-	Invalidate();
-
 	return true;
 }
 
@@ -725,8 +723,6 @@ void CDUIListItemCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Ms
 	__super::OnDuiMouseLeave(pt, Msg);
 
 	SendNotify(DuiNotify_ItemMouseLeave, Msg.wParam, Msg.lParam);
-
-	Invalidate();
 
 	return;
 }

@@ -351,16 +351,12 @@ bool CDUIButtonCtrl::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	__super::OnDuiMouseEnter(pt, Msg);
 
-	Invalidate();
-
 	return true;
 }
 
 void CDUIButtonCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	__super::OnDuiMouseLeave(pt, Msg);
-
-	Invalidate();
 
 	return;
 }

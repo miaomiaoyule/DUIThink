@@ -2331,8 +2331,6 @@ bool CDUIRichEditCtrl::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Ms
 
 	ConstructTextStyle();
 
-	Invalidate();
-
 	return true;
 }
 
@@ -2343,8 +2341,6 @@ void CDUIRichEditCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Ms
 	if (NULL == m_pTextHost || IsFocused()) return;
 
 	ConstructTextStyle();
-
-	Invalidate();
 
 	return;
 }

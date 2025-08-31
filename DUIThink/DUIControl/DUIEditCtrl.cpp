@@ -711,8 +711,6 @@ bool CDUIEditCtrl::OnDuiSetFocus()
 
 	m_pEditWindow->Init();
 
-	Invalidate();
-
 	return true;
 }
 
@@ -724,8 +722,6 @@ bool CDUIEditCtrl::OnDuiKillFocus()
 	{
 		m_pEditWindow->UnInit();
 	}
-
-	Invalidate();
 
 	return true;
 }

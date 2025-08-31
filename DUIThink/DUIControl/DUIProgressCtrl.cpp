@@ -341,16 +341,12 @@ bool CDUIProgressCtrl::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Ms
 {
 	__super::OnDuiMouseEnter(pt, Msg);
 
-	Invalidate();
-
 	return true;
 }
 
 void CDUIProgressCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	__super::OnDuiMouseLeave(pt, Msg);
-
-	Invalidate();
 
 	return;
 }

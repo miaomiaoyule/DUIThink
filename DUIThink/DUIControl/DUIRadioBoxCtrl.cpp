@@ -172,8 +172,6 @@ bool CDUIRadioBoxCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg
 		}
 	}
 
-	Invalidate();
-
 	return true;
 }
 

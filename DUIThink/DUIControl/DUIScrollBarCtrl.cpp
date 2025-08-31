@@ -625,8 +625,6 @@ void CDUIScrollBarCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &M
 	m_nUpBtnStatus &= ~ControlStatus_Hot;
 	m_nDownBtnStatus &= ~ControlStatus_Hot;
 
-	Invalidate();
-
 	return;
 }
 
@@ -646,6 +644,8 @@ bool CDUIScrollBarCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 		nCurValue += (bPositive ? -GetScrollSpeed() * nWheelCount : GetScrollSpeed() * nWheelCount);
 		SetCurValue(nCurValue);
 		
+		__super::OnDuiMouseWheel(pt, Msg);
+
 		return true;
 	}
 
@@ -673,12 +673,13 @@ bool CDUIScrollBarCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 		m_pWndOwner->SetTimer(this, Dui_TimerScrollSlowdown_ID, Dui_TimerScrollSlowdown_Elapse);
 	}
 
+	__super::OnDuiMouseWheel(pt, Msg);
+
 	return true;
 }
 
 void CDUIScrollBarCtrl::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
 {
-	//按钮自滚动
 	if (uTimerID == Dui_TimerScrollAuto_ID)
 	{
 		POINT ptMouse = {};
@@ -686,17 +687,13 @@ void CDUIScrollBarCtrl::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
 		if (m_pWndOwner) ::ScreenToClient(m_pWndOwner->GetWndHandle(), &ptMouse);
 
 		OnTimerScrollUpDownBtn(CDUIPoint(ptMouse.x, ptMouse.y));
-
-		return;
 	}
-
-	//滚轮滚动
-	if (uTimerID == Dui_TimerScrollSlowdown_ID)
+	else if (uTimerID == Dui_TimerScrollSlowdown_ID)
 	{
 		OnTimerScrollMouseWheel();
 	}
 
-	return;
+	return __super::OnDuiTimer(uTimerID, Msg);
 }
 
 void CDUIScrollBarCtrl::CalcSubRect()

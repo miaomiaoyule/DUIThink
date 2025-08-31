@@ -94,6 +94,7 @@ protected:
 	bool OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg) override;
 	void OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg) override;
 
+	void OnDuiTimer(UINT uTimerID, const DuiMessage &Msg) override;
 	LRESULT OnDuiKeyDown(const DuiMessage &Msg) override;
 
 	//help

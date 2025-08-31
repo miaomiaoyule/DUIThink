@@ -53,6 +53,7 @@ typedef CDUIControlBase* (CALLBACK* FindControlProc)(CDUIControlBase*, LPVOID pD
 #define Dui_TimerCaret_ID							(7)
 #define Dui_TimerClock_ID							(8)
 #define Dui_TimerInputChar_ID						(9)
+#define Dui_TimerDelaySlider_ID						(10)
 #define Dui_TimerInner_Finish						(50)
 
 #define Dui_TimerScrollAuto_Elapse					(30)						
@@ -64,6 +65,7 @@ typedef CDUIControlBase* (CALLBACK* FindControlProc)(CDUIControlBase*, LPVOID pD
 #define Dui_TimerCaret_Elapse						(500)
 #define Dui_TimerClock_Elapse						(1000)
 #define Dui_TimerInputChar_Elapse					(30)
+#define Dui_TimerDelaySlider_Elapse					(30)
 
 //////////////////////////////////////////////////////////////////////////
 //ctrlid

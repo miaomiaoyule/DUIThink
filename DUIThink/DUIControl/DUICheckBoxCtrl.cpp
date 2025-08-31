@@ -354,8 +354,6 @@ bool CDUICheckBoxCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg
 		Select(!IsSelected());
 	}
 
-	Invalidate();
-
 	return true;
 }
 
