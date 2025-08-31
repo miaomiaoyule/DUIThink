@@ -2018,7 +2018,7 @@ void CDUIControlBase::PaintColorAttribute(HDC hDC, CDUIAttributeColorSwitch *pAt
 		nSize = max(nSize, rcBorder.right);
 		nSize = max(nSize, rcBorder.bottom);
 
-		pAttribute->FillRoundRect(hDC, rcBorderRect, 0, rcBorderRound, IsColorHSL(), GetGradientColor());
+		pAttribute->FillRoundRect(hDC, rcBorderRect, nSize, rcBorderRound, IsColorHSL(), GetGradientColor());
 
 		return;
 	}
