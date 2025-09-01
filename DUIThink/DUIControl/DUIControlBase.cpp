@@ -1990,59 +1990,48 @@ void CDUIControlBase::PaintColorAttribute(HDC hDC, CDUIAttributeColorSwitch *pAt
 
 	CDUIRect rcBorderRect = GetBorderRect();
 	enDuiRoundType RoundType = GetRoundType();
+	CDUIRect rcBorderRound = GetRoundCorner();
+	if (Round_Normal == RoundType
+		&& rcBorderRound.left <= 0
+		&& rcBorderRound.top <= 0
+		&& rcBorderRound.right <= 0
+		&& rcBorderRound.bottom <= 0)
+	{
+		pAttribute->FillRect(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
+
+		return;
+	}
+
+	//because clip uninclude bottom, but draw has bottom
+	rcBorderRect.right--;
+	rcBorderRect.bottom--;
+
 	if (Round_Parallelogram == RoundType)
 	{
-		//because clip uninclude bottom, but draw has bottom
-		rcBorderRect.right--;
-		rcBorderRect.bottom--;
-
 		pAttribute->FillParallelogram(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
 
 		return;
 	}
 	if (Round_Rhomb == RoundType)
 	{
-		//because clip uninclude bottom, but draw has bottom
-		rcBorderRect.right--;
-		rcBorderRect.bottom--;
-
 		pAttribute->FillRhomb(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
 
 		return;
 	}
 	if (Round_Ellipse == RoundType)
 	{
-		//because clip uninclude bottom, but draw has bottom
-		rcBorderRect.right--;
-		rcBorderRect.bottom--;
-
 		pAttribute->FillEllipse(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
 
 		return;
 	}
 
-	CDUIRect rcBorderRound = GetRoundCorner();
-	if (rcBorderRound.left > 0
-		|| rcBorderRound.top > 0
-		|| rcBorderRound.right > 0
-		|| rcBorderRound.bottom > 0)
-	{
-		//because clip uninclude bottom, but draw has bottom
-		rcBorderRect.right--;
-		rcBorderRect.bottom--;
+	//make sure color in border inset
+	CDUIRect rcBorder = GetBorderLine();
+	int nSize = max(rcBorder.left, rcBorder.top);
+	nSize = max(nSize, rcBorder.right);
+	nSize = max(nSize, rcBorder.bottom);
 
-		//make sure color in border inset
-		CDUIRect rcBorder = GetBorderLine();
-		int nSize = max(rcBorder.left, rcBorder.top);
-		nSize = max(nSize, rcBorder.right);
-		nSize = max(nSize, rcBorder.bottom);
-
-		pAttribute->FillRoundRect(hDC, rcBorderRect, nSize, rcBorderRound, IsColorHSL(), GetGradientColor());
-
-		return;
-	}
-
-	pAttribute->FillRect(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
+	pAttribute->FillRoundRect(hDC, rcBorderRect, nSize, rcBorderRound, IsColorHSL(), GetGradientColor());
 
 	return;
 }
