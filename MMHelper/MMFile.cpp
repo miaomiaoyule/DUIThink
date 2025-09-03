@@ -527,6 +527,25 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 	{
 		strFile = CMMService::GetWorkDirectory() + _T('\\') + strFile;
 	}
+	{
+		HANDLE hFile = CreateFile(strFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (INVALID_HANDLE_VALUE == hFile) return false;
+
+		DWORD dwFileSize = 0;
+		dwFileSize = ::GetFileSize(hFile, NULL);
+		if (dwFileSize <= 0 || dwFileSize >= (DWORD)-1)
+		{
+			CloseHandle(hFile);
+
+			return true;
+		}
+
+		vecData.resize(dwFileSize);
+		ReadFile(hFile, vecData.data(), dwFileSize, &dwFileSize, NULL);
+		CloseHandle(hFile);
+
+		return true;
+	}
 
 	FILE *pFile = fopen(CT2CA(strFile), "rb");
 	if (NULL == pFile) return false;
