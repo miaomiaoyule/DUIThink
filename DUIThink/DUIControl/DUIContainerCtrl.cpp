@@ -1074,7 +1074,7 @@ void CDUIContainerCtrl::SetAutoCalcChildPaddingV(bool bAuto)
 
 bool CDUIContainerCtrl::Remove(CDUIControlBase *pControl)
 {
-	return RemoveAt(GetChildIndex(pControl));
+	return CDUIContainerCtrl::RemoveAt(GetChildIndex(pControl));
 }
 
 bool CDUIContainerCtrl::RemoveAt(int nIndex)
