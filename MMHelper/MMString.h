@@ -89,7 +89,7 @@
 //MMHELPER_API bool operator == (LPCTSTR lpszStr, const CMMString &src);
 
 ////////////////////////////////////////////////////////////////////////////
-class CMMString : 
+class MMHELPER_API CMMString :
 #ifdef UNICODE
 	public std::wstring
 #else

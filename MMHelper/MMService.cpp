@@ -952,51 +952,34 @@ BOOL CMMService::WinNTHDSerialNumAsPhysicalRead(BYTE* dwSerial, UINT* puSerialLe
 //机器标识
 bool CMMService::GetImportIDEx(TCHAR szMachineID[Len_Machine_ID], TCHAR szCPUID[20])
 {
-	TCHAR szMACAddress[20] = _T("");
-	{
-		unsigned long s1 = 0, s2 = 0;
-		// 		unsigned char vendor_id[]="------------";
-		// 		__asm{
-		// 			xor eax,eax      //eax=0:取Vendor信息
-		// 				cpuid    //取cpu id指令，可在Ring3级使用
-		// 
-		// 				mov dword ptr vendor_id,ebx
-		// 				mov dword ptr vendor_id[+4],edx
-		// 				mov dword ptr vendor_id[+8],ecx
-		// 		}
-		//	VernderID.Format(_T("%s-"),vendor_id);
+	// 1. CPU 序列号（CPUID）
+	unsigned int cpuInfo[4] = { 0 };
+	__cpuid((int*)cpuInfo, 1); // eax=1 -> Processor Info
+	DWORD s1 = cpuInfo[3];     // EDX
+	DWORD s2 = cpuInfo[0];     // EAX
 
-#ifndef _WIN64
-		__asm 
-		{
-			mov eax, 01h   //eax=1:取CPU序列号
-			xor edx, edx
-			cpuid
-			mov s1, edx
-			mov s2, eax
+	TCHAR szCpuBuf[32] = { 0 };
+	_stprintf_s(szCpuBuf, _T("%08X%08X"), s1, s2);
 
-		}
-#endif
+	if (szCPUID)
+		_tcsncpy_s(szCPUID, 20, szCpuBuf, _TRUNCATE);
 
-		_sntprintf_s(szMACAddress, MMCountArray(szMACAddress), _T("%08X%08X"), s1, s2);
-		if (szCPUID != NULL) lstrcpyn(szCPUID, szMACAddress, 20);
-	}
+	// 2. 硬盘序列号
+	DWORD volumeSerial = 0;
+	if (!GetVolumeInformation(_T("C:\\"), nullptr, 0, &volumeSerial, nullptr, nullptr, nullptr, 0))
+		volumeSerial = 0;
 
-	//硬盘标识
-	WORD wMacSize = 1;
-	DWORD *pbuf = (DWORD*)szMACAddress;
-	WORD wIndex = (wMacSize + sizeof(DWORD) - 1) / sizeof(DWORD);
-	LPCTSTR pszHardDisk[] = { _T("C:\\"),_T("D:\\"),_T("E:\\") };
-	for (WORD i = wIndex; i < MMCountArray(pszHardDisk); i++)
-	{
-		assert(MMCountArray(pszHardDisk) > (i - wIndex));
-		GetVolumeInformation(pszHardDisk[i - wIndex], NULL, 0, pbuf + i, NULL, NULL, 0, NULL);
-	}
+	// 3. 合并信息
+	BYTE buffer[64] = { 0 };
+	memcpy(buffer, &s1, sizeof(s1));
+	memcpy(buffer + 4, &s2, sizeof(s2));
+	memcpy(buffer + 8, &volumeSerial, sizeof(volumeSerial));
 
-	//转换信息
+	// 4. 生成 MD5
 	assert(Len_Machine_ID >= Len_MD5);
-	CMMString strMacAddr = CMMMD5Checksum::GetMD5((BYTE*)szMACAddress, sizeof(szMACAddress));
-	lstrcpyn(szMachineID, strMacAddr, Len_Machine_ID);
+	CMMString strMacAddr = CMMMD5Checksum::GetMD5(buffer, sizeof(s1) + sizeof(s2) + sizeof(volumeSerial));
+	assert(Len_Machine_ID >= (int)md5.size() + 1);
+	_tcsncpy_s(szMachineID, Len_Machine_ID, strMacAddr.c_str(), _TRUNCATE);
 
 	return true;
 }
