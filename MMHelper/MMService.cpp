@@ -978,7 +978,7 @@ bool CMMService::GetImportIDEx(TCHAR szMachineID[Len_Machine_ID], TCHAR szCPUID[
 	// 4. Éú³É MD5
 	assert(Len_Machine_ID >= Len_MD5);
 	CMMString strMacAddr = CMMMD5Checksum::GetMD5(buffer, sizeof(s1) + sizeof(s2) + sizeof(volumeSerial));
-	assert(Len_Machine_ID >= (int)md5.size() + 1);
+	assert(Len_Machine_ID >= (int)strMacAddr.size() + 1);
 	_tcsncpy_s(szMachineID, Len_Machine_ID, strMacAddr.c_str(), _TRUNCATE);
 
 	return true;
