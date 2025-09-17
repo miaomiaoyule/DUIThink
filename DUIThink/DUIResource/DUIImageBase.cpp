@@ -82,7 +82,7 @@ HBITMAP CDUIImageBase::GetHandle(int nScale)
 
 HBITMAP CDUIImageBase::CloneHandle(int nScale)
 {
-	tagDuiImageInfo &BmpSrc = GetImageInfo(nScale);
+	tagDuiImageInfo BmpSrc = GetImageInfo(nScale);
 	if (NULL == BmpSrc.hBitmap || NULL == BmpSrc.pBits) return NULL;
 
 	LPBYTE pDest = NULL;
