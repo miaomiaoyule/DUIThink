@@ -774,7 +774,7 @@ bool CMMFile::GetFileVersion(IN LPCTSTR lpszFileFull, OUT DWORD &dwVersionInfo)
 		WORD wVersion2 = LOWORD(pFixedFileInfo->dwFileVersionMS);
 		WORD wVersion3 = HIWORD(pFixedFileInfo->dwFileVersionLS);
 		WORD wVersion4 = LOWORD(pFixedFileInfo->dwFileVersionLS);
-		dwVersionInfo = MAKELONG(MAKEWORD(wVersion4, wVersion3), MAKEWORD(wVersion2, wVersion1));
+		dwVersionInfo = MAKELONG(MAKEWORD(wVersion1, wVersion2), MAKEWORD(wVersion3, wVersion4));
 
 		return true;
 	}
