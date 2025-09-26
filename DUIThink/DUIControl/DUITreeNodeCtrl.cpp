@@ -198,6 +198,13 @@ void CDUITreeNodeCtrl::SetOwner(CDUIListViewCtrl *pOwner)
 	return;
 }
 
+bool CDUITreeNodeCtrl::RemoveAt(int nIndex)
+{
+	if (nIndex < 3) return false;
+
+	return __super::RemoveAt(nIndex);
+}
+
 LPVOID CDUITreeNodeCtrl::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
 	QUERYINTERFACE(CDUITreeNodeCtrl, Guid, dwQueryVer);
@@ -223,99 +230,9 @@ void CDUITreeNodeCtrl::NeedParentRefreshView()
 	return __super::NeedParentRefreshView();
 }
 
-CDUITreeNodeCtrl * CDUITreeNodeCtrl::GetPrevSiblingCtrl()
-{
-	CDUITreeNodeCtrl *pParentNode = GetParentNode();
-	if (NULL == pParentNode) return NULL;
-
-	CDUITreeNodeCtrl *pTreeNode = pParentNode->GetChildNode(pParentNode->GetChildNodeIndex(this) - 1);
-	return pTreeNode ? pTreeNode : pParentNode;
-}
-
-CDUITreeNodeCtrl * CDUITreeNodeCtrl::GetNextSiblingCtrl()
-{
-	CDUITreeNodeCtrl *pParentNode = GetParentNode();
-	if (NULL == pParentNode) return NULL;
-
-	CDUITreeNodeCtrl *pTreeNode = pParentNode->GetChildNode(pParentNode->GetChildNodeIndex(this) + 1);
-	return pTreeNode ? pTreeNode : pParentNode->GetNextSiblingCtrl();
-}
-
-bool CDUITreeNodeCtrl::InsertChild(CDUIControlBase *pChild, int nPos /*= -1*/)
-{
-	//vert container
-	if (NULL == m_pVertContainerCtrl
-		&& pChild->GetCtrlID() == Dui_CtrlIDInner_TreeNodeVertContainer)
-	{
-		if (false == CDUIListItemCtrl::InsertChild(pChild, nPos)) return false;
-
-		m_pVertContainerCtrl = MMInterfaceHelper(CDUIVerticalLayoutCtrl, pChild);
-
-		return true;
-	}
-
-	if (NULL == m_pVertContainerCtrl) return false;
-
-	//tree view
-	MMInterfaceHelper(CDUITreeNodeCtrl, pChild, pTreeNode);
-	if (pTreeNode)
-	{
-		return InsertChildNode(pTreeNode, nPos);
-	}
-
-	//insert
-	if (NULL == m_pHorizContainerCtrl) return false;
-
-	return m_pHorizContainerCtrl->InsertChild(pChild, nPos);
-}
-
-bool CDUITreeNodeCtrl::Remove(CDUIControlBase *pControl)
-{
-	if (NULL == m_pVertContainerCtrl || pControl == m_pCheckExpandCtrl || pControl == m_pCheckSelectCtrl) return false;
-
-	if (m_pTreeViewCtrl && m_pTreeViewCtrl->Remove(pControl))
-	{
-		if (m_pTreeViewCtrl->GetChildCount() <= 0)
-		{
-			m_pVertContainerCtrl->Remove(m_pTreeViewCtrl);
-		}
-
-		return true;
-	}
-
-	if (NULL == m_pHorizContainerCtrl) return false;
-
-	return m_pHorizContainerCtrl->Remove(pControl);
-}
-
-bool CDUITreeNodeCtrl::RemoveAt(int nIndex)
-{
-	return RemoveChildNodeAt(nIndex);
-}
-
-void CDUITreeNodeCtrl::RemoveAll()
-{
-	if (m_pHorizContainerCtrl)
-	{
-		for (int n = m_pHorizContainerCtrl->GetChildCount() - 1; n >= 0; n--)
-		{
-			CDUIControlBase *pControl = m_pHorizContainerCtrl->GetChildAt(n);
-			if (pControl == m_pCheckExpandCtrl || pControl == m_pCheckSelectCtrl) continue;
-
-			m_pHorizContainerCtrl->RemoveAt(n);
-		}
-	}
-	if (m_pTreeViewCtrl)
-	{
-		m_pTreeViewCtrl->RemoveAll();
-	}
-
-	return;
-}
-
 void CDUITreeNodeCtrl::RefreshView()
 {
-	CDUIListItemCtrl::RefreshView();
+	__super::RefreshView();
 
 	CalcNodeHeight();
 
@@ -348,7 +265,7 @@ void CDUITreeNodeCtrl::RefreshSubItem()
 		for (; j < m_pHorizContainerCtrl->GetChildCount(); )
 		{
 			CDUIControlBase *pControl = m_pHorizContainerCtrl->GetChildAt(j++);
-			if (NULL == pControl 
+			if (NULL == pControl
 				|| false == pControl->IsVisible()
 				|| pControl == m_pCheckSelectCtrl
 				|| pControl == m_pCheckExpandCtrl) continue;
@@ -373,6 +290,117 @@ void CDUITreeNodeCtrl::RefreshSubItem()
 	return;
 }
 
+CDUITreeNodeCtrl * CDUITreeNodeCtrl::GetPrevSiblingCtrl()
+{
+	CDUITreeNodeCtrl *pParentNode = GetParentNode();
+	if (NULL == pParentNode) return NULL;
+
+	CDUITreeNodeCtrl *pTreeNode = pParentNode->GetChildNode(pParentNode->GetChildNodeIndex(this) - 1);
+	return pTreeNode ? pTreeNode : pParentNode;
+}
+
+CDUITreeNodeCtrl * CDUITreeNodeCtrl::GetNextSiblingCtrl()
+{
+	CDUITreeNodeCtrl *pParentNode = GetParentNode();
+	if (NULL == pParentNode) return NULL;
+
+	CDUITreeNodeCtrl *pTreeNode = pParentNode->GetChildNode(pParentNode->GetChildNodeIndex(this) + 1);
+	return pTreeNode ? pTreeNode : pParentNode->GetNextSiblingCtrl();
+}
+
+bool CDUITreeNodeCtrl::InsertChild(CDUIControlBase *pChild, int nPos /*= -1*/)
+{
+	//vert container
+	if (NULL == m_pVertContainerCtrl
+		&& pChild->GetCtrlID() == Dui_CtrlIDInner_TreeNodeVertContainer)
+	{
+		if (false == __super::InsertChild(pChild, nPos)) return false;
+
+		m_pVertContainerCtrl = MMInterfaceHelper(CDUIVerticalLayoutCtrl, pChild);
+
+		return true;
+	}
+
+	if (NULL == m_pVertContainerCtrl) return false;
+
+	//tree view
+	MMInterfaceHelper(CDUITreeNodeCtrl, pChild, pTreeNode);
+	if (pTreeNode)
+	{
+		return InsertChildNode(pTreeNode, nPos);
+	}
+
+	//insert
+	if (NULL == m_pHorizContainerCtrl) return false;
+
+	return m_pHorizContainerCtrl->InsertChild(pChild, nPos);
+}
+
+bool CDUITreeNodeCtrl::Remove(CDUIControlBase *pControl)
+{
+	if (NULL == m_pVertContainerCtrl 
+		|| pControl == m_pCheckExpandCtrl 
+		|| pControl == m_pCheckSelectCtrl
+		|| pControl == m_pEditTextCtrl) return false;
+
+	if (m_pTreeViewCtrl && m_pTreeViewCtrl->Remove(pControl))
+	{
+		if (m_pTreeViewCtrl->GetChildCount() <= 0)
+		{
+			m_pVertContainerCtrl->Remove(m_pTreeViewCtrl);
+		}
+
+		return true;
+	}
+
+	if (NULL == m_pHorizContainerCtrl) return false;
+
+	return m_pHorizContainerCtrl->Remove(pControl);
+}
+
+void CDUITreeNodeCtrl::RemoveAll()
+{
+	if (m_pHorizContainerCtrl)
+	{
+		for (int n = m_pHorizContainerCtrl->GetChildCount() - 1; n >= 0; n--)
+		{
+			CDUIControlBase *pControl = m_pHorizContainerCtrl->GetChildAt(n);
+			if (pControl == m_pCheckExpandCtrl 
+				|| pControl == m_pCheckSelectCtrl
+				|| pControl == m_pEditTextCtrl) continue;
+
+			m_pHorizContainerCtrl->RemoveAt(n);
+		}
+	}
+	if (m_pTreeViewCtrl)
+	{
+		m_pTreeViewCtrl->RemoveAll();
+	}
+
+	return;
+}
+
+bool CDUITreeNodeCtrl::RemoveAtUser(int nIndex)
+{
+	if (NULL == m_pHorizContainerCtrl) return false;
+
+	return m_pHorizContainerCtrl->RemoveAt(nIndex + 3);
+}
+
+int CDUITreeNodeCtrl::GetChildCountUser() const
+{
+	if (NULL == m_pHorizContainerCtrl) return 0;
+
+	return max(m_pHorizContainerCtrl->GetChildCount() - 3, 0);
+}
+
+CDUIControlBase * CDUITreeNodeCtrl::GetChildAtUser(int nIndex) const
+{
+	if (NULL == m_pHorizContainerCtrl) return NULL;
+
+	return m_pHorizContainerCtrl->GetChildAt(nIndex + 3);
+}
+
 void CDUITreeNodeCtrl::EnsureVisible(bool bCenter)
 {
 	CDUITreeViewCtrl *pRootView = GetRootView();
@@ -385,24 +413,24 @@ void CDUITreeNodeCtrl::EnsureVisible(bool bCenter)
 
 bool CDUITreeNodeCtrl::IsSelected() const
 {
-	return CDUIListItemCtrl::IsSelected();
+	return __super::IsSelected();
 }
 
 bool CDUITreeNodeCtrl::Select(bool bSelect/* = true*/)
 {
-	return CDUIListItemCtrl::Select(bSelect);
+	return __super::Select(bSelect);
 }
 
 void CDUITreeNodeCtrl::SetSelectIconVisible(bool bVisible)
 {
-	CDUIListItemCtrl::SetSelectIconVisible(bVisible);
+	__super::SetSelectIconVisible(bVisible);
 
 	return;
 }
 
 void CDUITreeNodeCtrl::SetSelectIconLeftPadding(int nLeft)
 {
-	CDUIListItemCtrl::SetSelectIconLeftPadding(nLeft);
+	__super::SetSelectIconLeftPadding(nLeft);
 
 	if (NULL == m_pTreeViewCtrl) return;
 
@@ -413,7 +441,7 @@ void CDUITreeNodeCtrl::SetSelectIconLeftPadding(int nLeft)
 
 void CDUITreeNodeCtrl::SetSelectIconFixedWidth(int nWidth)
 {
-	CDUIListItemCtrl::SetSelectIconFixedWidth(nWidth);
+	__super::SetSelectIconFixedWidth(nWidth);
 
 	if (NULL == m_pTreeViewCtrl) return;
 
@@ -424,7 +452,7 @@ void CDUITreeNodeCtrl::SetSelectIconFixedWidth(int nWidth)
 
 void CDUITreeNodeCtrl::SetSelectIconFixedHeight(int nHeight)
 {
-	CDUIListItemCtrl::SetSelectIconFixedHeight(nHeight);
+	__super::SetSelectIconFixedHeight(nHeight);
 
 	if (NULL == m_pTreeViewCtrl) return;
 
@@ -435,7 +463,7 @@ void CDUITreeNodeCtrl::SetSelectIconFixedHeight(int nHeight)
 
 void CDUITreeNodeCtrl::SetImageSectionSelIconNormal(const tagDuiImageSection &ImageSection)
 {
-	CDUIListItemCtrl::SetImageSectionSelIconNormal(ImageSection);
+	__super::SetImageSectionSelIconNormal(ImageSection);
 
 	if (NULL == m_pTreeViewCtrl) return;
 
@@ -446,7 +474,7 @@ void CDUITreeNodeCtrl::SetImageSectionSelIconNormal(const tagDuiImageSection &Im
 
 void CDUITreeNodeCtrl::SetImageSectionSelIconHot(const tagDuiImageSection &ImageSection)
 {
-	CDUIListItemCtrl::SetImageSectionSelIconHot(ImageSection);
+	__super::SetImageSectionSelIconHot(ImageSection);
 
 	if (NULL == m_pTreeViewCtrl) return;
 
@@ -457,7 +485,7 @@ void CDUITreeNodeCtrl::SetImageSectionSelIconHot(const tagDuiImageSection &Image
 
 void CDUITreeNodeCtrl::SetImageSectionSelIconPushed(const tagDuiImageSection &ImageSection)
 {
-	CDUIListItemCtrl::SetImageSectionSelIconPushed(ImageSection);
+	__super::SetImageSectionSelIconPushed(ImageSection);
 
 	if (NULL == m_pTreeViewCtrl) return;
 
@@ -468,7 +496,7 @@ void CDUITreeNodeCtrl::SetImageSectionSelIconPushed(const tagDuiImageSection &Im
 
 void CDUITreeNodeCtrl::SetImageSectionSelIconSelNormal(const tagDuiImageSection &ImageSection)
 {
-	CDUIListItemCtrl::SetImageSectionSelIconSelNormal(ImageSection);
+	__super::SetImageSectionSelIconSelNormal(ImageSection);
 
 	if (NULL == m_pTreeViewCtrl) return;
 
@@ -479,7 +507,7 @@ void CDUITreeNodeCtrl::SetImageSectionSelIconSelNormal(const tagDuiImageSection 
 
 void CDUITreeNodeCtrl::SetImageSectionSelIconSelHot(const tagDuiImageSection &ImageSection)
 {
-	CDUIListItemCtrl::SetImageSectionSelIconSelHot(ImageSection);
+	__super::SetImageSectionSelIconSelHot(ImageSection);
 
 	if (NULL == m_pTreeViewCtrl) return;
 
@@ -490,55 +518,13 @@ void CDUITreeNodeCtrl::SetImageSectionSelIconSelHot(const tagDuiImageSection &Im
 
 void CDUITreeNodeCtrl::SetImageSectionSelIconSelPushed(const tagDuiImageSection &ImageSection)
 {
-	CDUIListItemCtrl::SetImageSectionSelIconSelPushed(ImageSection);
+	__super::SetImageSectionSelIconSelPushed(ImageSection);
 
 	if (NULL == m_pTreeViewCtrl) return;
 
 	m_pTreeViewCtrl->SetImageSectionSelIconSelPushed(GetImageSectionSelIconSelPushed());
 
 	return;
-}
-
-void CDUITreeNodeCtrl::PerformEditText()
-{
-	if (NULL == m_pHorizContainerCtrl) return;
-
-	//same parent
-	if (NULL == m_pEditTextCtrl)
-	{
-		do
-		{
-			CDUITreeNodeCtrl *pParentNode = GetParentNode();
-			if (NULL == pParentNode) break;
-			
-			CDUIThinkEditCtrl *pEditTextCtrl = pParentNode->GetEditTextCtrl();
-			if (NULL == pEditTextCtrl) break;
-
-			m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, pEditTextCtrl->Clone());
-			if (NULL == m_pEditTextCtrl) break;
-
-			m_pHorizContainerCtrl->InsertChild(m_pEditTextCtrl);
-
-		} while (false);
-	}
-	//create
-	if (NULL == m_pEditTextCtrl)
-	{
-		m_pEditTextCtrl = new CDUIThinkEditCtrl;
-		m_pEditTextCtrl->Init();
-		m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
-		m_pEditTextCtrl->SetVisible(false);
-		m_pEditTextCtrl->SetBorderLine({ 1,1,1,1 });
-		m_pEditTextCtrl->SetBkColor({ Name_ColorWhite });
-		m_pEditTextCtrl->SetAutoSelAll(true);
-		m_pHorizContainerCtrl->InsertChild(m_pEditTextCtrl);
-
-		return;
-	}
-
-	m_pEditTextCtrl->RegisterControlCallBack(this);
-
-	return __super::PerformEditText();
 }
 
 bool CDUITreeNodeCtrl::IsExpandEnable()
@@ -1058,6 +1044,37 @@ void CDUITreeNodeCtrl::InitComplete()
 			m_pCheckSelectCtrl->Init();
 			m_pCheckSelectCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemSelect);
 			m_pHorizContainerCtrl->InsertChild(m_pCheckSelectCtrl);
+
+		} while (false);
+	}
+	if (NULL == m_pEditTextCtrl && m_pHorizContainerCtrl)
+	{
+		do
+		{
+			//same parent
+			CDUITreeNodeCtrl *pParentNode = GetParentNode();
+			if (pParentNode)
+			{
+				CDUIThinkEditCtrl *pEditTextCtrl = pParentNode->GetEditTextCtrl();
+				if (NULL == pEditTextCtrl) break;
+
+				m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, pEditTextCtrl->Clone());
+				if (NULL == m_pEditTextCtrl) break;
+
+				m_pHorizContainerCtrl->InsertChild(m_pEditTextCtrl);
+
+				break;
+			}
+
+			//new
+			m_pEditTextCtrl = new CDUIThinkEditCtrl;
+			m_pEditTextCtrl->Init();
+			m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
+			m_pEditTextCtrl->SetVisible(false);
+			m_pEditTextCtrl->SetBorderLine({ 1,1,1,1 });
+			m_pEditTextCtrl->SetBkColor({ Name_ColorWhite });
+			m_pEditTextCtrl->SetAutoSelAll(true);
+			m_pHorizContainerCtrl->InsertChild(m_pEditTextCtrl);
 
 		} while (false);
 	}

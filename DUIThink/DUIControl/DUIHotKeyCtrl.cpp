@@ -500,8 +500,6 @@ bool CDUIHotKeyCtrl::OnDuiSetFocus()
 
 	m_pHotKeyWindow->Init();
 
-	Invalidate();
-
 	return true;
 }
 
@@ -513,8 +511,6 @@ bool CDUIHotKeyCtrl::OnDuiKillFocus()
 	{
 		m_pHotKeyWindow->UnInit();
 	}
-
-	Invalidate();
 
 	return true;
 }

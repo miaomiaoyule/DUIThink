@@ -22,8 +22,6 @@ private:
 public:
 	void Run(int nThreadCount = 1);
 	void Stop();
-
-protected:
 	bool Push(PtrMMServiceMsg pMsg);
 	void Clear(CMMServiceItem *pDest);
 };

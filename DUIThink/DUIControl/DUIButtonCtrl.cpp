@@ -351,16 +351,12 @@ bool CDUIButtonCtrl::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	__super::OnDuiMouseEnter(pt, Msg);
 
-	Invalidate();
-
 	return true;
 }
 
 void CDUIButtonCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	__super::OnDuiMouseLeave(pt, Msg);
-
-	Invalidate();
 
 	return;
 }
@@ -405,19 +401,8 @@ void CDUIButtonCtrl::PaintStatusColor(HDC hDC)
 		return;
 	}
 
-	CDUIRect rcBorderRound = GetRoundCorner();
-	if (rcBorderRound.left > 0
-		|| rcBorderRound.top > 0
-		|| rcBorderRound.right > 0
-		|| rcBorderRound.bottom > 0)
-	{
-		pAttribute->FillRoundRect(hDC, m_rcAbsolute, 0, rcBorderRound, IsColorHSL());
-
-		return;
-	}
-
-	pAttribute->FillRect(hDC, m_rcAbsolute, IsColorHSL());
-
+	PaintColorAttribute(hDC, pAttribute);
+	
 	return;
 }
 
@@ -427,17 +412,27 @@ void CDUIButtonCtrl::PaintStatusImage(HDC hDC)
 
 	CDUIAttriImageSection *pAttribute = GetAttributeStatusImage();
 
-	NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeImageNormal : pAttribute;
-	if (NULL == pAttribute) return;
+	if ((NULL == pAttribute || pAttribute->IsEmpty())
+		&& false == m_AttributeImageNormal.IsEmpty())
+	{
+		pAttribute = &m_AttributeImageNormal;
+	}
+	if (NULL == pAttribute)
+	{
+		return;
+	}
 
-	pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint, false == IsEnabled() && pAttribute != &m_AttributeImageDisabled);
+	PaintImageAttribute(hDC, pAttribute, false == IsEnabled() && pAttribute != &m_AttributeImageDisabled);
 
 	return;
 }
 
 void CDUIButtonCtrl::PaintText(HDC hDC)
 {
-	if (GetText().empty() || NULL == m_pWndOwner) return;
+	if (GetText().empty() || NULL == m_pWndOwner)
+	{
+		return __super::PaintText(hDC);
+	}
 
 	CDUIRect rcRange = GetTextRange();
 

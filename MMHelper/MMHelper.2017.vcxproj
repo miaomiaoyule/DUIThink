@@ -691,6 +691,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClInclude Include="MMProcess.h" />
     <ClInclude Include="MMReDirection.h" />
     <ClInclude Include="MMRegMonitor.h" />
+    <ClInclude Include="MMResource.h" />
     <ClInclude Include="MMService.h" />
     <ClInclude Include="MMServiceModel\MMServiceItem.h" />
     <ClInclude Include="MMServiceModel\MMServiceMsg.h" />
@@ -712,6 +713,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClInclude Include="MMSvg.h" />
     <ClInclude Include="MMTrayIcon.h" />
     <ClInclude Include="MMVersion.h" />
+    <ClInclude Include="MMWinTCPing.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -785,6 +787,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClCompile Include="MMProcess.cpp" />
     <ClCompile Include="MMReDirection.cpp" />
     <ClCompile Include="MMRegMonitor.cpp" />
+    <ClCompile Include="MMResource.cpp" />
     <ClCompile Include="MMService.cpp" />
     <ClCompile Include="MMServiceModel\MMServiceItem.cpp" />
     <ClCompile Include="MMServiceModel\MMThreadPool.cpp" />
@@ -804,6 +807,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClCompile Include="MMSvg.cpp" />
     <ClCompile Include="MMTrayIcon.cpp" />
     <ClCompile Include="MMVersion.cpp" />
+    <ClCompile Include="MMWinTCPing.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|x64'">Create</PrecompiledHeader>

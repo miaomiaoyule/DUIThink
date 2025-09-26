@@ -66,6 +66,36 @@ inline uint32_t tagDuiTextStyle::GetID() const
 typedef std::vector<tagDuiTextStyle> VecDuiTextStyle;
 
 //////////////////////////////////////////////////////////////////////////
+struct tagDuiShadowText
+{
+	HFONT								hFont = NULL;
+	CMMString							strText;
+	DWORD								dwTextColor = 0;
+	DWORD								dwTextStyle = 0;
+
+	bool operator == (const tagDuiShadowText &Right) const
+	{
+		return hFont == Right.hFont
+			&& strText == Right.strText
+			&& dwTextColor == Right.dwTextColor
+			&& dwTextStyle == Right.dwTextStyle;
+	}
+};
+
+template<> struct hash<tagDuiShadowText>
+{
+	inline uint32_t operator()(const tagDuiShadowText &ShadowText) const
+	{
+		CMMString strInfo;
+		strInfo += CMMStrHelp::Format(_T("%u-%s-%u-%u"), (DWORD)ShadowText.hFont, ShadowText.strText.c_str(), ShadowText.dwTextColor, ShadowText.dwTextStyle);
+
+		return CMMHash::GetHash(strInfo);
+	}
+};
+
+typedef std::unordered_map<tagDuiShadowText, Gdiplus::Bitmap*> MapShadowText;
+
+//////////////////////////////////////////////////////////////////////////
 struct tagDuiRichTextBase
 {
 	//type
@@ -515,6 +545,18 @@ struct tagDuiDropData
 	WPARAM								wParam = 0;
 	LPARAM								lParam = 0;
 };
+
+//////////////////////////////////////////////////////////////////////////
+struct tagDuiKLineChartItem
+{
+	SYSTEMTIME							tDate = {};
+	float								fStart = 0.0f;
+	float								fFinish = 0.0f;
+	float								fHigh = 0.0f;
+	float								fLow = 0.0f;
+};
+
+typedef std::vector<tagDuiKLineChartItem> VecDuiKLineChartItem;
 
 //////////////////////////////////////////////////////////////////////////
 typedef std::unordered_map<CDUIWnd*, tagDuiFile> MapWnd;

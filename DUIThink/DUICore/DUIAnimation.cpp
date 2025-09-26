@@ -1072,7 +1072,7 @@ void CDUIAnimationWnd::StartAnimationWnd(bool bShow/* = true*/)
 			CDUITabLayoutCtrl *pTabRoot = dynamic_cast<CDUITabLayoutCtrl*>(GetRootCtrl());
 			if (NULL == pTabRoot || pTabRoot->GetChildCount() < 2)
 			{
-				MessageBox(GetWndHandle(), _T("this animatewnd need rootctrl is tablayoutctrl, and children has two or more limit"), NULL, NULL);
+				MessageBox(GetWndHandle(), _T("This Animatewnd Need RootCtrl Is TablayoutCtrl, And Children Has Two or More Limit"), NULL, NULL);
 				return;
 			}
 

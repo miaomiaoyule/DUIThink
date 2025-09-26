@@ -32,6 +32,12 @@ void CDUIListItemCtrl::OnNotify(CDUIControlBase *pControl, const DuiNotify &Noti
 	{
 		switch (Notify.NotifyType)
 		{
+			case DuiNotify_KillFocus:
+			{
+				m_pEditTextCtrl->SetVisible(false);
+
+				break;
+			}
 			case DuiNotify_Edited:
 			{
 				CMMString strTextOld = GetText();
@@ -79,6 +85,23 @@ void CDUIListItemCtrl::OnSize(CDUIControlBase *pControl)
 	}
 
 	return;
+}
+
+int CDUIListItemCtrl::GetChildCount() const
+{
+	return __super::GetChildCount();
+}
+
+CDUIControlBase * CDUIListItemCtrl::GetChildAt(int nIndex) const
+{
+	return __super::GetChildAt(nIndex);
+}
+
+bool CDUIListItemCtrl::RemoveAt(int nIndex)
+{
+	if (nIndex < 2) return false;
+
+	return __super::RemoveAt(nIndex);
 }
 
 LPVOID CDUIListItemCtrl::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
@@ -396,13 +419,6 @@ bool CDUIListItemCtrl::Remove(CDUIControlBase *pControl)
 	return __super::Remove(pControl);
 }
 
-bool CDUIListItemCtrl::RemoveAt(int nIndex)
-{
-	if (0 == nIndex) return false;
-
-	return __super::RemoveAt(nIndex);
-}
-
 void CDUIListItemCtrl::RemoveAll()
 {
 	for (int n = GetChildCount() - 1; n >= 0; n--)
@@ -414,6 +430,21 @@ void CDUIListItemCtrl::RemoveAll()
 	}
 
 	return;
+}
+
+bool CDUIListItemCtrl::RemoveAtUser(int nIndex)
+{
+	return RemoveAt(nIndex + 2);
+}
+
+int CDUIListItemCtrl::GetChildCountUser() const
+{
+	return max(GetChildCount() - 2, 0);
+}
+
+CDUIControlBase * CDUIListItemCtrl::GetChildAtUser(int nIndex) const
+{
+	return GetChildAt(nIndex + 2);
 }
 
 void CDUIListItemCtrl::RefreshView()
@@ -536,7 +567,7 @@ RECT CDUIListItemCtrl::GetTextPadding()
 
 void CDUIListItemCtrl::SetTextPadding(RECT rcPadding)
 {
-	if (rcPadding == GetTextPadding()) return;
+	if (DuiDpiScaleCtrl(rcPadding) == GetTextPadding()) return;
 
 	m_AttributeTextPadding.SetValue(rcPadding);
 
@@ -547,38 +578,16 @@ void CDUIListItemCtrl::SetTextPadding(RECT rcPadding)
 
 void CDUIListItemCtrl::PerformEditText()
 {
-	//create
-	if (NULL == m_pEditTextCtrl)
-	{
-		do
-		{
-			m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, FindSubControlThisView(Dui_CtrlIDInner_ListItemEdit));
-			if (m_pEditTextCtrl) break;
-
-			m_pEditTextCtrl = new CDUIThinkEditCtrl;
-			m_pEditTextCtrl->Init();
-			m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
-			m_pEditTextCtrl->SetVisible(false);
-			m_pEditTextCtrl->SetBorderLine({ 1,1,1,1 });
-			m_pEditTextCtrl->SetBkColor({ Name_ColorWhite });
-			m_pEditTextCtrl->SetAutoSelAll(true);
-			InsertChild(m_pEditTextCtrl, 1);
-
-		} while (false);
-	}
-	if (NULL == m_pEditTextCtrl)
-	{
-		return;
-	}
-
-	m_pEditTextCtrl->RegisterControlCallBack(this);
+	if (NULL == m_pEditTextCtrl) return;
 
 	//edit
 	CDUIAttributeTextStyle *pAttribute = GetAttributeTextStyleCur();
 	if (NULL == pAttribute) return;
 
+	tagDuiTextStyle TextStyle = pAttribute->GetTextStyle();
+	TextStyle.vecColorResSwitch = { Name_ColorBlack };
 	m_pEditTextCtrl->SetText(GetText());
-	m_pEditTextCtrl->SetTextStyle(pAttribute->GetTextStyle());
+	m_pEditTextCtrl->SetTextStyle(TextStyle);
 	m_pEditTextCtrl->SetFloat(true);
 	m_pEditTextCtrl->SetPadding(GetTextPadding());
 	m_pEditTextCtrl->SetVisible(true);
@@ -697,8 +706,6 @@ bool CDUIListItemCtrl::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Ms
 
 	SendNotify(DuiNotify_ItemMouseEnter, Msg.wParam, Msg.lParam);
 
-	Invalidate();
-
 	return true;
 }
 
@@ -716,8 +723,6 @@ void CDUIListItemCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Ms
 	__super::OnDuiMouseLeave(pt, Msg);
 
 	SendNotify(DuiNotify_ItemMouseLeave, Msg.wParam, Msg.lParam);
-
-	Invalidate();
 
 	return;
 }
@@ -837,6 +842,16 @@ void CDUIListItemCtrl::InitComplete()
 		do
 		{
 			m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, FindSubControlThisView(Dui_CtrlIDInner_ListItemEdit));
+			if (m_pEditTextCtrl) break;
+
+			m_pEditTextCtrl = new CDUIThinkEditCtrl;
+			m_pEditTextCtrl->Init();
+			m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
+			m_pEditTextCtrl->SetVisible(false);
+			m_pEditTextCtrl->SetBorderLine({ 1,1,1,1 });
+			m_pEditTextCtrl->SetBkColor({ Name_ColorWhite });
+			m_pEditTextCtrl->SetAutoSelAll(true);
+			InsertChild(m_pEditTextCtrl, 1);
 
 		} while (false);
 	}
@@ -917,7 +932,26 @@ void CDUIListItemCtrl::PaintItemColor(HDC hDC)
 	{
 		pAttribute = ListInfo.pAttributeItemStatusColorNormal;
 	}
-	if (NULL == pAttribute) return;
+	if (NULL == pAttribute)
+	{
+		return;
+	}
+
+	CDUIRect rcBorderRound = GetRoundCorner();
+	if (rcBorderRound.left > 0
+		|| rcBorderRound.top > 0
+		|| rcBorderRound.right > 0
+		|| rcBorderRound.bottom > 0)
+	{
+		CDUIRect rcBorder = GetBorderLine();
+		int nSize = max(rcBorder.left, rcBorder.top);
+		nSize = max(nSize, rcBorder.right);
+		nSize = max(nSize, rcBorder.bottom);
+
+		pAttribute->FillRoundRect(hDC, GetBackRange(), nSize, rcBorderRound, IsColorHSL());
+
+		return;
+	}
 
 	pAttribute->FillRect(hDC, GetBackRange(), IsColorHSL());
 
@@ -1125,6 +1159,17 @@ CDUIRect CDUIListItemCtrl::GetTextRange()
 	rcRange.right -= rcTextPadding.right;
 	rcRange.top += rcTextPadding.top;
 	rcRange.bottom -= rcTextPadding.bottom;
+
+	//model owner is null
+	if (m_pOwner)
+	{
+		rcTextPadding = m_pOwner->GetItemTextPadding();
+		rcRange.left += rcTextPadding.left;
+		rcRange.right -= rcTextPadding.right;
+		rcRange.top += rcTextPadding.top;
+		rcRange.bottom -= rcTextPadding.bottom;
+	}
+
 	rcRange.CheckRect();
 
 	return rcRange;

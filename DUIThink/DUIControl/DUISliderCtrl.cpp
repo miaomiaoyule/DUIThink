@@ -327,48 +327,58 @@ bool CDUISliderCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Msg
 
 	CalcThumbPosOnMouseDown(pt);
 
-	Invalidate();
-
 	return true;
 }
 
 bool CDUISliderCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
+	if (m_pWndOwner)
+	{
+		m_pWndOwner->KillTimer(this, Dui_TimerDelaySlider_ID);
+	}
+
 	return __super::OnDuiLButtonUp(pt, Msg);
 }
 
 bool CDUISliderCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (m_pWndOwner)
-	{
-		m_pWndOwner->SendNotify(this, DuiNotify_MouseMove, Msg.wParam, Msg.lParam);
-	}
 	if (0 == (m_nControlStatus & ControlStatus_Pushed) && m_rcCurThumb.PtInRect(pt))
 	{
 		m_nControlStatus |= ControlStatus_Hot;
 	}
-
-	//»¬¶¯»¬¿é
 	if ((m_nControlStatus & ControlStatus_Pushed))
 	{
-		CDUIPoint ptScroll = m_ptThumbLButtonDown;
-
-		ptScroll.x += (pt.x - m_ptLButtonDown.x);
-		ptScroll.y += (pt.y - m_ptLButtonDown.y);
-
-		CalcCurValueFromPt(ptScroll);
+		if (m_pWndOwner)
+		{
+			m_pWndOwner->SetTimer(this, Dui_TimerDelaySlider_ID, Dui_TimerDelaySlider_Elapse);
+		}
 	}
 
-	Invalidate();
-
-	return true;
+	return __super::OnDuiMouseMove(pt, Msg);
 }
 
 void CDUISliderCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	Invalidate();
-
 	return __super::OnDuiMouseLeave(pt, Msg);
+}
+
+void CDUISliderCtrl::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
+{
+	if (uTimerID == Dui_TimerDelaySlider_ID)
+	{
+		if (m_pWndOwner)
+		{
+			m_pWndOwner->KillTimer(this, Dui_TimerDelaySlider_ID);
+		}
+
+		CDUIPoint ptScroll = m_ptThumbLButtonDown;
+		ptScroll.x += (Msg.ptMouse.x - m_ptLButtonDown.x);
+		ptScroll.y += (Msg.ptMouse.y - m_ptLButtonDown.y);
+
+		CalcCurValueFromPt(ptScroll);
+	}
+
+	return __super::OnDuiTimer(uTimerID, Msg);
 }
 
 LRESULT CDUISliderCtrl::OnDuiKeyDown(const DuiMessage &Msg)

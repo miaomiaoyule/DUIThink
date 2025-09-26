@@ -69,6 +69,7 @@ interface DUITHINK_API IDuiResourceCallBack : public IDuiInterface
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
 	virtual void OnResourceAdd(CDUIResourceBase *pResourceObj) = NULL;
 	virtual void OnResourceRemove(CDUIResourceBase *pResourceObj) = NULL;
+	virtual void OnResourceRename(CDUIResourceBase *pResourceObj, const CMMString &strNameOld) = NULL;
 };
 
 typedef std::vector<IDuiResourceCallBack*> VecIDuiResourceCallBack;

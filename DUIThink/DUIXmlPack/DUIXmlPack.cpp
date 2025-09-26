@@ -578,13 +578,22 @@ CDUIControlBase * CDUIXmlPack::LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWnd *p
 
 	//开始导入
 	tinyxml2::XMLElement *pXMLRoot = DuiXml.RootElement();
-	if (NULL == pXMLRoot) return NULL;
+	if (NULL == pXMLRoot)
+	{
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("解析xml为空")));
+
+		return NULL;
+	}
 
 	//创建属性
 	CDUIContainerCtrl *pRootCtrl = NULL;
 	tinyxml2::XMLElement *pNodeXml = pXMLRoot->FirstChildElement();
-	if (NULL == pNodeXml) return NULL;
+	if (NULL == pNodeXml)
+	{
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("解析xml节点错误")));
 
+		return NULL;
+	}
 	do
 	{
 		//control
@@ -653,12 +662,22 @@ CDUIControlBase * CDUIXmlPack::LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWnd *p
 
 CDUIControlBase * CDUIXmlPack::LoadDui(LPCTSTR lpszFile, CDUIWnd *pWnd)
 {
-	if (MMInvalidString(lpszFile)) return NULL;
+	if (MMInvalidString(lpszFile))
+	{
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("duifile:[%s]不存在"), lpszFile));
+
+		return NULL;
+	}
 
 	DWORD dwTickCount = GetTickCount();
 
 	tinyxml2::XMLDocument xmlDoc;
-	if (false == LoadDuiXml(lpszFile, xmlDoc)) return NULL;
+	if (false == LoadDuiXml(lpszFile, xmlDoc))
+	{
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("duifile:[%s]提取xml解析失败"), lpszFile));
+
+		return NULL;
+	}
 
 	MMTRACE(_T("LoadDuiFile:%s-Time:%u"), lpszFile, GetTickCount() - dwTickCount);
 
@@ -838,7 +857,7 @@ void CDUIXmlPack::EncryptXmlFile(CMMString strFile)
 	//copy
 #ifdef DUI_DESIGN 
 #ifdef _DEBUG
-	CMMString strPath, strFileName;
+	/*CMMString strPath, strFileName;
 	CMMFile::ParseFilePathName(strFile, strPath, strFileName);
 
 	CMMString strName, strExt;
@@ -847,7 +866,7 @@ void CDUIXmlPack::EncryptXmlFile(CMMString strFile)
 	CMMString strFileCopy = CMMService::GetUserDataPath(Name_AppDUIThink) + _T("Copy\\");
 	SHCreateDirectory(NULL, strFileCopy);
 	strFileCopy += strName + _T(".") + strExt;
-	CopyFile(strFile, strFileCopy, false);
+	CopyFile(strFile, strFileCopy, false);*/
 #endif
 #endif
 

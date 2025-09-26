@@ -33,16 +33,17 @@ QQ群：885314879
 - 21、控件自定义Bitmap背景  
 
 # DTDesigner设计器（闭源）：  
-- 1、像mfc一样自动生成窗体类、控件变量、控件事件代码  
-- 2、任意拖放、对齐控件，修改控件属性所见即所得  
-- 3、图片、字体、颜色资源一览无余  
-- 4、控件树视图Shift+Up\Down实时调整控件Z序  
-- 5、实时进行菜单一级、二级、三级...编辑  
-- 6、支持Ctrl+C、Ctrl+V、Ctrl+Z、Ctrl+Y  
-- 7、复制ui到另一个视图里，无需重复制作ui  
-- 8、支持开发者自定义控件  
-- 9、实时预览窗体各dpi效果  
-下载：http://121.5.53.246/DTDesigner2.0.zip  
+- 1、真正所见即所得  
+- 2、绑定vs的sln项目文件可以像mfc一样自动生成窗体类、控件变量、控件事件代码  
+- 3、任意拖放、对齐控件，修改控件属性所见即所得  
+- 4、图片、字体、颜色资源一览无余  
+- 5、控件树视图Shift+Up\Down实时调整控件Z序  
+- 6、实时进行菜单一级、二级、三级...编辑  
+- 7、支持Ctrl+C、Ctrl+V、Ctrl+Z、Ctrl+Y  
+- 8、复制ui到另一个视图里，无需重复制作ui  
+- 9、支持开发者自定义控件  
+- 10、实时预览窗体各dpi效果  
+下载：http://49.235.209.245/DTDesigner2.0.zip  
  
    
   
@@ -91,4 +92,4 @@ Video tutorial: https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7
 - 7、Copy the ui to another view, no need to make the ui again
 - 8、support developer custom controls
 - 9、real-time preview of the dpi effect of the form  
-Download: http://121.5.53.246/DTDesigner2.0.zip
+Download: http://49.235.209.245/DTDesigner2.0.zip

@@ -78,9 +78,13 @@ void CDUIScrollBarCtrl::SetCurValue(int nCurValue)
 	{
 		enDuiProgressType ProgressType = GetProgressType();
 		if ((ProgressType_Horiz == ProgressType) && (GetCurValue() != nCurValueOld))
+		{
 			m_pOwnerCtrl->ScrollChilds(CDUISize(GetCurValue() - nCurValueOld, 0));
+		}
 		else if ((ProgressType_Vert == ProgressType) && ((GetCurValue() != nCurValueOld)))
+		{
 			m_pOwnerCtrl->ScrollChilds(CDUISize(0, GetCurValue() - nCurValueOld));
+		}
 	}
 
 	return;
@@ -621,8 +625,6 @@ void CDUIScrollBarCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &M
 	m_nUpBtnStatus &= ~ControlStatus_Hot;
 	m_nDownBtnStatus &= ~ControlStatus_Hot;
 
-	Invalidate();
-
 	return;
 }
 
@@ -630,12 +632,19 @@ bool CDUIScrollBarCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 {
 	if (NULL == m_pOwnerCtrl) return true;
 
+	//direction
+	int nWheelDelta = (int)(short)HIWORD(Msg.wParam);
+	int nWheelCount = abs(nWheelDelta / WHEEL_DELTA);
+	bool bPositive = nWheelDelta > 0;
+
 	//no speed
 	if (false == m_pOwnerCtrl->IsScrollBarSpeedModel())
 	{
 		int nCurValue = GetCurValue();
-		nCurValue += WHEEL_DELTA == (int)(short)HIWORD(Msg.wParam) ? -GetScrollSpeed() : GetScrollSpeed();
+		nCurValue += (bPositive ? -GetScrollSpeed() * nWheelCount : GetScrollSpeed() * nWheelCount);
 		SetCurValue(nCurValue);
+		
+		__super::OnDuiMouseWheel(pt, Msg);
 
 		return true;
 	}
@@ -644,18 +653,14 @@ bool CDUIScrollBarCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 	LONG lDeltaY = 0;
 	if (delay_number_ > 0) lDeltaY = (LONG)(pow((double)delay_left_ / delay_number_, 2) * delay_deltaY_);
 
-	switch ((int)(short)HIWORD(Msg.wParam))
+	if (bPositive)
 	{
-		case WHEEL_DELTA:
-		{
-			delay_deltaY_ = (delay_deltaY_ >= 0) ? lDeltaY + GetScrollSpeed() : lDeltaY + 12;
-			break;
-		}
-		case -WHEEL_DELTA:
-		{
-			delay_deltaY_ = (delay_deltaY_ <= 0) ? lDeltaY - GetScrollSpeed() : lDeltaY - 12;
-			break;
-		}
+		delay_deltaY_ = (delay_deltaY_ >= 0) ? lDeltaY + GetScrollSpeed() : lDeltaY + 12;
+	}
+	else
+	{
+		delay_deltaY_ = (delay_deltaY_ <= 0) ? lDeltaY - GetScrollSpeed() : lDeltaY - 12;
+
 	}
 
 	delay_deltaY_ = (delay_deltaY_ > 100) ? 100 : delay_deltaY_;
@@ -668,12 +673,13 @@ bool CDUIScrollBarCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 		m_pWndOwner->SetTimer(this, Dui_TimerScrollSlowdown_ID, Dui_TimerScrollSlowdown_Elapse);
 	}
 
+	__super::OnDuiMouseWheel(pt, Msg);
+
 	return true;
 }
 
 void CDUIScrollBarCtrl::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
 {
-	//按钮自滚动
 	if (uTimerID == Dui_TimerScrollAuto_ID)
 	{
 		POINT ptMouse = {};
@@ -681,17 +687,13 @@ void CDUIScrollBarCtrl::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
 		if (m_pWndOwner) ::ScreenToClient(m_pWndOwner->GetWndHandle(), &ptMouse);
 
 		OnTimerScrollUpDownBtn(CDUIPoint(ptMouse.x, ptMouse.y));
-
-		return;
 	}
-
-	//滚轮滚动
-	if (uTimerID == Dui_TimerScrollSlowdown_ID)
+	else if (uTimerID == Dui_TimerScrollSlowdown_ID)
 	{
 		OnTimerScrollMouseWheel();
 	}
 
-	return;
+	return __super::OnDuiTimer(uTimerID, Msg);
 }
 
 void CDUIScrollBarCtrl::CalcSubRect()

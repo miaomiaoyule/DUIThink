@@ -80,6 +80,8 @@ public:
 	//...
 	virtual bool IsEndEllipsis();
 	virtual void SetEndEllipsis(bool bEndEllipsis);
+	virtual bool IsMidEllipsis();
+	virtual void SetMidEllipsis(bool bMidEllipsis);
 
 	virtual CDUISize MeasureString(LPCTSTR lpszText);
 

@@ -40,6 +40,15 @@ bool CDUIAnimateCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 	return false;
 }
 
+void CDUIAnimateCtrl::OnDpiChanged(int nScalePre)
+{
+	__super::OnDpiChanged(nScalePre);
+
+	ConstructAnimateImageInfo();
+
+	return;
+}
+
 LPVOID CDUIAnimateCtrl::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
 	QUERYINTERFACE(CDUIAnimateCtrl, Guid, dwQueryVer);
@@ -263,16 +272,15 @@ void CDUIAnimateCtrl::ConstructAnimateImageInfo()
 	if (NULL == pImageBase) return;
 
 	m_AnimateImageInfo = pImageBase->GetAnimateImageInfo(GetScale());
-	if (AnimateImage_None == m_AnimateImageInfo.AnimateImageType)
-	{
-		CDUISize szItem = GetSequenceFrameSize();
-		if (szItem.cx <= 0 || szItem.cy <= 0) return;
 
-		m_AnimateImageInfo.AnimateImageType = AnimateImage_SequenceFrame;
-		m_AnimateImageInfo.nFrameCount = (pImageBase->GetWidth(GetScale()) / szItem.cx) * (pImageBase->GetHeight(GetScale()) / szItem.cy);
-		m_AnimateImageInfo.nSequenceFrameSpeed = GetSequenceFrameSpeed();
-		m_AnimateImageInfo.szSequenceFrameSize = szItem;
-	}
+	CDUISize szItem = GetSequenceFrameSize();
+	if (szItem.cx <= 0 || szItem.cy <= 0) return;
+
+	pImageBase->IsScale(GetScale()) ? szItem = DuiDpiScaleCtrl(szItem) : szItem;
+	m_AnimateImageInfo.AnimateImageType = AnimateImage_SequenceFrame;
+	m_AnimateImageInfo.nFrameCount = (pImageBase->GetWidth(GetScale()) / szItem.cx) * (pImageBase->GetHeight(GetScale()) / szItem.cy);
+	m_AnimateImageInfo.nSequenceFrameSpeed = GetSequenceFrameSpeed();
+	m_AnimateImageInfo.szSequenceFrameSize = szItem;
 
 	return;
 }

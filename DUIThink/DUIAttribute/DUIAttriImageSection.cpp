@@ -26,7 +26,7 @@ LPVOID CDUIAttriImageSection::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 	return __super::QueryInterface(Guid, dwQueryVer);
 }
 
-void CDUIAttriImageSection::Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled, const CDUIRect &rcRound)
+void CDUIAttriImageSection::Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete, const CDUIRect &rcRound, enDuiRoundType RoundType)
 {
 	CDUIImageBase *pImageBaseCur = GetCurImageBase();
 	if (NULL == pImageBaseCur || NULL == m_pOwner) return;
@@ -34,12 +34,12 @@ void CDUIAttriImageSection::Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect
 	//info
 	tagDuiImageSection ImageSection = GetImageSection();
 	
-	Draw(pImageBaseCur, ImageSection, hDC, rcItem, rcPaint, bDisabled, rcRound);
+	Draw(pImageBaseCur, ImageSection, hDC, rcItem, rcPaint, bDisablePallete, rcRound, RoundType);
 
 	return;
 }
 
-void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisabled, const CDUIRect &rcRound)
+void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete, const CDUIRect &rcRound, enDuiRoundType RoundType)
 {
 	if (NULL == pImageBase) return;
 
@@ -80,12 +80,14 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 		if (pWnd->IsGdiplusRenderImage())
 		{
 			CDUIRenderEngine::DrawImage(hDC, pBmp, rcDest, rcPaint, rcSource,
-				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY, rcRound);
+				rcCorner, bDisablePallete ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole, 
+				ImageSection.bTiledX, ImageSection.bTiledY, rcRound, RoundType);
 		}
 		else
 		{
 			CDUIRenderEngine::DrawImage(hDC, hBitmap, rcDest, rcPaint, rcSource,
-				rcCorner, bDisabled ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole, ImageSection.bTiledX, ImageSection.bTiledY, rcRound);
+				rcCorner, bDisablePallete ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole,
+				ImageSection.bTiledX, ImageSection.bTiledY, rcRound, RoundType);
 		}
 
 		//move right
@@ -110,10 +112,25 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 	return;
 }
 
+void CDUIAttriImageSection::DrawParallelogram(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete)
+{
+	return Draw(hDC, rcItem, rcPaint, bDisablePallete, {}, Round_Parallelogram);
+}
+
+void CDUIAttriImageSection::DrawRhomb(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete)
+{
+	return Draw(hDC, rcItem, rcPaint, bDisablePallete, {}, Round_Rhomb);
+}
+
+void CDUIAttriImageSection::DrawEllipse(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete)
+{
+	return Draw(hDC, rcItem, rcPaint, bDisablePallete, {}, Round_Ellipse);
+}
+
 void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, const tagDuiAnimateImageInfo &AnimateImageInfo, int nFrameCur, const CDUIRect &rcRound)
 {
 	CDUIImageBase *pImageBaseCur = GetCurImageBase();
-	if (NULL == pImageBaseCur) return;
+	if (NULL == pImageBaseCur || NULL == pImageBaseCur->GetHandle(GetScale())) return;
 
 	//dest
 	CDUIRect rcSource = { 0, 0, pImageBaseCur->GetWidth(GetScale()), pImageBaseCur->GetHeight(GetScale()) };

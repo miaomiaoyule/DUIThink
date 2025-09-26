@@ -419,20 +419,18 @@ bool CDUIRotateMenuCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &M
 
 bool CDUIRotateMenuCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	switch ((int)(short)HIWORD(Msg.wParam))
+	//direction
+	int nWheelDelta = (int)(short)HIWORD(Msg.wParam);
+	int nWheelCount = abs(nWheelDelta / WHEEL_DELTA);
+	bool bPositive = nWheelDelta > 0;
+
+	if (bPositive)
 	{
-		case WHEEL_DELTA:
-		{
-			ScrollChildsByWheelUp(Dui_ScrollSpeed_Normal);
-
-			break;
-		}
-		case -WHEEL_DELTA:
-		{
-			ScrollChildsByWheelDown(Dui_ScrollSpeed_Normal);
-
-			break;
-		}
+		ScrollChildsByWheelUp(Dui_ScrollSpeed_Normal);
+	}
+	else
+	{
+		ScrollChildsByWheelDown(Dui_ScrollSpeed_Normal);
 	}
 
 	CDUIControlBase::OnDuiMouseWheel(pt, Msg);

@@ -26,7 +26,8 @@ enum enMMFileEncode
 	FileEncode_Ansi = 0,
 	FileEncode_Unicode,
 	FileEncode_Unicode_big_endian,
-	FileEncode_UTF8_Bom
+	FileEncode_UTF8_Bom,
+	FileEncode_UTF8,
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,6 +62,8 @@ public:
 	// Parameter: 	CMMString & strName Àý£ºText.txt
 	//************************************
 	static bool ParseFilePathName(LPCTSTR lpszFileFull, CMMString &strPath, CMMString &strName);
+
+	static bool IsUTF8Encode(std::vector<BYTE> vecData);
 
 	//************************************
 	// Description:	
@@ -153,6 +156,12 @@ public:
 	// Parameter: 	LPCTSTR lpszDirFull Àý£ºC:\windows
 	//************************************
 	static std::vector<CMMString> GetFilesOfDir(IN LPCTSTR lpszDirFull);
+
+	//************************************
+	// Description:	get size of dir
+	// Parameter: 	LPCTSTR lpszDirFull Àý£ºC:\windows
+	//************************************
+	static uint64_t GetFolderSize(IN LPCTSTR lpszDirFull);
 
 	//************************************
 	// Description:	write string to file

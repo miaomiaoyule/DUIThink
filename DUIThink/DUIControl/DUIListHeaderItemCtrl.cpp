@@ -240,7 +240,7 @@ RECT CDUIListHeaderItemCtrl::GetTextPadding()
 
 void CDUIListHeaderItemCtrl::SetTextPadding(RECT rcPadding)
 {
-	if (rcPadding == GetTextPadding()) return;
+	if (DuiDpiScaleCtrl(rcPadding) == GetTextPadding()) return;
 
 	m_AttributeTextPadding.SetValue(rcPadding);
 
@@ -480,8 +480,6 @@ bool CDUIListHeaderItemCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessag
 void CDUIListHeaderItemCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	m_nSepStatus &= ~ControlStatus_Hot;
-
-	Invalidate();
 
 	return __super::OnDuiMouseLeave(pt, Msg);
 }

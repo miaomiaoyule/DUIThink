@@ -1511,9 +1511,8 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIAttribute\DUIAttributeRect.h" />
     <ClInclude Include="DUIAttribute\DUIAttributeSize.h" />
     <ClInclude Include="DUIAttribute\DUIAttriImageSection.h" />
-    <ClInclude Include="DUIAttribute\DUIAttriModelSelect.h" />
-    <ClInclude Include="DUIAttribute\DUIAttriTabSelect.h" />
-    <ClInclude Include="DUIAttribute\DUIAttriViewSelect.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeDuiSelect.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeTabSelect.h" />
     <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeCtrlID.h" />
     <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeFloat.h" />
     <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeLong.h" />
@@ -1524,6 +1523,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIControl\DUIClockCtrl.h" />
     <ClInclude Include="DUIControl\DUIGroupCtrl.h" />
     <ClInclude Include="DUIControl\DUIInstrumentCtrl.h" />
+    <ClInclude Include="DUIControl\DUIKLineChartCtrl.h" />
     <ClInclude Include="DUIControl\DUIRotateMenuCtrl.h" />
     <ClInclude Include="DUIControl\DUIButtonCtrl.h" />
     <ClInclude Include="DUIControl\DUICalendarCtrl.h" />
@@ -1587,6 +1587,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DUIAttribute\DUIAttributeBool.cpp" />
     <ClCompile Include="DUIAttribute\DUIAttributeColor.cpp" />
     <ClCompile Include="DUIAttribute\DUIAttributeColorSwitch.cpp" />
@@ -1599,9 +1600,8 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUIAttribute\DUIAttributeRect.cpp" />
     <ClCompile Include="DUIAttribute\DUIAttributeSize.cpp" />
     <ClCompile Include="DUIAttribute\DUIAttriImageSection.cpp" />
-    <ClCompile Include="DUIAttribute\DUIAttriModelSelect.cpp" />
-    <ClCompile Include="DUIAttribute\DUIAttriTabSelect.cpp" />
-    <ClCompile Include="DUIAttribute\DUIAttriViewSelect.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeDuiSelect.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeTabSelect.cpp" />
     <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeCtrlID.cpp" />
     <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeFloat.cpp" />
     <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeLong.cpp" />
@@ -1612,6 +1612,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUIControl\DUIClockCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIGroupCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIInstrumentCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIKLineChartCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIRotateMenuCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIButtonCtrl.cpp" />
     <ClCompile Include="DUIControl\DUICalendarCtrl.cpp" />
@@ -1764,15 +1765,15 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DUIThink.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\MMHelper\MMHelper.2017.vcxproj">
       <Project>{d64ee06c-987d-493c-969a-cf1d8f4390a9}</Project>
     </ProjectReference>
     <ProjectReference Include="..\ThirdDepend\tinyxml2\vs\tinyxml2.2017.vcxproj">
       <Project>{7c72653a-e6f8-4584-b553-de3a0aee4356}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DUIThink.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

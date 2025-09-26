@@ -132,8 +132,6 @@ CDUIThinkEditCtrl::~CDUIThinkEditCtrl()
 		m_pWndOwner->RemovePreMessagePtr(this);
 	}
 
-	MMSafeDelete(m_pBmpShadowText);
-
 	return;
 }
 
@@ -224,7 +222,7 @@ LPVOID CDUIThinkEditCtrl::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 
 CMMString CDUIThinkEditCtrl::GetDescribe() const
 {
-	return _T("ThinkEditCtrl");
+	return Dui_Ctrl_ThinkEdit;
 }
 
 void CDUIThinkEditCtrl::Invalidate()
@@ -283,8 +281,6 @@ void CDUIThinkEditCtrl::RefreshView()
 			SetTimer(Dui_TimerAnimate_ID, Dui_TimerThinkEditAnimate_Elapse);
 		}
 	}
-
-	MMSafeDelete(m_pBmpShadowText);
 
 	return;
 }
@@ -376,9 +372,7 @@ bool CDUIThinkEditCtrl::SetText(LPCTSTR lpszText)
 	CMMString strText = __super::GetText();
 	for (int n = 0; n < strText.length(); n++)
 	{
-		int nEmoji = CDUIGlobal::IsEmoji(strText[n]);
-		CMMString strTextSub = CMMString(strText.c_str() + n, max(1, nEmoji));
-		nEmoji > 0 ? n += (nEmoji - 1) : 0;
+		MMEmojiExtract(strText, n);
 
 		vecRichTextItem.push_back(tagDuiRichTextItem());
 		vecRichTextItem.back().strText = strTextSub;
@@ -423,9 +417,7 @@ bool CDUIThinkEditCtrl::SetRichTextItem(const VecDuiRichTextItem &vecRichTextIte
 			}
 			for (int n = 0; n < RichTextItem.strText.length(); n++)
 			{
-				int nEmoji = CDUIGlobal::IsEmoji(RichTextItem.strText[n]);
-				CMMString strTextSub = CMMString(RichTextItem.strText.c_str() + n, max(1, nEmoji));
-				nEmoji > 0 ? n += (nEmoji - 1) : 0;
+				MMEmojiExtract(RichTextItem.strText, n);
 
 				vecRichTextItemAdjust.push_back(tagDuiRichTextItem());
 				vecRichTextItemAdjust.back().strText = strTextSub;
@@ -671,10 +663,20 @@ CDUIRect CDUIThinkEditCtrl::GetCaretPos()
 	if (m_nCaretRow < 0 || m_nCaretRow >= m_mapLineVecRichTextDraw.size())
 	{
 		CDUIRect rcRange = GetTextRange();
-		rcRange.right = rcRange.left + 1;
-		rcRange.bottom = rcRange.top + rcMeasure.GetHeight();
+		CDUIRect rcCaret = rcRange;
+		rcCaret.right = rcCaret.left + 1;
+		rcCaret.bottom = rcCaret.top + rcMeasure.GetHeight();
 
-		return rcRange;
+		if (DT_CENTER & TextStyle.dwTextStyle)
+		{
+			rcCaret.Offset(rcRange.left + rcRange.GetWidth() / 2 - rcCaret.left, 0);
+		}
+		if (DT_VCENTER & TextStyle.dwTextStyle)
+		{
+			rcCaret.Offset(0, rcRange.top + rcRange.GetHeight() / 2 - (rcCaret.top + rcCaret.GetHeight() / 2));
+		}
+
+		return rcCaret;
 	}
 
 	//caret pos
@@ -1092,12 +1094,12 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName
 
 bool CDUIThinkEditCtrl::CanUndo()
 {
-	return 0 <= m_nIndexHistory && m_nIndexHistory < m_queHistory.size();
+	return 0 <= m_nIndexHistory && m_nIndexHistory < m_queHistory.size() && false == IsReadOnly();
 }
 
 bool CDUIThinkEditCtrl::CanRedo()
 {
-	return m_nIndexHistory < (int)m_queHistory.size() - 1;
+	return -1 <= m_nIndexHistory && m_nIndexHistory < (int)m_queHistory.size() - 1 && false == IsReadOnly();
 }
 
 void CDUIThinkEditCtrl::Undo()
@@ -1147,6 +1149,8 @@ void CDUIThinkEditCtrl::Cut()
 
 void CDUIThinkEditCtrl::Paste()
 {
+	if (IsReadOnly()) return;
+
 	auto vecFile = CMMService::GetClipboardFile();
 
 	//text
@@ -1252,24 +1256,22 @@ bool CDUIThinkEditCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 {
 	if (GetScrollRange().cy <= 0) return __super::OnDuiMouseWheel(pt, Msg);
 
-	switch ((int)(short)HIWORD(Msg.wParam))
+	//direction
+	int nWheelDelta = (int)(short)HIWORD(Msg.wParam);
+	int nWheelCount = abs(nWheelDelta / WHEEL_DELTA);
+	bool bPositive = nWheelDelta > 0;
+
+	if (bPositive)
 	{
-		case WHEEL_DELTA:
-		{
-			CDUISize szScrollPos = GetScrollPos();
-			szScrollPos.cy -= GetLineRange(0).GetHeight();
-			SetScrollPos(szScrollPos);
-
-			break;
-		}
-		case -WHEEL_DELTA:
-		{
-			CDUISize szScrollPos = GetScrollPos();
-			szScrollPos.cy += GetLineRange(0).GetHeight();
-			SetScrollPos(szScrollPos);
-
-			break;
-		}
+		CDUISize szScrollPos = GetScrollPos();
+		szScrollPos.cy -= GetLineRange(0).GetHeight();
+		SetScrollPos(szScrollPos);
+	}
+	else
+	{
+		CDUISize szScrollPos = GetScrollPos();
+		szScrollPos.cy += GetLineRange(0).GetHeight();
+		SetScrollPos(szScrollPos);
 	}
 
 	__super::OnDuiMouseWheel(pt, Msg);
@@ -1479,6 +1481,19 @@ LRESULT CDUIThinkEditCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 
 				m_nCaretRowFrom = nRowPre;
 				m_nCaretColumnFrom = nColumnPre;
+			}
+
+			PerformClearSelect();
+
+			break;
+		}
+		case VK_DELETE:
+		{
+			if (m_nCaretRow == m_nCaretRowFrom
+				&& m_nCaretColumn == m_nCaretColumnFrom
+				&& false == IsReadOnly())
+			{
+				PerformMoveCaretHoriz(false);
 			}
 
 			PerformClearSelect();
@@ -1729,14 +1744,20 @@ LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 		strBuff = CMMString(_T('\0'), nLen + 1);
 		ImmGetCompositionString(hImc, GCS_COMPSTR, strBuff.GetBuffer(), strBuff.length());
 		
+		bool bHaveEmoji = false;
 		for (int n = 0; n < strBuff.length(); n++)
 		{
-			if (CDUIGlobal::IsEmoji(strBuff[n]) > 0)
+			MMEmojiExtract(strBuff, n);
+			if (nEmoji > 0)
 			{
-				SetReplaceSel(strBuff);
+				bHaveEmoji = true;
 
-				ImmNotifyIME(hImc, NI_COMPOSITIONSTR, CPS_CANCEL, NULL);
+				SetReplaceSel(strTextSub);
 			}
+		}
+		if (bHaveEmoji)
+		{
+			ImmNotifyIME(hImc, NI_COMPOSITIONSTR, CPS_CANCEL, NULL);
 		}
 
 		ImmReleaseContext(m_pWndOwner->GetWndHandle(), hImc);
@@ -1889,29 +1910,6 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 			}
 		}
 
-		//shadow bmp
-		if (IsShadowText())
-		{
-			if (NULL == m_pBmpShadowText 
-				|| m_pBmpShadowText->GetWidth() != rcRange.GetWidth() 
-				|| m_pBmpShadowText->GetHeight() != rcRange.GetHeight())
-			{
-				MMSafeDelete(m_pBmpShadowText);
-
-				CDUIRect rcDraw(0, 0, rcRange.GetWidth(), rcRange.GetHeight());
-				CDUIMemDC MemDC(hDC, rcDraw, false);
-				CDUIRenderEngine::DrawRichText(MemDC, rcDraw, RichTextInfo, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
-				CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcDraw.GetWidth(), rcDraw);
-				m_pBmpShadowText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
-			}
-			if (m_pBmpShadowText)
-			{
-				CDUIRenderEngine::DrawImage(hDC, m_pBmpShadowText, rcRange);
-			}
-
-			return;
-		}
-
 		//normal
 		CDUIRenderEngine::DrawRichText(hDC, rcRange, RichTextInfo, m_pWndOwner->IsGdiplusRenderText(), m_pWndOwner->GetGdiplusRenderTextType(), GetRichTextLineSpace(), IsShadowText());
 
@@ -2045,8 +2043,10 @@ void CDUIThinkEditCtrl::PerformMeasureString(IN LPCTSTR lpszText, IN tagDuiTextS
 	CMMString strText = lpszText;
 	for (int n = 0; n < strText.length(); n++)
 	{
+		MMEmojiExtract(strText, n);
+
 		vecRichTextItem.push_back(tagDuiRichTextItem());
-		vecRichTextItem.back().strText = IsPasswordMode() ? GetPasswordChar() : strText[n];
+		vecRichTextItem.back().strText = IsPasswordMode() ? GetPasswordChar() : strTextSub;
 	}
 
 	PerformMeasureString(vecRichTextItem, TextStyle, mapLineVecRichTextDraw, rcMeasure);
@@ -2501,7 +2501,7 @@ void CDUIThinkEditCtrl::PerformAdjustRichText()
 
 			//next line
 			bool bOverRight = nLeft + RichTextDrawItem.rcDraw.GetWidth() > rcRange.right;
-			bool bWordWrap = _T('\n') == RichTextDrawItem.strText.Left(0) || _T('\r') == RichTextDrawItem.strText.Left(0);
+			bool bWordWrap = _T('\n') == RichTextDrawItem.strText.Left(1) || _T('\r') == RichTextDrawItem.strText.Left(1);
 			if ((bOverRight || bWordWrap)
 				&& false == bSingleLine
 				&& 0 != nLineHeight)

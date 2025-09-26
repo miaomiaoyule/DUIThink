@@ -117,7 +117,7 @@ LPVOID CDUIControlBase::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 
 CMMString CDUIControlBase::GetDescribe() const
 {
-	return Dui_Ctrl_Control;
+	return Dui_Ctrl_Base;
 }
 
 UINT CDUIControlBase::GetControlFlags()
@@ -641,10 +641,10 @@ CDUIRect CDUIControlBase::GetPadding()
 void CDUIControlBase::SetPadding(long lLeft, long lTop, long lRight, long lBottom)
 {
 	CDUIRect rcPadding = GetPadding();
-	if (lLeft == rcPadding.left
-		&& lTop == rcPadding.top
-		&& lRight == rcPadding.right
-		&& lBottom == rcPadding.bottom) return;
+	if ((IsDpiPadding() ? DuiDpiScaleCtrl(lLeft) == rcPadding.left : lLeft == rcPadding.left)
+		&& (IsDpiPadding() ? DuiDpiScaleCtrl(lTop) == rcPadding.top : lTop == rcPadding.top)
+		&& (IsDpiPadding() ? DuiDpiScaleCtrl(lRight) == rcPadding.right : lRight == rcPadding.right)
+		&& (IsDpiPadding() ? DuiDpiScaleCtrl(lBottom) == rcPadding.bottom : lBottom == rcPadding.bottom)) return;
 
 	m_AttributePosition.SetLeftAlignValue(lLeft);
 	m_AttributePosition.SetTopAlignValue(lTop);
@@ -762,7 +762,7 @@ long CDUIControlBase::GetMinWidth()
 
 void CDUIControlBase::SetMinWidth(long lWidth)
 {
-	if (lWidth < 0 || lWidth == GetMinWidth()) return;
+	if (lWidth < 0 || DuiDpiScaleCtrl(lWidth) == GetMinWidth()) return;
 
 	m_AttributeMinSize.SetValue(lWidth, m_AttributeMinSize.GetValue().cy);
 
@@ -778,7 +778,7 @@ long CDUIControlBase::GetMaxWidth()
 
 void CDUIControlBase::SetMaxWidth(long lWidth)
 {
-	if (lWidth < 0 || lWidth == GetMaxWidth()) return;
+	if (lWidth < 0 || DuiDpiScaleCtrl(lWidth) == GetMaxWidth()) return;
 
 	m_AttributeMaxSize.SetValue(lWidth, m_AttributeMaxSize.GetValue().cy);
 
@@ -794,7 +794,7 @@ long CDUIControlBase::GetMinHeight()
 
 void CDUIControlBase::SetMinHeight(long lHeight)
 {
-	if (lHeight < 0 || lHeight == GetMinHeight()) return;
+	if (lHeight < 0 || DuiDpiScaleCtrl(lHeight) == GetMinHeight()) return;
 
 	m_AttributeMinSize.SetValue(m_AttributeMinSize.GetValue().cx, lHeight);
 
@@ -810,7 +810,7 @@ long CDUIControlBase::GetMaxHeight()
 
 void CDUIControlBase::SetMaxHeight(long lHeight)
 {
-	if (lHeight < 0 || lHeight == GetMaxHeight()) return;
+	if (lHeight < 0 || DuiDpiScaleCtrl(lHeight) == GetMaxHeight()) return;
 
 	m_AttributeMaxSize.SetValue(m_AttributeMaxSize.GetValue().cx, lHeight);
 
@@ -955,12 +955,12 @@ void CDUIControlBase::SetRoundType(enDuiRoundType RoundType)
 
 CDUIRect CDUIControlBase::GetRoundCorner()
 {
-	return m_AttributeRoundCorner.GetValue();
+	return DuiDpiScaleCtrl(m_AttributeRoundCorner.GetValue());
 }
 
 void CDUIControlBase::SetRoundCorner(const CDUIRect &rcRoundCorner)
 {
-	if (rcRoundCorner == GetRoundCorner()) return;
+	if (DuiDpiScaleCtrl(rcRoundCorner) == GetRoundCorner()) return;
 
 	m_AttributeRoundCorner.SetValue(rcRoundCorner);
 
@@ -1067,8 +1067,6 @@ CMMString CDUIControlBase::GetToolTip()
 
 void CDUIControlBase::SetToolTip(LPCTSTR pstrText)
 {
-	if (MMInvalidString(pstrText) || _tcscmp(GetToolTip(), pstrText) == 0) return;
-
 	CMMString strTemp(pstrText);
 	strTemp.Replace(_T("<n>"), _T("\r\n"));
 	m_AttributeToolTip.SetValue(strTemp);
@@ -1469,6 +1467,8 @@ void CDUIControlBase::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg
 		m_pWndOwner->SendNotify(this, DuiNotify_MouseLeave, Msg.wParam, Msg.lParam);
 	}
 
+	Invalidate();
+
 	return;
 }
 
@@ -1775,50 +1775,16 @@ void CDUIControlBase::InitComplete()
 
 void CDUIControlBase::PaintBkColor(HDC hDC)
 {
-	enDuiRoundType RoundType = GetRoundType();
-	if (Round_Parallelogram == RoundType)
-	{
-		m_AttributeColorBk.FillParallelogram(hDC, m_rcAbsolute, IsColorHSL(), GetGradientColor());
-
-		return;
-	}
-	if (Round_Rhomb == RoundType)
-	{
-		m_AttributeColorBk.FillRhomb(hDC, m_rcAbsolute, IsColorHSL(), GetGradientColor());
-
-		return;
-	}
-	if (Round_Ellipse == RoundType)
-	{
-		m_AttributeColorBk.FillEllipse(hDC, m_rcAbsolute, IsColorHSL(), GetGradientColor());
-
-		return;
-	}
-	
-	CDUIRect rcBorderRound = GetRoundCorner();
-	if (rcBorderRound.left > 0 
-		|| rcBorderRound.top > 0
-		|| rcBorderRound.right > 0
-		|| rcBorderRound.bottom > 0)
-	{
-		CDUIRect rcBorder = GetBorderLine();
-		int nSize = max(rcBorder.left, rcBorder.top);
-		nSize = max(nSize, rcBorder.right);
-		nSize = max(nSize, rcBorder.bottom);
-
-		m_AttributeColorBk.FillRoundRect(hDC, GetBorderRect(), nSize, rcBorderRound, IsColorHSL(), GetGradientColor());
-	
-		return;
-	}
-	
-	m_AttributeColorBk.FillRect(hDC, m_rcAbsolute, IsColorHSL(), GetGradientColor());
+	PaintColorAttribute(hDC, &m_AttributeColorBk);
 
 	return;
 }
 
 void CDUIControlBase::PaintBkImage(HDC hDC)
 {
-	m_AttributeImageBack.Draw(hDC, m_rcAbsolute, m_rcPaint);
+	enDuiRoundType RoundType = GetRoundType();
+	CDUIRect rcBorderRound = GetRoundCorner(); 
+	PaintImageAttribute(hDC, &m_AttributeImageBack, false);
 
 	if (m_pBmpCustomBack)
 	{
@@ -1899,7 +1865,7 @@ void CDUIControlBase::PaintBkImage(HDC hDC)
 			rcDest = GetAbsoluteRect();
 		}
 
-		CDUIRenderEngine::DrawImage(hDC, m_pBmpCustomBack, rcDest);
+		CDUIRenderEngine::DrawImage(hDC, m_pBmpCustomBack, rcDest, rcBorderRound, RoundType);
 	}
 
 	return;
@@ -1936,6 +1902,7 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	if (NULL == pAttribute) return;
 
 	//info
+	CDUIRect rcBorderRect = GetBorderRect();
 	CDUIRect rcBorderLine = GetBorderLine();
 	CDUIRect rcBorderRound = GetRoundCorner();
 	CDUISize szBreakTop = GetBorderBreakTop();
@@ -1947,19 +1914,19 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	enDuiRoundType RoundType = GetRoundType();
 	if (Round_Parallelogram == RoundType)
 	{
-		pAttribute->DrawParallelogram(hDC, GetBorderRect(), nSize, GetBorderStyle());
+		pAttribute->DrawParallelogram(hDC, rcBorderRect, nSize, GetBorderStyle());
 
 		return;
 	}
 	if (Round_Rhomb == RoundType)
 	{
-		pAttribute->DrawRhomb(hDC, GetBorderRect(), nSize, GetBorderStyle());
+		pAttribute->DrawRhomb(hDC, rcBorderRect, nSize, GetBorderStyle());
 
 		return;
 	}
 	if (Round_Ellipse == RoundType)
 	{
-		CDUIRect rcBorder = GetBorderRect();
+		CDUIRect rcBorder = rcBorderRect;
 		rcBorder.right -= nSize;
 		rcBorder.bottom -= nSize;
 		pAttribute->DrawEllipse(hDC, rcBorder, nSize, GetBorderStyle());
@@ -1973,33 +1940,33 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 		|| rcBorderRound.right > 0
 		|| rcBorderRound.bottom > 0)
 	{
-		pAttribute->DrawRoundRect(hDC, GetBorderRect(), nSize, rcBorderRound, IsColorHSL(), szBreakTop);
+		pAttribute->DrawRoundRect(hDC, rcBorderRect, nSize, rcBorderRound, IsColorHSL(), szBreakTop);
 
 		return;
 	}
 	if (szBreakTop.cx > 0 || szBreakTop.cy > 0)
 	{
-		pAttribute->DrawRect(hDC, GetBorderRect(), nSize, szBreakTop);
+		pAttribute->DrawRect(hDC, rcBorderRect, nSize, szBreakTop);
 
 		return;
 	}
 	if (rcBorderLine.left > 0)
 	{
-		CDUIRect rcBorderDraw = m_rcAbsolute;
+		CDUIRect rcBorderDraw = rcBorderRect;
 		rcBorderDraw.left += rcBorderLine.left / 2;
 		rcBorderDraw.right = rcBorderDraw.left;
 		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.left, GetBorderStyle(), IsColorHSL());
 	}
 	if (rcBorderLine.top > 0)
 	{
-		CDUIRect rcBorderDraw = m_rcAbsolute;
+		CDUIRect rcBorderDraw = rcBorderRect;
 		rcBorderDraw.top += rcBorderLine.top / 2;
 		rcBorderDraw.bottom = rcBorderDraw.top;
 		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.top, GetBorderStyle(), IsColorHSL());
 	}
 	if (rcBorderLine.right > 0)
 	{
-		CDUIRect rcBorderDraw = m_rcAbsolute;
+		CDUIRect rcBorderDraw = rcBorderRect;
 		rcBorderDraw.left = rcBorderDraw.right - rcBorderLine.right;
 		rcBorderDraw.left += rcBorderLine.right / 2;
 		rcBorderDraw.right = rcBorderDraw.left;
@@ -2007,11 +1974,90 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 	}
 	if (rcBorderLine.bottom > 0)
 	{
-		CDUIRect rcBorderDraw = m_rcAbsolute;
+		CDUIRect rcBorderDraw = rcBorderRect;
 		rcBorderDraw.top = rcBorderDraw.bottom - rcBorderLine.bottom;
 		rcBorderDraw.top += rcBorderLine.bottom / 2;
 		rcBorderDraw.bottom = rcBorderDraw.top;
 		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.bottom, GetBorderStyle(), IsColorHSL());
+	}
+
+	return;
+}
+
+void CDUIControlBase::PaintColorAttribute(HDC hDC, CDUIAttributeColorSwitch *pAttribute)
+{
+	if (NULL == hDC || NULL == pAttribute) return;
+
+	CDUIRect rcBorderRect = GetBorderRect();
+	enDuiRoundType RoundType = GetRoundType();
+	CDUIRect rcBorderRound = GetRoundCorner();
+	if (Round_Normal == RoundType
+		&& rcBorderRound.left <= 0
+		&& rcBorderRound.top <= 0
+		&& rcBorderRound.right <= 0
+		&& rcBorderRound.bottom <= 0)
+	{
+		pAttribute->FillRect(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
+
+		return;
+	}
+
+	//because clip uninclude bottom, but draw has bottom
+	rcBorderRect.right--;
+	rcBorderRect.bottom--;
+
+	if (Round_Parallelogram == RoundType)
+	{
+		pAttribute->FillParallelogram(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
+
+		return;
+	}
+	if (Round_Rhomb == RoundType)
+	{
+		pAttribute->FillRhomb(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
+
+		return;
+	}
+	if (Round_Ellipse == RoundType)
+	{
+		pAttribute->FillEllipse(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
+
+		return;
+	}
+
+	//make sure color in border inset
+	CDUIRect rcBorder = GetBorderLine();
+	int nSize = max(rcBorder.left, rcBorder.top);
+	nSize = max(nSize, rcBorder.right);
+	nSize = max(nSize, rcBorder.bottom);
+
+	pAttribute->FillRoundRect(hDC, rcBorderRect, nSize, rcBorderRound, IsColorHSL(), GetGradientColor());
+
+	return;
+}
+
+void CDUIControlBase::PaintImageAttribute(HDC hDC, CDUIAttriImageSection *pAttribute, bool bDisablePallete)
+{
+	if (NULL == hDC || NULL == pAttribute) return;
+
+	CDUIRect rcBorderRect = GetBorderRect();
+	enDuiRoundType RoundType = GetRoundType();
+	CDUIRect rcBorderRound = GetRoundCorner();
+	if (Round_Parallelogram == RoundType)
+	{
+		pAttribute->DrawParallelogram(hDC, rcBorderRect, m_rcPaint, bDisablePallete);
+	}
+	else if (Round_Rhomb == RoundType)
+	{
+		pAttribute->DrawRhomb(hDC, rcBorderRect, m_rcPaint, bDisablePallete);
+	}
+	else if (Round_Ellipse == RoundType)
+	{
+		pAttribute->DrawEllipse(hDC, rcBorderRect, m_rcPaint, bDisablePallete);
+	}
+	else
+	{
+		pAttribute->Draw(hDC, rcBorderRect, m_rcPaint, bDisablePallete, rcBorderRound);
 	}
 
 	return;

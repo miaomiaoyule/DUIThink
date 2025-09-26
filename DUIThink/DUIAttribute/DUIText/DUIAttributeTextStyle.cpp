@@ -429,6 +429,28 @@ void CDUIAttributeTextStyle::SetEndEllipsis(bool bEndEllipsis)
 	return;
 }
 
+bool CDUIAttributeTextStyle::IsMidEllipsis()
+{
+	tagDuiTextStyle TextStyle = GetTextStyle();
+
+	return 0 != (TextStyle.dwTextStyle & DT_PATH_ELLIPSIS);
+}
+
+void CDUIAttributeTextStyle::SetMidEllipsis(bool bMidEllipsis)
+{
+	if (bMidEllipsis == IsMidEllipsis()) return;
+
+	tagDuiTextStyle TextStyle = GetTextStyle();
+
+	if (bMidEllipsis) TextStyle.dwTextStyle |= DT_PATH_ELLIPSIS;
+	else TextStyle.dwTextStyle &= ~DT_PATH_ELLIPSIS;
+	SetTextStyle(TextStyle);
+
+	NotifyChange();
+
+	return;
+}
+
 CDUISize CDUIAttributeTextStyle::MeasureString(LPCTSTR lpszText)
 {
 	if (MMInvalidString(lpszText) || NULL == m_pOwner) return {};

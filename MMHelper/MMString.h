@@ -89,7 +89,7 @@
 //MMHELPER_API bool operator == (LPCTSTR lpszStr, const CMMString &src);
 
 ////////////////////////////////////////////////////////////////////////////
-class CMMString : 
+class CMMString :
 #ifdef UNICODE
 	public std::wstring
 #else
@@ -152,7 +152,7 @@ public:
 	}
 	CMMString Mid(int nFrom, int nCount) const
 	{
-		return length() > nFrom ? CMMString(c_str() + nFrom, nCount) : _T("");
+		return length() > nFrom ? CMMString(c_str() + nFrom, nCount) : CMMString(_T(""));
 	}
 	CMMString Left(int nCount) const
 	{
@@ -346,12 +346,16 @@ public:
 	}
 	CMMString & operator = (LPCSTR lpszRight)
 	{
+		if (NULL == lpszRight) return *this;
+
 		__super::operator = ((LPCTSTR)CA2CT(lpszRight));
 
 		return *this;
 	}
 	CMMString & operator = (LPCTSTR lpszRight)
 	{
+		if (NULL == lpszRight) return *this;
+
 		__super::operator = (lpszRight);
 
 		return *this;

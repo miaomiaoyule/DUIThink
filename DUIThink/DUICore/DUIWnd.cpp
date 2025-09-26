@@ -33,6 +33,8 @@ CDUIWnd::CDUIWnd(LPCTSTR lpszDuiName, HWND hWndParent)
 
 CDUIWnd::~CDUIWnd()
 {
+	OnDuiDelayDelete();
+
 	CDUIAnimationWnd::UnInit();
 	CDUIGlobal::GetInstance()->RemoveWnd(this);
 
@@ -594,11 +596,6 @@ void CDUIWnd::Close(UINT nRet)
 
 	PostMessage(WM_CLOSE, (WPARAM)nRet, 0L);
 
-	if (g_pIDuiWndNotify)
-	{
-		g_pIDuiWndNotify->OnDuiWndClose(this);
-	}
-
 	return;
 }
 
@@ -850,8 +847,6 @@ CDUIContainerCtrl * CDUIWnd::DetachRootCtrl()
 {
 	CDUIGlobal::PerformNotifyChildRemove(this, m_pRootCtrl);
 
-	OnDuiDelayDelete();
-
 	CDUIContainerCtrl *pRootCtrl = m_pRootCtrl;
 	if (pRootCtrl)
 	{
@@ -868,6 +863,7 @@ CDUIContainerCtrl * CDUIWnd::DetachRootCtrl()
 
 	m_ptMousePosLast = {};
 
+	m_vecMouseEnterCtrl.clear();
 	m_mapControl.clear();
 	m_vecAsynNotify.clear();
 	RemoveAllRadioBoxGroup();
@@ -916,6 +912,7 @@ void CDUIWnd::ReapControl(CDUIControlBase *pControl)
 	if (pControl == m_pWinDragCtrl) m_pWinDragCtrl = NULL;
 	if (pControl == m_pWinDragEnterCtrl) m_pWinDragEnterCtrl = NULL;
 
+	m_vecMouseEnterCtrl.erase(std::remove(m_vecMouseEnterCtrl.begin(), m_vecMouseEnterCtrl.end(), pControl), m_vecMouseEnterCtrl.end());
 	m_mapControl.erase(pControl->GetCtrlID());
 
 	KillTimer(pControl);
@@ -1169,6 +1166,85 @@ void CDUIWnd::SetToolTipHoverTime(int nTime)
 	m_nToolTipHoverTime = nTime;
 }
 
+void CDUIWnd::RefreshToolTip(CMMString strToolTip)
+{
+	m_bRefreshToolTipNeeded = false;
+	m_strToolTip = strToolTip;
+
+	HINSTANCE hInst = CDUIGlobal::GetInstance()->GetInstanceHandle();
+	::ZeroMemory(&m_ToolTip, sizeof(m_ToolTip));
+	m_ToolTip.cbSize = sizeof(m_ToolTip);
+	m_ToolTip.uFlags = TTF_IDISHWND;
+	m_ToolTip.hwnd = m_hWnd;
+	m_ToolTip.uId = (UINT_PTR)m_hWnd;
+	m_ToolTip.hinst = hInst;
+	m_ToolTip.lpszText = const_cast<LPTSTR>((LPCTSTR)strToolTip);
+	m_ToolTip.rect = m_pHoverCtrl->GetAbsoluteRect();
+	if (NULL == m_hWndTooltip)
+	{
+		m_hWndTooltip = ::CreateWindowEx(0, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, m_hWnd, NULL, hInst, NULL);
+		::SendMessage(m_hWndTooltip, TTM_ADDTOOL, 0, (LPARAM)&m_ToolTip);
+	}
+	::SendMessage(m_hWndTooltip, TTM_SETMAXTIPWIDTH, 0, m_pHoverCtrl->GetToolTipWidth());
+	::SendMessage(m_hWndTooltip, TTM_SETTIPBKCOLOR, RGB(DUIARGBGetR(m_pHoverCtrl->GetToolTipBkColor()), DUIARGBGetG(m_pHoverCtrl->GetToolTipBkColor()), DUIARGBGetB(m_pHoverCtrl->GetToolTipBkColor())), 0);
+	::SendMessage(m_hWndTooltip, TTM_SETTIPTEXTCOLOR, RGB(DUIARGBGetR(m_pHoverCtrl->GetToolTipTextColor()), DUIARGBGetG(m_pHoverCtrl->GetToolTipTextColor()), DUIARGBGetB(m_pHoverCtrl->GetToolTipTextColor())), 0);
+	::SendMessage(m_hWndTooltip, TTM_SETTOOLINFO, 0, (LPARAM)&m_ToolTip);
+	::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, TRUE, (LPARAM)&m_ToolTip);
+
+	return;
+}
+
+void CDUIWnd::RefreshLayout()
+{
+	CDUIRect rcClient;
+	::GetClientRect(m_hWnd, &rcClient);
+
+	//layout
+	bool bNeedLayoutMsg = false;
+	if (false == IsRefreshViewNeeded()) return;
+	if (NULL == m_pRootCtrl || rcClient.Empty() || ::IsIconic(m_hWnd)) return;
+
+	m_bRefreshViewNeeded = false;
+
+	if (m_pRootCtrl && m_pRootCtrl->IsRefreshViewNeeded())
+	{
+		m_pRootCtrl->OnDuiSize(rcClient);
+		bNeedLayoutMsg = true;
+	}
+	else
+	{
+		m_vecFoundControls.clear();
+		m_pRootCtrl->FindControl(__FindControlsFromUpdate, nullptr, DuiFind_Visible | DuiFind_MeFirst | DuiFind_UpdateTest);
+		for (auto pControl : m_vecFoundControls)
+		{
+			pControl->OnDuiSize(pControl->GetModalParentRect());
+		}
+	}
+
+	if (m_bFirstLayout)
+	{
+		SendNotify(m_pRootCtrl, DuiNotify_WndInited, 0, 0);
+	}
+	if (bNeedLayoutMsg)
+	{
+		SendNotify(m_pRootCtrl, DuiNotify_WndLayout, 0, 0);
+	}
+	if (m_bFirstLayout)
+	{
+		//animation wnd
+#ifndef DUI_DESIGN
+		if (AnimateWnd_None != GetAnimateWndType())
+		{
+			StartAnimationWnd();
+		}
+#endif
+	}
+
+	m_bFirstLayout = false;
+
+	return;
+}
+
 void CDUIWnd::Invalidate()
 {
 	if (NULL == m_hWnd) return;
@@ -1308,10 +1384,16 @@ bool CDUIWnd::SetDpi(int nDpi)
 {
 	if (nDpi == GetDpi()) return true;
 
+	int nDpiPre = GetDpi();
  	m_DpiInfo.SetDpi(nDpi);
 
 	AdjustWndSize();
 	AdjustWndPos();
+
+	if (m_pRootCtrl)
+	{
+		m_pRootCtrl->OnDpiChanged(nDpiPre);
+	}
 
 	return true;
 }
@@ -1328,6 +1410,16 @@ bool CDUIWnd::SetScale(int nScale)
 	SetDpi(MulDiv(nScale, 96, 100));
 
 	return true;
+}
+
+HBITMAP CDUIWnd::GetBackgroundBmp()
+{
+	return m_hBmpBackground;
+}
+
+LPBYTE CDUIWnd::GetBackgroundBits()
+{
+	return m_pBmpBackgroundBits;
 }
 
 bool CDUIWnd::CreateCaret(HBITMAP hBmp, int nWidth, int nHeight)
@@ -2229,13 +2321,17 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 
 	//root
 	CDUIContainerCtrl *pRootCtrl = dynamic_cast<CDUIContainerCtrl*>(CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), this));
+	if (NULL == pRootCtrl)
+	{
+		OutputDebugString(CDUIGlobal::GetInstance()->GetDuiLastError());
+	}
 
 	//init
 	CMMDragDrop::UnRegister();
 	m_hDCPaint = ::GetDC(m_hWnd);
 	m_uTimerID = 0x1000;
 	m_bMouseTracking = false;
-	m_bRefreshToolTip = false;
+	m_bRefreshToolTipNeeded = false;
 	m_bRefreshViewNeeded = false;
 	m_bPostedAppMsg = false;
 	m_bFirstLayout = true;
@@ -2283,7 +2379,7 @@ LRESULT CDUIWnd::OnDestroy(WPARAM wParam, LPARAM lParam)
 {
 	if (g_pIDuiWndNotify)
 	{
-		g_pIDuiWndNotify->OnDuiWndClose(this);
+		g_pIDuiWndNotify->OnDuiWndDestroy(this);
 	}
 
 	return OnOldWndProc(WM_DESTROY, wParam, lParam);
@@ -2298,34 +2394,6 @@ LRESULT CDUIWnd::OnNcActivate(WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIWnd::OnNcCalcSize(WPARAM wParam, LPARAM lParam)
 {
-	LPRECT pRect = NULL;
-
-	if (wParam == TRUE)
-	{
-		LPNCCALCSIZE_PARAMS pParam = (LPNCCALCSIZE_PARAMS)lParam;
-		pRect = &pParam->rgrc[0];
-	}
-	else
-	{
-		pRect = (LPRECT)lParam;
-	}
-
-	if (::IsZoomed(m_hWnd))
-	{	
-		// 最大化时，计算当前显示器最适合宽高度
-		MONITORINFO oMonitor = {};
-		oMonitor.cbSize = sizeof(oMonitor);
-		::GetMonitorInfo(::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST), &oMonitor);
-		CDUIRect rcWork = oMonitor.rcWork;
-		CDUIRect rcMonitor = oMonitor.rcMonitor;
-		rcWork.Offset(-oMonitor.rcMonitor.left, -oMonitor.rcMonitor.top);
-
-		pRect->left = pRect->top = 0;
-		pRect->right = pRect->left + rcWork.GetWidth();
-		pRect->bottom = pRect->top + rcWork.GetHeight();
-		return WVR_REDRAW;
-	}
-
 	return 0;
 }
 
@@ -2340,10 +2408,10 @@ LRESULT CDUIWnd::OnNcHitTest(WPARAM wParam, LPARAM lParam)
 	GetCursorPos(&pt);
 	::ScreenToClient(m_hWnd, &pt);
 
-	RECT rcClient;
+	CDUIRect rcClient;
 	::GetClientRect(m_hWnd, &rcClient);
 
-	if (!::IsZoomed(m_hWnd))
+	if (false == ::IsZoomed(m_hWnd) && rcClient.PtInRect(pt))
 	{
 		RECT rcSizeBox = GetResizeTrack();
 		if (pt.y < rcClient.top + rcSizeBox.top)
@@ -2687,27 +2755,36 @@ LRESULT CDUIWnd::OnMouseMove(WPARAM wParam, LPARAM lParam)
 		}
 
 		//leave
-		if (m_pHoverCtrl)
+		if (m_hWndTooltip)
 		{
-			DuiMessage msgLeave = {};
-			msgLeave.wParam = DuiMsg.wParam;
-			msgLeave.lParam = DuiMsg.lParam;
-			msgLeave.pMsgCtrl = m_pHoverCtrl;
-			m_pHoverCtrl->OnDuiMouseLeave(pt, msgLeave);
-			Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseLeave, pt, msgLeave, false);
+			::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, false, (LPARAM)&m_ToolTip);
+		}
+		auto vecMouseEnterCtrl = m_vecMouseEnterCtrl;
+		for (int n = vecMouseEnterCtrl.size() - 1; n >= 0; n--)
+		{
+			CDUIControlBase *pControl = vecMouseEnterCtrl[n];
+			if (NULL == pControl) continue;
 
-			if (m_hWndTooltip)
+			CDUIRect rcCtrl = pControl->GetAbsoluteRect();
+			if (false == rcCtrl.PtInRect(pt))
 			{
-				::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, false, (LPARAM)&m_ToolTip);
+				DuiMessage msgLeave = {};
+				msgLeave.wParam = DuiMsg.wParam;
+				msgLeave.lParam = DuiMsg.lParam;
+				msgLeave.pMsgCtrl = pControl;
+				pControl->OnDuiMouseLeave(pt, msgLeave);
+
+				m_vecMouseEnterCtrl.erase(std::remove(m_vecMouseEnterCtrl.begin(), m_vecMouseEnterCtrl.end(), pControl), m_vecMouseEnterCtrl.end());
 			}
 		}
 
 		//hover
 		m_pHoverCtrl = pControl;
-		m_bRefreshToolTip = true;
-
-		if (m_pHoverCtrl)
+		m_bRefreshToolTipNeeded = true;
+		if (m_pHoverCtrl && std::find(m_vecMouseEnterCtrl.begin(), m_vecMouseEnterCtrl.end(), m_pHoverCtrl) == m_vecMouseEnterCtrl.end())
 		{
+			m_vecMouseEnterCtrl.push_back(m_pHoverCtrl);
+
 			//enter
 			DuiMsg.pMsgCtrl = pControl;
 			m_pHoverCtrl->OnDuiMouseEnter(pt, DuiMsg);
@@ -2744,30 +2821,9 @@ LRESULT CDUIWnd::OnMouseHover(WPARAM wParam, LPARAM lParam)
 	//track modify
 	CMMString strToolTip = m_pHoverCtrl->GetToolTip();
 	if (strToolTip.empty()) return lRes;
-	if (false == m_bRefreshToolTip && m_strToolTip == strToolTip) return lRes;
+	if (false == m_bRefreshToolTipNeeded && m_strToolTip == strToolTip) return lRes;
 
-	m_bRefreshToolTip = false;
-	m_strToolTip = strToolTip;
-
-	HINSTANCE hInst = CDUIGlobal::GetInstance()->GetInstanceHandle();
-	::ZeroMemory(&m_ToolTip, sizeof(m_ToolTip));
-	m_ToolTip.cbSize = sizeof(m_ToolTip);
-	m_ToolTip.uFlags = TTF_IDISHWND;
-	m_ToolTip.hwnd = m_hWnd;
-	m_ToolTip.uId = (UINT_PTR)m_hWnd;
-	m_ToolTip.hinst = hInst;
-	m_ToolTip.lpszText = const_cast<LPTSTR>((LPCTSTR)strToolTip);
-	m_ToolTip.rect = m_pHoverCtrl->GetAbsoluteRect();
-	if (NULL == m_hWndTooltip)
-	{
-		m_hWndTooltip = ::CreateWindowEx(0, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, m_hWnd, NULL, hInst, NULL);
-		::SendMessage(m_hWndTooltip, TTM_ADDTOOL, 0, (LPARAM)&m_ToolTip);
-	}
-	::SendMessage(m_hWndTooltip, TTM_SETMAXTIPWIDTH, 0, m_pHoverCtrl->GetToolTipWidth());
-	::SendMessage(m_hWndTooltip, TTM_SETTIPBKCOLOR, RGB(DUIARGBGetR(m_pHoverCtrl->GetToolTipBkColor()), DUIARGBGetG(m_pHoverCtrl->GetToolTipBkColor()), DUIARGBGetB(m_pHoverCtrl->GetToolTipBkColor())), 0);
-	::SendMessage(m_hWndTooltip, TTM_SETTIPTEXTCOLOR, RGB(DUIARGBGetR(m_pHoverCtrl->GetToolTipTextColor()), DUIARGBGetG(m_pHoverCtrl->GetToolTipTextColor()), DUIARGBGetB(m_pHoverCtrl->GetToolTipTextColor())), 0);
-	::SendMessage(m_hWndTooltip, TTM_SETTOOLINFO, 0, (LPARAM)&m_ToolTip);
-	::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, TRUE, (LPARAM)&m_ToolTip);
+	RefreshToolTip(strToolTip);
 
 	return lRes;
 }
@@ -2779,25 +2835,18 @@ LRESULT CDUIWnd::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	msgLeave.wParam = wParam;
 	msgLeave.lParam = MAKELPARAM(-1, -1);
 
-	if (m_pCaptureCtrl)
+	for (int n = m_vecMouseEnterCtrl.size() - 1; n >= 0; n--)
 	{
-		msgLeave.pMsgCtrl = m_pCaptureCtrl;
-		m_pCaptureCtrl->OnDuiMouseLeave(pt, msgLeave);
+		CDUIControlBase *pControl = m_vecMouseEnterCtrl[n];
+		if (NULL == pControl) continue;
 
-		//model
-		Dui_Dispatch_ModelMouseEvent(m_pCaptureCtrl, OnDuiMouseLeave, pt, msgLeave, false);
-	}
-	if (m_pHoverCtrl)
-	{
-		msgLeave.pMsgCtrl = m_pHoverCtrl;
+		msgLeave.pMsgCtrl = pControl;
 		msgLeave.pMsgCtrl->OnDuiMouseLeave(pt, msgLeave);
-
-		//model
-		Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseLeave, pt, msgLeave, false);
 	}
 
 	m_pHoverCtrl = NULL;
-	m_bRefreshToolTip = true;
+	m_bRefreshToolTipNeeded = true;
+	m_vecMouseEnterCtrl.clear();
 
 	//提示窗体
 	if (m_hWndTooltip) ::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, false, (LPARAM)&m_ToolTip);
@@ -3328,6 +3377,11 @@ void CDUIWnd::OnFinalMessage()
 	m_OldWndProc = NULL;
 	m_bSubWindow = false;
 
+	if (g_pIDuiWndNotify)
+	{
+		g_pIDuiWndNotify->OnDuiWndDestroy(this);
+	}
+
 	return;
 }
 
@@ -3469,57 +3523,6 @@ void CDUIWnd::AdjustImagesHSL()
 	}*/
 
 	Invalidate();
-
-	return;
-}
-
-void CDUIWnd::RefreshLayout()
-{
-	CDUIRect rcClient;
-	::GetClientRect(m_hWnd, &rcClient);
-
-	//layout
-	bool bNeedLayoutMsg = false;
-	if (false == IsRefreshViewNeeded()) return;
-	if (NULL == m_pRootCtrl || rcClient.Empty() || ::IsIconic(m_hWnd)) return;
-
-	m_bRefreshViewNeeded = false;
-
-	if (m_pRootCtrl && m_pRootCtrl->IsRefreshViewNeeded())
-	{
-		m_pRootCtrl->OnDuiSize(rcClient);
-		bNeedLayoutMsg = true;
-	}
-	else
-	{
-		m_vecFoundControls.clear();
-		m_pRootCtrl->FindControl(__FindControlsFromUpdate, nullptr, DuiFind_Visible | DuiFind_MeFirst | DuiFind_UpdateTest);
-		for (auto pControl : m_vecFoundControls)
-		{
-			pControl->OnDuiSize(pControl->GetModalParentRect());
-		}
-	}
-
-	if (m_bFirstLayout)
-	{
-		SendNotify(m_pRootCtrl, DuiNotify_WndInited, 0, 0);
-	}
-	if (bNeedLayoutMsg)
-	{
-		SendNotify(m_pRootCtrl, DuiNotify_WndLayout, 0, 0);
-	}
-	if (m_bFirstLayout)
-	{
-		//animation wnd
-#ifndef DUI_DESIGN
-		if (AnimateWnd_None != GetAnimateWndType())
-		{
-			StartAnimationWnd();
-		}
-#endif
-	}
-
-	m_bFirstLayout = false;
 
 	return;
 }

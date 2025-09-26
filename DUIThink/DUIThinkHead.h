@@ -103,8 +103,7 @@ using namespace tinyxml2;
 #endif
 #endif
 
-//////
-#include "../Global/Global.h"
+//////////////////////////////////////////////////////////////////////////
 #include "Define/DefineBase.h"
 #include "Define/DefineControl.h"
 #include "Define/DefineResource.h"
@@ -139,9 +138,8 @@ using namespace tinyxml2;
 #include "DUIAttribute/DUIAttributeBool.h"
 #include "DUIAttribute/DUIAttributeCombox.h"
 #include "DUIAttribute/DUIAttributeCursor.h"
-#include "DUIAttribute/DUIAttriModelSelect.h"
-#include "DUIAttribute/DUIAttriViewSelect.h"
-#include "DUIAttribute/DUIAttriTabSelect.h"
+#include "DUIAttribute/DUIAttributeDuiSelect.h"
+#include "DUIAttribute/DUIAttributeTabSelect.h"
 #include "DUIAttribute/DUIAttributeSize.h"
 #include "DUIAttribute/DUIAttributeRect.h"
 #include "DUIAttribute/DUIAttriImageSection.h"
@@ -170,7 +168,6 @@ using namespace tinyxml2;
 #include "DUIControl/DUIButtonCtrl.h"
 #include "DUIControl/DUICheckBoxCtrl.h"
 #include "DUIControl/DUIRadioBoxCtrl.h"
-#include "DUIControl/DUIDateTimeCtrl.h"
 #include "DUIControl/DUIEditCtrl.h"
 #include "DUIControl/DUIAnimateCtrl.h"
 #include "DUIControl/DUIContainerCtrl.h"
@@ -196,6 +193,8 @@ using namespace tinyxml2;
 #include "DUIControl/DUIClockCtrl.h"
 #include "DUIControl/DUIGroupCtrl.h"
 #include "DUIControl/DUIWaterCtrl.h"
+#include "DUIControl/DUIKLineChartCtrl.h"
+#include "DUIControl/DUIDateTimeCtrl.h"
 
 #include "Interface.h"
 #include "DUIUtils/Utils.h"
@@ -206,5 +205,7 @@ using namespace tinyxml2;
 #include "DUIXmlPack/DUIXmlPack.h"
 
 extern DUITHINK_API tagDuiMenuCmd g_DuiMenuCmd;
+extern DUITHINK_API tagDuiCalendarCmd g_DuiCalendarCmd;
 extern DUITHINK_API CDUIMenuWnd * g_pDuiMenuWndRoot;
+extern DUITHINK_API CDUICalendarWnd * g_pDuiCalendarWnd;
 //////////////////////////////////////////////////////////////////////////

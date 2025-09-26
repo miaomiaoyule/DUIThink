@@ -82,7 +82,7 @@ HBITMAP CDUIImageBase::GetHandle(int nScale)
 
 HBITMAP CDUIImageBase::CloneHandle(int nScale)
 {
-	tagDuiImageInfo &BmpSrc = GetImageInfo(nScale);
+	tagDuiImageInfo BmpSrc = GetImageInfo(nScale);
 	if (NULL == BmpSrc.hBitmap || NULL == BmpSrc.pBits) return NULL;
 
 	LPBYTE pDest = NULL;
@@ -143,7 +143,7 @@ tagDuiAnimateImageInfo CDUIImageBase::GetAnimateImageInfo(int nScale)
 {
 	if (NULL == GetHandle(nScale)) return {};
 
-	tagDuiImageInfo &ImageInfo = GetImageInfo(nScale);
+	tagDuiImageInfo ImageInfo = GetImageInfo(nScale);
 	if (NULL == ImageInfo.pImageAnimate) return tagDuiAnimateImageInfo();
 
 	tagDuiAnimateImageInfo AnimateImageInfo;
@@ -171,6 +171,8 @@ bool CDUIImageBase::IsAlpha()
 
 bool CDUIImageBase::IsScale(int nScale)
 {
+	GetImageInfo(nScale);
+
 	return m_mapDpiImageInfo[nScale].hBitmap;
 }
 
@@ -293,11 +295,13 @@ void CDUIImageBase::ConstructResource(int nScale)
 	//svg
 	if (bSvgFile)
 	{
+#ifdef MMSvgEnable
 		tagDuiImageInfo ImageInfo = {};
 		CMMSvg::GetInstance()->ParseImage(vecData, nScale, ImageInfo.hBitmap, ImageInfo.nWidth, ImageInfo.nHeight, &ImageInfo.pBits);
 
 		ImageInfo.bAlpha = true;
 		m_mapDpiImageInfo[nScale] = ImageInfo;
+#endif
 
 		return;
 	}
@@ -313,24 +317,8 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 	if (vecData.size() <= 0) return false;
 
 	//create
-	HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, vecData.size());
-	BYTE *pMem = (BYTE*)::GlobalLock(hMem);
-
-	CopyMemory(pMem, vecData.data(), vecData.size());
-
-	IStream *pIStream = NULL;
-	::CreateStreamOnHGlobal(hMem, TRUE, &pIStream);
-	if (NULL == pIStream)
-	{
-		::GlobalUnlock(hMem);
-
-		return false;
-	}
-
 	tagDuiImageInfo ImageInfo = {};
-	ImageInfo.pImageAnimate = Gdiplus::Bitmap::FromStream(pIStream);
-	pIStream->Release();
-	::GlobalUnlock(hMem);
+	ImageInfo.pImageAnimate = CDUIRenderEngine::GenerateBitmap(vecData);
 
 	//init
 	if (NULL == ImageInfo.pImageAnimate) return false;

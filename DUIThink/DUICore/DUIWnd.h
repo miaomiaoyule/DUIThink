@@ -19,7 +19,7 @@ class DUITHINK_API CDUIWnd
 	friend class CDUIXmlPack;
 	friend class CDesignerView;
 	friend class CControlView;
-	friend class CDuiLayoutView;
+	friend class CLayoutView;
 	friend class CDUIContainerCtrl;
 	friend class CDlgLogon;
 
@@ -88,7 +88,7 @@ protected:
 	POINT								m_ptMousePosLast;
 	POINT								m_ptMousePosDown;
 	bool								m_bMouseTracking = false;
-	bool								m_bRefreshToolTip = false;
+	bool								m_bRefreshToolTipNeeded = false;
 	bool								m_bRefreshViewNeeded = false;
 	bool								m_bPostedAppMsg = false;
 	bool								m_bFirstLayout = true;
@@ -109,6 +109,7 @@ protected:
 	CDUIControlBase *					m_pEventCtrl = NULL;
 	CDUIControlBase *					m_pWinDragCtrl = NULL;
 	CDUIControlBase *					m_pWinDragEnterCtrl = NULL;
+	VecDuiControlBase					m_vecMouseEnterCtrl;
 
 	//drop
 	tagDuiDropData						m_DropData;
@@ -218,8 +219,10 @@ public:
 	virtual HWND GetToolTipWindow() const;
 	virtual int GetToolTipHoverTime() const;
 	virtual void SetToolTipHoverTime(int nTime);
+	virtual void RefreshToolTip(CMMString strToolTip);
 
 	//refresh
+	virtual void RefreshLayout();
 	virtual void Invalidate();
 	virtual bool IsRefreshViewNeeded() const;
 	virtual void NeedRefreshView();
@@ -244,6 +247,8 @@ public:
 	virtual bool SetDpi(int nDpi);
 	virtual int GetScale() override;
 	virtual bool SetScale(int nScale);
+	virtual HBITMAP GetBackgroundBmp();
+	virtual LPBYTE GetBackgroundBits();
 
 	//caret
 	virtual bool CreateCaret(HBITMAP hBmp, int nWidth, int nHeight);
@@ -376,7 +381,6 @@ protected:
 	void OnDpiChanged(int nScalePre);
 	void AdjustWndSize();
 	void AdjustImagesHSL();
-	void RefreshLayout();
 	void DelayDelete(CDUIControlBase *pControl);
 	void DispatchNotifyAsyn();
 	void PostAppMsg();

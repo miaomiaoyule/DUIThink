@@ -1,3 +1,6 @@
+#ifndef __DUITHINKEDITCTRL_H__
+#define __DUITHINKEDITCTRL_H__
+
 #pragma once
 #pragma pack(1)
 
@@ -51,7 +54,6 @@ protected:
 	int									m_nCaretColumnFrom = -1;
 	int									m_nIndexHistory = -1;
 	QueDuiThinkEditHistory				m_queHistory;
-	Gdiplus::Bitmap *					m_pBmpShadowText = NULL;
 
 	//override
 protected:
@@ -191,3 +193,4 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()
+#endif

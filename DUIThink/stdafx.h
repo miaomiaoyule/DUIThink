@@ -48,9 +48,4 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-extern tagDuiCalendarCmd				g_DuiCalendarCmd;
-extern CDUICalendarWnd *				g_pDuiCalendarWnd;
-
-//////////////////////////////////////////////////////////////////////////
-//global ptr
-extern IDUIWndNotify *					g_pIDuiWndNotify;
+extern IDuiWndNotify *					g_pIDuiWndNotify;

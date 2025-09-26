@@ -375,30 +375,99 @@ bool CMMFile::ParseFilePathName(LPCTSTR lpszFileFull, CMMString &strPath, CMMStr
 	return true;
 }
 
+bool CMMFile::IsUTF8Encode(std::vector<BYTE> vecData)
+{
+	if (vecData.empty()) return false;
+
+	unsigned char byte;
+	int nIndex = 0;
+	int continuation_bytes = 0;
+
+	while (nIndex < vecData.size())
+	{
+		byte = vecData[nIndex++];
+
+		if (continuation_bytes == 0)
+		{
+			// Check leading byte
+			if (byte <= 0x7F)
+			{
+				// ASCII character, continue
+				continue;
+			}
+			else if (byte >= 0xC2 && byte <= 0xDF)
+			{
+				continuation_bytes = 1;
+			}
+			else if (byte >= 0xE0 && byte <= 0xEF)
+			{
+				continuation_bytes = 2;
+			}
+			else if (byte >= 0xF0 && byte <= 0xF4)
+			{
+				continuation_bytes = 3;
+			}
+			else
+			{
+				return false; // Not a valid UTF-8 leading byte
+			}
+		}
+		else
+		{
+			// Check continuation byte
+			if (byte >= 0x80 && byte <= 0xBF)
+			{
+				continuation_bytes--;
+			}
+			else
+			{
+				return false; // Not a valid UTF-8 continuation byte
+			}
+		}
+	}
+
+	return continuation_bytes == 0; // All continuation bytes must be matched
+}
+
 enMMFileEncode CMMFile::GetFileEncode(FILE *pFile)
 {
 	if (NULL == pFile) return FileEncode_Null;
 
 	fseek(pFile, 0, SEEK_END);
-	if (ftell(pFile) < 2) return FileEncode_Null;
+	int nFileSize = ftell(pFile);
+	if (nFileSize <= 0) return FileEncode_Null;
 
+	std::vector<BYTE> vecData;
+	vecData.resize(nFileSize);
 	fseek(pFile, 0, SEEK_SET);
-	unsigned char ch;
-	fread((char*)&ch, sizeof(ch), 1, pFile);//读取第一个字节，然后左移8位
+	int nSizeRead = fread(vecData.data(), 1, nFileSize, pFile);
+	if (vecData.size() < 2)
+	{
+		return IsUTF8Encode(vecData) ? FileEncode_UTF8 : FileEncode_Ansi;
+	}
+
+	unsigned char ch = vecData[0];
 	int p = ch << 8;
-	fread((char*)&ch, sizeof(ch), 1, pFile);//读取第二个字节
-	p += ch;
+	p += vecData[1];
 
 	switch (p)//判断文本前两个字节
 	{
-		case 0xfffe:  //65534
+		case 0xfffe:  //65534		
+		{
 			return FileEncode_Unicode;
+		}
 		case 0xfeff://65279
+		{
 			return FileEncode_Unicode_big_endian;
+		}
 		case 0xefbb://61371
+		{
 			return FileEncode_UTF8_Bom;
+		}
 		default:
-			return FileEncode_Ansi;
+		{
+			return IsUTF8Encode(vecData) ? FileEncode_UTF8 : FileEncode_Ansi;
+		}
 	}
 
 	return FileEncode_Ansi;
@@ -406,7 +475,12 @@ enMMFileEncode CMMFile::GetFileEncode(FILE *pFile)
 
 enMMFileEncode CMMFile::GetFileEncode(const char *pStr)
 {
-	if (NULL == pStr || strlen(pStr) < 2) return FileEncode_Ansi;
+	if (NULL == pStr) return FileEncode_Null;
+
+	if (strlen(pStr) < 2)
+	{
+		return IsUTF8Encode(std::vector<BYTE>(pStr, pStr + strlen(pStr))) ? FileEncode_UTF8 : FileEncode_Ansi;
+	}
 
 	unsigned char ch = pStr[0];
 	int p = ch << 8;
@@ -416,13 +490,21 @@ enMMFileEncode CMMFile::GetFileEncode(const char *pStr)
 	switch (p)//判断文本前两个字节
 	{
 		case 0xfffe:  //65534
+		{
 			return FileEncode_Unicode;
+		}
 		case 0xfeff://65279
+		{
 			return FileEncode_Unicode_big_endian;
+		}
 		case 0xefbb://61371
+		{
 			return FileEncode_UTF8_Bom;
+		}
 		default:
-			return FileEncode_Ansi;
+		{
+			return IsUTF8Encode(std::vector<BYTE>(pStr, pStr + strlen(pStr))) ? FileEncode_UTF8 : FileEncode_Ansi;
+		}
 	}
 
 	return FileEncode_Ansi;
@@ -445,6 +527,25 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 	if (strFile.length() < 2 || _T(':') != strFile[1])
 	{
 		strFile = CMMService::GetWorkDirectory() + _T('\\') + strFile;
+	}
+	{
+		HANDLE hFile = CreateFile(strFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (INVALID_HANDLE_VALUE == hFile) return false;
+
+		DWORD dwFileSize = 0;
+		dwFileSize = ::GetFileSize(hFile, NULL);
+		if (dwFileSize <= 0 || dwFileSize >= (DWORD)-1)
+		{
+			CloseHandle(hFile);
+
+			return true;
+		}
+
+		vecData.resize(dwFileSize);
+		ReadFile(hFile, vecData.data(), dwFileSize, &dwFileSize, NULL);
+		CloseHandle(hFile);
+
+		return true;
 	}
 
 	FILE *pFile = fopen(CT2CA(strFile), "rb");
@@ -537,6 +638,13 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 			}
 
 			break;
+		}
+		case FileEncode_UTF8:
+		{
+			strData = (LPCTSTR)CA2CT((LPCSTR)pByte, CP_UTF8);
+			strData.Replace(_T("\r\n"), _T("\n"));
+
+			return true;
 		}
 	}
 
@@ -667,7 +775,7 @@ bool CMMFile::GetFileVersion(IN LPCTSTR lpszFileFull, OUT DWORD &dwVersionInfo)
 		WORD wVersion2 = LOWORD(pFixedFileInfo->dwFileVersionMS);
 		WORD wVersion3 = HIWORD(pFixedFileInfo->dwFileVersionLS);
 		WORD wVersion4 = LOWORD(pFixedFileInfo->dwFileVersionLS);
-		dwVersionInfo = MAKELONG(MAKEWORD(wVersion4, wVersion3), MAKEWORD(wVersion2, wVersion1));
+		dwVersionInfo = MAKELONG(MAKEWORD(wVersion1, wVersion2), MAKEWORD(wVersion3, wVersion4));
 
 		return true;
 	}
@@ -793,6 +901,26 @@ std::vector<CMMString> CMMFile::GetFilesOfDir(IN LPCTSTR lpszDirFull)
 	return vecFiles;
 }
 
+uint64_t CMMFile::GetFolderSize(IN LPCTSTR lpszDirFull)
+{
+	uint64_t uSize = 0;
+	auto vecFiles = GetFilesOfDir(lpszDirFull);
+	for (CMMString strFile : vecFiles)
+	{
+		strFile = CMMString(lpszDirFull) + _T('\\') + strFile;
+		if (GetFileAttributes(strFile) & FILE_ATTRIBUTE_DIRECTORY)
+		{
+			uSize += GetFolderSize(strFile);
+		}
+		else
+		{
+			uSize += GetFileSize(strFile);
+		}
+	}
+
+	return uSize;
+}
+
 bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool bClearOld)
 {
 	FILE *pFile = fopen(CT2CA(lpszFileFull), "rb");
@@ -846,6 +974,14 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 		}
 		case FileEncode_Unicode_big_endian:
 		{
+			break;
+		}
+		case FileEncode_UTF8:
+		{
+			CStringA strDataA = CT2CA(strData, CP_UTF8);
+
+			fwrite(strDataA, strDataA.GetLength(), 1, pFile);
+
 			break;
 		}
 		case FileEncode_Ansi:

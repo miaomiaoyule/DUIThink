@@ -27,6 +27,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	LoadStringW(hInstance, IDC_DUITHINKDEMOC, szWindowClass, MAX_LOADSTRING);
 
 	CDUIGlobal::GetInstance()->Init(hInstance);
+	//CDUIGlobal::GetInstance()->SetDpi(CMMDpi::GetDpiOfMainMonitor());
 	CDUIGlobal::GetInstance()->LoadProjectFromFile(_T("../DUIThinkDemo.DuiProj/DUIThinkDemo.DuiProj"));
 	CMMDpi::SetProcessDPIAwareness(enMMPROCESS_DPI_AWARENESS::MMPROCESS_PER_MONITOR_DPI_AWARE);
 

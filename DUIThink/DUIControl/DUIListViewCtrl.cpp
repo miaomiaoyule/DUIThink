@@ -7,6 +7,10 @@ MMImplement_ClassName(CDUIListViewCtrl)
 
 CDUIListViewCtrl::CDUIListViewCtrl(void)
 {
+	//model
+	m_AttributeItemModel.SetDuiType(DuiType_ModelListItem);
+
+	//list view type
 	static tagDuiCombox AttriCombox;
 	if (AttriCombox.vecItem.empty())
 	{
@@ -274,13 +278,13 @@ void CDUIListViewCtrl::RefreshView()
 		&& GetTotalRange().cx != GetFixedWidth()
 		&& DuiDpiScaleBackCtrl(GetTotalRange().cx) != DuiDpiScaleBackCtrl(GetFixedWidth()))
 	{
-		SetFixedWidth(GetTotalRange().cx);
+		SetFixedWidth(DuiDpiScaleBackCtrl(GetTotalRange().cx));
 	}
 	if (IsAutoCalcHeight() 
 		&& GetTotalRange().cy != GetFixedHeight()
 		&& DuiDpiScaleBackCtrl(GetTotalRange().cy) != DuiDpiScaleBackCtrl(GetFixedHeight()))
 	{
-		SetFixedHeight(GetTotalRange().cy);
+		SetFixedHeight(DuiDpiScaleBackCtrl(GetTotalRange().cy));
 	}
 
 	CDUIControlBase::RefreshView();
@@ -481,7 +485,7 @@ int CDUIListViewCtrl::GetSwitchListItemHeight()
 
 void CDUIListViewCtrl::SetSwitchListItemHeight(int nHeight)
 {
-	if (nHeight <= 0 || nHeight == GetSwitchListItemHeight()) return;
+	if (nHeight <= 0 || DuiDpiScaleCtrl(nHeight) == GetSwitchListItemHeight()) return;
 
 	m_AttributeSwitchListItemHeight.SetValue(nHeight);
 
@@ -733,7 +737,7 @@ CDUISize CDUIListViewCtrl::GetSwitchTileItemSize()
 
 void CDUIListViewCtrl::SetSwitchTileItemSize(CDUISize szItem)
 {
-	if (szItem.cx <= 0 || szItem.cy <= 0 || szItem == GetSwitchTileItemSize()) return;
+	if (szItem.cx <= 0 || szItem.cy <= 0 || DuiDpiScaleCtrl(szItem) == GetSwitchTileItemSize()) return;
 
 	m_AttributeSwitchTileItemSize.SetValue(szItem);
 
@@ -906,7 +910,6 @@ bool CDUIListViewCtrl::IsSelected(int nIndex)
 
 bool CDUIListViewCtrl::SelectItem(int nIndex, bool bTakeFocus)
 {
-	if (IsSelected(nIndex)) return true;
 	if (nIndex < 0)
 	{
 		UnSelectAllItems();
@@ -915,14 +918,15 @@ bool CDUIListViewCtrl::SelectItem(int nIndex, bool bTakeFocus)
 	}
 
 	//single
-	if (false == IsMultiSelect() && 0 == (CDUIWnd::MapKeyState() & MK_CONTROL))
+	if (false == IsMultiSelect() 
+		&& (0 == (CDUIWnd::MapKeyState() & MK_CONTROL) || (GetKeyState('V') & 0x01)))
 	{
 		UnSelectItem(nIndex, true);
 	}
 
 	CDUIListItemCtrl *pItem = GetChildAt(nIndex);
-	if (pItem == NULL) return false;
-	if (false == pItem->Select(true)) return false;
+	if (pItem == NULL || false == pItem->Select(true)) return false;
+	if (IsSelected(nIndex)) return true;
 
 	m_nCurSel = nIndex;
 	m_vecSelItem.push_back(pItem);
@@ -1967,20 +1971,18 @@ bool CDUIListViewCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Ms
 {
 	if (IsScrollSelect() && false == IsMultiSelect())
 	{
-		switch ((int)(short)HIWORD(Msg.wParam))
+		//direction
+		int nWheelDelta = (int)(short)HIWORD(Msg.wParam);
+		int nWheelCount = abs(nWheelDelta / WHEEL_DELTA);
+		bool bPositive = nWheelDelta > 0;
+
+		if (bPositive)
 		{
-			case WHEEL_DELTA:
-			{
-				SelectItem(FindSelectable(VK_UP));
-
-				break;
-			}
-			case -WHEEL_DELTA:
-			{
-				SelectItem(FindSelectable(VK_DOWN));
-
-				break;
-			}
+			SelectItem(FindSelectable(VK_UP));
+		}
+		else
+		{
+			SelectItem(FindSelectable(VK_DOWN));
 		}
 
 		CDUIControlBase::OnDuiMouseWheel(pt, Msg);

@@ -3,7 +3,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 #define Default_LineMenu_Height			(6)
-#define	Default_LineMenu_Color			(0xFFBCBFC4)	
+#define	Default_LineMenu_Color			(0xffbcbfc4)	
 #define Size_MenuNormal					(150)
 
 //////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 	if (IsWindow(m_hWnd) || NULL == m_pShowMenuView) return;
 
 	//init view
-	if (m_pShowMenuView && NULL == MMInterfaceHelper(CDUIRotateMenuCtrl, m_pShowMenuView))
+	if (NULL == MMInterfaceHelper(CDUIRotateMenuCtrl, m_pShowMenuView))
 	{
 		m_pShowMenuView->UnSelectAllItems();
 	}
@@ -54,20 +54,17 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 	{
 		m_pWndOwner = static_cast<CDUIWnd*>(m_pOwner->GetWndOwner());
 	}
-	if (NULL == m_pWndOwner)
+	if (m_pWndOwner)
 	{
-		return;
+		SetDesigned(m_pWndOwner->IsDesigned());
 	}
 
-	SetDesigned(m_pWndOwner->IsDesigned());
-
 	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW, m_ptTrack.x, m_ptTrack.y);
-	
-	//focus
+
 	CDUIMenuCtrl *pRootMenuCtrl = GetMenuView();
 	if (pRootMenuCtrl)
 	{
-		pRootMenuCtrl->SetFocus();
+		pRootMenuCtrl->RefreshView();
 	}
 
 	return;
@@ -150,19 +147,23 @@ LRESULT CDUIMenuWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIMenuWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 {
-	__super::OnKillFocus(wParam, lParam);
+	LRESULT lRes = __super::OnKillFocus(wParam, lParam);
 
 #ifdef DUI_DESIGN
 	HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONULL);
-	if (NULL == hMonitor) return 0;
+	if (NULL == hMonitor) return lRes;
 #endif
 
 	if (g_pDuiMenuWndRoot)
 	{
 		HWND hWndFocus = (HWND)wParam;
+		if (NULL == hWndFocus)
+		{
+			hWndFocus = GetFocus();
+		}
 		while (hWndFocus)
 		{
-			if (hWndFocus == g_pDuiMenuWndRoot->GetWndHandle()) return 0;
+			if (hWndFocus == g_pDuiMenuWndRoot->GetWndHandle()) return lRes;
 
 			hWndFocus = GetParent(hWndFocus);
 		}
@@ -170,7 +171,7 @@ LRESULT CDUIMenuWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 		g_pDuiMenuWndRoot->UnInit();
 	}
 
-	return 0;
+	return lRes;
 }
 
 LRESULT CDUIMenuWnd::OnKeyDown(WPARAM wParam, LPARAM lParam)
@@ -233,7 +234,7 @@ LRESULT CDUIMenuWnd::OnWMDuiResizeMenu(WPARAM wParam, LPARAM lParam)
 	if (rcWnd.GetWidth() != szRange.cx
 		|| rcWnd.GetHeight() != szRange.cy)
 	{
-		SetWindowPos(GetWndHandle(), NULL, 0, 0, szRange.cx, szRange.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOOWNERZORDER);
+		SetWindowPos(GetWndHandle(), NULL, 0, 0, szRange.cx, szRange.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
 	}
 
 	//wnd pos
@@ -284,14 +285,17 @@ void CDUIMenuWnd::ResizeMenu()
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(-rcWnd.GetWidth(), 0);
 	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight());
 
-	SetWindowPos(m_hWnd, HWND_TOPMOST, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOACTIVATE);
-	ForegroundWindow(m_hWnd);
+	SetWindowPos(m_hWnd, HWND_TOPMOST, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), NULL);
+	SetForegroundWindow(m_hWnd);
+	SetFocus(m_hWnd);
 
 	return;
 }
 
 void CDUIMenuWnd::ResizeSubMenu()
 {
+	if (NULL == m_pWndOwner) return;
+
 	CDUIRect rcWnd;
 	::GetWindowRect(m_hWnd, &rcWnd);
 
@@ -311,7 +315,8 @@ void CDUIMenuWnd::ResizeSubMenu()
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(-(rcWndOwner.GetWidth() + rcWnd.GetWidth()), 0);
 	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight());
 	
-	SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
+	SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER);
+	SetFocus(m_hWnd);
 
 	return;
 }
@@ -809,8 +814,7 @@ void CDUIMenuItemCtrl::InitExpandMenu(bool bActive)
 	strName = CDUIGlobal::GetInstance()->CreateMenu(true);
 	m_AttributeExpandViewDuiName.SetValue(strName);
 
-	MMSafeDelete(m_pExpandMenuWnd);
-	m_pExpandMenuWnd = new CDUIMenuWnd(this, strName);
+	LoadExpandMenu();
 
 	if (bActive)
 	{
@@ -833,6 +837,9 @@ void CDUIMenuItemCtrl::CalcItemRect()
 	CDUIRect rcSourceChecked = m_AttributeIconChecked.GetSource();
 	CDUIRect rcSourceNormal = m_AttributeIconNormal.GetSource();
 	CDUIRect rcSourceExpand = m_AttributeIconExpand.GetSource();
+	m_rcIconChecked.Clear();
+	m_rcIconNormal.Clear();
+	m_rcIconExpand.Clear();
 	if (false == rcSourceChecked.Empty())
 	{
 		m_rcIconChecked = GetAbsoluteRect();

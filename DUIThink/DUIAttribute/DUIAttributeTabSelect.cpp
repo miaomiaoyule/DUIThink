@@ -1,11 +1,11 @@
 #include "StdAfx.h"
-#include "DUIAttriTabSelect.h"
+#include "DUIAttributeTabSelect.h"
 
 //////////////////////////////////////////////////////////////////////////
-DuiImplement_CreateAttribute(CDUIAttriTabSelect)
-MMImplement_ClassName(CDUIAttriTabSelect)
+DuiImplement_CreateAttribute(CDUIAttributeTabSelect)
+MMImplement_ClassName(CDUIAttributeTabSelect)
 
-CDUIAttriTabSelect::CDUIAttriTabSelect()
+CDUIAttributeTabSelect::CDUIAttributeTabSelect()
 {
 #ifdef DUI_DESIGN
 	m_DuiAttributeType = DuiAttribute_TabSelect;
@@ -14,18 +14,18 @@ CDUIAttriTabSelect::CDUIAttriTabSelect()
 	return;
 }
 
-CDUIAttriTabSelect::~CDUIAttriTabSelect(void)
+CDUIAttributeTabSelect::~CDUIAttributeTabSelect(void)
 {
 }
 
-LPVOID CDUIAttriTabSelect::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
+LPVOID CDUIAttributeTabSelect::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
-	QUERYINTERFACE(CDUIAttriTabSelect, Guid, dwQueryVer);
+	QUERYINTERFACE(CDUIAttributeTabSelect, Guid, dwQueryVer);
 
 	return __super::QueryInterface(Guid, dwQueryVer);
 }
 
-void CDUIAttriTabSelect::InitSelectItem()
+void CDUIAttributeTabSelect::InitSelectItem()
 {
 	CDUIWnd *pWnd = GetOwnerWnd();
 	if (NULL == pWnd) return;

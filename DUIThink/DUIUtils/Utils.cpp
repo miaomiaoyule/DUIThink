@@ -222,7 +222,6 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 
 				//right plus 
 				tagDuiRichTextDraw &RichTextDraw = *vecRichTextDraw.rbegin();
-				RichTextDraw.rcDraw.right += 1;
 				RichTextDraw.rcDraw.right = min(RichTextDraw.rcDraw.right, rcItem.right);
 				rcMeasure.right = max(rcMeasure.right, rcMeasureLine.right);
 				rcMeasure.right = max(rcMeasure.right, RichTextDraw.rcDraw.right);
@@ -318,7 +317,7 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 	return;
 }
 
-void CDUIRenderHelp::AdjustRichText(IN DWORD dwTextStyle, IN CDUIRect rcItem, OUT MapLineVecDuiRichTextDraw &mapLineVecRichTextDraw,
+void CDUIRenderHelp::AdjustRichText(IN DWORD dwTextStyle, IN CDUIRect rcItem, IN OUT MapLineVecDuiRichTextDraw &mapLineVecRichTextDraw,
 	IN CDUIRect rcMeasure)
 {
 	//horiz adjust
@@ -411,6 +410,35 @@ void CDUIRenderHelp::AdjustRichText(IN DWORD dwTextStyle, IN CDUIRect rcItem, OU
 			if (LineIt == mapLineVecRichTextDraw.begin()) break;
 		}
 	}
+
+	return;
+}
+
+void CDUIRenderHelp::AdjustRichText(IN OUT MapLineVecDuiRichTextDraw &mapLineVecRichTextDraw)
+{
+	MapLineVecDuiRichTextDraw mapLineVecRichTextDrawTemp;
+	for (auto &LineVecRichTextDraw : mapLineVecRichTextDraw)
+	{
+		for (int n = 0; n < LineVecRichTextDraw.second.size(); n++)
+		{
+			tagDuiRichTextDraw &RichTextDraw = LineVecRichTextDraw.second[n];
+			if (false == mapLineVecRichTextDrawTemp[LineVecRichTextDraw.first].empty()
+				&& RichTextItem_Text == mapLineVecRichTextDrawTemp[LineVecRichTextDraw.first].back().ItemType
+				&& RichTextItem_Text == RichTextDraw.ItemType
+				&& RichTextDraw.dwColor == mapLineVecRichTextDrawTemp[LineVecRichTextDraw.first].back().dwColor
+				&& RichTextDraw.pFontBase == mapLineVecRichTextDrawTemp[LineVecRichTextDraw.first].back().pFontBase)
+			{
+				mapLineVecRichTextDrawTemp[LineVecRichTextDraw.first].back().strText += RichTextDraw.strText;
+				mapLineVecRichTextDrawTemp[LineVecRichTextDraw.first].back().rcDraw.right = RichTextDraw.rcDraw.right;
+			}
+			else
+			{
+				mapLineVecRichTextDrawTemp[LineVecRichTextDraw.first].push_back(RichTextDraw);
+			}
+		}
+	}
+
+	mapLineVecRichTextDraw = mapLineVecRichTextDrawTemp;
 
 	return;
 }

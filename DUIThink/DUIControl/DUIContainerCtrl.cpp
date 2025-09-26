@@ -950,7 +950,7 @@ CDUIControlBase * CDUIContainerCtrl::DetachChild(CDUIControlBase *pControl)
 
 int CDUIContainerCtrl::GetChildIndex(CDUIControlBase *pChild) const
 {
-	if (pChild == NULL) return -1;
+	if (NULL == pChild) return -1;
 
 	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
 	{
@@ -1074,27 +1074,7 @@ void CDUIContainerCtrl::SetAutoCalcChildPaddingV(bool bAuto)
 
 bool CDUIContainerCtrl::Remove(CDUIControlBase *pControl)
 {
-	int nIndex = GetChildIndex(pControl);
-	if (-1 == nIndex || nIndex >= GetChildCount()) return false;
-
-	//control notify
-	CDUIGlobal::PerformNotifyChildRemove(this, pControl);
-
-	//delete
-	m_vecChilds.erase(m_vecChilds.begin() + nIndex);
-
-	if (m_pWndOwner)
-	{
-		m_pWndOwner->DelayDelete(pControl);
-	}
-	else
-	{
-		MMSafeDelete(pControl);
-	}
-
-	NeedRefreshView();
-
-	return true;
+	return CDUIContainerCtrl::RemoveAt(GetChildIndex(pControl));
 }
 
 bool CDUIContainerCtrl::RemoveAt(int nIndex)
@@ -1342,42 +1322,45 @@ void CDUIContainerCtrl::OnDuiSize(CDUIRect rcParentAbs)
 
 bool CDUIContainerCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg)
 {
+	//direction
 	int nWheelDelta = (int)(short)HIWORD(Msg.wParam);
+	int nWheelCount = abs(nWheelDelta / WHEEL_DELTA);
+	bool bPositive = nWheelDelta > 0;
 
-	if ((WHEEL_DELTA == nWheelDelta)
+	if (bPositive
 		&& GetVertScrollBar()
 		&& GetVertScrollBar()->IsVisible()
 		&& GetVertScrollBar()->GetCurValue() > 0)
 	{
 		DuiMessage MsgCopy = Msg;
-		MsgCopy.pMsgCtrl = m_pVertScrollBarCtrl;
+		MsgCopy.pMsgCtrl = GetVertScrollBar();
 		MsgCopy.pMsgCtrl->OnDuiMouseWheel(pt, Msg);
 	}
-	else if ((WHEEL_DELTA != nWheelDelta)
+	else if (false == bPositive
 		&& GetVertScrollBar()
 		&& GetVertScrollBar()->IsVisible()
 		&& GetVertScrollBar()->GetCurValue() < GetVertScrollBar()->GetMaxValue())
 	{
 		DuiMessage MsgCopy = Msg;
-		MsgCopy.pMsgCtrl = m_pVertScrollBarCtrl;
+		MsgCopy.pMsgCtrl = GetVertScrollBar();
 		MsgCopy.pMsgCtrl->OnDuiMouseWheel(pt, Msg);
 	}
-	else if ((WHEEL_DELTA == nWheelDelta)
+	else if (bPositive
 		&& GetHorizScrollBar()
 		&& GetHorizScrollBar()->IsVisible()
 		&& GetHorizScrollBar()->GetCurValue() > 0)
 	{
 		DuiMessage MsgCopy = Msg;
-		MsgCopy.pMsgCtrl = m_pHorizScrollBarCtrl;
+		MsgCopy.pMsgCtrl = GetHorizScrollBar();
 		MsgCopy.pMsgCtrl->OnDuiMouseWheel(pt, Msg);
 	}
-	else if ((WHEEL_DELTA != nWheelDelta)
+	else if (false == bPositive
 		&& GetHorizScrollBar()
 		&& GetHorizScrollBar()->IsVisible()
 		&& GetHorizScrollBar()->GetCurValue() < GetHorizScrollBar()->GetMaxValue())
 	{
 		DuiMessage MsgCopy = Msg;
-		MsgCopy.pMsgCtrl = m_pHorizScrollBarCtrl;
+		MsgCopy.pMsgCtrl = GetHorizScrollBar();
 		MsgCopy.pMsgCtrl->OnDuiMouseWheel(pt, Msg);
 	}
 	else

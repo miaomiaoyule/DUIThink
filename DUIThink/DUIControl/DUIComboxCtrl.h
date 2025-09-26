@@ -24,7 +24,7 @@ public:
 protected:
 	CDUIAttributeGroup					m_AttributeGroupCombox;
 	CDUIAttributeBool					m_AttributeEditEnable;
-	CDUIAttriViewSelect					m_AttributeComboxView;
+	CDUIAttributeDuiSelect				m_AttributeComboxView;
 	CDUIAttributeLong					m_AttributeWaveHeight;
 	CDUIAttributeSize					m_AttributeComboxSize;
 

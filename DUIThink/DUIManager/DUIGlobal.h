@@ -11,13 +11,9 @@ typedef std::map<UINT, CMMString> MapDuiControlID;
 LPCTSTR DUITHINK_API DUI__TraceMsg(UINT uMsg);
 
 //////////////////////////////////////////////////////////////////////////
-class CDUIOperatorHistory;
 class CDTDesignerView;
 class CProjectView;
 class CPropertiesView;
-class CDlgDefaultAttribList;
-class CDTDesignerDoc;
-class CDUIWndImageList;
 class CImageResView;
 class CFontResView;
 class CColorGridWnd;
@@ -28,24 +24,12 @@ class DUITHINK_API CDUIGlobal
 	, public CMMServiceItem
 {
 	friend class CDUIControlBase;
-	friend class CDUIControlObject;
 	friend class CDUIContainerCtrl;
 	friend class CDUIMenuItemCtrl;
 	friend class CDUIMenuWnd;
 	friend class CDUIRotateMenuCtrl;
 	friend class CDUICalendarWnd;
 	friend class CDUIXmlPack;
-	friend class CDuiOperatorHistory;
-	friend class CUICommandElement;
-	friend class CDesignerView;
-	friend class CProjectView;
-	friend class CPropertiesView;
-	friend class CDlgDefaultAttribList;
-	friend class CDesignerTitle;
-	friend class CImageResView;
-	friend class CFontResView;
-	friend class CColorResView;
-	friend class CColorGridWnd;
 	friend class CDUIAttributeObject;
 	friend class CDUIAttriImageSection;
 	friend class CDUIAttributeTextStyle;
@@ -57,17 +41,25 @@ class DUITHINK_API CDUIGlobal
 	friend class CDUIAttributeHotKey;
 	friend class CDUIAttributeRect;
 	friend class CDUIAttributeSize;
-	friend class CDUIAttriTabSelect;
+	friend class CDUIAttributeTabSelect;
 	friend class CDUIAttributeCtrlID;
 	friend class CDUIPropertyObject;
 	friend class CDUIImageBase;
-	friend class CDUIPreview;
 	friend class CDUIWnd;
+	friend class COperatorHistory;
+	friend class CUICommandElement;
+	friend class CDesignerView;
+	friend class CProjectView;
+	friend class CPropertiesView;
+	friend class CDesignerTitle;
+	friend class CImageResView;
+	friend class CFontResView;
+	friend class CColorResView;
+	friend class CColorGridWnd;
 	friend class CControlView;
 	friend class CVSManager;
 	friend class CDlgWizardVariant;
 	friend class CDlgWizardNotify;
-	friend class CDUIPropertyGridProperty;
 	friend class CNotifyView;
 	friend class CDTDesignerApp;
 
@@ -97,6 +89,7 @@ private:
 	MapDuiImageBase						m_mapResourceImage;
 	VecDuiFile							m_vecDui;
 	MapDuiModelStore					m_mapModelStore;
+	MapShadowText						m_mapShadowText;
 	VecIDuiResourceCallBack				m_vecIResourceCallBack;
 
 	//attribute
@@ -183,8 +176,16 @@ public:
 	int GetScale();
 	bool SetScale(int nScale);
 
+	//ui
+	CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
+	CDUIControlBase * ParseDui(LPCTSTR lpszXml);
+
 	//method resource
 public:
+	//data
+	bool ExtractResourceData(vector<BYTE> &vecData, CMMString strFile);
+
+	//res obj
 	bool RegisterResourceCallBack(IDuiResourceCallBack *pIResourceCallBack);
 	bool UnRegisterResourceCallBack(IDuiResourceCallBack *pIResourceCallBack);
 	bool AddResource(CDUIResourceBase *pResourceObj);
@@ -221,12 +222,15 @@ public:
 	CMMString GetSkinPath();
 	CMMString GetDuiPath(enDuiType DuiType);
 
-	//resource
+	//res info
 	HINSTANCE GetInstanceHandle();
 	CMMString GetInstancePath();
 	HINSTANCE GetResourceDll();
 	HZIPDT GetResourceZipHandle();
 	enDuiFileResType GetDuiFileResType();
+
+	//shadow text
+	Gdiplus::Bitmap * GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle);
 	
 	//hsl
 	void GetHSL(short *H, short *S, short *L);
@@ -257,11 +261,8 @@ protected:
 	CMMString CreateMenu(bool bSubMenu);
 	CMMString Create3DMenu();
 	CMMString CreateCalendar();
-	CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
-	CDUIControlBase * ParseDui(LPCTSTR lpszXml);
 	bool SaveDui(LPCTSTR lpszName, CDUIWnd *pWnd);
 	CMMString SaveDui(CDUIPropertyObject *pPropObj, bool bIncludeChild = true);
-	bool ExtractResourceData(vector<BYTE> &vecData, CMMString strFile);
 	
 	//refresh
 	bool RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pPropObj);
@@ -296,6 +297,7 @@ protected:
 	void OnDpiChanged(int nScalePre);
 	void OnResourceAdd(CDUIResourceBase *pResourceObj);
 	void OnResourceRemove(CDUIResourceBase *pResourceObj);
+	void OnResourceRename(CDUIResourceBase *pResourceObj, const CMMString &strNameOld);
 	void OnResourceSwitch(int nIndexRes);
 
 	//attribute
@@ -361,8 +363,8 @@ public:
 
 	//static help
 public:
-	static void RegisterWndNotify(IDUIWndNotify *pIDuiWndNotify);
-	static void UnRegisterWndNotify(IDUIWndNotify *pIDuiWndNotify);
+	static void RegisterWndNotify(IDuiWndNotify *pIDuiWndNotify);
+	static void UnRegisterWndNotify(IDuiWndNotify *pIDuiWndNotify);
 	static int IsEmoji(TCHAR ch);
 
 	//static help

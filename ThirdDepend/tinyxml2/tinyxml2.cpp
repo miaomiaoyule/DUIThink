@@ -2361,7 +2361,7 @@ XMLError XMLDocument::LoadFile( const char* filename )
     Clear();
     FILE* fp = callfopen( filename, "rb" );
     if ( !fp ) {
-        SetError( XML_ERROR_FILE_NOT_FOUND, 0, "filename=%s", filename );
+        SetError( XML_ERROR_FILE_NOT_FOUND, 0, "filename=%s-error=%s", filename, (char*)strerror(errno));
         return _errorID;
     }
     LoadFile( fp );
@@ -2433,7 +2433,8 @@ XMLError XMLDocument::SaveFile( const char* filename, bool compact )
 
     FILE* fp = callfopen( filename, "w" );
     if ( !fp ) {
-        SetError( XML_ERROR_FILE_COULD_NOT_BE_OPENED, 0, "filename=%s", filename );
+		char * strError = strerror(errno);
+        SetError( XML_ERROR_FILE_COULD_NOT_BE_OPENED, 0, "filename=%s-error=%s", filename, strError);
         return _errorID;
     }
     SaveFile(fp, compact);

@@ -177,6 +177,12 @@
     <ClInclude Include="MMMagnetBox.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MMWinTCPing.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMResource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -282,6 +288,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MMMagnetBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMWinTCPing.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMResource.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

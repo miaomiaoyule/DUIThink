@@ -11,14 +11,14 @@
 #define ID_RICH_SELECTALL				106
 #define ID_RICH_REDO					107
 
-EXTERN_C const IID IID_ITextServices = { // 8d33f740-cf58-11ce-a89d-00aa006cadc5
+static const IID GUID_ITextServices = { // 8d33f740-cf58-11ce-a89d-00aa006cadc5
 	0x8d33f740,
 	0xcf58,
 	0x11ce,
 	{0xa8, 0x9d, 0x00, 0xaa, 0x00, 0x6c, 0xad, 0xc5}
 };
 
-EXTERN_C const IID IID_ITextHost = { /* c5bdd8d0-d26e-11ce-a89e-00aa006cadc5 */
+static const IID GUID_ITextHost = { /* c5bdd8d0-d26e-11ce-a89e-00aa006cadc5 */
 	0xc5bdd8d0,
 	0xd26e,
 	0x11ce,
@@ -213,7 +213,7 @@ HRESULT CDUITextHost::QueryInterface(REFIID riid, void **ppvObject)
 	*ppvObject = NULL;
 
 	if (IsEqualIID(riid, IID_IUnknown)
-		|| IsEqualIID(riid, IID_ITextHost))
+		|| IsEqualIID(riid, GUID_ITextHost))
 	{
 		AddRef();
 		*ppvObject = (ITextHost *)this;
@@ -272,11 +272,11 @@ bool CDUITextHost::Init(CDUIRichEditCtrl *pOwnerCtrl)
 
 		//create
 		PCreateTextServices pFuncCreateTextServices = NULL;
-#ifdef _UNICODE
-		HMODULE hModule = LoadLibrary(_T("Msftedit.dll"));
-#else
 		HMODULE hModule = LoadLibrary(_T("Riched20.dll"));
-#endif
+		if (NULL == hModule)
+		{
+			hModule = LoadLibrary(_T("Msftedit.dll"));
+		}
 		if (hModule)
 		{
 			pFuncCreateTextServices = (PCreateTextServices)GetProcAddress(hModule, "CreateTextServices");
@@ -288,7 +288,7 @@ bool CDUITextHost::Init(CDUIRichEditCtrl *pOwnerCtrl)
 		if (FAILED(hRes)) return false;
 
 		//interface
-		hRes = pUnk->QueryInterface(IID_ITextServices, (void **)&m_pTextService);
+		hRes = pUnk->QueryInterface(GUID_ITextServices, (void **)&m_pTextService);
 		pUnk->Release();
 
 		if (FAILED(hRes)) return false;
@@ -1483,7 +1483,7 @@ RECT CDUIRichEditCtrl::GetTextPadding()
 
 void CDUIRichEditCtrl::SetTextPadding(RECT rcPadding)
 {
-	if (rcPadding == GetTextPadding()) return;
+	if (DuiDpiScaleCtrl(rcPadding) == GetTextPadding()) return;
 
 	m_AttributeTextPadding.SetValue(rcPadding);
 
@@ -2331,8 +2331,6 @@ bool CDUIRichEditCtrl::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Ms
 
 	ConstructTextStyle();
 
-	Invalidate();
-
 	return true;
 }
 
@@ -2343,8 +2341,6 @@ void CDUIRichEditCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Ms
 	if (NULL == m_pTextHost || IsFocused()) return;
 
 	ConstructTextStyle();
-
-	Invalidate();
 
 	return;
 }

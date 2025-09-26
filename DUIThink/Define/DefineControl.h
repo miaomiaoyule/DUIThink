@@ -21,10 +21,11 @@
 #define Dui_Prop_Object								(_T("PropertyObj"))
 #define Dui_Window									(_T("Window"))
 
-#define Dui_Ctrl_Control							(_T("ControlCtrl"))
+#define Dui_Ctrl_Base								(_T("BaseCtrl"))
 #define Dui_Ctrl_Static								(_T("StaticCtrl"))
 #define Dui_Ctrl_Edit								(_T("EditCtrl"))
 #define Dui_Ctrl_RichEdit							(_T("RichEditCtrl"))
+#define Dui_Ctrl_ThinkEdit							(_T("ThinkEditCtrl"))
 #define Dui_Ctrl_Button								(_T("ButtonCtrl"))
 #define Dui_Ctrl_CheckBox							(_T("CheckBoxCtrl"))
 #define Dui_Ctrl_RadioBox							(_T("RadioBoxCtrl"))
@@ -57,7 +58,7 @@
 #define Dui_Ctrl_TreeView							(_T("TreeViewCtrl"))
 #define Dui_Ctrl_TreeNode							(_T("TreeNodeCtrl"))
 #define Dui_Ctrl_TabLayout							(_T("TabLayoutCtrl"))
-#define Dui_Ctrl_WkeBrowser							(_T("WkeBrowserCtrl"))
+#define Dui_Ctrl_KLineChart							(_T("KLineChartCtrl"))
 
 //////////////////////////////////////////////////////////////////////////
 

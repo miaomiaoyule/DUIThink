@@ -94,6 +94,8 @@ using namespace std;
 void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 
 //////////////////////////////////////////////////////////////////////////
+#define MMSvgEnable
+#ifdef MMSvgEnable
 #include "../ThirdDepend/svg/Include/svg.h"
 
 #ifdef _DEBUG
@@ -125,6 +127,7 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 		#endif
 	#endif
 #endif
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 //导出文件
@@ -137,6 +140,7 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMMiniDumper.h"
 #include "MMService.h"
 #include "MMCommandLine.h"
+#include "MMResource.h"
 #include "MMMD5CheckSum.h"
 #include "MMAsyncObject.h"
 #include "MMProcess.h"
@@ -154,6 +158,7 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMServiceModel/MMThreadPool.h"
 #include "MMShellExecute/MMShellExecute.h"
 #include "MMFileMonitor/MMFileMonitor.h"
+#include "MMWinTCPing.h"
 #include "MMSocket/Define.h"
 #include "MMSocket/SocketClient/IMMTCPSocketClient.h"
 #include "MMSocket/SocketServer/IMMTCPSocketServer.h"

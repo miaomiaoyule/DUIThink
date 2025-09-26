@@ -279,9 +279,6 @@
     <ClInclude Include="DUIAttribute\DUIAttriImageSection.h">
       <Filter>DUIAttribute</Filter>
     </ClInclude>
-    <ClInclude Include="DUIAttribute\DUIAttriModelSelect.h">
-      <Filter>DUIAttribute</Filter>
-    </ClInclude>
     <ClInclude Include="DUIXmlPack\DUIXmlPack.h">
       <Filter>DUIPack</Filter>
     </ClInclude>
@@ -296,12 +293,6 @@
     </ClInclude>
     <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeULong.h">
       <Filter>DUIAttribute\DUINumber</Filter>
-    </ClInclude>
-    <ClInclude Include="DUIAttribute\DUIAttriViewSelect.h">
-      <Filter>DUIAttribute</Filter>
-    </ClInclude>
-    <ClInclude Include="DUIAttribute\DUIAttriTabSelect.h">
-      <Filter>DUIAttribute</Filter>
     </ClInclude>
     <ClInclude Include="DUIControl\DUIInstrumentCtrl.h">
       <Filter>DUIControl</Filter>
@@ -326,6 +317,15 @@
     </ClInclude>
     <ClInclude Include="DUICore\DUINotifyPump.h">
       <Filter>DUICore</Filter>
+    </ClInclude>
+    <ClInclude Include="DUIControl\DUIKLineChartCtrl.h">
+      <Filter>DUIControl</Filter>
+    </ClInclude>
+    <ClInclude Include="DUIAttribute\DUIAttributeDuiSelect.h">
+      <Filter>DUIAttribute</Filter>
+    </ClInclude>
+    <ClInclude Include="DUIAttribute\DUIAttributeTabSelect.h">
+      <Filter>DUIAttribute</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -512,9 +512,6 @@
     <ClCompile Include="DUIAttribute\DUIAttriImageSection.cpp">
       <Filter>DUIAttribute</Filter>
     </ClCompile>
-    <ClCompile Include="DUIAttribute\DUIAttriModelSelect.cpp">
-      <Filter>DUIAttribute</Filter>
-    </ClCompile>
     <ClCompile Include="DUIXmlPack\DUIXmlPack.cpp">
       <Filter>DUIPack</Filter>
     </ClCompile>
@@ -532,12 +529,6 @@
     </ClCompile>
     <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeULong.cpp">
       <Filter>DUIAttribute\DUINumber</Filter>
-    </ClCompile>
-    <ClCompile Include="DUIAttribute\DUIAttriViewSelect.cpp">
-      <Filter>DUIAttribute</Filter>
-    </ClCompile>
-    <ClCompile Include="DUIAttribute\DUIAttriTabSelect.cpp">
-      <Filter>DUIAttribute</Filter>
     </ClCompile>
     <ClCompile Include="DUIControl\DUIInstrumentCtrl.cpp">
       <Filter>DUIControl</Filter>
@@ -559,6 +550,18 @@
     </ClCompile>
     <ClCompile Include="DUICore\DUINotifyPump.cpp">
       <Filter>DUICore</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DUIControl\DUIKLineChartCtrl.cpp">
+      <Filter>DUIControl</Filter>
+    </ClCompile>
+    <ClCompile Include="DUIAttribute\DUIAttributeDuiSelect.cpp">
+      <Filter>DUIAttribute</Filter>
+    </ClCompile>
+    <ClCompile Include="DUIAttribute\DUIAttributeTabSelect.cpp">
+      <Filter>DUIAttribute</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

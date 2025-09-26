@@ -92,7 +92,9 @@ bool CDUIGlobal::UnInit()
 	CloseProject();
 
 	//third
+#ifdef MMSvgEnable
 	CMMSvg::GetInstance()->UnInit();
+#endif
 
 	//extend dll
 	for (HMODULE hDllModule : m_vecModuleExtendDll)
@@ -101,7 +103,15 @@ bool CDUIGlobal::UnInit()
 
 		FreeLibrary(hDllModule);
 	}
+	
+	//shadow text
+	for (auto ShadowText : m_mapShadowText)
+	{
+		MMSafeDelete(ShadowText.second);
+	}
+
 	m_vecModuleExtendDll.clear();
+	m_mapShadowText.clear();
 
 	return true;
 }
@@ -191,18 +201,8 @@ bool CDUIGlobal::LoadProjectFromResZip(HINSTANCE hResModule, LPCTSTR lpszZipName
 	m_hInstanceResource = hResModule;
 
 	//load res
-	HRSRC hResource = ::FindResource(GetResourceDll(), lpszZipName, lpszResType);
-	if (NULL == hResource) return false;
-
-	DWORD dwSize = ::SizeofResource(GetResourceDll(), hResource);
-	if (0 == dwSize) return false;
-
-	HGLOBAL hGlobal = ::LoadResource(GetResourceDll(), hResource);
-	if (NULL == hGlobal) return false;
-
-	m_vecZipData.resize(dwSize);
-	::CopyMemory(m_vecZipData.data(), (LPBYTE)::LockResource(hGlobal), dwSize);
-	::FreeResource(hGlobal);
+	CMMResource Resource;
+	Resource.Load(GetResourceDll(), lpszResType, lpszZipName, m_vecZipData);
 
 	//unzip
 	if (m_hResourceZip)
@@ -290,6 +290,20 @@ bool CDUIGlobal::SetScale(int nScale)
 	if (nScale < 100 || nScale == GetScale()) return false;
 
 	return SetDpi(MulDiv(nScale, 96, 100));
+}
+
+CDUIControlBase * CDUIGlobal::ParseDui(tinyxml2::XMLElement *pNodeXml)
+{
+	if (NULL == pNodeXml) return NULL;
+
+	return CDUIXmlPack::ParseDui(pNodeXml);
+}
+
+CDUIControlBase * CDUIGlobal::ParseDui(LPCTSTR lpszXml)
+{
+	if (NULL == lpszXml) return NULL;
+
+	return CDUIXmlPack::ParseDui(lpszXml);
 }
 
 int CDUIGlobal::GetFontResourceCount()
@@ -572,6 +586,35 @@ enDuiFileResType CDUIGlobal::GetDuiFileResType()
 	return m_DuiFileResType;
 }
 
+Gdiplus::Bitmap * CDUIGlobal::GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle)
+{
+	//find
+	tagDuiShadowText ShadowText;
+	ShadowText.hFont = hFont;
+	ShadowText.strText = lpszText;
+	ShadowText.dwTextColor = dwTextColor;
+	ShadowText.dwTextStyle = dwTextStyle;
+	Gdiplus::Bitmap *pBmpText = m_mapShadowText[ShadowText];
+	if (pBmpText) return pBmpText;
+
+	//generate
+	HDC hDCScreen = CreateDC(L"DISPLAY", NULL, NULL, NULL);
+	if (NULL == hDCScreen) return NULL;
+
+	CDUIRect rcDraw(0, 0, rcItem.GetWidth(), rcItem.GetHeight());
+	CDUIMemDC MemDC(hDCScreen, rcDraw, false);
+	HFONT hFontOld = (HFONT)::SelectObject(MemDC, hFont);
+	::DrawShadowText(MemDC, lpszText, -1, &rcDraw, dwTextStyle | DT_NOPREFIX, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)), RGB(0, 0, 0), 2, 2);
+	CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcDraw.GetWidth(), rcDraw);
+	::SelectObject(MemDC, hFontOld);
+	MMSafeDeleteDC(hDCScreen);
+
+	pBmpText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
+	m_mapShadowText[ShadowText] = pBmpText;
+
+	return pBmpText;
+}
+
 void CDUIGlobal::GetHSL(short* H, short* S, short* L)
 {
 	*H = m_H;
@@ -607,7 +650,12 @@ CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWnd *pWnd)
 	{
 		return DuiFile.strName == strName;
 	});
-	if (FindIt == m_vecDui.end()) return NULL;
+	if (FindIt == m_vecDui.end())
+	{
+		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]不存在\n"), strName.c_str()));
+
+		return NULL;
+	}
 
 	enDuiType DuiType = FindIt->DuiType;
 	CDUIControlBase *pRootCtrl = NULL;
@@ -1035,20 +1083,6 @@ CMMString CDUIGlobal::CreateCalendar()
 	return strName;
 }
 
-CDUIControlBase * CDUIGlobal::ParseDui(tinyxml2::XMLElement *pNodeXml)
-{
-	if (NULL == pNodeXml) return NULL;
-
-	return CDUIXmlPack::ParseDui(pNodeXml);
-}
-
-CDUIControlBase * CDUIGlobal::ParseDui(LPCTSTR lpszXml)
-{
-	if (NULL == lpszXml) return NULL;
-
-	return CDUIXmlPack::ParseDui(lpszXml);
-}
-
 bool CDUIGlobal::SaveDui(LPCTSTR lpszName, CDUIWnd *pWnd)
 {
 	auto FindIt = m_mapModelStore.find(lpszName);
@@ -1069,68 +1103,6 @@ CMMString CDUIGlobal::SaveDui(CDUIPropertyObject *pPropObj, bool bIncludeChild)
 	return CDUIXmlPack::SaveDui(pPropObj, bIncludeChild);
 }
 
-bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
-{
-	do
-	{
-		//full path
-		if (strFile.length() >= 2 && strFile[1] == _T(':')) break;
-
-		//zip
-		if (DuiFileResType_Zip == GetDuiFileResType()
-			|| DuiFileResType_ResZip == GetDuiFileResType())
-		{
-			HZIPDT hz = (HZIPDT)GetResourceZipHandle();
-			if (NULL == hz) break;
-
-			ZIPENTRYDT ze = {};
-			int i = 0;
-
-			strFile.Replace(_T("\\"), _T("/"));
-			if (0 != FindZipItem(hz, strFile, true, &i, &ze)) break;
-
-			DWORD dwSize = ze.unc_size;
-			if (0 == dwSize) return false;
-
-			vecData.resize(dwSize);
-			int res = UnzipItem(hz, i, vecData.data(), dwSize, 3);
-			if (0x00000000 != res && 0x00000600 != res)
-			{
-				vecData.clear();
-				return false;
-			}
-		}
-
-	} while (false);
-
-	//file
-	if (DuiFileResType_File == GetDuiFileResType() || vecData.empty())
-	{
-		//full path
-		if (strFile.length() < 2 || strFile[1] != _T(':'))
-		{
-			strFile = GetProjectPath() + strFile;
-		}
-
-		HANDLE hFile = ::CreateFile(strFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (INVALID_HANDLE_VALUE == hFile) return false;
-
-		DWORD dwSize = ::GetFileSize(hFile, NULL);
-		DWORD dwRead = 0;
-		vecData.resize(dwSize);
-		::ReadFile(hFile, vecData.data(), dwSize, &dwRead, NULL);
-		::CloseHandle(hFile);
-
-		if (dwRead != dwSize)
-		{
-			vecData.clear();
-			return false;
-		}
-	}
-
-	return true;
-}
-
 bool CDUIGlobal::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pPropObj)
 {
 	if (NULL == pNodeXml || NULL == pPropObj) return false;
@@ -1146,9 +1118,9 @@ CMMThreadPool * CDUIGlobal::GetThreadPool()
 void CDUIGlobal::LoadPublicResource()
 {
 	//image
-	for (auto lpszImage : g_szPublicImage)
+	for (auto ImageItem : g_szPublicImage)
 	{
-		auto pImageBase = new CDUIImageBase(lpszImage[0], lpszImage[1]);
+		auto pImageBase = new CDUIImageBase(ImageItem.first, ImageItem.second);
 		pImageBase->SetDesign(true);
 		if (false == AddResource(pImageBase))
 		{
@@ -1190,6 +1162,8 @@ void CDUIGlobal::LoadPublicResource()
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_DlgCaption);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_DlgLogo);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_DlgTitle);
+	DuiInitCtrlIDItem(Dui_CtrlIDInner_DragTmp);
+	DuiInitCtrlIDItem(Dui_CtrlIDInner_ListItemEdit);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_ListItemSelect);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_HeaderItemSelect);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_HeaderItemCheck);
@@ -1237,7 +1211,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 	if (false == bRes)
 	{
 		assert(false);
-		CMMString strWarning = CMMStrHelp::Format(_T("Failed of load [%s]，Please Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
+		CMMString strWarning = CMMStrHelp::Format(_T("Failed of Load [%s]，Please Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
 		MessageBox(NULL, strWarning, NULL, NULL);
 
 		return;
@@ -1352,6 +1326,68 @@ bool CDUIGlobal::AddResource(CDUIResourceBase *pResourceObj)
 	}
 
 	return false;
+}
+
+bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
+{
+	do
+	{
+		//full path
+		if (strFile.length() >= 2 && strFile[1] == _T(':')) break;
+
+		//zip
+		if (DuiFileResType_Zip == GetDuiFileResType()
+			|| DuiFileResType_ResZip == GetDuiFileResType())
+		{
+			HZIPDT hz = (HZIPDT)GetResourceZipHandle();
+			if (NULL == hz) break;
+
+			ZIPENTRYDT ze = {};
+			int i = 0;
+
+			strFile.Replace(_T("\\"), _T("/"));
+			if (0 != FindZipItem(hz, strFile, true, &i, &ze)) break;
+
+			DWORD dwSize = ze.unc_size;
+			if (0 == dwSize) return false;
+
+			vecData.resize(dwSize);
+			int res = UnzipItem(hz, i, vecData.data(), dwSize, 3);
+			if (0x00000000 != res && 0x00000600 != res)
+			{
+				vecData.clear();
+				return false;
+			}
+		}
+
+	} while (false);
+
+	//file
+	if (DuiFileResType_File == GetDuiFileResType() || vecData.empty())
+	{
+		//full path
+		if (strFile.length() < 2 || strFile[1] != _T(':'))
+		{
+			strFile = GetProjectPath() + strFile;
+		}
+
+		HANDLE hFile = ::CreateFile(strFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (INVALID_HANDLE_VALUE == hFile) return false;
+
+		DWORD dwSize = ::GetFileSize(hFile, NULL);
+		DWORD dwRead = 0;
+		vecData.resize(dwSize);
+		::ReadFile(hFile, vecData.data(), dwSize, &dwRead, NULL);
+		::CloseHandle(hFile);
+
+		if (dwRead != dwSize)
+		{
+			vecData.clear();
+			return false;
+		}
+	}
+
+	return true;
 }
 
 bool CDUIGlobal::RegisterResourceCallBack(IDuiResourceCallBack *pIResourceCallBack)
@@ -1483,6 +1519,8 @@ bool CDUIGlobal::RenameFontResource(const CMMString &strNameOld, const CMMString
 		m_strFontResDefault = strNameNew;
 	}
 
+	OnResourceRename(pFontBaseOld, strNameOld);
+
 	return true;
 }
 
@@ -1497,6 +1535,8 @@ bool CDUIGlobal::RenameImageResource(const CMMString &strNameOld, const CMMStrin
 
 	m_mapResourceImage.erase(strNameOld);
 	m_mapResourceImage[strNameNew] = pImageBaseOld;
+
+	OnResourceRename(pImageBaseOld, strNameOld);
 
 	return true;
 }
@@ -1513,6 +1553,8 @@ bool CDUIGlobal::RenameColorResource(const CMMString &strNameOld, const CMMStrin
 
 	m_mapResourceColor.erase(strNameOld);
 	m_mapResourceColor[strNameNew] = pColorBaseOld;
+
+	OnResourceRename(pColorBaseOld, strNameOld);
 
 	return true;
 }
@@ -1540,7 +1582,7 @@ bool CDUIGlobal::RenameDui(const CMMString &strNameOld, const CMMString &strName
 
 	if (false == MoveFile(strFileOld, strFileNew))
 	{
-		MessageBox(NULL, _T("error because same filename。"), _T("提示"), MB_ICONINFORMATION);
+		MessageBox(NULL, _T("Error Because Same Filename。"), _T("提示"), MB_ICONINFORMATION);
 		return false;
 	}
 
@@ -1567,6 +1609,8 @@ bool CDUIGlobal::RemoveFontResource(const CMMString &strName)
 	if (FindIt == m_mapResourceFont.end()) return true;
 	if (NULL == FindIt->second || FindIt->second->IsDesign()) return false;
 	
+	OnResourceRemove(FindIt->second);
+
 	MMSafeDelete(FindIt->second);
 	m_mapResourceFont.erase(FindIt);
 
@@ -1595,8 +1639,11 @@ bool CDUIGlobal::RemoveImageResource(const CMMString &strName)
 	CMMString strImage = pImageBase->GetImageFileFull();
 	if (true == PathFileExists(strImage) && false == DeleteFile(strImage))
 	{
+		assert(false);
 		return false;
 	}
+
+	OnResourceRemove(pImageBase);
 
 	MMSafeDelete(pImageBase);
 
@@ -1608,6 +1655,8 @@ bool CDUIGlobal::RemoveColorResource(const CMMString &strName)
 	auto FindIt = m_mapResourceColor.find(strName);
 	if (FindIt == m_mapResourceColor.end()) return true;
 	if (NULL == FindIt->second || FindIt->second->IsDesign()) return false;
+
+	OnResourceRemove(FindIt->second);
 
 	MMSafeDelete(FindIt->second);
 	m_mapResourceColor.erase(FindIt);
@@ -1729,6 +1778,25 @@ void CDUIGlobal::OnResourceRemove(CDUIResourceBase *pResourceObj)
 			if (NULL == pIResourceCallBack) continue;
 
 			pIResourceCallBack->OnResourceRemove(pResourceObj);
+		}
+	}
+
+	return;
+}
+
+void CDUIGlobal::OnResourceRename(CDUIResourceBase *pResourceObj, const CMMString &strNameOld)
+{
+	if (NULL == pResourceObj || false == IsLoadProject()) return;
+
+	{
+		std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+
+		for (int n = 0; n < m_vecIResourceCallBack.size(); n++)
+		{
+			IDuiResourceCallBack *pIResourceCallBack = m_vecIResourceCallBack[n];
+			if (NULL == pIResourceCallBack) continue;
+
+			pIResourceCallBack->OnResourceRename(pResourceObj, strNameOld);
 		}
 	}
 
@@ -2948,8 +3016,7 @@ void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t uID)
 			break;
 		}
 		case DuiAttribute_Combox:
-		case DuiAttribute_ModelSelect:
-		case DuiAttribute_ViewSelect:
+		case DuiAttribute_DuiSelect:
 		case DuiAttribute_TabSelect:
 		{
 			DuiAttriReadValue(uID, m_mapAttriComboxSave, m_mapAttriComboxValue);
@@ -3326,14 +3393,14 @@ bool CDUIGlobal::TranslateMessage(const LPMSG pMsg)
 	return false;
 }
 
-void CDUIGlobal::RegisterWndNotify(IDUIWndNotify *pIDuiWndNotify)
+void CDUIGlobal::RegisterWndNotify(IDuiWndNotify *pIDuiWndNotify)
 {
 	g_pIDuiWndNotify = pIDuiWndNotify;
 
 	return;
 }
 
-void CDUIGlobal::UnRegisterWndNotify(IDUIWndNotify *pIDuiWndNotify)
+void CDUIGlobal::UnRegisterWndNotify(IDuiWndNotify *pIDuiWndNotify)
 {
 	if (g_pIDuiWndNotify != pIDuiWndNotify) return;
 
