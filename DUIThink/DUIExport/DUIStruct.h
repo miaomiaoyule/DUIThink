@@ -240,7 +240,7 @@ struct tagDuiImageInfo
 	//animate
 	Gdiplus::Bitmap *					pImageAnimate = NULL;
 	int									nFrameCount = 0;
-	std::vector<Gdiplus::PropertyItem>	vecPropertyItem;							//Ö¡ÓëÖ¡Ö®¼ä¼ä¸ôÊ±¼ä
+	std::vector<Gdiplus::PropertyItem>	vecPropertyItem;							//å¸§ä¸å¸§ä¹‹é—´é—´éš”æ—¶é—´
 };
 
 struct tagDuiAnimateImageInfo
@@ -536,11 +536,11 @@ struct tagDuiDropData
 	std::vector<PCIDLIST_ABSOLUTE>		vecPIDL;
 
 	//CFSTR_FILENAMEMAP: List of file names when renaming with HDROP
-	//½âÎöFileNameMapW½á¹¹£¬¼æÈİ´Ó»ØÊÕÕ¾ÍÏ³ö£¬¸Ã½á¹¹´æ»ØÊÕÕ¾ÖĞÎÄ¼ş¶ÔÓ¦ÕıÈ·ÎÄ¼şÃû
+	//è§£æFileNameMapWç»“æ„ï¼Œå…¼å®¹ä»å›æ”¶ç«™æ‹–å‡ºï¼Œè¯¥ç»“æ„å­˜å›æ”¶ç«™ä¸­æ–‡ä»¶å¯¹åº”æ­£ç¡®æ–‡ä»¶å
 	std::vector<CMMString>				vecFileNameMap;
 
-	//IDataObject¶ÔÏóÊÇ·ñÖ§³ÖÒì²½²Ù×÷,ÕâÀïÄ¬ÈÏÉèÎªtrue
-	//´ó²¿·ÖshellÊı¾İ²Ù×÷»áÔÚÏß³ÌÖĞÒì²½Ö´ĞĞ
+	//IDataObjectå¯¹è±¡æ˜¯å¦æ”¯æŒå¼‚æ­¥æ“ä½œ,è¿™é‡Œé»˜è®¤è®¾ä¸ºtrue
+	//å¤§éƒ¨åˆ†shellæ•°æ®æ“ä½œä¼šåœ¨çº¿ç¨‹ä¸­å¼‚æ­¥æ‰§è¡Œ
 	bool								bAsyncMode = true;
 	WPARAM								wParam = 0;
 	LPARAM								lParam = 0;

@@ -126,14 +126,14 @@ static LPCTSTR g_szPublicColor[] =
 
 static LOGFONT g_PublicFont[] =
 {
-	{ 8, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("΢���ź�") },
-	{ 8, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("΢���ź�") },
-	{ 12, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("΢���ź�") },
-	{ 12, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("΢���ź�") },
-	{ 14, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("΢���ź�") },
-	{ 14, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("΢���ź�") },
-	{ 16, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("΢���ź�") },
-	{ 16, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("΢���ź�") }
+	{ 8, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("微软雅黑") },
+	{ 8, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("微软雅黑") },
+	{ 12, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("微软雅黑") },
+	{ 12, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("微软雅黑") },
+	{ 14, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("微软雅黑") },
+	{ 14, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("微软雅黑") },
+	{ 16, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("微软雅黑") },
+	{ 16, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("微软雅黑") }
 };
 
 static std::pair<CMMString, CMMString> g_szPublicImage[]
