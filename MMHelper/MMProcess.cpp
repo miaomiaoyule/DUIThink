@@ -10,9 +10,13 @@ bool CMMProcess::CreateFileLink(CMMString strFileFull, CMMString strPathTo, CMMS
 	HRESULT hr = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&pisl);
 	if (false == SUCCEEDED(hr)) return false;
 
+	CMMString strPathFrom;
+	CMMFile::ParseFilePathName(strFileFull, strPathFrom, CMMString());
+
 	//这里是我们要创建快捷方式的原始文件地址
 	IPersistFile* pIPF = NULL;
 	pisl->SetPath(strFileFull);
+	pisl->SetWorkingDirectory(strPathFrom);
 	hr = pisl->QueryInterface(IID_IPersistFile, (void**)&pIPF);
 	if (false == SUCCEEDED(hr))
 	{

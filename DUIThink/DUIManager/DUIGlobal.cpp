@@ -1118,7 +1118,7 @@ CMMThreadPool * CDUIGlobal::GetThreadPool()
 void CDUIGlobal::LoadPublicResource()
 {
 	//image
-	for (auto ImageItem : g_szPublicImage)
+	for (auto &ImageItem : g_szPublicImage)
 	{
 		auto pImageBase = new CDUIImageBase(ImageItem.first, ImageItem.second);
 		pImageBase->SetDesign(true);
@@ -1129,7 +1129,7 @@ void CDUIGlobal::LoadPublicResource()
 	}
 
 	//color
-	for (auto lpszColor : g_szPublicColor)
+	for (auto &lpszColor : g_szPublicColor)
 	{
 		auto pColorBase = new CDUIColorBase(lpszColor, _tcstoul(lpszColor, NULL, 16));
 		pColorBase->SetDesign(true);
@@ -1140,7 +1140,7 @@ void CDUIGlobal::LoadPublicResource()
 	}
 
 	//font
-	for (auto lgFont : g_PublicFont)
+	for (auto &lgFont : g_PublicFont)
 	{
 		CMMString strName = CDUIFontBase::FormatFontDescribe(lgFont.lfFaceName, lgFont.lfHeight, lgFont.lfWeight, lgFont.lfItalic, lgFont.lfUnderline, lgFont.lfStrikeOut);
 		auto pFontBase = new CDUIFontBase(strName, lgFont.lfFaceName, lgFont.lfHeight, lgFont.lfWeight, lgFont.lfItalic, lgFont.lfUnderline, lgFont.lfStrikeOut);
