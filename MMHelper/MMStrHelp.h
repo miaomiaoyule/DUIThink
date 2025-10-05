@@ -10,6 +10,7 @@ public:
 	static std::string FormatA(const char *lpszFmt, ...);
 	static std::wstring FormatW(const wchar_t *lpszFmt, ...);
 	static CMMString Format(LPCTSTR lpszFmt, ...);
+	static CMMString ConvertAuto(std::string strFrom);
 
 	//************************************
 	// Description:	´Ó×Ö·û´®½âÎöRECT

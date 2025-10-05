@@ -30,7 +30,7 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	strFontRes = strFontRes + Dui_Resource_FontRes + (".xml");
 	tinyxml2::XMLElement *pXmlFontRes = xmlDoc.NewElement(Dui_Resource_FontRes);
 	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResFile, strFontRes);
-	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResDefault, (LPCSTR)CT2CA(strFontResDefault));
+	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResDefault, (LPCSTR)CT2CA(strFontResDefault, CP_UTF8));
 	xmlDoc.LinkEndChild(pXmlFontRes);
 
 	//color res file
@@ -58,7 +58,7 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	for (auto It = vecDui.begin(); It != vecDui.end(); ++It)
 	{
 		tinyxml2::XMLElement *pXmlDui = xmlDoc.NewElement(Dui_Resource_DirectUI);
-		pXmlDui->SetAttribute(Dui_Resource_Key_DuiName, (LPSTR)CT2CA(It->strName));
+		pXmlDui->SetAttribute(Dui_Resource_Key_DuiName, (LPSTR)CT2CA(It->strName, CP_UTF8));
 		pXmlDui->SetAttribute(Dui_Resource_Key_DuiType, It->DuiType);
 		pXmlDui->SetAttribute(Dui_Resource_Key_DuiFile, (LPSTR)CT2CA(It->strFile));
 		xmlDoc.LinkEndChild(pXmlDui);
@@ -168,7 +168,7 @@ bool CDUIXmlPack::LoadProject(LPCTSTR lpszProject)
 		if (0 == strcmp(pXmlElement->Name(), Dui_Resource_FontRes))
 		{
 			//default
-			CDUIGlobal::GetInstance()->SetFontResDefault(pXmlElement->Attribute(Dui_Resource_Key_FontResDefault));
+			CDUIGlobal::GetInstance()->SetFontResDefault(CMMStrHelp::ConvertAuto(pXmlElement->Attribute(Dui_Resource_Key_FontResDefault)));
 
 			//res
 			strFile = pXmlElement->Attribute(Dui_Resource_Key_FontResFile);
@@ -217,7 +217,7 @@ bool CDUIXmlPack::LoadProject(LPCTSTR lpszProject)
 			DuiType = (enDuiType)strtol(pXmlElement->Attribute(Dui_Resource_Key_DuiType), NULL, 10);
 			strFile = pXmlElement->Attribute(Dui_Resource_Key_DuiFile);
 
-			if (false == CDUIGlobal::GetInstance()->AddDui(DuiType, pXmlElement->Attribute(Dui_Resource_Key_DuiName), strFile))
+			if (false == CDUIGlobal::GetInstance()->AddDui(DuiType, CMMStrHelp::ConvertAuto(pXmlElement->Attribute(Dui_Resource_Key_DuiName)), strFile))
 			{
 			}
 
