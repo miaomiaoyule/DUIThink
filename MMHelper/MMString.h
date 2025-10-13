@@ -219,13 +219,21 @@ public:
 	{
 		if (lstrlen(lpszSrc) <= 0) return *this;
 
-		int nPos = find(lpszSrc);
-		while (-1 != nPos)
+		CMMString strTemp;
+		int nPosFrom = 0;
+		int nPosFind = find(lpszSrc);
+		while (-1 != nPosFind)
 		{
-			erase(begin() + nPos, begin() + nPos + lstrlen(lpszSrc));
-			insert(nPos, lpszDest);
+			strTemp += Mid(nPosFrom, nPosFind - nPosFrom);
+			strTemp += lpszDest;
+			nPosFrom = nPosFind + lstrlen(lpszSrc);
+			nPosFind = find(lpszSrc, nPosFrom);
+		}
+		if (false == strTemp.empty() && nPosFrom < length())
+		{
+			strTemp += GetBuffer(nPosFrom);
 
-			nPos = find(lpszSrc, nPos + lstrlen(lpszDest));
+			*this = strTemp;
 		}
 
 		return *this;

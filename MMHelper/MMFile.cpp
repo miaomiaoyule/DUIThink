@@ -587,8 +587,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 		case FileEncode_Ansi:
 		{
 			strData = (LPCTSTR)CA2CT((LPCSTR)pByte);
-			strData.Replace(_T("\r\n"), _T("\n"));
-
+			
 			return true;
 		}
 		case FileEncode_Unicode:
@@ -597,8 +596,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 			{
 				pByte += 2;
 				strData = (LPCTSTR)pByte;
-				strData.Replace(_T("\r\n"), _T("\n"));
-
+				
 				return true;
 			}
 
@@ -618,8 +616,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 				}
 				
 				strData = (LPCTSTR)pByte;
-				strData.Replace(_T("\r\n"), _T("\n"));
-
+				
 				return true;
 			}
 
@@ -631,8 +628,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 			{
 				pByte += 3;
 				strData = (LPCTSTR)CA2CT((LPCSTR)pByte, CP_UTF8);
-				strData.Replace(_T("\r\n"), _T("\n"));
-
+				
 				return true;
 			}
 
@@ -641,8 +637,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 		case FileEncode_UTF8:
 		{
 			strData = (LPCTSTR)CA2CT((LPCSTR)pByte, CP_UTF8);
-			strData.Replace(_T("\r\n"), _T("\n"));
-
+			
 			return true;
 		}
 	}
