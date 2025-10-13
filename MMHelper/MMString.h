@@ -229,9 +229,12 @@ public:
 			nPosFrom = nPosFind + lstrlen(lpszSrc);
 			nPosFind = find(lpszSrc, nPosFrom);
 		}
-		if (false == strTemp.empty() && nPosFrom < length())
+		if (false == strTemp.empty())
 		{
-			strTemp += GetBuffer(nPosFrom);
+			if (nPosFrom < length())
+			{
+				strTemp += GetBuffer(nPosFrom);
+			}
 
 			*this = strTemp;
 		}
