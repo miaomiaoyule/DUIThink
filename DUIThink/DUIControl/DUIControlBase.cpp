@@ -1782,6 +1782,7 @@ void CDUIControlBase::PaintBkColor(HDC hDC)
 
 void CDUIControlBase::PaintBkImage(HDC hDC)
 {
+	CDUIRect rcBorderRect = GetBorderRect();
 	enDuiRoundType RoundType = GetRoundType();
 	CDUIRect rcBorderRound = GetRoundCorner(); 
 	PaintImageAttribute(hDC, &m_AttributeImageBack, false);
@@ -1794,19 +1795,30 @@ void CDUIControlBase::PaintBkImage(HDC hDC)
 
 		if (0 == nImageWidth || 0 == nImageHeight) return;
 
-		//µ»±»
-		if (CustomBack_ScaleSuitable == (CustomBack_ScaleSuitable & m_nCustomBackAlign))
+		if (CustomBack_Stretch == m_nCustomBackAlign)
+		{
+			rcDest = rcBorderRect;
+		}
+		else if (CustomBack_Scale == m_nCustomBackAlign)
+		{
+			rcDest = rcBorderRect;
+			rcDest.left = rcDest.left + rcDest.GetWidth() / 2 - nImageWidth / 2;
+			rcDest.top = rcDest.top + rcDest.GetHeight() / 2 - nImageHeight / 2;
+			rcDest.right = rcDest.left + nImageWidth;
+			rcDest.bottom = rcDest.top + nImageHeight;
+		}
+		else
 		{
 			double lfScaleBmp = (double)nImageWidth / (double)nImageHeight;
-			if (nImageWidth >= nImageHeight)
+			if (rcBorderRect.GetWidth() >= rcBorderRect.GetHeight())
 			{
-				nDestWidth = min(GetWidth(), nImageWidth);
-				nDestHeight = nDestWidth / lfScaleBmp;
+				nDestHeight = min(rcBorderRect.GetHeight(), nImageHeight);
+				nDestWidth = nDestHeight * lfScaleBmp; 
 			}
 			else
 			{
-				nDestHeight = min(GetHeight(), nImageHeight);
-				nDestWidth = nDestHeight * lfScaleBmp;
+				nDestWidth = min(rcBorderRect.GetWidth(), nImageWidth);
+				nDestHeight = nDestWidth / lfScaleBmp;
 			}
 
 			nDestWidth = max(nDestWidth, 1);
@@ -1815,54 +1827,40 @@ void CDUIControlBase::PaintBkImage(HDC hDC)
 			//center
 			if (CustomBack_Center == (CustomBack_Center & m_nCustomBackAlign))
 			{
-				rcDest.left = GetAbsoluteRect().left + GetWidth() / 2 - nDestWidth / 2;
+				rcDest.left = rcBorderRect.left + rcBorderRect.GetWidth() / 2 - nDestWidth / 2;
 				rcDest.right = rcDest.left + nDestWidth;
 			}
 			//right
 			else if (CustomBack_Right == (CustomBack_Right & m_nCustomBackAlign))
 			{
-				rcDest.right = GetAbsoluteRect().right;
+				rcDest.right = rcBorderRect.right;
 				rcDest.left = rcDest.right - nDestWidth;
 			}
 			//left
 			else
 			{
-				rcDest.left = GetAbsoluteRect().left;
+				rcDest.left = rcBorderRect.left;
 				rcDest.right = rcDest.left + nDestWidth;
 			}
 
 			//vcenter
 			if (CustomBack_VCenter == (CustomBack_VCenter & m_nCustomBackAlign))
 			{
-				rcDest.top = GetAbsoluteRect().top + GetHeight() / 2 - nDestHeight / 2;
+				rcDest.top = rcBorderRect.top + rcBorderRect.GetHeight() / 2 - nDestHeight / 2;
 				rcDest.bottom = rcDest.top + nDestHeight;
 			}
 			//bottom
 			else if (CustomBack_Bottom == (CustomBack_Bottom & m_nCustomBackAlign))
 			{
-				rcDest.bottom = GetAbsoluteRect().bottom;
+				rcDest.bottom = rcBorderRect.bottom;
 				rcDest.top = rcDest.bottom - nDestHeight;
 			}
 			//top
 			else
 			{
-				rcDest.top = GetAbsoluteRect().top;
+				rcDest.top = rcBorderRect.top;
 				rcDest.bottom = rcDest.top + nDestHeight;
 			}
-		}
-		//dengbi
-		else if (CustomBack_Scale == (CustomBack_Scale & m_nCustomBackAlign))
-		{
-			rcDest = GetAbsoluteRect();
-			rcDest.left = rcDest.left + rcDest.GetWidth() / 2 - nImageWidth / 2;
-			rcDest.top = rcDest.top + rcDest.GetHeight() / 2 - nImageHeight / 2;
-			rcDest.right = rcDest.left + nImageWidth;
-			rcDest.bottom = rcDest.top + nImageHeight;
-		}
-		//¿≠…Ï
-		else
-		{
-			rcDest = GetAbsoluteRect();
 		}
 
 		CDUIRenderEngine::DrawImage(hDC, m_pBmpCustomBack, rcDest, rcBorderRound, RoundType);

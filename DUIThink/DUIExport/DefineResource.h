@@ -122,6 +122,8 @@ static LPCTSTR g_szPublicColor[] =
 	Name_Colorff414143,
 	Name_Colorff3f3f41,
 	Name_Color11dcdcdc,
+	Name_Colorffc1c1c1,
+	Name_Colorffcce4f7,
 };
 
 static LOGFONT g_PublicFont[] =
