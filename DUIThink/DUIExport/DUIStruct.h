@@ -277,10 +277,9 @@ struct tagDuiImageSection
 	BYTE								cbAlpha = 255;
 	ARGB								dwMask = 0;
 
+	//corner
 	CDUIRect							rcCorner;
-	bool								bHole = false;
-	bool								bTiledX = false;
-	bool								bTiledY = false;
+	bool								bCornerHole = false;
 
 	uint32_t GetID() const;
 	bool operator == (const tagDuiImageSection &Right) const
@@ -298,9 +297,7 @@ struct tagDuiImageSection
 			&& cbAlpha == Right.cbAlpha
 			&& dwMask == Right.dwMask
 			&& rcCorner == Right.rcCorner
-			&& bHole == Right.bHole
-			&& bTiledX == Right.bTiledX
-			&& bTiledY == Right.bTiledY;
+			&& bCornerHole == Right.bCornerHole;
 	}
 };
 
@@ -332,7 +329,7 @@ template<> struct hash<tagDuiImageSection>
 
 		strInfo += CMMStrHelp::Format(_T("-%d-%d-%d-%d-%d-%d-%d-%d-%d"), (int)ImageSection.cbAlpha, (int)ImageSection.dwMask,
 			(int)ImageSection.rcCorner.left, (int)ImageSection.rcCorner.top, (int)ImageSection.rcCorner.right, (int)ImageSection.rcCorner.bottom,
-			(int)ImageSection.bHole, (int)ImageSection.bTiledX, (int)ImageSection.bTiledY);
+			(int)ImageSection.bCornerHole, 0, 0);
 
 		return CMMHash::GetHash(strInfo);
 	}

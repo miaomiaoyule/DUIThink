@@ -178,7 +178,7 @@ static void ConstructRhombPoints(const CDUIRect &rcDraw, int nLineSize, std::vec
 
 /////////////////////////////////////////////////////////////////////////////////////
 void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-	BYTE cbAlpha, bool bAlpha, bool bHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
+	BYTE cbAlpha, bool bAlpha, bool bCornerHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (NULL == hDC || NULL == hBitmap) return;
@@ -206,7 +206,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 	BLENDFUNCTION bf = { AC_SRC_OVER, 0, cbAlpha, AC_SRC_ALPHA };
 
 	//middle
-	if (false == bHole)
+	if (false == bCornerHole)
 	{
 		do
 		{
@@ -282,7 +282,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 
 			if (bTiledX)
 			{
-				LONG lWidth = rcBmpPart.right - rcBmpPart.left - rcCorner.left - rcCorner.right;
+				LONG lWidth = rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right;
 				int iTimes = (rcDest.GetWidth() + lWidth - 1) / lWidth;
 				for (int i = 0; i < iTimes; ++i)
 				{
@@ -313,7 +313,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 
 			//bTiledY
 			{
-				LONG lHeight = rcBmpPart.bottom - rcBmpPart.top - rcCorner.top - rcCorner.bottom;
+				LONG lHeight = rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom;
 				int iTimes = (rcDest.GetHeight() + lHeight - 1) / lHeight;
 				for (int i = 0; i < iTimes; ++i)
 				{
@@ -616,7 +616,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 }
 
 void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-	BYTE cbAlpha, bool bAlpha, bool bHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
+	BYTE cbAlpha, bool bAlpha, bool bCornerHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (NULL == hDC || NULL == pBmp) return;
@@ -624,7 +624,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	//no nine grid and roundpaint
 	bool bRoundPaint = (rcRound.left > 0 || rcRound.top > 0 || rcRound.right > 0 || rcRound.bottom > 0 || Round_Normal != RoundType);
 	if (bRoundPaint
-		&& false == bHole
+		&& false == bCornerHole
 		&& false == bTiledX
 		&& false == bTiledY
 		&& rcCorner.left == 0 && rcCorner.right == 0 && rcCorner.top == 0 && rcCorner.bottom == 0)
@@ -648,7 +648,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 
 	//draw middle
-	if (false == bHole)
+	if (false == bCornerHole)
 	{
 		do
 		{
@@ -706,7 +706,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 
 			if (bTiledX)
 			{
-				LONG lWidth = rcBmpPart.right - rcBmpPart.left - rcCorner.left - rcCorner.right;
+				LONG lWidth = rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right;
 				int iTimes = (rcDest.GetWidth() + lWidth - 1) / lWidth;
 				for (int i = 0; i < iTimes; ++i)
 				{
@@ -722,7 +722,6 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 					Gp.DrawImage(pBmp, Gdiplus::Rect(lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.GetHeight()),
 						rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
 						lDrawWidth, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, UnitPixel);
-
 				}
 
 				break;
@@ -730,7 +729,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 
 			//bTiledY
 			{
-				LONG lHeight = rcBmpPart.bottom - rcBmpPart.top - rcCorner.top - rcCorner.bottom;
+				LONG lHeight = rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom;
 				int iTimes = (rcDest.GetHeight() + lHeight - 1) / lHeight;
 				for (int i = 0; i < iTimes; ++i)
 				{

@@ -39,6 +39,8 @@ CDUIAttributeObject & CDUIAttributeObject::operator = (CDUIAttributeObject &Righ
 
 CMMString CDUIAttributeObject::FormatInfo()
 {
+	if (IsEmpty()) return _T("0");
+
 	return CMMStrHelp::Format(_T("%u"), GetValueID());
 }
 

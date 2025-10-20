@@ -2869,25 +2869,13 @@ bool CDUIGlobal::SetAttriImageSection(tinyxml2::XMLElement *pNode)
 
 				continue;
 			}
-			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriImageSecHole))
+			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriImageSecCornerHole))
 			{
-				ImageSection.bHole = strtol(pNodeAttribute->Value(), NULL, 10);
+				ImageSection.bCornerHole = strtol(pNodeAttribute->Value(), NULL, 10);
 
 				continue;
 			}
-			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriImageSecTiledX))
-			{
-				ImageSection.bTiledX = strtol(pNodeAttribute->Value(), NULL, 10);
-
-				continue;
-			}
-			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriImageSecTiledY))
-			{
-				ImageSection.bTiledY = strtol(pNodeAttribute->Value(), NULL, 10);
-
-				continue;
-			}
-
+			
 		} while (pNodeAttribute = pNodeAttribute->Next(), pNodeAttribute);
 
 	} while (false);
@@ -2964,14 +2952,8 @@ bool CDUIGlobal::SaveAttriImageSection(tinyxml2::XMLElement *pNode)
 		//Corner
 		pValue->SetAttribute(Dui_Key_AttriImageSecCorner, CMMStrHelp::FormatA("%d,%d,%d,%d", ImageSection.rcCorner.left, ImageSection.rcCorner.top, ImageSection.rcCorner.right, ImageSection.rcCorner.bottom).c_str());
 
-		//Hole
-		pValue->SetAttribute(Dui_Key_AttriImageSecHole, (int)ImageSection.bHole);
-
-		//TiledX
-		pValue->SetAttribute(Dui_Key_AttriImageSecTiledX, (int)ImageSection.bTiledX);
-
-		//TiledY
-		pValue->SetAttribute(Dui_Key_AttriImageSecTiledY, (int)ImageSection.bTiledY);
+		//Corner Hole
+		pValue->SetAttribute(Dui_Key_AttriImageSecCornerHole, (int)ImageSection.bCornerHole);
 
 		pNode->LinkEndChild(pValue);
 	}

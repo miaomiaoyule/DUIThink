@@ -63,9 +63,7 @@
 #define Dui_Key_AttriImageSecAlpha					("Alpha")
 #define Dui_Key_AttriImageSecMask					("Mask")
 #define Dui_Key_AttriImageSecCorner					("Corner")
-#define Dui_Key_AttriImageSecHole					("Hole")
-#define Dui_Key_AttriImageSecTiledX					("TiledX")
-#define Dui_Key_AttriImageSecTiledY					("TiledY")
+#define Dui_Key_AttriImageSecCornerHole				("CornerHole")
 
 #define Dui_Key_AttriNumberLong						("Value")
 #define Dui_Key_AttriNumberULong					("Value")
