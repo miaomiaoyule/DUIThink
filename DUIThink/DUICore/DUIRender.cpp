@@ -165,6 +165,13 @@ static void ConstructRhombPath(const CDUIRect &rcDraw, int nLineSize, Gdiplus::G
 	return;
 }
 
+static void ConstructEllipsePath(const CDUIRect &rcDraw, Gdiplus::GraphicsPath &Path)
+{
+	Path.AddEllipse(rcDraw.left, rcDraw.top, rcDraw.GetWidth(), rcDraw.GetHeight());
+
+	return;
+}
+
 static void ConstructRhombPoints(const CDUIRect &rcDraw, int nLineSize, std::vector<Gdiplus::Point> &vecPoint)
 {
 	vecPoint.clear();
@@ -172,6 +179,23 @@ static void ConstructRhombPoints(const CDUIRect &rcDraw, int nLineSize, std::vec
 	vecPoint.push_back({ rcDraw.right, rcDraw.top + rcDraw.GetHeight() / 2 });
 	vecPoint.push_back({ rcDraw.left + rcDraw.GetWidth() / 2, rcDraw.bottom - nLineSize });
 	vecPoint.push_back({ rcDraw.left, rcDraw.top + rcDraw.GetHeight() / 2 });
+
+	return;
+}
+
+static void ConstructTextureBrushMatrix(Gdiplus::TextureBrush &Brush, Gdiplus::GraphicsPath &Path, Gdiplus::Bitmap *pBmp)
+{
+	if (NULL == pBmp) return;
+
+	// ¼ÆËãËõ·Å¾ØÕó£¬Ê¹Í¼ÏñÆ¥ÅäÂ·¾¶±ß½ç
+	Gdiplus::RectF bounds;
+	Path.GetBounds(&bounds);
+	Gdiplus::Matrix matrix;
+	REAL sx = bounds.Width / pBmp->GetWidth();
+	REAL sy = bounds.Height / pBmp->GetHeight();
+	matrix.Scale(sx, sy);
+	matrix.Translate(bounds.X / sx, bounds.Y / sy, Gdiplus::MatrixOrderAppend);
+	Brush.SetTransform(&matrix);
 
 	return;
 }
@@ -573,24 +597,28 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 				Gdiplus::GraphicsPath Path;
 				ConstructRoundPath(rcItem, rcRound, 0, Path);
 
-				Gdiplus::TextureBrush Brush(pBmp);
+				Gdiplus::TextureBrush Brush(pBmp, Gdiplus::WrapModeClamp);
+				ConstructTextureBrushMatrix(Brush, Path, pBmp);
+				
 				Gp.FillPath(&Brush, &Path);
 			}
 			else
 			{
-				Gp.DrawImage(pBmp, Gdiplus::Rect(rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight()), 0, 0, pBmp->GetWidth(), pBmp->GetHeight(), UnitPixel);
+				Gp.DrawImage(pBmp, Gdiplus::Rect(rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight()), 0, 0, pBmp->GetWidth(), pBmp->GetHeight(), Gdiplus::UnitPixel);
 			}
 
 			break;
 		}
 
-		Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmp);
+		Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmp, Gdiplus::WrapModeClamp);
 		Gdiplus::GraphicsPath Path;
 		switch (RoundType)
 		{
 			case Round_Parallelogram:
 			{
 				ConstructParallelogramPath(rcItem, rcItem.GetWidth() / 3, 0, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmp);
+
 				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
@@ -598,13 +626,18 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 			case Round_Rhomb:
 			{
 				ConstructRhombPath(rcItem, 0, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmp);
+
 				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
 			}
 			case Round_Ellipse:
 			{
-				Gp.FillEllipse(&BrushBmp, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
+				ConstructEllipsePath(rcItem, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmp);
+
+				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
 			}
@@ -904,10 +937,7 @@ void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, c
 		|| rcRound.right > 0
 		|| rcRound.bottom > 0)
 	{
-		Gdiplus::Bitmap *pBmpClone = GenerateBitmap(pBmpAnimate, CDUISize(rcItem.GetWidth(), rcItem.GetHeight()));
-		if (NULL == pBmpClone) return;
-
-		Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmpClone);
+		Gdiplus::TextureBrush BrushBmp(pBmpAnimate, Gdiplus::WrapModeClamp);
 
 		//path
 		Gdiplus::GraphicsPath Path;
@@ -916,6 +946,8 @@ void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, c
 			case Round_Parallelogram:
 			{
 				ConstructParallelogramPath(rcItem, rcItem.GetWidth() / 3, 0, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmpAnimate);
+
 				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
@@ -923,26 +955,31 @@ void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, c
 			case Round_Rhomb:
 			{
 				ConstructRhombPath(rcItem, 0, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmpAnimate);
+
 				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
 			}
 			case Round_Ellipse:
 			{
-				Gp.FillEllipse(&BrushBmp, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
+				ConstructEllipsePath(rcItem, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmpAnimate);
+
+				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
 			}
 			default:
 			{
 				ConstructRoundPath(rcItem, rcRound, 0, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmpAnimate);
+
 				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
 			}
 		}
-
-		MMSafeDelete(pBmpClone);
 
 		return;
 	}
