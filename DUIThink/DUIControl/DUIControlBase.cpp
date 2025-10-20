@@ -1809,16 +1809,17 @@ void CDUIControlBase::PaintBkImage(HDC hDC)
 		}
 		else
 		{
-			double lfScaleBmp = (double)nImageWidth / (double)nImageHeight;
-			if (nImageWidth >= nImageHeight)
+			float fScaleBmp = (float)nImageWidth / (float)nImageHeight;
+			float fScaleRange = (float)rcBorderRect.GetWidth() / (float)rcBorderRect.GetHeight();
+			if (fScaleBmp <= fScaleRange)
 			{
-				nDestWidth = min(rcBorderRect.GetWidth(), nImageWidth);
-				nDestHeight = nDestWidth / lfScaleBmp;
+				nDestHeight = min(rcBorderRect.GetHeight(), nImageHeight);
+				nDestWidth = nDestHeight * fScaleBmp;
 			}
 			else
 			{
-				nDestHeight = min(rcBorderRect.GetHeight(), nImageHeight);
-				nDestWidth = nDestHeight * lfScaleBmp;
+				nDestWidth = min(rcBorderRect.GetWidth(), nImageWidth);
+				nDestHeight = nDestWidth / fScaleBmp;
 			}
 
 			nDestWidth = max(nDestWidth, 1);
