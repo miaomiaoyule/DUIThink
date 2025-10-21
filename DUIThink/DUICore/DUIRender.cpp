@@ -190,11 +190,18 @@ static void ConstructTextureBrushMatrix(Gdiplus::TextureBrush &Brush, Gdiplus::G
 	// 计算缩放矩阵，使图像匹配路径边界
 	Gdiplus::RectF bounds;
 	Path.GetBounds(&bounds);
+
 	Gdiplus::Matrix matrix;
+
+	// 先将图像缩放到路径尺寸
 	REAL sx = bounds.Width / pBmp->GetWidth();
 	REAL sy = bounds.Height / pBmp->GetHeight();
+
+	// 设置缩放
 	matrix.Scale(sx, sy);
-	matrix.Translate(bounds.X / sx, bounds.Y / sy, Gdiplus::MatrixOrderAppend);
+
+	// 再平移到路径位置（注意要用原坐标，不要除以 sx/sy）
+	matrix.Translate(bounds.X, bounds.Y, Gdiplus::MatrixOrderAppend);
 	Brush.SetTransform(&matrix);
 
 	return;
