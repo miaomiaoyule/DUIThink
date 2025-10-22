@@ -61,11 +61,7 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 
 	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW, m_ptTrack.x, m_ptTrack.y);
 
-	CDUIMenuCtrl *pRootMenuCtrl = GetMenuView();
-	if (pRootMenuCtrl)
-	{
-		pRootMenuCtrl->RefreshView();
-	}
+	RefreshLayout();
 
 	return;
 }
