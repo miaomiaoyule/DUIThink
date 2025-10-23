@@ -590,7 +590,6 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 
 	do
 	{
@@ -685,7 +684,6 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	Gdiplus::Graphics Gp(hDCPaint);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 
 	//draw middle
 	if (false == bCornerHole)
@@ -936,7 +934,6 @@ void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, c
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 
 	//round image
 	if (rcRound.left > 0
@@ -1066,7 +1063,6 @@ void CDUIRenderEngine::DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList
 {
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 	//path
@@ -1090,7 +1086,6 @@ void CDUIRenderEngine::DrawRound(HDC hDC, const CDUIRect &rcItem, const CDUIRect
 
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 	//left top right bottom
@@ -1112,7 +1107,6 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUI
 	{
 		Gdiplus::Graphics Gp(hDC);
 		Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-		Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 		Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 		//adjust
@@ -1166,7 +1160,6 @@ void CDUIRenderEngine::DrawParallelogram(HDC hDC, const CDUIRect &rcItem, int nL
 {
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 	//path
@@ -1186,7 +1179,6 @@ void CDUIRenderEngine::DrawRhomb(HDC hDC, const CDUIRect &rcItem, int nLineSize,
 {
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 	//path
@@ -1206,7 +1198,6 @@ void CDUIRenderEngine::DrawEllipse(HDC hDC, const CDUIRect &rcItem, int nLineSiz
 {
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
