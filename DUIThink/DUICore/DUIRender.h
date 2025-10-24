@@ -62,6 +62,7 @@ public:
 	static HBITMAP CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFilterColor = 0);
 	static HBITMAP CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor = 0);
 	static Bitmap * GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB = true);
+	static HBITMAP GetHBITMAP(Bitmap *pBmp, bool bKeepAlpha = true);
 	static bool SaveImage(HBITMAP hBitmap, CMMString strFile, bool bAlpahImage = false);
 
 	//alpha help

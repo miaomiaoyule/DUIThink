@@ -88,6 +88,7 @@ class CDUILayoutView;
 #define DUIBGR(b,g,r)					((DWORD)((((DWORD)(BYTE)(b))<<16) | (((WORD)((BYTE)(g))<<8) | (BYTE)(r))))
 #define DUIRGB(r,g,b)					((DWORD)((((DWORD)(BYTE)(r))<<16) | (((WORD)((BYTE)(g))<<8) | (BYTE)(b))))
 #define DUIABGR(a,b,g,r)				((DWORD)((((DWORD)(BYTE)(a))<<24) | DUIBGR(b,g,r)))
+#define DUIBGRA(b,g,r,a)				((DWORD)(((DUIBGR(b,g,r))<<8) | (BYTE)(a)))
 #define DUIARGB(a,r,g,b)				((DWORD)((((DWORD)(BYTE)(a))<<24) | DUIRGB(r,g,b)))
 #define DUICOLORREF(b,g,r)				(DUIBGR(b,g,r))
 #define DUIARGBGetA(argb)				(LOBYTE((argb)>>24))   

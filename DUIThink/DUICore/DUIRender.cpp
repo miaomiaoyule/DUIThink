@@ -1845,9 +1845,9 @@ Bitmap * CDUIRenderEngine::GenerateBitmap(Bitmap *pBmp, const CDUISize szGenerat
 	nScaleWidth = max(nScaleWidth, 1);
 	nScaleHeight = max(nScaleHeight, 1);
 
-	HDC hDCScreen = CreateDC(L"DISPLAY", NULL, NULL, NULL);
-	HDC hMemDC = CreateCompatibleDC(hDCScreen);
-	HBITMAP hBitmap = CreateCompatibleBitmap(hDCScreen, nScaleWidth, nScaleHeight);
+	HDC hDC = GetDC(NULL);
+	HDC hMemDC = CreateCompatibleDC(hDC);
+	HBITMAP hBitmap = CreateCompatibleBitmap(hDC, nScaleWidth, nScaleHeight);
 	HBITMAP hBmpOld = (HBITMAP)SelectObject(hMemDC, hBitmap);
 
 	Gdiplus::Graphics Gp(hMemDC);
@@ -1859,7 +1859,7 @@ Bitmap * CDUIRenderEngine::GenerateBitmap(Bitmap *pBmp, const CDUISize szGenerat
 	SelectObject(hMemDC, hBmpOld);
 	MMSafeDeleteObject(hBitmap);
 	MMSafeDeleteDC(hMemDC);
-	MMSafeDeleteDC(hDCScreen);
+	ReleaseDC(NULL, hDC);
 
 	return pBmpGenerate;
 }
@@ -1907,16 +1907,54 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFi
 
 HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor/* = 0*/)
 {
-	Bitmap *pBmp = GetAlphaBitmap(hBitmap);
-	if (NULL == pBmp) return NULL;
+	BITMAP bmp = {};
+	if (GetObject(hBitmap, sizeof(BITMAP), &bmp) == 0) return NULL;
 
-	HBITMAP hBmpClone = NULL;
-	pBmp->GetHBITMAP(Gdiplus::Color(0, 0, 0, 0), &hBmpClone);
-	MMSafeDelete(pBmp);
+	LONG cbSize = bmp.bmWidthBytes * bmp.bmHeight;
+	std::vector<BYTE> vecPixel;
+	vecPixel.resize(cbSize);
+	if (vecPixel.empty()) return NULL;
 
-	if (0 != dwFilterColor)
+	BITMAPINFO bmpInfo = {};
+	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bmpInfo.bmiHeader.biWidth = bmp.bmWidth;
+	bmpInfo.bmiHeader.biHeight = -bmp.bmHeight;	//正数说明数据从下到上，负数说明从上到下
+	bmpInfo.bmiHeader.biPlanes = bmp.bmPlanes;
+	bmpInfo.bmiHeader.biBitCount = bmp.bmBitsPixel;
+	bmpInfo.bmiHeader.biCompression = BI_RGB;
+
+	HDC hDC = GetDC(NULL);
+	LONG cbCopied = GetDIBits(hDC, hBitmap, 0, bmp.bmHeight, vecPixel.data(), &bmpInfo, DIB_RGB_COLORS);
+	if (cbCopied == 0)
 	{
-		AdjustImage(hBmpClone, dwFilterColor, 0);
+		ReleaseDC(NULL, hDC);
+		return NULL;
+	}
+
+	LPBYTE pBits = nullptr;
+	HBITMAP hBmpClone = CDUIRenderEngine::CreateARGB32Bitmap(hDC, bmp.bmWidth, bmp.bmHeight, &pBits);
+	ReleaseDC(NULL, hDC);
+	if (NULL == hBmpClone || NULL == pBits) return nullptr;
+
+	BYTE* src = vecPixel.data();
+	int nLinesize = bmp.bmWidth * 4;
+	int nHeight = bmp.bmHeight;
+	dwFilterColor = DUIBGRA(DUIARGBGetB(dwFilterColor), DUIARGBGetG(dwFilterColor), DUIARGBGetR(dwFilterColor), DUIARGBGetA(dwFilterColor));
+	for (UINT y = 0; y < nHeight; y++)
+	{
+		memcpy(pBits + y * nLinesize, src + y * nLinesize, nLinesize);
+
+		if (0 != dwFilterColor)
+		{
+			BYTE *pBitsLine = pBits + (nLinesize * y);
+			for (int nWidth = 0; nWidth < bmp.bmWidth; nWidth++)
+			{
+				DWORD &dwColor = *((DWORD *)pBitsLine + nWidth);
+				if (dwColor != dwFilterColor) continue;
+
+				dwColor = 0;
+			}
+		}
 	}
 
 	return hBmpClone;
@@ -1940,9 +1978,9 @@ Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB)
 	bmpInfo.bmiHeader.biBitCount = bmp.bmBitsPixel;
 	bmpInfo.bmiHeader.biCompression = BI_RGB;
 
-	HDC hDCScreen = CreateDC(L"DISPLAY", NULL, NULL, NULL);
-	LONG cbCopied = GetDIBits(hDCScreen, hBitmap, 0, bmp.bmHeight, vecPixel.data(), &bmpInfo, DIB_RGB_COLORS);
-	MMSafeDeleteDC(hDCScreen);
+	HDC hDC = GetDC(NULL);
+	LONG cbCopied = GetDIBits(hDC, hBitmap, 0, bmp.bmHeight, vecPixel.data(), &bmpInfo, DIB_RGB_COLORS);
+	ReleaseDC(NULL, hDC);
 
 	if (cbCopied == 0) return NULL;
 
@@ -1979,6 +2017,50 @@ Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB)
 	}
 
 	return pBitmap;
+}
+
+HBITMAP CDUIRenderEngine::GetHBITMAP(Bitmap *pBmp, bool bKeepAlpha)
+{
+	if (!pBmp) return nullptr;
+
+	UINT width = pBmp->GetWidth();
+	UINT height = pBmp->GetHeight();
+
+	LPBYTE pBits = nullptr;
+	HDC hDC = GetDC(NULL);
+	HBITMAP hBitmap = CreateARGB32Bitmap(hDC, pBmp->GetWidth(), pBmp->GetHeight(), &pBits);
+	ReleaseDC(NULL, hDC);
+	if (NULL == hBitmap || NULL == pBits) return nullptr;
+
+	BitmapData bmpData;
+	Rect rect(0, 0, width, height);
+	if (pBmp->LockBits(&rect, ImageLockModeRead, PixelFormat32bppARGB, &bmpData) != Ok)
+	{
+		MMSafeDeleteObject(hBitmap);
+		return nullptr;
+	}
+
+	BYTE* src = (BYTE*)bmpData.Scan0;
+	int stride = width * 4;
+
+	for (UINT y = 0; y < height; y++)
+	{
+		memcpy(pBits + y * stride, src + y * bmpData.Stride, stride);
+	}
+	
+	pBmp->UnlockBits(&bmpData);
+
+	if (false == bKeepAlpha)
+	{
+		// 如果不保留 alpha，则把 alpha 通道设为全不透明
+		for (UINT i = 0; i < width * height; i++)
+		{
+			pBits[3] = 255; // alpha
+			pBits += 4;
+		}
+	}
+
+	return hBitmap;
 }
 
 bool CDUIRenderEngine::SaveImage(HBITMAP hBitmap, CMMString strFile, bool bAlpahImage)

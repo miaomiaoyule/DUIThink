@@ -338,7 +338,7 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 	BITMAP BmpInfo = {};
 	GUID pageGuid = Gdiplus::FrameDimensionTime;
 	ImageInfo.pImageAnimate->SelectActiveFrame(&pageGuid, 0);
-	ImageInfo.pImageAnimate->GetHBITMAP(Color(0, 0, 0, 0), &ImageInfo.hBitmap);
+	ImageInfo.hBitmap = CDUIRenderEngine::GetHBITMAP(ImageInfo.pImageAnimate);
 	GetObject(ImageInfo.hBitmap, sizeof(BmpInfo), &BmpInfo);
 	ImageInfo.pBits = (LPBYTE)BmpInfo.bmBits;
 	ImageInfo.nWidth = ImageInfo.pImageAnimate->GetWidth();
