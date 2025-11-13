@@ -261,11 +261,16 @@ bool CDUISpinCtrl::RemoveAt(int nIndex)
 	CDUIControlBase *pControl = GetChildAt(nIndex);
 	if (pControl == m_pEditValueCtrl || pControl == m_pVertRightCtrl) return false;
 
-	return RemoveAt(nIndex);
+	return __super::RemoveAt(nIndex);
 }
 
 void CDUISpinCtrl::RemoveAll()
 {
+	for (int n = GetChildCount() - 1; n >= 0; n--)
+	{
+		RemoveAt(n);
+	}
+
 	return;
 }
 
