@@ -3200,6 +3200,7 @@ LRESULT CDUIWnd::OnPaint(CDUIRect rcPaint)
 	catch (const std::exception& exception)
 	{
 		OutputDebugString(CA2CT(exception.what()));
+		CDUIGlobal::GetInstance()->SetDuiLastError((LPCTSTR)CA2CT(exception.what()));
 	}
 	
 	//update
