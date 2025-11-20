@@ -133,13 +133,65 @@ static BOOL WINAPI AlphaBitBlt(HDC hDC, int nDestX, int nDestY, int dwWidth, int
 
 static void ConstructRoundPath(const CDUIRect &rcDraw, const CDUIRect &rcRound, int nLineSize, Gdiplus::GraphicsPath &Path)
 {
-	Path.AddArc(rcDraw.right - rcRound.top * 2 - nLineSize, rcDraw.top, rcRound.top * 2, rcRound.top * 2, 270, 90); //top right 
-	Path.AddLine(rcDraw.right - nLineSize, rcDraw.top + rcRound.top, rcDraw.right - nLineSize, rcDraw.bottom - rcRound.right); //right 
-	Path.AddArc(rcDraw.right - rcRound.right * 2 - nLineSize, rcDraw.bottom - rcRound.right * 2 - nLineSize, rcRound.right * 2, rcRound.right * 2, 0, 90); //right bottom
-	Path.AddLine(rcDraw.right - rcRound.right, rcDraw.bottom - nLineSize, rcDraw.left + rcRound.bottom, rcDraw.bottom - nLineSize); //bottom
-	Path.AddArc(rcDraw.left, rcDraw.bottom - rcRound.bottom * 2 - nLineSize, rcRound.bottom * 2, rcRound.bottom * 2, 90, 90); //left bottom
-	Path.AddLine(rcDraw.left, rcDraw.bottom - rcRound.bottom, rcDraw.left, rcDraw.top + rcRound.left); //left
-	Path.AddArc(rcDraw.left, rcDraw.top, rcRound.left * 2, rcRound.left * 2, 180, 90); //left top
+	if (rcDraw.GetWidth() <= 0 || rcDraw.GetHeight() <= 0) return;
+
+	// 修正圆角半径（不能超过矩形一半）
+	int rt = max(0, min(rcRound.top, rcDraw.GetHeight() / 2));
+	int rr = max(0, min(rcRound.right, rcDraw.GetWidth() / 2));
+	int rb = max(0, min(rcRound.bottom, rcDraw.GetHeight() / 2));
+	int rl = max(0, min(rcRound.left, rcDraw.GetWidth() / 2));
+
+	// 开始构造路径
+	Path.Reset();
+
+	// top-right
+	Path.AddArc(
+		rcDraw.right - rt * 2 - nLineSize,
+		rcDraw.top,
+		rt * 2, rt * 2,
+		270, 90);
+
+	// right
+	Path.AddLine(
+		rcDraw.right - nLineSize,
+		rcDraw.top + rt,
+		rcDraw.right - nLineSize,
+		rcDraw.bottom - rr);
+
+	// bottom-right
+	Path.AddArc(
+		rcDraw.right - rr * 2 - nLineSize,
+		rcDraw.bottom - rr * 2 - nLineSize,
+		rr * 2, rr * 2,
+		0, 90);
+
+	// bottom
+	Path.AddLine(
+		rcDraw.right - rr,
+		rcDraw.bottom - nLineSize,
+		rcDraw.left + rb,
+		rcDraw.bottom - nLineSize);
+
+	// bottom-left
+	Path.AddArc(
+		rcDraw.left,
+		rcDraw.bottom - rb * 2 - nLineSize,
+		rb * 2, rb * 2,
+		90, 90);
+
+	// left
+	Path.AddLine(
+		rcDraw.left,
+		rcDraw.bottom - rb,
+		rcDraw.left,
+		rcDraw.top + rl);
+
+	// top-left
+	Path.AddArc(
+		rcDraw.left,
+		rcDraw.top,
+		rl * 2, rl * 2,
+		180, 90);
 
 	return;
 }
@@ -187,21 +239,29 @@ static void ConstructTextureBrushMatrix(Gdiplus::TextureBrush &Brush, Gdiplus::G
 {
 	if (NULL == pBmp) return;
 
-	// 计算缩放矩阵，使图像匹配路径边界
+	UINT bmpW = pBmp->GetWidth();
+	UINT bmpH = pBmp->GetHeight();
+	if (bmpW == 0 || bmpH == 0) return;  // 避免除零
+
 	Gdiplus::RectF bounds;
 	Path.GetBounds(&bounds);
 
+	if (bounds.Width <= 0 || bounds.Height <= 0)
+		return;  // 无效路径，不应用纹理
+
+	REAL sx = bounds.Width / (REAL)bmpW;
+	REAL sy = bounds.Height / (REAL)bmpH;
+
+	// 避免 0，NaN，Inf
+	const REAL MIN_SCALE = 0.001f;
+	if (!std::isfinite(sx) || sx < MIN_SCALE) sx = MIN_SCALE;
+	if (!std::isfinite(sy) || sy < MIN_SCALE) sy = MIN_SCALE;
+
 	Gdiplus::Matrix matrix;
 
-	// 先将图像缩放到路径尺寸
-	REAL sx = bounds.Width / pBmp->GetWidth();
-	REAL sy = bounds.Height / pBmp->GetHeight();
-
-	// 设置缩放
 	matrix.Scale(sx, sy);
-
-	// 再平移到路径位置（注意要用原坐标，不要除以 sx/sy）
 	matrix.Translate(bounds.X, bounds.Y, Gdiplus::MatrixOrderAppend);
+
 	Brush.SetTransform(&matrix);
 
 	return;

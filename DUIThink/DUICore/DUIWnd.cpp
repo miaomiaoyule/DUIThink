@@ -3191,10 +3191,17 @@ LRESULT CDUIWnd::OnPaint(CDUIRect rcPaint)
 	CDUIRenderEngine::ClearPixel(m_pBmpBackgroundBits, rcClient.GetWidth(), rcPaint);
 
 	//paint
-	int iSaveDC = ::SaveDC(m_hMemDcBackground);
-	m_pRootCtrl->OnDraw(m_hMemDcBackground, rcPaint);
-	::RestoreDC(m_hMemDcBackground, iSaveDC);
-
+	try
+	{
+		int iSaveDC = ::SaveDC(m_hMemDcBackground);
+		m_pRootCtrl->OnDraw(m_hMemDcBackground, rcPaint);
+		::RestoreDC(m_hMemDcBackground, iSaveDC);
+	}
+	catch (const std::exception& exception)
+	{
+		OutputDebugString(CA2CT(exception.what()));
+	}
+	
 	//update
 	if (dwStyle & WS_EX_LAYERED)
 	{
