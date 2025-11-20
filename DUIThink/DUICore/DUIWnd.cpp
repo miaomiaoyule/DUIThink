@@ -961,8 +961,9 @@ bool CDUIWnd::SetTimer(CDUIPropertyObject *pPropObj, UINT uTimerID, UINT uElapse
 	ASSERT(uElapse > 0);
 	if (NULL == pPropObj || 0 == uElapse) return false;
 
-	for (auto &TimerInfo : m_vecTimers)
+	for (int n = 0; n < m_vecTimers.size(); n++)
 	{
+		auto &TimerInfo = m_vecTimers[n];
 		if (TimerInfo.pPropObj == pPropObj
 			&& TimerInfo.hWnd == m_hWnd
 			&& TimerInfo.nLocalID == uTimerID)
@@ -1018,8 +1019,9 @@ bool CDUIWnd::KillTimer(CDUIPropertyObject *pPropObj, UINT uTimerID)
 	ASSERT(pPropObj != NULL);
 	if (NULL == pPropObj) return false;
 
-	for (auto &TimerInfo : m_vecTimers)
+	for (int n = 0; n < m_vecTimers.size(); n++)
 	{
+		auto &TimerInfo = m_vecTimers[n];
 		if (TimerInfo.pPropObj == pPropObj
 			&& TimerInfo.hWnd == m_hWnd
 			&& TimerInfo.nLocalID == uTimerID)
@@ -2911,8 +2913,9 @@ LRESULT CDUIWnd::OnTimer(WPARAM wParam, LPARAM lParam)
 {
 	DuiMessage DuiMsg = {};
 
-	for (auto &TimerInfo : m_vecTimers)
+	for (int n = 0; n < m_vecTimers.size(); n++)
 	{
+		auto TimerInfo = m_vecTimers[n];
 		if (NULL == TimerInfo.pPropObj) continue;
 
 		if (TimerInfo.hWnd == m_hWnd
