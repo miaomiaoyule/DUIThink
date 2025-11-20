@@ -131,6 +131,91 @@ static BOOL WINAPI AlphaBitBlt(HDC hDC, int nDestX, int nDestY, int dwWidth, int
 	return TRUE;
 }
 
+static void ConstructRoundRectBezier(
+	const CDUIRect& rc,
+	const CDUIRect& rd,      // 各个圆角半径
+	Gdiplus::GraphicsPath& path)
+{
+	float left = (float)rc.left;
+	float top = (float)rc.top;
+	float right = (float)rc.right;
+	float bottom = (float)rc.bottom;
+
+	float rtl = (float)rd.left;
+	float rtr = (float)rd.top;
+	float rbr = (float)rd.right;
+	float rbl = (float)rd.bottom;
+
+	float w = right - left;
+	float h = bottom - top;
+	if (w <= 0 || h <= 0) return;
+
+	// 修正半径（不能超过宽/高的一半）
+	rtl = min(rtl, h * 0.5f);
+	rtl = min(rtl, w * 0.5f);
+
+	rtr = min(rtr, h * 0.5f);
+	rtr = min(rtr, w * 0.5f);
+
+	rbr = min(rbr, h * 0.5f);
+	rbr = min(rbr, w * 0.5f);
+
+	rbl = min(rbl, h * 0.5f);
+	rbl = min(rbl, w * 0.5f);
+
+	// 圆形逼近系数
+	const float K = 0.5522847498f;
+
+	path.Reset();
+
+	// === 开始于左上角（顶边中点）===
+	path.StartFigure();
+
+	// ---- top side ----
+	path.AddLine(left + rtl, top, right - rtr, top);
+
+	// ---- top-right corner (Bezier) ----
+	path.AddBezier(
+		right - rtr, top,
+		right - rtr + K * rtr, top,
+		right, top + rtr - K * rtr,
+		right, top + rtr);
+
+	// ---- right side ----
+	path.AddLine(right, top + rtr, right, bottom - rbr);
+
+	// ---- bottom-right corner ----
+	path.AddBezier(
+		right, bottom - rbr,
+		right, bottom - rbr + K * rbr,
+		right - rbr + K * rbr, bottom,
+		right - rbr, bottom);
+
+	// ---- bottom side ----
+	path.AddLine(right - rbr, bottom, left + rbl, bottom);
+
+	// ---- bottom-left corner ----
+	path.AddBezier(
+		left + rbl, bottom,
+		left + rbl - K * rbl, bottom,
+		left, bottom - rbl + K * rbl,
+		left, bottom - rbl);
+
+	// ---- left side ----
+	path.AddLine(left, bottom - rbl, left, top + rtl);
+
+	// ---- top-left corner ----
+	path.AddBezier(
+		left, top + rtl,
+		left, top + rtl - K * rtl,
+		left + rtl - K * rtl, top,
+		left + rtl, top);
+
+	path.CloseFigure();
+
+	return;
+}
+
 static void ConstructRoundPath(const CDUIRect &rcDraw, const CDUIRect &rcRound, int nLineSize, Gdiplus::GraphicsPath &Path)
 {
 	if (rcDraw.GetWidth() <= 0 || rcDraw.GetHeight() <= 0) return;
@@ -192,6 +277,8 @@ static void ConstructRoundPath(const CDUIRect &rcDraw, const CDUIRect &rcRound, 
 		rcDraw.top,
 		rl * 2, rl * 2,
 		180, 90);
+
+	Path.CloseFigure();
 
 	return;
 }
@@ -651,6 +738,11 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
+	//for clip
+	CDUIRect rcDraw = rcItem;
+	rcDraw.right--;
+	rcDraw.bottom--;
+
 	do
 	{
 		if (Round_Normal == RoundType)
@@ -661,7 +753,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 				|| rcRound.bottom > 0)
 			{
 				Gdiplus::GraphicsPath Path;
-				ConstructRoundPath(rcItem, rcRound, 0, Path);
+				ConstructRoundPath(rcDraw, rcRound, 0, Path);
 
 				Gdiplus::TextureBrush Brush(pBmp, Gdiplus::WrapModeClamp);
 				ConstructTextureBrushMatrix(Brush, Path, pBmp);
@@ -670,7 +762,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 			}
 			else
 			{
-				Gp.DrawImage(pBmp, Gdiplus::Rect(rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight()), 0, 0, pBmp->GetWidth(), pBmp->GetHeight(), Gdiplus::UnitPixel);
+				Gp.DrawImage(pBmp, Gdiplus::Rect(rcDraw.left, rcDraw.top, rcDraw.GetWidth(), rcDraw.GetHeight()), 0, 0, pBmp->GetWidth(), pBmp->GetHeight(), Gdiplus::UnitPixel);
 			}
 
 			break;
@@ -682,7 +774,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 		{
 			case Round_Parallelogram:
 			{
-				ConstructParallelogramPath(rcItem, rcItem.GetWidth() / 3, 0, Path);
+				ConstructParallelogramPath(rcDraw, rcDraw.GetWidth() / 3, 0, Path);
 				ConstructTextureBrushMatrix(BrushBmp, Path, pBmp);
 
 				Gp.FillPath(&BrushBmp, &Path);
@@ -691,7 +783,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 			}
 			case Round_Rhomb:
 			{
-				ConstructRhombPath(rcItem, 0, Path);
+				ConstructRhombPath(rcDraw, 0, Path);
 				ConstructTextureBrushMatrix(BrushBmp, Path, pBmp);
 
 				Gp.FillPath(&BrushBmp, &Path);
@@ -700,7 +792,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 			}
 			case Round_Ellipse:
 			{
-				ConstructEllipsePath(rcItem, Path);
+				ConstructEllipsePath(rcDraw, Path);
 				ConstructTextureBrushMatrix(BrushBmp, Path, pBmp);
 
 				Gp.FillPath(&BrushBmp, &Path);
@@ -1163,7 +1255,7 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUI
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 
-	//gid+
+	//gdi+
 	{
 		Gdiplus::Graphics Gp(hDC);
 		Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
@@ -1302,6 +1394,10 @@ void CDUIRenderEngine::FillRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUI
 	CDUIRect rcDraw = rcItem;
 	rcDraw.top += nLineSize;
 	rcDraw.left += nLineSize;
+
+	//for clip
+	rcDraw.right--;
+	rcDraw.bottom--;
 
 	//path
 	Gdiplus::GraphicsPath Path;
