@@ -85,11 +85,19 @@ bool CMMAsyncObject::UnInit()
 
 	if (IsWindow(m_hWnd))
 	{
+		// kill any timers
+		for (auto& kv : m_TimerTasks)
+		{
+			::KillTimer(m_hWnd, kv.first);
+		}
+
 		::SetWindowLongPtr(m_hWnd, GWLP_USERDATA, NULL);
 		PostMessage(WM_CLOSE, NULL, NULL);
 
 		m_hWnd = NULL;
 	}
+
+	m_TimerTasks.clear();
 
 	return true;
 }
@@ -106,5 +114,98 @@ bool CMMAsyncObject::SendMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 LRESULT CMMAsyncObject::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
 {
+	if (uMsg == m_uMsgAsyncTask)
+	{
+		auto pTask = reinterpret_cast<std::function<void()>*>(wParam);
+		if (pTask)
+		{
+			try
+			{
+				(*pTask)();
+			}
+			catch (...)
+			{
+			}
+			delete pTask;
+		}
+
+		bHandled = true;
+
+		return 0;
+	}
+	else if (uMsg == WM_TIMER)
+	{
+		UINT_PTR id = (UINT_PTR)wParam;
+		std::function<void()> fn;
+		bool repeat = false;
+
+		{
+			std::lock_guard<std::recursive_mutex> lock(m_DataLock);
+			auto it = m_TimerTasks.find(id);
+			if (it != m_TimerTasks.end())
+			{
+				fn = it->second.func;
+				repeat = it->second.repeat;
+				if (!repeat)
+				{
+					::KillTimer(m_hWnd, id);
+					m_TimerTasks.erase(it);
+				}
+			}
+		}
+
+		if (fn)
+		{
+			try
+			{
+				fn();
+			}
+			catch (...)
+			{
+			}
+		}
+
+		bHandled = true;
+		return 0;
+	}
+
 	return 0;
+}
+
+// Internal timer start helper
+UINT_PTR CMMAsyncObject::StartTimerInternal(unsigned int ms, std::function<void()>&& fn, bool repeat)
+{
+	if (!m_hWnd) return 0;
+	if (!fn) return 0;
+
+	UINT_PTR id = m_NextTimerId.fetch_add(1);
+	{
+		std::lock_guard<std::recursive_mutex> lock(m_DataLock);
+		m_TimerTasks[id] = TimerInfo{ std::move(fn), repeat };
+	}
+
+	if (!::SetTimer(m_hWnd, id, ms, NULL))
+	{
+		// failed -> cleanup
+		std::lock_guard<std::recursive_mutex> lock(m_DataLock);
+		m_TimerTasks.erase(id);
+		return 0;
+	}
+
+	return id;
+}
+
+bool CMMAsyncObject::StopTimer(UINT_PTR timerId)
+{
+	if (!m_hWnd) return false;
+
+	{
+		std::lock_guard<std::recursive_mutex> lock(m_DataLock);
+		auto it = m_TimerTasks.find(timerId);
+		if (it == m_TimerTasks.end()) return false;
+		::KillTimer(m_hWnd, timerId);
+		m_TimerTasks.erase(it);
+	}
+
+	return true;
 }

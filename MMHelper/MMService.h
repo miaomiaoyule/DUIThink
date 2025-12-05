@@ -169,6 +169,7 @@ public:
 	static CMMString GetUserDataPath(CMMString strFolderName);
 	static CMMString GetLocalTempPath();
 	static CMMString GetAppName();
+	static CMMString GetAppFile();
 
 	//Ini file
 	static UINT ReadFileValue(LPCTSTR lpszFileName, LPCTSTR pszKeyName, LPCTSTR pszItemName, UINT nDefault);

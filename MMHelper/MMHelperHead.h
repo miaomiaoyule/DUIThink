@@ -52,6 +52,7 @@
 #include <tchar.h>
 #include <assert.h>
 #include <vector>
+#include <atomic>
 #include <memory>
 #include <functional>
 #include <deque>
@@ -78,6 +79,7 @@
 #include <Shlwapi.h>
 #include <ShellAPI.h>
 #include <winternl.h>
+#include <WtsApi32.h>
 using namespace std;
 
 #pragma comment(lib, "ws2_32.lib")
