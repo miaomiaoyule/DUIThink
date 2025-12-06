@@ -88,6 +88,7 @@ using namespace std;
 #pragma comment(lib, "Bcrypt.lib")
 #pragma comment(lib, "Userenv.lib")
 #pragma comment(lib, "version.lib")
+#pragma comment(lib, "Wtsapi32.lib")
 
 //////////////////////////////////////////////////////////////////////////////////
 void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
