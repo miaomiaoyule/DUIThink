@@ -65,7 +65,6 @@
 #include <thread>
 #include <windows.h>
 #include <Tlhelp32.h>  
-#include <dbghelp.h>
 #include <ObjBase.h>
 #include <atltypes.h>
 #include <atlstr.h>
@@ -137,7 +136,6 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMModule.h"
 #include "MMFile.h"
 #include "MMStrHelp.h"
-#include "MMMiniDumper.h"
 #include "MMService.h"
 #include "MMCommandLine.h"
 #include "MMResource.h"

@@ -63,9 +63,6 @@
     <ClInclude Include="MMModule.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MMMiniDumper.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="MMFile.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -201,9 +198,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MMMD5CheckSum.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="MMMiniDumper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MMModule.cpp">
