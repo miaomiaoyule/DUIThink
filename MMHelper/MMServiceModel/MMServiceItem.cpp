@@ -1,9 +1,14 @@
 #include "stdafx.h"
 #include "MMServiceItem.h"
 //////////////////////////////////////////////////////////////////////////
-struct CTimeMsg : public tagMMServiceMsg
+struct M_ServiceItem_Timer : public tagMMServiceMsg
 {
 	uint32_t							uTimerID = 0;
+};
+
+struct M_ServiceItem_Task : public tagMMServiceMsg
+{
+	std::function<void()>				pFunc = NULL;
 };
 
 struct CMMServiceItem::tagData
@@ -94,6 +99,14 @@ bool CMMServiceItem::Send(CMMServiceItem *pDest, PtrMMServiceMsg pMessage)
 	return m_pData->pOwnerPool->Push(pMessage);
 }
 
+bool CMMServiceItem::PushTask(std::function<void()> pFunc)
+{
+	auto pMessage = std::make_shared<M_ServiceItem_Task>();
+	pMessage->pFunc = pFunc;
+
+	return Send(this, pMessage);
+}
+
 bool CMMServiceItem::Lock()
 {
 	if (NULL == m_pData) return false;
@@ -127,16 +140,24 @@ bool CMMServiceItem::Execute(PtrMMServiceMsg pMessage)
 
 	try
 	{
-		if (typeid(*pMessage) == typeid(CTimeMsg))
+		if (typeid(*pMessage) == typeid(M_ServiceItem_Timer))
 		{
 			std::lock_guard<std::recursive_mutex> DataLock(m_pData->TimerLock);
 
-			auto &pTimeMsg = std::dynamic_pointer_cast<CTimeMsg>(pMessage);
+			auto &pTimeMsg = std::dynamic_pointer_cast<M_ServiceItem_Timer>(pMessage);
 			auto pFuncIt = m_pData->mapTimeFunc.find(pTimeMsg->uTimerID);
 			if (pFuncIt != m_pData->mapTimeFunc.end())
 			{
 				FuncTimer pFuncTimer = pFuncIt->second;
 				pFuncTimer();
+			}
+		}
+		else if (typeid(*pMessage) == typeid(M_ServiceItem_Task))
+		{
+			auto &pTaskMsg = std::dynamic_pointer_cast<M_ServiceItem_Task>(pMessage);
+			if (pTaskMsg && pTaskMsg->pFunc)
+			{
+				(pTaskMsg->pFunc)();
 			}
 		}
 		else
@@ -165,7 +186,7 @@ void CMMServiceItem::SetTimer(uint32_t uTimerID, uint32_t uElapse, FuncTimer pFu
 
 	CMMTimerPower::GetInstance()->SetTimer(uTimerID, uElapse, [uTimerID, this]()
 	{
-		auto pMsg = std::make_shared<CTimeMsg>();
+		auto pMsg = std::make_shared<M_ServiceItem_Timer>();
 		pMsg->uTimerID = uTimerID;
 		Send(this, pMsg);
 

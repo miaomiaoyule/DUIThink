@@ -41,7 +41,7 @@ protected:
 
 	//scrollbar
 	CDUIAttributeGroup					m_AttributeGroupScroll;
-	CDUIAttributeBool					m_AttributeScrollBarSpeedModel = true;
+	CDUIAttributeBool					m_AttributeScrollBarSpeedModel = false;
 	CDUIAttributeBool					m_AttributeUseHorizScrollBar;
 	CDUIAttributeBool					m_AttributeUseVertScrollBar;
 	CDUIAttributeBool					m_AttributeHScrollBarPushItemRange = true;
