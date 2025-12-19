@@ -1066,6 +1066,36 @@ bool CMMFile::RemoveFileByHasName(CMMString strPath, CMMString strHasName)
 	return true;
 }
 
+bool CMMFile::ClearFilesOfFolder(CMMString strPath)
+{
+	if (false == PathFileExists(strPath)) return false;
+
+	if (strPath[strPath.length() - 1] != _T('/')
+		&& strPath[strPath.length() - 1] != _T('\\'))
+	{
+		strPath += _T('\\');
+	}
+
+	CMMString strPathFind = strPath + _T("*.*");
+
+	WIN32_FIND_DATA FindData = {};
+	HANDLE hFindFile = FindFirstFile(strPathFind, &FindData);
+	if (INVALID_HANDLE_VALUE == hFindFile) return false;
+
+	do
+	{
+		CMMString strFile = FindData.cFileName;
+		if (strFile.empty() || _T(".") == strFile || _T("..") == strFile)continue;
+
+		OperatorFileOrFolder(strPath + strFile, _T(""), FO_DELETE);
+
+	} while (FindNextFile(hFindFile, &FindData));
+
+	FindClose(hFindFile);
+
+	return true;
+}
+
 bool CMMFile::OpenFolderAndSelectFile(CMMString strFileFull)
 {
 	strFileFull.Replace(_T("/"), _T("\\"));

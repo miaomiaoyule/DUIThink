@@ -12,11 +12,13 @@ public:
 	CMMAsyncObject();
 	virtual ~CMMAsyncObject();
 
-	// Internal timer storage structure
-	struct TimerInfo
+	struct TaskBase
 	{
-		std::function<void()>	func;
-		bool					repeat;
+		std::function<void()>			func;
+	};
+	struct TimerInfo : public TaskBase
+	{
+		bool							repeat = false;
 	};
 
 protected:
@@ -35,35 +37,8 @@ public:
 	virtual bool PostMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual bool SendMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled);
-
-public:
-	// Post an async task (returns true if posted). Task executes as bound void().
-	template <typename F, typename... Args>
-	bool AsyncExecute(F&& f, Args&&... args)
-	{
-		auto bound = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
-		if (!m_hWnd) return false;
-		auto pTask = new std::function<void()>(std::move(bound));
-
-		BOOL ok = ::PostMessage(m_hWnd, m_uMsgAsyncTask, reinterpret_cast<WPARAM>(pTask), 0);
-		if (!ok)
-		{
-			delete pTask;
-			return false;
-		}
-
-		return true;
-	}
-
-	// Post a one-shot delayed task (ms delay). Returns timer id (0 on failure).
-	template <typename F, typename... Args>
-	UINT_PTR TimerExecute(unsigned int ms, bool bRepeat, F&& f, Args&&... args)
-	{
-		auto bound = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
-		return StartTimerInternal(ms, std::move(bound), bRepeat);
-	}
-
-	// Stop timer by id
+	bool AsyncTask(std::function<void()> pFunc);
+	UINT_PTR TimerTask(unsigned int ms, bool bRepeat, std::function<void()> pFunc);
 	bool StopTimer(UINT_PTR timerId);
 
 	//help

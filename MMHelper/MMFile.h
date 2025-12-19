@@ -191,6 +191,12 @@ public:
 	static bool RemoveFileByHasName(CMMString strPath, CMMString strHasName);
 
 	//************************************
+	// Description:	清空路径下的文件
+	// Parameter: 	CMMString strPath 例：C:\Program Files (x86)
+	//************************************
+	static bool ClearFilesOfFolder(CMMString strPath);
+
+	//************************************
 	// Description:	open folder and select file 
 	// Parameter: 	CMMString strFileFull 例：C:\user\desktop\test.txt
 	//************************************

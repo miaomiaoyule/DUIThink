@@ -2,33 +2,6 @@
 #include "MMAsyncObject.h"
 
 //////////////////////////////////////////////////////////////////////////
-LRESULT CALLBACK CMMAsyncObject::OnWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	CMMAsyncObject *pThis = (CMMAsyncObject*)::GetWindowLongPtr(hWnd, GWLP_USERDATA);
-	LRESULT lRes = 0;
-	
-	if (uMsg == WM_NCCREATE)
-	{
-		LPCREATESTRUCT lpcs = reinterpret_cast<LPCREATESTRUCT>(lParam);
-		pThis = static_cast<CMMAsyncObject*>(lpcs->lpCreateParams);
-		pThis->m_hWnd = hWnd;
-		::SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pThis);
-	}
-	if (pThis)
-	{
-		bool bHandled = false;
-		lRes = pThis->HandleMessage(uMsg, wParam, lParam, bHandled);
-		if (bHandled)
-		{
-			return lRes;
-		}
-	}
-
-	lRes = ::DefWindowProc(hWnd, uMsg, wParam, lParam);
-	return lRes;
-}
-
-//////////////////////////////////////////////////////////////////////////
 MMImplement_ClassName(CMMAsyncObject)
 
 CMMAsyncObject::CMMAsyncObject()
@@ -116,16 +89,17 @@ LRESULT CMMAsyncObject::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, b
 {
 	if (uMsg == m_uMsgAsyncTask)
 	{
-		auto pTask = reinterpret_cast<std::function<void()>*>(wParam);
+		auto pTask = reinterpret_cast<TaskBase*>(wParam);
 		if (pTask)
 		{
 			try
 			{
-				(*pTask)();
+				pTask->func();
 			}
 			catch (...)
 			{
 			}
+
 			delete pTask;
 		}
 
@@ -172,29 +146,27 @@ LRESULT CMMAsyncObject::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, b
 	return 0;
 }
 
-// Internal timer start helper
-UINT_PTR CMMAsyncObject::StartTimerInternal(unsigned int ms, std::function<void()>&& fn, bool repeat)
+bool CMMAsyncObject::AsyncTask(std::function<void()> pFunc)
 {
-	if (!m_hWnd) return 0;
-	if (!fn) return 0;
+	if (!m_hWnd) return false;
+	auto pTask = new TaskBase{ std::move(pFunc) };
 
-	UINT_PTR id = m_NextTimerId.fetch_add(1);
+	BOOL ok = ::PostMessage(m_hWnd, m_uMsgAsyncTask, reinterpret_cast<WPARAM>(pTask), 0);
+	if (!ok)
 	{
-		std::lock_guard<std::recursive_mutex> lock(m_DataLock);
-		m_TimerTasks[id] = TimerInfo{ std::move(fn), repeat };
+		delete pTask;
+		return false;
 	}
 
-	if (!::SetTimer(m_hWnd, id, ms, NULL))
-	{
-		// failed -> cleanup
-		std::lock_guard<std::recursive_mutex> lock(m_DataLock);
-		m_TimerTasks.erase(id);
-		return 0;
-	}
-
-	return id;
+	return true;
 }
 
+UINT_PTR CMMAsyncObject::TimerTask(unsigned int ms, bool bRepeat, std::function<void()> pFunc)
+{
+	return StartTimerInternal(ms, std::move(pFunc), bRepeat);
+}
+
+// Stop timer by id
 bool CMMAsyncObject::StopTimer(UINT_PTR timerId)
 {
 	if (!m_hWnd) return false;
@@ -208,4 +180,54 @@ bool CMMAsyncObject::StopTimer(UINT_PTR timerId)
 	}
 
 	return true;
+}
+
+UINT_PTR CMMAsyncObject::StartTimerInternal(unsigned int ms, std::function<void()>&& fn, bool repeat)
+{
+	if (!m_hWnd) return 0;
+	if (!fn) return 0;
+
+	UINT_PTR id = m_NextTimerId.fetch_add(1);
+	{
+		std::lock_guard<std::recursive_mutex> lock(m_DataLock);
+		m_TimerTasks[id].func = std::move(fn);
+		m_TimerTasks[id].repeat = repeat;
+	}
+
+	if (!::SetTimer(m_hWnd, id, ms, NULL))
+	{
+		// failed -> cleanup
+		std::lock_guard<std::recursive_mutex> lock(m_DataLock);
+		m_TimerTasks.erase(id);
+		return 0;
+	}
+
+	return id;
+}
+
+//////////////////////////////////////////////////////////////////////////
+LRESULT CALLBACK CMMAsyncObject::OnWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	CMMAsyncObject *pThis = (CMMAsyncObject*)::GetWindowLongPtr(hWnd, GWLP_USERDATA);
+	LRESULT lRes = 0;
+
+	if (uMsg == WM_NCCREATE)
+	{
+		LPCREATESTRUCT lpcs = reinterpret_cast<LPCREATESTRUCT>(lParam);
+		pThis = static_cast<CMMAsyncObject*>(lpcs->lpCreateParams);
+		pThis->m_hWnd = hWnd;
+		::SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pThis);
+	}
+	if (pThis)
+	{
+		bool bHandled = false;
+		lRes = pThis->HandleMessage(uMsg, wParam, lParam, bHandled);
+		if (bHandled)
+		{
+			return lRes;
+		}
+	}
+
+	lRes = ::DefWindowProc(hWnd, uMsg, wParam, lParam);
+	return lRes;
 }
