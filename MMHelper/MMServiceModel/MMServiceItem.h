@@ -26,7 +26,7 @@ public:
 	bool IsUnInited();
 	bool Send(CMMServiceItem *pDest, PtrMMServiceMsg pMessage);
 	bool PushTask(std::function<void()> pFunc);
-	virtual void OnMessage(PtrMMServiceMsg pMessage) = 0;
+	virtual void OnMessage(PtrMMServiceMsg pMessage) {}
 
 protected:
 	bool Lock();
