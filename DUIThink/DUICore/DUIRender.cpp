@@ -2097,7 +2097,6 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor/* = 0*
 	BYTE* src = vecPixel.data();
 	int nLinesize = bmp.bmWidth * 4;
 	int nHeight = bmp.bmHeight;
-	dwFilterColor = DUIBGRA(DUIARGBGetB(dwFilterColor), DUIARGBGetG(dwFilterColor), DUIARGBGetR(dwFilterColor), DUIARGBGetA(dwFilterColor));
 	for (UINT y = 0; y < nHeight; y++)
 	{
 		memcpy(pBits + y * nLinesize, src + y * nLinesize, nLinesize);

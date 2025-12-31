@@ -63,7 +63,7 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 
 	//mask
 	Gdiplus::Bitmap *pBmp = NULL;
-	if (GetMask() > 0xff000000)
+	if (GetMask() > 0x00ffffff)
 	{
 		hBitmap = CDUIRenderEngine::CopyBitmap(hBitmap, GetMask());
 	}
