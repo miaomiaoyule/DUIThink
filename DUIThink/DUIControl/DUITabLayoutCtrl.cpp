@@ -360,6 +360,11 @@ void CDUITabLayoutCtrl::SelectItem(int nIndex)
 		StartAnimation();
 	}
 
+	if (m_pWndOwner)
+	{
+		m_pWndOwner->SendNotify(this, DuiNotify_TabSelectChanged, GetCurSel(), m_nOldSel);
+	}
+
 	return;
 }
 
