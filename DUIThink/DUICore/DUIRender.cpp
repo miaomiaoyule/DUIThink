@@ -1984,6 +1984,8 @@ HBITMAP CDUIRenderEngine::GenerateBitmap(CDUIWnd *pWnd, CDUIControlBase *pContro
 
 Bitmap * CDUIRenderEngine::GenerateBitmap(Bitmap *pBmp, const CDUISize szGenerate)
 {
+	if (NULL == pBmp) return NULL;
+
 	int nScaleWidth = 0, nScaleHeight = 0;
 
 	double dbScaleBmp = (double)pBmp->GetWidth() / (double)pBmp->GetHeight();
