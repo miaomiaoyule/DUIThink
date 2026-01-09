@@ -182,7 +182,7 @@ void CMMTCPSocketClient::Connect(DWORD dwServerIP, WORD wPort)
 
 		m_hSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 		if (INVALID_SOCKET == m_hSocket) throw _T("SOCKET 创建失败！");
-		if (NULL == m_hWnd) throw _T("SOCKET 内部窗口创建失败！");
+		if (NULL == m_hWndAsync) throw _T("SOCKET 内部窗口创建失败！");
 
 		//address
 		m_wSocketID = m_hSocket;
@@ -195,7 +195,7 @@ void CMMTCPSocketClient::Connect(DWORD dwServerIP, WORD wPort)
 		//connect
 		WSASetLastError(0);
 
-		int nResCode = WSAAsyncSelect(m_hSocket, m_hWnd, WM_SOCKET_EVENT, FD_READ | FD_CONNECT | FD_CLOSE);
+		int nResCode = WSAAsyncSelect(m_hSocket, m_hWndAsync, WM_SOCKET_EVENT, FD_READ | FD_CONNECT | FD_CLOSE);
 		if (SOCKET_ERROR == nResCode) throw _T("绑定内部窗口错误！");
 
 		nResCode = connect(m_hSocket, (SOCKADDR *)&SocketAddr, sizeof(SocketAddr));
@@ -317,7 +317,7 @@ void CMMTCPSocketClient::CloseSocket(enSocketShutReason ShutReason)
 
 	if (INVALID_SOCKET != m_hSocket)
 	{
-		WSAAsyncSelect(m_hSocket, m_hWnd, WM_SOCKET_EVENT, 0);
+		WSAAsyncSelect(m_hSocket, m_hWndAsync, WM_SOCKET_EVENT, 0);
 
 		closesocket(m_hSocket);
 		m_hSocket = INVALID_SOCKET;

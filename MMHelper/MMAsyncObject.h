@@ -23,7 +23,7 @@ public:
 
 protected:
 	std::recursive_mutex				m_DataLock;
-	HWND								m_hWnd = NULL;
+	HWND								m_hWndAsync = NULL;
 	const UINT							m_uMsgAsyncTask = WM_APP + 1;
 	
 	// Map timer id -> TimerInfo

@@ -252,7 +252,7 @@ void CMMFileMonitor::MonitorRegister(std::shared_ptr<tagMonitorTask> pRecvData)
 
 	int nSources = SHCNRF_ShellLevel | SHCNRF_InterruptLevel | SHCNRF_NewDelivery;
 	pRecvData->bRecursive ? nSources |= SHCNRF_RecursiveInterrupt : nSources;
-	ULONG lRet = SHChangeNotifyRegister(m_hWnd, nSources, SHCNE_ALLEVENTS, ++m_uMsgRegister, 1, &enter);
+	ULONG lRet = SHChangeNotifyRegister(m_hWndAsync, nSources, SHCNE_ALLEVENTS, ++m_uMsgRegister, 1, &enter);
 	if (lRet <= 0)
 	{
 		assert(false);
