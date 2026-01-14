@@ -272,6 +272,7 @@ void CDUIAnimateCtrl::ConstructAnimateImageInfo()
 	if (NULL == pImageBase) return;
 
 	m_AnimateImageInfo = pImageBase->GetAnimateImageInfo(GetScale());
+	m_nFrameCur = 0;
 
 	CDUISize szItem = GetSequenceFrameSize();
 	if (szItem.cx <= 0 || szItem.cy <= 0) return;
@@ -288,7 +289,7 @@ void CDUIAnimateCtrl::ConstructAnimateImageInfo()
 void CDUIAnimateCtrl::PlayCurFrame()
 {
 	if (m_AnimateImageInfo.nFrameCount <= 0
-		|| (AnimateImage_Gif == m_AnimateImageInfo.AnimateImageType && m_AnimateImageInfo.vecGifPropertyItem.size() <= 0)
+		|| (AnimateImage_Gif == m_AnimateImageInfo.AnimateImageType && m_AnimateImageInfo.vecFrameElapse.size() <= 0)
 		|| (AnimateImage_SequenceFrame == m_AnimateImageInfo.AnimateImageType && m_AnimateImageInfo.nSequenceFrameSpeed <= 0)
 		|| NULL == m_pWndOwner) return;
 
@@ -297,7 +298,7 @@ void CDUIAnimateCtrl::PlayCurFrame()
 	{
 		case AnimateImage_Gif:
 		{
-			nElapse = ((long*)m_AnimateImageInfo.vecGifPropertyItem[0].value)[m_nFrameCur] * 10;
+			nElapse = m_AnimateImageInfo.vecFrameElapse[m_nFrameCur];
 
 			break;
 		}

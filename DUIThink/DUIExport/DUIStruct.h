@@ -240,7 +240,7 @@ struct tagDuiImageInfo
 	//animate
 	Gdiplus::Bitmap *					pImageAnimate = NULL;
 	int									nFrameCount = 0;
-	std::vector<Gdiplus::PropertyItem>	vecPropertyItem;							//帧与帧之间间隔时间
+	std::vector<WORD>					vecFrameElapse;
 };
 
 struct tagDuiAnimateImageInfo
@@ -249,7 +249,7 @@ struct tagDuiAnimateImageInfo
 	int									nFrameCount = 0;
 	int									nSequenceFrameSpeed = 0;
 	CDUISize							szSequenceFrameSize;
-	std::vector<Gdiplus::PropertyItem>	vecGifPropertyItem;
+	std::vector<WORD>					vecFrameElapse;
 };
 
 typedef std::unordered_map<int, tagDuiImageInfo> MapDuiDpiImageInfo;

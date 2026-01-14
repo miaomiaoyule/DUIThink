@@ -16,7 +16,7 @@ CMMAsyncObject::~CMMAsyncObject()
 
 bool CMMAsyncObject::Init()
 {
-	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+	std::lock_guard<std::recursive_mutex> Lock(m_AsyncDataLock);
 
 	if (IsWindow(m_hWndAsync))
 	{
@@ -54,7 +54,7 @@ bool CMMAsyncObject::Init()
 
 bool CMMAsyncObject::UnInit()
 {
-	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+	std::lock_guard<std::recursive_mutex> Lock(m_AsyncDataLock);
 
 	if (IsWindow(m_hWndAsync))
 	{
@@ -114,7 +114,7 @@ LRESULT CMMAsyncObject::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, b
 		bool repeat = false;
 
 		{
-			std::lock_guard<std::recursive_mutex> lock(m_DataLock);
+			std::lock_guard<std::recursive_mutex> lock(m_AsyncDataLock);
 			auto it = m_TimerTasks.find(id);
 			if (it != m_TimerTasks.end())
 			{
@@ -172,7 +172,7 @@ bool CMMAsyncObject::StopTimer(UINT_PTR timerId)
 	if (!m_hWndAsync) return false;
 
 	{
-		std::lock_guard<std::recursive_mutex> lock(m_DataLock);
+		std::lock_guard<std::recursive_mutex> lock(m_AsyncDataLock);
 		auto it = m_TimerTasks.find(timerId);
 		if (it == m_TimerTasks.end()) return false;
 		::KillTimer(m_hWndAsync, timerId);
@@ -189,7 +189,7 @@ UINT_PTR CMMAsyncObject::StartTimerInternal(unsigned int ms, std::function<void(
 
 	UINT_PTR id = m_NextTimerId.fetch_add(1);
 	{
-		std::lock_guard<std::recursive_mutex> lock(m_DataLock);
+		std::lock_guard<std::recursive_mutex> lock(m_AsyncDataLock);
 		m_TimerTasks[id].func = std::move(fn);
 		m_TimerTasks[id].repeat = repeat;
 	}
@@ -197,7 +197,7 @@ UINT_PTR CMMAsyncObject::StartTimerInternal(unsigned int ms, std::function<void(
 	if (!::SetTimer(m_hWndAsync, id, ms, NULL))
 	{
 		// failed -> cleanup
-		std::lock_guard<std::recursive_mutex> lock(m_DataLock);
+		std::lock_guard<std::recursive_mutex> lock(m_AsyncDataLock);
 		m_TimerTasks.erase(id);
 		return 0;
 	}

@@ -22,7 +22,7 @@ public:
 	};
 
 protected:
-	std::recursive_mutex				m_DataLock;
+	std::recursive_mutex				m_AsyncDataLock;
 	HWND								m_hWndAsync = NULL;
 	const UINT							m_uMsgAsyncTask = WM_APP + 1;
 	

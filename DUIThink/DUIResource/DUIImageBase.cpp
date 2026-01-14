@@ -149,7 +149,7 @@ tagDuiAnimateImageInfo CDUIImageBase::GetAnimateImageInfo(int nScale)
 	tagDuiAnimateImageInfo AnimateImageInfo;
 	AnimateImageInfo.AnimateImageType = ImageInfo.nFrameCount > 0 ? AnimateImage_Gif : AnimateImage_None;
 	AnimateImageInfo.nFrameCount = ImageInfo.nFrameCount;
-	AnimateImageInfo.vecGifPropertyItem = ImageInfo.vecPropertyItem;
+	AnimateImageInfo.vecFrameElapse = ImageInfo.vecFrameElapse;
 
 	return AnimateImageInfo;
 }
@@ -189,7 +189,6 @@ void CDUIImageBase::ReleaseResource()
 
 		//animate
 		MMSafeDelete(ImageInfo.pImageAnimate);
-		ImageInfo.vecPropertyItem.clear();
 		ImageInfo.nFrameCount = 0;
 	}
 
@@ -230,7 +229,6 @@ void CDUIImageBase::ConstructResource(int nScale)
 	
 	//release animate
 	MMSafeDelete(m_mapDpiImageInfo[nScale].pImageAnimate);
-	m_mapDpiImageInfo[nScale].vecPropertyItem.clear();
 	m_mapDpiImageInfo[nScale].nFrameCount = 0;
 	m_mapDpiImageInfo.erase(nScale);
 
@@ -331,8 +329,18 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 	ImageInfo.nFrameCount = ImageInfo.pImageAnimate->GetFrameCount(vecDimensionID.data());
 
 	int nSize = ImageInfo.pImageAnimate->GetPropertyItemSize(PropertyTagFrameDelay);
-	ImageInfo.vecPropertyItem.resize(nSize);
-	ImageInfo.pImageAnimate->GetPropertyItem(PropertyTagFrameDelay, nSize, ImageInfo.vecPropertyItem.data());
+	std::vector<BYTE> vecPropertyItem(nSize);
+	Gdiplus::PropertyItem *pPropertyItem = reinterpret_cast<Gdiplus::PropertyItem*>(vecPropertyItem.data());
+	if (Gdiplus::Ok == ImageInfo.pImageAnimate->GetPropertyItem(PropertyTagFrameDelay, nSize, pPropertyItem))
+	{
+		long *pDelays = (long*)pPropertyItem->value;
+		ImageInfo.vecFrameElapse.resize(ImageInfo.nFrameCount);
+		for (int n = 0; n < ImageInfo.nFrameCount; n++)
+		{
+			long lDelay = pDelays[n] * 10; 
+			ImageInfo.vecFrameElapse[n] = lDelay;
+		}
+	}
 
 	//info
 	BITMAP BmpInfo = {};
