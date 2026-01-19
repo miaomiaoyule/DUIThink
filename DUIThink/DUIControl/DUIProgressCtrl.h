@@ -117,6 +117,11 @@ protected:
 
 	//help
 protected:
+	virtual CDUIAttributeColorSwitch * GetAttributeStatusColorGroove();
+	virtual CDUIAttributeColorSwitch * GetAttributeStatusColorSlip();
+	virtual CDUIAttriImageSection * GetAttributeStatusImageGroove();
+	virtual CDUIAttriImageSection * GetAttributeStatusImageSlip();
+
 	virtual void CalcSubPos();
 	virtual void CalcSubRect();
 

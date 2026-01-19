@@ -1360,6 +1360,22 @@ void CDUIRenderEngine::DrawEllipse(HDC hDC, const CDUIRect &rcItem, int nLineSiz
 	return;
 }
 
+void CDUIRenderEngine::DrawArc(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, float fStartAngle, float fSweepAngle, enDuiLineStyle LineStyle)
+{
+	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
+
+	Gdiplus::Graphics Gp(hDC);
+	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+
+	//left top right bottom
+	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
+	Pen.SetAlignment(Gdiplus::PenAlignmentInset);
+	Gp.DrawArc(&Pen, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight(), fStartAngle, fSweepAngle);
+
+	return;
+}
+
 void CDUIRenderEngine::FillRect(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient)
 {
 	if (dwColor <= 0x00ffffff) return;

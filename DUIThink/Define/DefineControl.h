@@ -30,6 +30,7 @@
 #define Dui_Ctrl_CheckBox							(_T("CheckBoxCtrl"))
 #define Dui_Ctrl_RadioBox							(_T("RadioBoxCtrl"))
 #define Dui_Ctrl_Progress							(_T("ProgressCtrl"))
+#define Dui_Ctrl_ProgressCircle						(_T("ProgressCricleCtrl"))
 #define Dui_Ctrl_Slider								(_T("SliderCtrl"))
 #define Dui_Ctrl_ScrollBar							(_T("ScrollBarCtrl"))
 #define Dui_Ctrl_Combox								(_T("ComboxCtrl"))

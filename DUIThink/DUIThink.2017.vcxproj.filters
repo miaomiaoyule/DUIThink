@@ -327,6 +327,9 @@
     <ClInclude Include="DUIAttribute\DUIAttributeTabSelect.h">
       <Filter>DUIAttribute</Filter>
     </ClInclude>
+    <ClInclude Include="DUIControl\DUIProgressCircleCtrl.h">
+      <Filter>DUIControl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -562,6 +565,9 @@
     </ClCompile>
     <ClCompile Include="DUIAttribute\DUIAttributeTabSelect.cpp">
       <Filter>DUIAttribute</Filter>
+    </ClCompile>
+    <ClCompile Include="DUIControl\DUIProgressCircleCtrl.cpp">
+      <Filter>DUIControl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

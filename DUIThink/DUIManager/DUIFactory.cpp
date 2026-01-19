@@ -25,6 +25,7 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateControl(CDUIMenuItemCtrl);
 	DUIInner_RegisterCreateControl(CDUICheckBoxCtrl);
 	DUIInner_RegisterCreateControl(CDUIProgressCtrl);
+	DUIInner_RegisterCreateControl(CDUIProgressCircleCtrl);
 	DUIInner_RegisterCreateControl(CDUIRichEditCtrl);
 	DUIInner_RegisterCreateControl(CDUIScrollBarCtrl);
 	DUIInner_RegisterCreateControl(CDUISliderCtrl);

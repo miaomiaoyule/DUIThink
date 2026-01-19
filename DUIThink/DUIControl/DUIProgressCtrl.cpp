@@ -395,43 +395,8 @@ void CDUIProgressCtrl::PaintStatusColor(HDC hDC)
 	__super::PaintStatusColor(hDC);
 
 	//groove slip
-	CDUIAttributeColorSwitch *pAttributeGroove = NULL;
-	CDUIAttributeColorSwitch *pAttributeSlip = NULL;
-	if (false == IsEnabled())
-	{
-		pAttributeGroove = &m_AttributeColorGrooveNormal;
-		pAttributeSlip = &m_AttributeColorSlipNormal;
-	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
-	{
-		pAttributeGroove = &m_AttributeColorGrooveHot;
-		pAttributeSlip = &m_AttributeColorSlipHot;
-	}
-	else if (m_nControlStatus & ControlStatus_Hot)
-	{
-		pAttributeGroove = &m_AttributeColorGrooveHot;
-		pAttributeSlip = &m_AttributeColorSlipHot;
-	}
-	else if (IsFocused())
-	{
-		pAttributeGroove = &m_AttributeColorGrooveNormal;
-		pAttributeSlip = &m_AttributeColorSlipNormal;
-	}
-	else
-	{
-		pAttributeGroove = &m_AttributeColorGrooveNormal;
-		pAttributeSlip = &m_AttributeColorSlipNormal;
-	}
-
-	//verify
-	if (NULL == pAttributeGroove || pAttributeGroove->IsEmpty())
-	{
-		pAttributeGroove = &m_AttributeColorGrooveNormal;
-	}
-	if (NULL == pAttributeSlip || pAttributeSlip->IsEmpty())
-	{
-		pAttributeSlip = &m_AttributeColorSlipNormal;
-	}
+	CDUIAttributeColorSwitch *pAttributeGroove = GetAttributeStatusColorGroove();
+	CDUIAttributeColorSwitch *pAttributeSlip = GetAttributeStatusColorSlip();
 
 	//draw
 	if (pAttributeGroove)
@@ -449,43 +414,9 @@ void CDUIProgressCtrl::PaintStatusColor(HDC hDC)
 void CDUIProgressCtrl::PaintStatusImage(HDC hDC)
 {
 	//groove slip
-	CDUIAttriImageSection *pAttributeGroove = NULL;
-	CDUIAttriImageSection *pAttributeSlip = NULL;
-	if (false == IsEnabled())
-	{
-		pAttributeGroove = &m_AttributeImageGrooveNormal;
-		pAttributeSlip = &m_AttributeImageSlipNormal;
-	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
-	{
-		pAttributeGroove = &m_AttributeImageGrooveHot;
-		pAttributeSlip = &m_AttributeImageSlipHot;
-	}
-	else if (m_nControlStatus & ControlStatus_Hot)
-	{
-		pAttributeGroove = &m_AttributeImageGrooveHot;
-		pAttributeSlip = &m_AttributeImageSlipHot;
-	}
-	else if (IsFocused())
-	{
-		pAttributeGroove = &m_AttributeImageGrooveNormal;
-		pAttributeSlip = &m_AttributeImageSlipNormal;
-	}
-	else
-	{
-		pAttributeGroove = &m_AttributeImageGrooveNormal;
-		pAttributeSlip = &m_AttributeImageSlipNormal;
-	}
-
-	//verify
-	if (NULL == pAttributeGroove || pAttributeGroove->IsEmpty())
-	{
-		pAttributeGroove = &m_AttributeImageGrooveNormal;
-	}
-	if (NULL == pAttributeSlip || pAttributeSlip->IsEmpty())
-	{
-		pAttributeSlip = &m_AttributeImageSlipNormal;
-	}
+	CDUIAttriImageSection *pAttributeGroove = GetAttributeStatusImageGroove();
+	CDUIAttriImageSection *pAttributeSlip = GetAttributeStatusImageSlip();
+	
 	if (pAttributeGroove)
 	{
 		pAttributeGroove->Draw(hDC, m_rcGroove, m_rcPaint);
@@ -496,6 +427,139 @@ void CDUIProgressCtrl::PaintStatusImage(HDC hDC)
 	}
 
 	return;
+}
+
+CDUIAttributeColorSwitch * CDUIProgressCtrl::GetAttributeStatusColorGroove()
+{
+	//groove slip
+	CDUIAttributeColorSwitch *pAttributeGroove = NULL;
+	if (false == IsEnabled())
+	{
+		pAttributeGroove = &m_AttributeColorGrooveNormal;
+	}
+	else if (m_nControlStatus & ControlStatus_Pushed)
+	{
+		pAttributeGroove = &m_AttributeColorGrooveHot;
+	}
+	else if (m_nControlStatus & ControlStatus_Hot)
+	{
+		pAttributeGroove = &m_AttributeColorGrooveHot;
+	}
+	else if (IsFocused())
+	{
+		pAttributeGroove = &m_AttributeColorGrooveNormal;
+	}
+	else
+	{
+		pAttributeGroove = &m_AttributeColorGrooveNormal;
+	}
+
+	//verify
+	if (NULL == pAttributeGroove || pAttributeGroove->IsEmpty())
+	{
+		pAttributeGroove = &m_AttributeColorGrooveNormal;
+	}
+	
+	return pAttributeGroove;
+}
+
+CDUIAttributeColorSwitch * CDUIProgressCtrl::GetAttributeStatusColorSlip()
+{
+	CDUIAttributeColorSwitch *pAttributeSlip = NULL;
+	if (false == IsEnabled())
+	{
+		pAttributeSlip = &m_AttributeColorSlipNormal;
+	}
+	else if (m_nControlStatus & ControlStatus_Pushed)
+	{
+		pAttributeSlip = &m_AttributeColorSlipHot;
+	}
+	else if (m_nControlStatus & ControlStatus_Hot)
+	{
+		pAttributeSlip = &m_AttributeColorSlipHot;
+	}
+	else if (IsFocused())
+	{
+		pAttributeSlip = &m_AttributeColorSlipNormal;
+	}
+	else
+	{
+		pAttributeSlip = &m_AttributeColorSlipNormal;
+	}
+
+	//verify
+	if (NULL == pAttributeSlip || pAttributeSlip->IsEmpty())
+	{
+		pAttributeSlip = &m_AttributeColorSlipNormal;
+	}
+
+	return pAttributeSlip;
+}
+
+CDUIAttriImageSection * CDUIProgressCtrl::GetAttributeStatusImageGroove()
+{
+	CDUIAttriImageSection *pAttributeGroove = NULL;
+	if (false == IsEnabled())
+	{
+		pAttributeGroove = &m_AttributeImageGrooveNormal;
+	}
+	else if (m_nControlStatus & ControlStatus_Pushed)
+	{
+		pAttributeGroove = &m_AttributeImageGrooveHot;
+	}
+	else if (m_nControlStatus & ControlStatus_Hot)
+	{
+		pAttributeGroove = &m_AttributeImageGrooveHot;
+	}
+	else if (IsFocused())
+	{
+		pAttributeGroove = &m_AttributeImageGrooveNormal;
+	}
+	else
+	{
+		pAttributeGroove = &m_AttributeImageGrooveNormal;
+	}
+
+	//verify
+	if (NULL == pAttributeGroove || pAttributeGroove->IsEmpty())
+	{
+		pAttributeGroove = &m_AttributeImageGrooveNormal;
+	}
+	
+	return pAttributeGroove;
+}
+
+CDUIAttriImageSection *CDUIProgressCtrl::GetAttributeStatusImageSlip()
+{
+	CDUIAttriImageSection *pAttributeSlip = NULL;
+	if (false == IsEnabled())
+	{
+		pAttributeSlip = &m_AttributeImageSlipNormal;
+	}
+	else if (m_nControlStatus & ControlStatus_Pushed)
+	{
+		pAttributeSlip = &m_AttributeImageSlipHot;
+	}
+	else if (m_nControlStatus & ControlStatus_Hot)
+	{
+		pAttributeSlip = &m_AttributeImageSlipHot;
+	}
+	else if (IsFocused())
+	{
+		pAttributeSlip = &m_AttributeImageSlipNormal;
+	}
+	else
+	{
+		pAttributeSlip = &m_AttributeImageSlipNormal;
+	}
+
+	//verify
+	if (NULL == pAttributeSlip || pAttributeSlip->IsEmpty())
+	{
+		pAttributeSlip = &m_AttributeImageSlipNormal;
+	}
+
+	return pAttributeSlip;
 }
 
 void CDUIProgressCtrl::CalcSubPos()

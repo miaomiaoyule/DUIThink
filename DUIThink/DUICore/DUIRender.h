@@ -37,6 +37,7 @@ public:
 	static void DrawParallelogram(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void DrawRhomb(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void DrawEllipse(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
+	static void DrawArc(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, float fStartAngle, float fSweepAngle, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void FillRect(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient = 0);
 	static void FillRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, DWORD dwColor, DWORD dwColorGradient = 0);
 	static void FillParallelogram(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient = 0);

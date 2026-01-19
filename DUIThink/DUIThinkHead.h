@@ -165,6 +165,7 @@ using namespace tinyxml2;
 #include "DUIControl/DUIControlBase.h"
 #include "DUIControl/DUIStaticCtrl.h"
 #include "DUIControl/DUIProgressCtrl.h"
+#include "DUIControl/DUIProgressCircleCtrl.h"
 #include "DUIControl/DUISliderCtrl.h"
 #include "DUIControl/DUIScrollBarCtrl.h"
 #include "DUIControl/DUIButtonCtrl.h"
