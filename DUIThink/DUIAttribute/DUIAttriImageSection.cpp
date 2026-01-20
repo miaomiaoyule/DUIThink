@@ -63,9 +63,10 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 
 	//mask
 	Gdiplus::Bitmap *pBmp = NULL;
-	if (GetMask() > 0x00ffffff)
+	if (ImageSection.dwMask > 0x00ffffff)
 	{
-		hBitmap = CDUIRenderEngine::CopyBitmap(hBitmap, GetMask());
+		hBitmap = CDUIRenderEngine::CopyBitmap(hBitmap, ImageSection.dwMask);
+		bAlpha = true;
 	}
 	if (pWnd->IsGdiplusRenderImage())
 	{
@@ -80,13 +81,13 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 		if (pWnd->IsGdiplusRenderImage())
 		{
 			CDUIRenderEngine::DrawImage(hDC, pBmp, rcDest, rcPaint, rcSource,
-				rcCorner, bDisablePallete ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bCornerHole, 
+				rcCorner, bDisablePallete ? 150 : ImageSection.cbAlpha, bAlpha, ImageSection.bCornerHole, 
 				HorizImageAlign_Tile == ImageSection.HorizImageAlign, VertImageAlign_Tile == ImageSection.VertImageAlign, rcRound, RoundType);
 		}
 		else
 		{
 			CDUIRenderEngine::DrawImage(hDC, hBitmap, rcDest, rcPaint, rcSource,
-				rcCorner, bDisablePallete ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bCornerHole,
+				rcCorner, bDisablePallete ? 150 : ImageSection.cbAlpha, bAlpha, ImageSection.bCornerHole,
 				HorizImageAlign_Tile == ImageSection.HorizImageAlign, VertImageAlign_Tile == ImageSection.VertImageAlign, rcRound, RoundType);
 		}
 
@@ -469,6 +470,13 @@ bool CDUIAttriImageSection::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 		m_uValueHash = strtoul(lpszValue, NULL, 10);
 
 #ifdef DUI_DESIGN
+		//adjust
+		if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_5
+			&& GetMask() == 0xff000000)
+		{
+			SetMask(0);
+		}
+
 		CDUIGlobal::GetInstance()->OnAttriValueIDRead(GetAttributeType(), GetValueID());
 #endif
 
