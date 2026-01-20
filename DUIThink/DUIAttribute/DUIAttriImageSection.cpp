@@ -470,13 +470,6 @@ bool CDUIAttriImageSection::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 	{
 		m_uValueHash = strtoul(lpszValue, NULL, 10);
 
-		//adjust
-		if (CDUIGlobal::GetInstance()->GetResVersion() < DuiResVersion_5
-			&& GetMask() == 0xff000000)
-		{
-			SetMask(0);
-		}
-
 #ifdef DUI_DESIGN
 		CDUIGlobal::GetInstance()->OnAttriValueIDRead(GetAttributeType(), GetValueID());
 #endif
