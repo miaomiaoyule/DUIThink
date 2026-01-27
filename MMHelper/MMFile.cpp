@@ -815,7 +815,7 @@ std::vector<CMMString> CMMFile::GetFolderOfDir(IN LPCTSTR lpszDirFull)
 		//path
 		if (FILE_ATTRIBUTE_DIRECTORY & FindData.dwFileAttributes)
 		{
-			vecFolder.push_back(strFile);
+			vecFolder.push_back(strDir + strFile);
 		}
 
 	} while (FindNextFile(hFindFile, &FindData));
@@ -852,7 +852,7 @@ std::vector<CMMString> CMMFile::GetFileOfDir(IN LPCTSTR lpszDirFull)
 		//path
 		if (0 == (FILE_ATTRIBUTE_DIRECTORY & FindData.dwFileAttributes))
 		{
-			vecFile.push_back(strFile);
+			vecFile.push_back(strDir + strFile);
 		}
 
 	} while (FindNextFile(hFindFile, &FindData));
@@ -862,7 +862,7 @@ std::vector<CMMString> CMMFile::GetFileOfDir(IN LPCTSTR lpszDirFull)
 	return vecFile;
 }
 
-std::vector<CMMString> CMMFile::GetFilesOfDir(IN LPCTSTR lpszDirFull)
+std::vector<CMMString> CMMFile::GetFileAndFolderOfDir(IN LPCTSTR lpszDirFull)
 {
 	std::vector<CMMString> vecFiles;
 
@@ -886,7 +886,7 @@ std::vector<CMMString> CMMFile::GetFilesOfDir(IN LPCTSTR lpszDirFull)
 		CMMString strFile = FindData.cFileName;
 		if (strFile.empty() || _T(".") == strFile || _T("..") == strFile) continue;
 
-		vecFiles.push_back(strFile);
+		vecFiles.push_back(strDir + strFile);
 
 	} while (FindNextFile(hFindFile, &FindData));
 
@@ -898,10 +898,9 @@ std::vector<CMMString> CMMFile::GetFilesOfDir(IN LPCTSTR lpszDirFull)
 uint64_t CMMFile::GetFolderSize(IN LPCTSTR lpszDirFull)
 {
 	uint64_t uSize = 0;
-	auto vecFiles = GetFilesOfDir(lpszDirFull);
+	auto vecFiles = GetFileAndFolderOfDir(lpszDirFull);
 	for (CMMString strFile : vecFiles)
 	{
-		strFile = CMMString(lpszDirFull) + _T('\\') + strFile;
 		if (GetFileAttributes(strFile) & FILE_ATTRIBUTE_DIRECTORY)
 		{
 			uSize += GetFolderSize(strFile);

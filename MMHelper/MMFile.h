@@ -151,10 +151,10 @@ public:
 	static std::vector<CMMString> GetFileOfDir(IN LPCTSTR lpszDirFull);
 
 	//************************************
-	// Description:	get files of dir
+	// Description:	get all files of dir
 	// Parameter: 	LPCTSTR lpszDirFull Àý£ºC:\windows
 	//************************************
-	static std::vector<CMMString> GetFilesOfDir(IN LPCTSTR lpszDirFull);
+	static std::vector<CMMString> GetFileAndFolderOfDir(IN LPCTSTR lpszDirFull);
 
 	//************************************
 	// Description:	get size of dir
