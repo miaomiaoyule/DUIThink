@@ -45,6 +45,7 @@ public:
 public:
 	virtual LPCTSTR GetResourceName() const;
 	virtual enDuiResType GetResourceType() const;
+	virtual void ReleaseResource();
 
 	//help
 protected:
@@ -57,7 +58,6 @@ protected:
 protected:
 	bool SetResourceName(const CMMString &strName);
 	virtual void ConstructResource(int nScale = 100);
-	virtual void ReleaseResource();
 	virtual bool SetAttribute(LPCSTR lpszName, LPCSTR lpszValue);
 	virtual bool SaveAttribute(tinyxml2::XMLElement *pNode);
 	virtual void OnDpiChanged(int nScale);

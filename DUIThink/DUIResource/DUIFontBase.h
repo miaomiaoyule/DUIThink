@@ -38,6 +38,7 @@ public:
 	//method
 public:
 	enDuiResType GetResourceType() const override;
+	void ReleaseResource() override;
 	virtual HFONT GetHandle(int nScale = 100);
 	virtual CMMString GetFontName();
 	virtual void SetFontName(LPCTSTR lpszName);
@@ -57,7 +58,6 @@ public:
 	//help
 protected:
 	void ConstructResource(int nScale = 100) override;
-	void ReleaseResource() override;
 	bool SetAttribute(LPCSTR lpszName, LPCSTR lpszValue) override;
 	bool SaveAttribute(tinyxml2::XMLElement *pNode) override;
 	void OnDpiChanged(int nScale) override;

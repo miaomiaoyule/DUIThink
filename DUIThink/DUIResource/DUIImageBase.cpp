@@ -41,6 +41,27 @@ enDuiResType CDUIImageBase::GetResourceType() const
 	return DuiResType_Image;
 }
 
+void CDUIImageBase::ReleaseResource()
+{
+	for (auto &ImageInfoItem : m_mapDpiImageInfo)
+	{
+		auto &ImageInfo = ImageInfoItem.second;
+
+		//image
+		MMSafeDelete(ImageInfo.pBitmap);
+		MMSafeDeleteObject(ImageInfo.hBitmap);
+		ImageInfo.pBits = NULL;
+
+		//animate
+		MMSafeDelete(ImageInfo.pImageAnimate);
+		ImageInfo.nFrameCount = 0;
+	}
+
+	m_mapDpiImageInfo.clear();
+
+	return;
+}
+
 CMMString CDUIImageBase::GetImageFileFull()
 {
 	if (m_strImageFile.length() >= 2 && _T(':') == m_strImageFile[1])
@@ -174,27 +195,6 @@ bool CDUIImageBase::IsScale(int nScale)
 	GetImageInfo(nScale);
 
 	return m_mapDpiImageInfo[nScale].hBitmap;
-}
-
-void CDUIImageBase::ReleaseResource()
-{
-	for (auto &ImageInfoItem : m_mapDpiImageInfo)
-	{
-		auto &ImageInfo = ImageInfoItem.second;
-
-		//image
-		MMSafeDelete(ImageInfo.pBitmap);
-		MMSafeDeleteObject(ImageInfo.hBitmap);
-		ImageInfo.pBits = NULL;
-
-		//animate
-		MMSafeDelete(ImageInfo.pImageAnimate);
-		ImageInfo.nFrameCount = 0;
-	}
-
-	m_mapDpiImageInfo.clear();
-
-	return;
 }
 
 bool CDUIImageBase::SetResourceName(const CMMString &strName)

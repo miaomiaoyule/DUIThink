@@ -42,6 +42,18 @@ enDuiResType CDUIFontBase::GetResourceType() const
 	return DuiResType_Font;
 }
 
+void CDUIFontBase::ReleaseResource()
+{
+	for (auto &FontItem : m_mapDpiFont)
+	{
+		MMSafeDeleteObject(FontItem.second);
+	}
+
+	m_mapDpiFont.clear();
+
+	return;
+}
+
 HFONT CDUIFontBase::GetHandle(int nScale)
 {
 	if (NULL == m_mapDpiFont[nScale])
@@ -188,18 +200,6 @@ void CDUIFontBase::ConstructResource(int nScale)
 	::GetTextMetrics(m_hDCPaint, &m_DefaultFontInfo.tm);
 	::SelectObject(m_hDCPaint, hOldFont);
 	}*/
-
-	return;
-}
-
-void CDUIFontBase::ReleaseResource()
-{
-	for (auto &FontItem : m_mapDpiFont)
-	{
-		MMSafeDeleteObject(FontItem.second);
-	}
-
-	m_mapDpiFont.clear();
 
 	return;
 }

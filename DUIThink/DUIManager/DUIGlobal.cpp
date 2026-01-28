@@ -342,6 +342,29 @@ MapDuiFontBase CDUIGlobal::GetFontResourceAll()
 	return m_mapResourceFont;
 }
 
+bool CDUIGlobal::RemoveFontResource(const CMMString &strName)
+{
+	auto FindIt = m_mapResourceFont.find(strName);
+	if (FindIt == m_mapResourceFont.end()) return true;
+	if (NULL == FindIt->second || FindIt->second->IsDesign()) return false;
+
+	OnResourceRemove(FindIt->second);
+
+	MMSafeDelete(FindIt->second);
+	m_mapResourceFont.erase(FindIt);
+
+	//default
+	if (m_strFontResDefault == strName)
+	{
+		m_strFontResDefault.clear();
+
+		CDUIFontBase *pFontBase = GetFontResource(0);
+		pFontBase ? m_strFontResDefault = pFontBase->GetResourceName() : m_strFontResDefault.clear();
+	}
+
+	return true;
+}
+
 int CDUIGlobal::GetColorResourceCount()
 {
 	return m_mapResourceColor.size();
@@ -385,6 +408,20 @@ MapDuiColorBase CDUIGlobal::GetColorResourceAll()
 	return m_mapResourceColor;
 }
 
+bool CDUIGlobal::RemoveColorResource(const CMMString &strName)
+{
+	auto FindIt = m_mapResourceColor.find(strName);
+	if (FindIt == m_mapResourceColor.end()) return true;
+	if (NULL == FindIt->second || FindIt->second->IsDesign()) return false;
+
+	OnResourceRemove(FindIt->second);
+
+	MMSafeDelete(FindIt->second);
+	m_mapResourceColor.erase(FindIt);
+
+	return true;
+}
+
 int CDUIGlobal::GetImageResourceCount()
 {
 	return m_mapResourceImage.size();
@@ -424,6 +461,30 @@ CDUIImageBase * CDUIGlobal::GetImageResourceByFile(const CMMString &strFileFull)
 MapDuiImageBase CDUIGlobal::GetImageResourceAll()
 {
 	return m_mapResourceImage;
+}
+
+bool CDUIGlobal::RemoveImageResource(const CMMString &strName)
+{
+	auto FindIt = m_mapResourceImage.find(strName);
+	if (FindIt == m_mapResourceImage.end()) return true;
+
+	CDUIImageBase *pImageBase = FindIt->second;
+	if (NULL == pImageBase || pImageBase->IsDesign()) return false;
+
+	m_mapResourceImage.erase(FindIt);
+
+	CMMString strImage = pImageBase->GetImageFileFull();
+	if (true == PathFileExists(strImage) && false == DeleteFile(strImage))
+	{
+		assert(false);
+		return false;
+	}
+
+	OnResourceRemove(pImageBase);
+
+	MMSafeDelete(pImageBase);
+
+	return true;
 }
 
 int CDUIGlobal::GetDuiCount(enDuiType DuiType)
@@ -495,6 +556,41 @@ CMMString CDUIGlobal::GetDuiFileFull(const CMMString &strName)
 	CMMString strFile = GetDuiFile(strName);
 
 	return GetDuiPath(DuiType) + strFile;
+}
+
+bool CDUIGlobal::RemoveDui(const CMMString &strName)
+{
+	if (strName.empty()) return false;
+
+	auto FindIt = find_if(m_vecDui.begin(), m_vecDui.end(), [&](tagDuiFile &DuiFile)
+	{
+		return DuiFile.strName == strName;
+	});
+	if (FindIt == m_vecDui.end()) return false;
+
+	//menu
+	if (DuiType_Menu == FindIt->DuiType)
+	{
+		CDUIMenuCtrl *pMenu = dynamic_cast<CDUIMenuCtrl*>(LoadDui(strName, NULL));
+		if (pMenu)
+		{
+			for (int i = 0; i < pMenu->GetMenuItemCount(); i++)
+			{
+				CDUIMenuItemCtrl *pMenuItem = pMenu->GetMenuItem(i);
+				if (NULL == pMenuItem) continue;
+
+				pMenuItem->SetHasExpandMenu(false);
+			}
+		}
+	}
+
+	//file
+	CMMString strFile = GetDuiFileFull(strName);
+	::DeleteFile(strFile);
+
+	m_vecDui.erase(FindIt);
+
+	return true;
 }
 
 CMMString CDUIGlobal::GetProjectPath()
@@ -1604,102 +1700,6 @@ bool CDUIGlobal::RenameDui(const CMMString &strNameOld, const CMMString &strName
 	RenameWnd(strNameOld, strNameNew);
 
 	SaveProject();
-
-	return true;
-}
-
-bool CDUIGlobal::RemoveFontResource(const CMMString &strName)
-{
-	auto FindIt = m_mapResourceFont.find(strName);
-	if (FindIt == m_mapResourceFont.end()) return true;
-	if (NULL == FindIt->second || FindIt->second->IsDesign()) return false;
-	
-	OnResourceRemove(FindIt->second);
-
-	MMSafeDelete(FindIt->second);
-	m_mapResourceFont.erase(FindIt);
-
-	//default
-	if (m_strFontResDefault == strName)
-	{
-		m_strFontResDefault.clear();
-
-		CDUIFontBase *pFontBase = GetFontResource(0);
-		pFontBase ? m_strFontResDefault = pFontBase->GetResourceName() : m_strFontResDefault.clear();
-	}
-
-	return true;
-}
-
-bool CDUIGlobal::RemoveImageResource(const CMMString &strName)
-{
-	auto FindIt = m_mapResourceImage.find(strName);
-	if (FindIt == m_mapResourceImage.end()) return true;
-
-	CDUIImageBase *pImageBase = FindIt->second;
-	if (NULL == pImageBase || pImageBase->IsDesign()) return false;
-
-	m_mapResourceImage.erase(FindIt);
-
-	CMMString strImage = pImageBase->GetImageFileFull();
-	if (true == PathFileExists(strImage) && false == DeleteFile(strImage))
-	{
-		assert(false);
-		return false;
-	}
-
-	OnResourceRemove(pImageBase);
-
-	MMSafeDelete(pImageBase);
-
-	return true;
-}
-
-bool CDUIGlobal::RemoveColorResource(const CMMString &strName)
-{
-	auto FindIt = m_mapResourceColor.find(strName);
-	if (FindIt == m_mapResourceColor.end()) return true;
-	if (NULL == FindIt->second || FindIt->second->IsDesign()) return false;
-
-	OnResourceRemove(FindIt->second);
-
-	MMSafeDelete(FindIt->second);
-	m_mapResourceColor.erase(FindIt);
-
-	return true;
-}
-
-bool CDUIGlobal::RemoveDui(const CMMString &strName)
-{
-	if (strName.empty()) return false;
-
-	auto FindIt = find_if(m_vecDui.begin(), m_vecDui.end(), [&](tagDuiFile &DuiFile)
-	{
-		return DuiFile.strName == strName;
-	});
-	if (FindIt == m_vecDui.end()) return false;
-
-	//menu
-	if (DuiType_Menu == FindIt->DuiType)
-	{
-		CDUIMenuCtrl *pMenu = dynamic_cast<CDUIMenuCtrl*>(LoadDui(strName, NULL));
-		if (pMenu)
-		{
-			for (int i = 0; i < pMenu->GetMenuItemCount(); i++)
-			{
-				CDUIMenuItemCtrl *pMenuItem = pMenu->GetMenuItem(i);
-				if (NULL == pMenuItem) continue;
-
-				pMenuItem->SetHasExpandMenu(false);
-			}
-		}
-	}
-
-	//file
-	CMMString strFile = GetDuiFileFull(strName);
-	::DeleteFile(strFile);
-
-	m_vecDui.erase(FindIt);
 
 	return true;
 }

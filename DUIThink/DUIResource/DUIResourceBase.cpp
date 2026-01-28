@@ -30,6 +30,11 @@ enDuiResType CDUIResourceBase::GetResourceType() const
 	return DuiResType_None;
 }
 
+void CDUIResourceBase::ReleaseResource()
+{
+	return;
+}
+
 bool CDUIResourceBase::IsDesign() 
 {
 	return m_bDesign; 
@@ -70,11 +75,6 @@ bool CDUIResourceBase::SetResourceName(const CMMString &strName)
 }
 
 void CDUIResourceBase::ConstructResource(int nDpi)
-{
-	return;
-}
-
-void CDUIResourceBase::ReleaseResource()
 {
 	return;
 }

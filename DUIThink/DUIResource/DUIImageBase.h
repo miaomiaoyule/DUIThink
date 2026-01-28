@@ -35,6 +35,7 @@ public:
 	//method
 public:
 	enDuiResType GetResourceType() const override;
+	void ReleaseResource() override;
 	virtual CMMString GetImageFileFull();
 	virtual CMMString GetImageFile();
 	virtual CMMString GetImageFileName();
@@ -53,7 +54,6 @@ public:
 
 	//help
 protected:
-	void ReleaseResource();
 	bool SetResourceName(const CMMString &strName);
 	void ConstructResource(int nScale = 100) override;
 	bool ConstructAnimate(std::vector<BYTE> &vecData, int nScale);
