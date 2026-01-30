@@ -1011,6 +1011,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIControl\DUITreeViewCtrl.h" />
     <ClInclude Include="DUIControl\DUIVerticalLayoutCtrl.h" />
     <ClInclude Include="DUIControl\DUIWaterCtrl.h" />
+    <ClInclude Include="DUIControl\DUIWebBrowserCtrl.h" />
     <ClInclude Include="DUICore\DUIAnimation.h" />
     <ClInclude Include="DUICore\DUINotifyPump.h" />
     <ClInclude Include="DUICore\DUIPropertyObject.h" />
@@ -1037,7 +1038,6 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIUtils\Utils.h" />
     <ClInclude Include="DUIUtils\XUnzip.h" />
     <ClInclude Include="DUIXmlPack\DUIXmlPack.h" />
-    <ClInclude Include="Interface.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -1101,6 +1101,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUIControl\DUITreeViewCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIVerticalLayoutCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIWaterCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIWebBrowserCtrl.cpp" />
     <ClCompile Include="DUICore\DUIAnimation.cpp" />
     <ClCompile Include="DUICore\DUINotifyPump.cpp" />
     <ClCompile Include="DUICore\DUIPropertyObject.cpp" />
@@ -1161,7 +1162,6 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUIUtils\Utils.cpp" />
     <ClCompile Include="DUIUtils\XUnzip.cpp" />
     <ClCompile Include="DUIXmlPack\DUIXmlPack.cpp" />
-    <ClCompile Include="Interface.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|x64'">Create</PrecompiledHeader>

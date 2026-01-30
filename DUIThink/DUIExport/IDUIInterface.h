@@ -11,8 +11,6 @@ interface DUITHINK_API IDuiInterface : public IMMUnknown
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
 };
 
-typedef std::vector<IDuiInterface*> VecControlListen;
-
 //////////////////////////////////////////////////////////////////////////
 //Notify
 interface IDuiNotify
@@ -32,19 +30,6 @@ interface IDuiPreMessage
 };
 
 typedef std::vector<IDuiPreMessage*> VecIDuiPreMessage;
-
-//////////////////////////////////////////////////////////////////////////
-//property obj
-#define VER_IDuiPropertyObject INTERFACE_VERSION(1,1)
-static const GUID IID_IDuiPropertyObject = { 0x26744DF3,0xFCAE,0x4F87,0x81,0x01,0x27,0xB0,0x70,0xE8,0xF7,0x81 };
-interface DUITHINK_API IDuiPropertyObject : public IDuiInterface
-{
-	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
-	virtual bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) = NULL;
-	virtual VecControlListen GetControlListen() = NULL;
-	virtual bool RegisterControlListen(IDuiInterface *pIControlListen) = NULL;
-	virtual bool UnRegisterControlListen(IDuiInterface *pIControlListen) = NULL;
-};
 
 //////////////////////////////////////////////////////////////////////////
 //control callback
@@ -73,6 +58,34 @@ interface DUITHINK_API IDuiResourceCallBack : public IDuiInterface
 };
 
 typedef std::vector<IDuiResourceCallBack*> VecIDuiResourceCallBack;
+
+//////////////////////////////////////////////////////////////////////////
+//child
+#define VER_IDuiControlListen INTERFACE_VERSION(1,1)
+static const GUID IID_IDuiControlListen = { 0x816B4030,0xB07E,0x48B3,0x8E,0x6B,0xA2,0x1D,0x3A,0x64,0x38,0xFC };
+interface DUITHINK_API IDuiControlListen : public IDuiInterface
+{
+	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
+	virtual void OnChildAdd(CDUIContainerCtrl *pParent, CDUIControlBase *pChild) {}
+	virtual void OnChildRemove(CDUIContainerCtrl *pParent, CDUIControlBase *pChild) {}
+	virtual void OnVisibleChange(CDUIControlBase *pControl) {}
+	virtual void OnAttributeChange(CDUIPropertyObject *pPropObj, CDUIAttributeObject *pAttribute) {}
+};
+
+typedef std::vector<IDuiControlListen*> VecIDuiControlListen;
+
+//////////////////////////////////////////////////////////////////////////
+//wnd
+#define VER_IDuiWndNotify INTERFACE_VERSION(1,1)
+static const GUID IID_IDuiWndNotify = { 0xC78CF794,0x6ABD,0x4688,0x92,0x1C,0xC9,0xD7,0xEF,0x23,0x6C,0x2D };
+interface DUITHINK_API IDuiWndNotify : public IDuiInterface
+{
+	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
+	virtual void OnDuiWndCreate(CDUIWnd *pWnd) = NULL;
+	virtual void OnDuiWndDestroy(CDUIWnd *pWnd) = NULL;
+	virtual void OnDuiWndPaint(CDUIWnd *pWnd) {}
+	virtual void OnDuiWndSize(CDUIWnd *pWnd) {}
+};
 
 //////////////////////////////////////////////////////////////////////////
 

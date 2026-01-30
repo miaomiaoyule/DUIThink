@@ -362,25 +362,25 @@ CDUIComboxCtrl::~CDUIComboxCtrl(void)
 	return;
 }
 
-bool CDUIComboxCtrl::RegisterControlListen(IDuiInterface *pIControlListen)
+bool CDUIComboxCtrl::RegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
-	if (NULL == pIControlListen || false == __super::RegisterControlListen(pIControlListen)) return false;
+	if (NULL == pIDuiControlListen || false == __super::RegisterControlListen(pIDuiControlListen)) return false;
 
 	if (m_pEditCtrl)
 	{
-		m_pEditCtrl->RegisterControlListen(pIControlListen);
+		m_pEditCtrl->RegisterControlListen(pIDuiControlListen);
 	}
 
 	return true;
 }
 
-bool CDUIComboxCtrl::UnRegisterControlListen(IDuiInterface *pIControlListen)
+bool CDUIComboxCtrl::UnRegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
-	if (NULL == pIControlListen || false == __super::UnRegisterControlListen(pIControlListen)) return false;
+	if (NULL == pIDuiControlListen || false == __super::UnRegisterControlListen(pIDuiControlListen)) return false;
 
 	if (m_pEditCtrl)
 	{
-		m_pEditCtrl->UnRegisterControlListen(pIControlListen);
+		m_pEditCtrl->UnRegisterControlListen(pIDuiControlListen);
 	}
 
 	return true;

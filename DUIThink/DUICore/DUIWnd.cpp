@@ -59,24 +59,24 @@ CDUIWnd::~CDUIWnd()
 	return;
 }
 
-bool CDUIWnd::RegisterControlListen(IDuiInterface *pIControlListen)
+bool CDUIWnd::RegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
-	if (false == __super::RegisterControlListen(pIControlListen)) return false;
+	if (false == __super::RegisterControlListen(pIDuiControlListen)) return false;
 
 	CDUIContainerCtrl *pRootCtrl = GetRootCtrl();
 	if (NULL == pRootCtrl) return true;
 
-	return pRootCtrl->RegisterControlListen(pIControlListen);
+	return pRootCtrl->RegisterControlListen(pIDuiControlListen);
 }
 
-bool CDUIWnd::UnRegisterControlListen(IDuiInterface *pIControlListen)
+bool CDUIWnd::UnRegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
-	if (false == __super::UnRegisterControlListen(pIControlListen)) return false;
+	if (false == __super::UnRegisterControlListen(pIDuiControlListen)) return false;
 
 	CDUIContainerCtrl *pRootCtrl = GetRootCtrl();
 	if (NULL == pRootCtrl) return false;
 
-	return pRootCtrl->UnRegisterControlListen(pIControlListen);
+	return pRootCtrl->UnRegisterControlListen(pIDuiControlListen);
 }
 
 bool CDUIWnd::OnAttributeChange(CDUIAttributeObject *pAttributeObj)

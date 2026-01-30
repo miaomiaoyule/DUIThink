@@ -125,8 +125,8 @@ protected:
 
 	//override
 protected:
-	bool RegisterControlListen(IDuiInterface *pIControlListen) override;
-	bool UnRegisterControlListen(IDuiInterface *pIControlListen) override;
+	bool RegisterControlListen(IDuiControlListen *pIDuiControlListen) override;
+	bool UnRegisterControlListen(IDuiControlListen *pIDuiControlListen) override;
 	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
 
 	//override

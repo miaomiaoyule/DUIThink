@@ -66,8 +66,8 @@ protected:
 protected:
 	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
 	void OnDpiChanged(int nScalePre) override;
-	bool RegisterControlListen(IDuiInterface *pIControlListen) override;
-	bool UnRegisterControlListen(IDuiInterface *pIControlListen) override;
+	bool RegisterControlListen(IDuiControlListen *pIDuiControlListen) override;
+	bool UnRegisterControlListen(IDuiControlListen *pIDuiControlListen) override;
 
 	//method
 public:

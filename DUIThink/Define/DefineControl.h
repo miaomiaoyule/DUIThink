@@ -60,6 +60,7 @@
 #define Dui_Ctrl_TreeNode							(_T("TreeNodeCtrl"))
 #define Dui_Ctrl_TabLayout							(_T("TabLayoutCtrl"))
 #define Dui_Ctrl_KLineChart							(_T("KLineChartCtrl"))
+#define Dui_Ctrl_WebBrowser							(_T("WebBrowserCtrl"))
 
 //////////////////////////////////////////////////////////////////////////
 

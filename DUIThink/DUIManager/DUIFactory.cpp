@@ -41,6 +41,7 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateControl(CDUIClockCtrl);
 	DUIInner_RegisterCreateControl(CDUIGroupCtrl);
 	DUIInner_RegisterCreateControl(CDUIKLineChartCtrl);
+	DUIInner_RegisterCreateControl(CDUIWebBrowserCtrl);
 
 	//ืสิด
 	DUIInner_RegisterCreateResource(CDUIFontBase);

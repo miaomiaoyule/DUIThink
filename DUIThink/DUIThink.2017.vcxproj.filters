@@ -162,9 +162,6 @@
     <ClInclude Include="DUIResource\DUIColorBase.h">
       <Filter>DUIResource</Filter>
     </ClInclude>
-    <ClInclude Include="Interface.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="DUICore\DUIAnimation.h">
       <Filter>DUICore</Filter>
     </ClInclude>
@@ -330,6 +327,9 @@
     <ClInclude Include="DUIControl\DUIProgressCircleCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>
+    <ClInclude Include="DUIControl\DUIWebBrowserCtrl.h">
+      <Filter>DUIControl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -449,9 +449,6 @@
     <ClCompile Include="DUIUtils\DUIPoint.cpp">
       <Filter>DUIUtils</Filter>
     </ClCompile>
-    <ClCompile Include="Interface.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="DUIExport\IDUIInterface.cpp">
       <Filter>DUIExport</Filter>
     </ClCompile>
@@ -567,6 +564,9 @@
       <Filter>DUIAttribute</Filter>
     </ClCompile>
     <ClCompile Include="DUIControl\DUIProgressCircleCtrl.cpp">
+      <Filter>DUIControl</Filter>
+    </ClCompile>
+    <ClCompile Include="DUIControl\DUIWebBrowserCtrl.cpp">
       <Filter>DUIControl</Filter>
     </ClCompile>
   </ItemGroup>

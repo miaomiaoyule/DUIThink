@@ -11,7 +11,7 @@ class CUICommandElement;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIPropertyObject INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIPropertyObject = { 0x5BF13A7D,0xB9B7,0x4198,0xA3,0x98,0x88,0xF7,0x25,0xCF,0xC1,0x2E };
-class DUITHINK_API CDUIPropertyObject : public IDuiPropertyObject
+class DUITHINK_API CDUIPropertyObject : public IDuiInterface
 {
 	friend class CDUIGlobal;
 	friend class CUICommandElement;
@@ -29,7 +29,7 @@ public:
 	//variant
 protected:
 #ifdef DUI_DESIGN
-	VecControlListen					m_vecIControlListen;
+	VecIDuiControlListen				m_vecIDuiControlListen;
 #endif
 
 	VecAttributeGroup					m_vecAttributeGroup;
@@ -39,10 +39,10 @@ protected:
 	//override
 	//** you forbid override **//
 protected:
-	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
-	VecControlListen GetControlListen() override;
-	bool RegisterControlListen(IDuiInterface *pIControlListen) override;
-	bool UnRegisterControlListen(IDuiInterface *pIControlListen) override;
+	virtual bool OnAttributeChange(CDUIAttributeObject *pAttributeObj);
+	virtual VecIDuiControlListen GetControlListen();
+	virtual bool RegisterControlListen(IDuiControlListen *pIDuiControlListen);
+	virtual bool UnRegisterControlListen(IDuiControlListen *pIDuiControlListen);
 
 	//method 
 	//** you forbid override **//
