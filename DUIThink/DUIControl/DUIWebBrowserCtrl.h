@@ -69,6 +69,8 @@ public:
 	//message 
 protected:
 	bool OnDuiSetFocus() override;
+	void OnDuiWndManagerAttach() override;
+	void OnDuiWndManagerDetach() override;
 
 	//property
 protected:

@@ -3,6 +3,9 @@
 #include <atlbase.h>
 #include <atlhost.h>
 
+class CDUIThinkWebModule : public ATL::CAtlDllModuleT<CDUIThinkWebModule> {};
+CDUIThinkWebModule _DuiWebModule;
+
 //////////////////////////////////////////////////////////////////////////
 DuiImplement_CreateControl(CDUIWebBrowserCtrl)
 MMImplement_ClassName(CDUIWebBrowserCtrl)
@@ -252,6 +255,56 @@ bool CDUIWebBrowserCtrl::OnDuiSetFocus()
 	return true;
 }
 
+void CDUIWebBrowserCtrl::OnDuiWndManagerAttach()
+{
+	__super::OnDuiWndManagerAttach();
+
+	// 创建 ActiveX 宿主窗口
+	if (GetWndHandle() && false == IsWindow(m_hWndIE))
+	{
+		HWND hParentWnd = GetWndHandle();
+		CDUIRect rc = GetAbsoluteRect();
+
+		// 修正：使用 CAxWindow 辅助类创建窗口
+		// CAxWindow 会自动处理正确的类名("AtlAxWin" 或 "AtlAxWinLic") 和模块句柄，避免 1407 错误
+		CAxWindow wndIE;
+		RECT rcWin = { rc.left, rc.top, rc.right, rc.bottom };
+		m_hWndIE = wndIE.Create(hParentWnd, &rcWin, _T("Shell.Explorer.2"),
+			WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
+
+		if (m_hWndIE)
+		{
+			// 从宿主窗口获取 IWebBrowser2 接口指针
+			IUnknown* pUnk = NULL;
+			if (SUCCEEDED(AtlAxGetControl(m_hWndIE, &pUnk)) && pUnk)
+			{
+				pUnk->QueryInterface(IID_IWebBrowser2, (void**)&m_pWebBrowser);
+				pUnk->Release();
+			}
+
+			// [修改] 设置静默模式，屏蔽脚本错误弹窗
+			if (m_pWebBrowser)
+			{
+				// VARIANT_TRUE 为 -1 (0xFFFF)，VARIANT_FALSE 为 0
+				m_pWebBrowser->put_Silent(VARIANT_TRUE);
+			}
+		}
+	}
+
+	NavigateHomePage();
+
+	return;
+}
+
+void CDUIWebBrowserCtrl::OnDuiWndManagerDetach()
+{
+	__super::OnDuiWndManagerDetach();
+
+	Close();
+
+	return;
+}
+
 void CDUIWebBrowserCtrl::InitProperty()
 {
 	__super::InitProperty();
@@ -266,32 +319,6 @@ void CDUIWebBrowserCtrl::InitProperty()
 void CDUIWebBrowserCtrl::InitComplete()
 {
 	__super::InitComplete();
-
-	// 创建 ActiveX 宿主窗口
-	if (GetWndHandle())
-	{
-		HWND hParentWnd = GetWndHandle();
-		CDUIRect rc = GetAbsoluteRect();
-
-		// 使用 ATL 的 AtlAxWin 类名创建容器窗口并加载 Shell.Explorer.2 (IE控件)
-		m_hWndIE = ::CreateWindow(_T("AtlAxWin"), _T("Shell.Explorer.2"),
-			WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
-			rc.left, rc.top, rc.GetWidth(), rc.GetHeight(),
-			hParentWnd, (HMENU)GetCtrlID(), ::GetModuleHandle(NULL), NULL);
-
-		if (m_hWndIE)
-		{
-			// 从宿主窗口获取 IWebBrowser2 接口指针
-			IUnknown* pUnk = NULL;
-			if (SUCCEEDED(AtlAxGetControl(m_hWndIE, &pUnk)) && pUnk)
-			{
-				pUnk->QueryInterface(IID_IWebBrowser2, (void**)&m_pWebBrowser);
-				pUnk->Release();
-			}
-		}
-	}
-
-	NavigateHomePage();
 
 	return;
 }
