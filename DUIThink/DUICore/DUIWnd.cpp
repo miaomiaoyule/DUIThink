@@ -2319,7 +2319,7 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 	LONG lStyle = ::GetWindowLong(m_hWnd, GWL_STYLE);
 	lStyle &= ~WS_CAPTION;
 	//lStyle &= ~WS_SYSMENU;
-	::SetWindowLong(m_hWnd, GWL_STYLE, lStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
+	::SetWindowLong(m_hWnd, GWL_STYLE, lStyle);
 
 	//root
 	CDUIContainerCtrl *pRootCtrl = dynamic_cast<CDUIContainerCtrl*>(CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), this));
