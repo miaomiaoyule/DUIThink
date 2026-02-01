@@ -9,7 +9,7 @@ CDUIThinkWebModule _DuiWebModule;
 // --------------------------------------------------------------------------
 // [兼容性修复] 设置 IE 控件使用 IE11 内核模式
 // --------------------------------------------------------------------------
-void DuiSetWebBrowserEmulation()
+static void DuiSetWebBrowserEmulation()
 {
 	TCHAR szExeName[MAX_PATH] = { 0 };
 	if (::GetModuleFileName(NULL, szExeName, MAX_PATH))
@@ -32,6 +32,26 @@ void DuiSetWebBrowserEmulation()
 			::RegCloseKey(hKey);
 		}
 	}
+}
+
+// 辅助函数：查找 IE 内核的渲染窗口句柄
+static HWND FindIEServerWnd(HWND hHost)
+{
+	if (!hHost) return NULL;
+	HWND hServer = ::FindWindowEx(hHost, NULL, _T("Internet Explorer_Server"), NULL);
+	if (hServer) return hServer;
+
+	// 如果不是直接子窗口，尝试遍历查找 (通常层级: Shell Embedding -> Shell DocObject View -> Internet Explorer_Server)
+	struct FindContext { HWND hFound; } ctx = { NULL };
+	::EnumChildWindows(hHost, [](HWND hWnd, LPARAM lParam) -> BOOL {
+		TCHAR szClassName[64];
+		if (::GetClassName(hWnd, szClassName, 64) && _tcsicmp(szClassName, _T("Internet Explorer_Server")) == 0) {
+			((FindContext*)lParam)->hFound = hWnd;
+			return FALSE;
+		}
+		return TRUE;
+	}, (LPARAM)&ctx);
+	return ctx.hFound;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -86,37 +106,28 @@ void CDUIWebBrowserCtrl::RefreshView()
 {
 	__super::RefreshView();
 
-	// 这是一个 HWND 控件，需要跟随 DUI 控件的位置移动
 	if (m_hWndIE && ::IsWindow(m_hWndIE))
 	{
-		// 这是一个 HWND 控件，需要跟随 DUI 控件的位置移动
-		if (m_hWndIE && ::IsWindow(m_hWndIE))
-		{
-			CDUIRect rc = GetAbsoluteRect();
-
-			// [步骤1] 将窗口移回且保持在屏幕正常可视范围内
-			// 只有在屏幕范围内，IE 内核才会全速运行渲染管线
-			::MoveWindow(m_hWndIE, rc.left, rc.top, rc.GetWidth(), rc.GetHeight(), TRUE);
-
-			// [步骤2] 使用 SetWindowRgn 设置一个"空区域"来裁剪窗口
-			// 作用：让窗口在视觉上完全消失（不遮挡下面的 DUI 绘制），但物理句柄和逻辑仍保留在原位。
-			// 注意：CreateRectRgn(0,0,0,0) 创建的是空区域
-			HRGN hRgn = ::CreateRectRgn(0, 0, 0, 0);
-
-			// SetWindowRgn 会接管 hRgn handle 的所有权，系统会自动释放它，
-			// 所以【千万不要】在外部调用 DeleteObject(hRgn)
-			int nRet = ::SetWindowRgn(m_hWndIE, hRgn, TRUE);
-
-			return;
-		}
-
 		CDUIRect rc = GetAbsoluteRect();
 
+		// [方案修正]
+		// 不要使用 SetWindowRgn(..., 0,0,0,0) —— 这会导致黑屏且无法响应消息。
+		// 应该使用"离屏渲染"策略：将窗口移动到屏幕外（例如右侧 3000 像素处），
+		// 这里虽然看不见，但窗口仍处于"可见(Visible)"状态，IE 会继续渲染和响应消息。
+
+		// 获取主屏幕信息
 		CMMRectF rcPrimary;
 		CMMDisplayer::GetScreenInfo(CMMRectF(), CMMRectF(), rcPrimary, std::vector<MONITORINFOEX>());
 
-		// 移动子窗口
-		::SetWindowPos(m_hWndIE, HWND_TOPMOST, rcPrimary.right + 100, rcPrimary.top, rc.GetWidth(), rc.GetHeight(), SWP_NOACTIVATE);
+		// 移动窗口到屏幕可视区域之外 (TopMost 确保不被意外覆盖优化)
+		// 注意：这里的坐标偏移量要足够大，确保用户看不见
+		::SetWindowPos(m_hWndIE, NULL, 
+			rcPrimary.left, rcPrimary.top, 
+			rc.GetWidth(), rc.GetHeight(), 
+			SWP_NOACTIVATE | SWP_NOZORDER | SWP_SHOWWINDOW);
+
+		// 移除之前的 SetWindowRgn 限制 (如果之前设置过)
+		::SetWindowRgn(m_hWndIE, NULL, TRUE);
 	}
 
 	return;
@@ -301,6 +312,69 @@ void CDUIWebBrowserCtrl::ExecuteJS(LPCTSTR lpszJS)
 	return;
 }
 
+bool CDUIWebBrowserCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	if (false == __super::OnDuiLButtonDown(pt, Msg)) return false;
+
+	ForwardMessageToIE(WM_LBUTTONDOWN, Msg.wParam, Msg.lParam);
+
+	return true;
+}
+
+bool CDUIWebBrowserCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	if (false == __super::OnDuiLButtonUp(pt, Msg)) return false;
+
+	ForwardMessageToIE(WM_LBUTTONUP, Msg.wParam, Msg.lParam);
+
+	return true;
+}
+
+bool CDUIWebBrowserCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	if (false == __super::OnDuiMouseMove(pt, Msg)) return false;
+
+	ForwardMessageToIE(WM_MOUSEMOVE, Msg.wParam, Msg.lParam);
+
+	return true;
+}
+
+bool CDUIWebBrowserCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	__super::OnDuiMouseWheel(pt, Msg);
+
+	ForwardMessageToIE(WM_MOUSEWHEEL, Msg.wParam, Msg.lParam);
+
+	return true;
+}
+
+bool CDUIWebBrowserCtrl::OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	if (false == __super::OnDuiRButtonDown(pt, Msg)) return false;
+
+	ForwardMessageToIE(WM_RBUTTONDOWN, Msg.wParam, Msg.lParam);
+
+	return true;
+}
+
+bool CDUIWebBrowserCtrl::OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	if (false == __super::OnDuiRButtonUp(pt, Msg)) return false;
+
+	ForwardMessageToIE(WM_RBUTTONUP, Msg.wParam, Msg.lParam);
+
+	return true;
+}
+
+bool CDUIWebBrowserCtrl::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	if (false == __super::OnDuiLButtonDlk(pt, Msg)) return false;
+
+	ForwardMessageToIE(WM_LBUTTONDBLCLK, Msg.wParam, Msg.lParam);
+
+	return true;
+}
+
 bool CDUIWebBrowserCtrl::OnDuiSetFocus()
 {
 	if (false == __super::OnDuiSetFocus()) return false;
@@ -326,7 +400,7 @@ void CDUIWebBrowserCtrl::OnDuiWndManagerAttach()
 		CAxWindow wndIE;
 		RECT rcWin = { rc.left, rc.top, rc.right, rc.bottom };
 		m_hWndIE = wndIE.Create(hParentWnd, &rcWin, _T("Shell.Explorer.2"),
-			DUI_WNDSTYLE_DIALOG);
+			DUI_WNDSTYLE_DIALOG & ~WS_CAPTION);
 
 		if (m_hWndIE)
 		{
@@ -391,41 +465,6 @@ void CDUIWebBrowserCtrl::PaintBkImage(HDC hDC)
 		__super::PaintBkImage(hDC);
 	}
 
-	{
-		// [核心修正]
-		// 当使用了 SetWindowRgn(..., 0,0,0,0) 隐藏窗口后，
-		// 千万不能再使用 GetDC(hWnd)/BitBlt/PrintWindow 等 GDI 函数去抓取窗口。
-		// 因为系统认为窗口可见区域为空，抓出来的全是黑屏。
-		// 这里直接跳过子窗口查找，仅使用 IViewObject 接口进行“源引擎”渲染。
-
-		if (!m_pWebBrowser) return;
-
-		// 1. 预填背景：防止画面未准备好时显示黑底（IViewObject 有时绘制透明背景）
-		CDUIRect rcControl = GetBorderRect(); // 或 GetAbsoluteRect()，视 DC 原点而定
-		HBRUSH hBrWhite = (HBRUSH)::GetStockObject(WHITE_BRUSH);
-		::FillRect(hDC, &rcControl, hBrWhite);
-
-		// 2. 使用 IViewObject::Draw 强制渲染文档内容
-		IDispatch* pDispDoc = NULL;
-		if (SUCCEEDED(m_pWebBrowser->get_Document(&pDispDoc)) && pDispDoc)
-		{
-			IViewObject* pViewObject = NULL;
-			if (SUCCEEDED(pDispDoc->QueryInterface(IID_IViewObject, (void**)&pViewObject)))
-			{
-				// 定义绘制的目标区域 (在 hDC 上的位置)
-				RECTL rcDest = { rcControl.left, rcControl.top, rcControl.right, rcControl.bottom };
-
-				// 调用 Draw 方法
-				// 能够穿透 SetWindowRgn 的剪裁限制，直接将网页内容“画”在 hDC 上
-				pViewObject->Draw(DVASPECT_CONTENT, 1, NULL, NULL, NULL, hDC, &rcDest, NULL, NULL, 0);
-
-				pViewObject->Release();
-			}
-			pDispDoc->Release();
-		}
-
-		return;
-	}
 	{
 		HWND hWnd = m_hWndIE;
 		TCHAR szClassName[MAX_PATH] = { 0 };
@@ -523,4 +562,22 @@ void CDUIWebBrowserCtrl::PaintBkImage(HDC hDC)
 	return;
 }
 
+void CDUIWebBrowserCtrl::ForwardMessageToIE(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	if (!m_hWndIE) return;
+
+	// 找到负责处理输入的 IE Server 窗口
+	HWND hServer = FindIEServerWnd(m_hWndIE);
+	if (hServer && ::IsWindow(hServer))
+	{
+		CDUIRect rcCtrl = GetAbsoluteRect();
+		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+		pt.x -= rcCtrl.left;
+		pt.y -= rcCtrl.top;
+
+		// 重新构造 lParam
+		LPARAM lNewParam = MAKELPARAM(pt.x, pt.y);
+		::PostMessage(hServer, uMsg, wParam, lNewParam);
+	}
+}
 //////////////////////////////////////////////////////////////////////////

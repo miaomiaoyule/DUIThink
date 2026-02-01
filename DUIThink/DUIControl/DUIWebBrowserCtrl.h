@@ -68,6 +68,21 @@ public:
 
 	//message 
 protected:
+	bool OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	bool OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	bool OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg) override;
+
+	bool OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	bool OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	//bool OnDuiRButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg) override;
+
+	//bool OnDuiSetCursor(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	//bool OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	//bool OnDuiMouseHover(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	bool OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	//void OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	bool OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg) override;
+
 	bool OnDuiSetFocus() override;
 	void OnDuiWndManagerAttach() override;
 	void OnDuiWndManagerDetach() override;
@@ -80,6 +95,10 @@ protected:
 	//paint
 protected:
 	void PaintBkImage(HDC hDC) override;
+
+	//help
+protected:
+	void ForwardMessageToIE(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 //////////////////////////////////////////////////////////////////////////
