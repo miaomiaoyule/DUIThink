@@ -5,7 +5,8 @@
 
 class CDUIThinkWebModule : public ATL::CAtlDllModuleT<CDUIThinkWebModule> {};
 CDUIThinkWebModule _DuiWebModule;
-
+static CMMString g_strPropOldProc = _T("CDUIWebBrowserCtrl_OldProc");
+static CMMString g_strPropCtrl = _T("CDUIWebBrowserCtrl_ControlPtr");
 // --------------------------------------------------------------------------
 // [兼容性修复] 设置 IE 控件使用 IE11 内核模式
 // --------------------------------------------------------------------------
@@ -34,78 +35,6 @@ static void DuiSetWebBrowserEmulation()
 	}
 
 	return;
-}
-
-// 辅助函数：查找 IE 内核的渲染窗口句柄
-static HWND FindIEServerWnd(HWND hHost)
-{
-	if (NULL == hHost) return NULL;
-
-	HWND hServer = ::FindWindowEx(hHost, NULL, _T("Internet Explorer_Server"), NULL);
-	if (hServer) return hServer;
-
-	// 如果不是直接子窗口，尝试遍历查找 (通常层级: Shell Embedding -> Shell DocObject View -> Internet Explorer_Server)
-	struct tagFindContext { HWND hFound; } FindContext = { NULL };
-	::EnumChildWindows(hHost, [](HWND hWnd, LPARAM lParam) -> BOOL 
-	{
-		TCHAR szClassName[64];
-		if (::GetClassName(hWnd, szClassName, 64) && _tcsicmp(szClassName, _T("Internet Explorer_Server")) == 0) 
-		{
-			((tagFindContext*)lParam)->hFound = hWnd;
-			
-			return FALSE;
-		}
-
-		return TRUE;
-	}, (LPARAM)&FindContext);
-	
-	return FindContext.hFound;
-}
-
-// 定义用于存储数据的属性名
-static const LPCTSTR kPropOldProc = _T("DuiIE_OldProc");
-static const LPCTSTR kPropCtrl = _T("DuiIE_Ctrl");
-static LRESULT CALLBACK DuiIEHOokWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	WNDPROC oldProc = (WNDPROC)::GetProp(hWnd, kPropOldProc);
-	CDUIWebBrowserCtrl *pCtrl = (CDUIWebBrowserCtrl*)::GetProp(hWnd, kPropCtrl);
-
-	// 当 IE 拥有捕获时，系统会直接发送 WM_MOUSEMOVE 给它，且坐标是基于 IE 真实位置（屏幕外）
-	// 我们需要拦截这个消息，将其坐标修正为视觉上的位置（即相对于 DUI 控件的位置）
-	if (uMsg == WM_MOUSEMOVE && pCtrl && ::GetCapture() == hWnd)
-	{
-		POINT ptScreen;
-		::GetCursorPos(&ptScreen);
-
-		HWND hMainWnd = pCtrl->GetWndHandle();
-		if (hMainWnd && ::IsWindow(hMainWnd))
-		{
-			// 1. 将屏幕坐标转为主窗口客户区坐标
-			POINT ptInMain = ptScreen;
-			::ScreenToClient(hMainWnd, &ptInMain);
-
-			// 2. 获取控件在主窗口中的位置
-			CDUIRect rcCtrl = pCtrl->GetAbsoluteRect();
-
-			// 3. 计算相对于控件左上角的坐标 (即 IE 应该看到的正确坐标)
-			int x = ptInMain.x - rcCtrl.left;
-			int y = ptInMain.y - rcCtrl.top;
-
-			// 4. 重写 LPARAM
-			lParam = MAKELPARAM(x, y);
-		}
-	}
-	else if (uMsg == WM_NCDESTROY)
-	{
-		// 清理属性
-		::RemoveProp(hWnd, kPropOldProc);
-		::RemoveProp(hWnd, kPropCtrl);
-	}
-
-	if (oldProc)
-		return ::CallWindowProc(oldProc, hWnd, uMsg, wParam, lParam);
-
-	return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -189,6 +118,21 @@ void CDUIWebBrowserCtrl::Close()
 IWebBrowser2 * CDUIWebBrowserCtrl::GetWebBrowser()
 {
 	return m_pWebBrowser;
+}
+
+HWND CDUIWebBrowserCtrl::GetIEOwnerWnd()
+{
+	return m_hWndIEOwner;
+}
+
+HWND CDUIWebBrowserCtrl::GetIEServerWnd()
+{
+	return m_hWndIEServer;
+}
+
+HWND CDUIWebBrowserCtrl::GetIEUtilityWnd()
+{
+	return m_hWndIEUtility;
 }
 
 void CDUIWebBrowserCtrl::Navigate(LPCTSTR lpszUrl)
@@ -277,6 +221,16 @@ void CDUIWebBrowserCtrl::Reload()
 	return;
 }
 
+void CDUIWebBrowserCtrl::SetPageFocus()
+{
+	if (m_hWndIEOwner && ::IsWindow(m_hWndIEOwner))
+	{
+		::SetFocus(m_hWndIEOwner);
+	}
+
+	return;
+}
+
 CMMString CDUIWebBrowserCtrl::GetUrlHome()
 {
 	return m_AttributeUrlHome.GetValue();
@@ -307,16 +261,6 @@ void CDUIWebBrowserCtrl::SetUrlError(LPCTSTR lpszUrlError)
 CMMString CDUIWebBrowserCtrl::GetUrlCur()
 {
 	return m_strUrlCur;
-}
-
-void CDUIWebBrowserCtrl::SetPageFocus()
-{
-	if (m_hWndIEOwner && ::IsWindow(m_hWndIEOwner))
-	{
-		::SetFocus(m_hWndIEOwner);
-	}
-
-	return;
 }
 
 void CDUIWebBrowserCtrl::ExecuteJS(LPCTSTR lpszJS)
@@ -366,20 +310,11 @@ bool CDUIWebBrowserCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &M
 	return true;
 }
 
-bool CDUIWebBrowserCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
+bool CDUIWebBrowserCtrl::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (false == __super::OnDuiMouseMove(pt, Msg)) return false;
+	if (false == __super::OnDuiLButtonDlk(pt, Msg)) return false;
 
-	ForwardMessageToIE(WM_MOUSEMOVE, pt, Msg);
-
-	return true;
-}
-
-bool CDUIWebBrowserCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg)
-{
-	__super::OnDuiMouseWheel(pt, Msg);
-
-	ForwardMessageToIE(WM_MOUSEWHEEL, pt, Msg);
+	ForwardMessageToIE(WM_LBUTTONDBLCLK, pt, Msg);
 
 	return true;
 }
@@ -402,11 +337,65 @@ bool CDUIWebBrowserCtrl::OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &M
 	return true;
 }
 
-bool CDUIWebBrowserCtrl::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg)
+bool CDUIWebBrowserCtrl::OnDuiRButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (false == __super::OnDuiLButtonDlk(pt, Msg)) return false;
+	if (false == __super::OnDuiRButtonDlk(pt, Msg)) return false;
 
-	ForwardMessageToIE(WM_LBUTTONDBLCLK, pt, Msg);
+	ForwardMessageToIE(WM_RBUTTONDBLCLK, pt, Msg);
+
+	return true;
+}
+
+bool CDUIWebBrowserCtrl::OnDuiSetCursor(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	if (false == __super::OnDuiSetCursor(pt, Msg)) return false;
+
+	ForwardMessageToIE(WM_SETCURSOR, pt, Msg);
+
+	return true;
+}
+
+bool CDUIWebBrowserCtrl::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	if (false == __super::OnDuiMouseEnter(pt, Msg)) return false;
+
+	ForwardMessageToIE(WM_MOUSEMOVE, pt, Msg);
+
+	return true;
+}
+
+bool CDUIWebBrowserCtrl::OnDuiMouseHover(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	if (false == __super::OnDuiMouseHover(pt, Msg)) return false;
+
+	ForwardMessageToIE(WM_MOUSEHOVER, pt, Msg);
+
+	return true;
+}
+
+bool CDUIWebBrowserCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	if (false == __super::OnDuiMouseMove(pt, Msg)) return false;
+
+	ForwardMessageToIE(WM_MOUSEMOVE, pt, Msg);
+
+	return true;
+}
+
+void CDUIWebBrowserCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	__super::OnDuiMouseLeave(pt, Msg);
+
+	ForwardMessageToIE(WM_MOUSELEAVE, pt, Msg);
+
+	return;
+}
+
+bool CDUIWebBrowserCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg)
+{
+	__super::OnDuiMouseWheel(pt, Msg);
+
+	ForwardMessageToIE(WM_MOUSEWHEEL, pt, Msg);
 
 	return true;
 }
@@ -499,23 +488,21 @@ void CDUIWebBrowserCtrl::PaintBkImage(HDC hDC)
 
 	if (false == IsWindow(m_hWndIEServer))
 	{
-		m_hWndIEServer = FindIEServerWnd(m_hWndIEOwner);
+		m_hWndIEServer = FindIEServerWnd();
+		InstallIEHook(m_hWndIEServer);
 	}
-	if (false == IsWindow(m_hWndIEServer))
+	if (false == IsWindow(m_hWndIEUtility))
+	{
+		m_hWndIEUtility = FindIEUtilityWnd();
+		InstallIEHook(m_hWndIEUtility);
+	}
+	if (false == IsWindow(m_hWndIEServer) || false == IsWindow(m_hWndIEUtility))
 	{
 		return;
 	}
 
-	// [新增] 检查并安装钩子 (只需安装一次)
-	if (NULL == ::GetProp(m_hWndIEServer, kPropOldProc))
-	{
-		WNDPROC oldProc = (WNDPROC)::SetWindowLongPtr(m_hWndIEServer, GWLP_WNDPROC, (LONG_PTR)DuiIEHOokWndProc);
-		::SetProp(m_hWndIEServer, kPropOldProc, (HANDLE)oldProc);
-		::SetProp(m_hWndIEServer, kPropCtrl, (HANDLE)this);
-	}
-
 	CDUIRect rcCtrl = GetBorderRect();
-	CDUIMemDC MemDC(hDC, rcCtrl, false);
+	CDUIMemDC MemDC(hDC, rcCtrl);
 
 	// [关键步骤] 使用 PrintWindow 替代 BitBlt
 	// BitBlt 只能烤屏(屏幕必须可见)，PrintWindow 能强迫窗口画到 hMemDC 上
@@ -531,19 +518,195 @@ void CDUIWebBrowserCtrl::PaintBkImage(HDC hDC)
 	return; 
 }
 
+HWND CDUIWebBrowserCtrl::FindIEServerWnd()
+{
+	if (NULL == m_hWndIEOwner) return NULL;
+
+	HWND hServer = ::FindWindowEx(m_hWndIEOwner, NULL, _T("Internet Explorer_Server"), NULL);
+	if (hServer) return hServer;
+
+	// 如果不是直接子窗口，尝试遍历查找 (通常层级: Shell Embedding -> Shell DocObject View -> Internet Explorer_Server)
+	struct tagFindContext { HWND hFound; } FindContext = { NULL };
+	::EnumChildWindows(m_hWndIEOwner, [](HWND hWnd, LPARAM lParam) -> BOOL 
+	{
+		TCHAR szClassName[64];
+		if (::GetClassName(hWnd, szClassName, 64) && _tcsicmp(szClassName, _T("Internet Explorer_Server")) == 0) 
+		{
+			((tagFindContext*)lParam)->hFound = hWnd;
+
+			return FALSE;
+		}
+
+		return TRUE;
+	}, (LPARAM)&FindContext);
+
+	return FindContext.hFound;
+}
+
+HWND CDUIWebBrowserCtrl::FindIEUtilityWnd()
+{
+	if (NULL == m_hWndIEOwner) return NULL;
+
+	// 遍历查找 Internet Explorer_Hidden
+	struct tagFindContext { HWND hFound; } FindContext = { NULL };
+	::EnumWindows([](HWND hWnd, LPARAM lParam) -> BOOL
+	{
+		TCHAR szClassName[64];
+		if (::GetClassName(hWnd, szClassName, 64) 
+			&& _tcsicmp(szClassName, _T("Internet Explorer_Hidden")) == 0
+			&& GetWindowThreadProcessId(hWnd, NULL) == GetCurrentThreadId())
+		{
+			((tagFindContext*)lParam)->hFound = hWnd;
+
+			return FALSE;
+		}
+
+		return TRUE;
+	}, (LPARAM)&FindContext);
+
+	return FindContext.hFound;
+}
+
+void CDUIWebBrowserCtrl::InstallIEHook(HWND hWnd)
+{
+	if (::IsWindow(hWnd) && NULL == ::GetProp(hWnd, g_strPropOldProc))
+	{
+		WNDPROC oldProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)DuiIEHookWndProc);
+		::SetProp(hWnd, g_strPropOldProc, (HANDLE)oldProc);
+		::SetProp(hWnd, g_strPropCtrl, (HANDLE)this);
+	}
+
+	return;
+}
+
 void CDUIWebBrowserCtrl::ForwardMessageToIE(UINT uMsg, const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	if (false == IsWindow(m_hWndIEServer)) return;
 
+	LPARAM lNewParam = Msg.lParam;
 	CDUIRect rcCtrl = GetAbsoluteRect();
 	CDUIPoint ptMouse = pt;
 	ptMouse.x -= rcCtrl.left;
 	ptMouse.y -= rcCtrl.top;
 
-	// 重新构造 lParam
-	LPARAM lNewParam = MAKELPARAM(ptMouse.x, ptMouse.y);
+	if (WM_MOUSEWHEEL == uMsg)
+	{
+		ClientToScreen(m_hWndIEServer, &ptMouse);
+	}
+	if (WM_SETCURSOR != uMsg)
+	{
+		lNewParam = MAKELPARAM(ptMouse.x, ptMouse.y);
+	}
 	::PostMessage(m_hWndIEServer, uMsg, Msg.wParam, lNewParam);
 
 	return;
+}
+
+LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	WNDPROC oldProc = (WNDPROC)::GetProp(hWnd, g_strPropOldProc);
+	CDUIWebBrowserCtrl *pCtrl = (CDUIWebBrowserCtrl*)::GetProp(hWnd, g_strPropCtrl);
+	bool bNeedRepaint = false;
+
+	//修正 Capture 状态下的坐标偏移
+	if (pCtrl && ::GetCapture() == hWnd)
+	{
+		POINT ptScreen;
+		::GetCursorPos(&ptScreen);
+
+		HWND hMainWnd = pCtrl->GetWndHandle();
+		if (hMainWnd && ::IsWindow(hMainWnd))
+		{
+			// 1. 将屏幕坐标转为主窗口客户区坐标
+			POINT ptInMain = ptScreen;
+			::ScreenToClient(hMainWnd, &ptInMain);
+
+			do
+			{
+				if (WM_LBUTTONUP == uMsg || WM_RBUTTONUP == uMsg)
+				{
+					PostMessage(hMainWnd, uMsg, wParam, MAKELPARAM(ptInMain.x, ptInMain.y));
+					 
+					break;
+				}
+				if (WM_MOUSEMOVE != uMsg)
+				{
+					break;
+				}
+
+			} while (false);
+			
+			// 2. 获取控件在主窗口中的位置
+			CDUIRect rcCtrl = pCtrl->GetAbsoluteRect();
+
+			// 3. 计算相对于控件左上角的坐标 (即 IE 应该看到的正确坐标)
+			CDUIPoint ptMouseInCtrl(ptInMain.x - rcCtrl.left, ptInMain.y - rcCtrl.top);
+
+			CDUIRect rcWnd;
+			GetWindowRect(pCtrl->GetIEServerWnd(), &rcWnd);
+			ptMouseInCtrl.x += rcWnd.left;
+			ptMouseInCtrl.y += rcWnd.top;
+
+			// 4. 重写 LPARAM
+			lParam = MAKELPARAM(ptMouseInCtrl.x, ptMouseInCtrl.y);
+
+			bNeedRepaint = true;
+		}
+	}
+	else if (WM_NCDESTROY == uMsg || WM_DESTROY == uMsg)
+	{
+		// 清理属性
+		::RemoveProp(hWnd, g_strPropOldProc);
+		::RemoveProp(hWnd, g_strPropCtrl);
+	}
+
+	// 调用原有过程，让 IE 处理滚动或逻辑
+	LRESULT lRes = 0;
+	if (oldProc)
+		lRes = ::CallWindowProc(oldProc, hWnd, uMsg, wParam, lParam);
+	else
+		lRes = ::DefWindowProc(hWnd, uMsg, wParam, lParam);
+
+	// 只有在这里拦截并触发重绘才是有效的
+	// 因为 IE 在屏幕外不会产生 WM_PAINT，我们需要根据"动作"来驱动重绘。
+	// 当检测到以下消息时，说明页面内容很可能发生了变化（滚动、点击等）。
+	if (pCtrl && ::IsWindow(pCtrl->GetWndHandle()))
+	{
+		switch (uMsg)
+		{
+			case WM_MOUSEWHEEL: // 滚轮滚动
+			case WM_VSCROLL:    // 垂直滚动条消息
+			case WM_HSCROLL:    // 水平滚动条消息
+			case WM_KEYDOWN:    // 键盘按键 (如上下左右键)
+			case WM_KEYUP:
+			case WM_CHAR:       // 字符输入
+			case WM_LBUTTONDOWN:// 鼠标点击交互
+			case WM_LBUTTONUP:
+			case WM_RBUTTONUP:
+			{
+				bNeedRepaint = true;
+				break;
+			}
+			case WM_MOUSEMOVE:
+			{
+				break;
+			}
+			case WM_TIMER:
+			{
+				// [可选] 如果需要支持网页动画(如GIF)或平滑滚动惯性，可以放开 WM_TIMER
+				// 但需注意这会增加 CPU 占用，建议只在特定逻辑下开启
+				// bNeedRepaint = true; 
+				break;
+			}
+		}
+
+		if (bNeedRepaint)
+		{
+			// 主动标记 DUI 控件无效，DUI 消息循环会在随后调用 PaintBkImage -> PrintWindow
+			pCtrl->Invalidate();
+		}
+	}
+
+	return lRes;
 }
 //////////////////////////////////////////////////////////////////////////

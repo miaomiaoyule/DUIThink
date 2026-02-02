@@ -32,6 +32,7 @@ protected:
 	IWebBrowser2 *						m_pWebBrowser = NULL;	// IE COM 接口
 	HWND								m_hWndIEOwner = NULL;		// ActiveX 宿主窗口
 	HWND								m_hWndIEServer = NULL;
+	HWND								m_hWndIEUtility = NULL;
 
 	//override
 protected:
@@ -44,25 +45,27 @@ public:
 	//refresh
 	void RefreshView();
 
+	//url
 	void Close();
-	IWebBrowser2 * GetWebBrowser(); // 获取原生接口
-
-	//load url
+	IWebBrowser2 * GetWebBrowser();
+	HWND GetIEOwnerWnd();
+	HWND GetIEServerWnd();
+	HWND GetIEUtilityWnd();
 	void Navigate(LPCTSTR lpszUrl);
 	void NavigateHomePage();
 	void LoadHtml(LPCTSTR lpszHtml);
-
-	//url
 	void Back();
 	void Forward();
 	void Stop();
 	void Reload();
+	void SetPageFocus();
+
+	//url property
 	CMMString GetUrlHome();
 	void SetUrlHome(LPCTSTR lpszUrlHome);
 	CMMString GetUrlError();
 	void SetUrlError(LPCTSTR lpszUrlError);
 	CMMString GetUrlCur();
-	void SetPageFocus();
 
 	//js
 	void ExecuteJS(LPCTSTR lpszJS);
@@ -75,13 +78,13 @@ protected:
 
 	bool OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &Msg) override;
 	bool OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &Msg) override;
-	//bool OnDuiRButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	bool OnDuiRButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg) override;
 
-	//bool OnDuiSetCursor(const CDUIPoint &pt, const DuiMessage &Msg) override;
-	//bool OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Msg) override;
-	//bool OnDuiMouseHover(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	bool OnDuiSetCursor(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	bool OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	bool OnDuiMouseHover(const CDUIPoint &pt, const DuiMessage &Msg) override;
 	bool OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg) override;
-	//void OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg) override;
+	void OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg) override;
 	bool OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &Msg) override;
 
 	bool OnDuiSetFocus() override;
@@ -99,7 +102,14 @@ protected:
 
 	//help
 protected:
+	HWND FindIEServerWnd();
+	HWND FindIEUtilityWnd();
+	void InstallIEHook(HWND hWnd);
 	void ForwardMessageToIE(UINT uMsg, const CDUIPoint &pt, const DuiMessage &Msg);
+
+	//static
+protected:
+	static LRESULT CALLBACK DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 //////////////////////////////////////////////////////////////////////////
