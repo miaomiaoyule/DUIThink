@@ -30,7 +30,8 @@ protected:
 protected:
 	CMMString							m_strUrlCur;
 	IWebBrowser2 *						m_pWebBrowser = NULL;	// IE COM 接口
-	HWND								m_hWndIE = NULL;		// ActiveX 宿主窗口
+	HWND								m_hWndIEOwner = NULL;		// ActiveX 宿主窗口
+	HWND								m_hWndIEServer = NULL;
 
 	//override
 protected:
@@ -98,7 +99,7 @@ protected:
 
 	//help
 protected:
-	void ForwardMessageToIE(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	void ForwardMessageToIE(UINT uMsg, const CDUIPoint &pt, const DuiMessage &Msg);
 };
 
 //////////////////////////////////////////////////////////////////////////
