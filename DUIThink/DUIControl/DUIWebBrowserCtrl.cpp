@@ -3,10 +3,16 @@
 #include <atlbase.h>
 #include <atlhost.h>
 
-class CDUIThinkWebModule : public ATL::CAtlDllModuleT<CDUIThinkWebModule> {};
+#if defined(_WINDLL) || defined(_USRDLL)
+	class CDUIThinkWebModule : public ATL::CAtlDllModuleT<CDUIThinkWebModule> {};
+#else
+	class CDUIThinkWebModule : public ATL::CAtlWinModule {};
+#endif
+
 CDUIThinkWebModule _DuiWebModule;
 static CMMString g_strPropOldProc = _T("CDUIWebBrowserCtrl_OldProc");
 static CMMString g_strPropCtrl = _T("CDUIWebBrowserCtrl_ControlPtr");
+
 // --------------------------------------------------------------------------
 // [兼容性修复] 设置 IE 控件使用 IE11 内核模式
 // --------------------------------------------------------------------------
