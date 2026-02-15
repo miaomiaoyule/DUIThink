@@ -519,7 +519,7 @@ PCIDLIST_ABSOLUTE CMMFile::GetPCIDLFromPath(LPCTSTR lpszFileFull)
 	return pCID;
 }
 
-bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData)
+bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData, DWORD dwSizeLimit)
 {
 	//path
 	CMMString strFile = lpszFileFull;
@@ -540,6 +540,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 			return true;
 		}
 
+		dwFileSize = min(dwFileSize, dwSizeLimit);
 		vecData.resize(dwFileSize);
 		ReadFile(hFile, vecData.data(), dwFileSize, &dwFileSize, NULL);
 		CloseHandle(hFile);

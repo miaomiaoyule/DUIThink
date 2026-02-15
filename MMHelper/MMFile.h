@@ -84,10 +84,11 @@ public:
 
 	//************************************
 	// Description:	读取文件数据
-	// Parameter: 	LPCTSTR lpszFileFull 例：C:\Text.txt 
-	// Parameter: 	std::vector<BYTE> vecData
+	// Parameter: 	IN LPCTSTR lpszFileFull 例：C:\Text.txt 
+	// Parameter: 	OUT std::vector<BYTE> vecData
+	// Parameter: 	DWORD dwSizeLimit : 限制取文件的前dwSizeLimit个字节
 	//************************************
-	static bool GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData);
+	static bool GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData, DWORD dwSizeLimit = -1);
 
 	//************************************
 	// Description:	读取文件数据
