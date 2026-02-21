@@ -1,7 +1,7 @@
 # Chinese introduction DUIThink
 DUIThink是一个Windows下免费开源的DirectUI界面库，包含了一整套桌面软件的开发部件，与其说这是一个界面库，不如说它是一个开发框架，功能组件有（线程池、文件操作、iocp网络模型、文件监听、注册表监听、文件拖拽、命令行解析、磁吸算法、内存池、分辨率转换、字符串操作等）。您完全可以直接使用这个框架来开发任何你想要的桌面应用。  
   
-官网：http://49.235.209.245/DUIThink 
+官网：http://49.235.209.245/DUIThink    
 QQ群：885314879   
 视频教程：https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1    
   
@@ -50,7 +50,7 @@ QQ群：885314879
 # English introduction DUIThink
 DUIThink is a free and open source DirectUI interface library for Windows, which contains a complete set of desktop software development components. It is not so much an interface library as a development framework. The functional components are (thread pool, file operation, iocp network model, file listening, registry listening, file dragging, command line parsing, magnetic algorithm, memory pool, resolution conversion, string operation, etc.). You can use this framework directly to develop any desktop application you want.
 * * *
-Official website: http://49.235.209.245/DUIThink 
+Official website: http://49.235.209.245/DUIThink    
 QQ group: 885314879  
 Video tutorial: https://space.bilibili.com/322458488?spm_id_from=333.788.b_765f7570696e666f.1  
 
