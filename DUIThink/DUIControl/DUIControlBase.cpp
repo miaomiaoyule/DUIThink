@@ -1470,27 +1470,44 @@ bool CDUIControlBase::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 	{
 		CDUISize szOffset(pt.x - Msg.ptMousePre.x, pt.y - Msg.ptMousePre.y);
 		CDUIRect rcAbsolute = GetAbsoluteRect();
-		CDUIRect rcPadding = GetPadding();
 
-		if (m_cbSeparateStatus & BorderSeparate_Left)
+		if ((m_cbSeparateStatus & BorderSeparate_Left) || (m_cbSeparateStatus & BorderSeparate_Right))
 		{
-			rcAbsolute.left += szOffset.cx;
-			SetFixedWidth(rcAbsolute.GetWidth());
+			if (m_cbSeparateStatus & BorderSeparate_Left)
+			{
+				rcAbsolute.left += szOffset.cx;
+			}
+			else
+			{
+				rcAbsolute.right += szOffset.cx;
+			}
+			if (IsFloat() || (m_pParent && CMMString(m_pParent->GetClass()) == CDUIContainerCtrl().GetClass()))
+			{
+				SetAbsoluteRect(rcAbsolute);
+			}
+			else
+			{
+				SetFixedWidth(rcAbsolute.GetWidth());
+			}
 		}
-		else if (m_cbSeparateStatus & BorderSeparate_Right)
+		if ((m_cbSeparateStatus & BorderSeparate_Top) || (m_cbSeparateStatus & BorderSeparate_Bottom))
 		{
-			rcAbsolute.right += szOffset.cx;
-			SetFixedWidth(rcAbsolute.GetWidth());
-		}
-		else if (m_cbSeparateStatus & BorderSeparate_Top)
-		{
-			rcPadding.top += szOffset.cy;
-			SetFixedHeight(rcAbsolute.GetHeight());
-		}
-		else if (m_cbSeparateStatus & BorderSeparate_Bottom)
-		{
-			rcAbsolute.bottom += szOffset.cy;
-			SetFixedHeight(rcAbsolute.GetHeight());
+			if (m_cbSeparateStatus & BorderSeparate_Top)
+			{
+				rcAbsolute.top += szOffset.cy;
+			}
+			else
+			{
+				rcAbsolute.bottom += szOffset.cy;
+			}
+			if (IsFloat() || (m_pParent && CMMString(m_pParent->GetClass()) == CDUIContainerCtrl().GetClass()))
+			{
+				SetAbsoluteRect(rcAbsolute);
+			}
+			else
+			{
+				SetFixedHeight(rcAbsolute.GetHeight());
+			}
 		}
 	}
 
@@ -2222,19 +2239,20 @@ void CDUIControlBase::PerformBorderSeparateHit(const CDUIPoint& pt)
 	rcTop.bottom = rcTop.top + rcBorderSeparate.top;
 	rcRight.left = rcRight.right - rcBorderSeparate.right;
 	rcBottom.top = rcBottom.bottom - rcBorderSeparate.bottom;
-	if (rcLeft.PtInRect(pt))
+	m_cbSeparateStatus = BorderSeparate_None;
+	if (rcBorderSeparate.left > 0 && rcLeft.PtInRect(pt))
 	{
 		m_cbSeparateStatus |= BorderSeparate_Left;
 	}
-	else if (rcTop.PtInRect(pt))
-	{
-		m_cbSeparateStatus |= BorderSeparate_Top;
-	}
-	else if (rcRight.PtInRect(pt))
+	else if (rcBorderSeparate.right > 0 && rcRight.PtInRect(pt))
 	{
 		m_cbSeparateStatus |= BorderSeparate_Right;
 	}
-	else if (rcBottom.PtInRect(pt))
+	if (rcBorderSeparate.top > 0 && rcTop.PtInRect(pt))
+	{
+		m_cbSeparateStatus |= BorderSeparate_Top;
+	}
+	else if (rcBorderSeparate.bottom > 0 && rcBottom.PtInRect(pt))
 	{
 		m_cbSeparateStatus |= BorderSeparate_Bottom;
 	}
