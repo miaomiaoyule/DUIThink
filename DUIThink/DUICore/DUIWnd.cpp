@@ -2509,9 +2509,6 @@ LRESULT CDUIWnd::OnSysCommand(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
-	m_ptMousePosDown = m_ptMousePosLast;
 
 	::SetCapture(m_hWnd);
 
@@ -2519,7 +2516,11 @@ LRESULT CDUIWnd::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
+	DuiMsg.ptMousePre = m_ptMousePosLast;
 	DuiMsg.ptMouse = pt;
+
+	m_ptMousePosLast = pt;
+	m_ptMousePosDown = pt;
 
 	//find
 	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);
@@ -2540,8 +2541,6 @@ LRESULT CDUIWnd::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
 
 	::ReleaseCapture();
 
@@ -2549,7 +2548,10 @@ LRESULT CDUIWnd::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
+	DuiMsg.ptMousePre = m_ptMousePosLast;
 	DuiMsg.ptMouse = pt;
+
+	m_ptMousePosLast = pt;
 
 	m_pCaptureCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : FindSubControlByPoint(m_pRootCtrl, pt);
 	if (m_pCaptureCtrl)
@@ -2569,16 +2571,17 @@ LRESULT CDUIWnd::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnLButtonDlk(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
-
+	
 	::SetCapture(m_hWnd);
 
 	//msg
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
+	DuiMsg.ptMousePre = m_ptMousePosLast;
 	DuiMsg.ptMouse = pt;
+	
+	m_ptMousePosLast = pt;
 
 	//find
 	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);
@@ -2599,9 +2602,6 @@ LRESULT CDUIWnd::OnLButtonDlk(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnRButtonDown(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
-	m_ptMousePosDown = m_ptMousePosLast;
 
 	::SetCapture(m_hWnd);
 
@@ -2609,7 +2609,11 @@ LRESULT CDUIWnd::OnRButtonDown(WPARAM wParam, LPARAM lParam)
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
+	DuiMsg.ptMousePre = m_ptMousePosLast;
 	DuiMsg.ptMouse = pt;
+
+	m_ptMousePosLast = pt;
+	m_ptMousePosDown = pt;
 
 	//find
 	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);
@@ -2630,8 +2634,6 @@ LRESULT CDUIWnd::OnRButtonDown(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnRButtonUp(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
 
 	::ReleaseCapture();
 
@@ -2639,7 +2641,10 @@ LRESULT CDUIWnd::OnRButtonUp(WPARAM wParam, LPARAM lParam)
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
+	DuiMsg.ptMousePre = m_ptMousePosLast;
 	DuiMsg.ptMouse = pt;
+
+	m_ptMousePosLast = pt;
 
 	m_pCaptureCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : FindSubControlByPoint(m_pRootCtrl, pt);
 	if (m_pCaptureCtrl)
@@ -2659,14 +2664,15 @@ LRESULT CDUIWnd::OnRButtonUp(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnRButtonDlk(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
-
+	
 	//msg
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
+	DuiMsg.ptMousePre = m_ptMousePosLast;
 	DuiMsg.ptMouse = pt;
+
+	m_ptMousePosLast = pt;
 
 	//≤È’“
 	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);
@@ -2689,14 +2695,15 @@ LRESULT CDUIWnd::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	do
 	{
 		CDUIPoint pt(lParam);
-		m_ptMousePosLast.x = pt.x;
-		m_ptMousePosLast.y = pt.y;
 
 		//msg
 		DuiMessage DuiMsg = {};
 		DuiMsg.wParam = wParam;
 		DuiMsg.lParam = lParam;
+		DuiMsg.ptMousePre = m_ptMousePosLast;
 		DuiMsg.ptMouse = pt;
+		
+		m_ptMousePosLast = pt;
 
 		//capture
 		if (m_pCaptureCtrl)
@@ -2865,8 +2872,7 @@ LRESULT CDUIWnd::OnMouseWheel(WPARAM wParam, LPARAM lParam)
 	pt.x = (INT)((SHORT)(LOWORD(lParam)));
 	pt.y = (INT)((SHORT)(HIWORD(lParam)));
 	::ScreenToClient(m_hWnd, &pt);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
+	m_ptMousePosLast = pt;
 
 	//msg
 	DuiMessage DuiMsg = {};

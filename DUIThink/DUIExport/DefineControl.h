@@ -142,6 +142,16 @@ enum enDuiLineStyle
 	ListStyle_Count,
 };
 
+//border separate
+enum enDuiBorderSeparate
+{
+	BorderSeparate_None = 0x00,
+	BorderSeparate_Left = 0x01,
+	BorderSeparate_Top = 0x02,
+	BorderSeparate_Right = 0x04,
+	BorderSeparate_Bottom = 0x08,
+};
+
 //control status
 enum enDuiControlStatus
 {

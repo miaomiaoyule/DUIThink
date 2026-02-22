@@ -623,7 +623,7 @@ void CDUIMenuItemCtrl::SetHasExpandMenu(bool bHasExpandMenu)
 
 bool CDUIMenuItemCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	bool bClick = (m_nControlStatus & ControlStatus_Pushed);
+	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
 
 	if (false == __super::OnDuiLButtonUp(pt, Msg)) return false;
 	if (false == bClick) return false;

@@ -1841,11 +1841,11 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 	{
 		pAttribute = &m_AttributeTextStyleDisabled;
 	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
+	else if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttribute = &m_AttributeTextStylePushed;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttribute = &m_AttributeTextStyleHot;
 	}

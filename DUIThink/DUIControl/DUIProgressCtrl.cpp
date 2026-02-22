@@ -437,11 +437,11 @@ CDUIAttributeColorSwitch * CDUIProgressCtrl::GetAttributeStatusColorGroove()
 	{
 		pAttributeGroove = &m_AttributeColorGrooveNormal;
 	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
+	else if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttributeGroove = &m_AttributeColorGrooveHot;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttributeGroove = &m_AttributeColorGrooveHot;
 	}
@@ -470,11 +470,11 @@ CDUIAttributeColorSwitch * CDUIProgressCtrl::GetAttributeStatusColorSlip()
 	{
 		pAttributeSlip = &m_AttributeColorSlipNormal;
 	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
+	else if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttributeSlip = &m_AttributeColorSlipHot;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttributeSlip = &m_AttributeColorSlipHot;
 	}
@@ -503,11 +503,11 @@ CDUIAttriImageSection * CDUIProgressCtrl::GetAttributeStatusImageGroove()
 	{
 		pAttributeGroove = &m_AttributeImageGrooveNormal;
 	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
+	else if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttributeGroove = &m_AttributeImageGrooveHot;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttributeGroove = &m_AttributeImageGrooveHot;
 	}
@@ -536,11 +536,11 @@ CDUIAttriImageSection *CDUIProgressCtrl::GetAttributeStatusImageSlip()
 	{
 		pAttributeSlip = &m_AttributeImageSlipNormal;
 	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
+	else if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttributeSlip = &m_AttributeImageSlipHot;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttributeSlip = &m_AttributeImageSlipHot;
 	}

@@ -111,6 +111,7 @@ typedef struct tagDuiMessage
 	WPARAM								wParam = 0;
 	LPARAM								lParam = 0;
 	DWORD								dwTimestamp = 0;
+	POINT								ptMousePre = {};
 	POINT								ptMouse = {};
 	TCHAR								chKey = 0;
 	WORD								wKeyState = 0;

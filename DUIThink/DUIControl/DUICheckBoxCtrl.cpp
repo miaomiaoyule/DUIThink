@@ -345,7 +345,7 @@ void CDUICheckBoxCtrl::PaintText(HDC hDC)
 
 bool CDUICheckBoxCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	bool bClick = (m_nControlStatus & ControlStatus_Pushed);
+	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
 
 	__super::OnDuiLButtonUp(pt, Msg);
 
@@ -364,11 +364,11 @@ void CDUICheckBoxCtrl::PaintStatusColorSelected(HDC hDC)
 	{
 		pAttribute = &m_AttributeColorSelDisabled;
 	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
+	else if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttribute = &m_AttributeColorSelPushed;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttribute = &m_AttributeColorSelHot;
 	}
@@ -403,11 +403,11 @@ void CDUICheckBoxCtrl::PaintStatusImageSelected(HDC hDC)
 	{
 		pAttribute = &m_AttributeImageSelDisabled;
 	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
+	else if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttribute = &m_AttributeImageSelPushed;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttribute = &m_AttributeImageSelHot;
 	}
@@ -455,11 +455,11 @@ void CDUICheckBoxCtrl::PaintTextSelected(HDC hDC)
 	{
 		pAttribute = &m_AttributeTextStyleSelDisabled;
 	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
+	else if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttribute = &m_AttributeTextStyleSelPushed;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttribute = &m_AttributeTextStyleSelHot;
 	}

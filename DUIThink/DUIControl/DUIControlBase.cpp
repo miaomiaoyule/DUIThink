@@ -274,7 +274,7 @@ bool CDUIControlBase::SetWndOwner(CDUIWnd *pWndOwner)
 
 	//init
 	m_pWndOwner = pWndOwner;
-	m_nControlStatus = ControlStatus_Normal;
+	m_cbControlStatus = ControlStatus_Normal;
 
 	OnDuiWndManagerAttach();
 
@@ -979,7 +979,7 @@ void CDUIControlBase::SetCustomBmpBack(Gdiplus::Bitmap *pBmp, int nAlign)
 	MMSafeDelete(m_pBmpCustomBack);
 
 	m_pBmpCustomBack = pBmp;
-	m_nCustomBackAlign = nAlign;
+	m_wCustomBackAlign = nAlign;
 
 	Invalidate();
 
@@ -991,7 +991,7 @@ void CDUIControlBase::SetCustomBmpBack(HBITMAP hBimap, int nAlign)
 	MMSafeDelete(m_pBmpCustomBack);
 
 	m_pBmpCustomBack = CDUIRenderEngine::GetAlphaBitmap(hBimap);
-	m_nCustomBackAlign = nAlign;
+	m_wCustomBackAlign = nAlign;
 
 	MMSafeDeleteObject(hBimap);
 
@@ -1054,6 +1054,22 @@ void CDUIControlBase::SetBorderLine(RECT rcBorder)
 	if (rcBorder == GetBorderLine()) return;
 
 	m_AttributeBorderLine.SetValue(rcBorder);
+
+	Invalidate();
+
+	return;
+}
+
+CDUIRect CDUIControlBase::GetBorderSeparate()
+{
+	return m_AttributeBorderSeparate.GetValue();
+}
+
+void CDUIControlBase::SetBorderSeparate(RECT rcSeparate)
+{
+	if (rcSeparate == GetBorderSeparate()) return;
+
+	m_AttributeBorderSeparate.SetValue(rcSeparate);
 
 	Invalidate();
 
@@ -1282,9 +1298,9 @@ bool CDUIControlBase::IsShadowText()
 	return false;
 }
 
-bool CDUIControlBase::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Msg)
+bool CDUIControlBase::OnDuiLButtonDown(const CDUIPoint& pt, const DuiMessage& Msg)
 {
-	m_nControlStatus |= ControlStatus_Pushed;
+	m_cbControlStatus |= ControlStatus_Pushed;
 
 	if (m_pWndOwner)
 	{
@@ -1295,6 +1311,9 @@ bool CDUIControlBase::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Ms
 		::ShellExecute(m_pWndOwner->GetWndHandle(), NULL, GetActiveUrl(), NULL, NULL, SW_SHOW);
 	}
 
+	//border separate
+	PerformBorderSeparateHit(pt);
+
 	Invalidate();
 
 	return true;
@@ -1302,7 +1321,8 @@ bool CDUIControlBase::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Ms
 
 bool CDUIControlBase::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	m_nControlStatus &= ~ControlStatus_Pushed;
+	m_cbControlStatus &= ~ControlStatus_Pushed;
+	m_cbSeparateStatus = BorderSeparate_None;
 
 	if (m_pWndOwner)
 	{
@@ -1322,7 +1342,7 @@ bool CDUIControlBase::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 
 bool CDUIControlBase::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	m_nControlStatus |= ControlStatus_Pushed;
+	m_cbControlStatus |= ControlStatus_Pushed;
 
 	if (m_pWndOwner)
 	{
@@ -1336,7 +1356,7 @@ bool CDUIControlBase::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg
 
 bool CDUIControlBase::OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	m_nControlStatus |= ControlStatus_Pushed;
+	m_cbControlStatus |= ControlStatus_Pushed;
 
 	if (m_pWndOwner)
 	{
@@ -1350,7 +1370,7 @@ bool CDUIControlBase::OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &Ms
 
 bool CDUIControlBase::OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	m_nControlStatus &= ~ControlStatus_Pushed;
+	m_cbControlStatus &= ~ControlStatus_Pushed;
 
 	if (m_pWndOwner)
 	{
@@ -1364,7 +1384,7 @@ bool CDUIControlBase::OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 
 bool CDUIControlBase::OnDuiRButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	m_nControlStatus |= ControlStatus_Pushed;
+	m_cbControlStatus |= ControlStatus_Pushed;
 
 	if (m_pWndOwner)
 	{
@@ -1378,7 +1398,29 @@ bool CDUIControlBase::OnDuiRButtonDlk(const CDUIPoint &pt, const DuiMessage &Msg
 
 bool CDUIControlBase::OnDuiSetCursor(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (GetCursor())
+	if (m_pWndOwner && m_pWndOwner->GetCaptureControl() != this)
+	{
+		PerformBorderSeparateHit(pt);
+	}
+	if (((m_cbSeparateStatus & BorderSeparate_Left) && (m_cbSeparateStatus & BorderSeparate_Top))
+		|| ((m_cbSeparateStatus & BorderSeparate_Right) && (m_cbSeparateStatus & BorderSeparate_Bottom)))
+	{
+		::SetCursor(::LoadCursor(nullptr, IDC_SIZENWSE));
+	}
+	else if (((m_cbSeparateStatus & BorderSeparate_Right) && (m_cbSeparateStatus & BorderSeparate_Top))
+		|| ((m_cbSeparateStatus & BorderSeparate_Left) && (m_cbSeparateStatus & BorderSeparate_Bottom)))
+	{
+		::SetCursor(::LoadCursor(nullptr, IDC_SIZENESW));
+	}
+	else if ((m_cbSeparateStatus & BorderSeparate_Left) || (m_cbSeparateStatus & BorderSeparate_Right))
+	{
+		::SetCursor(::LoadCursor(nullptr, IDC_SIZEWE));
+	}
+	else if ((m_cbSeparateStatus & BorderSeparate_Top) || (m_cbSeparateStatus & BorderSeparate_Bottom))
+	{
+		::SetCursor(::LoadCursor(nullptr, IDC_SIZENS));
+	}
+	else if (GetCursor())
 	{
 		::SetCursor(::LoadCursor(nullptr, MAKEINTRESOURCE(GetCursor())));
 	}
@@ -1397,7 +1439,7 @@ bool CDUIControlBase::OnDuiSetCursor(const CDUIPoint &pt, const DuiMessage &Msg)
 
 bool CDUIControlBase::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	m_nControlStatus |= ControlStatus_Hot;
+	m_cbControlStatus |= ControlStatus_Hot;
 
 	if (m_pWndOwner)
 	{
@@ -1421,14 +1463,46 @@ bool CDUIControlBase::OnDuiMouseHover(const CDUIPoint &pt, const DuiMessage &Msg
 
 bool CDUIControlBase::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	int nControlStatusOld = m_nControlStatus;
+	int nControlStatusOld = m_cbControlStatus;
 
+	//separate
+	if (BorderSeparate_None != m_cbSeparateStatus && m_pWndOwner && m_pWndOwner->GetCaptureControl() == this)
+	{
+		CDUISize szOffset(pt.x - Msg.ptMousePre.x, pt.y - Msg.ptMousePre.y);
+		CDUIRect rcAbsolute = GetAbsoluteRect();
+		CDUIRect rcPadding = GetPadding();
+
+		if (m_cbSeparateStatus & BorderSeparate_Left)
+		{
+			rcAbsolute.left += szOffset.cx;
+			SetFixedWidth(rcAbsolute.GetWidth());
+		}
+		else if (m_cbSeparateStatus & BorderSeparate_Right)
+		{
+			rcAbsolute.right += szOffset.cx;
+			SetFixedWidth(rcAbsolute.GetWidth());
+		}
+		else if (m_cbSeparateStatus & BorderSeparate_Top)
+		{
+			rcPadding.top += szOffset.cy;
+			SetFixedHeight(rcAbsolute.GetHeight());
+		}
+		else if (m_cbSeparateStatus & BorderSeparate_Bottom)
+		{
+			rcAbsolute.bottom += szOffset.cy;
+			SetFixedHeight(rcAbsolute.GetHeight());
+		}
+	}
+
+	//notify
 	if (m_pWndOwner)
 	{
 		m_pWndOwner->SendNotify(this, DuiNotify_MouseMove, Msg.wParam, Msg.lParam);
 	}
+
+	//animate drag
 	if (m_pWndOwner
-		&& (m_nControlStatus & ControlStatus_Pushed)
+		&& (m_cbControlStatus & ControlStatus_Pushed)
 		&& GetParent()
 		&& GetParent()->IsAnimateDrag()
 		&& NULL == m_pOwnerModelCtrl
@@ -1450,7 +1524,9 @@ bool CDUIControlBase::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 			return true;
 		}
 	}
-	if (nControlStatusOld != m_nControlStatus)
+
+	//refresh
+	if (nControlStatusOld != m_cbControlStatus)
 	{
 		Invalidate();
 	}
@@ -1460,7 +1536,7 @@ bool CDUIControlBase::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 
 void CDUIControlBase::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	m_nControlStatus &= ~ControlStatus_Hot;
+	m_cbControlStatus &= ~ControlStatus_Hot;
 
 	if (m_pWndOwner)
 	{
@@ -1745,6 +1821,7 @@ void CDUIControlBase::InitProperty()
 	DuiCreateAttribute(m_AttributeColorBorderFocus, _T("ColorFocusBorder"), _T(""), m_AttributeGroupBorder);
 	DuiCreateAttribute(m_AttributeBorderLine, DuiCompatibleAttriName(_T("BorderRect"), _T("BorderLine"), DuiResVersion_3), _T(""), m_AttributeGroupBorder);
 	DuiModifyAttriName(m_AttributeBorderLine, _T("BorderLine"), DuiResVersion_3);
+	DuiCreateAttribute(m_AttributeBorderSeparate, _T("BorderSeparate"), _T(""), m_AttributeGroupBorder);
 
 	DuiCreateGroupAttribute(m_AttributeGroupMouse, _T("Mouse"));
 	DuiCreateAttribute(m_AttributeMouseThrough, _T("MouseThrough"), _T(""), m_AttributeGroupMouse);
@@ -1795,11 +1872,11 @@ void CDUIControlBase::PaintBkImage(HDC hDC)
 
 		if (0 == nImageWidth || 0 == nImageHeight) return;
 
-		if (CustomBack_Stretch == m_nCustomBackAlign)
+		if (CustomBack_Stretch == m_wCustomBackAlign)
 		{
 			rcDest = rcBorderRect;
 		}
-		else if (CustomBack_Scale == m_nCustomBackAlign)
+		else if (CustomBack_Scale == m_wCustomBackAlign)
 		{
 			rcDest = rcBorderRect;
 			rcDest.left = rcDest.left + rcDest.GetWidth() / 2 - nImageWidth / 2;
@@ -1826,13 +1903,13 @@ void CDUIControlBase::PaintBkImage(HDC hDC)
 			nDestHeight = max(nDestHeight, 1);
 
 			//center
-			if (CustomBack_Center == (CustomBack_Center & m_nCustomBackAlign))
+			if (CustomBack_Center == (CustomBack_Center & m_wCustomBackAlign))
 			{
 				rcDest.left = rcBorderRect.left + rcBorderRect.GetWidth() / 2 - nDestWidth / 2;
 				rcDest.right = rcDest.left + nDestWidth;
 			}
 			//right
-			else if (CustomBack_Right == (CustomBack_Right & m_nCustomBackAlign))
+			else if (CustomBack_Right == (CustomBack_Right & m_wCustomBackAlign))
 			{
 				rcDest.right = rcBorderRect.right;
 				rcDest.left = rcDest.right - nDestWidth;
@@ -1845,13 +1922,13 @@ void CDUIControlBase::PaintBkImage(HDC hDC)
 			}
 
 			//vcenter
-			if (CustomBack_VCenter == (CustomBack_VCenter & m_nCustomBackAlign))
+			if (CustomBack_VCenter == (CustomBack_VCenter & m_wCustomBackAlign))
 			{
 				rcDest.top = rcBorderRect.top + rcBorderRect.GetHeight() / 2 - nDestHeight / 2;
 				rcDest.bottom = rcDest.top + nDestHeight;
 			}
 			//bottom
-			else if (CustomBack_Bottom == (CustomBack_Bottom & m_nCustomBackAlign))
+			else if (CustomBack_Bottom == (CustomBack_Bottom & m_wCustomBackAlign))
 			{
 				rcDest.bottom = rcBorderRect.bottom;
 				rcDest.top = rcDest.bottom - nDestHeight;
@@ -2131,6 +2208,38 @@ CDUIRect CDUIControlBase::GetBorderRect()
 CDUISize CDUIControlBase::GetBorderBreakTop()
 {
 	return {};
+}
+
+void CDUIControlBase::PerformBorderSeparateHit(const CDUIPoint& pt)
+{
+	CDUIRect rcBorderSeparate = GetBorderSeparate();
+	CDUIRect rcBorderRect = GetBorderRect();
+	CDUIRect rcLeft = rcBorderRect;
+	CDUIRect rcTop = rcBorderRect;
+	CDUIRect rcRight = rcBorderRect;
+	CDUIRect rcBottom = rcBorderRect;
+	rcLeft.right = rcLeft.left + rcBorderSeparate.left;
+	rcTop.bottom = rcTop.top + rcBorderSeparate.top;
+	rcRight.left = rcRight.right - rcBorderSeparate.right;
+	rcBottom.top = rcBottom.bottom - rcBorderSeparate.bottom;
+	if (rcLeft.PtInRect(pt))
+	{
+		m_cbSeparateStatus |= BorderSeparate_Left;
+	}
+	else if (rcTop.PtInRect(pt))
+	{
+		m_cbSeparateStatus |= BorderSeparate_Top;
+	}
+	else if (rcRight.PtInRect(pt))
+	{
+		m_cbSeparateStatus |= BorderSeparate_Right;
+	}
+	else if (rcBottom.PtInRect(pt))
+	{
+		m_cbSeparateStatus |= BorderSeparate_Bottom;
+	}
+
+	return;
 }
 
 //////////////////////////////////////////////////////////////////////////

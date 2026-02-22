@@ -262,11 +262,11 @@ void CDUISliderCtrl::PaintStatusColor(HDC hDC)
 
 	//»¬¿é
 	CDUIAttributeColorSwitch *pAttribute = NULL;
-	if (m_nControlStatus & ControlStatus_Pushed)
+	if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttribute = &m_AttributeColorThumbPushed;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttribute = &m_AttributeColorThumbHot;
 	}
@@ -293,11 +293,11 @@ void CDUISliderCtrl::PaintStatusImage(HDC hDC)
 	__super::PaintStatusImage(hDC);
 
 	CDUIAttriImageSection* pAttribute = NULL;
-	if (m_nControlStatus & ControlStatus_Pushed)
+	if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttribute = &m_AttributeImageThumbPushed;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttribute = &m_AttributeImageThumbHot;
 	}
@@ -342,11 +342,11 @@ bool CDUISliderCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 
 bool CDUISliderCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	if (0 == (m_nControlStatus & ControlStatus_Pushed) && m_rcCurThumb.PtInRect(pt))
+	if (0 == (m_cbControlStatus & ControlStatus_Pushed) && m_rcCurThumb.PtInRect(pt))
 	{
-		m_nControlStatus |= ControlStatus_Hot;
+		m_cbControlStatus |= ControlStatus_Hot;
 	}
-	if ((m_nControlStatus & ControlStatus_Pushed))
+	if ((m_cbControlStatus & ControlStatus_Pushed))
 	{
 		if (m_pWndOwner)
 		{

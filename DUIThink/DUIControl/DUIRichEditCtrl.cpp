@@ -2629,7 +2629,7 @@ void CDUIRichEditCtrl::PaintStatusImage(HDC hDC)
 	{
 		pAttribute = &m_AttributeImageDisabled;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttribute = &m_AttributeImageHot;
 	}
@@ -2663,7 +2663,7 @@ void CDUIRichEditCtrl::PaintText(HDC hDC)
 		CMMString strTipText = GetTipText();
 		if (strTipText.empty()) return;
 
-		CDUIAttributeTextStyle *pAttribute = (m_nControlStatus & ControlStatus_Hot) ? &m_AttributeTextStyleTipTextHot : &m_AttributeTextStyleTipTextNormal;
+		CDUIAttributeTextStyle *pAttribute = (m_cbControlStatus & ControlStatus_Hot) ? &m_AttributeTextStyleTipTextHot : &m_AttributeTextStyleTipTextNormal;
 		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleTipTextNormal : pAttribute;
 		NULL == pAttribute || pAttribute->IsEmpty() ? pAttribute = &m_AttributeTextStyleNormal : pAttribute;
 
@@ -2739,7 +2739,7 @@ void CDUIRichEditCtrl::ConstructTextStyle()
 	}
 
 	//hover
-	if (m_nControlStatus & ControlStatus_Hot)
+	if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		CDUIAttributeTextStyle *pAttribute = &m_AttributeTextStyleHot;
 		if (pAttribute && false == pAttribute->IsEmpty())

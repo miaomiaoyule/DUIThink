@@ -995,11 +995,11 @@ CDUIAttributeColorSwitch * CDUIComboxCtrl::GetAttributeStatusColor()
 {
 	if (m_pEditCtrl && m_pEditCtrl->IsVisible())
 	{
-		if ((m_nControlStatus & ControlStatus_Pushed) || (m_pEditCtrl->m_nControlStatus & ControlStatus_Pushed))
+		if ((m_cbControlStatus & ControlStatus_Pushed) || (m_pEditCtrl->m_cbControlStatus & ControlStatus_Pushed))
 		{
 			return &m_AttributeColorPushed;
 		}
-		else if ((m_nControlStatus & ControlStatus_Hot) || (m_pEditCtrl->m_nControlStatus & ControlStatus_Hot))
+		else if ((m_cbControlStatus & ControlStatus_Hot) || (m_pEditCtrl->m_cbControlStatus & ControlStatus_Hot))
 		{
 			return &m_AttributeColorHot;
 		}
@@ -1016,11 +1016,11 @@ CDUIAttriImageSection * CDUIComboxCtrl::GetAttributeStatusImage()
 {
 	if (m_pEditCtrl && m_pEditCtrl->IsVisible())
 	{
-		if ((m_nControlStatus & ControlStatus_Pushed) || (m_pEditCtrl->m_nControlStatus & ControlStatus_Pushed))
+		if ((m_cbControlStatus & ControlStatus_Pushed) || (m_pEditCtrl->m_cbControlStatus & ControlStatus_Pushed))
 		{
 			return &m_AttributeImagePushed;
 		}
-		else if ((m_nControlStatus & ControlStatus_Hot) || (m_pEditCtrl->m_nControlStatus & ControlStatus_Hot))
+		else if ((m_cbControlStatus & ControlStatus_Hot) || (m_pEditCtrl->m_cbControlStatus & ControlStatus_Hot))
 		{
 			return &m_AttributeImageHot;
 		}
