@@ -349,7 +349,12 @@ protected:
 	virtual LRESULT OnMouseLeave(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnMouseWheel(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnTimer(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnMoving(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnMove(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnSizing(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnKeyDown(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnKeyUp(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnChar(WPARAM wParam, LPARAM lParam);

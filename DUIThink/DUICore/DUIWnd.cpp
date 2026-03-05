@@ -2180,9 +2180,29 @@ LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			return OnTimer(wParam, lParam);
 		}
+		case WM_MOVING:
+		{
+			return OnMoving(wParam, lParam);
+		}
+		case WM_MOVE:
+		{
+			return OnMove(wParam, lParam);
+		}
+		case WM_SIZING:
+		{
+			return OnSizing(wParam, lParam);
+		}
 		case WM_SIZE:
 		{
 			return OnSize(wParam, lParam);
+		}
+		case WM_WINDOWPOSCHANGING:
+		{
+			return OnWindowPosChanging(wParam, lParam);
+		}
+		case WM_WINDOWPOSCHANGED:
+		{
+			return OnWindowPosChanged(wParam, lParam);
 		}
 		case WM_KEYDOWN:
 		{
@@ -2947,6 +2967,21 @@ LRESULT CDUIWnd::OnTimer(WPARAM wParam, LPARAM lParam)
 	return OnOldWndProc(WM_TIMER, wParam, lParam);
 }
 
+LRESULT CDUIWnd::OnMoving(WPARAM wParam, LPARAM lParam)
+{
+	return OnOldWndProc(WM_MOVING, wParam, lParam);
+}
+
+LRESULT CDUIWnd::OnMove(WPARAM wParam, LPARAM lParam)
+{
+	return OnOldWndProc(WM_MOVE, wParam, lParam);
+}
+
+LRESULT CDUIWnd::OnSizing(WPARAM wParam, LPARAM lParam)
+{
+	return OnOldWndProc(WM_SIZING, wParam, lParam);
+}
+
 LRESULT CDUIWnd::OnSize(WPARAM wParam, LPARAM lParam)
 {
 	ReleasePaintScene();
@@ -2963,6 +2998,16 @@ LRESULT CDUIWnd::OnSize(WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
+}
+
+LRESULT CDUIWnd::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
+{
+	return OnOldWndProc(WM_WINDOWPOSCHANGING, wParam, lParam);
+}
+
+LRESULT CDUIWnd::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
+{
+	return OnOldWndProc(WM_WINDOWPOSCHANGED, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnKeyDown(WPARAM wParam, LPARAM lParam)
