@@ -531,13 +531,7 @@ struct tagDuiDropData
 	bool								bHasGUID = false;
 	std::vector<CMMString>				vecDropFiles;
 	std::vector<PCIDLIST_ABSOLUTE>		vecPIDL;
-
-	//CFSTR_FILENAMEMAP: List of file names when renaming with HDROP
-	//解析FileNameMapW结构，兼容从回收站拖出，该结构存回收站中文件对应正确文件名
 	std::vector<CMMString>				vecFileNameMap;
-
-	//IDataObject对象是否支持异步操作,这里默认设为true
-	//大部分shell数据操作会在线程中异步执行
 	bool								bAsyncMode = true;
 	WPARAM								wParam = 0;
 	LPARAM								lParam = 0;
