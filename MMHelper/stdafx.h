@@ -5,16 +5,16 @@
 
 #pragma once
 
+#ifdef _WIN32
 #include "targetver.h"
 
-#define WIN32_LEAN_AND_MEAN             // 从 Windows 头中排除极少使用的资料
+#define WIN32_LEAN_AND_MEAN             //  Windows ????
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+#endif
 
 //////////////////////////////////////////////////////////////////////////
-// TODO:  在此处引用程序需要的其他头文件
+// TODO:  ??ó???
 #include <sys/timeb.h>
 #include <time.h>
 
 #include "MMHelperHead.h"
-
-//////////////////////////////////////////////////////////////////////////

@@ -11,6 +11,7 @@
 void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...)
 {
 #ifdef _DEBUG
+#ifdef _WIN32
 	CString strMsg;
 	va_list Args;
 
@@ -20,6 +21,18 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...)
 
 	strMsg += _T("\n");
 	OutputDebugString(strMsg.GetBuffer(0));
-
+#else
+	va_list Args;
+	va_start(Args, pstrFormat);
+	// Basic implementation for Linux console output
+#ifdef _UNICODE
+	vwprintf(pstrFormat, Args);
+	wprintf(L"\n");
+#else
+	vprintf(pstrFormat, Args);
+	printf("\n");
+#endif
+	va_end(Args);
+#endif
 #endif
 }

@@ -1,20 +1,29 @@
 #ifndef __MM_HELPER_H__
 #define __MM_HELPER_H__
 
-#define __LINUX__
+// #define __LINUX__
+#if defined(__linux__) || defined(__linux)
+	#ifndef __LINUX__
+		#define __LINUX__
+	#endif
+#endif
 //#define __APPLE__
 
 //////////////////////////////////////////////////////////////////////////
 //导出定义
 #ifndef MMHELPER_API
-	#ifdef MMHELPLIB
-		#define MMHELPER_API
-	#else
-		#ifdef MMHELPER_DLL
-			#define MMHELPER_API _declspec(dllexport)
+	#ifdef _WIN32
+		#ifdef MMHELPLIB
+			#define MMHELPER_API
 		#else
-			#define MMHELPER_API _declspec(dllimport)
+			#ifdef MMHELPER_DLL
+				#define MMHELPER_API __declspec(dllexport)
+			#else
+				#define MMHELPER_API __declspec(dllimport)
+			#endif
 		#endif
+	#else
+		#define MMHELPER_API __attribute__((visibility("default")))
 	#endif
 #endif
 
@@ -52,7 +61,7 @@
 //包含文件
 #include <stdio.h>
 #include <stdlib.h>
-#include <tchar.h>
+//#include <tchar.h>
 #include <assert.h>
 #include <vector>
 #include <atomic>
@@ -66,6 +75,9 @@
 #include <map>
 #include <unordered_map>
 #include <thread>
+
+#ifdef _WIN32
+#include <tchar.h>
 #include <windows.h>
 #include <Tlhelp32.h>  
 #include <ObjBase.h>
@@ -82,8 +94,20 @@
 #include <ShellAPI.h>
 #include <winternl.h>
 #include <WtsApi32.h>
+#else
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <pthread.h>
+#include <dlfcn.h>
+#include <stdarg.h>
+#include <string.h>
+#include <wchar.h>
+#endif
+
 using namespace std;
 
+#ifdef _WIN32
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "wldap32.lib")
@@ -91,88 +115,9 @@ using namespace std;
 #pragma comment(lib, "Userenv.lib")
 #pragma comment(lib, "version.lib")
 #pragma comment(lib, "Wtsapi32.lib")
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 
 //////////////////////////////////////////////////////////////////////////
-#define MMSvgEnable
-#ifdef MMSvgEnable
-#include "../ThirdDepend/svg/Include/svg.h"
-
-#ifdef _DEBUG
-	#ifdef _DLL
-		#ifdef _WIN64
-		#pragma comment(lib, "../lib/svg64.lib")
-		#else
-		#pragma comment(lib, "../lib/svg.lib")
-		#endif
-	#else
-		#ifdef _WIN64
-		#pragma comment(lib, "../lib/svg64.lib")
-		#else
-		#pragma comment(lib, "../lib/svg.lib")
-		#endif
-	#endif
-#else
-	#ifdef _DLL
-		#ifdef _WIN64
-		#pragma comment(lib, "../lib/svg64.lib")
-		#else
-		#pragma comment(lib, "../lib/svg.lib")
-		#endif
-	#else
-		#ifdef _WIN64
-		#pragma comment(lib, "../lib/svg64.lib")
-		#else
-		#pragma comment(lib, "../lib/svg.lib")
-		#endif
-	#endif
-#endif
-#endif
-
-//////////////////////////////////////////////////////////////////////////////////
-//导出文件
-#include "MMDefine.h"
-#include "MMHash.h"
-#include "MMString.h"
-#include "MMModule.h"
-#include "MMFile.h"
-#include "MMStrHelp.h"
-#include "MMService.h"
-#include "MMCommandLine.h"
-#include "MMResource.h"
-#include "MMMD5CheckSum.h"
-#include "MMAsyncObject.h"
-#include "MMProcess.h"
-#include "MMDpi.h"
-#include "MMReDirection.h"
-#include "MMVersion.h"
-#include "MMSvg.h"
-#include "MMDisplayer.h"
-#include "MMTrayIcon.h"
-#include "MMEncrypt.h"
-#include "MMMagnetBox.h"
-#include "MMServiceModel/MMServiceMsg.h"
-#include "MMServiceModel/MMServiceItem.h"
-#include "MMServiceModel/MMTimerPower.h"
-#include "MMServiceModel/MMThreadPool.h"
-#include "MMShellExecute/MMShellExecute.h"
-#include "MMFileMonitor/MMFileMonitor.h"
-#include "MMWinTCPing.h"
-#include "MMSocket/Define.h"
-#include "MMSocket/SocketClient/IMMTCPSocketClient.h"
-#include "MMSocket/SocketServer/IMMTCPSocketServer.h"
-#include "MMRegMonitor.h"
-#include "MMDragDrop/MMDropSource.h"
-#include "MMDragDrop/MMDataObject.h"
-#include "MMDragDrop/MMDragDrop.h"
-#include "MMSocket/SocketClient/Define.h"
-#include "MMSocket/SocketClient/MMTCPSocketClient.h"
-#include "MMSocket/SocketServer/Define.h"
-#include "MMSocket/SocketServer/MMSocketClientItem.h"
-#include "MMSocket/SocketServer/MMTCPSocketServer.h"
-
-//////////////////////////////////////////////////////////////////////////////////
-
-#endif

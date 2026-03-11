@@ -40,9 +40,14 @@
 #define CountStringBuffer CountStringBufferA
 #endif
 
-//´æ´¢³¤¶È
+//›¥
+#ifdef _WIN32
 #define CountStringBufferA(String)		((UINT)((lstrlenA(String) + 1) * sizeof(CHAR)))
 #define CountStringBufferW(String)		((UINT)((lstrlenW(String) + 1) * sizeof(WCHAR)))
+#else
+#define CountStringBufferA(String)		((UINT)((strlen(String) + 1) * sizeof(CHAR)))
+#define CountStringBufferW(String)		((UINT)((wcslen(String) + 1) * sizeof(WCHAR)))
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 #define MMCountArray(Array)				(sizeof(Array) / sizeof(Array[0]))
@@ -53,7 +58,11 @@
 #define MMSafeDeleteObject(hObject)		{ if (hObject) { ::DeleteObject(hObject); hObject = NULL; } }
 #define MMSafeDeleteDC(hDC)				{ if (hDC) { ::DeleteDC(hDC); hDC = NULL; } }
 #define MMSafeDeleteArray(pData)		{ try { delete []pData; } catch (...) { assert(false); } pData = NULL; } 
+#ifdef _WIN32
 #define MMSafeDeletePCIDL(pPCIDL)		{ try { if (pPCIDL) { CoTaskMemFree((LPVOID)pPCIDL); } } catch (...) { assert(false); } pPCIDL = NULL; } 
+#else
+#define MMSafeDeletePCIDL(pPCIDL)		{ try { if (pPCIDL) { free((void*)pPCIDL); } } catch (...) { assert(false); } pPCIDL = NULL; } 
+#endif
 #define MMStaticPtr(Type, pPointer)		(static_cast<Type*>(pPointer))
 #define MMDynamicPtr(Type, pPointer)	(dynamic_cast<Type*>(pPointer))
 #define MMInvalidString(Str)			(NULL == Str || _T('\0') == Str[0])
@@ -68,6 +77,7 @@ public:\
 	LPCTSTR class_name::GetClass()\
 	{ return _T(#class_name); }
 
+#ifdef _WIN32
 #define MMScreenToClient(DUIRect, hWnd) \
 	{ POINT pt = { DUIRect.left, DUIRect.top };\
 	ScreenToClient(hWnd, &pt);\
@@ -77,6 +87,70 @@ public:\
 	{ POINT pt = { DUIRect.left, DUIRect.top };\
 	ClientToScreen(hWnd, &pt);\
 	DUIRect.Offset(pt.x - DUIRect.left, pt.y - DUIRect.top); }
+#else
+// Linux implementation (placeholder, needs X11/Wayland context)
+#define MMScreenToClient(DUIRect, hWnd) \
+	{ /* TODO: Linux implementation */ }
+
+#define MMClientToScreen(DUIRect, hWnd) \
+	{ /* TODO: Linux implementation */ }
+#endif
+
+#ifdef __LINUX__
+// Basic Type Definitions
+typedef long LONG;
+typedef struct tagRECT
+{
+    LONG    left;
+    LONG    top;
+    LONG    right;
+    LONG    bottom;
+} RECT, *PRECT, *NPRECT, *LPRECT;
+
+typedef struct tagPOINT
+{
+    LONG  x;
+    LONG  y;
+} POINT, *PPOINT, *NPPOINT, *LPPOINT;
+
+typedef struct tagSIZE
+{
+    LONG        cx;
+    LONG        cy;
+} SIZE, *PSIZE, *LPSIZE;
+
+typedef HANDLE HBITMAP;
+typedef HANDLE HFONT;
+typedef HANDLE HICON;
+typedef HANDLE HMENU;
+typedef HANDLE HCURSOR;
+typedef HANDLE HBRUSH;
+typedef HANDLE HPEN;
+typedef HANDLE HDC;
+typedef HANDLE HWND;
+typedef HANDLE HINSTANCE;
+typedef HANDLE HMODULE;
+typedef HANDLE HRGN;
+typedef DWORD   COLORREF;
+
+#define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
+#define GetRValue(rgb)      (LOBYTE(rgb))
+#define GetGValue(rgb)      (LOBYTE(((WORD)(rgb)) >> 8))
+#define GetBValue(rgb)      (LOBYTE((rgb)>>16))
+#define LOBYTE(w)           ((BYTE)(((DWORD)(w)) & 0xff))
+
+#define ZeroMemory(Destination,Length) memset((Destination),0,(Length))
+#define CopyMemory(Destination,Source,Length) memcpy((Destination),(Source),(Length))
+#define CALLBACK
+
+#define lstrlenA strlen
+#define lstrlenW wcslen
+#ifdef _UNICODE
+#define lstrlen  wcslen
+#endif
+#define lstrcmp wcscmp
+
+#endif
 
 #define MMEmojiExtract(String, nIndex) \
 	int nEmoji = CDUIGlobal::IsEmoji(String[nIndex]); \
