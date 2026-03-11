@@ -587,7 +587,7 @@ bool CDUIScrollBarCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Ms
 	{
 		return true;
 	}
-	if (m_nControlStatus & ControlStatus_Pushed)
+	if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		return __super::OnDuiMouseMove(pt, Msg);
 	}
@@ -595,7 +595,7 @@ bool CDUIScrollBarCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Ms
 	//°´Å¥¡¢»¬¿é
 	m_nUpBtnStatus &= ~ControlStatus_Hot;
 	m_nDownBtnStatus &= ~ControlStatus_Hot;
-	m_nControlStatus &= ~ControlStatus_Hot;
+	m_cbControlStatus &= ~ControlStatus_Hot;
 	if (m_rcUpBtn.PtInRect(pt) && 0 == (m_nUpBtnStatus & ControlStatus_Hot))
 	{
 		m_nUpBtnStatus |= ControlStatus_Hot;
@@ -608,9 +608,9 @@ bool CDUIScrollBarCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Ms
 
 		Invalidate();
 	}
-	else if (0 == (m_nControlStatus & ControlStatus_Hot))
+	else if (0 == (m_cbControlStatus & ControlStatus_Hot))
 	{
-		m_nControlStatus |= ControlStatus_Hot;
+		m_cbControlStatus |= ControlStatus_Hot;
 
 		Invalidate();
 	}

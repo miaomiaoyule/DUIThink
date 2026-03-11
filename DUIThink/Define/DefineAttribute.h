@@ -4,7 +4,7 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
-//Position布局定义
+//Position甯冨眬瀹氫箟
 #define Dui_Name_HorizAlignLeft						_T("HorizAlignLeft")
 #define Dui_Name_HorizAlignRight					_T("HorizAlignRight")
 #define Dui_Name_HorizAlignCenter					_T("HorizAlignCenter")
@@ -13,7 +13,7 @@
 #define Dui_Name_VertAlignMiddle					_T("VertAlignMiddle")
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//属性XML节点名称
+//灞炴�ML鑺傜偣鍚嶇О
 #define Dui_Key_AttriObjName						("Name")
 #define Dui_Key_AttriObjNameID						("NameID")
 #define Dui_Key_AttriObjDescr						("Descr")
@@ -63,9 +63,7 @@
 #define Dui_Key_AttriImageSecAlpha					("Alpha")
 #define Dui_Key_AttriImageSecMask					("Mask")
 #define Dui_Key_AttriImageSecCorner					("Corner")
-#define Dui_Key_AttriImageSecHole					("Hole")
-#define Dui_Key_AttriImageSecTiledX					("TiledX")
-#define Dui_Key_AttriImageSecTiledY					("TiledY")
+#define Dui_Key_AttriImageSecCornerHole				("CornerHole")
 
 #define Dui_Key_AttriNumberLong						("Value")
 #define Dui_Key_AttriNumberULong					("Value")

@@ -276,7 +276,7 @@ void CDUIThinkEditCtrl::RefreshView()
 			auto AnimateImageInfo = pImageBase->GetAnimateImageInfo(GetScale());
 			if (RichTextDrawItem.nAnimateFrameCur < 0 || RichTextDrawItem.nAnimateFrameCur >= AnimateImageInfo.nFrameCount) continue;
 
-			RichTextDrawItem.nAnimateElapseCur = ((long*)AnimateImageInfo.vecGifPropertyItem[0].value)[RichTextDrawItem.nAnimateFrameCur] * 10;
+			RichTextDrawItem.nAnimateElapseCur = AnimateImageInfo.vecFrameElapse[RichTextDrawItem.nAnimateFrameCur];
 
 			SetTimer(Dui_TimerAnimate_ID, Dui_TimerThinkEditAnimate_Elapse);
 		}
@@ -1393,7 +1393,7 @@ void CDUIThinkEditCtrl::OnDuiTimer(UINT uTimerID, const DuiMessage &Msg)
 				{
 					RichTextDrawItem.nAnimateFrameCur++;
 					RichTextDrawItem.nAnimateFrameCur %= AnimateImageInfo.nFrameCount;
-					RichTextDrawItem.nAnimateElapseCur = ((long*)AnimateImageInfo.vecGifPropertyItem[0].value)[RichTextDrawItem.nAnimateFrameCur] * 10;
+					RichTextDrawItem.nAnimateElapseCur = AnimateImageInfo.vecFrameElapse[RichTextDrawItem.nAnimateFrameCur];
 				}
 			}
 		}
@@ -1841,11 +1841,11 @@ void CDUIThinkEditCtrl::PaintText(HDC hDC)
 	{
 		pAttribute = &m_AttributeTextStyleDisabled;
 	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
+	else if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttribute = &m_AttributeTextStylePushed;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttribute = &m_AttributeTextStyleHot;
 	}

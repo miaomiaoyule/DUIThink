@@ -42,6 +42,11 @@ void CDUIAttributeTabSelect::InitSelectItem()
 	{
 		MMInterfaceHelper(CDUITabLayoutCtrl, pControl, pTabCtrl);
 		if (NULL == pTabCtrl) continue;
+		if (find_if(AttriCombox.vecItem.begin(), AttriCombox.vecItem.end(), [&](tagDuiComboxItem &Item)
+		{
+			return Item.nItem == (int)pTabCtrl->GetCtrlID();
+
+		}) != AttriCombox.vecItem.end()) continue;
 
 		CMMString strCtrlID = CDUIGlobal::GetInstance()->FindCtrlID(pTabCtrl->GetCtrlID());
 		if (strCtrlID.empty()) continue;

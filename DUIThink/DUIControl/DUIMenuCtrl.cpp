@@ -61,11 +61,7 @@ void CDUIMenuWnd::Init(HWND hWndParent)
 
 	Create(hWndParent, _T("DuiMenuWnd"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW, m_ptTrack.x, m_ptTrack.y);
 
-	CDUIMenuCtrl *pRootMenuCtrl = GetMenuView();
-	if (pRootMenuCtrl)
-	{
-		pRootMenuCtrl->RefreshView();
-	}
+	RefreshLayout();
 
 	return;
 }
@@ -627,7 +623,7 @@ void CDUIMenuItemCtrl::SetHasExpandMenu(bool bHasExpandMenu)
 
 bool CDUIMenuItemCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	bool bClick = (m_nControlStatus & ControlStatus_Pushed);
+	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
 
 	if (false == __super::OnDuiLButtonUp(pt, Msg)) return false;
 	if (false == bClick) return false;

@@ -293,11 +293,11 @@ void CDUIListHeaderItemCtrl::PaintStatusColor(HDC hDC)
 
 	//back
 	CDUIAttributeColorSwitch *pAttribute = NULL;
-	if (m_nControlStatus & ControlStatus_Pushed)
+	if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttribute = &m_AttributeColorPushed;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttribute = &m_AttributeColorHot;
 	}
@@ -328,11 +328,11 @@ void CDUIListHeaderItemCtrl::PaintStatusImage(HDC hDC)
 
 	//back
 	CDUIAttriImageSection *pAttribute = NULL;
-	if (m_nControlStatus & ControlStatus_Pushed)
+	if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttribute = &m_AttributeImagePushed;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttribute = &m_AttributeImageHot;
 	}
@@ -369,7 +369,7 @@ void CDUIListHeaderItemCtrl::PaintText(HDC hDC)
 	if (strText.empty()) return;
 
 	if (false == m_AttributeTextStyle.IsEmpty()
-		&& 0 == (m_nControlStatus & ControlStatus_Hot))
+		&& 0 == (m_cbControlStatus & ControlStatus_Hot))
 	{
 		pAttribute = &m_AttributeTextStyle;
 	}
@@ -402,7 +402,7 @@ bool CDUIListHeaderItemCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMess
 
 bool CDUIListHeaderItemCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	bool bClick = (m_nControlStatus & ControlStatus_Pushed);
+	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
 
 	__super::OnDuiLButtonUp(pt, Msg);
 

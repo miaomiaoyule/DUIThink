@@ -64,10 +64,11 @@ protected:
 
 	//border
 	CDUIAttributeGroup					m_AttributeGroupBorder;
+	CDUIAttributeCombox					m_AttributeBorderStyle;
 	CDUIAttributeColorSwitch			m_AttributeColorBorder;
 	CDUIAttributeColorSwitch			m_AttributeColorBorderFocus;
 	CDUIAttributeRect					m_AttributeBorderLine;
-	CDUIAttributeCombox					m_AttributeBorderStyle;
+	CDUIAttributeRect					m_AttributeBorderSeparate;
 
 	//mouse
 	CDUIAttributeGroup					m_AttributeGroupMouse;
@@ -100,12 +101,13 @@ protected:
 	bool								m_bRefreshViewNeeded = true;
 
 	//status
-	int									m_nControlStatus = ControlStatus_Normal;
+	BYTE								m_cbControlStatus = ControlStatus_Normal;
+	BYTE								m_cbSeparateStatus = BorderSeparate_None;
 	TCHAR								m_chShortcut = 0;
 
 	//custom bk
 	Gdiplus::Bitmap *					m_pBmpCustomBack = NULL;
-	int									m_nCustomBackAlign = 0;
+	WORD								m_wCustomBackAlign = 0;
 
 	//water
 	tagDuiRippleBitmap *				m_pRippleBmp = NULL;
@@ -252,6 +254,8 @@ public:
 	virtual void SetFocusBorderColor(const vector<CMMString> &vecResSwitch);
 	virtual CDUIRect GetBorderLine();
 	virtual void SetBorderLine(RECT rcBorder);
+	virtual CDUIRect GetBorderSeparate();
+	virtual void SetBorderSeparate(RECT rcSeparate);
 
 	//tip
 	virtual CMMString GetToolTip();
@@ -361,6 +365,7 @@ protected:
 	virtual CDUISize GetBorderBreakTop();
 	virtual CDUIScrollBarCtrl * GetHorizScrollBar() const { return NULL; }
 	virtual CDUIScrollBarCtrl * GetVertScrollBar() const { return NULL; }
+	virtual void PerformBorderSeparateHit(const CDUIPoint& pt);
 };
 
 DUITHINK_API bool operator == (IDuiInterface *pLeft, const CDUIControlBase &pControl);

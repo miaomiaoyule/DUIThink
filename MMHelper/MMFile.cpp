@@ -520,7 +520,7 @@ PCIDLIST_ABSOLUTE CMMFile::GetPCIDLFromPath(LPCTSTR lpszFileFull)
 	return pCID;
 }
 
-bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData)
+bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData, DWORD dwSizeLimit)
 {
 	//path
 	CMMString strFile = lpszFileFull;
@@ -541,6 +541,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 			return true;
 		}
 
+		dwFileSize = min(dwFileSize, dwSizeLimit);
 		vecData.resize(dwFileSize);
 		ReadFile(hFile, vecData.data(), dwFileSize, &dwFileSize, NULL);
 		CloseHandle(hFile);
@@ -588,8 +589,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 		case FileEncode_Ansi:
 		{
 			strData = (LPCTSTR)CA2CT((LPCSTR)pByte);
-			strData.Replace(_T("\r\n"), _T("\n"));
-
+			
 			return true;
 		}
 		case FileEncode_Unicode:
@@ -598,8 +598,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 			{
 				pByte += 2;
 				strData = (LPCTSTR)pByte;
-				strData.Replace(_T("\r\n"), _T("\n"));
-
+				
 				return true;
 			}
 
@@ -619,8 +618,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 				}
 				
 				strData = (LPCTSTR)pByte;
-				strData.Replace(_T("\r\n"), _T("\n"));
-
+				
 				return true;
 			}
 
@@ -632,8 +630,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 			{
 				pByte += 3;
 				strData = (LPCTSTR)CA2CT((LPCSTR)pByte, CP_UTF8);
-				strData.Replace(_T("\r\n"), _T("\n"));
-
+				
 				return true;
 			}
 
@@ -642,8 +639,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 		case FileEncode_UTF8:
 		{
 			strData = (LPCTSTR)CA2CT((LPCSTR)pByte, CP_UTF8);
-			strData.Replace(_T("\r\n"), _T("\n"));
-
+			
 			return true;
 		}
 	}
@@ -821,7 +817,7 @@ std::vector<CMMString> CMMFile::GetFolderOfDir(IN LPCTSTR lpszDirFull)
 		//path
 		if (FILE_ATTRIBUTE_DIRECTORY & FindData.dwFileAttributes)
 		{
-			vecFolder.push_back(strFile);
+			vecFolder.push_back(strDir + strFile);
 		}
 
 	} while (FindNextFile(hFindFile, &FindData));
@@ -858,7 +854,7 @@ std::vector<CMMString> CMMFile::GetFileOfDir(IN LPCTSTR lpszDirFull)
 		//path
 		if (0 == (FILE_ATTRIBUTE_DIRECTORY & FindData.dwFileAttributes))
 		{
-			vecFile.push_back(strFile);
+			vecFile.push_back(strDir + strFile);
 		}
 
 	} while (FindNextFile(hFindFile, &FindData));
@@ -868,7 +864,7 @@ std::vector<CMMString> CMMFile::GetFileOfDir(IN LPCTSTR lpszDirFull)
 	return vecFile;
 }
 
-std::vector<CMMString> CMMFile::GetFilesOfDir(IN LPCTSTR lpszDirFull)
+std::vector<CMMString> CMMFile::GetFileAndFolderOfDir(IN LPCTSTR lpszDirFull)
 {
 	std::vector<CMMString> vecFiles;
 
@@ -892,7 +888,7 @@ std::vector<CMMString> CMMFile::GetFilesOfDir(IN LPCTSTR lpszDirFull)
 		CMMString strFile = FindData.cFileName;
 		if (strFile.empty() || _T(".") == strFile || _T("..") == strFile) continue;
 
-		vecFiles.push_back(strFile);
+		vecFiles.push_back(strDir + strFile);
 
 	} while (FindNextFile(hFindFile, &FindData));
 
@@ -904,10 +900,9 @@ std::vector<CMMString> CMMFile::GetFilesOfDir(IN LPCTSTR lpszDirFull)
 uint64_t CMMFile::GetFolderSize(IN LPCTSTR lpszDirFull)
 {
 	uint64_t uSize = 0;
-	auto vecFiles = GetFilesOfDir(lpszDirFull);
+	auto vecFiles = GetFileAndFolderOfDir(lpszDirFull);
 	for (CMMString strFile : vecFiles)
 	{
-		strFile = CMMString(lpszDirFull) + _T('\\') + strFile;
 		if (GetFileAttributes(strFile) & FILE_ATTRIBUTE_DIRECTORY)
 		{
 			uSize += GetFolderSize(strFile);
@@ -1064,6 +1059,36 @@ bool CMMFile::RemoveFileByHasName(CMMString strPath, CMMString strHasName)
 		{
 			RemoveFileByHasName(strPath + strFile, strHasName);
 		}
+
+	} while (FindNextFile(hFindFile, &FindData));
+
+	FindClose(hFindFile);
+
+	return true;
+}
+
+bool CMMFile::ClearFilesOfFolder(CMMString strPath)
+{
+	if (false == PathFileExists(strPath)) return false;
+
+	if (strPath[strPath.length() - 1] != _T('/')
+		&& strPath[strPath.length() - 1] != _T('\\'))
+	{
+		strPath += _T('\\');
+	}
+
+	CMMString strPathFind = strPath + _T("*.*");
+
+	WIN32_FIND_DATA FindData = {};
+	HANDLE hFindFile = FindFirstFile(strPathFind, &FindData);
+	if (INVALID_HANDLE_VALUE == hFindFile) return false;
+
+	do
+	{
+		CMMString strFile = FindData.cFileName;
+		if (strFile.empty() || _T(".") == strFile || _T("..") == strFile)continue;
+
+		OperatorFileOrFolder(strPath + strFile, _T(""), FO_DELETE);
 
 	} while (FindNextFile(hFindFile, &FindData));
 

@@ -160,7 +160,7 @@ void CDUIRadioBoxCtrl::InitProperty()
 
 bool CDUIRadioBoxCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	bool bClick = (m_nControlStatus & ControlStatus_Pushed);
+	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
 
 	CDUIButtonCtrl::OnDuiLButtonUp(pt, Msg);
 

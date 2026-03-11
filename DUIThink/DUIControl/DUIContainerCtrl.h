@@ -41,7 +41,7 @@ protected:
 
 	//scrollbar
 	CDUIAttributeGroup					m_AttributeGroupScroll;
-	CDUIAttributeBool					m_AttributeScrollBarSpeedModel = true;
+	CDUIAttributeBool					m_AttributeScrollBarSpeedModel = false;
 	CDUIAttributeBool					m_AttributeUseHorizScrollBar;
 	CDUIAttributeBool					m_AttributeUseVertScrollBar;
 	CDUIAttributeBool					m_AttributeHScrollBarPushItemRange = true;
@@ -66,8 +66,8 @@ protected:
 protected:
 	bool OnAttributeChange(CDUIAttributeObject *pAttributeObj) override;
 	void OnDpiChanged(int nScalePre) override;
-	bool RegisterControlListen(IDuiInterface *pIControlListen) override;
-	bool UnRegisterControlListen(IDuiInterface *pIControlListen) override;
+	bool RegisterControlListen(IDuiControlListen *pIDuiControlListen) override;
+	bool UnRegisterControlListen(IDuiControlListen *pIDuiControlListen) override;
 
 	//method
 public:

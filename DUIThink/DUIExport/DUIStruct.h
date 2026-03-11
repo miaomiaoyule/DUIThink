@@ -240,7 +240,7 @@ struct tagDuiImageInfo
 	//animate
 	Gdiplus::Bitmap *					pImageAnimate = NULL;
 	int									nFrameCount = 0;
-	std::vector<Gdiplus::PropertyItem>	vecPropertyItem;							//帧与帧之间间隔时间
+	std::vector<WORD>					vecFrameElapse;
 };
 
 struct tagDuiAnimateImageInfo
@@ -249,7 +249,7 @@ struct tagDuiAnimateImageInfo
 	int									nFrameCount = 0;
 	int									nSequenceFrameSpeed = 0;
 	CDUISize							szSequenceFrameSize;
-	std::vector<Gdiplus::PropertyItem>	vecGifPropertyItem;
+	std::vector<WORD>					vecFrameElapse;
 };
 
 typedef std::unordered_map<int, tagDuiImageInfo> MapDuiDpiImageInfo;
@@ -277,10 +277,9 @@ struct tagDuiImageSection
 	BYTE								cbAlpha = 255;
 	ARGB								dwMask = 0;
 
+	//corner
 	CDUIRect							rcCorner;
-	bool								bHole = false;
-	bool								bTiledX = false;
-	bool								bTiledY = false;
+	bool								bCornerHole = false;
 
 	uint32_t GetID() const;
 	bool operator == (const tagDuiImageSection &Right) const
@@ -298,9 +297,7 @@ struct tagDuiImageSection
 			&& cbAlpha == Right.cbAlpha
 			&& dwMask == Right.dwMask
 			&& rcCorner == Right.rcCorner
-			&& bHole == Right.bHole
-			&& bTiledX == Right.bTiledX
-			&& bTiledY == Right.bTiledY;
+			&& bCornerHole == Right.bCornerHole;
 	}
 };
 
@@ -332,7 +329,7 @@ template<> struct hash<tagDuiImageSection>
 
 		strInfo += CMMStrHelp::Format(_T("-%d-%d-%d-%d-%d-%d-%d-%d-%d"), (int)ImageSection.cbAlpha, (int)ImageSection.dwMask,
 			(int)ImageSection.rcCorner.left, (int)ImageSection.rcCorner.top, (int)ImageSection.rcCorner.right, (int)ImageSection.rcCorner.bottom,
-			(int)ImageSection.bHole, (int)ImageSection.bTiledX, (int)ImageSection.bTiledY);
+			(int)ImageSection.bCornerHole, 0, 0);
 
 		return CMMHash::GetHash(strInfo);
 	}
@@ -534,13 +531,7 @@ struct tagDuiDropData
 	bool								bHasGUID = false;
 	std::vector<CMMString>				vecDropFiles;
 	std::vector<PCIDLIST_ABSOLUTE>		vecPIDL;
-
-	//CFSTR_FILENAMEMAP: List of file names when renaming with HDROP
-	//解析FileNameMapW结构，兼容从回收站拖出，该结构存回收站中文件对应正确文件名
 	std::vector<CMMString>				vecFileNameMap;
-
-	//IDataObject对象是否支持异步操作,这里默认设为true
-	//大部分shell数据操作会在线程中异步执行
 	bool								bAsyncMode = true;
 	WPARAM								wParam = 0;
 	LPARAM								lParam = 0;

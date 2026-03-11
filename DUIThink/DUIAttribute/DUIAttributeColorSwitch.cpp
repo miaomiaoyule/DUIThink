@@ -174,6 +174,18 @@ bool CDUIAttributeColorSwitch::DrawEllipse(HDC hDC, const CDUIRect &rcPaint, int
 	return true;
 }
 
+bool CDUIAttributeColorSwitch::DrawArc(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, float fStartAngle, float fSweepAngle, enDuiLineStyle LineStyle)
+{
+	if (nBorderSize <= 0) return false;
+
+	DWORD dwColor = GetColorValue();
+	if (0 == dwColor) return false;
+
+	CDUIRenderEngine::DrawArc(hDC, rcPaint, nBorderSize, dwColor, fStartAngle, fSweepAngle, LineStyle);
+
+	return true;
+}
+
 bool CDUIAttributeColorSwitch::FillRect(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust, ARGB dwColorGradient)
 {
 	DWORD dwColor = GetColorValue();

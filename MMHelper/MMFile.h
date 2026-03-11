@@ -85,10 +85,11 @@ public:
 
 	//************************************
 	// Description:	读取文件数据
-	// Parameter: 	LPCTSTR lpszFileFull 例：C:\Text.txt 
-	// Parameter: 	std::vector<BYTE> vecData
+	// Parameter: 	IN LPCTSTR lpszFileFull 例：C:\Text.txt 
+	// Parameter: 	OUT std::vector<BYTE> vecData
+	// Parameter: 	DWORD dwSizeLimit : 限制取文件的前dwSizeLimit个字节
 	//************************************
-	static bool GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData);
+	static bool GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData, DWORD dwSizeLimit = -1);
 
 	//************************************
 	// Description:	读取文件数据
@@ -152,10 +153,10 @@ public:
 	static std::vector<CMMString> GetFileOfDir(IN LPCTSTR lpszDirFull);
 
 	//************************************
-	// Description:	get files of dir
+	// Description:	get all files of dir
 	// Parameter: 	LPCTSTR lpszDirFull 例：C:\windows
 	//************************************
-	static std::vector<CMMString> GetFilesOfDir(IN LPCTSTR lpszDirFull);
+	static std::vector<CMMString> GetFileAndFolderOfDir(IN LPCTSTR lpszDirFull);
 
 	//************************************
 	// Description:	get size of dir
@@ -190,6 +191,12 @@ public:
 	// Parameter: 	CMMString strHasName 例：qq
 	//************************************
 	static bool RemoveFileByHasName(CMMString strPath, CMMString strHasName);
+
+	//************************************
+	// Description:	清空路径下的文件
+	// Parameter: 	CMMString strPath 例：C:\Program Files (x86)
+	//************************************
+	static bool ClearFilesOfFolder(CMMString strPath);
 
 	//************************************
 	// Description:	open folder and select file 

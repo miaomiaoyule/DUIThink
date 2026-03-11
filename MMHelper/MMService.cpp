@@ -618,6 +618,14 @@ CMMString CMMService::GetAppName()
 	return sName.c_str();
 }
 
+CMMString CMMService::GetAppFile()
+{
+	TCHAR szPath[MAX_PATH + 1] = {};
+	GetModuleFileName(NULL, szPath, MAX_PATH);
+
+	return szPath;
+}
+
 UINT CMMService::ReadFileValue(LPCTSTR lpszFileName, LPCTSTR pszKeyName, LPCTSTR pszItemName, UINT nDefault)
 {
 	//»ñÈ¡Ä¿Â¼

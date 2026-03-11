@@ -617,7 +617,7 @@ bool CDUIListItemCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &M
 
 bool CDUIListItemCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	bool bClick = (m_nControlStatus & ControlStatus_Pushed);
+	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
 	bool bDragMoving = m_pOwner && m_pOwner->IsAnimateDraging();
 
 	__super::OnDuiLButtonUp(pt, Msg);
@@ -670,7 +670,7 @@ bool CDUIListItemCtrl::OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &M
 
 bool CDUIListItemCtrl::OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	bool bClick = (m_nControlStatus & ControlStatus_Pushed);
+	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
 
 	__super::OnDuiRButtonUp(pt, Msg);
 
@@ -899,7 +899,7 @@ void CDUIListItemCtrl::PaintItemColor(HDC hDC)
 	}
 	else if (IsSelected())
 	{
-		if (m_nControlStatus & ControlStatus_Hot)
+		if (m_cbControlStatus & ControlStatus_Hot)
 		{
 			pAttribute = ListInfo.pAttributeItemStatusColorSelHot;
 		}
@@ -910,7 +910,7 @@ void CDUIListItemCtrl::PaintItemColor(HDC hDC)
 	}
 	else
 	{
-		if (m_nControlStatus & ControlStatus_Hot)
+		if (m_cbControlStatus & ControlStatus_Hot)
 		{
 			pAttribute = ListInfo.pAttributeItemStatusColorHot;
 		}
@@ -969,7 +969,7 @@ void CDUIListItemCtrl::PaintItemImage(HDC hDC)
 	}
 	else if (IsSelected())
 	{
-		if (m_nControlStatus & ControlStatus_Hot)
+		if (m_cbControlStatus & ControlStatus_Hot)
 		{
 			pAttribute = ListInfo.pAttributeItemStatusImageSelHot;
 		}
@@ -980,7 +980,7 @@ void CDUIListItemCtrl::PaintItemImage(HDC hDC)
 	}
 	else
 	{
-		if (m_nControlStatus & ControlStatus_Hot)
+		if (m_cbControlStatus & ControlStatus_Hot)
 		{
 			pAttribute = ListInfo.pAttributeItemStatusImageHot;
 		}
@@ -1200,7 +1200,7 @@ CDUIAttributeTextStyle * CDUIListItemCtrl::GetAttributeTextStyleCur()
 	}
 	else if (IsSelected())
 	{
-		if (m_nControlStatus & ControlStatus_Hot)
+		if (m_cbControlStatus & ControlStatus_Hot)
 		{
 			pAttribute = ListInfo.pAttributeItemTextStyleSelHot;
 		}
@@ -1211,7 +1211,7 @@ CDUIAttributeTextStyle * CDUIListItemCtrl::GetAttributeTextStyleCur()
 	}
 	else
 	{
-		if (m_nControlStatus & ControlStatus_Hot)
+		if (m_cbControlStatus & ControlStatus_Hot)
 		{
 			pAttribute = ListInfo.pAttributeItemTextStyleHot;
 		}

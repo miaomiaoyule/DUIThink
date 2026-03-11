@@ -131,15 +131,154 @@ static BOOL WINAPI AlphaBitBlt(HDC hDC, int nDestX, int nDestY, int dwWidth, int
 	return TRUE;
 }
 
+static void ConstructRoundRectBezier(
+	const CDUIRect& rc,
+	const CDUIRect& rd,      // 各个圆角半径
+	Gdiplus::GraphicsPath& path)
+{
+	float left = (float)rc.left;
+	float top = (float)rc.top;
+	float right = (float)rc.right;
+	float bottom = (float)rc.bottom;
+
+	float rtl = (float)rd.left;
+	float rtr = (float)rd.top;
+	float rbr = (float)rd.right;
+	float rbl = (float)rd.bottom;
+
+	float w = right - left;
+	float h = bottom - top;
+	if (w <= 0 || h <= 0) return;
+
+	// 修正半径（不能超过宽/高的一半）
+	rtl = min(rtl, h * 0.5f);
+	rtl = min(rtl, w * 0.5f);
+
+	rtr = min(rtr, h * 0.5f);
+	rtr = min(rtr, w * 0.5f);
+
+	rbr = min(rbr, h * 0.5f);
+	rbr = min(rbr, w * 0.5f);
+
+	rbl = min(rbl, h * 0.5f);
+	rbl = min(rbl, w * 0.5f);
+
+	// 圆形逼近系数
+	const float K = 0.5522847498f;
+
+	path.Reset();
+
+	// === 开始于左上角（顶边中点）===
+	path.StartFigure();
+
+	// ---- top side ----
+	path.AddLine(left + rtl, top, right - rtr, top);
+
+	// ---- top-right corner (Bezier) ----
+	path.AddBezier(
+		right - rtr, top,
+		right - rtr + K * rtr, top,
+		right, top + rtr - K * rtr,
+		right, top + rtr);
+
+	// ---- right side ----
+	path.AddLine(right, top + rtr, right, bottom - rbr);
+
+	// ---- bottom-right corner ----
+	path.AddBezier(
+		right, bottom - rbr,
+		right, bottom - rbr + K * rbr,
+		right - rbr + K * rbr, bottom,
+		right - rbr, bottom);
+
+	// ---- bottom side ----
+	path.AddLine(right - rbr, bottom, left + rbl, bottom);
+
+	// ---- bottom-left corner ----
+	path.AddBezier(
+		left + rbl, bottom,
+		left + rbl - K * rbl, bottom,
+		left, bottom - rbl + K * rbl,
+		left, bottom - rbl);
+
+	// ---- left side ----
+	path.AddLine(left, bottom - rbl, left, top + rtl);
+
+	// ---- top-left corner ----
+	path.AddBezier(
+		left, top + rtl,
+		left, top + rtl - K * rtl,
+		left + rtl - K * rtl, top,
+		left + rtl, top);
+
+	path.CloseFigure();
+
+	return;
+}
+
 static void ConstructRoundPath(const CDUIRect &rcDraw, const CDUIRect &rcRound, int nLineSize, Gdiplus::GraphicsPath &Path)
 {
-	Path.AddArc(rcDraw.right - rcRound.top * 2 - nLineSize, rcDraw.top, rcRound.top * 2, rcRound.top * 2, 270, 90); //top right 
-	Path.AddLine(rcDraw.right - nLineSize, rcDraw.top + rcRound.top, rcDraw.right - nLineSize, rcDraw.bottom - rcRound.right); //right 
-	Path.AddArc(rcDraw.right - rcRound.right * 2 - nLineSize, rcDraw.bottom - rcRound.right * 2 - nLineSize, rcRound.right * 2, rcRound.right * 2, 0, 90); //right bottom
-	Path.AddLine(rcDraw.right - rcRound.right, rcDraw.bottom - nLineSize, rcDraw.left + rcRound.bottom, rcDraw.bottom - nLineSize); //bottom
-	Path.AddArc(rcDraw.left, rcDraw.bottom - rcRound.bottom * 2 - nLineSize, rcRound.bottom * 2, rcRound.bottom * 2, 90, 90); //left bottom
-	Path.AddLine(rcDraw.left, rcDraw.bottom - rcRound.bottom, rcDraw.left, rcDraw.top + rcRound.left); //left
-	Path.AddArc(rcDraw.left, rcDraw.top, rcRound.left * 2, rcRound.left * 2, 180, 90); //left top
+	if (rcDraw.GetWidth() <= 0 || rcDraw.GetHeight() <= 0) return;
+
+	// 修正圆角半径（不能超过矩形一半）
+	int rt = max(0, min(rcRound.top, rcDraw.GetHeight() / 2));
+	int rr = max(0, min(rcRound.right, rcDraw.GetWidth() / 2));
+	int rb = max(0, min(rcRound.bottom, rcDraw.GetHeight() / 2));
+	int rl = max(0, min(rcRound.left, rcDraw.GetWidth() / 2));
+
+	// 开始构造路径
+	Path.Reset();
+
+	// top-right
+	Path.AddArc(
+		rcDraw.right - rt * 2 - nLineSize,
+		rcDraw.top,
+		rt * 2, rt * 2,
+		270, 90);
+
+	// right
+	Path.AddLine(
+		rcDraw.right - nLineSize,
+		rcDraw.top + rt,
+		rcDraw.right - nLineSize,
+		rcDraw.bottom - rr);
+
+	// bottom-right
+	Path.AddArc(
+		rcDraw.right - rr * 2 - nLineSize,
+		rcDraw.bottom - rr * 2 - nLineSize,
+		rr * 2, rr * 2,
+		0, 90);
+
+	// bottom
+	Path.AddLine(
+		rcDraw.right - rr,
+		rcDraw.bottom - nLineSize,
+		rcDraw.left + rb,
+		rcDraw.bottom - nLineSize);
+
+	// bottom-left
+	Path.AddArc(
+		rcDraw.left,
+		rcDraw.bottom - rb * 2 - nLineSize,
+		rb * 2, rb * 2,
+		90, 90);
+
+	// left
+	Path.AddLine(
+		rcDraw.left,
+		rcDraw.bottom - rb,
+		rcDraw.left,
+		rcDraw.top + rl);
+
+	// top-left
+	Path.AddArc(
+		rcDraw.left,
+		rcDraw.top,
+		rl * 2, rl * 2,
+		180, 90);
+
+	Path.CloseFigure();
 
 	return;
 }
@@ -165,6 +304,13 @@ static void ConstructRhombPath(const CDUIRect &rcDraw, int nLineSize, Gdiplus::G
 	return;
 }
 
+static void ConstructEllipsePath(const CDUIRect &rcDraw, Gdiplus::GraphicsPath &Path)
+{
+	Path.AddEllipse(rcDraw.left, rcDraw.top, rcDraw.GetWidth(), rcDraw.GetHeight());
+
+	return;
+}
+
 static void ConstructRhombPoints(const CDUIRect &rcDraw, int nLineSize, std::vector<Gdiplus::Point> &vecPoint)
 {
 	vecPoint.clear();
@@ -176,9 +322,41 @@ static void ConstructRhombPoints(const CDUIRect &rcDraw, int nLineSize, std::vec
 	return;
 }
 
+static void ConstructTextureBrushMatrix(Gdiplus::TextureBrush &Brush, Gdiplus::GraphicsPath &Path, Gdiplus::Bitmap *pBmp)
+{
+	if (NULL == pBmp) return;
+
+	UINT bmpW = pBmp->GetWidth();
+	UINT bmpH = pBmp->GetHeight();
+	if (bmpW == 0 || bmpH == 0) return;  // 避免除零
+
+	Gdiplus::RectF bounds;
+	Path.GetBounds(&bounds);
+
+	if (bounds.Width <= 0 || bounds.Height <= 0)
+		return;  // 无效路径，不应用纹理
+
+	REAL sx = bounds.Width / (REAL)bmpW;
+	REAL sy = bounds.Height / (REAL)bmpH;
+
+	// 避免 0，NaN，Inf
+	const REAL MIN_SCALE = 0.001f;
+	if (!std::isfinite(sx) || sx < MIN_SCALE) sx = MIN_SCALE;
+	if (!std::isfinite(sy) || sy < MIN_SCALE) sy = MIN_SCALE;
+
+	Gdiplus::Matrix matrix;
+
+	matrix.Scale(sx, sy);
+	matrix.Translate(bounds.X, bounds.Y, Gdiplus::MatrixOrderAppend);
+
+	Brush.SetTransform(&matrix);
+
+	return;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-	BYTE cbAlpha, bool bAlpha, bool bHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
+	BYTE cbAlpha, bool bAlpha, bool bCornerHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (NULL == hDC || NULL == hBitmap) return;
@@ -206,7 +384,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 	BLENDFUNCTION bf = { AC_SRC_OVER, 0, cbAlpha, AC_SRC_ALPHA };
 
 	//middle
-	if (false == bHole)
+	if (false == bCornerHole)
 	{
 		do
 		{
@@ -282,7 +460,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 
 			if (bTiledX)
 			{
-				LONG lWidth = rcBmpPart.right - rcBmpPart.left - rcCorner.left - rcCorner.right;
+				LONG lWidth = rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right;
 				int iTimes = (rcDest.GetWidth() + lWidth - 1) / lWidth;
 				for (int i = 0; i < iTimes; ++i)
 				{
@@ -313,7 +491,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 
 			//bTiledY
 			{
-				LONG lHeight = rcBmpPart.bottom - rcBmpPart.top - rcCorner.top - rcCorner.bottom;
+				LONG lHeight = rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom;
 				int iTimes = (rcDest.GetHeight() + lHeight - 1) / lHeight;
 				for (int i = 0; i < iTimes; ++i)
 				{
@@ -559,7 +737,11 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
+
+	//for clip
+	CDUIRect rcDraw = rcItem;
+	rcDraw.right--;
+	rcDraw.bottom--;
 
 	do
 	{
@@ -571,40 +753,49 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 				|| rcRound.bottom > 0)
 			{
 				Gdiplus::GraphicsPath Path;
-				ConstructRoundPath(rcItem, rcRound, 0, Path);
+				ConstructRoundPath(rcDraw, rcRound, 0, Path);
 
-				Gdiplus::TextureBrush Brush(pBmp);
+				Gdiplus::TextureBrush Brush(pBmp, Gdiplus::WrapModeClamp);
+				ConstructTextureBrushMatrix(Brush, Path, pBmp);
+				
 				Gp.FillPath(&Brush, &Path);
 			}
 			else
 			{
-				Gp.DrawImage(pBmp, Gdiplus::Rect(rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight()), 0, 0, pBmp->GetWidth(), pBmp->GetHeight(), UnitPixel);
+				Gp.DrawImage(pBmp, Gdiplus::Rect(rcDraw.left, rcDraw.top, rcDraw.GetWidth(), rcDraw.GetHeight()), 0, 0, pBmp->GetWidth(), pBmp->GetHeight(), Gdiplus::UnitPixel);
 			}
 
 			break;
 		}
 
-		Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmp);
+		Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmp, Gdiplus::WrapModeClamp);
 		Gdiplus::GraphicsPath Path;
 		switch (RoundType)
 		{
 			case Round_Parallelogram:
 			{
-				ConstructParallelogramPath(rcItem, rcItem.GetWidth() / 3, 0, Path);
+				ConstructParallelogramPath(rcDraw, rcDraw.GetWidth() / 3, 0, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmp);
+
 				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
 			}
 			case Round_Rhomb:
 			{
-				ConstructRhombPath(rcItem, 0, Path);
+				ConstructRhombPath(rcDraw, 0, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmp);
+
 				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
 			}
 			case Round_Ellipse:
 			{
-				Gp.FillEllipse(&BrushBmp, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
+				ConstructEllipsePath(rcDraw, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmp);
+
+				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
 			}
@@ -616,7 +807,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 }
 
 void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-	BYTE cbAlpha, bool bAlpha, bool bHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
+	BYTE cbAlpha, bool bAlpha, bool bCornerHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (NULL == hDC || NULL == pBmp) return;
@@ -624,7 +815,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	//no nine grid and roundpaint
 	bool bRoundPaint = (rcRound.left > 0 || rcRound.top > 0 || rcRound.right > 0 || rcRound.bottom > 0 || Round_Normal != RoundType);
 	if (bRoundPaint
-		&& false == bHole
+		&& false == bCornerHole
 		&& false == bTiledX
 		&& false == bTiledY
 		&& rcCorner.left == 0 && rcCorner.right == 0 && rcCorner.top == 0 && rcCorner.bottom == 0)
@@ -645,10 +836,9 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	Gdiplus::Graphics Gp(hDCPaint);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 
 	//draw middle
-	if (false == bHole)
+	if (false == bCornerHole)
 	{
 		do
 		{
@@ -706,7 +896,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 
 			if (bTiledX)
 			{
-				LONG lWidth = rcBmpPart.right - rcBmpPart.left - rcCorner.left - rcCorner.right;
+				LONG lWidth = rcBmpPart.GetWidth() - rcCorner.left - rcCorner.right;
 				int iTimes = (rcDest.GetWidth() + lWidth - 1) / lWidth;
 				for (int i = 0; i < iTimes; ++i)
 				{
@@ -722,7 +912,6 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 					Gp.DrawImage(pBmp, Gdiplus::Rect(lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.GetHeight()),
 						rcBmpPart.left + rcCorner.left, rcBmpPart.top + rcCorner.top, \
 						lDrawWidth, rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom, UnitPixel);
-
 				}
 
 				break;
@@ -730,7 +919,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 
 			//bTiledY
 			{
-				LONG lHeight = rcBmpPart.bottom - rcBmpPart.top - rcCorner.top - rcCorner.bottom;
+				LONG lHeight = rcBmpPart.GetHeight() - rcCorner.top - rcCorner.bottom;
 				int iTimes = (rcDest.GetHeight() + lHeight - 1) / lHeight;
 				for (int i = 0; i < iTimes; ++i)
 				{
@@ -897,7 +1086,6 @@ void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, c
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 
 	//round image
 	if (rcRound.left > 0
@@ -905,10 +1093,7 @@ void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, c
 		|| rcRound.right > 0
 		|| rcRound.bottom > 0)
 	{
-		Gdiplus::Bitmap *pBmpClone = GenerateBitmap(pBmpAnimate, CDUISize(rcItem.GetWidth(), rcItem.GetHeight()));
-		if (NULL == pBmpClone) return;
-
-		Gdiplus::TextureBrush BrushBmp((Gdiplus::Image*)pBmpClone);
+		Gdiplus::TextureBrush BrushBmp(pBmpAnimate, Gdiplus::WrapModeClamp);
 
 		//path
 		Gdiplus::GraphicsPath Path;
@@ -917,6 +1102,8 @@ void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, c
 			case Round_Parallelogram:
 			{
 				ConstructParallelogramPath(rcItem, rcItem.GetWidth() / 3, 0, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmpAnimate);
+
 				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
@@ -924,26 +1111,31 @@ void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, c
 			case Round_Rhomb:
 			{
 				ConstructRhombPath(rcItem, 0, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmpAnimate);
+
 				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
 			}
 			case Round_Ellipse:
 			{
-				Gp.FillEllipse(&BrushBmp, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
+				ConstructEllipsePath(rcItem, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmpAnimate);
+
+				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
 			}
 			default:
 			{
 				ConstructRoundPath(rcItem, rcRound, 0, Path);
+				ConstructTextureBrushMatrix(BrushBmp, Path, pBmpAnimate);
+
 				Gp.FillPath(&BrushBmp, &Path);
 
 				break;
 			}
 		}
-
-		MMSafeDelete(pBmpClone);
 
 		return;
 	}
@@ -1023,7 +1215,6 @@ void CDUIRenderEngine::DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList
 {
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 	//path
@@ -1047,7 +1238,6 @@ void CDUIRenderEngine::DrawRound(HDC hDC, const CDUIRect &rcItem, const CDUIRect
 
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 	//left top right bottom
@@ -1065,11 +1255,10 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUI
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 
-	//gid+
+	//gdi+
 	{
 		Gdiplus::Graphics Gp(hDC);
 		Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-		Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 		Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 		//adjust
@@ -1123,7 +1312,6 @@ void CDUIRenderEngine::DrawParallelogram(HDC hDC, const CDUIRect &rcItem, int nL
 {
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 	//path
@@ -1143,7 +1331,6 @@ void CDUIRenderEngine::DrawRhomb(HDC hDC, const CDUIRect &rcItem, int nLineSize,
 {
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 	//path
@@ -1163,13 +1350,28 @@ void CDUIRenderEngine::DrawEllipse(HDC hDC, const CDUIRect &rcItem, int nLineSiz
 {
 	Gdiplus::Graphics Gp(hDC);
 	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-	Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
 	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
 	Pen.SetAlignment(Gdiplus::PenAlignmentInset);
 	Pen.SetDashStyle((Gdiplus::DashStyle)LineStyle);
 	Gp.DrawEllipse(&Pen, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
+
+	return;
+}
+
+void CDUIRenderEngine::DrawArc(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, float fStartAngle, float fSweepAngle, enDuiLineStyle LineStyle)
+{
+	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
+
+	Gdiplus::Graphics Gp(hDC);
+	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+
+	//left top right bottom
+	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
+	Pen.SetAlignment(Gdiplus::PenAlignmentInset);
+	Gp.DrawArc(&Pen, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight(), fStartAngle, fSweepAngle);
 
 	return;
 }
@@ -1208,6 +1410,10 @@ void CDUIRenderEngine::FillRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUI
 	CDUIRect rcDraw = rcItem;
 	rcDraw.top += nLineSize;
 	rcDraw.left += nLineSize;
+
+	//for clip
+	rcDraw.right--;
+	rcDraw.bottom--;
 
 	//path
 	Gdiplus::GraphicsPath Path;
@@ -1794,6 +2000,8 @@ HBITMAP CDUIRenderEngine::GenerateBitmap(CDUIWnd *pWnd, CDUIControlBase *pContro
 
 Bitmap * CDUIRenderEngine::GenerateBitmap(Bitmap *pBmp, const CDUISize szGenerate)
 {
+	if (NULL == pBmp) return NULL;
+
 	int nScaleWidth = 0, nScaleHeight = 0;
 
 	double dbScaleBmp = (double)pBmp->GetWidth() / (double)pBmp->GetHeight();
@@ -1811,9 +2019,9 @@ Bitmap * CDUIRenderEngine::GenerateBitmap(Bitmap *pBmp, const CDUISize szGenerat
 	nScaleWidth = max(nScaleWidth, 1);
 	nScaleHeight = max(nScaleHeight, 1);
 
-	HDC hDCScreen = CreateDC(L"DISPLAY", NULL, NULL, NULL);
-	HDC hMemDC = CreateCompatibleDC(hDCScreen);
-	HBITMAP hBitmap = CreateCompatibleBitmap(hDCScreen, nScaleWidth, nScaleHeight);
+	HDC hDC = GetDC(NULL);
+	HDC hMemDC = CreateCompatibleDC(hDC);
+	HBITMAP hBitmap = CreateCompatibleBitmap(hDC, nScaleWidth, nScaleHeight);
 	HBITMAP hBmpOld = (HBITMAP)SelectObject(hMemDC, hBitmap);
 
 	Gdiplus::Graphics Gp(hMemDC);
@@ -1825,7 +2033,7 @@ Bitmap * CDUIRenderEngine::GenerateBitmap(Bitmap *pBmp, const CDUISize szGenerat
 	SelectObject(hMemDC, hBmpOld);
 	MMSafeDeleteObject(hBitmap);
 	MMSafeDeleteDC(hMemDC);
-	MMSafeDeleteDC(hDCScreen);
+	ReleaseDC(NULL, hDC);
 
 	return pBmpGenerate;
 }
@@ -1873,16 +2081,53 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFi
 
 HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor/* = 0*/)
 {
-	Bitmap *pBmp = GetAlphaBitmap(hBitmap);
-	if (NULL == pBmp) return NULL;
+	BITMAP bmp = {};
+	if (GetObject(hBitmap, sizeof(BITMAP), &bmp) == 0) return NULL;
 
-	HBITMAP hBmpClone = NULL;
-	pBmp->GetHBITMAP(Gdiplus::Color(0, 0, 0, 0), &hBmpClone);
-	MMSafeDelete(pBmp);
+	LONG cbSize = bmp.bmWidthBytes * bmp.bmHeight;
+	std::vector<BYTE> vecPixel;
+	vecPixel.resize(cbSize);
+	if (vecPixel.empty()) return NULL;
 
-	if (0 != dwFilterColor)
+	BITMAPINFO bmpInfo = {};
+	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bmpInfo.bmiHeader.biWidth = bmp.bmWidth;
+	bmpInfo.bmiHeader.biHeight = -bmp.bmHeight;	//正数说明数据从下到上，负数说明从上到下
+	bmpInfo.bmiHeader.biPlanes = bmp.bmPlanes;
+	bmpInfo.bmiHeader.biBitCount = bmp.bmBitsPixel;
+	bmpInfo.bmiHeader.biCompression = BI_RGB;
+
+	HDC hDC = GetDC(NULL);
+	LONG cbCopied = GetDIBits(hDC, hBitmap, 0, bmp.bmHeight, vecPixel.data(), &bmpInfo, DIB_RGB_COLORS);
+	if (cbCopied == 0)
 	{
-		AdjustImage(hBmpClone, dwFilterColor, 0);
+		ReleaseDC(NULL, hDC);
+		return NULL;
+	}
+
+	LPBYTE pBits = nullptr;
+	HBITMAP hBmpClone = CDUIRenderEngine::CreateARGB32Bitmap(hDC, bmp.bmWidth, bmp.bmHeight, &pBits);
+	ReleaseDC(NULL, hDC);
+	if (NULL == hBmpClone || NULL == pBits) return nullptr;
+
+	BYTE* src = vecPixel.data();
+	int nLinesize = bmp.bmWidth * 4;
+	int nHeight = bmp.bmHeight;
+	for (UINT y = 0; y < nHeight; y++)
+	{
+		memcpy(pBits + y * nLinesize, src + y * nLinesize, nLinesize);
+
+		if (0 != dwFilterColor)
+		{
+			BYTE *pBitsLine = pBits + (nLinesize * y);
+			for (int nWidth = 0; nWidth < bmp.bmWidth; nWidth++)
+			{
+				DWORD &dwColor = *((DWORD *)pBitsLine + nWidth);
+				if (dwColor != dwFilterColor) continue;
+
+				dwColor = 0;
+			}
+		}
 	}
 
 	return hBmpClone;
@@ -1906,9 +2151,9 @@ Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB)
 	bmpInfo.bmiHeader.biBitCount = bmp.bmBitsPixel;
 	bmpInfo.bmiHeader.biCompression = BI_RGB;
 
-	HDC hDCScreen = CreateDC(L"DISPLAY", NULL, NULL, NULL);
-	LONG cbCopied = GetDIBits(hDCScreen, hBitmap, 0, bmp.bmHeight, vecPixel.data(), &bmpInfo, DIB_RGB_COLORS);
-	MMSafeDeleteDC(hDCScreen);
+	HDC hDC = GetDC(NULL);
+	LONG cbCopied = GetDIBits(hDC, hBitmap, 0, bmp.bmHeight, vecPixel.data(), &bmpInfo, DIB_RGB_COLORS);
+	ReleaseDC(NULL, hDC);
 
 	if (cbCopied == 0) return NULL;
 
@@ -1945,6 +2190,50 @@ Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB)
 	}
 
 	return pBitmap;
+}
+
+HBITMAP CDUIRenderEngine::GetHBITMAP(Bitmap *pBmp, bool bKeepAlpha)
+{
+	if (!pBmp) return nullptr;
+
+	UINT width = pBmp->GetWidth();
+	UINT height = pBmp->GetHeight();
+
+	LPBYTE pBits = nullptr;
+	HDC hDC = GetDC(NULL);
+	HBITMAP hBitmap = CreateARGB32Bitmap(hDC, pBmp->GetWidth(), pBmp->GetHeight(), &pBits);
+	ReleaseDC(NULL, hDC);
+	if (NULL == hBitmap || NULL == pBits) return nullptr;
+
+	BitmapData bmpData;
+	Rect rect(0, 0, width, height);
+	if (pBmp->LockBits(&rect, ImageLockModeRead, PixelFormat32bppARGB, &bmpData) != Ok)
+	{
+		MMSafeDeleteObject(hBitmap);
+		return nullptr;
+	}
+
+	BYTE* src = (BYTE*)bmpData.Scan0;
+	int stride = width * 4;
+
+	for (UINT y = 0; y < height; y++)
+	{
+		memcpy(pBits + y * stride, src + y * bmpData.Stride, stride);
+	}
+	
+	pBmp->UnlockBits(&bmpData);
+
+	if (false == bKeepAlpha)
+	{
+		// 如果不保留 alpha，则把 alpha 通道设为全不透明
+		for (UINT i = 0; i < width * height; i++)
+		{
+			pBits[3] = 255; // alpha
+			pBits += 4;
+		}
+	}
+
+	return hBitmap;
 }
 
 bool CDUIRenderEngine::SaveImage(HBITMAP hBitmap, CMMString strFile, bool bAlpahImage)

@@ -25,6 +25,7 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateControl(CDUIMenuItemCtrl);
 	DUIInner_RegisterCreateControl(CDUICheckBoxCtrl);
 	DUIInner_RegisterCreateControl(CDUIProgressCtrl);
+	DUIInner_RegisterCreateControl(CDUIProgressCircleCtrl);
 	DUIInner_RegisterCreateControl(CDUIRichEditCtrl);
 	DUIInner_RegisterCreateControl(CDUIScrollBarCtrl);
 	DUIInner_RegisterCreateControl(CDUISliderCtrl);
@@ -40,6 +41,7 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateControl(CDUIClockCtrl);
 	DUIInner_RegisterCreateControl(CDUIGroupCtrl);
 	DUIInner_RegisterCreateControl(CDUIKLineChartCtrl);
+	DUIInner_RegisterCreateControl(CDUIWebBrowserCtrl);
 
 	//ืสิด
 	DUIInner_RegisterCreateResource(CDUIFontBase);

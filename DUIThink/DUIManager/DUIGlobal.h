@@ -195,18 +195,21 @@ public:
 	CDUIFontBase * GetFontResource(int nIndex);
 	CDUIFontBase * GetFontResDefault();
 	MapDuiFontBase GetFontResourceAll();
+	bool RemoveFontResource(const CMMString &strName);
 
 	int GetColorResourceCount();
 	CDUIColorBase * GetColorResource(const CMMString &strName);
 	CDUIColorBase * GetColorResource(int nIndex);
 	CDUIColorBase * GetColorResource(ARGB dwColor);
 	MapDuiColorBase GetColorResourceAll();
+	bool RemoveColorResource(const CMMString &strName);
 
 	int GetImageResourceCount();
 	CDUIImageBase * GetImageResource(const CMMString &strName);
 	CDUIImageBase * GetImageResource(int nIndex);
 	CDUIImageBase * GetImageResourceByFile(const CMMString &strFileFull);
 	MapDuiImageBase GetImageResourceAll();
+	bool RemoveImageResource(const CMMString &strName);
 
 	int GetDuiCount(enDuiType DuiType);
 	CMMString GetDuiName(int nIndex, enDuiType DuiType);
@@ -214,6 +217,7 @@ public:
 	CMMString GetDuiFile(int nIndex, enDuiType DuiType);
 	CMMString GetDuiFile(const CMMString &strName);
 	CMMString GetDuiFileFull(const CMMString &strName);
+	bool RemoveDui(const CMMString &strName);
 
 	//path
 	CMMString GetProjectPath();
@@ -289,10 +293,6 @@ protected:
 	bool RenameImageResource(const CMMString &strNameOld, const CMMString &strNameNew);
 	bool RenameColorResource(const CMMString &strNameOld, const CMMString &strNameNew);
 	bool RenameDui(const CMMString &strNameOld, const CMMString &strNameNew);
-	bool RemoveFontResource(const CMMString &strName);
-	bool RemoveImageResource(const CMMString &strName);
-	bool RemoveColorResource(const CMMString &strName);
-	bool RemoveDui(const CMMString &strName);
 	void SetFontResDefault(const CMMString &strName);
 	void OnDpiChanged(int nScalePre);
 	void OnResourceAdd(CDUIResourceBase *pResourceObj);

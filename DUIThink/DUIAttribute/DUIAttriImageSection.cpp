@@ -47,7 +47,8 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 	if (NULL == pWnd) return;
 
 	bool bScale = pImageBase->IsScale(GetScale());
-	bool bAlpha = pImageBase->IsAlpha();
+	BYTE cbAlpha = bDisablePallete ? 150 : ImageSection.cbAlpha;
+	bool bAlpha = 255 != cbAlpha || pImageBase->IsAlpha();
 	HBITMAP hBitmap = pImageBase->GetHandle(GetScale());
 
 	//source
@@ -63,9 +64,10 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 
 	//mask
 	Gdiplus::Bitmap *pBmp = NULL;
-	if (GetMask() > 0xff000000)
+	if (ImageSection.dwMask > 0x00ffffff)
 	{
-		hBitmap = CDUIRenderEngine::CopyBitmap(hBitmap, GetMask());
+		hBitmap = CDUIRenderEngine::CopyBitmap(hBitmap, ImageSection.dwMask);
+		bAlpha = true;
 	}
 	if (pWnd->IsGdiplusRenderImage())
 	{
@@ -80,28 +82,17 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 		if (pWnd->IsGdiplusRenderImage())
 		{
 			CDUIRenderEngine::DrawImage(hDC, pBmp, rcDest, rcPaint, rcSource,
-				rcCorner, bDisablePallete ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole, 
-				ImageSection.bTiledX, ImageSection.bTiledY, rcRound, RoundType);
+				rcCorner, cbAlpha, bAlpha, ImageSection.bCornerHole, 
+				HorizImageAlign_Tile == ImageSection.HorizImageAlign, VertImageAlign_Tile == ImageSection.VertImageAlign, rcRound, RoundType);
 		}
 		else
 		{
 			CDUIRenderEngine::DrawImage(hDC, hBitmap, rcDest, rcPaint, rcSource,
-				rcCorner, bDisablePallete ? 150 : ImageSection.cbAlpha, GetMask() > 0xff000000 || bAlpha, ImageSection.bHole,
-				ImageSection.bTiledX, ImageSection.bTiledY, rcRound, RoundType);
+				rcCorner, cbAlpha, bAlpha, ImageSection.bCornerHole,
+				HorizImageAlign_Tile == ImageSection.HorizImageAlign, VertImageAlign_Tile == ImageSection.VertImageAlign, rcRound, RoundType);
 		}
 
-		//move right
-		rcDest.Offset(rcDest.GetWidth(), 0);
-
-		//next line
-		if (rcDest.left >= rcItem.right)
-		{
-			rcDest.Offset(rcItem.left - rcDest.left, rcDest.GetHeight());
-		}
-
-		if (rcDest.top >= rcItem.bottom) break;
-
-	} while (HorizImageAlign_Tile == ImageSection.HorizImageAlign && VertImageAlign_Tile == ImageSection.VertImageAlign);
+	} while (false);
 
 	if (hBitmap != pImageBase->GetHandle(GetScale()))
 	{
@@ -248,6 +239,42 @@ LPCTSTR CDUIAttriImageSection::GetImageResName()
 {
 	CDUIImageBase *pImageBaseCur = GetCurImageBase();
 	return pImageBaseCur ? pImageBaseCur->GetResourceName() : _T("");
+}
+
+enDuiHorizImageAlignType CDUIAttriImageSection::GetHorizImageAlignType()
+{
+	tagDuiImageSection ImageSection = GetImageSection();
+
+	return ImageSection.HorizImageAlign;
+}
+
+void CDUIAttriImageSection::SetHorizImageAlignType(enDuiHorizImageAlignType ImageAlignType)
+{
+	tagDuiImageSection ImageSection = GetImageSection();
+	ImageSection.HorizImageAlign = ImageAlignType;
+	SetImageSection(ImageSection);
+
+	NotifyChange();
+
+	return;
+}
+
+enDuiVertImageAlignType CDUIAttriImageSection::GetVertImageAlignType()
+{
+	tagDuiImageSection ImageSection = GetImageSection();
+
+	return ImageSection.VertImageAlign;
+}
+
+void CDUIAttriImageSection::SetVertImageAlignType(enDuiVertImageAlignType ImageAlignType)
+{
+	tagDuiImageSection ImageSection = GetImageSection();
+	ImageSection.VertImageAlign = ImageAlignType;
+	SetImageSection(ImageSection);
+
+	NotifyChange();
+
+	return;
 }
 
 CDUIRect CDUIAttriImageSection::GetSource()
@@ -417,53 +444,17 @@ void CDUIAttriImageSection::SetCorner(const CDUIRect &rcCorner)
 	return;
 }
 
-bool CDUIAttriImageSection::IsHole()
+bool CDUIAttriImageSection::IsCornerHole()
 {
 	tagDuiImageSection ImageSection = GetImageSection();
 
-	return ImageSection.bHole;
+	return ImageSection.bCornerHole;
 }
 
-void CDUIAttriImageSection::SetHole(bool bHole)
+void CDUIAttriImageSection::SetCornerHole(bool bHole)
 {
 	tagDuiImageSection ImageSection = GetImageSection();
-	ImageSection.bHole = bHole;
-	SetImageSection(ImageSection);
-
-	NotifyChange();
-
-	return;
-}
-
-bool CDUIAttriImageSection::IsTiledX()
-{
-	tagDuiImageSection ImageSection = GetImageSection();
-
-	return ImageSection.bTiledX;
-}
-
-void CDUIAttriImageSection::SetTiledX(bool bTiledX)
-{
-	tagDuiImageSection ImageSection = GetImageSection();
-	ImageSection.bTiledX = bTiledX;
-	SetImageSection(ImageSection);
-
-	NotifyChange();
-
-	return;
-}
-
-bool CDUIAttriImageSection::IsTiledY()
-{
-	tagDuiImageSection ImageSection = GetImageSection();
-
-	return ImageSection.bTiledY;
-}
-
-void CDUIAttriImageSection::SetTiledY(bool bTiledY)
-{
-	tagDuiImageSection ImageSection = GetImageSection();
-	ImageSection.bTiledY = bTiledY;
+	ImageSection.bCornerHole = bHole;
 	SetImageSection(ImageSection);
 
 	NotifyChange();

@@ -59,24 +59,24 @@ CDUIWnd::~CDUIWnd()
 	return;
 }
 
-bool CDUIWnd::RegisterControlListen(IDuiInterface *pIControlListen)
+bool CDUIWnd::RegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
-	if (false == __super::RegisterControlListen(pIControlListen)) return false;
+	if (false == __super::RegisterControlListen(pIDuiControlListen)) return false;
 
 	CDUIContainerCtrl *pRootCtrl = GetRootCtrl();
 	if (NULL == pRootCtrl) return true;
 
-	return pRootCtrl->RegisterControlListen(pIControlListen);
+	return pRootCtrl->RegisterControlListen(pIDuiControlListen);
 }
 
-bool CDUIWnd::UnRegisterControlListen(IDuiInterface *pIControlListen)
+bool CDUIWnd::UnRegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
-	if (false == __super::UnRegisterControlListen(pIControlListen)) return false;
+	if (false == __super::UnRegisterControlListen(pIDuiControlListen)) return false;
 
 	CDUIContainerCtrl *pRootCtrl = GetRootCtrl();
 	if (NULL == pRootCtrl) return false;
 
-	return pRootCtrl->UnRegisterControlListen(pIControlListen);
+	return pRootCtrl->UnRegisterControlListen(pIDuiControlListen);
 }
 
 bool CDUIWnd::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
@@ -961,8 +961,9 @@ bool CDUIWnd::SetTimer(CDUIPropertyObject *pPropObj, UINT uTimerID, UINT uElapse
 	ASSERT(uElapse > 0);
 	if (NULL == pPropObj || 0 == uElapse) return false;
 
-	for (auto &TimerInfo : m_vecTimers)
+	for (int n = 0; n < m_vecTimers.size(); n++)
 	{
+		auto &TimerInfo = m_vecTimers[n];
 		if (TimerInfo.pPropObj == pPropObj
 			&& TimerInfo.hWnd == m_hWnd
 			&& TimerInfo.nLocalID == uTimerID)
@@ -1018,8 +1019,9 @@ bool CDUIWnd::KillTimer(CDUIPropertyObject *pPropObj, UINT uTimerID)
 	ASSERT(pPropObj != NULL);
 	if (NULL == pPropObj) return false;
 
-	for (auto &TimerInfo : m_vecTimers)
+	for (int n = 0; n < m_vecTimers.size(); n++)
 	{
+		auto &TimerInfo = m_vecTimers[n];
 		if (TimerInfo.pPropObj == pPropObj
 			&& TimerInfo.hWnd == m_hWnd
 			&& TimerInfo.nLocalID == uTimerID)
@@ -2178,9 +2180,29 @@ LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			return OnTimer(wParam, lParam);
 		}
+		case WM_MOVING:
+		{
+			return OnMoving(wParam, lParam);
+		}
+		case WM_MOVE:
+		{
+			return OnMove(wParam, lParam);
+		}
+		case WM_SIZING:
+		{
+			return OnSizing(wParam, lParam);
+		}
 		case WM_SIZE:
 		{
 			return OnSize(wParam, lParam);
+		}
+		case WM_WINDOWPOSCHANGING:
+		{
+			return OnWindowPosChanging(wParam, lParam);
+		}
+		case WM_WINDOWPOSCHANGED:
+		{
+			return OnWindowPosChanged(wParam, lParam);
 		}
 		case WM_KEYDOWN:
 		{
@@ -2317,7 +2339,7 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 	LONG lStyle = ::GetWindowLong(m_hWnd, GWL_STYLE);
 	lStyle &= ~WS_CAPTION;
 	//lStyle &= ~WS_SYSMENU;
-	::SetWindowLong(m_hWnd, GWL_STYLE, lStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
+	::SetWindowLong(m_hWnd, GWL_STYLE, lStyle);
 
 	//root
 	CDUIContainerCtrl *pRootCtrl = dynamic_cast<CDUIContainerCtrl*>(CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), this));
@@ -2507,9 +2529,6 @@ LRESULT CDUIWnd::OnSysCommand(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
-	m_ptMousePosDown = m_ptMousePosLast;
 
 	::SetCapture(m_hWnd);
 
@@ -2517,7 +2536,11 @@ LRESULT CDUIWnd::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
+	DuiMsg.ptMousePre = m_ptMousePosLast;
 	DuiMsg.ptMouse = pt;
+
+	m_ptMousePosLast = pt;
+	m_ptMousePosDown = pt;
 
 	//find
 	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);
@@ -2538,8 +2561,6 @@ LRESULT CDUIWnd::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
 
 	::ReleaseCapture();
 
@@ -2547,7 +2568,10 @@ LRESULT CDUIWnd::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
+	DuiMsg.ptMousePre = m_ptMousePosLast;
 	DuiMsg.ptMouse = pt;
+
+	m_ptMousePosLast = pt;
 
 	m_pCaptureCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : FindSubControlByPoint(m_pRootCtrl, pt);
 	if (m_pCaptureCtrl)
@@ -2567,16 +2591,17 @@ LRESULT CDUIWnd::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnLButtonDlk(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
-
+	
 	::SetCapture(m_hWnd);
 
 	//msg
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
+	DuiMsg.ptMousePre = m_ptMousePosLast;
 	DuiMsg.ptMouse = pt;
+	
+	m_ptMousePosLast = pt;
 
 	//find
 	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);
@@ -2597,9 +2622,6 @@ LRESULT CDUIWnd::OnLButtonDlk(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnRButtonDown(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
-	m_ptMousePosDown = m_ptMousePosLast;
 
 	::SetCapture(m_hWnd);
 
@@ -2607,7 +2629,11 @@ LRESULT CDUIWnd::OnRButtonDown(WPARAM wParam, LPARAM lParam)
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
+	DuiMsg.ptMousePre = m_ptMousePosLast;
 	DuiMsg.ptMouse = pt;
+
+	m_ptMousePosLast = pt;
+	m_ptMousePosDown = pt;
 
 	//find
 	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);
@@ -2628,8 +2654,6 @@ LRESULT CDUIWnd::OnRButtonDown(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnRButtonUp(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
 
 	::ReleaseCapture();
 
@@ -2637,7 +2661,10 @@ LRESULT CDUIWnd::OnRButtonUp(WPARAM wParam, LPARAM lParam)
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
+	DuiMsg.ptMousePre = m_ptMousePosLast;
 	DuiMsg.ptMouse = pt;
+
+	m_ptMousePosLast = pt;
 
 	m_pCaptureCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : FindSubControlByPoint(m_pRootCtrl, pt);
 	if (m_pCaptureCtrl)
@@ -2657,14 +2684,15 @@ LRESULT CDUIWnd::OnRButtonUp(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnRButtonDlk(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
-
+	
 	//msg
 	DuiMessage DuiMsg = {};
 	DuiMsg.wParam = wParam;
 	DuiMsg.lParam = lParam;
+	DuiMsg.ptMousePre = m_ptMousePosLast;
 	DuiMsg.ptMouse = pt;
+
+	m_ptMousePosLast = pt;
 
 	//≤È’“
 	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);
@@ -2687,14 +2715,15 @@ LRESULT CDUIWnd::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	do
 	{
 		CDUIPoint pt(lParam);
-		m_ptMousePosLast.x = pt.x;
-		m_ptMousePosLast.y = pt.y;
 
 		//msg
 		DuiMessage DuiMsg = {};
 		DuiMsg.wParam = wParam;
 		DuiMsg.lParam = lParam;
+		DuiMsg.ptMousePre = m_ptMousePosLast;
 		DuiMsg.ptMouse = pt;
+		
+		m_ptMousePosLast = pt;
 
 		//capture
 		if (m_pCaptureCtrl)
@@ -2863,8 +2892,7 @@ LRESULT CDUIWnd::OnMouseWheel(WPARAM wParam, LPARAM lParam)
 	pt.x = (INT)((SHORT)(LOWORD(lParam)));
 	pt.y = (INT)((SHORT)(HIWORD(lParam)));
 	::ScreenToClient(m_hWnd, &pt);
-	m_ptMousePosLast.x = pt.x;
-	m_ptMousePosLast.y = pt.y;
+	m_ptMousePosLast = pt;
 
 	//msg
 	DuiMessage DuiMsg = {};
@@ -2911,8 +2939,9 @@ LRESULT CDUIWnd::OnTimer(WPARAM wParam, LPARAM lParam)
 {
 	DuiMessage DuiMsg = {};
 
-	for (auto &TimerInfo : m_vecTimers)
+	for (int n = 0; n < m_vecTimers.size(); n++)
 	{
+		auto TimerInfo = m_vecTimers[n];
 		if (NULL == TimerInfo.pPropObj) continue;
 
 		if (TimerInfo.hWnd == m_hWnd
@@ -2938,6 +2967,21 @@ LRESULT CDUIWnd::OnTimer(WPARAM wParam, LPARAM lParam)
 	return OnOldWndProc(WM_TIMER, wParam, lParam);
 }
 
+LRESULT CDUIWnd::OnMoving(WPARAM wParam, LPARAM lParam)
+{
+	return OnOldWndProc(WM_MOVING, wParam, lParam);
+}
+
+LRESULT CDUIWnd::OnMove(WPARAM wParam, LPARAM lParam)
+{
+	return OnOldWndProc(WM_MOVE, wParam, lParam);
+}
+
+LRESULT CDUIWnd::OnSizing(WPARAM wParam, LPARAM lParam)
+{
+	return OnOldWndProc(WM_SIZING, wParam, lParam);
+}
+
 LRESULT CDUIWnd::OnSize(WPARAM wParam, LPARAM lParam)
 {
 	ReleasePaintScene();
@@ -2954,6 +2998,16 @@ LRESULT CDUIWnd::OnSize(WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
+}
+
+LRESULT CDUIWnd::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
+{
+	return OnOldWndProc(WM_WINDOWPOSCHANGING, wParam, lParam);
+}
+
+LRESULT CDUIWnd::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
+{
+	return OnOldWndProc(WM_WINDOWPOSCHANGED, wParam, lParam);
 }
 
 LRESULT CDUIWnd::OnKeyDown(WPARAM wParam, LPARAM lParam)
@@ -3188,10 +3242,18 @@ LRESULT CDUIWnd::OnPaint(CDUIRect rcPaint)
 	CDUIRenderEngine::ClearPixel(m_pBmpBackgroundBits, rcClient.GetWidth(), rcPaint);
 
 	//paint
-	int iSaveDC = ::SaveDC(m_hMemDcBackground);
-	m_pRootCtrl->OnDraw(m_hMemDcBackground, rcPaint);
-	::RestoreDC(m_hMemDcBackground, iSaveDC);
-
+	try
+	{
+		int iSaveDC = ::SaveDC(m_hMemDcBackground);
+		m_pRootCtrl->OnDraw(m_hMemDcBackground, rcPaint);
+		::RestoreDC(m_hMemDcBackground, iSaveDC);
+	}
+	catch (const std::exception& exception)
+	{
+		OutputDebugString(CA2CT(exception.what()));
+		CDUIGlobal::GetInstance()->SetDuiLastError((LPCTSTR)CA2CT(exception.what()));
+	}
+	
 	//update
 	if (dwStyle & WS_EX_LAYERED)
 	{

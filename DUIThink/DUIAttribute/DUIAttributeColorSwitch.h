@@ -45,6 +45,7 @@ public:
 	virtual bool DrawParallelogram(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid);
 	virtual bool DrawRhomb(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid);
 	virtual bool DrawEllipse(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid);
+	virtual bool DrawArc(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, float fStartAngle, float fSweepAngle, enDuiLineStyle LineStyle = LineStyle_Solid);
 	virtual bool FillRect(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust = false, ARGB dwColorGradient = 0);
 	virtual bool FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, bool bHSLAdjust = false, ARGB dwColorGradient = 0);
 	virtual bool FillParallelogram(HDC hDC, const CDUIRect &rcPaint, bool bHSLAdjust = false, ARGB dwColorGradient = 0);

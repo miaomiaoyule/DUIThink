@@ -24,10 +24,10 @@ class DUITHINK_API CDUIRenderEngine
 public:
 	//draw argb
 	static void DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-		BYTE cbAlpha = 255, bool bAlpha = false, bool bHole = false, bool bTiledX = false, bool bTiledY = false, const CDUIRect &rcRound = {}, enDuiRoundType RoundType = Round_Normal);
+		BYTE cbAlpha = 255, bool bAlpha = false, bool bCornerHole = false, bool bTiledX = false, bool bTiledY = false, const CDUIRect &rcRound = {}, enDuiRoundType RoundType = Round_Normal);
 	static void DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcRound = {}, enDuiRoundType RoundType = Round_Normal);
 	static void DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-		BYTE cbAlpha = 255, bool bAlpha = false, bool bHole = false, bool bTiledX = false, bool bTiledY = false, const CDUIRect &rcRound = {}, enDuiRoundType RoundType = Round_Normal);
+		BYTE cbAlpha = 255, bool bAlpha = false, bool bCornerHole = false, bool bTiledX = false, bool bTiledY = false, const CDUIRect &rcRound = {}, enDuiRoundType RoundType = Round_Normal);
 	static void DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, const CDUIRect &rcItem, int nFrameCur, const CDUIRect &rcRound = {}, enDuiRoundType RoundType = Round_Normal);
 	static void DrawLine(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, CDUISize szBreakTop = {}, enDuiLineStyle LineStyle = LineStyle_Solid);
@@ -37,6 +37,7 @@ public:
 	static void DrawParallelogram(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void DrawRhomb(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void DrawEllipse(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
+	static void DrawArc(HDC hDC, const CDUIRect &rcItem, int nLineSize, DWORD dwPenColor, float fStartAngle, float fSweepAngle, enDuiLineStyle LineStyle = LineStyle_Solid);
 	static void FillRect(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient = 0);
 	static void FillRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, DWORD dwColor, DWORD dwColorGradient = 0);
 	static void FillParallelogram(HDC hDC, const CDUIRect &rcItem, DWORD dwColor, DWORD dwColorGradient = 0);
@@ -62,6 +63,7 @@ public:
 	static HBITMAP CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFilterColor = 0);
 	static HBITMAP CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor = 0);
 	static Bitmap * GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB = true);
+	static HBITMAP GetHBITMAP(Bitmap *pBmp, bool bKeepAlpha = true);
 	static bool SaveImage(HBITMAP hBitmap, CMMString strFile, bool bAlpahImage = false);
 
 	//alpha help

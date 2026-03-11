@@ -76,51 +76,51 @@ void CDUIContainerCtrl::OnDpiChanged(int nScalePre)
 	return;
 }
 
-bool CDUIContainerCtrl::RegisterControlListen(IDuiInterface *pIControlListen)
+bool CDUIContainerCtrl::RegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
-	if (NULL == pIControlListen || false == __super::RegisterControlListen(pIControlListen)) return false;
+	if (NULL == pIDuiControlListen || false == __super::RegisterControlListen(pIDuiControlListen)) return false;
 
 	for (int n = 0; n < GetChildCount(); n++)
 	{
 		CDUIControlBase *pChild = GetChildAt(n);
 		if (NULL == pChild) continue;
 
-		pChild->RegisterControlListen(pIControlListen);
+		pChild->RegisterControlListen(pIDuiControlListen);
 	}
 
 	//scrollbar
 	if (m_pHorizScrollBarCtrl)
 	{
-		m_pHorizScrollBarCtrl->RegisterControlListen(pIControlListen);
+		m_pHorizScrollBarCtrl->RegisterControlListen(pIDuiControlListen);
 	}
 	if (m_pVertScrollBarCtrl)
 	{
-		m_pVertScrollBarCtrl->RegisterControlListen(pIControlListen);
+		m_pVertScrollBarCtrl->RegisterControlListen(pIDuiControlListen);
 	}
 
 	return true;
 }
 
-bool CDUIContainerCtrl::UnRegisterControlListen(IDuiInterface *pIControlListen)
+bool CDUIContainerCtrl::UnRegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
-	if (NULL == pIControlListen || false == __super::UnRegisterControlListen(pIControlListen)) return false;
+	if (NULL == pIDuiControlListen || false == __super::UnRegisterControlListen(pIDuiControlListen)) return false;
 
 	for (int n = 0; n < GetChildCount(); n++)
 	{
 		CDUIControlBase *pChild = GetChildAt(n);
 		if (NULL == pChild) continue;
 
-		pChild->UnRegisterControlListen(pIControlListen);
+		pChild->UnRegisterControlListen(pIDuiControlListen);
 	}
 
 	//scrollbar
 	if (m_pHorizScrollBarCtrl)
 	{
-		m_pHorizScrollBarCtrl->UnRegisterControlListen(pIControlListen);
+		m_pHorizScrollBarCtrl->UnRegisterControlListen(pIDuiControlListen);
 	}
 	if (m_pVertScrollBarCtrl)
 	{
-		m_pVertScrollBarCtrl->UnRegisterControlListen(pIControlListen);
+		m_pVertScrollBarCtrl->UnRegisterControlListen(pIDuiControlListen);
 	}
 
 	return true;

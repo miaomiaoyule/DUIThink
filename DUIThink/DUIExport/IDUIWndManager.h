@@ -157,7 +157,7 @@ public:
 
 	//static
 public:
-	//MK_CONTROL°¢MK_RBUTTON°¢MK_LBUTTON°¢MK_SHIFT°¢MK_ALT;
+	//MK_CONTROL„ÄÅMK_RBUTTON„ÄÅMK_LBUTTON„ÄÅMK_SHIFT„ÄÅMK_ALT;
 	static UINT MapKeyState();
 };
 //////////////////////////////////////////////////////////////////////////

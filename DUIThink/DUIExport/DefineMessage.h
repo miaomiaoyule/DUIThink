@@ -63,6 +63,7 @@ enum enDuiNotifyType
 	DuiNotify_SysChar = 205,
 	DuiNotify_SelectChanged = 250,
 	DuiNotify_ComboxExpand = 251,
+	DuiNotify_TabSelectChanged = 252,
 	DuiNotify_SwitchListViewType = 260,
 	DuiNotify_HeadItemButtonDown = 261,
 	DuiNotify_HeadItemButtonUp = 262,
@@ -110,6 +111,7 @@ typedef struct tagDuiMessage
 	WPARAM								wParam = 0;
 	LPARAM								lParam = 0;
 	DWORD								dwTimestamp = 0;
+	POINT								ptMousePre = {};
 	POINT								ptMouse = {};
 	TCHAR								chKey = 0;
 	WORD								wKeyState = 0;

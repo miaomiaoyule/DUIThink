@@ -46,6 +46,16 @@ CMMString CMMStrHelp::Format(LPCTSTR lpszFmt, ...)
 	return strRes;
 }
 
+CMMString CMMStrHelp::ConvertAuto(std::string strFrom)
+{
+	if (CMMFile::IsUTF8Encode(std::vector<BYTE>(strFrom.begin(), strFrom.end())))
+	{
+		return ((LPCTSTR)CA2CT(strFrom.c_str(), CP_UTF8));
+	}
+	
+	return ((LPCTSTR)CA2CT(strFrom.c_str()));
+}
+
 RECT CMMStrHelp::ParseRect(LPCTSTR lpszStr)
 {
 	RECT rc = {};

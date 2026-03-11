@@ -50,6 +50,10 @@ public:
 	virtual void SetImageResSwitch(const CMMString &strImageResSwitch);
 	virtual vector<CMMString> GetImageResSwitch();
 	virtual LPCTSTR GetImageResName();
+	virtual enDuiHorizImageAlignType GetHorizImageAlignType();
+	virtual void SetHorizImageAlignType(enDuiHorizImageAlignType ImageAlignType);
+	virtual enDuiVertImageAlignType GetVertImageAlignType();
+	virtual void SetVertImageAlignType(enDuiVertImageAlignType ImageAlignType);
 
 	virtual CDUIRect GetSource();
 	virtual CDUIRect GetSource(tagDuiImageSection ImageSection);
@@ -65,12 +69,8 @@ public:
 
 	virtual CDUIRect GetCorner();
 	virtual void SetCorner(const CDUIRect &rcCorner);
-	virtual bool IsHole();
-	virtual void SetHole(bool bHole);
-	virtual bool IsTiledX();
-	virtual void SetTiledX(bool bTiledX);
-	virtual bool IsTiledY();
-	virtual void SetTiledY(bool bTiledY);
+	virtual bool IsCornerHole();
+	virtual void SetCornerHole(bool bHole);
 
 	//attribute
 protected:

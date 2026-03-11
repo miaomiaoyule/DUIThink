@@ -321,7 +321,7 @@ void CDUIButtonCtrl::SetImageSectionDisabled(const tagDuiImageSection &ImageSect
 
 bool CDUIButtonCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	bool bClick = (m_nControlStatus & ControlStatus_Pushed);
+	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
 
 	__super::OnDuiLButtonUp(pt, Msg);
 
@@ -335,7 +335,7 @@ bool CDUIButtonCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 
 bool CDUIButtonCtrl::OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	bool bClick = (m_nControlStatus & ControlStatus_Pushed);
+	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
 
 	if (false == __super::OnDuiRButtonUp(pt, Msg)) return false;
 
@@ -442,11 +442,11 @@ void CDUIButtonCtrl::PaintText(HDC hDC)
 	{
 		pAttribute = &m_AttributeTextStyleDisabled;
 	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
+	else if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		pAttribute = &m_AttributeTextStylePushed;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		pAttribute = &m_AttributeTextStyleHot;
 	}
@@ -483,11 +483,11 @@ CDUIAttributeColorSwitch * CDUIButtonCtrl::GetAttributeStatusColor()
 	{
 		return &m_AttributeColorDisabled;
 	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
+	else if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		return &m_AttributeColorPushed;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		return &m_AttributeColorHot;
 	}
@@ -509,11 +509,11 @@ CDUIAttriImageSection * CDUIButtonCtrl::GetAttributeStatusImage()
 	{
 		return &m_AttributeImageDisabled;
 	}
-	else if (m_nControlStatus & ControlStatus_Pushed)
+	else if (m_cbControlStatus & ControlStatus_Pushed)
 	{
 		return &m_AttributeImagePushed;
 	}
-	else if (m_nControlStatus & ControlStatus_Hot)
+	else if (m_cbControlStatus & ControlStatus_Hot)
 	{
 		return &m_AttributeImageHot;
 	}

@@ -55,6 +55,7 @@
 #include <tchar.h>
 #include <assert.h>
 #include <vector>
+#include <atomic>
 #include <memory>
 #include <functional>
 #include <deque>
@@ -67,7 +68,6 @@
 #include <thread>
 #include <windows.h>
 #include <Tlhelp32.h>  
-#include <dbghelp.h>
 #include <ObjBase.h>
 #include <atltypes.h>
 #include <atlstr.h>
@@ -81,6 +81,7 @@
 #include <Shlwapi.h>
 #include <ShellAPI.h>
 #include <winternl.h>
+#include <WtsApi32.h>
 using namespace std;
 
 #pragma comment(lib, "ws2_32.lib")
@@ -89,6 +90,7 @@ using namespace std;
 #pragma comment(lib, "Bcrypt.lib")
 #pragma comment(lib, "Userenv.lib")
 #pragma comment(lib, "version.lib")
+#pragma comment(lib, "Wtsapi32.lib")
 
 //////////////////////////////////////////////////////////////////////////////////
 void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
@@ -137,7 +139,6 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMModule.h"
 #include "MMFile.h"
 #include "MMStrHelp.h"
-#include "MMMiniDumper.h"
 #include "MMService.h"
 #include "MMCommandLine.h"
 #include "MMResource.h"

@@ -16,7 +16,7 @@ CDUIPropertyObject::~CDUIPropertyObject()
 	m_vecAttributeGroup.clear();
 
 #ifdef DUI_DESIGN
-	m_vecIControlListen.clear();
+	m_vecIDuiControlListen.clear();
 #endif
 
 	return;
@@ -24,49 +24,48 @@ CDUIPropertyObject::~CDUIPropertyObject()
 
 bool CDUIPropertyObject::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 {
-	auto vecIControlListen = GetControlListen();
-	for (auto pInterface : vecIControlListen)
+	auto vecIDuiControlListen = GetControlListen();
+	for (auto pIDuiControlListen : vecIDuiControlListen)
 	{
-		MMInterfaceHelper(IControlListen, pInterface, pIControlListen);
-		if (NULL == pIControlListen) continue;
+		if (NULL == pIDuiControlListen) continue;
 
-		pIControlListen->OnAttributeChange(this, pAttributeObj);
+		pIDuiControlListen->OnAttributeChange(this, pAttributeObj);
 	}
 
 	return false;
 }
 
-VecControlListen CDUIPropertyObject::GetControlListen()
+VecIDuiControlListen CDUIPropertyObject::GetControlListen()
 {
 #ifdef DUI_DESIGN
-	return m_vecIControlListen;
+	return m_vecIDuiControlListen;
 #else
 	return {};
 #endif
 }
 
-bool CDUIPropertyObject::RegisterControlListen(IDuiInterface *pIControlListen)
+bool CDUIPropertyObject::RegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
-	if (NULL == pIControlListen) return false;
+	if (NULL == pIDuiControlListen) return false;
 
 #ifdef DUI_DESIGN
-	if (find(m_vecIControlListen.begin(), m_vecIControlListen.end(), pIControlListen) != m_vecIControlListen.end()) return false;
+	if (find(m_vecIDuiControlListen.begin(), m_vecIDuiControlListen.end(), pIDuiControlListen) != m_vecIDuiControlListen.end()) return false;
 
-	m_vecIControlListen.push_back(pIControlListen);
+	m_vecIDuiControlListen.push_back(pIDuiControlListen);
 #endif
 
 	return true;
 }
 
-bool CDUIPropertyObject::UnRegisterControlListen(IDuiInterface *pIControlListen)
+bool CDUIPropertyObject::UnRegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
-	if (NULL == pIControlListen) return false;
+	if (NULL == pIDuiControlListen) return false;
 
 #ifdef DUI_DESIGN
-	auto FindIt = find(m_vecIControlListen.begin(), m_vecIControlListen.end(), pIControlListen);
-	if (FindIt == m_vecIControlListen.end()) return false;
+	auto FindIt = find(m_vecIDuiControlListen.begin(), m_vecIDuiControlListen.end(), pIDuiControlListen);
+	if (FindIt == m_vecIDuiControlListen.end()) return false;
 
-	m_vecIControlListen.erase(FindIt);
+	m_vecIDuiControlListen.erase(FindIt);
 #endif
 
 	return true;
@@ -258,17 +257,16 @@ void CDUIGlobal::PerformNotifyChildAdd(CDUIPropertyObject *pPropertyObj, CDUICon
 {
 	if (NULL == pPropertyObj || NULL == pChild) return;
 
-	auto vecIControlListen = pPropertyObj->GetControlListen();
-	if (vecIControlListen.empty()) return;
+	auto vecIDuiControlListen = pPropertyObj->GetControlListen();
+	if (vecIDuiControlListen.empty()) return;
 
-	for (auto pInterface : vecIControlListen)
+	for (auto pIDuiControlListen : vecIDuiControlListen)
 	{
-		MMInterfaceHelper(IControlListen, pInterface, pIControlListen);
-		if (NULL == pIControlListen) continue;
+		if (NULL == pIDuiControlListen) continue;
 
-		pIControlListen->OnChildAdd(pChild->GetParent(), pChild);
+		pIDuiControlListen->OnChildAdd(pChild->GetParent(), pChild);
 
-		pChild->RegisterControlListen(pIControlListen);
+		pChild->RegisterControlListen(pIDuiControlListen);
 	}
 
 	return;
@@ -278,17 +276,16 @@ void CDUIGlobal::PerformNotifyChildRemove(CDUIPropertyObject *pPropertyObj, CDUI
 {
 	if (NULL == pPropertyObj || NULL == pChild) return;
 
-	auto vecIControlListen = pPropertyObj->GetControlListen();
-	if (vecIControlListen.empty()) return;
+	auto vecIDuiControlListen = pPropertyObj->GetControlListen();
+	if (vecIDuiControlListen.empty()) return;
 
-	for (auto pInterface : vecIControlListen)
+	for (auto pIDuiControlListen : vecIDuiControlListen)
 	{
-		MMInterfaceHelper(IControlListen, pInterface, pIControlListen);
-		if (NULL == pIControlListen) continue;
+		if (NULL == pIDuiControlListen) continue;
 
-		pIControlListen->OnChildRemove(pChild->GetParent(), pChild);
+		pIDuiControlListen->OnChildRemove(pChild->GetParent(), pChild);
 
-		pChild->UnRegisterControlListen(pIControlListen);
+		pChild->UnRegisterControlListen(pIDuiControlListen);
 	}
 
 	return;
@@ -298,18 +295,17 @@ void CDUIGlobal::PerformNotifyVisibleChange(CDUIPropertyObject *pPropertyObj)
 {
 	if (NULL == pPropertyObj) return;
 
-	auto vecIControlListen = pPropertyObj->GetControlListen();
-	if (vecIControlListen.empty()) return;
+	auto vecIDuiControlListen = pPropertyObj->GetControlListen();
+	if (vecIDuiControlListen.empty()) return;
 
 	MMInterfaceHelper(CDUIControlBase, pPropertyObj, pControl);
 	if (NULL == pControl) return;
 
-	for (auto pInterface : vecIControlListen)
+	for (auto pIDuiControlListen : vecIDuiControlListen)
 	{
-		MMInterfaceHelper(IControlListen, pInterface, pIControlListen);
-		if (NULL == pIControlListen) continue;
+		if (NULL == pIDuiControlListen) continue;
 
-		pIControlListen->OnVisibleChange(pControl);
+		pIDuiControlListen->OnVisibleChange(pControl);
 	}
 
 	return;

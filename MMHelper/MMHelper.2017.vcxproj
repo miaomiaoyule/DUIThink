@@ -684,7 +684,6 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClInclude Include="MMHash.h" />
     <ClInclude Include="MMHelperHead.h" />
     <ClInclude Include="MMMagnetBox.h" />
-    <ClInclude Include="MMMiniDumper.h" />
     <ClInclude Include="MMCommandLine.h" />
     <ClInclude Include="MMMD5CheckSum.h" />
     <ClInclude Include="MMModule.h" />
@@ -778,7 +777,6 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClCompile Include="MMFileMonitor\MMFileMonitor.cpp" />
     <ClCompile Include="MMHash.cpp" />
     <ClCompile Include="MMMagnetBox.cpp" />
-    <ClCompile Include="MMMiniDumper.cpp" />
     <ClCompile Include="MMCommandLine.cpp" />
     <ClCompile Include="MMFile.cpp" />
     <ClCompile Include="MMHelper.cpp" />

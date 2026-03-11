@@ -24,6 +24,8 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////
+#define GDIPVER 0x0110
+
 #include <vector>
 #include <set>
 #include <map>
@@ -163,6 +165,7 @@ using namespace tinyxml2;
 #include "DUIControl/DUIControlBase.h"
 #include "DUIControl/DUIStaticCtrl.h"
 #include "DUIControl/DUIProgressCtrl.h"
+#include "DUIControl/DUIProgressCircleCtrl.h"
 #include "DUIControl/DUISliderCtrl.h"
 #include "DUIControl/DUIScrollBarCtrl.h"
 #include "DUIControl/DUIButtonCtrl.h"
@@ -195,8 +198,8 @@ using namespace tinyxml2;
 #include "DUIControl/DUIWaterCtrl.h"
 #include "DUIControl/DUIKLineChartCtrl.h"
 #include "DUIControl/DUIDateTimeCtrl.h"
+#include "DUIControl/DUIWebBrowserCtrl.h"
 
-#include "Interface.h"
 #include "DUIUtils/Utils.h"
 
 #include "DUIManager/DUIFactory.h"

@@ -41,6 +41,27 @@ enDuiResType CDUIImageBase::GetResourceType() const
 	return DuiResType_Image;
 }
 
+void CDUIImageBase::ReleaseResource()
+{
+	for (auto &ImageInfoItem : m_mapDpiImageInfo)
+	{
+		auto &ImageInfo = ImageInfoItem.second;
+
+		//image
+		MMSafeDelete(ImageInfo.pBitmap);
+		MMSafeDeleteObject(ImageInfo.hBitmap);
+		ImageInfo.pBits = NULL;
+
+		//animate
+		MMSafeDelete(ImageInfo.pImageAnimate);
+		ImageInfo.nFrameCount = 0;
+	}
+
+	m_mapDpiImageInfo.clear();
+
+	return;
+}
+
 CMMString CDUIImageBase::GetImageFileFull()
 {
 	if (m_strImageFile.length() >= 2 && _T(':') == m_strImageFile[1])
@@ -149,7 +170,7 @@ tagDuiAnimateImageInfo CDUIImageBase::GetAnimateImageInfo(int nScale)
 	tagDuiAnimateImageInfo AnimateImageInfo;
 	AnimateImageInfo.AnimateImageType = ImageInfo.nFrameCount > 0 ? AnimateImage_Gif : AnimateImage_None;
 	AnimateImageInfo.nFrameCount = ImageInfo.nFrameCount;
-	AnimateImageInfo.vecGifPropertyItem = ImageInfo.vecPropertyItem;
+	AnimateImageInfo.vecFrameElapse = ImageInfo.vecFrameElapse;
 
 	return AnimateImageInfo;
 }
@@ -174,28 +195,6 @@ bool CDUIImageBase::IsScale(int nScale)
 	GetImageInfo(nScale);
 
 	return m_mapDpiImageInfo[nScale].hBitmap;
-}
-
-void CDUIImageBase::ReleaseResource()
-{
-	for (auto &ImageInfoItem : m_mapDpiImageInfo)
-	{
-		auto &ImageInfo = ImageInfoItem.second;
-
-		//image
-		MMSafeDelete(ImageInfo.pBitmap);
-		MMSafeDeleteObject(ImageInfo.hBitmap);
-		ImageInfo.pBits = NULL;
-
-		//animate
-		MMSafeDelete(ImageInfo.pImageAnimate);
-		ImageInfo.vecPropertyItem.clear();
-		ImageInfo.nFrameCount = 0;
-	}
-
-	m_mapDpiImageInfo.clear();
-
-	return;
 }
 
 bool CDUIImageBase::SetResourceName(const CMMString &strName)
@@ -230,7 +229,6 @@ void CDUIImageBase::ConstructResource(int nScale)
 	
 	//release animate
 	MMSafeDelete(m_mapDpiImageInfo[nScale].pImageAnimate);
-	m_mapDpiImageInfo[nScale].vecPropertyItem.clear();
 	m_mapDpiImageInfo[nScale].nFrameCount = 0;
 	m_mapDpiImageInfo.erase(nScale);
 
@@ -331,14 +329,24 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 	ImageInfo.nFrameCount = ImageInfo.pImageAnimate->GetFrameCount(vecDimensionID.data());
 
 	int nSize = ImageInfo.pImageAnimate->GetPropertyItemSize(PropertyTagFrameDelay);
-	ImageInfo.vecPropertyItem.resize(nSize);
-	ImageInfo.pImageAnimate->GetPropertyItem(PropertyTagFrameDelay, nSize, ImageInfo.vecPropertyItem.data());
+	std::vector<BYTE> vecPropertyItem(nSize);
+	Gdiplus::PropertyItem *pPropertyItem = reinterpret_cast<Gdiplus::PropertyItem*>(vecPropertyItem.data());
+	if (Gdiplus::Ok == ImageInfo.pImageAnimate->GetPropertyItem(PropertyTagFrameDelay, nSize, pPropertyItem))
+	{
+		long *pDelays = (long*)pPropertyItem->value;
+		ImageInfo.vecFrameElapse.resize(ImageInfo.nFrameCount);
+		for (int n = 0; n < ImageInfo.nFrameCount; n++)
+		{
+			long lDelay = pDelays[n] * 10; 
+			ImageInfo.vecFrameElapse[n] = lDelay;
+		}
+	}
 
 	//info
 	BITMAP BmpInfo = {};
 	GUID pageGuid = Gdiplus::FrameDimensionTime;
 	ImageInfo.pImageAnimate->SelectActiveFrame(&pageGuid, 0);
-	ImageInfo.pImageAnimate->GetHBITMAP(Color(0, 0, 0, 0), &ImageInfo.hBitmap);
+	ImageInfo.hBitmap = CDUIRenderEngine::GetHBITMAP(ImageInfo.pImageAnimate);
 	GetObject(ImageInfo.hBitmap, sizeof(BmpInfo), &BmpInfo);
 	ImageInfo.pBits = (LPBYTE)BmpInfo.bmBits;
 	ImageInfo.nWidth = ImageInfo.pImageAnimate->GetWidth();

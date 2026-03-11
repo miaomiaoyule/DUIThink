@@ -41,25 +41,25 @@ CDUIListViewCtrl::~CDUIListViewCtrl(void)
 	return;
 }
 
-bool CDUIListViewCtrl::RegisterControlListen(IDuiInterface *pIControlListen)
+bool CDUIListViewCtrl::RegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
-	if (NULL == pIControlListen || false == __super::RegisterControlListen(pIControlListen)) return false;
+	if (NULL == pIDuiControlListen || false == __super::RegisterControlListen(pIDuiControlListen)) return false;
 
 	if (m_pListHeader)
 	{
-		m_pListHeader->RegisterControlListen(pIControlListen);
+		m_pListHeader->RegisterControlListen(pIDuiControlListen);
 	}
 
 	return true;
 }
 
-bool CDUIListViewCtrl::UnRegisterControlListen(IDuiInterface *pIControlListen)
+bool CDUIListViewCtrl::UnRegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
-	if (NULL == pIControlListen || false == __super::UnRegisterControlListen(pIControlListen)) return false;
+	if (NULL == pIDuiControlListen || false == __super::UnRegisterControlListen(pIDuiControlListen)) return false;
 
 	if (m_pListHeader)
 	{
-		m_pListHeader->UnRegisterControlListen(pIControlListen);
+		m_pListHeader->UnRegisterControlListen(pIDuiControlListen);
 	}
 
 	return true;

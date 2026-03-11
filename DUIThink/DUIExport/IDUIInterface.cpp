@@ -11,17 +11,25 @@ LPVOID IDuiInterface::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 }
 
 //////////////////////////////////////////////////////////////////////////
-LPVOID IDuiPropertyObject::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
+LPVOID IDuiResourceCallBack::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
-	QUERYINTERFACE(IDuiPropertyObject, Guid, dwQueryVer);
+	QUERYINTERFACE(IDuiResourceCallBack, Guid, dwQueryVer);
 
 	return __super::QueryInterface(Guid, dwQueryVer);
 }
 
 //////////////////////////////////////////////////////////////////////////
-LPVOID IDuiResourceCallBack::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
+LPVOID IDuiControlListen::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
-	QUERYINTERFACE(IDuiResourceCallBack, Guid, dwQueryVer);
+	QUERYINTERFACE(IDuiControlListen, Guid, dwQueryVer);
+
+	return __super::QueryInterface(Guid, dwQueryVer);
+}
+
+//////////////////////////////////////////////////////////////////////////
+LPVOID IDuiWndNotify::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
+{
+	QUERYINTERFACE(IDuiWndNotify, Guid, dwQueryVer);
 
 	return __super::QueryInterface(Guid, dwQueryVer);
 }

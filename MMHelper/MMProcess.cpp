@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "MMProcess.h"
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 //////////////////////////////////////////////////////////////////////////
 bool CMMProcess::CreateFileLink(CMMString strFileFull, CMMString strPathTo, CMMString strNameLink)
 {
@@ -11,9 +10,13 @@ bool CMMProcess::CreateFileLink(CMMString strFileFull, CMMString strPathTo, CMMS
 	HRESULT hr = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&pisl);
 	if (false == SUCCEEDED(hr)) return false;
 
+	CMMString strPathFrom;
+	CMMFile::ParseFilePathName(strFileFull, strPathFrom, CMMString());
+
 	//这里是我们要创建快捷方式的原始文件地址
 	IPersistFile* pIPF = NULL;
 	pisl->SetPath(strFileFull);
+	pisl->SetWorkingDirectory(strPathFrom);
 	hr = pisl->QueryInterface(IID_IPersistFile, (void**)&pIPF);
 	if (false == SUCCEEDED(hr))
 	{
@@ -257,4 +260,133 @@ bool CMMProcess::GetProcessCmdline(HANDLE hProcess, CMMString &strCmdLine)
 	return true;
 }
 
-#endif
+void CMMProcess::LaunchAsExplorerFromSystem(CString strFile, CString strCmdLine)
+{
+	do
+	{
+		HANDLE hToken = NULL;
+		HANDLE hTokenDup = NULL;
+		HANDLE hProcess = NULL;
+		TOKEN_PRIVILEGES tp;
+		PROCESS_INFORMATION pi;
+		STARTUPINFO si = { sizeof(si) };
+		DWORD dwSessionId = WTSGetActiveConsoleSessionId();
+		//INFOLOG("WTSGetActiveConsoleSessionId Error:{}-dwSessionId:{}", GetLastError(), dwSessionId);
+
+		//获取当前会话的会话 ID
+		//ProcessIdToSessionId(GetCurrentProcessId(), &dwSessionId);
+
+		//获取当前用户的访问令牌
+		if (!WTSQueryUserToken(dwSessionId, &hToken))
+		{
+			DWORD err = GetLastError();
+			//INFOLOG("WTSQueryUserToken Error:{}", err);
+			break;
+		}
+
+		//复制访问令牌，以便在新进程中使用
+		if (!DuplicateTokenEx(hToken, MAXIMUM_ALLOWED, NULL, SecurityImpersonation, TokenPrimary, &hTokenDup))
+		{
+			DWORD err = GetLastError();
+			//INFOLOG("DuplicateTokenEx Error:{}", err);
+			CloseHandle(hToken);
+			break;
+		}
+
+		//启用权限
+		tp.PrivilegeCount = 1;
+		tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+		if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &tp.Privileges[0].Luid))
+		{
+			DWORD err = GetLastError();
+			//INFOLOG("LookupPrivilegeValue Error:{}", err);
+			CloseHandle(hToken);
+			CloseHandle(hTokenDup);
+			break;
+		}
+
+		if (!AdjustTokenPrivileges(hTokenDup, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), NULL, NULL))
+		{
+			DWORD err = GetLastError();
+			//INFOLOG("AdjustTokenPrivileges Error:{}", err);
+			CloseHandle(hToken);
+			CloseHandle(hTokenDup);
+			break;
+		}
+
+		//切换到新进程的访问令牌
+		CString strDesktop = _T("winsta0\\default");
+		si.lpDesktop = strDesktop.GetBuffer();
+		si.dwFlags = STARTF_USESHOWWINDOW;
+		si.wShowWindow = SW_SHOW;
+		if (!CreateProcessAsUserW(hTokenDup, strFile, strCmdLine.GetBuffer(), NULL, NULL, FALSE, CREATE_UNICODE_ENVIRONMENT, NULL, NULL, &si, &pi))
+		{
+			DWORD err = GetLastError();
+			//INFOLOG("CreateProcessAsUserW Error:{}", err);
+			CloseHandle(hToken);
+			CloseHandle(hTokenDup);
+			break;
+		}
+
+		//关闭进程句柄
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+
+		//关闭访问令牌
+		CloseHandle(hToken);
+		CloseHandle(hTokenDup);
+
+	} while (false);
+
+	return;
+}
+
+void CMMProcess::LaunchAsExplorerFromAdmin(CString strFile, CString strCmdLine)
+{
+	HANDLE hProcess = NULL;
+	HANDLE hToken = NULL;
+	HANDLE hTokenNew = NULL;
+	LPVOID pEnv = NULL;
+	do
+	{
+		hProcess = FindProcessByName(_T("explorer.exe"));
+		if (NULL == hProcess || INVALID_HANDLE_VALUE == hProcess) break;
+		if (false == OpenProcessToken(hProcess, TOKEN_QUERY | TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY, &hToken)) break;
+		//if (false == CreateEnvironmentBlock(&pEnv, hToken, FALSE)) break;
+
+		SECURITY_ATTRIBUTES SecurityAttr = {};
+		if (false == DuplicateTokenEx(hToken,
+			MAXIMUM_ALLOWED,//使用允许所有权限，否则会报error：5的错误
+			&SecurityAttr,
+			SECURITY_IMPERSONATION_LEVEL::SecurityIdentification,
+			TOKEN_TYPE::TokenPrimary,
+			&hTokenNew) || NULL == hTokenNew) break;
+
+		STARTUPINFO StartupInfo = {};
+		PROCESS_INFORMATION ProcessInfo = {};
+		StartupInfo.cb = sizeof(STARTUPINFO);
+		StartupInfo.lpDesktop = _T("winsta0\\default");
+		StartupInfo.wShowWindow = TRUE;
+		StartupInfo.dwFlags = STARTF_USESHOWWINDOW;
+
+		//strFile = strFile + _T(" ") + strCmdLine;
+		DWORD dwFlag = CREATE_DEFAULT_ERROR_MODE | NORMAL_PRIORITY_CLASS | CREATE_NEW_CONSOLE | CREATE_NEW_PROCESS_GROUP | CREATE_UNICODE_ENVIRONMENT;
+		if (false == CreateProcessWithTokenW(hTokenNew, LOGON_WITH_PROFILE, strFile, (LPWSTR)strCmdLine.GetBuffer(), dwFlag, pEnv, NULL, &StartupInfo, &ProcessInfo)) break;
+
+		CloseHandle(ProcessInfo.hProcess);
+		CloseHandle(ProcessInfo.hThread);
+
+	} while (false);
+
+	int nError = GetLastError();
+	MMSafeCloseHandle(hProcess);
+	MMSafeCloseHandle(hTokenNew);
+	MMSafeCloseHandle(hToken);
+	if (pEnv)
+	{
+		//DestroyEnvironmentBlock(pEnv);
+		pEnv = NULL;
+	}
+
+	return;
+}
