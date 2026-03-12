@@ -74,9 +74,10 @@ protected:
 	CDUIAttributeGroup					m_AttributeGroupMouse;
 	CDUIAttributeBool					m_AttributeMouseThrough;
 	CDUIAttributeBool					m_AttributeClickTransmit = true;
-	CDUIAttributeCursor					m_AttributeCursor;
+	CDUIAttributeBool					m_AttributeClickCloseWnd;
 	CDUIAttributeBool					m_AttributeContextMenu;
 	CDUIAttributeText					m_AttributeActiveUrl;
+	CDUIAttributeCursor					m_AttributeCursor;
 
 	//tip
 	CDUIAttributeGroup					m_AttributeGroupToolTip;
@@ -154,6 +155,8 @@ public:
 	virtual void SetMouseThrough(bool bThrough);
 	virtual bool IsClickTransmit();
 	virtual void SetClickTransmit(bool bTransmit);
+	virtual bool IsClickCloseWnd();
+	virtual void SetClickCloseWnd(bool bClose);
 	virtual bool IsCaptured();
 	virtual bool IsFocused();
 	virtual void SetFocus();

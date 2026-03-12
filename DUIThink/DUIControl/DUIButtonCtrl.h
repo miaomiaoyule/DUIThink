@@ -93,10 +93,6 @@ public:
 
 	//message
 protected:
-	bool OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg) override;
-	bool OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &Msg) override;
-	bool OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Msg) override;
-	void OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg) override;
 
 	//proprety
 protected:

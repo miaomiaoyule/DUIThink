@@ -395,6 +395,20 @@ void CDUIControlBase::SetClickTransmit(bool bTransmit)
 	return;
 }
 
+bool CDUIControlBase::IsClickCloseWnd()
+{
+	return m_AttributeClickCloseWnd.GetValue();
+}
+
+void CDUIControlBase::SetClickCloseWnd(bool bClose)
+{
+	if (bClose == IsClickCloseWnd()) return;
+
+	m_AttributeClickCloseWnd.SetValue(bClose);
+
+	return;
+}
+
 bool CDUIControlBase::IsCaptured()
 {
 	return m_pWndOwner && m_pWndOwner->GetCaptureControl() == this;
@@ -1321,12 +1335,23 @@ bool CDUIControlBase::OnDuiLButtonDown(const CDUIPoint& pt, const DuiMessage& Ms
 
 bool CDUIControlBase::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
+	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
 	m_cbControlStatus &= ~ControlStatus_Pushed;
 	m_cbSeparateStatus = BorderSeparate_None;
 
 	if (m_pWndOwner)
 	{
 		m_pWndOwner->SendNotify(this, DuiNotify_LButtonUp, Msg.wParam, Msg.lParam);
+
+		if (bClick)
+		{
+			m_pWndOwner->SendNotify(this, DuiNotify_Click, Msg.wParam, Msg.lParam);
+
+			if (IsClickCloseWnd())
+			{
+				m_pWndOwner->Close(GetCtrlID());
+			}
+		}
 	}
 	if (GetParent()
 		&& GetParent()->IsAnimateDrag()
@@ -1370,11 +1395,17 @@ bool CDUIControlBase::OnDuiRButtonDown(const CDUIPoint &pt, const DuiMessage &Ms
 
 bool CDUIControlBase::OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
+	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
 	m_cbControlStatus &= ~ControlStatus_Pushed;
 
 	if (m_pWndOwner)
 	{
 		m_pWndOwner->SendNotify(this, DuiNotify_RButtonUp, Msg.wParam, Msg.lParam);
+
+		if (bClick)
+		{
+			m_pWndOwner->SendNotify(this, DuiNotify_RClick, Msg.wParam, Msg.lParam);
+		}
 	}
 
 	Invalidate();
@@ -1843,9 +1874,10 @@ void CDUIControlBase::InitProperty()
 	DuiCreateGroupAttribute(m_AttributeGroupMouse, _T("Mouse"));
 	DuiCreateAttribute(m_AttributeMouseThrough, _T("MouseThrough"), _T(""), m_AttributeGroupMouse);
 	DuiCreateAttribute(m_AttributeClickTransmit, _T("ClickTransmit"), _T("notify listitem"), m_AttributeGroupMouse);
-	DuiCreateAttribute(m_AttributeCursor, _T("ControlCursor"), _T(""), m_AttributeGroupMouse);
+	DuiCreateAttribute(m_AttributeClickCloseWnd, _T("ClickCloseWnd"), _T(""), m_AttributeGroupMouse);
 	DuiCreateAttribute(m_AttributeContextMenu, _T("ContextMenu"), _T(""), m_AttributeGroupMouse);
 	DuiCreateAttribute(m_AttributeActiveUrl, _T("ActiveUrl"), _T(""), m_AttributeGroupMouse);
+	DuiCreateAttribute(m_AttributeCursor, _T("ControlCursor"), _T(""), m_AttributeGroupMouse);
 
 	DuiCreateGroupAttribute(m_AttributeGroupToolTip, _T("ToolTip"));
 	DuiCreateAttribute(m_AttributeToolTip, _T("ToolTip"), _T(""), m_AttributeGroupToolTip);

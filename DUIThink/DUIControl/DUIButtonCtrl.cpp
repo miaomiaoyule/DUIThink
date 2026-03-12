@@ -319,48 +319,6 @@ void CDUIButtonCtrl::SetImageSectionDisabled(const tagDuiImageSection &ImageSect
 	return;
 }
 
-bool CDUIButtonCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
-{
-	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
-
-	__super::OnDuiLButtonUp(pt, Msg);
-
-	if (m_pWndOwner && bClick)
-	{
-		m_pWndOwner->SendNotify(this, DuiNotify_Click, Msg.wParam, Msg.lParam);
-	}
-
-	return true;
-}
-
-bool CDUIButtonCtrl::OnDuiRButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
-{
-	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
-
-	if (false == __super::OnDuiRButtonUp(pt, Msg)) return false;
-
-	if (m_pWndOwner && bClick)
-	{
-		m_pWndOwner->SendNotify(this, DuiNotify_RClick, Msg.wParam, Msg.lParam);
-	}
-
-	return true;
-}
-
-bool CDUIButtonCtrl::OnDuiMouseEnter(const CDUIPoint &pt, const DuiMessage &Msg)
-{
-	__super::OnDuiMouseEnter(pt, Msg);
-
-	return true;
-}
-
-void CDUIButtonCtrl::OnDuiMouseLeave(const CDUIPoint &pt, const DuiMessage &Msg)
-{
-	__super::OnDuiMouseLeave(pt, Msg);
-
-	return;
-}
-
 void CDUIButtonCtrl::InitProperty()
 {
 	__super::InitProperty();
