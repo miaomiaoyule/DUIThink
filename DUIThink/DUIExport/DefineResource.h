@@ -215,11 +215,9 @@ static std::pair<CMMString, CMMString> g_szPublicImage[]
 enum enDuiResVersion
 {
 	DuiResVersion_0 = 0,
-	DuiResVersion_1,
-	DuiResVersion_2,
-	DuiResVersion_3,
-	DuiResVersion_4,
-	DuiResVersion_Max = DuiResVersion_4,
+	DuiResVersion_3 = 3,
+	DuiResVersion_5 = 5,
+	DuiResVersion_Max = DuiResVersion_5,
 };
 
 enum enDuiResType

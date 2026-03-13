@@ -338,7 +338,7 @@ bool CDUIAttributeColorSwitch::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 		m_uValueHash = strtoul(lpszValue, NULL, 10);
 
 #ifdef DUI_DESIGN
-		CDUIGlobal::GetInstance()->OnAttriValueIDRead(GetAttributeType(), GetValueID());
+		CDUIGlobal::GetInstance()->OnAttriValueIDRead(GetAttributeType(), m_uValueHash);
 #endif
 
 		return true;

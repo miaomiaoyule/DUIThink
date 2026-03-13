@@ -1107,6 +1107,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUICore\DUIPropertyObject.cpp" />
     <ClCompile Include="DUICore\DUIRender.cpp" />
     <ClCompile Include="DUICore\DUIWnd.cpp" />
+    <ClCompile Include="DUIExport\DUIStruct.cpp" />
     <ClCompile Include="DUIExport\IDUIInterface.cpp" />
     <ClCompile Include="DUIManager\DUIFactory.cpp" />
     <ClCompile Include="DUIManager\DUIGlobal.cpp" />

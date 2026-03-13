@@ -105,6 +105,15 @@
 	} \
 }
 
+#define DuiAttriSwitchValue(ID, MapSwitch) \
+{ \
+	auto FindIt = MapSwitch.find(ID); \
+	if (FindIt != MapSwitch.end()) \
+	{ \
+		ID = FindIt->second; \
+	} \
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif

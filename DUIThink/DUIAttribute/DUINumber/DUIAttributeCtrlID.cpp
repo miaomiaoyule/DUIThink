@@ -32,7 +32,7 @@ bool CDUIAttributeCtrlID::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 		__super::SetAttribute(lpszName, lpszValue);
 
 #ifdef DUI_DESIGN
-		CDUIGlobal::GetInstance()->OnAttriValueIDRead(GetAttributeType(), GetValue());
+		CDUIGlobal::GetInstance()->OnAttriValueIDRead(GetAttributeType(), (uint32_t&)m_uValue);
 #endif
 
 		return true;

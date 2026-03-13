@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 typedef std::unordered_map<CMMString, CDUIControlBase*> MapDuiModelStore;
 typedef std::map<UINT, CMMString> MapDuiControlID;
+typedef std::map<uint32_t, uint32_t> MapValueIDSwitch;
 
 //Êä³ö
 LPCTSTR DUITHINK_API DUI__TraceMsg(UINT uMsg);
@@ -113,6 +114,7 @@ private:
 	MapDuiAttributeRect					m_mapAttriRectSave;
 	UnorderMapDuiAttriImageSection		m_mapAttriImageSectionValue;
 	MapDuiAttriImageSection				m_mapAttriImageSectionSave;
+	MapValueIDSwitch					m_mapAttriImageSectionSwitch;
 
 	//info
 	std::recursive_mutex				m_DataLock;
@@ -337,7 +339,7 @@ protected:
 	uint32_t SetAttriImageSection(const tagDuiImageSection &ImageSection);
 	bool SetAttriImageSection(tinyxml2::XMLElement *pNode);
 	bool SaveAttriImageSection(tinyxml2::XMLElement *pNode);
-	void OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t uID);
+	void OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t &uID);
 	bool SaveAttriValue(tinyxml2::XMLDocument &xmlDoc);
 
 	//Wnd

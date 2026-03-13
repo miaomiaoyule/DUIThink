@@ -176,7 +176,7 @@ bool CDUIAttributeCombox::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 		}
 
 #ifdef DUI_DESIGN
-		CDUIGlobal::GetInstance()->OnAttriValueIDRead(GetAttributeType(), GetValueID());
+		CDUIGlobal::GetInstance()->OnAttriValueIDRead(GetAttributeType(), m_uValueHash);
 #endif
 
 		return true;

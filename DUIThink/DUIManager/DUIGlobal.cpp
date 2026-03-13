@@ -143,6 +143,30 @@ bool CDUIGlobal::LoadProjectFromFile(LPCTSTR lpszProjFile)
 
 	m_bProjectExist = true;
 
+	//switch res value id for some old project
+#ifdef DUI_DESIGN
+	if (DuiResVersion_Max != GetResVersion())
+	{
+		SetResVersion(DuiResVersion_Max);
+
+		UnorderMapDuiAttriImageSection mapAttriImageSectionValue = m_mapAttriImageSectionValue;
+		for (auto &ImageSectionItem : mapAttriImageSectionValue)
+		{
+			uint32_t uID = ImageSectionItem.second.GetID();
+			if (uID != ImageSectionItem.first)
+			{
+				m_mapAttriImageSectionValue.erase(ImageSectionItem.first);
+				m_mapAttriImageSectionValue[uID] = ImageSectionItem.second;
+				m_mapAttriImageSectionSwitch[ImageSectionItem.first] = uID;
+			}
+		}
+	}
+	if (false == m_mapAttriImageSectionSwitch.empty())
+	{
+		SaveProject();
+	}
+#endif
+
 	return true;
 }
 
@@ -798,15 +822,8 @@ bool CDUIGlobal::SaveProject()
 
 	if (m_strProjectPath.empty() || m_strProjectName.empty()) return false;
 
-	if (CDUIXmlPack::SaveProject(m_strProjectPath, m_strProjectName, m_mapResourceFont, \
-		m_mapResourceImage, m_mapResourceColor, m_vecDui, m_mapWnd, m_strFontResDefault))
-	{
-		SetResVersion(DuiResVersion_Max);
-
-		return true;
-	}
-
-	return false;
+	return CDUIXmlPack::SaveProject(m_strProjectPath, m_strProjectName, m_mapResourceFont, \
+		m_mapResourceImage, m_mapResourceColor, m_vecDui, m_mapWnd, m_strFontResDefault);
 }
 
 bool CDUIGlobal::CloseProject(bool bSaveProject)
@@ -2966,7 +2983,7 @@ bool CDUIGlobal::SaveAttriImageSection(tinyxml2::XMLElement *pNode)
 	return true;
 }
 
-void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t uID)
+void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t &uID)
 {
 	if (false == m_bAttriWaitSave) return;
 
@@ -3024,6 +3041,7 @@ void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t uID)
 		}
 		case DuiAttribute_ImageSection:
 		{
+			DuiAttriSwitchValue(uID, m_mapAttriImageSectionSwitch);
 			DuiAttriReadValue(uID, m_mapAttriImageSectionSave, m_mapAttriImageSectionValue);
 
 			break;

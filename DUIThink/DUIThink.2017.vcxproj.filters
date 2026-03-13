@@ -569,6 +569,9 @@
     <ClCompile Include="DUIControl\DUIWebBrowserCtrl.cpp">
       <Filter>DUIControl</Filter>
     </ClCompile>
+    <ClCompile Include="DUIExport\DUIStruct.cpp">
+      <Filter>DUIExport</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DUIThink.rc">
