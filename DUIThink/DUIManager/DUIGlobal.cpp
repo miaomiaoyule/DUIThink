@@ -163,7 +163,24 @@ bool CDUIGlobal::LoadProjectFromFile(LPCTSTR lpszProjFile)
 	}
 	if (false == m_mapAttriImageSectionSwitch.empty())
 	{
+		//load dui
+		std::vector<CDUIWnd *> vecDlg;
+		for (auto Dui : m_vecDui)
+		{
+			CDUIWnd *pDlg = new CDUIWnd(Dui.strName);
+			pDlg->Create(NULL, _T(""), DUI_WNDSTYLE_DIALOG & ~WS_VISIBLE, DUI_WNDSTYLE_EX_DIALOG);
+			vecDlg.push_back(pDlg);
+		}
+
 		SaveProject();
+
+		//release wnd
+		for (auto pDlg : vecDlg)
+		{
+			MMSafeDelete(pDlg);
+		}
+
+		m_mapAttriImageSectionSwitch.clear();
 	}
 #endif
 
@@ -2983,8 +3000,20 @@ bool CDUIGlobal::SaveAttriImageSection(tinyxml2::XMLElement *pNode)
 	return true;
 }
 
-void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t &uID)
+void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, OUT uint32_t &uID)
 {
+	//switch value
+	switch (AttriType)
+	{
+		case DuiAttribute_ImageSection:
+		{
+			DuiAttriSwitchValue(uID, m_mapAttriImageSectionSwitch);
+
+			break;
+		}
+	}
+
+	//save value
 	if (false == m_bAttriWaitSave) return;
 
 	switch (AttriType)
@@ -3041,7 +3070,6 @@ void CDUIGlobal::OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t &uID)
 		}
 		case DuiAttribute_ImageSection:
 		{
-			DuiAttriSwitchValue(uID, m_mapAttriImageSectionSwitch);
 			DuiAttriReadValue(uID, m_mapAttriImageSectionSave, m_mapAttriImageSectionValue);
 
 			break;
@@ -3068,8 +3096,8 @@ bool CDUIGlobal::SaveAttriValue(tinyxml2::XMLDocument &xmlDoc)
 	//load dui
 	for (auto Dui : m_vecDui)
 	{
-		CDUIWnd WndManger;
-		CDUIControlBase *pControl = LoadDui(Dui.strName, &WndManger);
+		CDUIWnd Dlg;
+		CDUIControlBase *pControl = LoadDui(Dui.strName, &Dlg);
 
 		MMSafeDelete(pControl);
 	}

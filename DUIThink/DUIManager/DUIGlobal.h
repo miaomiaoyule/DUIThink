@@ -339,7 +339,7 @@ protected:
 	uint32_t SetAttriImageSection(const tagDuiImageSection &ImageSection);
 	bool SetAttriImageSection(tinyxml2::XMLElement *pNode);
 	bool SaveAttriImageSection(tinyxml2::XMLElement *pNode);
-	void OnAttriValueIDRead(enDuiAttributeType AttriType, uint32_t &uID);
+	void OnAttriValueIDRead(enDuiAttributeType AttriType, OUT uint32_t &uID);
 	bool SaveAttriValue(tinyxml2::XMLDocument &xmlDoc);
 
 	//Wnd

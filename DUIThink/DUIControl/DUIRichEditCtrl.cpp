@@ -66,16 +66,19 @@ HRESULT InitDefaultCharFormat(CDUIRichEditCtrl *pOwnerCtrl, CHARFORMAT2W *pCharF
 
 	pCharFormat->cbSize = sizeof(CHARFORMAT2W);
 	pCharFormat->crTextColor = RGB(GetBValue(dwColor), GetGValue(dwColor), GetRValue(dwColor));
-	LONG yPixPerInch = GetDeviceCaps(pOwnerCtrl->GetWndOwner()->GetWndDC(), LOGPIXELSY);
-	pCharFormat->yHeight = -lf.lfHeight * LY_PER_INCH / yPixPerInch;
 	pCharFormat->yOffset = 0;
 	pCharFormat->dwEffects = 0;
 	pCharFormat->dwMask = CFM_SIZE | CFM_OFFSET | CFM_FACE | CFM_CHARSET | CFM_COLOR | CFM_BOLD | CFM_ITALIC | CFM_UNDERLINE;
+	pCharFormat->bCharSet = lf.lfCharSet;
+	pCharFormat->bPitchAndFamily = lf.lfPitchAndFamily;
 	if (lf.lfWeight >= FW_BOLD) pCharFormat->dwEffects |= CFE_BOLD;
 	if (lf.lfItalic) pCharFormat->dwEffects |= CFE_ITALIC;
 	if (lf.lfUnderline) pCharFormat->dwEffects |= CFE_UNDERLINE;
-	pCharFormat->bCharSet = lf.lfCharSet;
-	pCharFormat->bPitchAndFamily = lf.lfPitchAndFamily;
+	if (pOwnerCtrl->GetWndOwner()->GetWndDC())
+	{
+		LONG yPixPerInch = GetDeviceCaps(pOwnerCtrl->GetWndOwner()->GetWndDC(), LOGPIXELSY);
+		pCharFormat->yHeight = -lf.lfHeight * LY_PER_INCH / yPixPerInch;
+	}
 
 #ifdef _UNICODE
 	_tcscpy(pCharFormat->szFaceName, lf.lfFaceName);
@@ -321,6 +324,7 @@ void CDUITextHost::SetFont(HFONT hFont)
 {
 	if (NULL == m_pOwnerCtrl
 		|| NULL == m_pOwnerCtrl->GetWndOwner()
+		|| NULL == m_pOwnerCtrl->GetWndOwner()->GetWndDC()
 		|| NULL == hFont
 		|| NULL == m_pTextService) return;
 
