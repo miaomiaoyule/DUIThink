@@ -55,11 +55,15 @@ CDUIWebBrowserCtrl::CDUIWebBrowserCtrl(void)
 	// 2. 初始化 ATL 控件宿主类支持
 	AtlAxWinInit();
 
+	CMMAsyncObject::Init();
+
 	return;
 }
 
 CDUIWebBrowserCtrl::~CDUIWebBrowserCtrl(void)
 {
+	CMMAsyncObject::UnInit();
+
 	Close();
 
 	return;
@@ -458,6 +462,11 @@ void CDUIWebBrowserCtrl::OnDuiWndManagerAttach()
 
 	NavigateHomePage();
 
+	m_uRefreshTimerID = TimerTask(50, true, [=]() 
+	{
+		Invalidate();
+	});
+
 	return;
 }
 
@@ -466,6 +475,8 @@ void CDUIWebBrowserCtrl::OnDuiWndManagerDetach()
 	__super::OnDuiWndManagerDetach();
 
 	Close();
+
+	StopTimer(m_uRefreshTimerID);
 
 	return;
 }
@@ -631,7 +642,7 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 			{
 				if (WM_LBUTTONUP == uMsg || WM_RBUTTONUP == uMsg)
 				{
-					PostMessage(hMainWnd, uMsg, wParam, MAKELPARAM(ptInMain.x, ptInMain.y));
+					::PostMessage(hMainWnd, uMsg, wParam, MAKELPARAM(ptInMain.x, ptInMain.y));
 					 
 					break;
 				}
@@ -691,6 +702,7 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 			case WM_RBUTTONUP:
 			{
 				bNeedRepaint = true;
+
 				break;
 			}
 			case WM_MOUSEMOVE:
