@@ -820,7 +820,16 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 		&& false == bTiledY
 		&& rcCorner.left == 0 && rcCorner.right == 0 && rcCorner.top == 0 && rcCorner.bottom == 0)
 	{
-		return DrawImage(hDC, pBmp, rcItem, rcRound, RoundType);
+		if (0 == rcBmpPart.left && 0 == rcBmpPart.top && rcBmpPart.GetWidth() == pBmp->GetWidth() && rcBmpPart.GetHeight() == pBmp->GetHeight())
+		{
+			return DrawImage(hDC, pBmp, rcItem, rcRound, RoundType);
+		}
+
+		Gdiplus::Bitmap *pBmpPart = pBmp->Clone(rcBmpPart.left, rcBmpPart.top, rcBmpPart.GetWidth(), rcBmpPart.GetHeight(), pBmp->GetPixelFormat());
+		DrawImage(hDC, pBmpPart, rcItem, rcRound, RoundType);
+		MMSafeDelete(pBmpPart);
+
+		return;
 	}
 
 	//verify

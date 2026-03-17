@@ -98,6 +98,7 @@
 #define Name_ImageBtnVertCenter			_T("{CD238424-CA43-408D-83B7-89D58F485295}")
 #define Name_ImageBtnVertSpace			_T("{F887BC18-2371-4438-92A8-7001ACC0DF6B}")
 #define Name_ImageBtnCalendar			_T("{FA5FF464-0E51-459A-893B-117119570494}")
+#define Name_ImageAbout					_T("{E41C4D37-80DE-43DD-A3CD-70B5031FC44B}")
 
 static LPCTSTR g_szPublicColor[] = 
 {
@@ -209,6 +210,7 @@ static std::pair<CMMString, CMMString> g_szPublicImage[]
 	{ Name_ImageBtnVertCenter, _T("SkinDesign/BtnVertCenter.png") },
 	{ Name_ImageBtnVertSpace, _T("SkinDesign/BtnVertSpace.png") },
 	{ Name_ImageBtnCalendar, _T("SkinDesign/BtnCalendar.png") },
+	{ Name_ImageAbout, _T("SkinDesign/About.png") },
 };
 
 //////////////////////////////////////////////////////////////////////////
