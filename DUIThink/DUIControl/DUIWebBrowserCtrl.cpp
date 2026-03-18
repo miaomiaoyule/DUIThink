@@ -6,7 +6,17 @@
 #if defined(_WINDLL) || defined(_USRDLL)
 	class CDUIThinkWebModule : public ATL::CAtlDllModuleT<CDUIThinkWebModule> {};
 #else
-	class CDUIThinkWebModule : public ATL::CAtlWinModule {};
+	class CDUIThinkWebModule : public ATL::CAtlWinModule, public ATL::CAtlModule 
+	{
+	public:
+		// CAtlModule 的纯虚函数。
+		// 静态库模式通常仅用于 Hosting 控件，不需要处理 RGS 注册脚本中的变量替换(如 %APPID%)
+		// 直接返回 S_OK 即可满足编译要求。
+		virtual HRESULT AddCommonRGSReplacements(_Inout_ IRegistrarBase* /*pRegistrar*/) throw()
+		{
+			return S_OK;
+		}
+	};
 #endif
 
 CDUIThinkWebModule _DuiWebModule;
