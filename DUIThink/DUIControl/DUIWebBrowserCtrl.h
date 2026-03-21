@@ -107,6 +107,7 @@ protected:
 	HWND FindIEServerWnd();
 	HWND FindIEUtilityWnd();
 	void InstallIEHook(HWND hWnd);
+	void UnInstallIEHook(HWND hWnd);
 	void ForwardMessageToIE(UINT uMsg, const CDUIPoint &pt, const DuiMessage &Msg);
 
 	//static

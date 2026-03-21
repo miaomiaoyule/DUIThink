@@ -72,6 +72,9 @@ CDUIWebBrowserCtrl::CDUIWebBrowserCtrl(void)
 
 CDUIWebBrowserCtrl::~CDUIWebBrowserCtrl(void)
 {
+	UnInstallIEHook(m_hWndIEServer);
+	UnInstallIEHook(m_hWndIEUtility);
+
 	CMMAsyncObject::UnInit();
 
 	Close();
@@ -601,6 +604,22 @@ void CDUIWebBrowserCtrl::InstallIEHook(HWND hWnd)
 		WNDPROC oldProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)DuiIEHookWndProc);
 		::SetProp(hWnd, g_strPropOldProc, (HANDLE)oldProc);
 		::SetProp(hWnd, g_strPropCtrl, (HANDLE)this);
+	}
+
+	return;
+}
+
+void CDUIWebBrowserCtrl::UnInstallIEHook(HWND hWnd)
+{
+	if (::IsWindow(hWnd))
+	{
+		WNDPROC oldProc = (WNDPROC)::GetProp(hWnd, g_strPropOldProc);
+		if (oldProc)
+		{
+			::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)oldProc);
+			::RemoveProp(hWnd, g_strPropOldProc);
+			::RemoveProp(hWnd, g_strPropCtrl);
+		}
 	}
 
 	return;
