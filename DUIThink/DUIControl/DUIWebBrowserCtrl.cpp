@@ -82,6 +82,113 @@ CDUIWebBrowserCtrl::~CDUIWebBrowserCtrl(void)
 	return;
 }
 
+STDMETHODIMP CDUIWebBrowserCtrl::QueryInterface(REFIID riid, void** ppvObject)
+{
+	if (ppvObject == NULL) return E_POINTER;
+
+	*ppvObject = NULL;
+
+	if (riid == IID_IUnknown || riid == IID_IDispatch)
+	{
+		*ppvObject = static_cast<IDispatch*>(this);
+		AddRef();
+		return S_OK;
+	}
+
+	// 处理现有的 QueryInterface
+	// return __super::QueryInterface(riid, ppvObject); // 需要将 REFGUID 转成合适的调用
+	return E_NOINTERFACE;
+}
+
+STDMETHODIMP_(ULONG) CDUIWebBrowserCtrl::AddRef()
+{
+	return InterlockedIncrement(&m_cRef);
+}
+
+STDMETHODIMP_(ULONG) CDUIWebBrowserCtrl::Release()
+{
+	ULONG ulRef = InterlockedDecrement(&m_cRef);
+	if (ulRef == 0)
+	{
+		// ... (不直接释放，因为控件生命周期由DUI框架管理)
+	}
+	return ulRef;
+}
+
+STDMETHODIMP CDUIWebBrowserCtrl::GetTypeInfoCount(UINT* pctinfo)
+{
+	if (pctinfo) *pctinfo = 0;
+	return E_NOTIMPL;
+}
+
+STDMETHODIMP CDUIWebBrowserCtrl::GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo)
+{
+	return E_NOTIMPL;
+}
+
+STDMETHODIMP CDUIWebBrowserCtrl::GetIDsOfNames(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId)
+{
+	if (cNames != 1) return DISP_E_UNKNOWNNAME;
+
+	CMMString strName = rgszNames[0];
+
+	// 查找是否注册了该函数
+	if (m_mapJSCallbacks.find(strName) != m_mapJSCallbacks.end())
+	{
+		// 查找或分配一个新的 DISPID
+		for (auto it = m_mapDispIdToName.begin(); it != m_mapDispIdToName.end(); ++it)
+		{
+			if (it->second == strName)
+			{
+				*rgDispId = it->first;
+				return S_OK;
+			}
+		}
+
+		DISPID newId = ++m_nNextDispId;
+		m_mapDispIdToName[newId] = strName;
+		*rgDispId = newId;
+		return S_OK;
+	}
+
+	return DISP_E_UNKNOWNNAME;
+}
+
+STDMETHODIMP CDUIWebBrowserCtrl::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pDispParams, VARIANT* pVarResult, EXCEPINFO* pExcepInfo, UINT* puArgErr)
+{
+	if (wFlags & DISPATCH_METHOD)
+	{
+		auto itName = m_mapDispIdToName.find(dispIdMember);
+		if (itName != m_mapDispIdToName.end())
+		{
+			auto itFunc = m_mapJSCallbacks.find(itName->second);
+			if (itFunc != m_mapJSCallbacks.end())
+			{
+				std::vector<CComVariant> args;
+				if (pDispParams && pDispParams->cArgs > 0)
+				{
+					// 注意：DISPPARAMS 中的参数顺序是相反的
+					for (UINT i = 0; i < pDispParams->cArgs; ++i)
+					{
+						args.push_back(pDispParams->rgvarg[pDispParams->cArgs - 1 - i]);
+					}
+				}
+
+				CComVariant vRet = itFunc->second(args);
+
+				if (pVarResult)
+				{
+					vRet.Detach(pVarResult);
+				}
+
+				return S_OK;
+			}
+		}
+	}
+
+	return DISP_E_MEMBERNOTFOUND;
+}
+
 LPVOID CDUIWebBrowserCtrl::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
 	QUERYINTERFACE(CDUIWebBrowserCtrl, Guid, dwQueryVer);
@@ -315,6 +422,20 @@ void CDUIWebBrowserCtrl::ExecuteJS(LPCTSTR lpszJS)
 	return;
 }
 
+void CDUIWebBrowserCtrl::RegisterJSCallback(const CMMString& strFuncName, JSCallbackFunc callback)
+{
+	m_mapJSCallbacks[strFuncName] = callback;
+
+	return;
+}
+
+void CDUIWebBrowserCtrl::UnregisterJSCallback(const CMMString& strFuncName)
+{
+	m_mapJSCallbacks.erase(strFuncName);
+
+	return;
+}
+
 bool CDUIWebBrowserCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	if (false == __super::OnDuiLButtonDown(pt, Msg)) return false;
@@ -452,6 +573,9 @@ void CDUIWebBrowserCtrl::OnDuiWndManagerAttach()
 
 		if (m_hWndIEOwner)
 		{
+			// 使得 JS 脚本调用 window.external.XXX() 时，能直接映射到本类的 Invoke
+			wndIE.SetExternalDispatch(static_cast<IDispatch*>(this));
+
 			// 从宿主窗口获取 IWebBrowser2 接口指针
 			IUnknown* pUnk = NULL;
 			if (SUCCEEDED(AtlAxGetControl(m_hWndIEOwner, &pUnk)) && pUnk)

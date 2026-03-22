@@ -7,12 +7,16 @@
 //WebBrowser
 #include <ExDisp.h>
 
+// JS回调函数类型定义: 接收参数数组，返回结果
+typedef std::function<CComVariant(const std::vector<CComVariant>&)> JSCallbackFunc;
+
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIWebBrowserCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIWebBrowserCtrl={0xF3395628,0x2460,0x40E8,0xBB,0xEA,0xE5,0xCE,0x40,0x56,0xD3,0x83};
 class DUITHINK_API CDUIWebBrowserCtrl
 	: public CDUIControlBase
 	, public CMMAsyncObject
+	, public IDispatch
 {
 	DuiDeclare_CreateControl(CDUIWebBrowserCtrl)
 	MMDeclare_ClassName(CDUIWebBrowserCtrl)
@@ -35,6 +39,25 @@ protected:
 	HWND								m_hWndIEServer = NULL;
 	HWND								m_hWndIEUtility = NULL;
 	UINT_PTR							m_uRefreshTimerID = 0;
+
+	//js<=>c++
+	std::map<CMMString, JSCallbackFunc> m_mapJSCallbacks;
+	std::map<DISPID, CMMString>         m_mapDispIdToName;
+	DISPID                              m_nNextDispId = 1000;
+	long                                m_cRef = 1;
+
+	//override
+protected:
+	// IUnknown
+	STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject);
+	STDMETHODIMP_(ULONG) AddRef();
+	STDMETHODIMP_(ULONG) Release();
+
+	// IDispatch
+	STDMETHODIMP GetTypeInfoCount(UINT* pctinfo);
+	STDMETHODIMP GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo);
+	STDMETHODIMP GetIDsOfNames(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId);
+	STDMETHODIMP Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pDispParams, VARIANT* pVarResult, EXCEPINFO* pExcepInfo, UINT* puArgErr);
 
 	//override
 protected:
@@ -69,8 +92,10 @@ public:
 	void SetUrlError(LPCTSTR lpszUrlError);
 	CMMString GetUrlCur();
 
-	//js
+	//js<=>c++
 	void ExecuteJS(LPCTSTR lpszJS);
+	void RegisterJSCallback(const CMMString& strFuncName, JSCallbackFunc callback);
+	void UnregisterJSCallback(const CMMString& strFuncName);
 
 	//message 
 protected:
