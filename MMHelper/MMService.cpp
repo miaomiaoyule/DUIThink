@@ -149,7 +149,7 @@ CMMString CMMService::GetClipboardString()
 		if (false == bText && false == bUnicodeText) break;
 		if (false == OpenClipboard(NULL)) break;
 
-		HANDLE hData = bText ? GetClipboardData(CF_TEXT) : GetClipboardData(CF_UNICODETEXT);
+		HANDLE hData = bUnicodeText ? GetClipboardData(CF_UNICODETEXT) : GetClipboardData(CF_TEXT);
 		if (NULL == hData)
 		{
 			CloseClipboard();
