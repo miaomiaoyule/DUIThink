@@ -127,12 +127,11 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 			//text
 			if (RichTextItem_Text == RichTextDraw.ItemType)
 			{
-				for (int nChar = 0; nChar < RichTextDraw.strText.length(); nChar++)
+				CMMString strTextDraw;
+				auto vecText = CMMStrHelp::ParseStringForEmoji(RichTextDraw.strText);
+				for (int n = 0; n < vecText.size(); n++)
 				{
-					int nEmoji = CDUIGlobal::IsEmoji(RichTextDraw.strText[nChar]);
-					CMMString strDraw(RichTextDraw.strText.c_str() + nChar, max(1, nEmoji));
-					nEmoji > 0 ? nChar += (nEmoji - 1) : 0;
-
+					CMMString strDraw = vecText[n].strText;
 					CDUIRect rcChar = { rcMeasureLine.right, rcMeasureLine.top, rcMeasureLine.right + 9999, rcMeasureLine.top + 9999 };
 					HFONT hFont = RichTextDraw.pFontBase ? RichTextDraw.pFontBase->GetHandle() : NULL;
 					CDUIRenderEngine::DrawText(hDC, hFont, rcChar, strDraw, 0, dwTextStyleCalc, bGdiplusRender, RenderType, false);
@@ -153,12 +152,16 @@ void CDUIRenderHelp::MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichTe
 						bOverRight = false;
 						rcRichItem.right += rcChar.GetWidth();
 						rcRichItem.bottom = max(rcRichItem.bottom, rcChar.bottom);
+						strTextDraw += strDraw;
 
 						continue;
 					}
+					for (; n < vecText.size(); n++)
+					{
+						strSurplus += vecText[n].strText;
+					}
 
-					strSurplus = RichTextDraw.strText.c_str() + nChar;
-					RichTextDraw.strText.SetAt(nChar, _T('\0'));
+					RichTextDraw.strText = strTextDraw;
 
 					break;
 				}

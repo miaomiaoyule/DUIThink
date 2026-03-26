@@ -1245,11 +1245,6 @@ bool CDUIGlobal::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObj
 	return CDUIXmlPack::RefreshAttibute(pNodeXml, pPropObj);
 }
 
-CMMThreadPool * CDUIGlobal::GetThreadPool()
-{
-	return &m_ThreadPool;
-}
-
 void CDUIGlobal::LoadPublicResource()
 {
 	//image
@@ -3440,27 +3435,6 @@ void CDUIGlobal::UnRegisterWndNotify(IDuiWndNotify *pIDuiWndNotify)
 	g_pIDuiWndNotify = NULL;
 
 	return;
-}
-
-int CDUIGlobal::IsEmoji(TCHAR ch)
-{
-	//0x200d -- 连接符  0xd83c----好像是颜色分割符 或者是旗帜?  0xfe0f ---好像是表情结束符  0xfe0f0x20e3--特殊符号的表情
-	if ((ch >= 0xd800 && ch <= 0xdbff))
-	{
-		return 2;
-	}
-	else if ((0x2100 <= ch && ch <= 0x27ff && ch != 0x263b)
-		|| (0x2b05 <= ch && ch <= 0x2b07)
-		|| (0x2934 <= ch && ch <= 0x2935)
-		|| (0x3297 <= ch && ch <= 0x3299)
-		|| ch == 0xa9 || ch == 0xae || ch == 0x303d || ch == 0x3030
-		|| ch == 0x2b55 || ch == 0x2b1c || ch == 0x2b1b || ch == 0x2b50
-		|| ch == 0x231a)
-	{
-		return 1;
-	}
-
-	return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

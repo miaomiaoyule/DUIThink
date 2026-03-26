@@ -8,19 +8,6 @@
 #include "Iptypes.h"
 #include "Iphlpapi.h"
 
-//////////////////////////////////////////////////////////////////////////
-#define FILE_DEVICE_SCSI				0x0000001b
-#define IOCTL_SCSI_MINIPORT_IDENTIFY	( ( FILE_DEVICE_SCSI << 16 ) + 0x0501 )
-	    
-#define IOCTL_SCSI_MINIPORT				0x0004D008  //  see NTDDSCSI.H for definition
-	    
-#define IDENTIFY_BUFFER_SIZE			512
-#define SENDIDLENGTH					( sizeof( SENDCMDOUTPARAMS ) + IDENTIFY_BUFFER_SIZE )
-	    
-#define IDE_ATAPI_IDENTIFY				0xA1  //  Returns ID sector for ATAPI.
-#define IDE_ATA_IDENTIFY				0xEC  //  Returns ID sector for ATA.
-#define DFP_RECEIVE_DRIVE_DATA			0x0007c088
-
 //////////////////////////////////////////////////////////////////////////////////
 typedef struct _IDSECTOR
 {
@@ -55,23 +42,7 @@ typedef struct _IDSECTOR
 	USHORT  wMultiWordDMA;
 	BYTE    bReserved[128];
 } IDSECTOR, *PIDSECTOR;
-//
-//typedef struct _DRIVERSTATUS
-//{
-//	BYTE  bDriverError;  //  Error code from driver, or 0 if no error.
-//	BYTE  bIDEStatus;    //  Contents of IDE Error register.
-//	//  Only valid when bDriverError is SMART_IDE_ERROR.
-//	BYTE  bReserved[2];  //  Reserved for future expansion.
-//	DWORD  dwReserved[2];  //  Reserved for future expansion.
-//} DRIVERSTATUS, *PDRIVERSTATUS, *LPDRIVERSTATUS;
-//
-//typedef struct _SENDCMDOUTPARAMS
-//{
-//	DWORD         cBufferSize;   //  Size of bBuffer in bytes
-//	DRIVERSTATUS  DriverStatus;  //  Driver status structure.
-//	BYTE          bBuffer[1];    //  Buffer of arbitrary length in which to store the data read from the                                                       // drive.
-//} SENDCMDOUTPARAMS, *PSENDCMDOUTPARAMS, *LPSENDCMDOUTPARAMS;
-//
+
 typedef struct _SRB_IO_CONTROL
 {
 	ULONG HeaderLength;
@@ -81,30 +52,7 @@ typedef struct _SRB_IO_CONTROL
 	ULONG ReturnCode;
 	ULONG Length;
 } SRB_IO_CONTROL, *PSRB_IO_CONTROL;
-//
-//typedef struct _IDEREGS
-//{
-//	BYTE bFeaturesReg;       // Used for specifying SMART "commands".
-//	BYTE bSectorCountReg;    // IDE sector count register
-//	BYTE bSectorNumberReg;   // IDE sector number register
-//	BYTE bCylLowReg;         // IDE low order cylinder value
-//	BYTE bCylHighReg;        // IDE high order cylinder value
-//	BYTE bDriveHeadReg;      // IDE drive/head register
-//	BYTE bCommandReg;        // Actual IDE command.
-//	BYTE bReserved;          // reserved for future use.  Must be zero.
-//} IDEREGS, *PIDEREGS, *LPIDEREGS;
-//
-//typedef struct _SENDCMDINPARAMS
-//{
-//	DWORD     cBufferSize;   //  Buffer size in bytes
-//	IDEREGS   irDriveRegs;   //  Structure with drive register values.
-//	BYTE bDriveNumber;       //  Physical drive number to send 
-//	//  command to (0,1,2,3).
-//	BYTE bReserved[3];       //  Reserved for future expansion.
-//	DWORD     dwReserved[4]; //  For future use.
-//	BYTE      bBuffer[1];    //  Input buffer.
-//} SENDCMDINPARAMS, *PSENDCMDINPARAMS, *LPSENDCMDINPARAMS;
-//
+
 typedef struct _GETVERSIONOUTPARAMS
 {
 	BYTE bVersion;      // Binary driver version.
@@ -118,9 +66,6 @@ typedef struct _GETVERSIONOUTPARAMS
 //////////////////////////////////////////////////////////////////////////
 class MMHELPER_API CMMService
 {
-private:
-	CMMService();
-
 	//system
 public:
 	//clipboard
@@ -170,12 +115,6 @@ public:
 	static CMMString GetLocalTempPath();
 	static CMMString GetAppName();
 	static CMMString GetAppFile();
-
-	//Ini file
-	static UINT ReadFileValue(LPCTSTR lpszFileName, LPCTSTR pszKeyName, LPCTSTR pszItemName, UINT nDefault);
-	static VOID ReadFileString(LPCTSTR lpszFileName, LPCTSTR pszKeyName, LPCTSTR pszItemName, TCHAR szResult[], WORD wMaxCount);
-	static VOID WriteFileValue(LPCTSTR lpszFileName, LPCTSTR pszKeyName, LPCTSTR pszItemName, UINT nValue);
-	static VOID WriteFileString(LPCTSTR lpszFileName, LPCTSTR pszKeyName, LPCTSTR pszItemName, LPCTSTR pszString);
 
 	//GUID
 	static CMMString ProductGUID();

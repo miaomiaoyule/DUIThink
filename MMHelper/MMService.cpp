@@ -5,22 +5,26 @@
 #pragma comment(lib, "Ws2_32.lib")
 
 //////////////////////////////////////////////////////////////////////////////////
+#define FILE_DEVICE_SCSI				0x0000001b
+#define IOCTL_SCSI_MINIPORT_IDENTIFY	( ( FILE_DEVICE_SCSI << 16 ) + 0x0501 )
+
+#define IOCTL_SCSI_MINIPORT				0x0004D008  //  see NTDDSCSI.H for definition
+
+#define IDENTIFY_BUFFER_SIZE			512
+#define SENDIDLENGTH					( sizeof( SENDCMDOUTPARAMS ) + IDENTIFY_BUFFER_SIZE )
+
+#define IDE_ATAPI_IDENTIFY				0xA1  //  Returns ID sector for ATAPI.
+#define IDE_ATA_IDENTIFY				0xEC  //  Returns ID sector for ATA.
+#define DFP_RECEIVE_DRIVE_DATA			0x0007c088
 
 //状态信息
 struct tagAstatInfo
 {
-	ADAPTER_STATUS					AdapterStatus;						//网卡状态
-	NAME_BUFFER						NameBuff[16];						//名字缓冲
+	ADAPTER_STATUS						AdapterStatus;						//网卡状态
+	NAME_BUFFER							NameBuff[16];						//名字缓冲
 };
 
 //////////////////////////////////////////////////////////////////////////////////
-
-//构造函数
-CMMService::CMMService()
-{
-}
-
-//拷贝字符
 bool CMMService::SetClipboardString(HWND hWnd, LPCTSTR pszString)
 {
 	//变量定义
@@ -142,29 +146,27 @@ CMMString CMMService::GetClipboardString()
 {
 	CMMString strText;
 
-	do 
+	do
 	{
-		bool bText = IsClipboardFormatAvailable(CF_TEXT);
-		bool bUnicodeText = IsClipboardFormatAvailable(CF_UNICODETEXT);
-		if (false == bText && false == bUnicodeText) break;
 		if (false == OpenClipboard(NULL)) break;
 
-		HANDLE hData = bUnicodeText ? GetClipboardData(CF_UNICODETEXT) : GetClipboardData(CF_TEXT);
+		bool bUnicode = IsClipboardFormatAvailable(CF_UNICODETEXT);
+		HANDLE hData = bUnicode ? GetClipboardData(CF_UNICODETEXT) : GetClipboardData(CF_TEXT);
 		if (NULL == hData)
 		{
 			CloseClipboard();
 
 			break;
 		}
-		if (bText)
-		{
-			strText = (LPCSTR)GlobalLock(hData);
-		}
-		else
+		if (bUnicode)
 		{
 			strText = (LPCTSTR)GlobalLock(hData);
 		}
-		
+		else
+		{
+			strText = (LPCSTR)GlobalLock(hData);
+		}
+
 		GlobalUnlock(hData);
 		CloseClipboard();
 
@@ -626,76 +628,6 @@ CMMString CMMService::GetAppFile()
 	GetModuleFileName(NULL, szPath, MAX_PATH);
 
 	return szPath;
-}
-
-UINT CMMService::ReadFileValue(LPCTSTR lpszFileName, LPCTSTR pszKeyName, LPCTSTR pszItemName, UINT nDefault)
-{
-	//获取目录
-	TCHAR szDirectory[MAX_PATH] = _T("");
-	CMMService::GetWorkDirectory(szDirectory, MMCountArray(szDirectory));
-
-	//构造路径
-	TCHAR szServerInfoPath[MAX_PATH] = _T("");
-	_sntprintf(szServerInfoPath, MMCountArray(szServerInfoPath), _T("%s\\%s"), szDirectory, lpszFileName);
-
-	//读取数据
-	UINT nValue = GetPrivateProfileInt(pszKeyName, pszItemName, nDefault, szServerInfoPath);
-
-	return nValue;
-}
-
-//读取数据
-VOID CMMService::ReadFileString(LPCTSTR lpszFileName, LPCTSTR pszKeyName, LPCTSTR pszItemName, TCHAR szResult[], WORD wMaxCount)
-{
-	//获取目录
-	TCHAR szDirectory[MAX_PATH] = _T("");
-	CMMService::GetWorkDirectory(szDirectory, MMCountArray(szDirectory));
-
-	//构造路径
-	TCHAR szServerInfoPath[MAX_PATH] = _T("");
-	_sntprintf(szServerInfoPath, MMCountArray(szServerInfoPath), _T("%s\\%s"), szDirectory, lpszFileName);
-
-	//读取数据
-	GetPrivateProfileString(pszKeyName, pszItemName, _T(""), szResult, wMaxCount, szServerInfoPath);
-
-	return;
-}
-
-//写入数值
-VOID CMMService::WriteFileValue(LPCTSTR lpszFileName, LPCTSTR pszKeyName, LPCTSTR pszItemName, UINT nValue)
-{
-	//获取目录
-	TCHAR szDirectory[MAX_PATH] = _T("");
-	CMMService::GetWorkDirectory(szDirectory, MMCountArray(szDirectory));
-
-	//构造路径
-	TCHAR szServerInfoPath[MAX_PATH] = _T("");
-	_sntprintf(szServerInfoPath, MMCountArray(szServerInfoPath), _T("%s\\%s"), szDirectory, lpszFileName);
-
-	//构造数据
-	TCHAR szString[16] = _T("");
-	_sntprintf(szString, MMCountArray(szString), _T("%d"), nValue);
-
-	//写入数据
-	WritePrivateProfileString(pszKeyName, pszItemName, szString, szServerInfoPath);
-
-	return;
-}
-
-//写入数据
-VOID CMMService::WriteFileString(LPCTSTR lpszFileName, LPCTSTR pszKeyName, LPCTSTR pszItemName, LPCTSTR pszString)
-{
-	//获取目录
-	TCHAR szDirectory[MAX_PATH] = _T("");
-	CMMService::GetWorkDirectory(szDirectory, MMCountArray(szDirectory));
-
-	//构造路径
-	TCHAR szServerInfoPath[MAX_PATH] = _T("");
-	_sntprintf(szServerInfoPath, MMCountArray(szServerInfoPath), _T("%s\\%s"), szDirectory, lpszFileName);
-
-	WritePrivateProfileString(pszKeyName, pszItemName, pszString, szServerInfoPath);
-
-	return;
 }
 
 //GUID

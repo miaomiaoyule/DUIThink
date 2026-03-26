@@ -181,3 +181,47 @@ std::vector<CMMString> CMMStrHelp::ParseStrFromString(LPCSTR lpszString, LPCSTR 
 
 	return vecResult;
 }
+
+std::vector<tagMMStringEmoji> CMMStrHelp::ParseStringForEmoji(const CMMString &strString)
+{
+	std::vector<tagMMStringEmoji> vecStringEmoji;
+	int nLen = strString.length();
+	if (nLen == 0) return vecStringEmoji;
+
+	// 预分配适当的空间，降低频繁 push_back 带来的内存重分配开销
+	vecStringEmoji.reserve(nLen);
+
+	for (int n = 0; n < nLen; )
+	{
+		wchar_t c = strString[n];
+		bool bEmoji = false;
+		int step = 1;
+
+		// 1. 判断是否是高阶代理项（占2个wchar_t的Emoji及扩展字符）
+		if (c >= 0xD800 && c <= 0xDBFF && (n + 1 < nLen))
+		{
+			wchar_t cNext = strString[n + 1];
+			if (cNext >= 0xDC00 && cNext <= 0xDFFF)
+			{
+				bEmoji = true;
+				step = 2;
+			}
+		}
+		// 2. 拦截部分存在于 BMP 基础平面内的老式符号/Emoji (U+2600 ~ U+27BF 等)
+		else if ((c >= 0x2600 && c <= 0x27BF) || (c >= 0x2300 && c <= 0x23FF) || c == 0x200D)
+		{
+			bEmoji = true;
+		}
+
+		// 追加
+		vecStringEmoji.push_back({ bEmoji, c });
+		if (step == 2)
+		{
+			vecStringEmoji.back().strText += strString[n + 1];
+		}
+
+		n += step;
+	}
+
+	return vecStringEmoji;
+}

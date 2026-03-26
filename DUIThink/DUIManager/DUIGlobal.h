@@ -273,10 +273,6 @@ protected:
 	//refresh
 	bool RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObject *pPropObj);
 
-	//module
-protected:
-	CMMThreadPool * GetThreadPool();
-
 	//help
 protected:
 	//config
@@ -367,7 +363,6 @@ public:
 public:
 	static void RegisterWndNotify(IDuiWndNotify *pIDuiWndNotify);
 	static void UnRegisterWndNotify(IDuiWndNotify *pIDuiWndNotify);
-	static int IsEmoji(TCHAR ch);
 
 	//static help
 public:

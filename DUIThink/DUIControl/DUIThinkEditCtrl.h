@@ -43,6 +43,7 @@ protected:
 	CDUIControlBase *					m_pBindCtrl = NULL;
 	VecDuiRichTextItem					m_vecRichTextItem;
 	MapLineVecDuiRichTextDraw			m_mapLineVecRichTextDraw;
+	TCHAR								m_chEmojiWait = 0;
 	CMMString							m_strInput;
 	CDUISize							m_szScrollRange;
 	CDUISize							m_szScrollPos;

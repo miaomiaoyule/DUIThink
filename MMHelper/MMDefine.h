@@ -19,6 +19,8 @@
 #ifndef __MM_DEFINE_H__
 #define __MM_DEFINE_H__
 
+typedef DWORD DROPEFFECT;
+
 //////////////////////////////////////////////////////////////////////////////////
 //无效数值
 #define INVALID_BYTE					((BYTE)(0xFF))						//无效数值
@@ -77,14 +79,6 @@ public:\
 	{ POINT pt = { DUIRect.left, DUIRect.top };\
 	ClientToScreen(hWnd, &pt);\
 	DUIRect.Offset(pt.x - DUIRect.left, pt.y - DUIRect.top); }
-
-#define MMEmojiExtract(String, nIndex) \
-	int nEmoji = CDUIGlobal::IsEmoji(String[nIndex]); \
-	CMMString strTextSub = CMMString(String.c_str() + nIndex, max(1, nEmoji)); \
-	nEmoji > 0 ? nIndex += (nEmoji - 1) : 0;
-
-//////////////////////////////////////////////////////////////////////////
-typedef DWORD DROPEFFECT;
 
 //////////////////////////////////////////////////////////////////////////
 

@@ -367,17 +367,17 @@ bool CDUIThinkEditCtrl::SetText(LPCTSTR lpszText)
 	if (false == bRes) return false;
 #endif
 
-	tagDuiTextStyle TextStyle = GetTextStyle();
-	VecDuiRichTextItem vecRichTextItem;
 	CMMString strText = __super::GetText();
-	for (int n = 0; n < strText.length(); n++)
+	tagDuiTextStyle TextStyle = GetTextStyle();
+	std::vector<tagMMStringEmoji> vecText = CMMStrHelp::ParseStringForEmoji(strText);
+	VecDuiRichTextItem vecRichTextItem;
+	for (auto &Item : vecText)
 	{
-		MMEmojiExtract(strText, n);
-
-		vecRichTextItem.push_back(tagDuiRichTextItem());
-		vecRichTextItem.back().strText = strTextSub;
-		vecRichTextItem.back().vecFontResSwitch = TextStyle.vecFontResSwitch;
-		vecRichTextItem.back().vecColorResSwitch = TextStyle.vecColorResSwitch;
+		tagDuiRichTextItem RichTextItem;
+		RichTextItem.vecFontResSwitch = TextStyle.vecFontResSwitch;
+		RichTextItem.vecColorResSwitch = TextStyle.vecColorResSwitch;
+		RichTextItem.strText = Item.strText;
+		vecRichTextItem.push_back(RichTextItem);
 	}
 
 	SetRichTextItem(vecRichTextItem);
@@ -415,15 +415,17 @@ bool CDUIThinkEditCtrl::SetRichTextItem(const VecDuiRichTextItem &vecRichTextIte
 			{
 				RichTextItem.vecColorResSwitch = TextStyle.vecColorResSwitch;
 			}
-			for (int n = 0; n < RichTextItem.strText.length(); n++)
-			{
-				MMEmojiExtract(RichTextItem.strText, n);
 
-				vecRichTextItemAdjust.push_back(tagDuiRichTextItem());
-				vecRichTextItemAdjust.back().strText = strTextSub;
-				vecRichTextItemAdjust.back().vecFontResSwitch = RichTextItem.vecFontResSwitch;
-				vecRichTextItemAdjust.back().vecColorResSwitch = RichTextItem.vecColorResSwitch;
-				strText += strTextSub;
+			std::vector<tagMMStringEmoji> vecText = CMMStrHelp::ParseStringForEmoji(RichTextItem.strText);
+			for (auto &Item : vecText)
+			{
+				strText += Item.strText;
+
+				tagDuiRichTextItem RichTextItemAdjust;
+				RichTextItemAdjust.vecFontResSwitch = RichTextItem.vecFontResSwitch;
+				RichTextItemAdjust.vecColorResSwitch = RichTextItem.vecColorResSwitch;
+				RichTextItemAdjust.strText = Item.strText;
+				vecRichTextItemAdjust.push_back(RichTextItemAdjust);
 			}
 		}
 		//image
@@ -1054,13 +1056,10 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName
 	//caret
 	if (RichTextItem_Text == History.ItemType)
 	{
-		int nLen = lstrlen(lpszText);
-		for (int n = 0; n < nLen; n++)
+		auto vecText = CMMStrHelp::ParseStringForEmoji(lpszText);
+		for (auto &Item : vecText)
 		{
 			PerformMoveCaretHoriz(false, false, false);
-
-			int nEmoji = CDUIGlobal::IsEmoji(lpszText[n]);
-			nEmoji > 0 ? n += nEmoji - 1 : 0;	
 		}
 	}
 	else if (RichTextItem_Image == History.ItemType)
@@ -1611,22 +1610,37 @@ LRESULT CDUIThinkEditCtrl::OnDuiChar(const DuiMessage &Msg)
 	//maxchar
 	if (m_vecRichTextItem.size() >= GetMaxChar()) return 0;
 
-	static TCHAR chEmoji = 0;
-	CMMString strReplace = CMMString((TCHAR)Msg.wParam);
-	if (0 != chEmoji)
+	CMMString strReplace;
+	TCHAR ch = (TCHAR)Msg.wParam;
+	if (ch >= 0xD800 && ch <= 0xDBFF)
 	{
-		strReplace = chEmoji + strReplace;
-
-		chEmoji = 0;
-	}
-	else if (CDUIGlobal::IsEmoji(Msg.wParam) > 1)
-	{
-		chEmoji = (TCHAR)Msg.wParam;
+		// 收到高阶代理项（Emoji前半段），暂存并等待下一次 WM_CHAR
+		m_chEmojiWait = ch;
 
 		return 0;
 	}
+	if (ch >= 0xDC00 && ch <= 0xDFFF)
+	{
+		// 收到低阶代理项（Emoji后半段），进行组合
+		if (m_chEmojiWait != 0)
+		{
+			strReplace += m_chEmojiWait;
+			strReplace += ch;
+		}
+		else
+		{
+			// 出现了没有高阶项的孤立低阶项（属于异常编码），直接丢弃
+			return 0; 
+		}
+	}
+	else
+	{
+		// 正常BMP面板内的字符(包括部分1个 wchar_t 的老式符号)
+		strReplace = ch;
+	}
 
 	//add
+	m_chEmojiWait = 0;
 	m_strInput += strReplace;
 	SetTimer(Dui_TimerInputChar_ID, Dui_TimerInputChar_Elapse);
 
@@ -1745,14 +1759,16 @@ LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 		ImmGetCompositionString(hImc, GCS_COMPSTR, strBuff.GetBuffer(), strBuff.length());
 		
 		bool bHaveEmoji = false;
-		for (int n = 0; n < strBuff.length(); n++)
+		std::vector<tagMMStringEmoji> vecText = CMMStrHelp::ParseStringForEmoji(strBuff);
+		for (auto &Item : vecText)
 		{
-			MMEmojiExtract(strBuff, n);
-			if (nEmoji > 0)
+			if (Item.bEmoji)
 			{
 				bHaveEmoji = true;
 
-				SetReplaceSel(strTextSub);
+				SetReplaceSel(strBuff);
+
+				break;
 			}
 		}
 		if (bHaveEmoji)
@@ -2040,13 +2056,12 @@ void CDUIThinkEditCtrl::PerformMeasureString(IN LPCTSTR lpszText, IN tagDuiTextS
 {
 	VecDuiRichTextItem vecRichTextItem;
 
-	CMMString strText = lpszText;
-	for (int n = 0; n < strText.length(); n++)
+	std::vector<tagMMStringEmoji> vecText = CMMStrHelp::ParseStringForEmoji(lpszText);
+	for (auto &Item : vecText)
 	{
-		MMEmojiExtract(strText, n);
-
-		vecRichTextItem.push_back(tagDuiRichTextItem());
-		vecRichTextItem.back().strText = IsPasswordMode() ? GetPasswordChar() : strTextSub;
+		tagDuiRichTextItem RichTextItem;
+		RichTextItem.strText = IsPasswordMode() ? GetPasswordChar() : Item.strText;
+		vecRichTextItem.push_back(RichTextItem);
 	}
 
 	PerformMeasureString(vecRichTextItem, TextStyle, mapLineVecRichTextDraw, rcMeasure);
