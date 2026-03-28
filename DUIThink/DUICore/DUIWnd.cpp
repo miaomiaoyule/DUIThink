@@ -2815,14 +2815,17 @@ LRESULT CDUIWnd::OnMouseMove(WPARAM wParam, LPARAM lParam)
 			m_vecMouseEnterCtrl.push_back(m_pHoverCtrl);
 
 			//enter
-			DuiMsg.pMsgCtrl = pControl;
+			DuiMsg.pMsgCtrl = m_pHoverCtrl;
 			m_pHoverCtrl->OnDuiMouseEnter(pt, DuiMsg);
 			Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseEnter, pt, DuiMsg, false);
 
-			//move
-			DuiMsg.pMsgCtrl = pControl;
-			m_pHoverCtrl->OnDuiMouseMove(pt, DuiMsg);
-			Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseMove, pt, DuiMsg, false);
+			//move, verify if enter popup wnd then hoverctrl will null
+			if (m_pHoverCtrl)
+			{
+				DuiMsg.pMsgCtrl = m_pHoverCtrl;
+				m_pHoverCtrl->OnDuiMouseMove(pt, DuiMsg);
+				Dui_Dispatch_ModelMouseEvent(m_pHoverCtrl, OnDuiMouseMove, pt, DuiMsg, false);
+			}
 		}
 
 	} while (false);
