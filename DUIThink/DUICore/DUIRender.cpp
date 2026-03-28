@@ -2007,7 +2007,7 @@ HBITMAP CDUIRenderEngine::GenerateBitmap(CDUIWnd *pWnd, CDUIControlBase *pContro
 	return hBitmap;
 }
 
-Bitmap * CDUIRenderEngine::GenerateBitmap(Bitmap *pBmp, const CDUISize szGenerate)
+Bitmap * CDUIRenderEngine::GenerateBitmap(Bitmap *pBmp, const CDUISize &szGenerate)
 {
 	if (NULL == pBmp) return NULL;
 
@@ -2068,6 +2068,44 @@ Bitmap * CDUIRenderEngine::GenerateBitmap(const std::vector<BYTE> &vecFileData)
 	::GlobalUnlock(hMem);
 
 	return pBmp;
+}
+
+Bitmap * CDUIRenderEngine::GenerateEllipseBitmap(Bitmap *pBmp, const CDUISize &szGenerate)
+{
+	if (NULL == pBmp) return NULL;
+
+	Bitmap *pBmpScaled = GenerateBitmap(pBmp, szGenerate);
+	if (NULL == pBmpScaled) return NULL;
+
+	// 临时 DC/位图用于缩放原图到 nScaleWidth x nScaleHeight
+	HDC hDC = GetDC(NULL);
+	HDC hMemDC = CreateCompatibleDC(hDC);
+	HBITMAP hBitmap = CreateCompatibleBitmap(hDC, szGenerate.cx, szGenerate.cy);
+	HBITMAP hOldBmp = (HBITMAP)SelectObject(hMemDC, hBitmap);
+
+	{
+		Gdiplus::Graphics gp(hMemDC);
+		gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+		gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+
+		Gdiplus::TextureBrush brush((Gdiplus::Image*)pBmpScaled, Gdiplus::WrapModeClamp);
+		
+		// 填充椭圆（减1以避免边界像素裁切）
+		gp.FillEllipse(&brush, 0, 0, szGenerate.cx - 1, szGenerate.cy - 1);
+	}
+
+	// 从 hBitmap3 获取最终带 alpha 的 Bitmap
+	Bitmap *pBmpFinal = GetAlphaBitmap(hBitmap);
+
+	// cleanup GDI objects + 中间 Gdiplus 位图
+	SelectObject(hMemDC, hOldBmp);
+	DeleteObject(hBitmap);
+	DeleteDC(hMemDC);
+	ReleaseDC(NULL, hDC);
+
+	MMSafeDelete(pBmpScaled);
+
+	return pBmpFinal;
 }
 
 HBITMAP CDUIRenderEngine::CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFilterColor)
