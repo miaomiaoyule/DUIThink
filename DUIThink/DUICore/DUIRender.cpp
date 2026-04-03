@@ -283,6 +283,60 @@ static void ConstructRoundPath(const CDUIRect &rcDraw, const CDUIRect &rcRound, 
 	return;
 }
 
+static void ConstructRoundPath(const CDUIRect &rcDraw, const CDUIRect &rcRound, CDUISize szBreakTop, int nLineSize, Gdiplus::GraphicsPath &Path)
+{
+	if (rcDraw.GetWidth() <= 0 || rcDraw.GetHeight() <= 0) return;
+
+	if (szBreakTop.cx <= 0 && szBreakTop.cy <= 0)
+	{
+		ConstructRoundPath(rcDraw, rcRound, nLineSize, Path);
+		return;
+	}
+
+	// 修正圆角半径边界
+	int rt = max(0, min(rcRound.top, rcDraw.GetHeight() / 2));
+	int rr = max(0, min(rcRound.right, rcDraw.GetWidth() / 2));
+	int rb = max(0, min(rcRound.bottom, rcDraw.GetHeight() / 2));
+	int rl = max(0, min(rcRound.left, rcDraw.GetWidth() / 2));
+
+	// 计算缺口的起点和终点
+	int nBreakStart = rcDraw.left + rl + szBreakTop.cx;
+	int nBreakEnd = nBreakStart + szBreakTop.cy;
+	nBreakEnd = min(nBreakEnd, rcDraw.right - rt);
+
+	Path.Reset();
+
+	// 1. 从缺口右侧起点到右上圆角水平线终点
+	Path.AddLine(nBreakEnd, rcDraw.top, rcDraw.right - rt * 2, rcDraw.top);
+
+	// 2. 右上圆角
+	Path.AddArc(rcDraw.right - rt * 2 - nLineSize, rcDraw.top, rt * 2, rt * 2, 270, 90);
+
+	// 3. 右边线
+	Path.AddLine(rcDraw.right - nLineSize, rcDraw.top + rt, rcDraw.right - nLineSize, rcDraw.bottom - rr);
+
+	// 4. 右下圆角
+	Path.AddArc(rcDraw.right - rr * 2 - nLineSize, rcDraw.bottom - rr * 2 - nLineSize, rr * 2, rr * 2, 0, 90);
+
+	// 5. 底部边线
+	Path.AddLine(rcDraw.right - rr, rcDraw.bottom - nLineSize, rcDraw.left + rb, rcDraw.bottom - nLineSize);
+
+	// 6. 左下圆角
+	Path.AddArc(rcDraw.left, rcDraw.bottom - rb * 2 - nLineSize, rb * 2, rb * 2, 90, 90);
+
+	// 7. 左边线
+	Path.AddLine(rcDraw.left, rcDraw.bottom - rb, rcDraw.left, rcDraw.top + rl);
+
+	// 8. 左上圆角
+	Path.AddArc(rcDraw.left, rcDraw.top, rl * 2, rl * 2, 180, 90);
+
+	// 9. 左上圆角结束到缺口左侧起点
+	Path.AddLine(rcDraw.left + rl * 2, rcDraw.top, nBreakStart, rcDraw.top);
+
+	// 缺口处不封口，不调用 Path.CloseFigure()
+	return;
+}
+
 static void ConstructParallelogramPath(const CDUIRect &rcDraw, int nRound, int nLineSize, Gdiplus::GraphicsPath &Path)
 {
 	nRound = min(nRound, rcDraw.GetWidth());
@@ -1277,27 +1331,7 @@ void CDUIRenderEngine::DrawRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUI
 
 		//path
 		Gdiplus::GraphicsPath Path;
-
-		//top break
-		if (szBreakTop.cx > 0 || szBreakTop.cy > 0)
-		{
-			int nLeft = rcDraw.left + rcRound.left + szBreakTop.cx + szBreakTop.cy;
-			nLeft = min(nLeft, rcDraw.right - rcRound.top);
-			Path.AddLine(nLeft, rcDraw.top, rcDraw.right - rcRound.top, rcDraw.top);
-		}
-		else
-		{
-			Path.AddLine(rcDraw.left + rcRound.left, rcDraw.top, rcDraw.right - rcRound.top, rcDraw.top);
-		}
-
-		//round path
-		ConstructRoundPath(rcDraw, rcRound, nLineSize, Path);
-
-		//top break
-		if (szBreakTop.cx > 0 || szBreakTop.cy > 0)
-		{
-			Path.AddLine(rcDraw.left + rcRound.left, rcDraw.top, rcDraw.left + rcRound.left + szBreakTop.cx, rcDraw.top);
-		}
+		ConstructRoundPath(rcDraw, rcRound, szBreakTop, nLineSize, Path);
 
 		Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
 		Pen.SetAlignment(Gdiplus::PenAlignmentInset);
