@@ -206,6 +206,7 @@ void CDUIComboxWnd::OnDuiItemSelected(const DuiNotify &Notify)
 	CDUIListItemCtrl *pItem = m_pComboxView->GetChildAt(Notify.DuiNotifyExtend.ListView.nIndexItem);
 	if (NULL == pItem) return;
 
+	//need support empty text, example DTDesigner radiobox bind empty tabctrl
 	m_pOwner->SetText(pItem->GetText());
 
 	UnInit();
