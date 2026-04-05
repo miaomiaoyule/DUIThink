@@ -206,10 +206,7 @@ void CDUIComboxWnd::OnDuiItemSelected(const DuiNotify &Notify)
 	CDUIListItemCtrl *pItem = m_pComboxView->GetChildAt(Notify.DuiNotifyExtend.ListView.nIndexItem);
 	if (NULL == pItem) return;
 
-	if (false == pItem->GetText().empty())
-	{
-		m_pOwner->SetText(pItem->GetText());
-	}
+	m_pOwner->SetText(pItem->GetText());
 
 	UnInit();
 
