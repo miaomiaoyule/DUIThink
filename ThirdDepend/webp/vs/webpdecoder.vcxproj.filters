@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Object Include="webpdecode.dir\$(Configuration)\alpha_dec.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\alpha_processing.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\alpha_processing_mips_dsp_r2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\alpha_processing_neon.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\alpha_processing_sse2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\alpha_processing_sse41.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webputilsdecode.dir\$(Configuration)\bit_reader_utils.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdecode.dir\$(Configuration)\buffer_dec.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webputilsdecode.dir\$(Configuration)\color_cache_utils.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\cpu.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\dec.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\dec_clip_tables.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\dec_mips_dsp_r2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\dec_mips32.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\dec_msa.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\dec_neon.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\dec_sse2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\dec_sse41.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\filters.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\filters_mips_dsp_r2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\filters_msa.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\filters_neon.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\filters_sse2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webputilsdecode.dir\$(Configuration)\filters_utils.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdecode.dir\$(Configuration)\frame_dec.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webputilsdecode.dir\$(Configuration)\huffman_utils.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdecode.dir\$(Configuration)\idec_dec.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdecode.dir\$(Configuration)\io_dec.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\lossless.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\lossless_avx2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\lossless_mips_dsp_r2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\lossless_msa.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\lossless_neon.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\lossless_sse2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\lossless_sse41.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webputilsdecode.dir\$(Configuration)\palette.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdecode.dir\$(Configuration)\quant_dec.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webputilsdecode.dir\$(Configuration)\quant_levels_dec_utils.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webputilsdecode.dir\$(Configuration)\random_utils.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\rescaler.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\rescaler_mips_dsp_r2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\rescaler_mips32.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\rescaler_msa.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\rescaler_neon.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\rescaler_sse2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webputilsdecode.dir\$(Configuration)\rescaler_utils.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webputilsdecode.dir\$(Configuration)\thread_utils.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdecode.dir\$(Configuration)\tree_dec.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\upsampling.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\upsampling_mips_dsp_r2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\upsampling_msa.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\upsampling_neon.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\upsampling_sse2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\upsampling_sse41.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webputilsdecode.dir\$(Configuration)\utils.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdecode.dir\$(Configuration)\vp8_dec.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdecode.dir\$(Configuration)\vp8l_dec.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdecode.dir\$(Configuration)\webp_dec.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\yuv.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\yuv_mips_dsp_r2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\yuv_mips32.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\yuv_neon.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\yuv_sse2.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="webpdspdecode.dir\$(Configuration)\yuv_sse41.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Object Libraries">
+      <UniqueIdentifier>{A24A79A7-BFD7-34FD-85DB-97C57EE07221}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
