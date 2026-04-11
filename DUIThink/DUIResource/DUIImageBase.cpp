@@ -472,7 +472,6 @@ bool CDUIImageBase::ConstructWebp(std::vector<BYTE> &vecData, int nScale)
 			}
 
 			ImageInfo.vecImageWebp.push_back(CDUIRenderEngine::GetAlphaBitmap(hBitmap));
-			MMSafeDeleteObject(hBitmap);
 
 			if (NULL == ImageInfo.hBitmap)
 			{
@@ -482,6 +481,8 @@ bool CDUIImageBase::ConstructWebp(std::vector<BYTE> &vecData, int nScale)
 					memcpy(ImageInfo.pBits, pDest, dataSize);
 				}
 			}
+	
+			MMSafeDeleteObject(hBitmap);
 		}
 	}
 
