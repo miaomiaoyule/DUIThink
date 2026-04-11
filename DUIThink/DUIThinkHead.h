@@ -62,6 +62,10 @@ using namespace std;
 //////////////////////////////////////////////////////////////////////////
 #include "../MMHelper/MMHelperHead.h"
 #include "../ThirdDepend/tinyxml2/tinyxml2.h"
+#include "../ThirdDepend/webp/src/webp/decode.h"
+#include "../ThirdDepend/webp/src/webp/demux.h"
+#include "../ThirdDepend/webp/src/webp/encode.h"
+#include "../ThirdDepend/webp/src/webp/mux.h"
 #include <olectl.h>
 using namespace tinyxml2;
 

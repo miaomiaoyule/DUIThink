@@ -23,17 +23,17 @@ typedef DWORD DROPEFFECT;
 
 //////////////////////////////////////////////////////////////////////////////////
 //无效数值
-#define INVALID_BYTE					((BYTE)(0xFF))						//无效数值
-#define INVALID_WORD					((WORD)(0xFFFF))					//无效数值
-#define INVALID_DWORD					((DWORD)(0xFFFFFFFF))				//无效数值
+#define INVALID_BYTE							((BYTE)(0xFF))						//无效数值
+#define INVALID_WORD							((WORD)(0xFFFF))					//无效数值
+#define INVALID_DWORD							((DWORD)(0xFFFFFFFF))				//无效数值
 
 #ifndef PI
-#define PI								(3.141592653589793f)
+#define PI										(3.141592653589793f)
 #endif
 
-#define Len_MD5							(33)								//加密密码
-#define Len_Machine_ID					(33)								//序列长度
-#define Len_Network_ID					(13)								//网卡长度
+#define Len_MD5									(33)								//加密密码
+#define Len_Machine_ID							(33)								//序列长度
+#define Len_Network_ID							(13)								//网卡长度
 
 //////////////////////////////////////////////////////////////////////////////////
 #ifdef _UNICODE
@@ -43,23 +43,25 @@ typedef DWORD DROPEFFECT;
 #endif
 
 //存储长度
-#define CountStringBufferA(String)		((UINT)((lstrlenA(String) + 1) * sizeof(CHAR)))
-#define CountStringBufferW(String)		((UINT)((lstrlenW(String) + 1) * sizeof(WCHAR)))
+#define CountStringBufferA(String)				((UINT)((lstrlenA(String) + 1) * sizeof(CHAR)))
+#define CountStringBufferW(String)				((UINT)((lstrlenW(String) + 1) * sizeof(WCHAR)))
 
 //////////////////////////////////////////////////////////////////////////////////
-#define MMCountArray(Array)				(sizeof(Array) / sizeof(Array[0]))
-#define MMCountString(Array)			(sizeof(Array) / sizeof(Array[0]) - 1)
-#define MMSafeRelease(pPointer)			{ if (pPointer) { pPointer->Release(); pPointer = NULL; } }
-#define MMSafeDelete(pPointer)			{ try { if (pPointer) {delete pPointer;} } catch (...) { assert(false); } pPointer = NULL; } 
-#define MMSafeCloseHandle(hHandle)		{ if (hHandle) { ::CloseHandle(hHandle); hHandle = NULL; } }
-#define MMSafeDeleteObject(hObject)		{ if (hObject) { ::DeleteObject(hObject); hObject = NULL; } }
-#define MMSafeDeleteDC(hDC)				{ if (hDC) { ::DeleteDC(hDC); hDC = NULL; } }
-#define MMSafeDeleteArray(pData)		{ try { delete []pData; } catch (...) { assert(false); } pData = NULL; } 
-#define MMSafeDeletePCIDL(pPCIDL)		{ try { if (pPCIDL) { CoTaskMemFree((LPVOID)pPCIDL); } } catch (...) { assert(false); } pPCIDL = NULL; } 
-#define MMStaticPtr(Type, pPointer)		(static_cast<Type*>(pPointer))
-#define MMDynamicPtr(Type, pPointer)	(dynamic_cast<Type*>(pPointer))
-#define MMInvalidString(Str)			(NULL == Str || _T('\0') == Str[0])
-#define MMInvalidIPAddress(IPAddress)	((IPAddress == 0L) || (IPAddress == INADDR_NONE))
+#define MMCountArray(Array)						(sizeof(Array) / sizeof(Array[0]))
+#define MMCountString(Array)					(sizeof(Array) / sizeof(Array[0]) - 1)
+#define MMSafeRelease(pPointer)					{ if (pPointer) { pPointer->Release(); pPointer = NULL; } }
+#define MMSafeCloseHandle(hHandle)				{ if (hHandle) { ::CloseHandle(hHandle); hHandle = NULL; } }
+#define MMSafeDeleteObject(hObject)				{ if (hObject) { ::DeleteObject(hObject); hObject = NULL; } }
+#define MMSafeDeleteObjectArray(vecObject)		{ for (auto &hObject : vecObject) { MMSafeDeleteObject(hObject) } }
+#define MMSafeDeleteDC(hDC)						{ if (hDC) { ::DeleteDC(hDC); hDC = NULL; } }
+#define MMSafeDelete(pPointer)					{ try { if (pPointer) {delete pPointer;} } catch (...) { assert(false); } pPointer = NULL; } 
+#define MMSafeDeleteVector(vecPtr)				{ for (auto &ptr : vecPtr) { MMSafeDelete(ptr); } }
+#define MMSafeDeleteArray(pData)				{ try { delete []pData; } catch (...) { assert(false); } pData = NULL; } 
+#define MMSafeDeletePCIDL(pPCIDL)				{ try { if (pPCIDL) { CoTaskMemFree((LPVOID)pPCIDL); } } catch (...) { assert(false); } pPCIDL = NULL; } 
+#define MMStaticPtr(Type, pPointer)				(static_cast<Type*>(pPointer))
+#define MMDynamicPtr(Type, pPointer)			(dynamic_cast<Type*>(pPointer))
+#define MMInvalidString(Str)					(NULL == Str || _T('\0') == Str[0])
+#define MMInvalidIPAddress(IPAddress)			((IPAddress == 0L) || (IPAddress == INADDR_NONE))
 
 //////////////////////////////////////////////////////////////////////////
 #define MMDeclare_ClassName(class_name)\

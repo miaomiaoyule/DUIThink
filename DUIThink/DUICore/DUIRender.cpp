@@ -861,7 +861,7 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 }
 
 void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
-	BYTE cbAlpha, bool bAlpha, bool bCornerHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
+	bool bCornerHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
 {
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (NULL == hDC || NULL == pBmp) return;
@@ -1135,75 +1135,6 @@ void CDUIRenderEngine::DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect 
 	}
 
 	MMSafeDelete(pMemDC);
-
-	return;
-}
-
-void CDUIRenderEngine::DrawAnimateImage(HDC hDC, Gdiplus::Bitmap *pBmpAnimate, const CDUIRect &rcItem, int nFrameCur, const CDUIRect &rcRound, enDuiRoundType RoundType)
-{
-	if (NULL == pBmpAnimate) return;
-
-	GUID pageGuid = Gdiplus::FrameDimensionTime;
-	pBmpAnimate->SelectActiveFrame(&pageGuid, nFrameCur);
-
-	Gdiplus::Graphics Gp(hDC);
-	Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
-	Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
-
-	//round image
-	if (rcRound.left > 0
-		|| rcRound.top > 0
-		|| rcRound.right > 0
-		|| rcRound.bottom > 0)
-	{
-		Gdiplus::TextureBrush BrushBmp(pBmpAnimate, Gdiplus::WrapModeClamp);
-
-		//path
-		Gdiplus::GraphicsPath Path;
-		switch (RoundType)
-		{
-			case Round_Parallelogram:
-			{
-				ConstructParallelogramPath(rcItem, rcItem.GetWidth() / 3, 0, Path);
-				ConstructTextureBrushMatrix(BrushBmp, Path, pBmpAnimate);
-
-				Gp.FillPath(&BrushBmp, &Path);
-
-				break;
-			}
-			case Round_Rhomb:
-			{
-				ConstructRhombPath(rcItem, 0, Path);
-				ConstructTextureBrushMatrix(BrushBmp, Path, pBmpAnimate);
-
-				Gp.FillPath(&BrushBmp, &Path);
-
-				break;
-			}
-			case Round_Ellipse:
-			{
-				ConstructEllipsePath(rcItem, Path);
-				ConstructTextureBrushMatrix(BrushBmp, Path, pBmpAnimate);
-
-				Gp.FillPath(&BrushBmp, &Path);
-
-				break;
-			}
-			default:
-			{
-				ConstructRoundPath(rcItem, rcRound, 0, Path);
-				ConstructTextureBrushMatrix(BrushBmp, Path, pBmpAnimate);
-
-				Gp.FillPath(&BrushBmp, &Path);
-
-				break;
-			}
-		}
-
-		return;
-	}
-
-	Gp.DrawImage(pBmpAnimate, rcItem.left, rcItem.top, rcItem.GetWidth(), rcItem.GetHeight());
 
 	return;
 }
@@ -1821,7 +1752,13 @@ void CDUIRenderEngine::DrawRichText(HDC hDC, CDUIRect &rcItem, const MapLineVecD
 					{
 						case AnimateImage_Gif:
 						{
-							CDUIRenderEngine::DrawAnimateImage(hDC, pImageBase->GetAnimateImage(), RichTextDrawItem.rcDraw, RichTextDrawItem.nAnimateFrameCur);
+							Gdiplus::Bitmap *pBmpAnimate = pImageBase->GetAnimateImage();
+							if (pBmpAnimate)
+							{
+								GUID pageGuid = Gdiplus::FrameDimensionTime;
+								pBmpAnimate->SelectActiveFrame(&pageGuid, RichTextDrawItem.nAnimateFrameCur);
+								CDUIRenderEngine::DrawImage(hDC, pBmpAnimate, RichTextDrawItem.rcDraw);
+							}
 
 							break;
 						}
@@ -2162,6 +2099,8 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFi
 
 HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor/* = 0*/)
 {
+	if (NULL == hBitmap) return NULL;
+
 	BITMAP bmp = {};
 	if (GetObject(hBitmap, sizeof(BITMAP), &bmp) == 0) return NULL;
 
@@ -2216,6 +2155,8 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor/* = 0*
 
 Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB)
 {
+	if (NULL == hBitmap) return NULL;
+
 	BITMAP bmp = {};
 	if (GetObject(hBitmap, sizeof(BITMAP), &bmp) == 0) return NULL;
 

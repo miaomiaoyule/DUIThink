@@ -57,6 +57,7 @@ protected:
 	bool SetResourceName(const CMMString &strName);
 	void ConstructResource(int nScale = 100) override;
 	bool ConstructAnimate(std::vector<BYTE> &vecData, int nScale);
+	bool ConstructWebp(std::vector<BYTE> &vecData, int nScale);
 	bool ConstructNormal(std::vector<BYTE> &vecData, int nScale);
 	bool ConstructBitmap(LPBYTE pPixel, int nWidth, int nHeight, int nScale);
 	bool SetAttribute(LPCSTR lpszName, LPCSTR lpszValue) override;

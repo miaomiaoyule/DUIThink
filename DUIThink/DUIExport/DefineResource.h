@@ -230,6 +230,14 @@ enum enDuiResType
 	DuiResType_Color,
 };
 
+enum enDuiImageType
+{
+	DuiImageType_Normal,
+	DuiImageType_Gif,
+	DuiImageType_Svg,
+	DuiImageType_Webp,
+};
+
 //////////////////////////////////////////////////////////////////////////
 
 #endif

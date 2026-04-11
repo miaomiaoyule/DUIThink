@@ -45,6 +45,12 @@ public:
 	// Parameter: 	LPCTSTR lpszFile 例：C:\Text.txt or Text.txt or txt or C:\Text
 	//************************************
 	static enMMFileType ParseFileType(LPCTSTR lpszFile);
+	static bool IsWebpFile(LPCTSTR lpszFile);
+	static bool IsWebpFile(const std::vector<BYTE> &vecData);
+	static bool IsGifFile(LPCTSTR lpszFile);
+	static bool IsGifFile(const std::vector<BYTE> &vecData);
+	static bool IsSvgFile(LPCTSTR lpszFile);
+	static bool IsSvgFile(const std::vector<BYTE> &vecData);
 
 	//************************************
 	// Description:	从一个完整路径字符串解析出文件名、扩展名

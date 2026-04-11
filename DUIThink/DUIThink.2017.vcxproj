@@ -1193,6 +1193,15 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ProjectReference Include="..\ThirdDepend\tinyxml2\vs\tinyxml2.2017.vcxproj">
       <Project>{7c72653a-e6f8-4584-b553-de3a0aee4356}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\ThirdDepend\webp\vs\webp.vcxproj">
+      <Project>{0ef1f64a-3427-335c-b396-186b76d4b58f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdDepend\webp\vs\webpdecoder.vcxproj">
+      <Project>{fb573304-4a90-3c74-8ee3-492b0ee488bb}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdDepend\webp\vs\webpdemux.vcxproj">
+      <Project>{5015d271-c44c-3f3a-93b7-af7c7a4b8b86}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DUIThink.rc" />

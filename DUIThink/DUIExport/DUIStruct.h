@@ -229,6 +229,8 @@ typedef std::map<int, VecDuiRichTextDraw> MapLineVecDuiRichTextDraw;
 //////////////////////////////////////////////////////////////////////////
 struct tagDuiImageInfo
 {
+	enDuiImageType						ImageType = DuiImageType_Normal;
+
 	//normal
 	Gdiplus::Bitmap *					pBitmap = NULL;
 	HBITMAP								hBitmap = NULL;
@@ -237,8 +239,13 @@ struct tagDuiImageInfo
 	int									nHeight = 0;
 	bool								bAlpha = false;
 
-	//animate
+	//gif
 	Gdiplus::Bitmap *					pImageAnimate = NULL;
+
+	//webp
+	std::vector<Gdiplus::Bitmap*>		vecImageWebp;
+
+	//gif or webp or animate frame
 	int									nFrameCount = 0;
 	std::vector<WORD>					vecFrameElapse;
 };

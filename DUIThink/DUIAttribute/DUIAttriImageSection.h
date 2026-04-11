@@ -33,8 +33,8 @@ public:
 	//render
 	virtual void Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete = false, const CDUIRect &rcRound = {}, 
 		enDuiRoundType RoundType = Round_Normal);
-	virtual void Draw(CDUIImageBase *pImageBase, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete = false, const CDUIRect &rcRound = {},
-		enDuiRoundType RoundType = Round_Normal);
+	virtual void Draw(HBITMAP hBitmap, Gdiplus::Bitmap *pBitmap, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete = false, bool bScale = false, bool bAlpha = false,
+		const CDUIRect &rcRound = {}, enDuiRoundType RoundType = Round_Normal);
 	virtual void DrawParallelogram(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete = false);
 	virtual void DrawRhomb(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete = false);
 	virtual void DrawEllipse(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete = false); 

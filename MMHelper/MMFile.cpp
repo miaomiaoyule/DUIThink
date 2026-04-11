@@ -323,6 +323,88 @@ enMMFileType CMMFile::ParseFileType(LPCTSTR lpszFile)
 	return FileType_None;
 }
 
+bool CMMFile::IsWebpFile(LPCTSTR lpszFile)
+{
+	if (MMInvalidString(lpszFile)) return false;
+
+	std::vector<BYTE> vecData;
+	GetFileData(lpszFile, vecData);
+	return IsWebpFile(vecData);
+}
+
+bool CMMFile::IsWebpFile(const std::vector<BYTE> &vecData)
+{
+	// WebP 文件头至少需要 12 个字节
+	if (vecData.size() < 12)
+	{
+		return false;
+	}
+
+	// 检查前 4 个字节是否为 'RIFF'
+	bool bIsRiff = (vecData[0] == 'R' && vecData[1] == 'I' && 
+		vecData[2] == 'F' && vecData[3] == 'F');
+
+	// 检查第 8 到 11 字节是否为 'WEBP'
+	bool bIsWebp = (vecData[8] == 'W' && vecData[9] == 'E' && 
+		vecData[10] == 'B' && vecData[11] == 'P');
+
+	return bIsRiff && bIsWebp;
+}
+
+bool CMMFile::IsGifFile(LPCTSTR lpszFile)
+{
+	if (MMInvalidString(lpszFile)) return false;
+
+	std::vector<BYTE> vecData;
+	GetFileData(lpszFile, vecData);
+	return IsGifFile(vecData);
+}
+
+bool CMMFile::IsGifFile(const std::vector<BYTE> &vecData)
+{
+	// GIF 文件头至少有 6 个字节 (如 "GIF89a" 或 "GIF87a")
+	if (vecData.size() < 6) return false;
+
+	// 前三个字节必须是 'G' 'I' 'F'
+	if (vecData[0] != 'G' || vecData[1] != 'I' || vecData[2] != 'F')
+		return false;
+
+	// 后三个字节通常是版本号 "87a" 或 "89a"
+	bool bIs87a = (vecData[3] == '8' && vecData[4] == '7' && vecData[5] == 'a');
+	bool bIs89a = (vecData[3] == '8' && vecData[4] == '9' && vecData[5] == 'a');
+
+	return bIs87a || bIs89a;
+}
+
+bool CMMFile::IsSvgFile(LPCTSTR lpszFile)
+{
+	if (MMInvalidString(lpszFile)) return false;
+
+	std::vector<BYTE> vecData;
+	GetFileData(lpszFile, vecData, 512);
+	return IsSvgFile(vecData);
+}
+
+bool CMMFile::IsSvgFile(const std::vector<BYTE> &vecData)
+{
+	if (vecData.size() < 4) return false;
+
+	size_t nCheckSize = min((size_t)512, vecData.size());
+	auto itEnd = vecData.begin() + nCheckSize;
+
+	// 查找 "<svg"
+	const char szSvgLower[] = "<svg";
+	auto itLower = std::search(vecData.begin(), itEnd, szSvgLower, szSvgLower + 4);
+	if (itLower != itEnd) return true;
+
+	// 查找 "<SVG"
+	const char szSvgUpper[] = "<SVG";
+	auto itUpper = std::search(vecData.begin(), itEnd, szSvgUpper, szSvgUpper + 4);
+	if (itUpper != itEnd) return true;
+
+	return false;
+}
+
 bool CMMFile::ParseFileName(LPCTSTR lpszFileName, CMMString &strName, CMMString &strExt)
 {
 	if (NULL == lpszFileName) return false;

@@ -54,6 +54,7 @@ void CDUIImageBase::ReleaseResource()
 
 		//animate
 		MMSafeDelete(ImageInfo.pImageAnimate);
+		MMSafeDeleteVector(ImageInfo.vecImageWebp);
 		ImageInfo.nFrameCount = 0;
 	}
 
@@ -165,10 +166,16 @@ tagDuiAnimateImageInfo CDUIImageBase::GetAnimateImageInfo(int nScale)
 	if (NULL == GetHandle(nScale)) return {};
 
 	tagDuiImageInfo ImageInfo = GetImageInfo(nScale);
-	if (NULL == ImageInfo.pImageAnimate) return tagDuiAnimateImageInfo();
-
 	tagDuiAnimateImageInfo AnimateImageInfo;
-	AnimateImageInfo.AnimateImageType = ImageInfo.nFrameCount > 0 ? AnimateImage_Gif : AnimateImage_None;
+	if (ImageInfo.pImageAnimate)
+	{
+		AnimateImageInfo.AnimateImageType = AnimateImage_Gif;
+	}
+	else if (ImageInfo.vecImageWebp.size() > 0)
+	{
+		AnimateImageInfo.AnimateImageType = AnimateImage_Webp;
+	}
+
 	AnimateImageInfo.nFrameCount = ImageInfo.nFrameCount;
 	AnimateImageInfo.vecFrameElapse = ImageInfo.vecFrameElapse;
 
@@ -229,14 +236,29 @@ void CDUIImageBase::ConstructResource(int nScale)
 	
 	//release animate
 	MMSafeDelete(m_mapDpiImageInfo[nScale].pImageAnimate);
+	MMSafeDeleteVector(m_mapDpiImageInfo[nScale].vecImageWebp);	
 	m_mapDpiImageInfo[nScale].nFrameCount = 0;
 	m_mapDpiImageInfo.erase(nScale);
 
 	//type
 	CMMString strExt;
 	CMMFile::ParseFileName(m_strImageFile, CMMString(), strExt);
-	bool bSvgFile = 0 == strExt.CompareNoCase(_T("svg"));
-	bool bGifFile = 0 == strExt.CompareNoCase(_T("gif"));
+	enDuiImageType ImageType = DuiImageType_Normal;
+	if (false == strExt.empty())
+	{
+		if (0 == strExt.CompareNoCase(_T("svg")))
+		{
+			ImageType = DuiImageType_Svg;
+		}
+		else if (0 == strExt.CompareNoCase(_T("gif")))
+		{
+			ImageType = DuiImageType_Gif;
+		}
+		else if (0 == strExt.CompareNoCase(_T("webp")))
+		{
+			ImageType = DuiImageType_Webp;
+		}
+	}
 
 	//file
 	vector<BYTE> vecData;
@@ -244,7 +266,7 @@ void CDUIImageBase::ConstructResource(int nScale)
 
 	//scale
 	CMMString strScale;
-	if (false == bSvgFile && 100 != nScale)
+	if (DuiImageType_Svg != ImageType && 100 != nScale)
 	{
 		strScale.Format(_T("@%d"), nScale);
 
@@ -259,11 +281,11 @@ void CDUIImageBase::ConstructResource(int nScale)
 		{
 			break;
 		}
-		if (false == bSvgFile && m_mapDpiImageInfo[100].hBitmap)
+		if (DuiImageType_Svg != ImageType && m_mapDpiImageInfo[100].hBitmap)
 		{
 			return;
 		}
-		if (bSvgFile)
+		if (DuiImageType_Svg == ImageType)
 		{
 			::MessageBox(NULL, _T("Extract Image Fail£¡"), _T("Error"), MB_OK);
 
@@ -282,8 +304,28 @@ void CDUIImageBase::ConstructResource(int nScale)
 
 	} while (false);
 
+	//check file type by content
+	if (DuiImageType_Svg != ImageType && strExt.empty() && CMMFile::IsSvgFile(vecData))
+	{
+		ImageType = DuiImageType_Svg;
+	}
+	else if (DuiImageType_Gif != ImageType && strExt.empty() && CMMFile::IsGifFile(vecData))
+	{
+		ImageType = DuiImageType_Gif;
+	}
+	else if (DuiImageType_Webp != ImageType && strExt.empty() && CMMFile::IsWebpFile(vecData))
+	{
+		ImageType = DuiImageType_Webp;
+	}
+
 	//parse
-	if (bGifFile)
+	if (DuiImageType_Webp == ImageType)
+	{
+		ConstructWebp(vecData, nScale);
+	
+		return;
+	}
+	if (DuiImageType_Gif == ImageType)
 	{
 		ConstructAnimate(vecData, nScale);
 
@@ -291,10 +333,11 @@ void CDUIImageBase::ConstructResource(int nScale)
 	}
 
 	//svg
-	if (bSvgFile)
+	if (DuiImageType_Svg == ImageType)
 	{
 #ifdef MMSvgEnable
 		tagDuiImageInfo ImageInfo = {};
+		ImageInfo.ImageType = DuiImageType_Svg;
 		CMMSvg::GetInstance()->ParseImage(vecData, nScale, ImageInfo.hBitmap, ImageInfo.nWidth, ImageInfo.nHeight, &ImageInfo.pBits);
 
 		ImageInfo.bAlpha = true;
@@ -316,6 +359,7 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 
 	//create
 	tagDuiImageInfo ImageInfo = {};
+	ImageInfo.ImageType = DuiImageType_Gif;
 	ImageInfo.pImageAnimate = CDUIRenderEngine::GenerateBitmap(vecData);
 
 	//init
@@ -351,6 +395,97 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 	ImageInfo.pBits = (LPBYTE)BmpInfo.bmBits;
 	ImageInfo.nWidth = ImageInfo.pImageAnimate->GetWidth();
 	ImageInfo.nHeight = ImageInfo.pImageAnimate->GetHeight();
+
+	m_mapDpiImageInfo[nScale] = ImageInfo;
+
+	return true;
+}
+
+bool CDUIImageBase::ConstructWebp(std::vector<BYTE> &vecData, int nScale)
+{
+	if (vecData.size() <= 0) return false;
+
+	//parse
+	tagDuiImageInfo ImageInfo = {};
+	ImageInfo.ImageType = DuiImageType_Webp;
+
+	WebPData data = { vecData.data(), vecData.size() };
+	WebPAnimDecoderOptions opts;
+	WebPAnimDecoderOptionsInit(&opts);
+
+	WebPAnimDecoder* dec = WebPAnimDecoderNew(&data, &opts);
+	if (!dec) return false;
+
+	WebPAnimInfo info;
+	WebPAnimDecoderGetInfo(dec, &info);
+
+	ImageInfo.bAlpha = true;
+	ImageInfo.nWidth = info.canvas_width;
+	ImageInfo.nHeight = info.canvas_height;
+	size_t dataSize = ImageInfo.nWidth * ImageInfo.nHeight * 4;
+
+	uint8_t* buf = NULL;
+	int timestamp = 0;
+	int prev_timestamp = 0;
+
+	while (WebPAnimDecoderGetNext(dec, &buf, &timestamp))
+	{
+		int duration = timestamp - prev_timestamp;
+		prev_timestamp = timestamp;
+
+		ImageInfo.nFrameCount++;
+		ImageInfo.vecFrameElapse.push_back(duration);
+
+		LPBYTE pDest = NULL;
+		HBITMAP hBitmap = CDUIRenderEngine::CreateARGB32Bitmap(NULL, ImageInfo.nWidth, ImageInfo.nHeight, &pDest);
+		if (hBitmap && pDest)
+		{
+			LPBYTE pSrc = buf;
+			LPBYTE pDst = pDest;
+			int nTotalPixels = ImageInfo.nWidth * ImageInfo.nHeight;
+			for (int i = 0; i < nTotalPixels; ++i, pSrc += 4, pDst += 4)
+			{
+				BYTE r = pSrc[0];
+				BYTE g = pSrc[1];
+				BYTE b = pSrc[2];
+				BYTE a = pSrc[3];
+
+				if (a == 255)
+				{
+					pDst[0] = b;
+					pDst[1] = g;
+					pDst[2] = r;
+					pDst[3] = 255;
+				}
+				else if (a == 0)
+				{
+					*(DWORD*)pDst = 0;
+				}
+				else
+				{
+					//RGBA to BGRA
+					pDst[0] = (b * a + 255) >> 8;
+					pDst[1] = (g * a + 255) >> 8;
+					pDst[2] = (r * a + 255) >> 8;
+					pDst[3] = a;
+				}
+			}
+
+			ImageInfo.vecImageWebp.push_back(CDUIRenderEngine::GetAlphaBitmap(hBitmap));
+			MMSafeDeleteObject(hBitmap);
+
+			if (NULL == ImageInfo.hBitmap)
+			{
+				ImageInfo.hBitmap = CDUIRenderEngine::CreateARGB32Bitmap(NULL, ImageInfo.nWidth, ImageInfo.nHeight, &ImageInfo.pBits);
+				if (ImageInfo.hBitmap && ImageInfo.pBits)
+				{
+					memcpy(ImageInfo.pBits, pDest, dataSize);
+				}
+			}
+		}
+	}
+
+	WebPAnimDecoderDelete(dec);
 
 	m_mapDpiImageInfo[nScale] = ImageInfo;
 
@@ -395,29 +530,34 @@ bool CDUIImageBase::ConstructBitmap(LPBYTE pPixel, int nWidth, int nHeight, int 
 		return false;
 	}
 
-	for (int i = 0; i < nWidth * nHeight; i++)
+	LPBYTE pSrc = pPixel;
+	LPBYTE pDst = pDest;
+	int nTotalPixels = nWidth * nHeight;
+	for (int i = 0; i < nTotalPixels; ++i, pSrc += 4, pDst += 4)
 	{
-		pDest[i * 4 + 3] = pPixel[i * 4 + 3];
-		if (pDest[i * 4 + 3] < 255)
+		BYTE r = pSrc[0];
+		BYTE g = pSrc[1];
+		BYTE b = pSrc[2];
+		BYTE a = pSrc[3];
+
+		if (a == 255)
 		{
-			pDest[i * 4] = (BYTE)(DWORD(pPixel[i * 4 + 2]) * pPixel[i * 4 + 3] / 255);
-			pDest[i * 4 + 1] = (BYTE)(DWORD(pPixel[i * 4 + 1]) * pPixel[i * 4 + 3] / 255);
-			pDest[i * 4 + 2] = (BYTE)(DWORD(pPixel[i * 4]) * pPixel[i * 4 + 3] / 255);
+			pDst[0] = b;
+			pDst[1] = g;
+			pDst[2] = r;
+			pDst[3] = 255;
+		}
+		else if (a == 0)
+		{
+			*(DWORD*)pDst = 0;
 			bAlphaChannel = true;
 		}
 		else
 		{
-			pDest[i * 4] = pPixel[i * 4 + 2];
-			pDest[i * 4 + 1] = pPixel[i * 4 + 1];
-			pDest[i * 4 + 2] = pPixel[i * 4];
-		}
-
-		if (*(DWORD*)(&pDest[i * 4]) == 0)
-		{
-			pDest[i * 4] = (BYTE)0;
-			pDest[i * 4 + 1] = (BYTE)0;
-			pDest[i * 4 + 2] = (BYTE)0;
-			pDest[i * 4 + 3] = (BYTE)0;
+			pDst[0] = (b * a + 255) >> 8;
+			pDst[1] = (g * a + 255) >> 8;
+			pDst[2] = (r * a + 255) >> 8;
+			pDst[3] = a;
 			bAlphaChannel = true;
 		}
 	}

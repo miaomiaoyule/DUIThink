@@ -32,24 +32,27 @@ void CDUIAttriImageSection::Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect
 	if (NULL == pImageBaseCur || NULL == m_pOwner) return;
 
 	//info
+	CDUIWnd *pWnd = GetOwnerWnd();
+	if (NULL == pWnd) return;
+
 	tagDuiImageSection ImageSection = GetImageSection();
-	
-	Draw(pImageBaseCur, ImageSection, hDC, rcItem, rcPaint, bDisablePallete, rcRound, RoundType);
+
+	Draw(pImageBaseCur->GetHandle(GetScale()), pWnd->IsGdiplusRenderImage() ? pImageBaseCur->GetBitmap(GetScale()) : NULL, ImageSection, hDC, rcItem, rcPaint, bDisablePallete, pImageBaseCur->IsScale(GetScale()), pImageBaseCur->IsAlpha(), rcRound, RoundType);
 
 	return;
 }
 
-void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete, const CDUIRect &rcRound, enDuiRoundType RoundType)
+void CDUIAttriImageSection::Draw(HBITMAP hBitmap, Gdiplus::Bitmap *pBitmap, const tagDuiImageSection &ImageSection, HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcPaint, bool bDisablePallete, bool bScale, bool bAlpha, const CDUIRect &rcRound, enDuiRoundType RoundType)
 {
-	if (NULL == pImageBase) return;
+	if (NULL == hBitmap && NULL == pBitmap) return;
 
 	CDUIWnd *pWnd = GetOwnerWnd();
 	if (NULL == pWnd) return;
 
-	bool bScale = pImageBase->IsScale(GetScale());
+	HBITMAP hBmpPaint = hBitmap;
+	Gdiplus::Bitmap *pBmpPaint = pBitmap;
 	BYTE cbAlpha = bDisablePallete ? 150 : ImageSection.cbAlpha;
-	bool bAlpha = 255 != cbAlpha || pImageBase->IsAlpha();
-	HBITMAP hBitmap = pImageBase->GetHandle(GetScale());
+	bAlpha = 255 != cbAlpha || bAlpha;
 
 	//source
 	CDUIRect rcSource = GetSource(ImageSection);
@@ -63,15 +66,15 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 	CDUIRect rcCorner = bScale ? DuiDpiScaleAttri(ImageSection.rcCorner) : ImageSection.rcCorner;
 
 	//mask
-	Gdiplus::Bitmap *pBmp = NULL;
 	if (ImageSection.dwMask > 0x00ffffff)
 	{
-		hBitmap = CDUIRenderEngine::CopyBitmap(hBitmap, ImageSection.dwMask);
+		hBmpPaint = CDUIRenderEngine::CopyBitmap(hBitmap, ImageSection.dwMask);
 		bAlpha = true;
 	}
-	if (pWnd->IsGdiplusRenderImage())
+	if ((pWnd->IsGdiplusRenderImage() && NULL == pBmpPaint)
+		|| (hBmpPaint != hBitmap))
 	{
-		pBmp = hBitmap != pImageBase->GetHandle(GetScale()) ? CDUIRenderEngine::GetAlphaBitmap(hBitmap) : pImageBase->GetBitmap(GetScale());
+		pBmpPaint = CDUIRenderEngine::GetAlphaBitmap(hBmpPaint);
 	}
 	do
 	{
@@ -79,25 +82,28 @@ void CDUIAttriImageSection::Draw(CDUIImageBase *pImageBase, const tagDuiImageSec
 		if (rcDest.Empty()) return;
 
 		//draw
-		if (pWnd->IsGdiplusRenderImage())
+		if (pBmpPaint)
 		{
-			CDUIRenderEngine::DrawImage(hDC, pBmp, rcDest, rcPaint, rcSource,
-				rcCorner, cbAlpha, bAlpha, ImageSection.bCornerHole, 
+			CDUIRenderEngine::DrawImage(hDC, pBmpPaint, rcDest, rcPaint, rcSource, 
+				rcCorner, ImageSection.bCornerHole,
 				HorizImageAlign_Tile == ImageSection.HorizImageAlign, VertImageAlign_Tile == ImageSection.VertImageAlign, rcRound, RoundType);
 		}
 		else
 		{
-			CDUIRenderEngine::DrawImage(hDC, hBitmap, rcDest, rcPaint, rcSource,
+			CDUIRenderEngine::DrawImage(hDC, hBmpPaint, rcDest, rcPaint, rcSource,
 				rcCorner, cbAlpha, bAlpha, ImageSection.bCornerHole,
 				HorizImageAlign_Tile == ImageSection.HorizImageAlign, VertImageAlign_Tile == ImageSection.VertImageAlign, rcRound, RoundType);
 		}
 
 	} while (false);
 
-	if (hBitmap != pImageBase->GetHandle(GetScale()))
+	if (hBmpPaint != hBitmap)
 	{
-		MMSafeDeleteObject(hBitmap);
-		MMSafeDelete(pBmp);
+		MMSafeDeleteObject(hBmpPaint);
+	}
+	if (pBmpPaint != pBitmap)
+	{
+		MMSafeDelete(pBmpPaint);
 	}
 
 	return;
@@ -123,6 +129,9 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 	CDUIImageBase *pImageBaseCur = GetCurImageBase();
 	if (NULL == pImageBaseCur || NULL == pImageBaseCur->GetHandle(GetScale())) return;
 
+	CDUIWnd *pWnd = GetOwnerWnd();
+	if (NULL == pWnd) return;
+
 	//dest
 	CDUIRect rcSource = { 0, 0, pImageBaseCur->GetWidth(GetScale()), pImageBaseCur->GetHeight(GetScale()) };
 	CDUIRect rcDest = GetDest(rcSource, rcItem);
@@ -135,7 +144,21 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 		Gdiplus::Bitmap *pBmpAnimate = pImageBaseCur->GetAnimateImage(GetScale());
 		if (NULL == pBmpAnimate) return;
 
-		CDUIRenderEngine::DrawAnimateImage(hDC, pBmpAnimate, rcDest, nFrameCur, rcRound);
+		GUID pageGuid = Gdiplus::FrameDimensionTime;
+		pBmpAnimate->SelectActiveFrame(&pageGuid, nFrameCur);
+		CDUIRenderEngine::DrawImage(hDC, pBmpAnimate, rcDest, rcRound);
+
+		return;
+	}
+
+	//webp
+	if (AnimateImage_Webp == AnimateImageInfo.AnimateImageType)
+	{
+		tagDuiImageSection ImageSection = GetImageSection();
+		tagDuiImageInfo ImageInfo = pImageBaseCur->GetImageInfo(GetScale());
+		if (nFrameCur >= ImageInfo.vecImageWebp.size()) return;
+
+		Draw(NULL, ImageInfo.vecImageWebp[nFrameCur], ImageSection, hDC, rcItem, rcPaint, false, pImageBaseCur->IsScale(GetScale()), pImageBaseCur->IsAlpha(), rcRound);
 
 		return;
 	}
@@ -158,7 +181,7 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 		ImageSection.ImageSourceType = ImageSource_Custom;
 		ImageSection.mapSourceCustomScale[100] = rcSource;
 
-		Draw(pImageBaseCur, ImageSection, hDC, rcItem, rcPaint, false, rcRound);
+		Draw(pImageBaseCur->GetHandle(GetScale()), pWnd->IsGdiplusRenderImage() ? pImageBaseCur->GetBitmap(GetScale()) : NULL, ImageSection, hDC, rcItem, rcPaint, false, pImageBaseCur->IsScale(GetScale()), pImageBaseCur->IsAlpha(), rcRound);
 	}
 
 	return;
