@@ -92,10 +92,10 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">$(Platform)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">$(Platform)\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">webpdecode</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|x64'">webpdecode</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">webpdecode</TargetName>
@@ -104,10 +104,10 @@
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|x64'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">$(Platform)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">$(Platform)\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">webpdecode</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|x64'">webpdecode</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">webpdecode</TargetName>
@@ -118,16 +118,20 @@
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|x64'">.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|x64'">
-    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'">
-    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|x64'">
-    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|x64'">
-    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">
     <ClCompile>

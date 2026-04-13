@@ -1,340 +1,340 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Object Include="$(Platform)\$(Configuration)\alpha_dec.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdecode\alpha_dec.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\alpha_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\alpha_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\alpha_processing.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\alpha_processing.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\alpha_processing_mips_dsp_r2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\alpha_processing_mips_dsp_r2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\alpha_processing_neon.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\alpha_processing_neon.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\alpha_processing_sse2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\alpha_processing_sse2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\alpha_processing_sse41.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\alpha_processing_sse41.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\analysis_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\analysis_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\backward_references_cost_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\backward_references_cost_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\backward_references_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\backward_references_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\buffer_dec.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\bit_reader_utils.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\config_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\bit_writer_utils.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\cost.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdecode\buffer_dec.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\cost_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\color_cache_utils.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\cost_mips_dsp_r2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\config_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\cost_mips32.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\cost.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\cost_neon.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\cost_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\cost_sse2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\cost_mips_dsp_r2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\cpu.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\cost_mips32.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\dec.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\cost_neon.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\dec_clip_tables.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\cost_sse2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\dec_mips_dsp_r2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\cpu.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\dec_mips32.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\dec.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\dec_msa.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\dec_clip_tables.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\dec_neon.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\dec_mips_dsp_r2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\dec_sse2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\dec_mips32.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\dec_sse41.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\dec_msa.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\dec_neon.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\enc_mips_dsp_r2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\dec_sse2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\enc_mips32.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\dec_sse41.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\enc_msa.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\enc_neon.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\enc_mips_dsp_r2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\enc_sse2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\enc_mips32.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\enc_sse41.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\enc_msa.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\filter_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\enc_neon.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\filters.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\enc_sse2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\filters_mips_dsp_r2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\enc_sse41.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\filters_msa.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\filter_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\filters_neon.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\filters.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\filters_sse2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\filters_mips_dsp_r2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\frame_dec.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\filters_msa.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\frame_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\filters_neon.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\histogram_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\filters_sse2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\idec_dec.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\filters_utils.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\io_dec.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdecode\frame_dec.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\iterator_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\frame_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\histogram_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_avx2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\huffman_encode_utils.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\huffman_utils.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_enc_avx2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdecode\idec_dec.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_enc_mips_dsp_r2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdecode\io_dec.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_enc_mips32.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\iterator_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_enc_msa.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_enc_neon.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_avx2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_enc_sse2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_enc_sse41.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_enc_avx2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_mips_dsp_r2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_enc_mips_dsp_r2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_msa.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_enc_mips32.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_neon.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_enc_msa.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_sse2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_enc_neon.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\lossless_sse41.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_enc_sse2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\near_lossless_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_enc_sse41.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\picture_csp_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_mips_dsp_r2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\picture_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_msa.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\picture_psnr_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_neon.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\picture_rescale_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_sse2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\picture_tools_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\lossless_sse41.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\predictor_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\near_lossless_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\quant_dec.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\palette.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\quant_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\picture_csp_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\rescaler.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\picture_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\rescaler_mips_dsp_r2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\picture_psnr_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\rescaler_mips32.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\picture_rescale_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\rescaler_msa.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\picture_tools_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\rescaler_neon.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\predictor_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\rescaler_sse2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdecode\quant_dec.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\ssim.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\quant_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\ssim_sse2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\quant_levels_dec_utils.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\syntax_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\quant_levels_utils.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\token_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\random_utils.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\tree_dec.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\rescaler.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\tree_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\rescaler_mips_dsp_r2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\upsampling.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\rescaler_mips32.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\upsampling_mips_dsp_r2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\rescaler_msa.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\upsampling_msa.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\rescaler_neon.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\upsampling_neon.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\rescaler_sse2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\upsampling_sse2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\rescaler_utils.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\upsampling_sse41.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\ssim.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\vp8_dec.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\ssim_sse2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\vp8l_dec.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\syntax_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\vp8l_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\thread_utils.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\webp_dec.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\token_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\webp_enc.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdecode\tree_dec.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\yuv.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\tree_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\yuv_mips_dsp_r2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\upsampling.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\yuv_mips32.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\upsampling_mips_dsp_r2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\yuv_neon.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\upsampling_msa.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\yuv_sse2.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\upsampling_neon.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\yuv_sse41.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\upsampling_sse2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\bit_reader_utils.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\upsampling_sse41.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\bit_writer_utils.obj">
+    <Object Include="$(Platform)\$(Configuration)\webputils\utils.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\color_cache_utils.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdecode\vp8_dec.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\filters_utils.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdecode\vp8l_dec.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\huffman_encode_utils.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\vp8l_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\huffman_utils.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdecode\webp_dec.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\palette.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpencode\webp_enc.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\quant_levels_dec_utils.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\yuv.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\quant_levels_utils.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\yuv_mips_dsp_r2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\random_utils.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\yuv_mips32.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\rescaler_utils.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\yuv_neon.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\thread_utils.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\yuv_sse2.obj">
       <Filter>Object Libraries</Filter>
     </Object>
-    <Object Include="$(Platform)\$(Configuration)\utils.obj">
+    <Object Include="$(Platform)\$(Configuration)\webpdsp\yuv_sse41.obj">
       <Filter>Object Libraries</Filter>
     </Object>
   </ItemGroup>
