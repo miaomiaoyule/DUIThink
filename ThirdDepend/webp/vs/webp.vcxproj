@@ -5,17 +5,33 @@
       <Configuration>Debug_Unicode_Static_MT</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_Unicode_Static_MT|x64">
+      <Configuration>Debug_Unicode_Static_MT</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_Unicode_Static|Win32">
       <Configuration>Debug_Unicode_Static</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_Unicode_Static|x64">
+      <Configuration>Debug_Unicode_Static</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release_Unicode_Static_MT|Win32">
       <Configuration>Release_Unicode_Static_MT</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Unicode_Static_MT|x64">
+      <Configuration>Release_Unicode_Static_MT</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release_Unicode_Static|Win32">
       <Configuration>Release_Unicode_Static</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Unicode_Static|x64">
+      <Configuration>Release_Unicode_Static</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -32,7 +48,17 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
@@ -42,7 +68,17 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
@@ -56,22 +92,42 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">$(Configuration)</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">$(Configuration)</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">webp.dir\$(Configuration)</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">webp.dir\$(Configuration)</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">libwebp</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">libwebp</TargetName>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">libwebp.2017D</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|x64'">libwebp.201764D</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">libwebp.2017_MT_D</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'">libwebp.201764_MT_D</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|x64'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">$(Configuration)</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">$(Configuration)</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">webp.dir\$(Configuration)</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">webp.dir\$(Configuration)</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">libwebp</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">libwebp</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">libwebp.2017</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|x64'">libwebp.201764</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">libwebp.2017_MT</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|x64'">libwebp.201764_MT</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|x64'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">
     <ClCompile>
@@ -109,6 +165,49 @@
     <Lib>
       <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
     </Lib>
+    <PostBuildEvent>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Platform)\$(Configuration)\$(TargetFileName) "../../../lib"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../;..\Build;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MinimalRebuild>
+      </MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;UNICODE;_UNICODE;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;UNICODE;_UNICODE;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../;..\Build;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>../;..\Build;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib />
+    <PostBuildEvent>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Platform)\$(Configuration)\$(TargetFileName) "../../../lib"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">
     <ClCompile>
@@ -146,6 +245,49 @@
     <Lib>
       <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
     </Lib>
+    <PostBuildEvent>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Platform)\$(Configuration)\$(TargetFileName) "../../../lib"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../;..\Build;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MinimalRebuild>
+      </MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;UNICODE;_UNICODE;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;UNICODE;_UNICODE;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../;..\Build;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>../;..\Build;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib />
+    <PostBuildEvent>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Platform)\$(Configuration)\$(TargetFileName) "../../../lib"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">
     <ClCompile>
@@ -184,6 +326,50 @@
     <Lib>
       <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
     </Lib>
+    <PostBuildEvent>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Platform)\$(Configuration)\$(TargetFileName) "../../../lib"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../;..\Build;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>
+      </MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../;..\Build;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>../;..\Build;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib />
+    <PostBuildEvent>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Platform)\$(Configuration)\$(TargetFileName) "../../../lib"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">
     <ClCompile>
@@ -222,120 +408,164 @@
     <Lib>
       <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
     </Lib>
+    <PostBuildEvent>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Platform)\$(Configuration)\$(TargetFileName) "../../../lib"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../;..\Build;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>
+      </MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../;..\Build;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>../;..\Build;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib />
+    <PostBuildEvent>
+      <Command>if not exist "../../../lib" mkdir "../../../lib"
+copy $(Platform)\$(Configuration)\$(TargetFileName) "../../../lib"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Object Include="webpdecode.dir\$(Configuration)\alpha_dec.obj" />
-    <Object Include="webpdecode.dir\$(Configuration)\buffer_dec.obj" />
-    <Object Include="webpdecode.dir\$(Configuration)\frame_dec.obj" />
-    <Object Include="webpdecode.dir\$(Configuration)\idec_dec.obj" />
-    <Object Include="webpdecode.dir\$(Configuration)\io_dec.obj" />
-    <Object Include="webpdecode.dir\$(Configuration)\quant_dec.obj" />
-    <Object Include="webpdecode.dir\$(Configuration)\tree_dec.obj" />
-    <Object Include="webpdecode.dir\$(Configuration)\vp8_dec.obj" />
-    <Object Include="webpdecode.dir\$(Configuration)\vp8l_dec.obj" />
-    <Object Include="webpdecode.dir\$(Configuration)\webp_dec.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\alpha_processing.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\cpu.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\dec.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\dec_clip_tables.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\filters.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\rescaler.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\upsampling.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\yuv.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_avx2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\alpha_processing_sse41.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\dec_sse41.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_sse41.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\upsampling_sse41.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\yuv_sse41.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\alpha_processing_sse2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\dec_sse2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\filters_sse2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_sse2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\rescaler_sse2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\upsampling_sse2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\yuv_sse2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\alpha_processing_neon.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\dec_neon.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\filters_neon.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_neon.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\rescaler_neon.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\upsampling_neon.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\yuv_neon.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\dec_msa.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\filters_msa.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_msa.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\rescaler_msa.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\upsampling_msa.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\dec_mips32.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\rescaler_mips32.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\yuv_mips32.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\alpha_processing_mips_dsp_r2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\dec_mips_dsp_r2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\filters_mips_dsp_r2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_mips_dsp_r2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\rescaler_mips_dsp_r2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\upsampling_mips_dsp_r2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\yuv_mips_dsp_r2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\cost.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\enc.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_enc.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\ssim.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\cost_sse2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\enc_sse2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_enc_sse2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\ssim_sse2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\enc_sse41.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_enc_sse41.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_enc_avx2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\cost_neon.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\enc_neon.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_enc_neon.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\enc_msa.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_enc_msa.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\cost_mips32.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\enc_mips32.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_enc_mips32.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\cost_mips_dsp_r2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\enc_mips_dsp_r2.obj" />
-    <Object Include="webpdsp.dir\$(Configuration)\lossless_enc_mips_dsp_r2.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\alpha_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\analysis_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\backward_references_cost_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\backward_references_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\config_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\cost_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\filter_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\frame_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\histogram_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\iterator_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\near_lossless_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\picture_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\picture_csp_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\picture_psnr_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\picture_rescale_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\picture_tools_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\predictor_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\quant_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\syntax_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\token_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\tree_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\vp8l_enc.obj" />
-    <Object Include="webpencode.dir\$(Configuration)\webp_enc.obj" />
-    <Object Include="webputils.dir\$(Configuration)\bit_reader_utils.obj" />
-    <Object Include="webputils.dir\$(Configuration)\color_cache_utils.obj" />
-    <Object Include="webputils.dir\$(Configuration)\filters_utils.obj" />
-    <Object Include="webputils.dir\$(Configuration)\huffman_utils.obj" />
-    <Object Include="webputils.dir\$(Configuration)\palette.obj" />
-    <Object Include="webputils.dir\$(Configuration)\quant_levels_dec_utils.obj" />
-    <Object Include="webputils.dir\$(Configuration)\rescaler_utils.obj" />
-    <Object Include="webputils.dir\$(Configuration)\random_utils.obj" />
-    <Object Include="webputils.dir\$(Configuration)\thread_utils.obj" />
-    <Object Include="webputils.dir\$(Configuration)\utils.obj" />
-    <Object Include="webputils.dir\$(Configuration)\bit_writer_utils.obj" />
-    <Object Include="webputils.dir\$(Configuration)\huffman_encode_utils.obj" />
-    <Object Include="webputils.dir\$(Configuration)\quant_levels_utils.obj" />
+    <Object Include="$(Platform)\$(Configuration)\alpha_dec.obj" />
+    <Object Include="$(Platform)\$(Configuration)\buffer_dec.obj" />
+    <Object Include="$(Platform)\$(Configuration)\frame_dec.obj" />
+    <Object Include="$(Platform)\$(Configuration)\idec_dec.obj" />
+    <Object Include="$(Platform)\$(Configuration)\io_dec.obj" />
+    <Object Include="$(Platform)\$(Configuration)\quant_dec.obj" />
+    <Object Include="$(Platform)\$(Configuration)\tree_dec.obj" />
+    <Object Include="$(Platform)\$(Configuration)\vp8_dec.obj" />
+    <Object Include="$(Platform)\$(Configuration)\vp8l_dec.obj" />
+    <Object Include="$(Platform)\$(Configuration)\webp_dec.obj" />
+    <Object Include="$(Platform)\$(Configuration)\alpha_processing.obj" />
+    <Object Include="$(Platform)\$(Configuration)\cpu.obj" />
+    <Object Include="$(Platform)\$(Configuration)\dec.obj" />
+    <Object Include="$(Platform)\$(Configuration)\dec_clip_tables.obj" />
+    <Object Include="$(Platform)\$(Configuration)\filters.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless.obj" />
+    <Object Include="$(Platform)\$(Configuration)\rescaler.obj" />
+    <Object Include="$(Platform)\$(Configuration)\upsampling.obj" />
+    <Object Include="$(Platform)\$(Configuration)\yuv.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_avx2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\alpha_processing_sse41.obj" />
+    <Object Include="$(Platform)\$(Configuration)\dec_sse41.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_sse41.obj" />
+    <Object Include="$(Platform)\$(Configuration)\upsampling_sse41.obj" />
+    <Object Include="$(Platform)\$(Configuration)\yuv_sse41.obj" />
+    <Object Include="$(Platform)\$(Configuration)\alpha_processing_sse2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\dec_sse2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\filters_sse2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_sse2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\rescaler_sse2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\upsampling_sse2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\yuv_sse2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\alpha_processing_neon.obj" />
+    <Object Include="$(Platform)\$(Configuration)\dec_neon.obj" />
+    <Object Include="$(Platform)\$(Configuration)\filters_neon.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_neon.obj" />
+    <Object Include="$(Platform)\$(Configuration)\rescaler_neon.obj" />
+    <Object Include="$(Platform)\$(Configuration)\upsampling_neon.obj" />
+    <Object Include="$(Platform)\$(Configuration)\yuv_neon.obj" />
+    <Object Include="$(Platform)\$(Configuration)\dec_msa.obj" />
+    <Object Include="$(Platform)\$(Configuration)\filters_msa.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_msa.obj" />
+    <Object Include="$(Platform)\$(Configuration)\rescaler_msa.obj" />
+    <Object Include="$(Platform)\$(Configuration)\upsampling_msa.obj" />
+    <Object Include="$(Platform)\$(Configuration)\dec_mips32.obj" />
+    <Object Include="$(Platform)\$(Configuration)\rescaler_mips32.obj" />
+    <Object Include="$(Platform)\$(Configuration)\yuv_mips32.obj" />
+    <Object Include="$(Platform)\$(Configuration)\alpha_processing_mips_dsp_r2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\dec_mips_dsp_r2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\filters_mips_dsp_r2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_mips_dsp_r2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\rescaler_mips_dsp_r2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\upsampling_mips_dsp_r2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\yuv_mips_dsp_r2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\cost.obj" />
+    <Object Include="$(Platform)\$(Configuration)\enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\ssim.obj" />
+    <Object Include="$(Platform)\$(Configuration)\cost_sse2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\enc_sse2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_enc_sse2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\ssim_sse2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\enc_sse41.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_enc_sse41.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_enc_avx2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\cost_neon.obj" />
+    <Object Include="$(Platform)\$(Configuration)\enc_neon.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_enc_neon.obj" />
+    <Object Include="$(Platform)\$(Configuration)\enc_msa.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_enc_msa.obj" />
+    <Object Include="$(Platform)\$(Configuration)\cost_mips32.obj" />
+    <Object Include="$(Platform)\$(Configuration)\enc_mips32.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_enc_mips32.obj" />
+    <Object Include="$(Platform)\$(Configuration)\cost_mips_dsp_r2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\enc_mips_dsp_r2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\lossless_enc_mips_dsp_r2.obj" />
+    <Object Include="$(Platform)\$(Configuration)\alpha_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\analysis_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\backward_references_cost_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\backward_references_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\config_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\cost_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\filter_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\frame_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\histogram_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\iterator_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\near_lossless_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\picture_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\picture_csp_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\picture_psnr_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\picture_rescale_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\picture_tools_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\predictor_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\quant_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\syntax_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\token_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\tree_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\vp8l_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\webp_enc.obj" />
+    <Object Include="$(Platform)\$(Configuration)\bit_reader_utils.obj" />
+    <Object Include="$(Platform)\$(Configuration)\color_cache_utils.obj" />
+    <Object Include="$(Platform)\$(Configuration)\filters_utils.obj" />
+    <Object Include="$(Platform)\$(Configuration)\huffman_utils.obj" />
+    <Object Include="$(Platform)\$(Configuration)\palette.obj" />
+    <Object Include="$(Platform)\$(Configuration)\quant_levels_dec_utils.obj" />
+    <Object Include="$(Platform)\$(Configuration)\rescaler_utils.obj" />
+    <Object Include="$(Platform)\$(Configuration)\random_utils.obj" />
+    <Object Include="$(Platform)\$(Configuration)\thread_utils.obj" />
+    <Object Include="$(Platform)\$(Configuration)\utils.obj" />
+    <Object Include="$(Platform)\$(Configuration)\bit_writer_utils.obj" />
+    <Object Include="$(Platform)\$(Configuration)\huffman_encode_utils.obj" />
+    <Object Include="$(Platform)\$(Configuration)\quant_levels_utils.obj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sharpyuv.vcxproj">
