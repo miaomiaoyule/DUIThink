@@ -330,6 +330,9 @@
     <ClInclude Include="DUIControl\DUIWebBrowserCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>
+    <ClInclude Include="DUIUtils\stb_image_write.h">
+      <Filter>DUIUtils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

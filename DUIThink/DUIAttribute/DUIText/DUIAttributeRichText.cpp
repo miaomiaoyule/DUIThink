@@ -311,7 +311,6 @@ void CDUIAttributeRichText::SetVAlignBottom(bool bVAlignBottom)
 	return;
 }
 
-//ÊÇ·ñ»»ÐÐ
 bool CDUIAttributeRichText::IsWordBreak()
 {
 	tagDuiRichText RichText = GetRichText();
@@ -343,7 +342,6 @@ void CDUIAttributeRichText::SetWordBreak(bool bWordBreak)
 	return;
 }
 
-//ÊÇ·ñ...
 bool CDUIAttributeRichText::IsEndEllipsis()
 {
 	tagDuiRichText RichText = GetRichText();

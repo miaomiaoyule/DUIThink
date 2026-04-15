@@ -1036,7 +1036,7 @@ void CDUIAnimationWnd::StartAnimationWnd(bool bShow/* = true*/)
 	CDUIRect rcBitmap = pRootCtrl->GetAbsoluteRect();
 	m_hMemDCAni = CreateCompatibleDC(GetWndDC());
 	m_hMemDCSrc = CreateCompatibleDC(m_hMemDCAni);
-	m_hBitmapSrc = CDUIRenderEngine::GenerateBitmap(pWndManager, pRootCtrl, rcBitmap);
+	m_hBitmapSrc = CDUIRenderEngine::GenerateBitmap(pRootCtrl, rcBitmap);
 	GetObject(m_hBitmapSrc, sizeof(m_BmpInfoSrc), &m_BmpInfoSrc);
 	CDUIRenderEngine::RestorePixelAlpha((LPBYTE)m_BmpInfoSrc.bmBits, rcBitmap.GetWidth(), rcBitmap);
 	m_hBitmapSrcOld = (HBITMAP)SelectObject(m_hMemDCSrc, m_hBitmapSrc);
@@ -1081,7 +1081,7 @@ void CDUIAnimationWnd::StartAnimationWnd(bool bShow/* = true*/)
 			pTabRoot->RefreshView();
 			
 			BITMAP BmpInfo = {};
-			m_hBitmapReplase = CDUIRenderEngine::GenerateBitmap(pWndManager, pRootCtrl, rcBitmap);
+			m_hBitmapReplase = CDUIRenderEngine::GenerateBitmap(pRootCtrl, rcBitmap);
 			GetObject(m_hBitmapReplase, sizeof(BmpInfo), &BmpInfo);
 			CDUIRenderEngine::RestorePixelAlpha((LPBYTE)BmpInfo.bmBits, rcBitmap.GetWidth(), rcBitmap);
 			m_pBitmapReplase = CDUIRenderEngine::GetAlphaBitmap(m_hBitmapReplase);

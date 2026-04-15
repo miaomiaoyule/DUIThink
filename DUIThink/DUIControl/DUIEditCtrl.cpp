@@ -329,7 +329,7 @@ LRESULT CDUIEditWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			MMScreenToClient(rcWnd, m_pWndOwner->GetWndHandle());
 			if (false == rcWnd.Empty())
 			{
-				HBITMAP hBmpEditBk = CDUIRenderEngine::GenerateBitmap(m_pWndOwner, m_pWndOwner->GetRootCtrl(), rcWnd);
+				HBITMAP hBmpEditBk = CDUIRenderEngine::GenerateBitmap(m_pWndOwner->GetRootCtrl(), rcWnd);
 				if (hBmpEditBk)
 				{
 					m_hBkBrush = ::CreatePatternBrush(hBmpEditBk);

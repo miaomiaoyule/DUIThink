@@ -264,7 +264,7 @@ protected:
 	CMMString CreateView();
 	CMMString CreateModelListItem();
 	CMMString CreateModelTreeNode();
-	CMMString CreateMenu(bool bSubMenu);
+	CMMString CreateMenu(CDUIWnd *pWndParentMenu);
 	CMMString Create3DMenu();
 	CMMString CreateCalendar();
 	bool SaveDui(LPCTSTR lpszName, CDUIWnd *pWnd);

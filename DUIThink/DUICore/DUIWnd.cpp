@@ -1791,7 +1791,7 @@ bool CDUIWnd::BeginDragDrop(CDUIControlBase *pControl, WPARAM wParam, LPARAM lPa
 	SendNotify(m_pWinDragCtrl, DuiNotify_WinDragCreateBmp, (WPARAM)&hBitmapDrag, (LPARAM)&ptOffset);
 	if (NULL == hBitmapDrag)
 	{
-		hBitmapDrag = CDUIRenderEngine::GenerateBitmap(this, m_pWinDragCtrl, rcCtrl);
+		hBitmapDrag = CDUIRenderEngine::GenerateBitmap(m_pWinDragCtrl, rcCtrl);
 		ptOffset = { rcCtrl.GetWidth() / 2, rcCtrl.GetHeight() / 2 };
 	}
 
@@ -1875,7 +1875,7 @@ HBITMAP CDUIWnd::ProductBitmap(IN std::vector<CDUIControlBase*> vecCtrl, IN CDUI
 	{
 		if (NULL == pCtrl) continue;
 
-		HBITMAP hBitmap = CDUIRenderEngine::GenerateBitmap(this, pCtrl, pCtrl->GetAbsoluteRect());
+		HBITMAP hBitmap = CDUIRenderEngine::GenerateBitmap(pCtrl, pCtrl->GetAbsoluteRect());
 		if (NULL == hBitmap) continue;
 
 		CDUIRect rcPos = pCtrl->GetAbsoluteRect();

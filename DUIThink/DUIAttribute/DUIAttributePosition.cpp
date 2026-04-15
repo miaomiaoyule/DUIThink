@@ -254,7 +254,7 @@ bool CDUIAttributePosition::SetPositionFromAbsolute(const CDUIRect &rcAbsolute)
 	CDUIContainerCtrl *pParentCtrl = m_pOwnerCtrl->GetParent();
 	CDUIRect rcModalParentAbs = pParentCtrl ? pParentCtrl->GetAbsoluteRect() : m_pOwnerCtrl->GetModalParentRect();
 
-	//Ïà¶Ô×ø±ê
+	//relative
 	CDUIRect rcRelative;
 	rcRelative.left = rcAbsolute.left - rcModalParentAbs.left;
 	rcRelative.top = rcAbsolute.top - rcModalParentAbs.top;

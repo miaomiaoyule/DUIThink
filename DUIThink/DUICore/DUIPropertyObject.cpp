@@ -152,6 +152,47 @@ CDUIWnd * CDUIPropertyObject::GetWndOwner()
 	return NULL;
 }
 
+CDUIPropertyObject & CDUIPropertyObject::operator = (const CDUIPropertyObject &PropObj)
+{
+	if (m_vecAttributeGroup.size() != PropObj.m_vecAttributeGroup.size())
+	{
+		assert(false);
+
+		return *this;
+	}
+	for (int n = 0; n < m_vecAttributeGroup.size(); n++)
+	{
+		CDUIAttributeGroup *pAttriGroup = m_vecAttributeGroup[n];
+		if (NULL == pAttriGroup) continue;
+
+		*pAttriGroup = *(PropObj.m_vecAttributeGroup[n]);
+	}
+
+	return *this;
+}
+
+void CDUIPropertyObject::CopyAttributesFrom(const CDUIPropertyObject &PropObj)
+{
+	for (CDUIAttributeGroup *pAttriGroup : m_vecAttributeGroup)
+	{
+		if (NULL == pAttriGroup) continue;
+
+		auto vecAttribute = pAttriGroup->GetVecAttribute();
+		for (CDUIAttributeObject *pAttribute : vecAttribute)
+		{
+			if (NULL == pAttribute) continue;
+
+			CDUIAttributeObject *pAttributeSrc = const_cast<CDUIPropertyObject &>(PropObj).GetAttributeObj(pAttribute->GetAttributeName());
+			if (pAttributeSrc)
+			{
+				*pAttribute = *pAttributeSrc;
+			}
+		}
+	}
+
+	return;
+}
+
 bool CDUIPropertyObject::Init()
 {
 	if (IsInitComplete()) return true;

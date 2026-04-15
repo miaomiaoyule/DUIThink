@@ -131,21 +131,8 @@ CDUIControlBase * CDUIControlBase::Clone(bool bIncludeChild, bool bRefreshCtrlID
 	if (NULL == pControlClone) return NULL;
 
 	pControlClone->InitProperty();
-
-	if (m_vecAttributeGroup.size() != pControlClone->m_vecAttributeGroup.size())
-	{
-		assert(false);
-		MMSafeDelete(pControlClone);
-
-		return NULL;
-	}
-	for (int n = 0; n < m_vecAttributeGroup.size(); n++)
-	{
-		CDUIAttributeGroup *pAttriGroup = m_vecAttributeGroup[n];
-		if (NULL == pAttriGroup) continue;
-
-		*pControlClone->m_vecAttributeGroup[n] = *pAttriGroup;
-	}
+	(*pControlClone) = (*this);
+	
 	if (NULL == MMInterfaceHelper(CDUIContainerCtrl, pControlClone))
 	{
 		pControlClone->InitComplete();
@@ -1897,6 +1884,13 @@ void CDUIControlBase::InitComplete()
 	DuiInitAttriVisible(m_AttributeToolTipTextColor, false);
 
 	return;
+}
+
+CDUIControlBase & CDUIControlBase::operator = (const CDUIControlBase &Right)
+{
+	__super::operator=(Right);
+
+	return *this;
 }
 
 void CDUIControlBase::PaintBkColor(HDC hDC)

@@ -230,7 +230,7 @@ LRESULT CDUIHotKeyWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				if (rcWnd.Empty()) break;
 
-				HBITMAP hBmpBk = CDUIRenderEngine::GenerateBitmap(m_pWndOwner, m_pWndOwner->GetRootCtrl(), rcWnd);
+				HBITMAP hBmpBk = CDUIRenderEngine::GenerateBitmap(m_pWndOwner->GetRootCtrl(), rcWnd);
 				if (NULL == hBmpBk) break;
 
 				Bitmap *pBmp = CDUIRenderEngine::GetAlphaBitmap(hBmpBk);

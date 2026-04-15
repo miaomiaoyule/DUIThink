@@ -4,7 +4,7 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
-//Position布局定义
+//Position
 #define Dui_Name_HorizAlignLeft						_T("HorizAlignLeft")
 #define Dui_Name_HorizAlignRight					_T("HorizAlignRight")
 #define Dui_Name_HorizAlignCenter					_T("HorizAlignCenter")
@@ -13,7 +13,7 @@
 #define Dui_Name_VertAlignMiddle					_T("VertAlignMiddle")
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//属性XML节点名称
+//XML node name
 #define Dui_Key_AttriObjName						("Name")
 #define Dui_Key_AttriObjNameID						("NameID")
 #define Dui_Key_AttriObjDescr						("Descr")

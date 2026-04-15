@@ -1,5 +1,6 @@
 #include "StdAfx.h"
-#include <atlimage.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "../DUIUtils/stb_image_write.h"
 
 /////////////////////////////////////////////////////////////////////////////////////
 CDUIRenderClip::~CDUIRenderClip()
@@ -1946,34 +1947,38 @@ HBITMAP CDUIRenderEngine::CreateARGB32Bitmap(HDC hDC, int cx, int cy, BYTE **pBi
 	return hBitmap;
 }
 
-HBITMAP CDUIRenderEngine::GenerateBitmap(CDUIWnd *pWnd, CDUIControlBase *pControl, const CDUIRect &rcItem, DWORD dwFilterColor)
+HBITMAP CDUIRenderEngine::GenerateBitmap(CDUIControlBase *pControl, const CDUIRect &rcItem, DWORD dwFilterColor)
 {
-	HDC hPaintDC = ::CreateCompatibleDC(pWnd->GetWndDC());
-	HBITMAP hPaintBitmap = ::CreateCompatibleBitmap(pWnd->GetWndDC(), rcItem.right, rcItem.bottom);
-	ASSERT(hPaintDC);
-	ASSERT(hPaintBitmap);
-	HBITMAP hOldPaintBitmap = (HBITMAP)::SelectObject(hPaintDC, hPaintBitmap);
-	pControl->OnDraw(hPaintDC, rcItem, true);
-	AdjustImage(hPaintBitmap, dwFilterColor, 0);
+	//draw control to bitmap
+	HDC hDC = ::GetDC(NULL);
+	HDC hDCPaint = ::CreateCompatibleDC(hDC);
+	HBITMAP hBmpPaint = ::CreateCompatibleBitmap(hDC, rcItem.right, rcItem.bottom);
+	ASSERT(hDCPaint);
+	ASSERT(hBmpPaint);
+	HBITMAP hBmpOld = (HBITMAP)::SelectObject(hDCPaint, hBmpPaint);
+	pControl->OnDraw(hDCPaint, rcItem, true);
+	AdjustImage(hBmpPaint, dwFilterColor, 0);
 
+	//copy control size bitmap
 	LPBYTE pBmpBits = NULL;
-	HDC hDCClone = ::CreateCompatibleDC(pWnd->GetWndDC());
-	HBITMAP hBitmap = CreateARGB32Bitmap(pWnd->GetWndDC(), rcItem.GetWidth(), rcItem.GetHeight(), &pBmpBits);
+	HDC hDCClone = ::CreateCompatibleDC(hDCPaint);
+	HBITMAP hBitmap = CreateARGB32Bitmap(hDCClone, rcItem.GetWidth(), rcItem.GetHeight(), &pBmpBits);
 	ASSERT(hDCClone);
 	ASSERT(hBitmap);
 	if (hBitmap != NULL)
 	{
 		HBITMAP hOldBitmap = (HBITMAP)::SelectObject(hDCClone, hBitmap);
-		::BitBlt(hDCClone, 0, 0, rcItem.GetWidth(), rcItem.GetHeight(), hPaintDC, rcItem.left, rcItem.top, SRCCOPY);
+		::BitBlt(hDCClone, 0, 0, rcItem.GetWidth(), rcItem.GetHeight(), hDCPaint, rcItem.left, rcItem.top, SRCCOPY);
 		::SelectObject(hDCClone, hOldBitmap);
 		MMSafeDeleteDC(hDCClone);
 		::GdiFlush();
 	}
 
 	// Cleanup
-	::SelectObject(hPaintDC, hOldPaintBitmap);
-	MMSafeDeleteObject(hPaintBitmap);
-	MMSafeDeleteDC(hPaintDC);
+	::SelectObject(hDCPaint, hBmpOld);
+	MMSafeDeleteObject(hBmpPaint);
+	MMSafeDeleteDC(hDCPaint);
+	ReleaseDC(NULL, hDC);
 
 	return hBitmap;
 }
@@ -2258,71 +2263,68 @@ HBITMAP CDUIRenderEngine::GetHBITMAP(Bitmap *pBmp, bool bKeepAlpha)
 	return hBitmap;
 }
 
-bool CDUIRenderEngine::SaveImage(HBITMAP hBitmap, CMMString strFile, bool bAlpahImage)
+bool CDUIRenderEngine::SaveImage(HBITMAP hBitmap, CMMString strFile)
 {
-	if (hBitmap == NULL || strFile.empty()) return false;
+	if (NULL == hBitmap || strFile.empty()) return false;
 
+	BITMAP bmp = {};
+	if (GetObject(hBitmap, sizeof(BITMAP), &bmp) == 0) return false;
+	if (bmp.bmWidth <= 0 || bmp.bmHeight <= 0) return false;
+
+	//info
+	int nWidth = bmp.bmWidth;
+	int nHeight = bmp.bmHeight;
+	LONG cbSize = nWidth * nHeight * 4;
+	std::vector<BYTE> vecPixel(cbSize, 0);
+
+	//get pixel data
+	BITMAPINFO bmpInfo = {};
+	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bmpInfo.bmiHeader.biWidth = nWidth;
+	bmpInfo.bmiHeader.biHeight = -nHeight;
+	bmpInfo.bmiHeader.biPlanes = 1;
+	bmpInfo.bmiHeader.biBitCount = 32;
+	bmpInfo.bmiHeader.biCompression = BI_RGB;
+
+	HDC hDC = GetDC(NULL);
+	LONG cbCopied = GetDIBits(hDC, hBitmap, 0, nHeight, vecPixel.data(), &bmpInfo, DIB_RGB_COLORS);
+	ReleaseDC(NULL, hDC);
+	if (cbCopied == 0) return false;
+
+	//stb_image_write BGRA->RGBA
+	for (int i = 0; i < cbSize; i += 4)
+	{
+		BYTE tempSpace = vecPixel[i];       // B
+		vecPixel[i] = vecPixel[i + 2];      // R -> B
+		vecPixel[i + 2] = tempSpace;        // B -> R
+	}
+
+	//ext
 	CMMString strExt;
 	CMMFile::ParseFileName(strFile, CMMString(), strExt);
 
-	GUID ImageFormat = ImageFormatPNG;
+	//save
+	int nRes = 0;
+	int nChannels = 4;
+	int nStride = nWidth * 4;
 	if (0 == strExt.CompareNoCase(_T("bmp")))
 	{
-		ImageFormat = Gdiplus::ImageFormatBMP;
+		nRes = stbi_write_bmp((LPCSTR)CT2CA(strFile), nWidth, nHeight, nChannels, vecPixel.data());
 	}
-	else if (0 == strExt.CompareNoCase(_T("emf")))
+	else if (0 == strExt.CompareNoCase(_T("jpg")) || 0 == strExt.CompareNoCase(_T("jpeg")))
 	{
-		ImageFormat = Gdiplus::ImageFormatEMF;
+		nRes = stbi_write_jpg((LPCSTR)CT2CA(strFile), nWidth, nHeight, nChannels, vecPixel.data(), 90);
 	}
-	else if (0 == strExt.CompareNoCase(_T("exif")))
+	else if (0 == strExt.CompareNoCase(_T("tga")))
 	{
-		ImageFormat = Gdiplus::ImageFormatEXIF;
+		nRes = stbi_write_tga((LPCSTR)CT2CA(strFile), nWidth, nHeight, nChannels, vecPixel.data());
 	}
-	else if (0 == strExt.CompareNoCase(_T("gif")))
+	else
 	{
-		ImageFormat = Gdiplus::ImageFormatGIF;
-	}
-	else if (0 == strExt.CompareNoCase(_T("ico")))
-	{
-		ImageFormat = Gdiplus::ImageFormatIcon;
-	}
-	else if (0 == strExt.CompareNoCase(_T("jpeg")))
-	{
-		ImageFormat = Gdiplus::ImageFormatJPEG;
-	}
-	else if (0 == strExt.CompareNoCase(_T("png")))
-	{
-		ImageFormat = Gdiplus::ImageFormatPNG;
-	}
-	else if (0 == strExt.CompareNoCase(_T("tiff")))
-	{
-		ImageFormat = Gdiplus::ImageFormatTIFF;
-	}
-	else if (0 == strExt.CompareNoCase(_T("wmf")))
-	{
-		ImageFormat = Gdiplus::ImageFormatWMF;
+		nRes = stbi_write_png((LPCSTR)CT2CA(strFile), nWidth, nHeight, nChannels, vecPixel.data(), nStride);
 	}
 
-	CImage ImageObj;
-	ImageObj.Attach(hBitmap);
-	ImageObj.SetHasAlphaChannel(bAlpahImage);
-	if (FAILED(ImageObj.Save(strFile, ImageFormat))) return false;
-	ImageObj.Detach();
-
-	return true;
-}
-
-void CDUIRenderEngine::CheckAlphaColor(DWORD &dwColor)
-{
-	//RestoreAlphaColor认为0x00000000是真正的透明，其它都是GDI绘制导致的
-	//所以在GDI绘制中不能用0xFF000000这个颜色值，现在处理是让它变成RGB(0,0,1)
-	//RGB(0,0,1)与RGB(0,0,0)很难分出来
-	if ((0x00FFFFFF & dwColor) == 0)
-	{
-		dwColor += 1;
-	}
-
-	return;
+	return (nRes != 0);
 }
 
 void CDUIRenderEngine::ClearPixel(LPBYTE pBits, int nWidthBitmap, CDUIRect rcClear)

@@ -1103,10 +1103,10 @@ CMMString CDUIGlobal::CreateModelTreeNode()
 	return strName;
 }
 
-CMMString CDUIGlobal::CreateMenu(bool bSubMenu)
+CMMString CDUIGlobal::CreateMenu(CDUIWnd *pWndParentMenu)
 {
 	//name
-	CMMString strName = bSubMenu ? Dui_Resource_Key_SubMenu : ("Menu");
+	CMMString strName = pWndParentMenu ? Dui_Resource_Key_SubMenu : ("Menu");
 	CMMString strFile = GetDuiFile(strName);
 	while (false == strFile.empty())
 	{
@@ -1129,8 +1129,15 @@ CMMString CDUIGlobal::CreateMenu(bool bSubMenu)
 		pRootCtrl->Init();
 		pRootCtrl->SetBkColor({ Name_ColorDefault });
 	}
-
-	if (NULL == pWnd || NULL == pRootCtrl) return _T("");
+	if (NULL == pWnd || NULL == pRootCtrl)
+	{
+		return _T("");
+	}
+	if (pWndParentMenu)
+	{
+		(*pWnd).CDUIPropertyObject::operator=(*pWndParentMenu);
+		(*pRootCtrl).CDUIPropertyObject::operator=(*pWndParentMenu->GetRootCtrl());
+	}
 
 	pWnd->AttachRootCtrl(pRootCtrl);
 	pWnd->SetCaptionHeight(0);

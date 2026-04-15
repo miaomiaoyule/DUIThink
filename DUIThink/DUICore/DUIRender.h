@@ -56,7 +56,7 @@ public:
 	static void AdjustImage(CDUIImageBase *pImageBase, short H, short S, short L);
 	static void AdjustImage(HBITMAP hBitmap, DWORD dwColorSrc, DWORD dwColorDest);
 	static HBITMAP CreateARGB32Bitmap(HDC hDC, int cx, int cy, BYTE** pBits, bool bPositive = true);
-	static HBITMAP GenerateBitmap(CDUIWnd *pWnd, CDUIControlBase *pControl, const CDUIRect &rcItem, DWORD dwFilterColor = 0);
+	static HBITMAP GenerateBitmap(CDUIControlBase *pControl, const CDUIRect &rcItem, DWORD dwFilterColor = 0);
 	static Bitmap * GenerateBitmap(Bitmap *pBmp, const CDUISize &szGenerate);
 	static Bitmap * GenerateBitmap(const std::vector<BYTE> &vecFileData);
 	static Bitmap * GenerateEllipseBitmap(Bitmap *pBmp, const CDUISize &szGenerate);
@@ -64,10 +64,9 @@ public:
 	static HBITMAP CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor = 0);
 	static Bitmap * GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB = true);
 	static HBITMAP GetHBITMAP(Bitmap *pBmp, bool bKeepAlpha = true);
-	static bool SaveImage(HBITMAP hBitmap, CMMString strFile, bool bAlpahImage = false);
+	static bool SaveImage(HBITMAP hBitmap, CMMString strFile);
 
 	//alpha help
-	static void CheckAlphaColor(DWORD &dwColor);
 	static void ClearPixel(LPBYTE pBits, int nWidthBitmap, CDUIRect rcClear);
 	static void ClearPixelAlpha(LPBYTE pBits, int nWidthBitmap, CDUIRect rcClear);
 	static void RestorePixelAlpha(LPBYTE pBits, int nWidthBitmap, CDUIRect rcRestore);

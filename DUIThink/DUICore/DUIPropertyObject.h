@@ -67,6 +67,8 @@ public:
 	virtual int GetScale();
 	virtual const CMMDpi & GetDpiObj();
 	virtual CDUIWnd * GetWndOwner();
+	virtual CDUIPropertyObject & operator = (const CDUIPropertyObject &PropObj);
+	virtual void CopyAttributesFrom(const CDUIPropertyObject &PropObj);
 
 	//property 
 	//** you can override if you need, but you should execute this class first **//

@@ -1035,6 +1035,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIUtils\DUIPoint.h" />
     <ClInclude Include="DUIUtils\DUIRect.h" />
     <ClInclude Include="DUIUtils\DUISize.h" />
+    <ClInclude Include="DUIUtils\stb_image_write.h" />
     <ClInclude Include="DUIUtils\Utils.h" />
     <ClInclude Include="DUIUtils\XUnzip.h" />
     <ClInclude Include="DUIXmlPack\DUIXmlPack.h" />

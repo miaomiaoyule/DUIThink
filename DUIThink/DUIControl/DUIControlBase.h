@@ -341,6 +341,7 @@ protected:
 protected:
 	virtual void InitProperty();
 	virtual void InitComplete();
+	CDUIControlBase & operator = (const CDUIControlBase &Right);
 
 	//paint
 	//** you can override if you need **//

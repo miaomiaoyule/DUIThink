@@ -32,7 +32,7 @@ protected:
 public:
 	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
 
-	//½Ó¿Ú
+	//method
 public:
 	CDUIAttributeTextStyle & operator = (CDUIAttributeObject &Right) override;
 

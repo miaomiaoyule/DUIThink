@@ -807,7 +807,7 @@ void CDUIMenuItemCtrl::InitExpandMenu(bool bActive)
 
 	//new expand view
 	CDUIGlobal::GetInstance()->RemoveDui(strName);
-	strName = CDUIGlobal::GetInstance()->CreateMenu(true);
+	strName = CDUIGlobal::GetInstance()->CreateMenu(GetWndOwner());
 	m_AttributeExpandViewDuiName.SetValue(strName);
 
 	LoadExpandMenu();
