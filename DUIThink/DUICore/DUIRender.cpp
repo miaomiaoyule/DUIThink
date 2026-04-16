@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_STATIC
 #include "../DUIUtils/stb_image_write.h"
 
 /////////////////////////////////////////////////////////////////////////////////////
