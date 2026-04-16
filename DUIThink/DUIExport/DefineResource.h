@@ -99,6 +99,7 @@
 #define Name_ImageBtnVertSpace			_T("{F887BC18-2371-4438-92A8-7001ACC0DF6B}")
 #define Name_ImageBtnCalendar			_T("{FA5FF464-0E51-459A-893B-117119570494}")
 #define Name_ImageAbout					_T("{E41C4D37-80DE-43DD-A3CD-70B5031FC44B}")
+#define Name_ImageControlIcon			_T("{A7F2889A-E9C4-4B4D-B53D-4867D4E7551F}")
 
 static LPCTSTR g_szPublicColor[] = 
 {
@@ -139,7 +140,7 @@ static LOGFONT g_PublicFont[] =
 	{ 16, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") }
 };
 
-static std::pair<CMMString, CMMString> g_szPublicImage[]
+static std::unordered_map<CMMString, CMMString> g_mapPublicImage = 
 {
 	{ Name_ImageVScrollBk, _T("SkinDesign/VScrollBk.png") },
 	{ Name_ImageVScrollThumb, _T("SkinDesign/VScrollThumb.png") },
@@ -211,6 +212,7 @@ static std::pair<CMMString, CMMString> g_szPublicImage[]
 	{ Name_ImageBtnVertSpace, _T("SkinDesign/BtnVertSpace.png") },
 	{ Name_ImageBtnCalendar, _T("SkinDesign/BtnCalendar.png") },
 	{ Name_ImageAbout, _T("SkinDesign/About.png") },
+	{ Name_ImageControlIcon, _T("SkinDesign/ControlIcon.png") },
 };
 
 //////////////////////////////////////////////////////////////////////////

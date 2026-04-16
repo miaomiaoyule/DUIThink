@@ -22,8 +22,6 @@
 #define Dui_FileModelDlgCpp					_T("ModelDlg.cpp")
 #define Dui_FileModelViewHead				_T("ModelView.h")
 #define Dui_FileModelViewCpp				_T("ModelView.cpp")
-#define Dui_Name_NodeNormalCtrl				_T("NormalCtrl")
-#define Dui_Name_NodeLayoutCtrl				_T("LayoutCtrl")
 #define Dui_Name_NodeExtendCtrl				_T("ExtendCtrl")
 #define Dui_Name_NodeCustomCtrl				_T("CustomCtrl")
 #define Dui_Key_DllNameDesign				_T("DllNameDesign")

@@ -2079,17 +2079,17 @@ LRESULT CDUIWnd::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &
 
 LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	//notify
-	DispatchNotifyAsyn();
-
-	//delaydelete
-	OnDuiDelayDelete();
-
 	LRESULT lRes = 0;
 	switch (uMsg)
 	{
 		case WM_DUIAPP:
 		{
+			//notify
+			DispatchNotifyAsyn();
+
+			//delaydelete
+			OnDuiDelayDelete();
+
 			m_bPostedAppMsg = false;
 
 			return 0;

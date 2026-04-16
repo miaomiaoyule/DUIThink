@@ -22,6 +22,7 @@ CDUIListItemCtrl::~CDUIListItemCtrl(void)
 
 	m_pCheckSelectCtrl = NULL;
 	m_pEditTextCtrl = NULL;
+	m_pOwner = NULL;
 
 	return;
 }

@@ -1255,7 +1255,7 @@ bool CDUIGlobal::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyObj
 void CDUIGlobal::LoadPublicResource()
 {
 	//image
-	for (auto &ImageItem : g_szPublicImage)
+	for (auto &ImageItem : g_mapPublicImage)
 	{
 		auto pImageBase = new CDUIImageBase(ImageItem.first, ImageItem.second);
 		pImageBase->SetDesign(true);
