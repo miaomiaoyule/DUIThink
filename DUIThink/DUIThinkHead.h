@@ -115,13 +115,21 @@ using namespace tinyxml2;
 		#pragma comment(lib, "../lib/libwebpdecoder.201764D.lib")
 		#pragma comment(lib, "../lib/libwebpdemux.201764D.lib")
 		#pragma comment(lib, "../lib/tinyxml2.201764D.lib")
+		#ifdef MMHELPLIB
+		#pragma comment(lib, "../lib/MMHelper.201764_Static_D.lib")
+		#else
 		#pragma comment(lib, "../lib/MMHelper.201764D.lib")
+		#endif
 		#else
 		#pragma comment(lib, "../lib/libwebp.2017D.lib")
 		#pragma comment(lib, "../lib/libwebpdecoder.2017D.lib")
 		#pragma comment(lib, "../lib/libwebpdemux.2017D.lib")
 		#pragma comment(lib, "../lib/tinyxml2.2017D.lib")
+		#ifdef MMHELPLIB
+		#pragma comment(lib, "../lib/MMHelper.2017_Static_D.lib")
+		#else
 		#pragma comment(lib, "../lib/MMHelper.2017D.lib")
+		#endif
 		#endif
 	#else
 		#ifdef _WIN64
@@ -129,13 +137,21 @@ using namespace tinyxml2;
 		#pragma comment(lib, "../lib/libwebpdecoder.201764_MT_D.lib")
 		#pragma comment(lib, "../lib/libwebpdemux.201764_MT_D.lib")
 		#pragma comment(lib, "../lib/tinyxml2.201764_MT_D.lib")
+		#ifdef MMHELPLIB
+		#pragma comment(lib, "../lib/MMHelper.201764_Static_MT_D.lib")
+		#else
 		#pragma comment(lib, "../lib/MMHelper.201764_MT_D.lib")
+		#endif
 		#else
 		#pragma comment(lib, "../lib/libwebp.2017_MT_D.lib")
 		#pragma comment(lib, "../lib/libwebpdecoder.2017_MT_D.lib")
 		#pragma comment(lib, "../lib/libwebpdemux.2017_MT_D.lib")
 		#pragma comment(lib, "../lib/tinyxml2.2017_MT_D.lib")
+		#ifdef MMHELPLIB
+		#pragma comment(lib, "../lib/MMHelper.2017_Static_MT_D.lib")
+		#else
 		#pragma comment(lib, "../lib/MMHelper.2017_MT_D.lib")
+		#endif
 		#endif
 	#endif	
 #else
@@ -145,13 +161,21 @@ using namespace tinyxml2;
 		#pragma comment(lib, "../lib/libwebpdecoder.201764.lib")
 		#pragma comment(lib, "../lib/libwebpdemux.201764.lib")
 		#pragma comment(lib, "../lib/tinyxml2.201764.lib")
+		#ifdef MMHELPLIB
+		#pragma comment(lib, "../lib/MMHelper.201764_Static.lib")
+		#else
 		#pragma comment(lib, "../lib/MMHelper.201764.lib")
+		#endif
 		#else
 		#pragma comment(lib, "../lib/libwebp.2017.lib")
 		#pragma comment(lib, "../lib/libwebpdecoder.2017.lib")
 		#pragma comment(lib, "../lib/libwebpdemux.2017.lib")
 		#pragma comment(lib, "../lib/tinyxml2.2017.lib")
+		#ifdef MMHELPLIB
+		#pragma comment(lib, "../lib/MMHelper.2017_Static.lib")
+		#else
 		#pragma comment(lib, "../lib/MMHelper.2017.lib")
+		#endif
 		#endif
 	#else
 		#ifdef _WIN64	
@@ -159,13 +183,21 @@ using namespace tinyxml2;
 		#pragma comment(lib, "../lib/libwebpdecoder.201764_MT.lib")
 		#pragma comment(lib, "../lib/libwebpdemux.201764_MT.lib")
 		#pragma comment(lib, "../lib/tinyxml2.201764_MT.lib")
+		#ifdef MMHELPLIB
+		#pragma comment(lib, "../lib/MMHelper.201764_Static_MT.lib")
+		#else
 		#pragma comment(lib, "../lib/MMHelper.201764_MT.lib")
+		#endif
 		#else	
 		#pragma comment(lib, "../lib/libwebp.2017_MT.lib")
 		#pragma comment(lib, "../lib/libwebpdecoder.2017_MT.lib")
 		#pragma comment(lib, "../lib/libwebpdemux.2017_MT.lib")
 		#pragma comment(lib, "../lib/tinyxml2.2017_MT.lib")
+		#ifdef MMHELPLIB
+		#pragma comment(lib, "../lib/MMHelper.2017_Static_MT.lib")
+		#else
 		#pragma comment(lib, "../lib/MMHelper.2017_MT.lib")
+		#endif
 		#endif
 	#endif
 #endif
