@@ -51,8 +51,6 @@ void CDUIAttriImageSection::Draw(HBITMAP hBitmap, Gdiplus::Bitmap *pBitmap, cons
 
 	HBITMAP hBmpPaint = hBitmap;
 	Gdiplus::Bitmap *pBmpPaint = pBitmap;
-	BYTE cbAlpha = bDisablePallete ? 150 : ImageSection.cbAlpha;
-	bAlpha = 255 != cbAlpha || bAlpha;
 
 	//source
 	CDUIRect rcSource = GetSource(ImageSection);
@@ -66,10 +64,9 @@ void CDUIAttriImageSection::Draw(HBITMAP hBitmap, Gdiplus::Bitmap *pBitmap, cons
 	CDUIRect rcCorner = bScale ? DuiDpiScaleAttri(ImageSection.rcCorner) : ImageSection.rcCorner;
 
 	//mask
-	if (ImageSection.dwMask > 0x00ffffff)
+	if (ImageSection.dwMask > 0x00ffffff || bDisablePallete || 255 != ImageSection.cbAlpha)
 	{
-		hBmpPaint = CDUIRenderEngine::CopyBitmap(hBitmap, ImageSection.dwMask);
-		bAlpha = true;
+		hBmpPaint = CDUIRenderEngine::CopyBitmap(hBitmap, ImageSection.dwMask, bDisablePallete, ImageSection.cbAlpha * 1.0 / 255);
 	}
 	if ((pWnd->IsGdiplusRenderImage() && NULL == pBmpPaint)
 		|| (hBmpPaint != hBitmap))
@@ -91,7 +88,7 @@ void CDUIAttriImageSection::Draw(HBITMAP hBitmap, Gdiplus::Bitmap *pBitmap, cons
 		else
 		{
 			CDUIRenderEngine::DrawImage(hDC, hBmpPaint, rcDest, rcPaint, rcSource,
-				rcCorner, cbAlpha, bAlpha, ImageSection.bCornerHole,
+				rcCorner, ImageSection.cbAlpha, bAlpha, ImageSection.bCornerHole,
 				HorizImageAlign_Tile == ImageSection.HorizImageAlign, VertImageAlign_Tile == ImageSection.VertImageAlign, rcRound, RoundType);
 		}
 

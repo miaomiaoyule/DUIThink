@@ -2103,14 +2103,15 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFi
 	return hBitmap;
 }
 
-HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor/* = 0*/)
+HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor, bool bDisablePallete, float fAlpha)
 {
 	if (NULL == hBitmap) return NULL;
 
 	BITMAP bmp = {};
 	if (GetObject(hBitmap, sizeof(BITMAP), &bmp) == 0) return NULL;
 
-	LONG cbSize = bmp.bmWidthBytes * bmp.bmHeight;
+	int nLinesize = bmp.bmWidth * 4;
+	LONG cbSize = nLinesize * bmp.bmHeight;
 	std::vector<BYTE> vecPixel;
 	vecPixel.resize(cbSize);
 	if (vecPixel.empty()) return NULL;
@@ -2118,9 +2119,9 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor/* = 0*
 	BITMAPINFO bmpInfo = {};
 	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	bmpInfo.bmiHeader.biWidth = bmp.bmWidth;
-	bmpInfo.bmiHeader.biHeight = -bmp.bmHeight;	//正数说明数据从下到上，负数说明从上到下
-	bmpInfo.bmiHeader.biPlanes = bmp.bmPlanes;
-	bmpInfo.bmiHeader.biBitCount = bmp.bmBitsPixel;
+	bmpInfo.bmiHeader.biHeight = -bmp.bmHeight;
+	bmpInfo.bmiHeader.biPlanes = 1;
+	bmpInfo.bmiHeader.biBitCount = 32; 
 	bmpInfo.bmiHeader.biCompression = BI_RGB;
 
 	HDC hDC = GetDC(NULL);
@@ -2136,22 +2137,58 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor/* = 0*
 	ReleaseDC(NULL, hDC);
 	if (NULL == hBmpClone || NULL == pBits) return nullptr;
 
-	BYTE* src = vecPixel.data();
-	int nLinesize = bmp.bmWidth * 4;
+	BYTE *src = vecPixel.data();
 	int nHeight = bmp.bmHeight;
 	for (UINT y = 0; y < nHeight; y++)
 	{
 		memcpy(pBits + y * nLinesize, src + y * nLinesize, nLinesize);
 
-		if (0 != dwFilterColor)
-		{
-			BYTE *pBitsLine = pBits + (nLinesize * y);
-			for (int nWidth = 0; nWidth < bmp.bmWidth; nWidth++)
-			{
-				DWORD &dwColor = *((DWORD *)pBitsLine + nWidth);
-				if (dwColor != dwFilterColor) continue;
+		if (0 == dwFilterColor && false == bDisablePallete && 1.0 == fAlpha) continue;
 
+		BYTE *pBitsLine = pBits + (nLinesize * y);
+		for (int nWidth = 0; nWidth < bmp.bmWidth; nWidth++)
+		{
+			BYTE *pPixel = pBitsLine + (nWidth * 4);
+			DWORD &dwColor = *((DWORD *)pBitsLine + nWidth);
+			if (dwColor == dwFilterColor)
+			{
 				dwColor = 0;
+
+				continue;
+			}
+			else if (bDisablePallete && pPixel[3] > 0)
+			{
+				BYTE a = pPixel[3];
+				BYTE b, g, r;
+				if (a == 255)
+				{
+					b = pPixel[0];
+					g = pPixel[1];
+					r = pPixel[2];
+				}
+				else
+				{
+					//realColor = storedColor * 255 / alpha
+					b = (BYTE)min(255, pPixel[0] * 255 / a);
+					g = (BYTE)min(255, pPixel[1] * 255 / a);
+					r = (BYTE)min(255, pPixel[2] * 255 / a);
+				}
+
+				BYTE gray = (BYTE)(0.299 * r + 0.587 * g + 0.114 * b);
+
+				//premultily alpha
+				pPixel[0] = (BYTE)(gray * a / 255); // B
+				pPixel[1] = (BYTE)(gray * a / 255); // G
+				pPixel[2] = (BYTE)(gray * a / 255); // R
+			}
+			if (1.0 != fAlpha && pPixel[3] > 0)
+			{
+				BYTE a = pPixel[3];
+				BYTE newAlpha = (BYTE)(a * fAlpha);
+				pPixel[0] = (BYTE)(pPixel[0] * newAlpha / a);
+				pPixel[1] = (BYTE)(pPixel[1] * newAlpha / a);
+				pPixel[2] = (BYTE)(pPixel[2] * newAlpha / a);
+				pPixel[3] = newAlpha;
 			}
 		}
 	}
@@ -2159,14 +2196,15 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor/* = 0*
 	return hBmpClone;
 }
 
-Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB)
+Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPreMultiplyArgb)
 {
 	if (NULL == hBitmap) return NULL;
 
 	BITMAP bmp = {};
 	if (GetObject(hBitmap, sizeof(BITMAP), &bmp) == 0) return NULL;
 
-	LONG cbSize = bmp.bmWidthBytes * bmp.bmHeight;
+	int nLinesize = bmp.bmWidth * 4;
+	LONG cbSize = nLinesize * bmp.bmHeight;
 	std::vector<BYTE> vecPixel;
 	vecPixel.resize(cbSize);
 	if (vecPixel.empty()) return NULL;
@@ -2174,9 +2212,9 @@ Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB)
 	BITMAPINFO bmpInfo = {};
 	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	bmpInfo.bmiHeader.biWidth = bmp.bmWidth;
-	bmpInfo.bmiHeader.biHeight = bmp.bmHeight;	//正数说明数据从下到上，负数说明从上到下
-	bmpInfo.bmiHeader.biPlanes = bmp.bmPlanes;
-	bmpInfo.bmiHeader.biBitCount = bmp.bmBitsPixel;
+	bmpInfo.bmiHeader.biHeight = bmp.bmHeight;
+	bmpInfo.bmiHeader.biPlanes = 1;
+	bmpInfo.bmiHeader.biBitCount = 32; 
 	bmpInfo.bmiHeader.biCompression = BI_RGB;
 
 	HDC hDC = GetDC(NULL);
@@ -2185,7 +2223,7 @@ Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB)
 
 	if (cbCopied == 0) return NULL;
 
-	Gdiplus::PixelFormat PixelFormat = bPARGB ? PixelFormat32bppPARGB : PixelFormat32bppARGB;
+	Gdiplus::PixelFormat PixelFormat = bPreMultiplyArgb ? PixelFormat32bppPARGB : PixelFormat32bppARGB;
 	Bitmap *pBitmap = new Bitmap(bmp.bmWidth, bmp.bmHeight, PixelFormat);
 	if (NULL == pBitmap) return NULL;
 
@@ -2199,9 +2237,7 @@ Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB)
 	}
 
 	BYTE *pixelsDest = (BYTE *)bitmapData.Scan0;
-	int nLinesize = bmp.bmWidth * sizeof(UINT);
 	int nHeight = bmp.bmHeight;
-
 	for (int y = 0; y < nHeight; y++)
 	{
 		//从下到上复制数据，因为前面设置高度为正数

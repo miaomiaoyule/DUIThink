@@ -61,8 +61,8 @@ public:
 	static Bitmap * GenerateBitmap(const std::vector<BYTE> &vecFileData);
 	static Bitmap * GenerateEllipseBitmap(Bitmap *pBmp, const CDUISize &szGenerate);
 	static HBITMAP CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFilterColor = 0);
-	static HBITMAP CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor = 0);
-	static Bitmap * GetAlphaBitmap(HBITMAP hBitmap, bool bPARGB = true);
+	static HBITMAP CopyBitmap(HBITMAP hBitmap, DWORD dwFilterColor = 0, bool bDisablePallete = false, float fAlpha = 1.0);
+	static Bitmap * GetAlphaBitmap(HBITMAP hBitmap, bool bPreMultiplyArgb = true);
 	static HBITMAP GetHBITMAP(Bitmap *pBmp, bool bKeepAlpha = true);
 	static bool SaveImage(HBITMAP hBitmap, CMMString strFile);
 
