@@ -458,7 +458,9 @@ namespace std
 	{
 		inline uint32_t operator()(const CMMString &str) const
 		{
-			return CMMHash::GetHash(str);
+			//forbid CMMHash::GetHash(str) to avoid dependency, and use FNV-1a algorithm directly here
+			//if CMMHash::GetHash(str) connot delay load MMHelper dll
+			return MM_Fnv1a_append_bytes(MM_FNV_offset_basis, (const unsigned char*)str.c_str(), sizeof(TCHAR) * str.length());
 		}
 	};
 }
