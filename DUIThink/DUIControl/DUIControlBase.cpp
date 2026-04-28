@@ -869,31 +869,6 @@ void CDUIControlBase::SetGradientColor(const vector<CMMString> &vecResSwitch)
 	return;
 }
 
-bool CDUIControlBase::IsColorHSL()
-{
-	return m_AttributeIsColorHSL.GetValue();
-}
-
-void CDUIControlBase::SetColorHSL(bool bColorHSL)
-{
-	if (bColorHSL == IsColorHSL()) return;
-
-	m_AttributeIsColorHSL.SetValue(bColorHSL);
-
-	Invalidate();
-
-	return;
-}
-
-DWORD CDUIControlBase::GetAdjustColor(DWORD dwColor)
-{
-	if (false == IsColorHSL()) return dwColor;
-
-	short H, S, L;
-	CDUIGlobal::GetInstance()->GetHSL(&H, &S, &L);
-	return CDUIRenderEngine::AdjustColor(dwColor, H, S, L);
-}
-
 tagDuiImageSection CDUIControlBase::GetBkImageSection()
 {
 	return m_AttributeImageBack.GetImageSection();
@@ -1844,7 +1819,6 @@ void CDUIControlBase::InitProperty()
 	DuiCreateGroupAttribute(m_AttributeGroupBk, _T("Back"));
 	DuiCreateAttribute(m_AttributeColorBk, _T("ColorBk"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeColorGradient, _T("ColorGradient"), _T(""), m_AttributeGroupBk);
-	DuiCreateAttribute(m_AttributeIsColorHSL, _T("IsColorHSL"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeImageBack, _T("ImageBack"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeImageFore, _T("ImageFore"), _T(""), m_AttributeGroupBk);
 	DuiCreateAttribute(m_AttributeRoundType, _T("RoundType"), _T(""), m_AttributeGroupBk);
@@ -2059,7 +2033,7 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 		|| rcBorderRound.right > 0
 		|| rcBorderRound.bottom > 0)
 	{
-		pAttribute->DrawRoundRect(hDC, rcBorderRect, nSize, rcBorderRound, IsColorHSL(), szBreakTop);
+		pAttribute->DrawRoundRect(hDC, rcBorderRect, nSize, rcBorderRound, szBreakTop);
 
 		return;
 	}
@@ -2074,14 +2048,14 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 		CDUIRect rcBorderDraw = rcBorderRect;
 		rcBorderDraw.left += rcBorderLine.left / 2;
 		rcBorderDraw.right = rcBorderDraw.left;
-		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.left, GetBorderStyle(), IsColorHSL());
+		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.left, GetBorderStyle());
 	}
 	if (rcBorderLine.top > 0)
 	{
 		CDUIRect rcBorderDraw = rcBorderRect;
 		rcBorderDraw.top += rcBorderLine.top / 2;
 		rcBorderDraw.bottom = rcBorderDraw.top;
-		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.top, GetBorderStyle(), IsColorHSL());
+		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.top, GetBorderStyle());
 	}
 	if (rcBorderLine.right > 0)
 	{
@@ -2089,7 +2063,7 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 		rcBorderDraw.left = rcBorderDraw.right - rcBorderLine.right;
 		rcBorderDraw.left += rcBorderLine.right / 2;
 		rcBorderDraw.right = rcBorderDraw.left;
-		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.right, GetBorderStyle(), IsColorHSL());
+		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.right, GetBorderStyle());
 	}
 	if (rcBorderLine.bottom > 0)
 	{
@@ -2097,7 +2071,7 @@ void CDUIControlBase::PaintBorder(HDC hDC)
 		rcBorderDraw.top = rcBorderDraw.bottom - rcBorderLine.bottom;
 		rcBorderDraw.top += rcBorderLine.bottom / 2;
 		rcBorderDraw.bottom = rcBorderDraw.top;
-		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.bottom, GetBorderStyle(), IsColorHSL());
+		pAttribute->DrawLine(hDC, rcBorderDraw, rcBorderLine.bottom, GetBorderStyle());
 	}
 
 	return;
@@ -2116,7 +2090,7 @@ void CDUIControlBase::PaintColorAttribute(HDC hDC, CDUIAttributeColorSwitch *pAt
 		&& rcBorderRound.right <= 0
 		&& rcBorderRound.bottom <= 0)
 	{
-		pAttribute->FillRect(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
+		pAttribute->FillRect(hDC, rcBorderRect, GetGradientColor());
 
 		return;
 	}
@@ -2127,19 +2101,19 @@ void CDUIControlBase::PaintColorAttribute(HDC hDC, CDUIAttributeColorSwitch *pAt
 
 	if (Round_Parallelogram == RoundType)
 	{
-		pAttribute->FillParallelogram(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
+		pAttribute->FillParallelogram(hDC, rcBorderRect, GetGradientColor());
 
 		return;
 	}
 	if (Round_Rhomb == RoundType)
 	{
-		pAttribute->FillRhomb(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
+		pAttribute->FillRhomb(hDC, rcBorderRect, GetGradientColor());
 
 		return;
 	}
 	if (Round_Ellipse == RoundType)
 	{
-		pAttribute->FillEllipse(hDC, rcBorderRect, IsColorHSL(), GetGradientColor());
+		pAttribute->FillEllipse(hDC, rcBorderRect, GetGradientColor());
 
 		return;
 	}
@@ -2150,7 +2124,7 @@ void CDUIControlBase::PaintColorAttribute(HDC hDC, CDUIAttributeColorSwitch *pAt
 	nSize = max(nSize, rcBorder.right);
 	nSize = max(nSize, rcBorder.bottom);
 
-	pAttribute->FillRoundRect(hDC, rcBorderRect, nSize, rcBorderRound, IsColorHSL(), GetGradientColor());
+	pAttribute->FillRoundRect(hDC, rcBorderRect, nSize, rcBorderRound, GetGradientColor());
 
 	return;
 }

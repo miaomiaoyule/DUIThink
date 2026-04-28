@@ -446,7 +446,7 @@ void CDUIScrollBarCtrl::PaintStatusColor(HDC hDC)
 
 	if (pAttribute)
 	{
-		pAttribute->FillRect(hDC, m_rcUpBtn, IsColorHSL());
+		pAttribute->FillRect(hDC, m_rcUpBtn);
 	}
 
 	//down btn
@@ -466,7 +466,7 @@ void CDUIScrollBarCtrl::PaintStatusColor(HDC hDC)
 
 	if (pAttribute)
 	{
-		pAttribute->FillRect(hDC, m_rcDownBtn, IsColorHSL());
+		pAttribute->FillRect(hDC, m_rcDownBtn);
 	}
 
 	return;

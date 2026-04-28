@@ -401,11 +401,11 @@ void CDUIProgressCtrl::PaintStatusColor(HDC hDC)
 	//draw
 	if (pAttributeGroove)
 	{
-		pAttributeGroove->FillRect(hDC, m_rcGroove, IsColorHSL());
+		pAttributeGroove->FillRect(hDC, m_rcGroove);
 	}
 	if (pAttributeSlip)
 	{
-		pAttributeSlip->FillRect(hDC, m_rcCurSlip, IsColorHSL());
+		pAttributeSlip->FillRect(hDC, m_rcCurSlip);
 	}
 
 	return;

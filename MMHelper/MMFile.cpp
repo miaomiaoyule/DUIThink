@@ -1167,7 +1167,7 @@ bool CMMFile::ClearFilesOfFolder(CMMString strPath)
 	do
 	{
 		CMMString strFile = FindData.cFileName;
-		if (strFile.empty() || _T(".") == strFile || _T("..") == strFile)continue;
+		if (strFile.empty() || _T(".") == strFile || _T("..") == strFile) continue;
 
 		OperatorFileOrFolder(strPath + strFile, _T(""), FO_DELETE);
 
@@ -1176,6 +1176,13 @@ bool CMMFile::ClearFilesOfFolder(CMMString strPath)
 	FindClose(hFindFile);
 
 	return true;
+}
+
+bool CMMFile::DeleteFolder(CMMString strPath)
+{
+	if (false == PathFileExists(strPath) || false == PathIsDirectory(strPath)) return false;
+
+	return OperatorFileOrFolder(strPath, _T(""), FO_DELETE);
 }
 
 bool CMMFile::OpenFolderAndSelectFile(CMMString strFileFull)

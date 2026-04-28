@@ -135,12 +135,6 @@ private:
 	HZIPDT								m_hResourceZip = NULL;
 	std::vector<BYTE>					m_vecZipData;
 
-	//hsl
-	bool								m_bUseHSL = false;
-	short								m_H = 180;
-	short								m_S = 100;
-	short								m_L = 100;
-
 	//gdiplus
 	ULONG_PTR							m_uToken;
 	Gdiplus::GdiplusStartupInput		m_GdiplusInput;
@@ -238,10 +232,6 @@ public:
 	//shadow text
 	Gdiplus::Bitmap * GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle);
 	
-	//hsl
-	void GetHSL(short *H, short *S, short *L);
-	void SetHSL(bool bUseHSL, short H, short S, short L); // H:0~360, S:0~200, L:0~200 
-
 	//dui
 public:
 	CDUIControlBase * LoadDui(const CMMString &strName, CDUIWnd *pWnd = NULL);

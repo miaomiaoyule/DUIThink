@@ -1981,7 +1981,7 @@ void CDUIThinkEditCtrl::PaintSelectBk(HDC hDC)
 
 		if (rcRow.Empty()) continue;
 
-		m_AttributeColorSelect.FillRect(hDC, rcRow, IsColorHSL());
+		m_AttributeColorSelect.FillRect(hDC, rcRow);
 		m_AttributeImageSelect.Draw(hDC, rcRow, m_rcPaint);
 	}
 

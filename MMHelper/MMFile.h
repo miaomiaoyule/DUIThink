@@ -204,6 +204,12 @@ public:
 	static bool ClearFilesOfFolder(CMMString strPath);
 
 	//************************************
+	// Description:	É¾³ýÎÄ¼þ¼Ð
+	// Parameter: 	CMMString strPath Àý£ºC:\Program Files (x86)
+	//************************************
+	static bool DeleteFolder(CMMString strPath);
+
+	//************************************
 	// Description:	open folder and select file 
 	// Parameter: 	CMMString strFileFull Àý£ºC:\user\desktop\test.txt
 	//************************************
@@ -234,8 +240,7 @@ public:
 
 	//************************************
 	// Description:	select folder
-	// Parameter: 	HWND hWndParent
-	//																	
+	// Parameter: 	HWND hWndParent															
 	//************************************
 	static bool OperatorSelectFolder(HWND hWndParent, OUT CMMString &strFolderSelect);
 };

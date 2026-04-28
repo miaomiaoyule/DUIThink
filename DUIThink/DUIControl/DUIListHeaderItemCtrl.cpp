@@ -313,11 +313,11 @@ void CDUIListHeaderItemCtrl::PaintStatusColor(HDC hDC)
 	//äÖÈ¾
 	if (pAttribute)
 	{
-		pAttribute->FillRect(hDC, m_rcAbsolute, IsColorHSL());
+		pAttribute->FillRect(hDC, m_rcAbsolute);
 	}
 
 	//sep
-	m_AttributeSepColor.FillRect(hDC, m_rcSep, IsColorHSL());
+	m_AttributeSepColor.FillRect(hDC, m_rcSep);
 
 	return;
 }

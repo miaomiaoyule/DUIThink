@@ -73,7 +73,7 @@ void CDUIProgressCircleCtrl::PaintStatusColor(HDC hDC)
 	//draw
 	if (pAttributeGroove)
 	{
-		pAttributeGroove->FillEllipse(hDC, m_rcGroove, IsColorHSL());
+		pAttributeGroove->FillEllipse(hDC, m_rcGroove);
 	}
 	if (pAttributeSlip)
 	{

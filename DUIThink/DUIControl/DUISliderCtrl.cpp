@@ -282,7 +282,7 @@ void CDUISliderCtrl::PaintStatusColor(HDC hDC)
 	}
 	if (pAttribute)
 	{
-		pAttribute->FillRect(hDC, m_rcCurThumb, IsColorHSL());
+		pAttribute->FillRect(hDC, m_rcCurThumb);
 	}
 
 	return;

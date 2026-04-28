@@ -752,34 +752,6 @@ Gdiplus::Bitmap * CDUIGlobal::GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPC
 	return pBmpText;
 }
 
-void CDUIGlobal::GetHSL(short* H, short* S, short* L)
-{
-	*H = m_H;
-	*S = m_S;
-	*L = m_L;
-
-	return;
-}
-
-void CDUIGlobal::SetHSL(bool bUseHSL, short H, short S, short L)
-{
-	if (H == m_H && S == m_S && L == m_L) return;
-	m_H = CLAMP(H, 0, 360);
-	m_S = CLAMP(S, 0, 200);
-	m_L = CLAMP(L, 0, 200);
-
-	/*for (int i = 0; i < m_arrPreMsgManager.GetSize(); i++)
-	{
-		CDUIGlobal* pManager = static_cast<CDUIGlobal*>(m_arrPreMsgManager[i]);
-		if (pManager)
-		{
-			pManager->AdjustImagesHSL();
-		}
-	}*/
-
-	return;
-}
-
 CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWnd *pWnd)
 {
 	//has

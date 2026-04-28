@@ -949,12 +949,12 @@ void CDUIListItemCtrl::PaintItemColor(HDC hDC)
 		nSize = max(nSize, rcBorder.right);
 		nSize = max(nSize, rcBorder.bottom);
 
-		pAttribute->FillRoundRect(hDC, GetBackRange(), nSize, rcBorderRound, IsColorHSL());
+		pAttribute->FillRoundRect(hDC, GetBackRange(), nSize, rcBorderRound);
 
 		return;
 	}
 
-	pAttribute->FillRect(hDC, GetBackRange(), IsColorHSL());
+	pAttribute->FillRect(hDC, GetBackRange());
 
 	return;
 }

@@ -741,7 +741,7 @@ void CDUIMenuItemCtrl::InitComplete()
 
 void CDUIMenuItemCtrl::PaintLineMenu(HDC hDC)
 {
-	m_AttributeLineColor.FillRect(hDC, m_rcLineMenu, IsColorHSL());
+	m_AttributeLineColor.FillRect(hDC, m_rcLineMenu);
 
 	return;
 }
