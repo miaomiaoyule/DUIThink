@@ -714,6 +714,24 @@ std::string CMMService::EncryptBase64(unsigned char const* bytes_to_encode, unsi
 	return ret;
 }
 
+int CMMService::CompareVersion(LPCTSTR lpszVersion1, LPCTSTR lpszVersion2)
+{
+	if (NULL == lpszVersion1 || NULL == lpszVersion2) return 0;
+
+	std::vector<int> vecVersion1 = CMMStrHelp::ParseIntFromString(lpszVersion1, _T('.'));
+	std::vector<int> vecVersion2 = CMMStrHelp::ParseIntFromString(lpszVersion2, _T('.'));
+	int nCount = max(vecVersion1.size(), vecVersion2.size());
+	for (int i = 0; i < nCount; i++)
+	{
+		int nV1 = (i < vecVersion1.size()) ? vecVersion1[i] : 0;
+		int nV2 = (i < vecVersion2.size()) ? vecVersion2[i] : 0;
+		if (nV1 > nV2) return 1;
+		if (nV1 < nV2) return -1;
+	}
+
+	return 0;
+}
+
 BOOL CMMService::WinNTHDSerialNumAsScsiRead(BYTE* dwSerial, UINT* puSerialLen, UINT uMaxSerialLen)
 {
 	BOOL bInfoLoaded = FALSE;

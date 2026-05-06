@@ -871,6 +871,11 @@ CMMString CMMFile::GetFileVersion(IN LPCTSTR lpszFileFull)
 	return strVersion;
 }
 
+CMMString CMMFile::GetAppVersion()
+{
+	return GetFileVersion(CMMService::GetAppFile());
+}
+
 std::vector<CMMString> CMMFile::GetFolderOfDir(IN LPCTSTR lpszDirFull)
 {
 	std::vector<CMMString> vecFolder;

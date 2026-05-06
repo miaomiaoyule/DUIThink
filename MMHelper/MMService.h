@@ -107,7 +107,6 @@ public:
 	// Return: 		CMMString Àý£ºC:\windows
 	//************************************
 	static CMMString GetWorkDirectory();
-	//µ±Ç°Ä¿Â¼
 	static CMMString GetCurrentPath();
 	//localappdata path + folder
 	//Return: 		CMMString Àý£º"C:\Users\XXX\AppData\Local\strFolderName\"
@@ -116,7 +115,7 @@ public:
 	static CMMString GetAppName();
 	static CMMString GetAppFile();
 
-	//GUID
+	//guid
 	static CMMString ProductGUID();
 
 	//rand
@@ -126,6 +125,9 @@ public:
 
 	//encrypt
 	static std::string EncryptBase64(unsigned char const* bytes_to_encode, unsigned int in_len);
+
+	//version
+	static int CompareVersion(LPCTSTR lpszVersion1, LPCTSTR lpszVersion2);
 
 	//help
 private:

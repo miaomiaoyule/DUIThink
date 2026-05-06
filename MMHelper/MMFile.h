@@ -138,12 +138,8 @@ public:
 	// Parameter: 	LPCTSTR lpszFileFull Àý£ºC:\Text.txt 
 	//************************************
 	static bool GetFileVersion(IN LPCTSTR lpszFileFull, OUT DWORD &dwVersionInfo);
-
-	//************************************
-	// Description:	return file version
-	// Parameter: 	LPCTSTR lpszFileFull Àý£ºC:\Text.txt 
-	//************************************
 	static CMMString GetFileVersion(IN LPCTSTR lpszFileFull);
+	static CMMString GetAppVersion();
 
 	//************************************
 	// Description:	get folder of dir
