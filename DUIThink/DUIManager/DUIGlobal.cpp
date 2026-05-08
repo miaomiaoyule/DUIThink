@@ -305,7 +305,7 @@ bool CDUIGlobal::TranslateMessage(const LPMSG pMsg)
 	bool bHandled = false;
 
 	//pre message
-	for(int n = m_vecPreMessage.size()- 1; n>= 0; n--)
+	for (int n = m_vecPreMessage.size() - 1; n >= 0; n--)
 	{
 		IDuiPreMessage *pPreMessage = m_vecPreMessage[n];
 		if (NULL == pPreMessage)
