@@ -535,7 +535,7 @@ UINT CDUIWnd::DoModal()
 			::EnableWindow(hWndParent, bWndParentEnable);
 			::SetFocus(hWndParent);
 		}
-		if (false == CDUIGlobal::TranslateMessage(&Msg))
+		if (false == CDUIGlobal::GetInstance()->TranslateMessage(&Msg))
 		{
 			::TranslateMessage(&Msg);
 			::DispatchMessage(&Msg);
@@ -578,7 +578,7 @@ UINT CDUIWnd::DoBlock()
 		{
 			nRet = Msg.wParam;
 		}
-		if (false == CDUIGlobal::TranslateMessage(&Msg))
+		if (false == CDUIGlobal::GetInstance()->TranslateMessage(&Msg))
 		{
 			::TranslateMessage(&Msg);
 			::DispatchMessage(&Msg);
@@ -1743,22 +1743,6 @@ VecDuiControlBase CDUIWnd::FindSubControlsByClass(CDUIContainerCtrl *pParent, LP
 	return m_vecFoundControls;
 }
 
-bool CDUIWnd::AddPreMessagePtr(IDuiPreMessage *pInterface)
-{
-	if (find(m_vecPreMessage.begin(), m_vecPreMessage.end(), pInterface) != m_vecPreMessage.end()) return true;
-
-	m_vecPreMessage.push_back(pInterface);
-
-	return true;
-}
-
-bool CDUIWnd::RemovePreMessagePtr(IDuiPreMessage *pInterface)
-{
-	m_vecPreMessage.erase(std::remove(m_vecPreMessage.begin(), m_vecPreMessage.end(), pInterface), m_vecPreMessage.end());
-
-	return true;
-}
-
 bool CDUIWnd::BeginDragDrop(CDUIControlBase *pControl, WPARAM wParam, LPARAM lParam, int nFlag)
 {
 	if (NULL == pControl) return false;
@@ -2020,61 +2004,6 @@ bool CDUIWnd::KillTimer(UINT uTimerID)
 bool CDUIWnd::KillTimer()
 {
 	return KillTimer(this);
-}
-
-LRESULT CDUIWnd::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
-{
-	//pre message
-	bHandled = false;
-	for (auto pPreMessage : m_vecPreMessage)
-	{
-		if (NULL == pPreMessage)
-		{
-			assert(false);
-			break;
-		}
-
-		pPreMessage->OnPreWndMessage(uMsg, wParam, lParam, bHandled);
-
-		if (bHandled)
-		{
-			return 0;
-		}
-	}
-
-	//message
-	switch (uMsg)
-	{
-		case WM_SYSCHAR:
-		{
-			// Handle ALT-shortcut key-combinations
-			CDUIControlBase *pControl = FindControlByShortCut(wParam);
-			if (pControl)
-			{
-				pControl->SetFocus();
-				pControl->Active();
-			}
-
-			break;
-		}
-		case WM_KEYDOWN:
-		{
-			if (VK_ESCAPE == wParam)
-			{
-				bHandled = TRUE;
-
-				Close(Dui_CtrlIDInner_BtnCancel);
-			}
-
-			break;
-		}
-		default:
-		{
-			break;
-		}
-	}
-
-	return 0;
 }
 
 LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -3017,6 +2946,12 @@ LRESULT CDUIWnd::OnKeyDown(WPARAM wParam, LPARAM lParam)
 {
 	do
 	{
+		//close
+		if (VK_ESCAPE == wParam)
+		{
+			Close(Dui_CtrlIDInner_BtnCancel);
+		}
+
 		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
 		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
@@ -3167,9 +3102,15 @@ LRESULT CDUIWnd::OnSysChar(WPARAM wParam, LPARAM lParam)
 {
 	do
 	{
-		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
-
 		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
+		if (NULL == m_pEventCtrl)
+		{
+			m_pEventCtrl = FindControlByShortCut(wParam);
+		}
+		if (NULL == m_pEventCtrl)
+		{
+			break;
+		}
 
 		DuiMessage DuiMsg = {};
 		DuiMsg.wParam = wParam;
@@ -3183,6 +3124,16 @@ LRESULT CDUIWnd::OnSysChar(WPARAM wParam, LPARAM lParam)
 		if (DuiMsg.pMsgCtrl->IsEnabled())
 		{
 			DuiMsg.pMsgCtrl->OnDuiSysChar(DuiMsg);
+
+			//shortcut
+			if (NULL == m_pCaptureCtrl 
+				&& NULL == m_pFocusCtrl
+				&& m_pEventCtrl)
+			{
+				m_pEventCtrl->SetFocus();
+				m_pEventCtrl->Active();
+			}
+
 		}
 
 		//model

@@ -301,16 +301,15 @@ CDUIHotKeyCtrl::~CDUIHotKeyCtrl(void)
 {
 	MMSafeDelete(m_pHotKeyWindow);
 
-	if (m_pWndOwner)
-	{
-		m_pWndOwner->RemovePreMessagePtr(this);
-	}
+	CDUIGlobal::GetInstance()->RemovePreMessagePtr(this);
 
 	return;
 }
 
-LRESULT CDUIHotKeyCtrl::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDUIHotKeyCtrl::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
 {
+	if (hWnd != GetWndHandle()) return 0;
+
 	if (uMsg >= WM_KEYFIRST && uMsg <= WM_KEYLAST)
 	{
 		if (false == IsFocused()
@@ -521,7 +520,7 @@ void CDUIHotKeyCtrl::OnDuiWndManagerAttach()
 
 	if (NULL == m_pWndOwner) return;
 
-	m_pWndOwner->AddPreMessagePtr(this);
+	CDUIGlobal::GetInstance()->AddPreMessagePtr(this);
 
 	return;
 }
@@ -532,7 +531,7 @@ void CDUIHotKeyCtrl::OnDuiWndManagerDetach()
 
 	if (NULL == m_pWndOwner) return;
 
-	m_pWndOwner->RemovePreMessagePtr(this);
+	CDUIGlobal::GetInstance()->RemovePreMessagePtr(this);
 
 	return;
 }

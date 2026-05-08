@@ -861,10 +861,8 @@ CDUIRichEditCtrl::CDUIRichEditCtrl(void)
 
 CDUIRichEditCtrl::~CDUIRichEditCtrl(void)
 {
-	if (m_pWndOwner)
-	{
-		m_pWndOwner->RemovePreMessagePtr(this);
-	}
+	CDUIGlobal::GetInstance()->RemovePreMessagePtr(this);
+
 	if (m_pTextHost)
 	{
 		m_pTextHost->Release();
@@ -875,9 +873,9 @@ CDUIRichEditCtrl::~CDUIRichEditCtrl(void)
 	return;
 }
 
-LRESULT CDUIRichEditCtrl::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDUIRichEditCtrl::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
 {
-	if (NULL == m_pWndOwner) return 0;
+	if (NULL == m_pWndOwner || hWnd != GetWndHandle()) return 0;
 
 	if (uMsg == WM_IME_COMPOSITION)
 	{
@@ -2402,7 +2400,7 @@ void CDUIRichEditCtrl::OnDuiWndManagerAttach()
 		LRESULT lResult;
 		m_pTextHost->GetTextServices()->TxSendMessage(EM_SETLANGOPTIONS, 0, 0, &lResult);
 		m_pTextHost->OnTxInPlaceActivate(NULL);
-		m_pWndOwner->AddPreMessagePtr(this);
+		CDUIGlobal::GetInstance()->AddPreMessagePtr(this);
 
 		ConstructTextStyle();
 
@@ -2416,10 +2414,7 @@ void CDUIRichEditCtrl::OnDuiWndManagerDetach()
 {
 	__super::OnDuiWndManagerDetach();
 
-	if (m_pWndOwner)
-	{
-		m_pWndOwner->RemovePreMessagePtr(this);
-	}
+	CDUIGlobal::GetInstance()->RemovePreMessagePtr(this);
 
 	return;
 }

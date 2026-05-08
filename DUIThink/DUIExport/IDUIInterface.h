@@ -26,7 +26,7 @@ typedef std::vector<IDuiNotify*> VecIDuiNotify;
 interface IDuiPreMessage
 {
 	virtual ~IDuiPreMessage() {}
-	virtual LRESULT OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) = 0;
+	virtual LRESULT OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) = 0;
 };
 
 typedef std::vector<IDuiPreMessage*> VecIDuiPreMessage;

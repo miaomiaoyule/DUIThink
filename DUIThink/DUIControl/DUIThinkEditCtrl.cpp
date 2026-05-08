@@ -127,17 +127,14 @@ CDUIThinkEditCtrl::CDUIThinkEditCtrl()
 
 CDUIThinkEditCtrl::~CDUIThinkEditCtrl()
 {
-	if (m_pWndOwner)
-	{
-		m_pWndOwner->RemovePreMessagePtr(this);
-	}
+	CDUIGlobal::GetInstance()->RemovePreMessagePtr(this);
 
 	return;
 }
 
-LRESULT CDUIThinkEditCtrl::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CDUIThinkEditCtrl::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
 {
-	if (NULL == m_pWndOwner) return 0;
+	if (NULL == m_pWndOwner || hWnd != GetWndHandle()) return 0;
 
 	if (WM_IME_COMPOSITION == uMsg
 		|| WM_KEYDOWN == uMsg)
@@ -1354,7 +1351,7 @@ void CDUIThinkEditCtrl::OnDuiWndManagerAttach()
 
 	if (NULL == m_pWndOwner) return;
 
-	m_pWndOwner->AddPreMessagePtr(this);
+	CDUIGlobal::GetInstance()->AddPreMessagePtr(this);
 
 	return;
 }
@@ -1363,10 +1360,7 @@ void CDUIThinkEditCtrl::OnDuiWndManagerDetach()
 {
 	__super::OnDuiWndManagerDetach();
 
-	if (m_pWndOwner)
-	{
-		m_pWndOwner->RemovePreMessagePtr(this);
-	}
+	CDUIGlobal::GetInstance()->RemovePreMessagePtr(this);
 
 	return;
 }

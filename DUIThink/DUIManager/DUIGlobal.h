@@ -84,11 +84,14 @@ private:
 	CMMString							m_strCalendarDir;
 	CMMString							m_strFontResDefault;
 
-	//manager resource	
+	//resource	
 	MapDuiFontBase						m_mapResourceFont;
 	MapDuiColorBase						m_mapResourceColor;
 	MapDuiImageBase						m_mapResourceImage;
 	VecDuiFile							m_vecDui;
+
+	//manager
+	VecIDuiPreMessage					m_vecPreMessage;
 	MapDuiModelStore					m_mapModelStore;
 	MapShadowText						m_mapShadowText;
 	VecIDuiResourceCallBack				m_vecIResourceCallBack;
@@ -161,11 +164,16 @@ public:
 	void SetDuiLastError(CMMString strError);
 	enDuiResVersion GetResVersion() { return m_DuiResVersion; }
 
+	//message
+	bool AddPreMessagePtr(IDuiPreMessage *pInterface);
+	bool RemovePreMessagePtr(IDuiPreMessage *pInterface);
+	bool TranslateMessage(const LPMSG pMsg);
+
 	//switch skin
 	void PerformSwitchRes(int nIndexRes);
 	int GetSwitchResIndex();
 
-	//info
+	//dpi
 	const CMMDpi & GetDpiObj();
 	int GetDpi();
 	bool SetDpi(int nDpi);
@@ -173,10 +181,14 @@ public:
 	bool SetScale(int nScale);
 
 	//ui
+	CDUIControlBase * LoadDui(const CMMString &strName, CDUIWnd *pWnd = NULL);
 	CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
 	CDUIControlBase * ParseDui(LPCTSTR lpszXml);
 
-	//method resource
+	//shadow text
+	Gdiplus::Bitmap * GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle);
+
+	//resource
 public:
 	//data
 	bool ExtractResourceData(vector<BYTE> &vecData, CMMString strFile);
@@ -228,13 +240,6 @@ public:
 	HINSTANCE GetResourceDll();
 	HZIPDT GetResourceZipHandle();
 	enDuiFileResType GetDuiFileResType();
-
-	//shadow text
-	Gdiplus::Bitmap * GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle);
-	
-	//dui
-public:
-	CDUIControlBase * LoadDui(const CMMString &strName, CDUIWnd *pWnd = NULL);
 
 	//ui manager
 protected:
@@ -347,7 +352,6 @@ protected:
 	//static
 public:
 	static void MessageLoop();
-	static bool TranslateMessage(const LPMSG pMsg);
 
 	//static help
 public:

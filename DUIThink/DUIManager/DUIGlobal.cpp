@@ -282,6 +282,49 @@ void CDUIGlobal::SetDuiLastError(CMMString strError)
 	return;
 }
 
+bool CDUIGlobal::AddPreMessagePtr(IDuiPreMessage *pInterface)
+{
+	if (find(m_vecPreMessage.begin(), m_vecPreMessage.end(), pInterface) != m_vecPreMessage.end()) return true;
+
+	m_vecPreMessage.push_back(pInterface);
+
+	return true;
+}
+
+bool CDUIGlobal::RemovePreMessagePtr(IDuiPreMessage *pInterface)
+{
+	m_vecPreMessage.erase(std::remove(m_vecPreMessage.begin(), m_vecPreMessage.end(), pInterface), m_vecPreMessage.end());
+
+	return true;
+}
+
+bool CDUIGlobal::TranslateMessage(const LPMSG pMsg)
+{
+	if (NULL == pMsg) return false;
+
+	bool bHandled = false;
+
+	//pre message
+	for(int n = m_vecPreMessage.size()- 1; n>= 0; n--)
+	{
+		IDuiPreMessage *pPreMessage = m_vecPreMessage[n];
+		if (NULL == pPreMessage)
+		{
+			assert(false);
+			break;
+		}
+
+		pPreMessage->OnPreWndMessage(pMsg->hwnd, pMsg->message, pMsg->wParam, pMsg->lParam, bHandled);
+
+		if (bHandled)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void CDUIGlobal::PerformSwitchRes(int nIndexRes)
 {
 	if (m_nIndexSwitchRes == nIndexRes) return;
@@ -333,6 +376,57 @@ bool CDUIGlobal::SetScale(int nScale)
 	return SetDpi(MulDiv(nScale, 96, 100));
 }
 
+CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWnd *pWnd)
+{
+	//has
+	auto FindIt = find_if(m_vecDui.begin(), m_vecDui.end(), [&](tagDuiFile &DuiFile)
+	{
+		return DuiFile.strName == strName;
+	});
+	if (FindIt == m_vecDui.end())
+	{
+		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]不存在\n"), strName.c_str()));
+
+		return NULL;
+	}
+
+	enDuiType DuiType = FindIt->DuiType;
+	CDUIControlBase *pRootCtrl = NULL;
+
+	//model store
+	if (DuiType_ModelListItem == DuiType
+		|| DuiType_ModelTreeNode == DuiType)
+	{
+		auto FindStore = m_mapModelStore.find(strName);
+		if (FindStore != m_mapModelStore.end() && FindStore->second)
+		{
+			pRootCtrl = FindStore->second->Clone();
+		}	
+	}
+
+	//load
+	if (NULL == pRootCtrl)
+	{
+		CMMString strFileFull = GetDuiPath(DuiType) + FindIt->strFile;
+		pRootCtrl = CDUIXmlPack::LoadDui(strFileFull, pWnd);
+
+		if (NULL == pRootCtrl) return NULL;
+
+		if (DuiType_ModelListItem == DuiType
+			|| DuiType_ModelTreeNode == DuiType)
+		{
+			m_mapModelStore[strName] = pRootCtrl->Clone();
+		}
+	}
+	if (pWnd)
+	{
+		RenameWnd(pWnd, strName);
+		SetWndDuiType(pWnd, DuiType);
+	}
+
+	return pRootCtrl;
+}
+
 CDUIControlBase * CDUIGlobal::ParseDui(tinyxml2::XMLElement *pNodeXml)
 {
 	if (NULL == pNodeXml) return NULL;
@@ -345,6 +439,35 @@ CDUIControlBase * CDUIGlobal::ParseDui(LPCTSTR lpszXml)
 	if (NULL == lpszXml) return NULL;
 
 	return CDUIXmlPack::ParseDui(lpszXml);
+}
+
+Gdiplus::Bitmap * CDUIGlobal::GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle)
+{
+	//find
+	tagDuiShadowText ShadowText;
+	ShadowText.hFont = hFont;
+	ShadowText.strText = lpszText;
+	ShadowText.dwTextColor = dwTextColor;
+	ShadowText.dwTextStyle = dwTextStyle;
+	Gdiplus::Bitmap *pBmpText = m_mapShadowText[ShadowText];
+	if (pBmpText) return pBmpText;
+
+	//generate
+	HDC hDCScreen = CreateDC(L"DISPLAY", NULL, NULL, NULL);
+	if (NULL == hDCScreen) return NULL;
+
+	CDUIRect rcDraw(0, 0, rcItem.GetWidth(), rcItem.GetHeight());
+	CDUIMemDC MemDC(hDCScreen, rcDraw, false);
+	HFONT hFontOld = (HFONT)::SelectObject(MemDC, hFont);
+	::DrawShadowText(MemDC, lpszText, -1, &rcDraw, dwTextStyle | DT_NOPREFIX, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)), RGB(0, 0, 0), 2, 2);
+	CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcDraw.GetWidth(), rcDraw);
+	::SelectObject(MemDC, hFontOld);
+	MMSafeDeleteDC(hDCScreen);
+
+	pBmpText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
+	m_mapShadowText[ShadowText] = pBmpText;
+
+	return pBmpText;
 }
 
 int CDUIGlobal::GetFontResourceCount()
@@ -721,86 +844,6 @@ HZIPDT CDUIGlobal::GetResourceZipHandle()
 enDuiFileResType CDUIGlobal::GetDuiFileResType()
 {
 	return m_DuiFileResType;
-}
-
-Gdiplus::Bitmap * CDUIGlobal::GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle)
-{
-	//find
-	tagDuiShadowText ShadowText;
-	ShadowText.hFont = hFont;
-	ShadowText.strText = lpszText;
-	ShadowText.dwTextColor = dwTextColor;
-	ShadowText.dwTextStyle = dwTextStyle;
-	Gdiplus::Bitmap *pBmpText = m_mapShadowText[ShadowText];
-	if (pBmpText) return pBmpText;
-
-	//generate
-	HDC hDCScreen = CreateDC(L"DISPLAY", NULL, NULL, NULL);
-	if (NULL == hDCScreen) return NULL;
-
-	CDUIRect rcDraw(0, 0, rcItem.GetWidth(), rcItem.GetHeight());
-	CDUIMemDC MemDC(hDCScreen, rcDraw, false);
-	HFONT hFontOld = (HFONT)::SelectObject(MemDC, hFont);
-	::DrawShadowText(MemDC, lpszText, -1, &rcDraw, dwTextStyle | DT_NOPREFIX, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)), RGB(0, 0, 0), 2, 2);
-	CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcDraw.GetWidth(), rcDraw);
-	::SelectObject(MemDC, hFontOld);
-	MMSafeDeleteDC(hDCScreen);
-
-	pBmpText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
-	m_mapShadowText[ShadowText] = pBmpText;
-
-	return pBmpText;
-}
-
-CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWnd *pWnd)
-{
-	//has
-	auto FindIt = find_if(m_vecDui.begin(), m_vecDui.end(), [&](tagDuiFile &DuiFile)
-	{
-		return DuiFile.strName == strName;
-	});
-	if (FindIt == m_vecDui.end())
-	{
-		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]不存在\n"), strName.c_str()));
-
-		return NULL;
-	}
-
-	enDuiType DuiType = FindIt->DuiType;
-	CDUIControlBase *pRootCtrl = NULL;
-
-	//model store
-	if (DuiType_ModelListItem == DuiType
-		|| DuiType_ModelTreeNode == DuiType)
-	{
-		auto FindStore = m_mapModelStore.find(strName);
-		if (FindStore != m_mapModelStore.end() && FindStore->second)
-		{
-			pRootCtrl = FindStore->second->Clone();
-		}	
-	}
-
-	//load
-	if (NULL == pRootCtrl)
-	{
-		CMMString strFileFull = GetDuiPath(DuiType) + FindIt->strFile;
-		pRootCtrl = CDUIXmlPack::LoadDui(strFileFull, pWnd);
-
-		if (NULL == pRootCtrl) return NULL;
-
-		if (DuiType_ModelListItem == DuiType
-			|| DuiType_ModelTreeNode == DuiType)
-		{
-			m_mapModelStore[strName] = pRootCtrl->Clone();
-		}
-	}
-	if (pWnd)
-	{
-		RenameWnd(pWnd, strName);
-		SetWndDuiType(pWnd, DuiType);
-	}
-
-	return pRootCtrl;
 }
 
 bool CDUIGlobal::SaveProject()
@@ -3357,7 +3400,7 @@ void CDUIGlobal::MessageLoop()
 			continue;
 		}
 
-		if (false == CDUIGlobal::TranslateMessage(&Msg))
+		if (false == CDUIGlobal::GetInstance()->TranslateMessage(&Msg))
 		{
 			try
 			{
@@ -3376,28 +3419,6 @@ void CDUIGlobal::MessageLoop()
 	}
 
 	return;
-}
-
-bool CDUIGlobal::TranslateMessage(const LPMSG pMsg)
-{
-	bool bHandled = false;
-	MapWnd mapWnd = CDUIGlobal::GetInstance()->GetWndAll();
-	for (auto &Item : mapWnd)
-	{
-		CDUIWnd *pWnd = static_cast<CDUIWnd*>(Item.first);
-		if (NULL == pWnd) continue;
-
-		if (pMsg->hwnd == pWnd->GetWndHandle())
-		{
-			pWnd->OnPreWndMessage(pMsg->message, pMsg->wParam, pMsg->lParam, bHandled);
-
-			if (bHandled) return true;
-
-			return false;
-		}
-	}
-
-	return false;
 }
 
 void CDUIGlobal::RegisterWndNotify(IDuiWndNotify *pIDuiWndNotify)

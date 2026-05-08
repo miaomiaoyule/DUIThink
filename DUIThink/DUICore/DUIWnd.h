@@ -10,7 +10,6 @@ class DUITHINK_API CDUIWnd
 	: public CDUIPropertyObject
 	, public CDUIAnimationWnd
 	, public CDUINotifyPump
-	, public IDuiPreMessage
 #if (NTDDI_VERSION >= NTDDI_VISTA)
 	, public CMMDragDrop
 #endif
@@ -117,7 +116,6 @@ protected:
 	VecIDuiNotify						m_vecINotify;
 	VecDuiNotify						m_vecAsynNotify;
 	VecDuiTimerInfo						m_vecTimers;
-	VecIDuiPreMessage					m_vecPreMessage;
 	DequeDuiControlBase					m_queDelayDelete;
 	VecDuiControlBase					m_vecFoundControls;
 	MapDuiControlBase					m_mapControl;
@@ -297,10 +295,6 @@ public:
 	virtual CDUIControlBase * FindSubControlByID(CDUIContainerCtrl *pParent, UINT uCtrlID);
 	virtual VecDuiControlBase FindSubControlsByClass(CDUIContainerCtrl *pParent, LPCTSTR pstrClass);
 
-	//wnd message
-	virtual bool AddPreMessagePtr(IDuiPreMessage *pInterface);
-	virtual bool RemovePreMessagePtr(IDuiPreMessage *pInterface);
-
 	//window dragdrop
 	virtual bool BeginDragDrop(CDUIControlBase *pControl, WPARAM wParam, LPARAM lParam, int nFlag = DROPEFFECT_MOVE | DROPEFFECT_COPY | DROPEFFECT_LINK);
 	virtual void EndDragDrop();
@@ -325,7 +319,6 @@ protected:
 
 	//message
 protected:
-	LRESULT OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) override;
 	virtual LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnOldWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnCreate(WPARAM wParam, LPARAM lParam);
