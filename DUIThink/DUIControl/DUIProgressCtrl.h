@@ -91,14 +91,14 @@ public:
 	virtual void SetImageSectionSlipHot(const tagDuiImageSection &ImageSection);
 
 	//rect
-	virtual virtual CDUIRect GetGrooveRect();
-	virtual virtual CDUIRect GetSlipRect();
+	virtual CDUIRect GetGrooveRect();
+	virtual CDUIRect GetSlipRect();
 
 	//progress
-	virtual virtual enDuiProgressType GetProgressType();
-	virtual virtual void SetProgressType(enDuiProgressType ProgressType);
-	virtual virtual enDuiProgressMoveType GetProgressMoveType();
-	virtual virtual void SetProgressMoveType(enDuiProgressMoveType ProgressMoveType);
+	virtual enDuiProgressType GetProgressType();
+	virtual void SetProgressType(enDuiProgressType ProgressType);
+	virtual enDuiProgressMoveType GetProgressMoveType();
+	virtual void SetProgressMoveType(enDuiProgressMoveType ProgressMoveType);
 
 	//message
 protected:

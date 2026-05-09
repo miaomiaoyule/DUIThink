@@ -196,8 +196,8 @@ public:
 	virtual bool VerifyControl(CDUIControlBase *pControl);
 
 	//tag
-	virtual virtual UINT_PTR GetTag();
-	virtual virtual void SetTag(UINT_PTR pTag);
+	virtual UINT_PTR GetTag();
+	virtual void SetTag(UINT_PTR pTag);
 
 	//timer
 	virtual bool SetTimer(CDUIPropertyObject *pPropObj, UINT uTimerID, UINT uElapse);
