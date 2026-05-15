@@ -12,6 +12,7 @@ class DUITHINK_API CDUIWnd
 	, public CDUINotifyPump
 #if (NTDDI_VERSION >= NTDDI_VISTA)
 	, public CMMDragDrop
+	, public IDuiPreMessage
 #endif
 {
 	friend class CDUIGlobal;
@@ -319,6 +320,7 @@ protected:
 
 	//message
 protected:
+	virtual LRESULT OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) override;
 	virtual LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnOldWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnCreate(WPARAM wParam, LPARAM lParam);

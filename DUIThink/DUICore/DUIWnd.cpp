@@ -27,6 +27,7 @@ CDUIWnd::CDUIWnd(LPCTSTR lpszDuiName, HWND hWndParent)
 	SetDpi(CDUIGlobal::GetInstance()->GetDpi());
 
 	CDUIGlobal::GetInstance()->AddWnd(this);
+	CDUIGlobal::GetInstance()->AddPreMessagePtr(this);
 
 	return;
 }
@@ -37,6 +38,7 @@ CDUIWnd::~CDUIWnd()
 
 	CDUIAnimationWnd::UnInit();
 	CDUIGlobal::GetInstance()->RemoveWnd(this);
+	CDUIGlobal::GetInstance()->RemovePreMessagePtr(this);
 
 	ReleaseRootCtrl();
 	ReleasePaintScene();
@@ -2004,6 +2006,11 @@ bool CDUIWnd::KillTimer(UINT uTimerID)
 bool CDUIWnd::KillTimer()
 {
 	return KillTimer(this);
+}
+
+LRESULT CDUIWnd::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
+{
+	return 0;
 }
 
 LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
