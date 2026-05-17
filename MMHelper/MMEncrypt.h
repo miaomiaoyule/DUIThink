@@ -69,12 +69,12 @@ public:
 
 	//¼ÓÃÜº¯Êý
 public:
-	static CMMString MapEncrypt(CMMString strSrc);
-	static std::vector<BYTE> MapEncrypt(std::vector<BYTE> vecData);
-	static std::vector<BYTE> MapEncrypt(std::vector<BYTE> vecData, DWORD dwMapKey);
-	static CMMString MapDecrypt(CMMString strSrc);
-	static std::vector<BYTE> MapDecrypt(std::vector<BYTE> vecData);
-	static std::vector<BYTE> MapDecrypt(std::vector<BYTE> vecData, DWORD dwMapKey);
+	static void MapEncrypt(CMMString &strSrc);
+	static void MapEncrypt(std::vector<BYTE> &vecData);
+	static void MapEncrypt(std::vector<BYTE> &vecData, DWORD dwMapKey);
+	static void MapDecrypt(CMMString &strSrc);
+	static void MapDecrypt(std::vector<BYTE> &vecData);
+	static void MapDecrypt(std::vector<BYTE> &vecData, DWORD dwMapKey);
 };
 
 //////////////////////////////////////////////////////////////////////////////////
