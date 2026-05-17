@@ -873,7 +873,7 @@ void CDUIXmlPack::EncryptXmlFile(CMMString strFile)
 	//encrypt
 	std::vector<BYTE> vecData;
 	CMMFile::GetFileData(strFile, vecData);
-	CMMEncrypt::MapEncrypt(vecData, Key_ResourceEncrypt);
+	CMMEncrypt::MapEncrypt(vecData);
 	FILE *pFile = fopen((LPCSTR)CT2CA(strFile), "wb");
 	if (pFile)
 	{

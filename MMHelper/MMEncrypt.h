@@ -71,10 +71,8 @@ public:
 public:
 	static void MapEncrypt(CMMString &strSrc);
 	static void MapEncrypt(std::vector<BYTE> &vecData);
-	static void MapEncrypt(std::vector<BYTE> &vecData, DWORD dwMapKey);
 	static void MapDecrypt(CMMString &strSrc);
 	static void MapDecrypt(std::vector<BYTE> &vecData);
-	static void MapDecrypt(std::vector<BYTE> &vecData, DWORD dwMapKey);
 };
 
 //////////////////////////////////////////////////////////////////////////////////

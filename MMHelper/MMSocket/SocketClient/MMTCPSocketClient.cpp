@@ -23,7 +23,7 @@ struct CMMTCPSocketClient::tagData
 	{
 		if (vecBuffer.empty()) return;
 
-		CMMEncrypt::MapEncrypt(vecBuffer, dwSendKey);
+		CMMEncrypt::MapEncrypt(vecBuffer);
 
 		return;
 	}
@@ -32,7 +32,7 @@ struct CMMTCPSocketClient::tagData
 	{
 		if (vecBuffer.empty()) return;
 
-		CMMEncrypt::MapDecrypt(vecBuffer, dwRecvKey);
+		CMMEncrypt::MapDecrypt(vecBuffer);
 
 		return;
 	}

@@ -119,33 +119,6 @@ void CMMEncrypt::MapEncrypt(std::vector<BYTE> &vecData)
 	return;
 }
 
-void CMMEncrypt::MapEncrypt(std::vector<BYTE> &vecData, DWORD dwMapKey)
-{
-	for (size_t n = 0; n < vecData.size(); n++)
-	{
-		vecData[n] = g_cbEncryptMap[vecData[n]];
-	}
-	
-	if (vecData.empty()) return;
-
-	//¼ÓÃÜÊý¾Ý
-	DWORD dwKey = dwMapKey;
-	WORD *pSeed = (WORD *)(vecData.data());
-	DWORD *pEncrypt = (DWORD *)(vecData.data());
-	
-	size_t dwCount = vecData.size() / sizeof(DWORD);
-	
-	for (size_t i = 0; i < dwCount; i++)
-	{
-		*pEncrypt++ ^= dwKey;
-		dwKey = SeedRandMap(*pSeed++);
-		dwKey |= ((DWORD)SeedRandMap(*pSeed++)) << 16;
-		dwKey ^= dwMapKey;
-	}
-
-	return;
-}
-
 void CMMEncrypt::MapDecrypt(CMMString &strSrc)
 {
 	if (strSrc.empty()) return;
@@ -164,32 +137,6 @@ void CMMEncrypt::MapDecrypt(CMMString &strSrc)
 
 void CMMEncrypt::MapDecrypt(std::vector<BYTE> &vecData)
 {
-	for (int i = 0; i < vecData.size(); ++i)
-	{
-		vecData[i] = g_cbDecryptMap[vecData[i]];
-	}
-
-	return;
-}
-
-void CMMEncrypt::MapDecrypt(std::vector<BYTE> &vecData, DWORD dwMapKey)
-{
-	if (vecData.empty()) return;
-
-	DWORD dwKey = dwMapKey;
-	DWORD dwDecryptKey = dwMapKey;
-	WORD *pSeed = (WORD*)vecData.data();
-	DWORD *pDecrypt = (DWORD*)vecData.data();
-	size_t dwCount = vecData.size() / sizeof(DWORD);
-	for (size_t i = 0; i < dwCount; i++)
-	{
-		dwKey = SeedRandMap(*pSeed++);
-		dwKey |= ((DWORD)SeedRandMap(*pSeed++)) << 16;
-		dwKey ^= dwMapKey;
-		*pDecrypt++ ^= dwDecryptKey;
-		dwDecryptKey = dwKey;
-	}
-
 	for (int i = 0; i < vecData.size(); ++i)
 	{
 		vecData[i] = g_cbDecryptMap[vecData[i]];

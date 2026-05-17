@@ -738,7 +738,7 @@ void CMMSocketClientItem::EncryptBuffer(std::vector<BYTE> &vecBuffer)
 {
 	if (vecBuffer.empty()) return;
 
-	CMMEncrypt::MapEncrypt(vecBuffer, m_dwSendKey);
+	CMMEncrypt::MapEncrypt(vecBuffer);
 
 	return;
 }
@@ -747,7 +747,7 @@ void CMMSocketClientItem::DecryptBuffer(std::vector<BYTE> &vecBuffer)
 {
 	if (vecBuffer.empty()) return;
 
-	CMMEncrypt::MapDecrypt(vecBuffer, m_dwRecvKey);
+	CMMEncrypt::MapDecrypt(vecBuffer);
 
 	return;
 }
