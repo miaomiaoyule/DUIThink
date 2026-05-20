@@ -47,6 +47,7 @@ public:
 
 	static CMMString GetProcessName(DWORD dwProcessID);
 	static bool GetProcessCmdline(HANDLE hProcess, CMMString &strCmdLine);
+	static DWORD GetProcessRunningSeconds();
 	static void LaunchAsExplorerFromSystem(CString strFile, CString strCmdLine);
 	static void LaunchAsExplorerFromAdmin(CString strFile, CString strCmdLine);
 };

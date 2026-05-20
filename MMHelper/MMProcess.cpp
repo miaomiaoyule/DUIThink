@@ -260,6 +260,21 @@ bool CMMProcess::GetProcessCmdline(HANDLE hProcess, CMMString &strCmdLine)
 	return true;
 }
 
+DWORD CMMProcess::GetProcessRunningSeconds()
+{
+	FILETIME ftCreate, ftExit, ftKernel, ftUser;
+	if (false == GetProcessTimes(GetCurrentProcess(), &ftCreate, &ftExit, &ftKernel, &ftUser))
+		return 0;
+
+	FILETIME ftNow;
+	GetSystemTimeAsFileTime(&ftNow);
+
+	ULONGLONG ullCreate = ((ULONGLONG)ftCreate.dwHighDateTime << 32) | ftCreate.dwLowDateTime;
+	ULONGLONG ullNow    = ((ULONGLONG)ftNow.dwHighDateTime    << 32) | ftNow.dwLowDateTime;
+
+	return (DWORD)((ullNow - ullCreate) / 10000000ULL);
+}
+
 void CMMProcess::LaunchAsExplorerFromSystem(CString strFile, CString strCmdLine)
 {
 	do
