@@ -178,8 +178,6 @@ struct CMMTimerPower::tagData
 
 CMMTimerPower::CMMTimerPower()
 {
-	m_pData = new tagData();
-
 	return;
 }
 
@@ -198,8 +196,9 @@ CMMTimerPower * CMMTimerPower::GetInstance()
 
 void CMMTimerPower::Init()
 {
-	if (NULL == m_pData) return;
+	if (m_pData) return;
 
+	m_pData = new tagData();
 	m_pData->Init();
 
 	return;
