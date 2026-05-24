@@ -18,7 +18,13 @@ public:
 	virtual ~CMMServiceItem();
 
 protected:
-	tagData *							m_pData = NULL;
+	CMMThreadPool *								m_pOwnerPool = NULL;
+	std::recursive_mutex						m_TimerLock;
+	std::recursive_mutex						m_ExcuteLock;
+	std::recursive_mutex						m_UnInitedLock;
+	bool										m_bExcuteLocked = false;
+	bool										m_bUnInited = false;
+	MapTimerFunc								m_mapTimeFunc;
 
 public:
 	virtual bool Init();

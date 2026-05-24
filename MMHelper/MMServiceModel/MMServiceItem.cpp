@@ -1,57 +1,34 @@
 #include "stdafx.h"
 #include "MMServiceItem.h"
-//////////////////////////////////////////////////////////////////////////
-struct M_ServiceItem_Timer : public tagMMServiceMsg
-{
-	uint32_t							uTimerID = 0;
-};
 
-struct M_ServiceItem_Task : public tagMMServiceMsg
-{
-	std::function<void()>				pFunc = NULL;
-};
-
-struct CMMServiceItem::tagData
-{
-	CMMThreadPool *						pOwnerPool = NULL;
-	std::recursive_mutex				TimerLock;
-	std::recursive_mutex				ExcuteLock;
-	std::recursive_mutex				UnInitedLock;
-	bool								bExcuteLocked = false;
-	bool								bUnInited = false;
-	MapTimerFunc						mapTimeFunc;
-};
 //////////////////////////////////////////////////////////////////////////
 CMMServiceItem::CMMServiceItem(CMMThreadPool *pOwnerPool)
 {
-	m_pData = new tagData();
-	m_pData->pOwnerPool = pOwnerPool;
+	m_pOwnerPool = pOwnerPool;
 
 	return;
 }
 
 CMMServiceItem::~CMMServiceItem()
 {
-	MMSafeDelete(m_pData);
-
 	return;
 }
 
 bool CMMServiceItem::Init()
 {
-	if (NULL == m_pData || NULL == m_pData->pOwnerPool) return false;
+	if (NULL == m_pOwnerPool) return false;
 
 	KillTimerAll();
 	while (false == Lock())
 	{
-		m_pData->pOwnerPool->Clear(this);
+		m_pOwnerPool->Clear(this);
 	}
 	UnLock();
 
 	{
-		std::lock_guard<std::recursive_mutex> Lock(m_pData->UnInitedLock);
+		std::lock_guard<std::recursive_mutex> Lock(m_UnInitedLock);
 
-		m_pData->bUnInited = false;
+		m_bUnInited = false;
 	}
 
 	return true;
@@ -59,20 +36,20 @@ bool CMMServiceItem::Init()
 
 bool CMMServiceItem::UnInit()
 {
-	if (NULL == m_pData || NULL == m_pData->pOwnerPool) return false;
+	if (NULL == m_pOwnerPool) return false;
 
 	{
-		std::lock_guard<std::recursive_mutex> Lock(m_pData->UnInitedLock);
+		std::lock_guard<std::recursive_mutex> Lock(m_UnInitedLock);
 
-		m_pData->bUnInited = true;
+		m_bUnInited = true;
 	}
 
 	KillTimerAll();
-	m_pData->pOwnerPool->Clear(this);
+	m_pOwnerPool->Clear(this);
 	while (false == Lock())
 	{
 		KillTimerAll();
-		m_pData->pOwnerPool->Clear(this);
+		m_pOwnerPool->Clear(this);
 	}
 	UnLock();
 
@@ -81,22 +58,22 @@ bool CMMServiceItem::UnInit()
 
 bool CMMServiceItem::IsUnInited()
 {
-	if (NULL == m_pData || NULL == m_pData->pOwnerPool) return true;
+	if (NULL == m_pOwnerPool) return true;
 
-	std::lock_guard<std::recursive_mutex> Lock(m_pData->UnInitedLock);
+	std::lock_guard<std::recursive_mutex> Lock(m_UnInitedLock);
 
-	return m_pData->bUnInited;
+	return m_bUnInited;
 }
 
 bool CMMServiceItem::Send(CMMServiceItem *pDest, PtrMMServiceMsg pMessage)
 {
-	if (NULL == pDest || NULL == m_pData->pOwnerPool) return false;
+	if (NULL == pDest || NULL == m_pOwnerPool) return false;
 	if (IsUnInited() || pDest->IsUnInited()) return false;
 
 	pMessage->pSrc = this;
 	pMessage->pDest = pDest;
 
-	return m_pData->pOwnerPool->Push(pMessage);
+	return m_pOwnerPool->Push(pMessage);
 }
 
 bool CMMServiceItem::PushTask(std::function<void()> pFunc)
@@ -109,44 +86,39 @@ bool CMMServiceItem::PushTask(std::function<void()> pFunc)
 
 bool CMMServiceItem::Lock()
 {
-	if (NULL == m_pData) return false;
+	std::lock_guard<std::recursive_mutex> Lock(m_ExcuteLock);
 
-	std::lock_guard<std::recursive_mutex> Lock(m_pData->ExcuteLock);
+	if (m_bExcuteLocked) return false;
 
-	if (m_pData->bExcuteLocked) return false;
-
-	m_pData->bExcuteLocked = true;
+	m_bExcuteLocked = true;
 
 	return true;
 }
 
 bool CMMServiceItem::UnLock()
 {
-	if (NULL == m_pData) return false;
+	std::lock_guard<std::recursive_mutex> Lock(m_ExcuteLock);
 
-	std::lock_guard<std::recursive_mutex> Lock(m_pData->ExcuteLock);
+	if (false == m_bExcuteLocked) return false;
 
-	if (false == m_pData->bExcuteLocked) return false;
-
-	m_pData->bExcuteLocked = false;
+	m_bExcuteLocked = false;
 
 	return true;
 }
 
 bool CMMServiceItem::Execute(PtrMMServiceMsg pMessage)
 {
-	if (NULL == m_pData) return false;
 	if (IsUnInited()) return true;
 
 	try
 	{
 		if (typeid(*pMessage) == typeid(M_ServiceItem_Timer))
 		{
-			std::lock_guard<std::recursive_mutex> DataLock(m_pData->TimerLock);
+			std::lock_guard<std::recursive_mutex> DataLock(m_TimerLock);
 
 			auto &pTimeMsg = std::dynamic_pointer_cast<M_ServiceItem_Timer>(pMessage);
-			auto pFuncIt = m_pData->mapTimeFunc.find(pTimeMsg->uTimerID);
-			if (pFuncIt != m_pData->mapTimeFunc.end())
+			auto pFuncIt = m_mapTimeFunc.find(pTimeMsg->uTimerID);
+			if (pFuncIt != m_mapTimeFunc.end())
 			{
 				FuncTimer pFuncTimer = pFuncIt->second;
 				pFuncTimer();
@@ -175,13 +147,13 @@ bool CMMServiceItem::Execute(PtrMMServiceMsg pMessage)
 
 void CMMServiceItem::SetTimer(uint32_t uTimerID, uint32_t uElapse, FuncTimer pFuncTimer)
 {
-	if (NULL == m_pData || IsUnInited()) return;
+	if (IsUnInited()) return;
 
 	//add
 	{
-		std::lock_guard<std::recursive_mutex> lock(m_pData->TimerLock);
+		std::lock_guard<std::recursive_mutex> lock(m_TimerLock);
 
-		m_pData->mapTimeFunc[uTimerID] = pFuncTimer;
+		m_mapTimeFunc[uTimerID] = pFuncTimer;
 	}
 
 	CMMTimerPower::GetInstance()->SetTimer(uTimerID, uElapse, [uTimerID, this]()
@@ -197,16 +169,14 @@ void CMMServiceItem::SetTimer(uint32_t uTimerID, uint32_t uElapse, FuncTimer pFu
 
 void CMMServiceItem::KillTimer(uint32_t uTimerID)
 {
-	if (NULL == m_pData) return;
-
 	//remove
 	{
-		std::lock_guard<std::recursive_mutex> lock(m_pData->TimerLock);
+		std::lock_guard<std::recursive_mutex> lock(m_TimerLock);
 
-		auto FintIt = m_pData->mapTimeFunc.find(uTimerID);
-		if (FintIt != m_pData->mapTimeFunc.end())
+		auto FintIt = m_mapTimeFunc.find(uTimerID);
+		if (FintIt != m_mapTimeFunc.end())
 		{
-			m_pData->mapTimeFunc.erase(FintIt);
+			m_mapTimeFunc.erase(FintIt);
 		}
 	}
 
@@ -217,13 +187,11 @@ void CMMServiceItem::KillTimer(uint32_t uTimerID)
 
 void CMMServiceItem::KillTimerAll()
 {
-	if (NULL == m_pData) return;
-
 	//remove
 	{
-		std::lock_guard<std::recursive_mutex> lock(m_pData->TimerLock);
+		std::lock_guard<std::recursive_mutex> lock(m_TimerLock);
 
-		m_pData->mapTimeFunc.clear();
+		m_mapTimeFunc.clear();
 	}
 
 	CMMTimerPower::GetInstance()->KillTimerAll(this);

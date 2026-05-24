@@ -1,234 +1,217 @@
 #include "stdafx.h"
 #include "MMThreadPool.h"
 
-typedef std::deque<PtrMMServiceMsg> QueMessage;
-typedef std::unordered_map<CMMServiceItem*, QueMessage> MapSrvMessage;
-
-struct CMMThreadPool::tagData
-{
-	bool								bInited = false;
-	bool								bStoping = false;
-	MapSrvMessage						mapServiceMsg;
-	std::recursive_mutex				DataLock;
-	std::recursive_mutex				RunningLock;
-	int									nThreadCount = 0;
-	int									nThreadRunning = 0;
-	std::vector<std::thread>			vecThreadWorker;
-	HANDLE								hEvent = NULL;
-
-	void Run(int nThreadCount)
-	{
-		std::lock_guard<std::recursive_mutex> Lock(DataLock);
-
-		while (bStoping)
-		{
-			Sleep(100);
-		}
-
-		if (bInited) return;
-
-		bInited = true;
-		hEvent = CreateEvent(0, FALSE, FALSE, 0);
-		this->nThreadCount = nThreadCount;
-		for (int i = 0; i < nThreadCount; i++)
-		{
-			vecThreadWorker.push_back(std::thread(std::bind(&CMMThreadPool::tagData::Work, this)));
-		}
-
-		SetEvent(hEvent);
-
-		return;
-	}
-
-	void Stop()
-	{
-		{
-			std::lock_guard<std::recursive_mutex> Lock(DataLock);
-
-			bStoping = true;
-		}
-		while (true)
-		{
-			std::lock_guard<std::recursive_mutex> Lock(RunningLock);
-			if (nThreadRunning <= 0) break;
-
-			SetEvent(hEvent);
-		}
-		{
-			std::lock_guard<std::recursive_mutex> Lock(DataLock);
-			
-			for (auto &ThreadWork : vecThreadWorker)
-			{
-				if (ThreadWork.joinable())
-				{
-					ThreadWork.join();
-				}
-			}
-
-			vecThreadWorker.clear();
-			mapServiceMsg.clear();
-			MMSafeCloseHandle(hEvent);
-			bInited = false;
-			bStoping = false;
-		}
-
-		return;
-	}
-
-	void Work()
-	{
-		// Init Com
-		::CoInitialize(nullptr);
-		::OleInitialize(nullptr);
-
-		{
-			std::lock_guard<std::recursive_mutex> Lock(RunningLock);
-			nThreadRunning++;
-		}
-
-		while (true)
-		{
-			if (true == bStoping)
-			{
-				std::lock_guard<std::recursive_mutex> Lock(RunningLock);
-				nThreadRunning--;
-
-				break;
-			}
-
-			auto queMsg = Translate();
-			if (false == Dispatch(queMsg))
-			{
-				DWORD dwRes = WaitForSingleObject(hEvent, INFINITE);
-			}
-		}
-
-		::CoUninitialize();
-		::OleUninitialize();
-
-		return;
-	}
-
-	QueMessage Translate()
-	{
-		std::lock_guard<std::recursive_mutex> Lock(DataLock);
-
-		QueMessage queMsg;
-		for (auto &queMsgIt : mapServiceMsg)
-		{
-			if (NULL == queMsgIt.first) break;
-			if (queMsgIt.second.size() <= 0) continue;
-			if (false == queMsgIt.first->Lock()) continue;
-
-			queMsg = std::move(queMsgIt.second);
-			mapServiceMsg.erase(queMsgIt.first);
-			break;
-		}
-
-		return queMsg;
-	}
-
-	bool Dispatch(QueMessage &queMsg)
-	{
-		if (queMsg.empty()) return false;
-
-		CMMServiceItem *pServiceItem = NULL;
-		for (auto &Msg : queMsg)
-		{
-			pServiceItem = Msg->pDest;
-			assert(pServiceItem);
-
-			if (true == bStoping)
-			{
-				pServiceItem->UnLock();
-
-				return true;
-			}
-
-			pServiceItem->Execute(Msg);
-		}
-		
-		pServiceItem->UnLock();
-
-		return true;
-	}
-
-	bool Push(PtrMMServiceMsg pMessage)
-	{
-		std::lock_guard<std::recursive_mutex> Lock(DataLock);
-
-		if (NULL == pMessage || NULL == pMessage->pDest || pMessage->pDest->IsUnInited()) return false;
-		if (bStoping) return false;
-
-		auto &queMsg = mapServiceMsg[pMessage->pDest];
-		queMsg.push_back(pMessage);
-
-		SetEvent(hEvent);
-
-		return true;
-	}
-
-	void Clear(CMMServiceItem *pDest)
-	{
-		std::lock_guard<std::recursive_mutex> DataLock(DataLock);
-
-		if (NULL == pDest) return;
-
-		auto FindIt = mapServiceMsg.find(pDest);
-		if (FindIt != mapServiceMsg.end())
-		{
-			mapServiceMsg.erase(FindIt);
-		}
-
-		return;
-	}
-};
-
 //////////////////////////////////////////////////////////////////////////
 CMMThreadPool::CMMThreadPool()
 {
-	m_pData = new tagData();
-
 	return;
 }
 
 CMMThreadPool::~CMMThreadPool()
 {
-	MMSafeDelete(m_pData);
-
 	return;
 }
 
 void CMMThreadPool::Run(int nThreadCount)
 {
-	if (NULL == m_pData) return;
+	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-	m_pData->Run(nThreadCount);
+	while (m_bStoping)
+	{
+		Sleep(100);
+	}
+
+	if (m_bInited) return;
+
+	m_bInited = true;
+	m_hEvent = CreateEvent(0, FALSE, FALSE, 0);
+	m_nThreadCount = nThreadCount;
+	for (int i = 0; i < nThreadCount; i++)
+	{
+		m_vecThreadWorker.push_back(std::thread(std::bind(&CMMThreadPool::Work, this)));
+	}
+
+	SetEvent(m_hEvent);
 
 	return;
 }
 
 void CMMThreadPool::Stop()
 {
-	if (NULL == m_pData) return;
+	{
+		std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-	m_pData->Stop();
+		m_bStoping = true;
+	}
+	while (true)
+	{
+		std::lock_guard<std::recursive_mutex> Lock(m_RunningLock);
+		if (m_nThreadRunning <= 0) break;
+
+		SetEvent(m_hEvent);
+	}
+	{
+		std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+
+		for (auto &ThreadWork : m_vecThreadWorker)
+		{
+			if (ThreadWork.joinable())
+			{
+				ThreadWork.join();
+			}
+		}
+
+		m_vecThreadWorker.clear();
+		m_mapServiceMsg.clear();
+		MMSafeCloseHandle(m_hEvent);
+		m_bInited = false;
+		m_bStoping = false;
+	}
 
 	return;
 }
 
 bool CMMThreadPool::Push(PtrMMServiceMsg pMsg)
 {
-	if (NULL == m_pData) return false;
+	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-	return m_pData->Push(pMsg);
+	if (NULL == pMsg || NULL == pMsg->pDest || pMsg->pDest->IsUnInited()) return false;
+	if (m_bStoping) return false;
+
+	auto &queMsg = m_mapServiceMsg[pMsg->pDest];
+	queMsg.push_back(pMsg);
+
+	SetEvent(m_hEvent);
+
+	return true;
 }
 
 void CMMThreadPool::Clear(CMMServiceItem *pDest)
 {
-	if (NULL == m_pData) return;
+	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
-	return m_pData->Clear(pDest);
+	if (NULL == pDest) return;
+
+	auto FindIt = m_mapServiceMsg.find(pDest);
+	if (FindIt != m_mapServiceMsg.end())
+	{
+		m_mapServiceMsg.erase(FindIt);
+	}
+
+	return;
+}
+
+bool CMMThreadPool::PushTask(std::function<void()> pFunc)
+{
+	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+
+	if (NULL == pFunc || m_bStoping) return false;
+
+	m_deqFuncTask.push_back(pFunc);
+
+	SetEvent(m_hEvent);
+
+	return true;
+}
+
+void CMMThreadPool::Work()
+{
+	// Init Com
+	::CoInitialize(nullptr);
+	::OleInitialize(nullptr);
+
+	{
+		std::lock_guard<std::recursive_mutex> Lock(m_RunningLock);
+		m_nThreadRunning++;
+	}
+
+	while (true)
+	{
+		if (true == m_bStoping)
+		{
+			std::lock_guard<std::recursive_mutex> Lock(m_RunningLock);
+			m_nThreadRunning--;
+
+			break;
+		}
+
+		auto queMsg = Translate();
+		if (false == Dispatch(queMsg))
+		{
+			auto pFunc = PopTask();
+			if (pFunc)
+			{
+				pFunc();
+			}
+			else
+			{
+				DWORD dwRes = WaitForSingleObject(m_hEvent, INFINITE);
+			}
+		}
+	}
+
+	::CoUninitialize();
+	::OleUninitialize();
+
+	return;
+}
+
+QueMessage CMMThreadPool::Translate()
+{
+	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+
+	QueMessage queMsg;
+	for (auto &queMsgIt : m_mapServiceMsg)
+	{
+		if (NULL == queMsgIt.first) break;
+		if (queMsgIt.second.size() <= 0) continue;
+		if (false == queMsgIt.first->Lock()) continue;
+
+		queMsg = std::move(queMsgIt.second);
+		m_mapServiceMsg.erase(queMsgIt.first);
+		break;
+	}
+
+	return queMsg;
+}
+
+std::function<void()> CMMThreadPool::PopTask()
+{
+	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+
+	std::function<void()> pFunc = NULL;
+	if (m_deqFuncTask.size() > 0)
+	{
+		pFunc = m_deqFuncTask.front();
+		m_deqFuncTask.pop_front();
+	}
+
+	return pFunc;
+}
+
+bool CMMThreadPool::Dispatch(QueMessage &queMsg)
+{
+	if (queMsg.empty()) return false;
+
+	CMMServiceItem *pServiceItem = NULL;
+	for (auto &Msg : queMsg)
+	{
+		pServiceItem = Msg->pDest;
+		assert(pServiceItem);
+
+		if (true == m_bStoping)
+		{
+			pServiceItem->UnLock();
+
+			return true;
+		}
+
+		pServiceItem->Execute(Msg);
+	}
+
+	pServiceItem->UnLock();
+
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
