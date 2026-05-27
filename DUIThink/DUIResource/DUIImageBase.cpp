@@ -108,7 +108,7 @@ HBITMAP CDUIImageBase::CloneHandle(int nScale)
 	if (NULL == BmpSrc.hBitmap || NULL == BmpSrc.pBits) return NULL;
 
 	LPBYTE pDest = NULL;
-	HBITMAP hBitmap = CDUIRenderEngine::CreateARGB32Bitmap(NULL, BmpSrc.nWidth, BmpSrc.nHeight, &pDest, NULL == BmpSrc.pImageAnimate);
+	HBITMAP hBitmap = CDUIRenderEngine::CreateARGB32Bitmap(NULL, BmpSrc.nWidth, BmpSrc.nHeight, &pDest);
 	if (NULL == hBitmap)
 	{
 		assert(false);
