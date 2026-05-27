@@ -124,30 +124,46 @@ void CMMThreadPool::Work()
 		std::lock_guard<std::recursive_mutex> Lock(m_RunningLock);
 		m_nThreadRunning++;
 	}
-
-	while (true)
+	try
 	{
-		if (true == m_bStoping)
+		while (true)
 		{
-			std::lock_guard<std::recursive_mutex> Lock(m_RunningLock);
-			m_nThreadRunning--;
-
-			break;
-		}
-
-		auto queMsg = Translate();
-		if (false == Dispatch(queMsg))
-		{
-			auto pFunc = PopTask();
-			if (pFunc)
+			if (true == m_bStoping)
 			{
-				pFunc();
+				std::lock_guard<std::recursive_mutex> Lock(m_RunningLock);
+				m_nThreadRunning--;
+
+				break;
 			}
-			else
+
+			auto queMsg = Translate();
+			if (false == Dispatch(queMsg))
 			{
-				DWORD dwRes = WaitForSingleObject(m_hEvent, INFINITE);
+				auto pFunc = PopTask();
+				if (pFunc)
+				{
+					pFunc();
+				}
+				else
+				{
+					DWORD dwRes = WaitForSingleObject(m_hEvent, INFINITE);
+				}
 			}
 		}
+	}
+	catch (const std::exception &err)
+	{
+		std::lock_guard<std::recursive_mutex> Lock(m_RunningLock);
+		m_nThreadRunning--;
+
+		assert(false);
+	}
+	catch (...)
+	{
+		std::lock_guard<std::recursive_mutex> Lock(m_RunningLock);
+		m_nThreadRunning--;
+
+		assert(false);
 	}
 
 	::CoUninitialize();

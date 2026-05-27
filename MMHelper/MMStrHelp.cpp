@@ -86,6 +86,10 @@ std::vector<int> CMMStrHelp::ParseIntFromString(CMMString strString, CMMString s
 	if (strString.empty() || strSplit.empty()) return vecInt;
 
 	int nIndex = strString.find(strSplit, 0), nIndexArr = 0;
+	if (-1 == nIndex && strString.length() > 0)
+	{
+		nIndex = strString.length();
+	}
 	while (0 <= nIndex && nIndex <= strString.length())
 	{
 		CMMString strTemp = strString.Left(nIndex);
