@@ -37,7 +37,7 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-#include "../DUIThinkDemo.DuiProj/ResourceCtrlID.h"
+#include "../DUIThinkDemo_C++.DuiProj/ResourceCtrlID.h"
 #include "Resource.h"
 #include "Define.h"
 #include "BaseControl/StaticView/StaticView.h"

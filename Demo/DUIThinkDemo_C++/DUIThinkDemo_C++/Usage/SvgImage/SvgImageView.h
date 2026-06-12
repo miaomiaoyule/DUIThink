@@ -25,7 +25,7 @@ protected:
 
 	//override
 protected:
-	LRESULT OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) override;
+	LRESULT OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) override;
 
 	//method
 public:

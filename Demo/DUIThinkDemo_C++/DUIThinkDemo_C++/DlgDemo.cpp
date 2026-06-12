@@ -72,8 +72,6 @@ void CDlgDemo::OnInitDialog()
 		m_SvgImageView.Attach(MMInterfaceHelper(CDUIContainerCtrl, pTabUsage->FindSubControl(IDC_VertSvgImageView)));
 		m_SwitchSkinView.Attach(MMInterfaceHelper(CDUIContainerCtrl, pTabUsage->FindSubControl(IDC_VertSwitchSkinView)));
 		m_AnimateDlgView.Attach(MMInterfaceHelper(CDUIContainerCtrl, pTabUsage->FindSubControl(IDC_VertAnimateDlgView)));
-
-		AddPreMessagePtr(&m_SvgImageView);
 	}
 
 	//qq

@@ -10,11 +10,15 @@ DuiEnd_Message_Map()
 
 CSvgImageView::CSvgImageView()
 {
+	CDUIGlobal::GetInstance()->AddPreMessagePtr(this);
 
+	return;
 }
 
 CSvgImageView::~CSvgImageView()
 {
+	CDUIGlobal::GetInstance()->RemovePreMessagePtr(this);
+
 	if (m_pSvgImageViewCtrl)
 	{
 		if (m_pSvgImageViewCtrl->GetWndOwner())
@@ -28,7 +32,7 @@ CSvgImageView::~CSvgImageView()
 	return;
 }
 
-LRESULT CSvgImageView::OnPreWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
+LRESULT CSvgImageView::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
 {
 	switch (uMsg)
 	{
