@@ -212,6 +212,9 @@
     <ClCompile Include="QQ\DlgQQFace.cpp">
       <Filter>QQ</Filter>
     </ClCompile>
+    <ClCompile Include="DlgChatTip.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DUIThinkDemo_C++.rc">
