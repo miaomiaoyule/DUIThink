@@ -84,6 +84,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)64</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -127,8 +130,8 @@ if exist "../../../bin\DUIThink.2017D.dll" copy "../../../bin\DUIThink.2017D.dll
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
     </Manifest>
     <PreBuildEvent>
-      <Command>if exist "../../../bin\MMHelper.201764D.dll" copy "../../../bin\" "../Debug"
-if exist "../../../bin\DUIThink.201764D.dll" copy "../../../bin\" "../Debug"</Command>
+      <Command>if exist "../../../bin\MMHelper.201764D.dll" copy "../../../bin\MMHelper.201764D.dll" "../Debug"
+if exist "../../../bin\DUIThink.201764D.dll" copy "../../../bin\DUIThink.201764D.dll" "../Debug"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -181,8 +184,8 @@ if exist "../../../bin\DUIThink.2017.dll" copy "../../../bin\DUIThink.2017.dll" 
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
     </Manifest>
     <PreBuildEvent>
-      <Command>if exist "../../../bin\MMHelper.2017.dll" copy "../../../bin\MMHelper.2017.dll" "../Release"
-if exist "../../../bin\DUIThink.2017.dll" copy "../../../bin\DUIThink.2017.dll" "../Release"</Command>
+      <Command>if exist "../../../bin\MMHelper.201764.dll" copy "../../../bin\MMHelper.201764.dll" "../Debug"
+if exist "../../../bin\DUIThink.201764.dll" copy "../../../bin\DUIThink.201764.dll" "../Debug"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
