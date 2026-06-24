@@ -54,9 +54,6 @@
 #define Name_ImageSequenceFrame			_T("{3482C09B-88D0-4A30-B854-9DBC23B83587}")
 #define Name_ImageButton				_T("{5D038E0C-9B44-4CCA-AAF3-9B14175FEF27}")
 #define Name_ImageExpandToolsArrow		_T("{792618B7-4B73-47BE-ABBE-6C21591B5D9B}")
-#define Name_Imagegray					_T("{D54E16B0-2812-4B19-B9C6-441D844BA704}")
-#define Name_ImagelineH					_T("{A03CB0C8-889D-4A66-9494-F56A941DCB22}")
-#define Name_ImagelineV					_T("{77AAB5A7-1532-4B9B-ACD0-BE8D03C5F182}")
 #define Name_ImageControlIcon			_T("{A7F2889A-E9C4-4B4D-B53D-4867D4E7551F}")
 #define Name_ImageToolBar				_T("{5AD8A847-1A93-4075-83FB-498D11197A64}")
 
@@ -126,9 +123,6 @@ static std::unordered_map<CMMString, CMMString> g_mapPublicImage =
 	{ Name_ImageSequenceFrame, _T("SkinDesign/SequenceFrame.png") },
 	{ Name_ImageButton, _T("SkinDesign/Button.png") },
 	{ Name_ImageExpandToolsArrow, _T("SkinDesign/ExpandToolsArrow.svg") },
-	{ Name_Imagegray, _T("SkinDesign/gray.png") },
-	{ Name_ImagelineH, _T("SkinDesign/lineH.png") },
-	{ Name_ImagelineV, _T("SkinDesign/lineV.png") },
 	{ Name_ImageControlIcon, _T("SkinDesign/ControlIcon.png") },
 	{ Name_ImageToolBar, _T("SkinDesign/ImageToolBar.png") },
 };
