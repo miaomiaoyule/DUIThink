@@ -109,7 +109,7 @@ bool CDUIAttributeObject::SetAttributeDescr(LPCTSTR lpszDescribe)
 bool CDUIAttributeObject::IsVisible()
 {
 #ifdef DUI_DESIGN
-	return m_bVisible;
+	return m_bVisible && (NULL == m_pGroup || m_pGroup->IsVisible());
 #endif
 
 	return true;

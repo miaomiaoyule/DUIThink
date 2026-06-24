@@ -256,15 +256,14 @@ void CDUICheckBoxCtrl::InitProperty()
 
 void CDUICheckBoxCtrl::InitNormalSkin()
 {
-	auto pImageBaseCheckBoxUnSelect = CDUIGlobal::GetInstance()->GetImageResource(Name_ImageCheckBoxUnSelect);
-	auto pImageBaseCheckBoxSelect = CDUIGlobal::GetInstance()->GetImageResource(Name_ImageCheckBoxSelect);
+	auto pImageBaseCheckBoxUnSelect = CDUIGlobal::GetInstance()->GetImageResource(Name_ImageCheckBox);
 
 	tagDuiImageSection ImageSection;
 	ImageSection.ImageSourceType = ImageSource_Part;
 	ImageSection.vecImageResSwitch.push_back(pImageBaseCheckBoxUnSelect->GetResourceName());
 	ImageSection.HorizImageAlign = HorizImageAlign_Left;
 	ImageSection.VertImageAlign = VertImageAlign_Center;
-	ImageSection.cbPartAll = 4;
+	ImageSection.cbPartAll = 8;
 	ImageSection.cbPartSel = 1;
 	SetImageSectionNormal(ImageSection);
 
@@ -277,18 +276,16 @@ void CDUICheckBoxCtrl::InitNormalSkin()
 	ImageSection.cbPartSel = 4;
 	SetImageSectionDisabled(ImageSection);
 
-	ImageSection.vecImageResSwitch.clear();
-	ImageSection.vecImageResSwitch.push_back(pImageBaseCheckBoxSelect->GetResourceName());
-	ImageSection.cbPartSel = 1;
+	ImageSection.cbPartSel = 5;
 	SetImageSectionSelNormal(ImageSection);
 
-	ImageSection.cbPartSel = 2;
+	ImageSection.cbPartSel = 6;
 	SetImageSectionSelHot(ImageSection);
 
-	ImageSection.cbPartSel = 3;
+	ImageSection.cbPartSel = 7;
 	SetImageSectionSelPushed(ImageSection);
 
-	ImageSection.cbPartSel = 4;
+	ImageSection.cbPartSel = 8;
 	SetImageSectionSelDisabled(ImageSection);
 
 	CMMString strText = _T("¸´Ñ¡¿ò");

@@ -28,6 +28,10 @@ protected:
 
 	//variant
 protected:
+	Gdiplus::Bitmap *					m_pBmpClockCenterDot = NULL;
+	Gdiplus::Bitmap *					m_pBmpClockHourPointer = NULL;
+	Gdiplus::Bitmap *					m_pBmpClockMinutePointer = NULL;
+	Gdiplus::Bitmap *					m_pBmpClockSecondPointer = NULL;
 
 	//override
 protected:

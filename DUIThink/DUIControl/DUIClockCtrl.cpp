@@ -12,6 +12,11 @@ CDUIClockCtrl::CDUIClockCtrl(void)
 
 CDUIClockCtrl::~CDUIClockCtrl(void)
 {
+	MMSafeDelete(m_pBmpClockCenterDot);
+	MMSafeDelete(m_pBmpClockHourPointer);
+	MMSafeDelete(m_pBmpClockMinutePointer);
+	MMSafeDelete(m_pBmpClockSecondPointer);
+
 	return;
 }
 
@@ -71,6 +76,7 @@ void CDUIClockCtrl::SetImageSectionClockDial(const tagDuiImageSection &ImageSect
 void CDUIClockCtrl::SetImageSectionClockHour(const tagDuiImageSection &ImageSection)
 {
 	m_AttributeImageClockHour.SetImageSection(ImageSection);
+	MMSafeDelete(m_pBmpClockHourPointer);
 
 	Invalidate();
 
@@ -80,6 +86,7 @@ void CDUIClockCtrl::SetImageSectionClockHour(const tagDuiImageSection &ImageSect
 void CDUIClockCtrl::SetImageSectionClockMinute(const tagDuiImageSection &ImageSection)
 {
 	m_AttributeImageClockMinute.SetImageSection(ImageSection);
+	MMSafeDelete(m_pBmpClockMinutePointer);
 
 	Invalidate();
 
@@ -89,6 +96,7 @@ void CDUIClockCtrl::SetImageSectionClockMinute(const tagDuiImageSection &ImageSe
 void CDUIClockCtrl::SetImageSectionClockSecond(const tagDuiImageSection &ImageSection)
 {
 	m_AttributeImageClockSecond.SetImageSection(ImageSection);
+	MMSafeDelete(m_pBmpClockSecondPointer);
 
 	Invalidate();
 
@@ -98,6 +106,7 @@ void CDUIClockCtrl::SetImageSectionClockSecond(const tagDuiImageSection &ImageSe
 void CDUIClockCtrl::SetImageSectionClockCenterDot(const tagDuiImageSection &ImageSection)
 {
 	m_AttributeImageClockCenterDot.SetImageSection(ImageSection);
+	MMSafeDelete(m_pBmpClockCenterDot);
 
 	Invalidate();
 
@@ -165,75 +174,139 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 	ptCenter.y = m_rcAbsolute.top + GetHeight() / 2;
 
 	//hour
-	CDUIImageBase *pImageBase = m_AttributeImageClockHour.GetCurImageBase();
-	if (pImageBase)
+	if (NULL == m_pBmpClockHourPointer)
 	{
-		Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap(GetScale());
-		if (pBitmap)
+		tagDuiImageSection ImageSection = m_AttributeImageClockHour.GetImageSection();
+		CDUIImageBase *pImageBase = m_AttributeImageClockHour.GetCurImageBase();
+		if (pImageBase)
 		{
-			Gdiplus::Matrix matrixH(1, 0, 0, 1, ptCenter.x, ptCenter.y);
-			Gdiplus::Point pointsH[] =
+			Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap(GetScale());
+			if (pBitmap)
 			{
-				Point(0, 0),
-				Point(pImageBase->GetWidth(GetScale()), 0),
-				Point(0, pImageBase->GetHeight(GetScale()))
-			};
-			matrixH.Rotate(SystemTime.wHour * 30 + SystemTime.wMinute * 1.0 / 2.0);
-			matrixH.Translate(-pImageBase->GetWidth(GetScale()) / 2, -pImageBase->GetHeight(GetScale()) / 2);
-			matrixH.TransformPoints(pointsH, 3);
-			Gp.DrawImage(pBitmap, pointsH, 3);
+				CDUIRect rcSource = ImageSection.mapSourceCustomScale[100];
+				if (ImageSection.mapSourceCustomScale.find(GetScale()) != ImageSection.mapSourceCustomScale.end())
+				{
+					rcSource = ImageSection.mapSourceCustomScale[GetScale()];
+				}
+
+				m_pBmpClockHourPointer = pBitmap->Clone(rcSource.left, rcSource.top, rcSource.GetWidth(), rcSource.GetHeight(), PixelFormat32bppARGB);
+			}
 		}
+	}
+	if (m_pBmpClockHourPointer)
+	{
+		Gdiplus::Matrix matrixH(1, 0, 0, 1, ptCenter.x, ptCenter.y);
+		Gdiplus::PointF pointsH[] =
+		{
+			PointF(0, 0),
+			PointF(m_pBmpClockHourPointer->GetWidth(), 0),
+			PointF(0, m_pBmpClockHourPointer->GetHeight())
+		};
+		matrixH.Rotate(SystemTime.wHour * 30 + SystemTime.wMinute * 1.0 / 2.0);
+		matrixH.Translate(m_pBmpClockHourPointer->GetWidth() / -2.0f, m_pBmpClockHourPointer->GetHeight() / -2.0f);
+		matrixH.TransformPoints(pointsH, 3);
+		Gp.DrawImage(m_pBmpClockHourPointer, pointsH, 3);
 	}
 
 	//minute
-	pImageBase = m_AttributeImageClockMinute.GetCurImageBase();
-	if (pImageBase)
+	if (NULL == m_pBmpClockMinutePointer)
 	{
-		Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap(GetScale());
-		if (pBitmap)
+		tagDuiImageSection ImageSection = m_AttributeImageClockMinute.GetImageSection();
+		CDUIImageBase *pImageBase = m_AttributeImageClockMinute.GetCurImageBase();
+		if (pImageBase)
 		{
-			Gdiplus::Matrix matrixM(1, 0, 0, 1, ptCenter.x, ptCenter.y);	
-			Gdiplus::Point pointsM[] = 
-			{ 
-				Point(0, 0), 
-				Point(pImageBase->GetWidth(GetScale()),0),
-				Point(0, pImageBase->GetHeight(GetScale()))
-			};
-			matrixM.Rotate(SystemTime.wMinute * 6);
-			matrixM.Translate(-pImageBase->GetWidth(GetScale()) / 2, -pImageBase->GetHeight(GetScale()) / 2);
-			matrixM.TransformPoints(pointsM, 3);
-			Gp.DrawImage(pBitmap, pointsM, 3);
+			Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap(GetScale());
+			if (pBitmap)
+			{
+				CDUIRect rcSource = ImageSection.mapSourceCustomScale[100];
+				if (ImageSection.mapSourceCustomScale.find(GetScale()) != ImageSection.mapSourceCustomScale.end())
+				{
+					rcSource = ImageSection.mapSourceCustomScale[GetScale()];
+				}
+
+				m_pBmpClockMinutePointer = pBitmap->Clone(rcSource.left, rcSource.top, rcSource.GetWidth(), rcSource.GetHeight(), PixelFormat32bppARGB);
+			}
 		}
+	}
+	if (m_pBmpClockMinutePointer)
+	{
+		Gdiplus::Matrix matrixM(1, 0, 0, 1, ptCenter.x, ptCenter.y);
+		Gdiplus::PointF pointsM[] =
+		{
+			PointF(0, 0),
+			PointF(m_pBmpClockMinutePointer->GetWidth(),0),
+			PointF(0, m_pBmpClockMinutePointer->GetHeight())
+		};
+		matrixM.Rotate(SystemTime.wMinute * 6);
+		matrixM.Translate(m_pBmpClockMinutePointer->GetWidth() / -2.0f, m_pBmpClockMinutePointer->GetHeight() / -2.0f);
+		matrixM.TransformPoints(pointsM, 3);
+		Gp.DrawImage(m_pBmpClockMinutePointer, pointsM, 3);
 	}
 
 	//second
-	pImageBase = m_AttributeImageClockSecond.GetCurImageBase();
-	if (pImageBase)
+	if (NULL == m_pBmpClockSecondPointer)
 	{
-		Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap(GetScale());
-		if (pBitmap)
+		tagDuiImageSection ImageSection = m_AttributeImageClockSecond.GetImageSection();
+		CDUIImageBase *pImageBase = m_AttributeImageClockSecond.GetCurImageBase();
+		if (pImageBase)
 		{
-			Gdiplus::Matrix matrixS(1, 0, 0, 1, ptCenter.x, ptCenter.y);
-			Gdiplus::Point pointsS[] = 
-			{ 
-				Point(0, 0),
-				Point(pImageBase->GetWidth(GetScale()), 0),
-				Point(0, pImageBase->GetHeight(GetScale()))
-			};
-			matrixS.Rotate(SystemTime.wSecond * 6);
-			matrixS.Translate(-pImageBase->GetWidth(GetScale()) / 2, -pImageBase->GetHeight(GetScale()) / 2);
-			matrixS.TransformPoints(pointsS, 3);
-			Gp.DrawImage(pBitmap, pointsS, 3);
+			Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap(GetScale());
+			if (pBitmap)
+			{
+				CDUIRect rcSource = ImageSection.mapSourceCustomScale[100];
+				if (ImageSection.mapSourceCustomScale.find(GetScale()) != ImageSection.mapSourceCustomScale.end())
+				{
+					rcSource = ImageSection.mapSourceCustomScale[GetScale()];
+				}
+
+				m_pBmpClockSecondPointer = pBitmap->Clone(rcSource.left, rcSource.top, rcSource.GetWidth(), rcSource.GetHeight(), PixelFormat32bppARGB);
+			}
 		}
+	}
+	if (m_pBmpClockSecondPointer)
+	{
+		Gdiplus::Matrix matrixS(1, 0, 0, 1, ptCenter.x, ptCenter.y);
+		Gdiplus::PointF pointsS[] =
+		{
+			PointF(0, 0),
+			PointF(m_pBmpClockSecondPointer->GetWidth(), 0),
+			PointF(0, m_pBmpClockSecondPointer->GetHeight())
+		};
+		matrixS.Rotate(SystemTime.wSecond * 6);
+		matrixS.Translate(m_pBmpClockSecondPointer->GetWidth() / -2.0f, m_pBmpClockSecondPointer->GetHeight() / -2.0f);
+		matrixS.TransformPoints(pointsS, 3);
+		Gp.DrawImage(m_pBmpClockSecondPointer, pointsS, 3);
 	}
 
 	//center dot
-	CDUIRect rcCenterDot;
-	rcCenterDot.left = ptCenter.x - m_AttributeImageClockCenterDot.GetCurImageWidth() / 2;
-	rcCenterDot.top = ptCenter.y - m_AttributeImageClockCenterDot.GetCurImageHeight() / 2;
-	rcCenterDot.right = rcCenterDot.left + m_AttributeImageClockCenterDot.GetCurImageWidth();
-	rcCenterDot.bottom = rcCenterDot.top + m_AttributeImageClockCenterDot.GetCurImageHeight();
-	m_AttributeImageClockCenterDot.Draw(hDC, rcCenterDot, m_rcPaint);
+	if (NULL == m_pBmpClockCenterDot)
+	{
+		tagDuiImageSection ImageSection = m_AttributeImageClockCenterDot.GetImageSection();
+		CDUIImageBase *pImageBase = m_AttributeImageClockCenterDot.GetCurImageBase();
+		if (pImageBase)
+		{
+			Gdiplus::Bitmap *pBitmap = pImageBase->GetBitmap(GetScale());
+			if (pBitmap)
+			{
+				CDUIRect rcSource = ImageSection.mapSourceCustomScale[100];
+				if (ImageSection.mapSourceCustomScale.find(GetScale()) != ImageSection.mapSourceCustomScale.end())
+				{
+					rcSource = ImageSection.mapSourceCustomScale[GetScale()];
+				}
+
+				m_pBmpClockCenterDot = pBitmap->Clone(rcSource.left, rcSource.top, rcSource.GetWidth(), rcSource.GetHeight(), PixelFormat32bppARGB);
+			}
+		}
+	}
+	if (m_pBmpClockCenterDot)
+	{
+		CDUIRect rcCenterDot;
+		rcCenterDot.left = ptCenter.x - m_pBmpClockCenterDot->GetWidth() / 2;
+		rcCenterDot.top = ptCenter.y - m_pBmpClockCenterDot->GetHeight() / 2;
+		rcCenterDot.right = rcCenterDot.left + m_pBmpClockCenterDot->GetWidth();
+		rcCenterDot.bottom = rcCenterDot.top + m_pBmpClockCenterDot->GetHeight();
+		Gp.DrawImage(m_pBmpClockCenterDot, rcCenterDot.left, rcCenterDot.top, m_pBmpClockCenterDot->GetWidth(), m_pBmpClockCenterDot->GetHeight());
+	}
 
 	return;
 }
