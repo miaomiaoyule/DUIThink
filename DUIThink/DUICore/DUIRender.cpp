@@ -2329,12 +2329,25 @@ bool CDUIRenderEngine::SaveImage(HBITMAP hBitmap, CMMString strFile)
 	ReleaseDC(NULL, hDC);
 	if (cbCopied == 0) return false;
 
-	//stb_image_write BGRA->RGBA
+	//stb_image_write BGRA->RGBA£¬restore Alpha premultiply
 	for (int i = 0; i < cbSize; i += 4)
 	{
-		BYTE tempSpace = vecPixel[i];       // B
-		vecPixel[i] = vecPixel[i + 2];      // R -> B
-		vecPixel[i + 2] = tempSpace;        // B -> R
+		BYTE b = vecPixel[i];
+		BYTE g = vecPixel[i + 1];
+		BYTE r = vecPixel[i + 2];
+		BYTE a = vecPixel[i + 3];
+
+		if (a > 0 && a < 255)
+		{
+			r = min((r * 255) / a, 255);
+			g = min((g * 255) / a, 255);
+			b = min((b * 255) / a, 255);
+		}
+
+		vecPixel[i]     = r;  // R
+		vecPixel[i + 1] = g;  // G
+		vecPixel[i + 2] = b;  // B
+		vecPixel[i + 3] = a;  // A
 	}
 
 	//ext

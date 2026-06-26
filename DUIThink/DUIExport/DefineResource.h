@@ -28,6 +28,8 @@
 #define Name_Color11dcdcdc				_T("0x11dcdcdc")
 #define Name_Colorffc1c1c1				_T("0xffc1c1c1")
 #define Name_Colorffcce4f7				_T("0xffcce4f7")
+#define Name_Colordcfaad3b				_T("0xdcfaad3b")
+#define Name_Colorff616163				_T("0xff616163")
 
 #define Name_ImageScrollBarHoriz		_T("{88D041B7-27A9-4819-9986-BF3A631B2A36}")
 #define Name_ImageScrollBarVert			_T("{689FF69E-A8B1-453C-A1FE-58D234E97A06}")
@@ -82,6 +84,8 @@ static LPCTSTR g_szPublicColor[] =
 	Name_Color11dcdcdc,
 	Name_Colorffc1c1c1,
 	Name_Colorffcce4f7,
+	Name_Colordcfaad3b,
+	Name_Colorff616163,
 };
 
 static LOGFONT g_PublicFont[] =
