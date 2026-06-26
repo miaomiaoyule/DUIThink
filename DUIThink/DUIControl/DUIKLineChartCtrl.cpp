@@ -153,6 +153,8 @@ void CDUIKLineChartCtrl::PaintBkColor(HDC hDC)
 {
 	__super::PaintBkColor(hDC);
 
+	if (NULL == m_pWndOwner) return;
+
 	//scene
 	float fHigh = 0.0f;
 	float fLow = 0x7fffffff;

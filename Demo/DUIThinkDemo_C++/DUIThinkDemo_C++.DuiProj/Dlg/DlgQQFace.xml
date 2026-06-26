@@ -22,7 +22,7 @@
             <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100474"/>
             <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3140852276"/>
-            <MaxValue Descr="" NameID="540625834" Visible="1" Modified="1" ValueID="0" Value="0"/>
+            <MaxValue Descr="" NameID="540625834" Visible="0" Modified="1" ValueID="0" Value="0"/>
             <ImageGrooveHot Descr="" NameID="2881586551" Visible="1" Modified="1" ValueID="2499609609"/>
             <ThumbHorizFixedWidth Descr="" NameID="3795418709" Visible="0" Modified="1" ValueID="0" Value="420"/>
             <ImageThumbNormal Descr="" NameID="811014879" Visible="1" Modified="1" ValueID="2686807599"/>
@@ -34,9 +34,9 @@
             <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100475"/>
             <Visible Descr="" NameID="3686892259" Visible="1" Modified="1" ValueID="0" Value="0"/>
             <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3221534916"/>
-            <ProgressType Descr="" NameID="3332400408" Visible="1" Modified="1" ValueID="1884515023" Cur="1"/>
-            <MoveType Descr="" NameID="4040424860" Visible="1" Modified="1" ValueID="2648091639" Cur="1"/>
-            <MaxValue Descr="" NameID="540625834" Visible="1" Modified="1" ValueID="0" Value="0"/>
+            <ProgressType Descr="" NameID="3332400408" Visible="0" Modified="1" ValueID="1884515023" Cur="1"/>
+            <MoveType Descr="" NameID="4040424860" Visible="0" Modified="1" ValueID="2648091639" Cur="1"/>
+            <MaxValue Descr="" NameID="540625834" Visible="0" Modified="1" ValueID="0" Value="0"/>
             <ImageGrooveHot Descr="" NameID="2881586551" Visible="1" Modified="1" ValueID="1514105052"/>
             <ThumbVertFixedHeight Descr="" NameID="2770656695" Visible="0" Modified="1" ValueID="0" Value="420"/>
             <ImageThumbNormal Descr="" NameID="811014879" Visible="1" Modified="1" ValueID="3871191615"/>
