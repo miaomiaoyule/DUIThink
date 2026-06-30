@@ -101,7 +101,7 @@ HANDLE CMMProcess::FindProcessByID(DWORD dwProcessID)
 	return INVALID_HANDLE_VALUE;
 }
 
-HANDLE CMMProcess::FindProcessByName(CMMString strName)
+HANDLE CMMProcess::FindProcessByName(CMMString strName, DWORD dwFileterID)
 {
 	PROCESSENTRY32 Pe32 = {};
 	Pe32.dwSize = sizeof(PROCESSENTRY32);
@@ -114,7 +114,7 @@ HANDLE CMMProcess::FindProcessByName(CMMString strName)
 	BOOL bMore = ::Process32First(hSnapshot, &Pe32);
 	while (bMore)
 	{
-		if (0 == strName.CompareNoCase(Pe32.szExeFile))
+		if (0 == strName.CompareNoCase(Pe32.szExeFile) && Pe32.th32ProcessID != dwFileterID)
 		{
 			HANDLE hProcess = ::OpenProcess(PROCESS_ALL_ACCESS, FALSE, Pe32.th32ProcessID);
 			::CloseHandle(hSnapshot);

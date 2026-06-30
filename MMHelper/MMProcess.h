@@ -31,7 +31,7 @@ public:
 	// Description:	Find process of the process name
 	// Parameter: 	CMMString strName
 	//************************************
-	static HANDLE FindProcessByName(CMMString strName);
+	static HANDLE FindProcessByName(CMMString strName, DWORD dwFileterID = 0);
 
 	//************************************
 	// Description:	Find process of the process name
