@@ -557,6 +557,7 @@ bool CMMSocketClientItem::PerformParseWSFrame(std::vector<BYTE> vecSrc, std::vec
 		{
 			//  medium stream   
 			WSHeader.header_size = 8;
+			if (vecSrc.size() < 4) return false;
 			unsigned short s = 0;
 			memcpy(&s, (const char*)&buf[2], 2);
 			WSHeader.payload_size = ntohs(s);
@@ -564,6 +565,7 @@ bool CMMSocketClientItem::PerformParseWSFrame(std::vector<BYTE> vecSrc, std::vec
 		}
 		else if (stream_size == 127)
 		{
+			if (vecSrc.size() < 10) return false;
 			unsigned long long l = 0;
 			memcpy(&l, (const char*)&buf[2], 8);
 
@@ -582,7 +584,7 @@ bool CMMSocketClientItem::PerformParseWSFrame(std::vector<BYTE> vecSrc, std::vec
 
 		//½âÎöÊý¾Ý
 		const unsigned char *final_buf = vecSrc.data();
-		if (vecSrc.size() < WSHeader.header_size + 1)
+		if (vecSrc.size() < WSHeader.mask_offset + 4 + WSHeader.payload_size)
 		{
 			return false;
 		}
