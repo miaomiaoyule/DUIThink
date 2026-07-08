@@ -238,6 +238,7 @@ protected:
 public:
 	virtual void LoadMenu(LPCTSTR lpszMenu);
 	virtual void DestroyMenu();
+	virtual CDUIMenuWnd * GetRootWnd();
 	virtual CDUIMenuCtrl * GetRootMenu();
 	virtual tagDuiMenuCmd TrackPopupMenu(HWND hWndParent, CDUIPoint pt = {});
 };

@@ -2281,7 +2281,7 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 	::SetWindowLong(m_hWnd, GWL_STYLE, lStyle);
 
 	//root
-	CDUIContainerCtrl *pRootCtrl = dynamic_cast<CDUIContainerCtrl*>(CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), NULL));
+	CDUIContainerCtrl *pRootCtrl = dynamic_cast<CDUIContainerCtrl*>(CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), IsInitComplete() ? NULL : this));
 	if (NULL == pRootCtrl)
 	{
 		OutputDebugString(CDUIGlobal::GetInstance()->GetDuiLastError());

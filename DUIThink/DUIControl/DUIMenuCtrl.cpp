@@ -1118,6 +1118,11 @@ void CDUIMenu::DestroyMenu()
 	return;
 }
 
+CDUIMenuWnd * CDUIMenu::GetRootWnd()
+{
+	return g_pDuiMenuWndRoot;
+}
+
 CDUIMenuCtrl * CDUIMenu::GetRootMenu()
 {
 	if (NULL == g_pDuiMenuWndRoot) return NULL;
