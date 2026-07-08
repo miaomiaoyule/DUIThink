@@ -602,7 +602,7 @@ void CDUIXmlPack::LoadWnd(tinyxml2::XMLDocument &DuiXml, CDUIWnd *pWnd)
 
 	DWORD dwTickCount = GetTickCount();
 
-	//开始导入
+	//root
 	tinyxml2::XMLElement *pXMLRoot = DuiXml.RootElement();
 	if (NULL == pXMLRoot)
 	{
@@ -611,7 +611,7 @@ void CDUIXmlPack::LoadWnd(tinyxml2::XMLDocument &DuiXml, CDUIWnd *pWnd)
 		return;
 	}
 
-	//创建属性
+	//element
 	tinyxml2::XMLElement *pNodeXml = pXMLRoot->FirstChildElement();
 	if (NULL == pNodeXml)
 	{
@@ -619,6 +619,8 @@ void CDUIXmlPack::LoadWnd(tinyxml2::XMLDocument &DuiXml, CDUIWnd *pWnd)
 
 		return;
 	}
+
+	//attribute
 	do
 	{
 		//refresh attribute
