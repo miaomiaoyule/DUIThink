@@ -181,6 +181,7 @@ public:
 	bool SetScale(int nScale);
 
 	//ui
+	void LoadWnd(const CMMString &strName, CDUIWnd *pWnd);
 	CDUIControlBase * LoadDui(const CMMString &strName, CDUIWnd *pWnd = NULL);
 	CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
 	CDUIControlBase * ParseDui(LPCTSTR lpszXml);

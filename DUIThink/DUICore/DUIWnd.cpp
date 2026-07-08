@@ -29,6 +29,9 @@ CDUIWnd::CDUIWnd(LPCTSTR lpszDuiName, HWND hWndParent)
 	CDUIGlobal::GetInstance()->AddWnd(this);
 	CDUIGlobal::GetInstance()->AddPreMessagePtr(this);
 
+	//attribute
+	CDUIGlobal::GetInstance()->LoadWnd(GetDuiName(), this);
+
 	return;
 }
 
@@ -2278,7 +2281,7 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 	::SetWindowLong(m_hWnd, GWL_STYLE, lStyle);
 
 	//root
-	CDUIContainerCtrl *pRootCtrl = dynamic_cast<CDUIContainerCtrl*>(CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), this));
+	CDUIContainerCtrl *pRootCtrl = dynamic_cast<CDUIContainerCtrl*>(CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), NULL));
 	if (NULL == pRootCtrl)
 	{
 		OutputDebugString(CDUIGlobal::GetInstance()->GetDuiLastError());

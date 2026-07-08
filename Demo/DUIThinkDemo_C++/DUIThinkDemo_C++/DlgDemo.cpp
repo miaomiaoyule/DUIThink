@@ -49,6 +49,9 @@ void CDlgDemo::OnFindControl()
 	__super::OnFindControl();
 
 	Dui_DDX_Control(CDUIContainerCtrl, m_pTabViewControls, IDC_TabViewControls)
+	Dui_DDX_Control(CDUIRadioBoxCtrl, m_pRadioViewHomePageCtrl, IDC_RadioBoxHomePage)
+	Dui_DDX_Control(CDUIRadioBoxCtrl, m_pRadioViewControlViewCtrl, IDC_RadioBoxControlView)
+	Dui_DDX_Control(CDUIRadioBoxCtrl, m_pRadioViewStaticViewCtrl, IDC_RadioBoxStaticView)
 
 	return;
 }
@@ -89,6 +92,10 @@ void CDlgDemo::OnInitDialog()
 	}
 
 	CenterWindow();
+
+	//switch
+	m_pRadioViewHomePageCtrl->Select(true, false);
+	m_pRadioViewStaticViewCtrl->Select(true, false);
 
 	return;
 }

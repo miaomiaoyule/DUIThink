@@ -71,6 +71,8 @@ public:
 	virtual bool SetText(LPCTSTR lpszText);
 	virtual VecDuiRichTextItem GetRichTextItem();
 	virtual bool SetRichTextItem(const VecDuiRichTextItem &vecRichTextItem);
+	virtual tagDuiRichText GetRichText();
+	virtual bool SetRichText(const tagDuiRichText &RichText);
 	virtual bool IsShadowText() override;
 	virtual void SetShadowText(bool bShadow);
 	virtual HFONT GetFont();

@@ -376,6 +376,35 @@ bool CDUIGlobal::SetScale(int nScale)
 	return SetDpi(MulDiv(nScale, 96, 100));
 }
 
+void CDUIGlobal::LoadWnd(const CMMString &strName, CDUIWnd *pWnd)
+{
+	//has
+	auto FindIt = find_if(m_vecDui.begin(), m_vecDui.end(), [&](tagDuiFile &DuiFile)
+	{
+		return DuiFile.strName == strName;
+	});
+	if (FindIt == m_vecDui.end())
+	{
+		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]²»´æÔÚ\n"), strName.c_str()));
+
+		return;
+	}
+
+	enDuiType DuiType = FindIt->DuiType;
+
+	//load
+	CMMString strFileFull = GetDuiPath(DuiType) + FindIt->strFile;
+	CDUIXmlPack::LoadWnd(strFileFull, pWnd);
+
+	if (pWnd)
+	{
+		RenameWnd(pWnd, strName);
+		SetWndDuiType(pWnd, DuiType);
+	}
+
+	return;
+}
+
 CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWnd *pWnd)
 {
 	//has

@@ -16,6 +16,9 @@ public:
 protected:
 	//control
 	CDUIContainerCtrl *					m_pTabViewControls = NULL;
+	CDUIRadioBoxCtrl *					m_pRadioViewHomePageCtrl = NULL;
+	CDUIRadioBoxCtrl *					m_pRadioViewControlViewCtrl = NULL;
+	CDUIRadioBoxCtrl *					m_pRadioViewStaticViewCtrl = NULL;
 
 	//control view
 	CStaticView							m_StaticView;
