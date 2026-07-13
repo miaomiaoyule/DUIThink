@@ -75,7 +75,7 @@ public:
 
 	//attribute
 	void SetEnabled(bool bEnable = true) override;
-	void SetScrollPos(SIZE szPos, bool bMsg = true) override;
+	void SetScrollPos(SIZE szPos) override;
 	void LineUp() override;
 	void LineDown() override;
 	void PageUp() override;

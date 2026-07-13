@@ -643,7 +643,7 @@ bool CDUIScrollBarCtrl::OnDuiMouseWheel(const CDUIPoint &pt, const DuiMessage &M
 		int nCurValue = GetCurValue();
 		nCurValue += (bPositive ? -GetScrollSpeed() * nWheelCount : GetScrollSpeed() * nWheelCount);
 		SetCurValue(nCurValue);
-		
+
 		__super::OnDuiMouseWheel(pt, Msg);
 
 		return true;

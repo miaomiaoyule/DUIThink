@@ -84,7 +84,7 @@ public:
 	//scroll
 	SIZE GetScrollPos() const override;
 	SIZE GetScrollRange() const override;
-	void SetScrollPos(SIZE szPos, bool bMsg = true) override;
+	void SetScrollPos(SIZE szPos) override;
 	void EnsureVisible(int nIndex, bool bCenter = true) override;
 
 	//rotate menu

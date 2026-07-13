@@ -1086,9 +1086,9 @@ void CDUIRichEditCtrl::SetEnabled(bool bEnable)
 	return;
 }
 
-void CDUIRichEditCtrl::SetScrollPos(SIZE szPos, bool bMsg)
+void CDUIRichEditCtrl::SetScrollPos(SIZE szPos)
 {
-	CDUIContainerCtrl::SetScrollPos(szPos, bMsg);
+	CDUIContainerCtrl::SetScrollPos(szPos);
 
 	szPos = GetScrollPos();
 
