@@ -768,7 +768,9 @@ void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcIte
 	{
 		do
 		{
-			Gdiplus::Bitmap *pBmp = GetAlphaBitmap(CopyBitmap(hDCPaint, rcItem));
+			HBITMAP hBitmap = CopyBitmap(hDCPaint, rcItem);
+			Gdiplus::Bitmap *pBmp = GetAlphaBitmap(hBitmap);
+			MMSafeDeleteObject(hBitmap);
 			if (NULL == pBmp) break;
 
 			DrawImage(hDC, pBmp, rcItem, rcRound, RoundType);
@@ -2093,6 +2095,14 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFi
 	HBITMAP hBitmap = CreateARGB32Bitmap(hDC, rcItem.GetWidth(), rcItem.GetHeight(), &pBmpBits);
 	ASSERT(hPaintDC);
 	ASSERT(hBitmap);
+	if (NULL == hPaintDC || NULL == hBitmap)
+	{
+		int nError = GetLastError();
+		MMSafeDeleteDC(hPaintDC);
+		MMSafeDeleteObject(hBitmap);
+		return NULL;
+	}
+
 	HBITMAP hOldBitmap = (HBITMAP)::SelectObject(hPaintDC, hBitmap);
 	::BitBlt(hPaintDC, 0, 0, rcItem.GetWidth(), rcItem.GetHeight(), hDC, rcItem.left, rcItem.top, SRCCOPY);
 	AdjustImage(hBitmap, dwFilterColor, 0);
