@@ -1987,46 +1987,6 @@ HBITMAP CDUIRenderEngine::GenerateBitmap(CDUIControlBase *pControl, const CDUIRe
 	return hBitmap;
 }
 
-Bitmap * CDUIRenderEngine::GenerateBitmap(Bitmap *pBmp, const CDUISize &szGenerate)
-{
-	if (NULL == pBmp) return NULL;
-
-	int nScaleWidth = 0, nScaleHeight = 0;
-
-	double dbScaleBmp = (double)pBmp->GetWidth() / (double)pBmp->GetHeight();
-	if (pBmp->GetWidth() >= pBmp->GetHeight())
-	{
-		nScaleHeight = min(szGenerate.cy, pBmp->GetHeight());
-		nScaleWidth = nScaleHeight * dbScaleBmp;
-	}
-	else
-	{
-		nScaleWidth = min(szGenerate.cx, pBmp->GetWidth());
-		nScaleHeight = nScaleWidth / dbScaleBmp;
-	}
-
-	nScaleWidth = max(nScaleWidth, 1);
-	nScaleHeight = max(nScaleHeight, 1);
-
-	HDC hDC = GetDC(NULL);
-	HDC hMemDC = CreateCompatibleDC(hDC);
-	HBITMAP hBitmap = CreateCompatibleBitmap(hDC, nScaleWidth, nScaleHeight);
-	HBITMAP hBmpOld = (HBITMAP)SelectObject(hMemDC, hBitmap);
-
-	Gdiplus::Graphics Gp(hMemDC);
-	Gp.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeHighQuality);
-	Gp.DrawImage(pBmp, Gdiplus::Rect(0, 0, nScaleWidth, nScaleHeight),
-		0, 0, pBmp->GetWidth(), pBmp->GetHeight(), Gdiplus::Unit::UnitPixel);
-	Bitmap *pBmpGenerate = GetAlphaBitmap(hBitmap);
-
-	SelectObject(hMemDC, hBmpOld);
-	MMSafeDeleteObject(hBitmap);
-	MMSafeDeleteDC(hMemDC);
-	ReleaseDC(NULL, hDC);
-
-	return pBmpGenerate;
-}
-
 Bitmap * CDUIRenderEngine::GenerateBitmap(const std::vector<BYTE> &vecFileData)
 {
 	HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, vecFileData.size());
@@ -2054,7 +2014,7 @@ Bitmap * CDUIRenderEngine::GenerateEllipseBitmap(Bitmap *pBmp, const CDUISize &s
 {
 	if (NULL == pBmp) return NULL;
 
-	Bitmap *pBmpScaled = GenerateBitmap(pBmp, szGenerate);
+	Bitmap *pBmpScaled = GenerateThumbnail(pBmp, szGenerate);
 	if (NULL == pBmpScaled) return NULL;
 
 	// 临时 DC/位图用于缩放原图到 nScaleWidth x nScaleHeight
@@ -2086,6 +2046,40 @@ Bitmap * CDUIRenderEngine::GenerateEllipseBitmap(Bitmap *pBmp, const CDUISize &s
 	MMSafeDelete(pBmpScaled);
 
 	return pBmpFinal;
+}
+
+Bitmap * CDUIRenderEngine::GenerateThumbnail(Bitmap *pBmp, const CDUISize &szGenerate)
+{
+	if (pBmp == nullptr || szGenerate.cx <= 0 || szGenerate.cy <= 0) return nullptr;
+
+	const UINT srcW = pBmp->GetWidth();
+	const UINT srcH = pBmp->GetHeight();
+	if (0 == srcW || 0 == srcH) return nullptr;
+
+	double scaleX = static_cast<double>(szGenerate.cx) / static_cast<double>(srcW);
+	double scaleY = static_cast<double>(szGenerate.cy) / static_cast<double>(srcH);
+	double scale = (scaleX < scaleY) ? scaleX : scaleY;
+	if (scale > 1.0) scale = 1.0;
+
+	const INT destW = static_cast<INT>(srcW * scale);
+	const INT destH = static_cast<INT>(srcH * scale);
+	if (destW <= 0 || destH <= 0) return nullptr;
+
+	auto pBmpThumb = new Gdiplus::Bitmap(destW, destH, PixelFormat32bppPARGB);
+	if (pBmpThumb == nullptr || pBmpThumb->GetLastStatus() != Gdiplus::Ok)
+	{
+		delete pBmpThumb;
+		return nullptr;
+	}
+
+	Gdiplus::Graphics g(pBmpThumb);
+	g.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+	g.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+	g.SetPixelOffsetMode(Gdiplus::PixelOffsetModeHighQuality);
+	g.DrawImage(pBmp, Gdiplus::Rect(0, 0, destW, destH),
+		0, 0, srcW, srcH, Gdiplus::UnitPixel);
+
+	return pBmpThumb;
 }
 
 HBITMAP CDUIRenderEngine::CopyBitmap(HDC hDC, const CDUIRect &rcItem, DWORD dwFilterColor)
