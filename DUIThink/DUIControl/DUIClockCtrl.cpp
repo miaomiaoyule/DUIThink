@@ -24,6 +24,25 @@ bool CDUIClockCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 {
 	if (__super::OnAttributeChange(pAttributeObj)) return true;
 
+	if (pAttributeObj == &m_AttributeImageClockHour)
+	{
+		MMSafeDelete(m_pBmpClockHourPointer);
+
+		return true;
+	}
+	if (pAttributeObj == &m_AttributeImageClockMinute)
+	{
+		MMSafeDelete(m_pBmpClockMinutePointer);
+
+		return true;
+	}
+	if (pAttributeObj == &m_AttributeImageClockSecond)
+	{
+		MMSafeDelete(m_pBmpClockSecondPointer);
+
+		return true;
+	}
+
 	return false;
 }
 
