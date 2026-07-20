@@ -1048,11 +1048,9 @@ void CDUIMenuCtrl::InitComplete()
 	DuiInitAttriVisible(m_AttributeChildPaddingH, false);
 	DuiInitAttriVisible(m_AttributeAutoCalcChildPaddingH, false);
 	DuiInitAttriVisible(m_AttributeUseListHeader, false);
-	DuiInitAttriVisible(m_AttributeListViewType, false);
 	DuiInitAttriVisible(m_AttributeMultiSel, false);
 	DuiInitAttriVisible(m_AttributeScrollSelect, false);
 	DuiInitAttriVisible(m_AttributeItemModel, false);
-	DuiInitAttriVisible(m_AttributeGroupTileType, false);
 	DuiInitAttriVisible(m_AttributeGroupLine, false);
 	DuiInitAttriVisible(m_AttributeColorItemStatusSelNormal, false);
 	DuiInitAttriVisible(m_AttributeColorItemStatusSelHot, false);

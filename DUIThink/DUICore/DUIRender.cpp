@@ -2382,6 +2382,18 @@ bool CDUIRenderEngine::SaveImage(HBITMAP hBitmap, CMMString strFile)
 	return (nRes != 0);
 }
 
+bool CDUIRenderEngine::SaveImage(Bitmap *pBmp, CMMString strFile)
+{
+	if (NULL == pBmp) return false;
+
+	HBITMAP hBitmap = NULL;
+	pBmp->GetHBITMAP(Color(0, 0, 0, 0), &hBitmap);
+	bool bRes = SaveImage(hBitmap, strFile);
+	MMSafeDeleteObject(hBitmap);
+
+	return bRes;
+}
+
 void CDUIRenderEngine::ClearPixel(LPBYTE pBits, int nWidthBitmap, CDUIRect rcClear)
 {
 	if (NULL == pBits) return;

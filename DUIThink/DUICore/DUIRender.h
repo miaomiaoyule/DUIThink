@@ -65,6 +65,7 @@ public:
 	static Bitmap * GetAlphaBitmap(HBITMAP hBitmap, bool bPreMultiplyArgb = true);
 	static HBITMAP GetHBITMAP(Bitmap *pBmp, bool bKeepAlpha = true);
 	static bool SaveImage(HBITMAP hBitmap, CMMString strFile);
+	static bool SaveImage(Bitmap *pBmp, CMMString strFile);
 
 	//alpha help
 	static void ClearPixel(LPBYTE pBits, int nWidthBitmap, CDUIRect rcClear);
