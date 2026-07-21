@@ -404,8 +404,9 @@ CDUIMenuItemCtrl * CDUIMenuItemCtrl::Clone(bool bIncludeChild, bool bRefreshCtrl
 	MMInterfaceHelper(CDUIMenuItemCtrl, __super::Clone(bIncludeChild, bRefreshCtrlID), pMenuItemClone);
 	if (NULL == pMenuItemClone) return NULL;
 
-	pMenuItemClone->m_AttributeHasExpandMenu.SetValue(false);
+	//first clear menuname, because hasexpandmenu touch attributechange so delete menufile
 	pMenuItemClone->m_AttributeExpandViewDuiName.SetValue(_T(""));
+	pMenuItemClone->m_AttributeHasExpandMenu.SetValue(false);
 
 	return pMenuItemClone;
 }
