@@ -399,6 +399,17 @@ CMMString CDUIMenuItemCtrl::GetDescribe() const
 	return Dui_Ctrl_MenuItem;
 }
 
+CDUIMenuItemCtrl * CDUIMenuItemCtrl::Clone(bool bIncludeChild, bool bRefreshCtrlID)
+{
+	MMInterfaceHelper(CDUIMenuItemCtrl, __super::Clone(bIncludeChild, bRefreshCtrlID), pMenuItemClone);
+	if (NULL == pMenuItemClone) return NULL;
+
+	pMenuItemClone->m_AttributeHasExpandMenu.SetValue(false);
+	pMenuItemClone->m_AttributeExpandViewDuiName.SetValue(_T(""));
+
+	return pMenuItemClone;
+}
+
 bool CDUIMenuItemCtrl::DoPaint(HDC hDC, bool bGenerateBmp)
 {
 	if (false == __super::DoPaint(hDC, bGenerateBmp)) return false;

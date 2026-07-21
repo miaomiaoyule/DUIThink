@@ -107,6 +107,7 @@ public:
 	//override
 	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
 	CMMString GetDescribe() const override;
+	CDUIMenuItemCtrl * Clone(bool bIncludeChild = true, bool bRefreshCtrlID = true) override;
 	bool DoPaint(HDC hDC, bool bGenerateBmp = false) override;
 	void RefreshView() override;
 
