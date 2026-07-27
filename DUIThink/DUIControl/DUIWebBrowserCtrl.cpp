@@ -769,6 +769,9 @@ void CDUIWebBrowserCtrl::PaintBkImage(HDC hDC)
 		::SendMessage(m_hWndIEServer, WM_PRINT, (WPARAM)MemDC.GetMemHDC(), PRF_CHILDREN | PRF_CLIENT | PRF_ERASEBKGND | PRF_OWNED);
 	}
 
+	CDUIRect rcBmp(0, 0, rcCtrl.GetWidth(), rcCtrl.GetHeight());
+	CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcBmp.GetWidth(), rcBmp);
+
 	return; 
 }
 

@@ -2431,8 +2431,7 @@ void CDUIRenderEngine::RestorePixelAlpha(LPBYTE pBits, int nWidthBitmap, CDUIRec
 		for (int nLeft = rcRestore.left; nLeft < rcRestore.right; ++nLeft)
 		{
 			LPBYTE lpColor = (LPBYTE)((ARGB *)pBits + nWidthBitmap * nTop + nLeft);
-			if ((lpColor[3] == 0) && (lpColor[0] != 0 || lpColor[1] != 0 || lpColor[2] != 0))
-				lpColor[3] = 255;
+			lpColor[3] = 255;
 		}
 	}
 
