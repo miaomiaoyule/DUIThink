@@ -1,7 +1,9 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "DUIWebBrowserCtrl.h"
 #include <atlbase.h>
 #include <atlhost.h>
+#include <wininet.h>
+#pragma comment(lib, "wininet.lib")
 
 #if defined(_WINDLL) || defined(_USRDLL)
 	class CDUIThinkWebModule : public ATL::CAtlDllModuleT<CDUIThinkWebModule> {};
@@ -9,9 +11,9 @@
 	class CDUIThinkWebModule : public ATL::CAtlWinModule, public ATL::CAtlModule 
 	{
 	public:
-		// CAtlModule µÄ´¿Ğéº¯Êı¡£
-		// ¾²Ì¬¿âÄ£Ê½Í¨³£½öÓÃÓÚ Hosting ¿Ø¼ş£¬²»ĞèÒª´¦Àí RGS ×¢²á½Å±¾ÖĞµÄ±äÁ¿Ìæ»»(Èç %APPID%)
-		// Ö±½Ó·µ»Ø S_OK ¼´¿ÉÂú×ã±àÒëÒªÇó¡£
+		// CAtlModule çš„çº¯è™šå‡½æ•°ã€‚
+		// é™æ€åº“æ¨¡å¼é€šå¸¸ä»…ç”¨äº Hosting æ§ä»¶ï¼Œä¸éœ€è¦å¤„ç† RGS æ³¨å†Œè„šæœ¬ä¸­çš„å˜é‡æ›¿æ¢(å¦‚ %APPID%)
+		// ç›´æ¥è¿”å› S_OK å³å¯æ»¡è¶³ç¼–è¯‘è¦æ±‚ã€‚
 		virtual HRESULT AddCommonRGSReplacements(_Inout_ IRegistrarBase* /*pRegistrar*/) throw()
 		{
 			return S_OK;
@@ -23,27 +25,95 @@ CDUIThinkWebModule _DuiWebModule;
 static CMMString g_strPropOldProc = _T("CDUIWebBrowserCtrl_OldProc");
 static CMMString g_strPropCtrl = _T("CDUIWebBrowserCtrl_ControlPtr");
 
+// IE/WinInet ä¼šè¯ä¸è¿æ¥æ˜¯è¿›ç¨‹çº§å…±äº«çš„ï¼›åå¤åˆ›å»ºé”€æ¯åè‹¥ä¸é‡ç½®ï¼Œå¾®ä¿¡å–ç æ¥å£å®¹æ˜“æ’é˜Ÿ/å¤ç”¨è„ä¼šè¯
+static void DuiWebBrowserResetWinInetSession()
+{
+	::InternetSetOption(NULL, INTERNET_OPTION_END_BROWSER_SESSION, NULL, 0);
+
+	DWORD dwMaxConn = 8;
+	::InternetSetOption(NULL, INTERNET_OPTION_MAX_CONNS_PER_SERVER, &dwMaxConn, sizeof(dwMaxConn));
+	::InternetSetOption(NULL, INTERNET_OPTION_MAX_CONNS_PER_1_0_SERVER, &dwMaxConn, sizeof(dwMaxConn));
+
+	return;
+}
+
+static CMMString DuiWebBrowserAppendCacheBuster(LPCTSTR lpszUrl)
+{
+	CMMString strUrl = lpszUrl;
+	if (strUrl.empty() || 0 == _tcsicmp(strUrl.c_str(), _T("about:blank")))
+		return strUrl;
+
+	TCHAR szTick[32] = { 0 };
+	_stprintf_s(szTick, _T("%lu"), ::GetTickCount());
+
+	if (strUrl.find(_T('?')) != CMMString::npos)
+		strUrl += _T("&_dui_ts=");
+	else
+		strUrl += _T("?_dui_ts=");
+	strUrl += szTick;
+
+	return strUrl;
+}
+
+// å¸è½½é¡µé¢å¹¶ç­‰å¾… Document å®Œæˆï¼Œé‡Šæ”¾ XHR/è½®è¯¢ä¸ WinInet è¿æ¥ï¼Œé¿å…åŒè¿›ç¨‹åå¤åˆ›å»ºåå–ç å˜æ…¢
+static void DuiWebBrowserNavigateBlank(IWebBrowser2* pWebBrowser)
+{
+	if (NULL == pWebBrowser) return;
+
+	pWebBrowser->Stop();
+
+	CComVariant vFlags((long)(navNoHistory | navNoReadFromCache | navNoWriteToCache));
+	CComVariant vEmpty;
+	pWebBrowser->Navigate(CComBSTR(L"about:blank"), &vFlags, &vEmpty, &vEmpty, &vEmpty);
+
+	const DWORD dwTimeout = 500;
+	const DWORD dwStart = ::GetTickCount();
+	while (::GetTickCount() - dwStart < dwTimeout)
+	{
+		READYSTATE state = READYSTATE_UNINITIALIZED;
+		if (SUCCEEDED(pWebBrowser->get_ReadyState(&state)) && state >= READYSTATE_COMPLETE)
+			break;
+
+		MSG msg = {};
+		while (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			if (WM_QUIT == msg.message)
+			{
+				::PostQuitMessage((int)msg.wParam);
+				return;
+			}
+
+			::TranslateMessage(&msg);
+			::DispatchMessage(&msg);
+		}
+
+		::Sleep(10);
+	}
+
+	return;
+}
+
 // --------------------------------------------------------------------------
-// [¼æÈİĞÔĞŞ¸´] ÉèÖÃ IE ¿Ø¼şÊ¹ÓÃ IE11 ÄÚºËÄ£Ê½
+// [å…¼å®¹æ€§ä¿®å¤] è®¾ç½® IE æ§ä»¶ä½¿ç”¨ IE11 å†…æ ¸æ¨¡å¼
 // --------------------------------------------------------------------------
 static void DuiSetWebBrowserEmulation()
 {
 	TCHAR szExeName[MAX_PATH] = { 0 };
 	if (::GetModuleFileName(NULL, szExeName, MAX_PATH))
 	{
-		// »ñÈ¡µ±Ç°½ø³ÌÃû (Èç YourApp.exe)
+		// è·å–å½“å‰è¿›ç¨‹å (å¦‚ YourApp.exe)
 		TCHAR* pName = _tcsrchr(szExeName, _T('\\'));
 		if (pName) pName++;
 		else pName = szExeName;
 
 		HKEY hKey = NULL;
-		// ĞŞÕı£ºÊ¹ÓÃ REG_OPTION_NON_VOLATILE È·±£ÉèÖÃ³Ö¾ÃÓĞĞ§
-		// IE ÄÚºË¶ÁÈ¡´ËÅäÖÃÊ±ÒÀÀµÓÚ×¢²á±íÊµ¼Ê´æÔÚµÄÖµ
+		// ä¿®æ­£ï¼šä½¿ç”¨ REG_OPTION_NON_VOLATILE ç¡®ä¿è®¾ç½®æŒä¹…æœ‰æ•ˆ
+		// IE å†…æ ¸è¯»å–æ­¤é…ç½®æ—¶ä¾èµ–äºæ³¨å†Œè¡¨å®é™…å­˜åœ¨çš„å€¼
 		if (ERROR_SUCCESS == ::RegCreateKeyEx(HKEY_CURRENT_USER,
 			_T("Software\\Microsoft\\Internet Explorer\\Main\\FeatureControl\\FEATURE_BROWSER_EMULATION"),
 			0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL))
 		{
-			// 11001 (0x2AF9) = IE11 Edge Mode (Ç¿ÖÆÊ¹ÓÃ IE11 ±ê×¼äÖÈ¾)
+			// 11001 (0x2AF9) = IE11 Edge Mode (å¼ºåˆ¶ä½¿ç”¨ IE11 æ ‡å‡†æ¸²æŸ“)
 			DWORD dwVal = 11001; 
 			::RegSetValueEx(hKey, pName, 0, REG_DWORD, (const BYTE*)&dwVal, sizeof(dwVal));
 			::RegCloseKey(hKey);
@@ -59,11 +129,14 @@ MMImplement_ClassName(CDUIWebBrowserCtrl)
 
 CDUIWebBrowserCtrl::CDUIWebBrowserCtrl(void)
 {
-	// 1. ÏÈÉèÖÃ×¢²á±í£¬È·±£¿Ø¼ş´´½¨Ê±ÄÜ¶ÁÈ¡µ½ IE11 Ä£Ê½
+	// 1. å…ˆè®¾ç½®æ³¨å†Œè¡¨ï¼Œç¡®ä¿æ§ä»¶åˆ›å»ºæ—¶èƒ½è¯»å–åˆ° IE11 æ¨¡å¼
 	DuiSetWebBrowserEmulation();
 
-	// 2. ³õÊ¼»¯ ATL ¿Ø¼şËŞÖ÷ÀàÖ§³Ö
+	// 2. åˆå§‹åŒ– ATL æ§ä»¶å®¿ä¸»ç±»æ”¯æŒ
 	AtlAxWinInit();
+
+	// 3. æé«˜ WinInet æ¯ä¸»æœºè¿æ¥æ•°ï¼Œå‡è½»æ‰«ç è½®è¯¢æ®‹ç•™è¿æ¥å¯¼è‡´çš„åç»­æ’é˜Ÿ
+	DuiWebBrowserResetWinInetSession();
 
 	CMMAsyncObject::Init();
 
@@ -72,12 +145,9 @@ CDUIWebBrowserCtrl::CDUIWebBrowserCtrl(void)
 
 CDUIWebBrowserCtrl::~CDUIWebBrowserCtrl(void)
 {
-	UnInstallIEHook(m_hWndIEServer);
-	UnInstallIEHook(m_hWndIEUtility);
+	Close();
 
 	CMMAsyncObject::UnInit();
-
-	Close();
 
 	return;
 }
@@ -95,8 +165,8 @@ STDMETHODIMP CDUIWebBrowserCtrl::QueryInterface(REFIID riid, void** ppvObject)
 		return S_OK;
 	}
 
-	// ´¦ÀíÏÖÓĞµÄ QueryInterface
-	// return __super::QueryInterface(riid, ppvObject); // ĞèÒª½« REFGUID ×ª³ÉºÏÊÊµÄµ÷ÓÃ
+	// å¤„ç†ç°æœ‰çš„ QueryInterface
+	// return __super::QueryInterface(riid, ppvObject); // éœ€è¦å°† REFGUID è½¬æˆåˆé€‚çš„è°ƒç”¨
 	return E_NOINTERFACE;
 }
 
@@ -110,7 +180,7 @@ STDMETHODIMP_(ULONG) CDUIWebBrowserCtrl::Release()
 	ULONG ulRef = InterlockedDecrement(&m_cRef);
 	if (ulRef == 0)
 	{
-		// ... (²»Ö±½ÓÊÍ·Å£¬ÒòÎª¿Ø¼şÉúÃüÖÜÆÚÓÉDUI¿ò¼Ü¹ÜÀí)
+		// ... (ä¸ç›´æ¥é‡Šæ”¾ï¼Œå› ä¸ºæ§ä»¶ç”Ÿå‘½å‘¨æœŸç”±DUIæ¡†æ¶ç®¡ç†)
 	}
 	return ulRef;
 }
@@ -132,10 +202,10 @@ STDMETHODIMP CDUIWebBrowserCtrl::GetIDsOfNames(REFIID riid, LPOLESTR* rgszNames,
 
 	CMMString strName = rgszNames[0];
 
-	// ²éÕÒÊÇ·ñ×¢²áÁË¸Ãº¯Êı
+	// æŸ¥æ‰¾æ˜¯å¦æ³¨å†Œäº†è¯¥å‡½æ•°
 	if (m_mapJSCallbacks.find(strName) != m_mapJSCallbacks.end())
 	{
-		// ²éÕÒ»ò·ÖÅäÒ»¸öĞÂµÄ DISPID
+		// æŸ¥æ‰¾æˆ–åˆ†é…ä¸€ä¸ªæ–°çš„ DISPID
 		for (auto it = m_mapDispIdToName.begin(); it != m_mapDispIdToName.end(); ++it)
 		{
 			if (it->second == strName)
@@ -167,7 +237,7 @@ STDMETHODIMP CDUIWebBrowserCtrl::Invoke(DISPID dispIdMember, REFIID riid, LCID l
 				std::vector<CComVariant> args;
 				if (pDispParams && pDispParams->cArgs > 0)
 				{
-					// ×¢Òâ£ºDISPPARAMS ÖĞµÄ²ÎÊıË³ĞòÊÇÏà·´µÄ
+					// æ³¨æ„ï¼šDISPPARAMS ä¸­çš„å‚æ•°é¡ºåºæ˜¯ç›¸åçš„
 					for (UINT i = 0; i < pDispParams->cArgs; ++i)
 					{
 						args.push_back(pDispParams->rgvarg[pDispParams->cArgs - 1 - i]);
@@ -230,17 +300,44 @@ void CDUIWebBrowserCtrl::RefreshView()
 
 void CDUIWebBrowserCtrl::Close()
 {
-	if (m_pWebBrowser)
+	if (m_uRefreshTimerID)
 	{
+		StopTimer(m_uRefreshTimerID);
+		m_uRefreshTimerID = 0;
+	}
+
+	UnInstallIEHook(m_hWndIEServer);
+	UnInstallIEHook(m_hWndIEUtility);
+	m_hWndIEServer = NULL;
+	m_hWndIEUtility = NULL;
+
+	if (m_hWndIEOwner && ::IsWindow(m_hWndIEOwner))
+	{
+		CAxWindow wndIE(m_hWndIEOwner);
+		wndIE.SetExternalDispatch(NULL);
+
+		if (m_pWebBrowser)
+		{
+			// å…ˆå¸é¡µé¢ï¼Œåˆ‡æ–­å¾®ä¿¡æ‰«ç è½®è¯¢ç­‰ç½‘ç»œè¯·æ±‚ï¼Œå†é”€æ¯ ActiveX
+			DuiWebBrowserNavigateBlank(m_pWebBrowser);
+			m_pWebBrowser->Release();
+			m_pWebBrowser = NULL;
+		}
+
+		::DestroyWindow(m_hWndIEOwner);
+	}
+	else if (m_pWebBrowser)
+	{
+		DuiWebBrowserNavigateBlank(m_pWebBrowser);
 		m_pWebBrowser->Release();
 		m_pWebBrowser = NULL;
 	}
 
-	if (m_hWndIEOwner && ::IsWindow(m_hWndIEOwner))
-	{
-		::DestroyWindow(m_hWndIEOwner);
-		m_hWndIEOwner = NULL;
-	}
+	m_hWndIEOwner = NULL;
+	m_strUrlCur.clear();
+
+	// é”€æ¯åç»“æŸè¿›ç¨‹çº§æµè§ˆå™¨ä¼šè¯ï¼Œæ¸…æ‰ Cookie/ä¼šè¯ç¼“å­˜ï¼Œé¿å…ç¬¬ä¸‰æ¬¡å–ç å¤ç”¨è„çŠ¶æ€
+	DuiWebBrowserResetWinInetSession();
 
 	return;
 }
@@ -269,11 +366,16 @@ void CDUIWebBrowserCtrl::Navigate(LPCTSTR lpszUrl)
 {
 	if (NULL == m_pWebBrowser) return;
 
-	CComBSTR bstrUrl(lpszUrl);
-	CComVariant vEmpty;
-	m_pWebBrowser->Navigate(bstrUrl, &vEmpty, &vEmpty, &vEmpty, &vEmpty);
+	// æ¯æ¬¡å¯¼èˆªå‰é‡ç½® WinInet ä¼šè¯ï¼Œé¿å…åŒè¿›ç¨‹åå¤æ‰“å¼€å¾®ä¿¡ç™»å½•é¡µæ—¶ä¼šè¯/è¿æ¥æ®‹ç•™
+	DuiWebBrowserResetWinInetSession();
 
-	m_strUrlCur = lpszUrl;
+	CMMString strUrl = DuiWebBrowserAppendCacheBuster(lpszUrl);
+	CComBSTR bstrUrl(strUrl.c_str());
+	CComVariant vFlags((long)(navNoHistory | navNoReadFromCache | navNoWriteToCache));
+	CComVariant vEmpty;
+	HRESULT hRes = m_pWebBrowser->Navigate(bstrUrl, &vFlags, &vEmpty, &vEmpty, &vEmpty);
+
+	m_strUrlCur = strUrl;
 
 	return;
 }
@@ -289,7 +391,7 @@ void CDUIWebBrowserCtrl::LoadHtml(LPCTSTR lpszHtml)
 {
 	if (NULL == m_pWebBrowser) return;
 
-	// »ñÈ¡ÎÄµµ¶ÔÏó²¢Ğ´Èë HTML
+	// è·å–æ–‡æ¡£å¯¹è±¡å¹¶å†™å…¥ HTML
 	IDispatch* pDisp = NULL;
 	if (SUCCEEDED(m_pWebBrowser->get_Document(&pDisp)) && pDisp)
 	{
@@ -548,7 +650,7 @@ bool CDUIWebBrowserCtrl::OnDuiSetFocus()
 {
 	if (false == __super::OnDuiSetFocus()) return false;
 
-	// µ± DUI ¿Ø¼ş»ñµÃ½¹µãÊ±£¬½«½¹µã´«µİ¸ø IE Ô­Éú´°¿Ú
+	// å½“ DUI æ§ä»¶è·å¾—ç„¦ç‚¹æ—¶ï¼Œå°†ç„¦ç‚¹ä¼ é€’ç»™ IE åŸç”Ÿçª—å£
 	SetPageFocus();
 
 	return true;
@@ -558,25 +660,25 @@ void CDUIWebBrowserCtrl::OnDuiWndManagerAttach()
 {
 	__super::OnDuiWndManagerAttach();
 
-	// ´´½¨ ActiveX ËŞÖ÷´°¿Ú
+	// åˆ›å»º ActiveX å®¿ä¸»çª—å£
 	if (GetWndHandle() && false == IsWindow(m_hWndIEOwner))
 	{
 		HWND hWndParent = GetWndHandle();
 		CDUIRect rcCtrl = GetAbsoluteRect();
 		rcCtrl.Offset(19999 - rcCtrl.left, 0 - rcCtrl.top);
 
-		// ĞŞÕı£ºÊ¹ÓÃ CAxWindow ¸¨ÖúÀà´´½¨´°¿Ú
-		// CAxWindow »á×Ô¶¯´¦ÀíÕıÈ·µÄÀàÃû("AtlAxWin" »ò "AtlAxWinLic") ºÍÄ£¿é¾ä±ú£¬±ÜÃâ 1407 ´íÎó
+		// ä¿®æ­£ï¼šä½¿ç”¨ CAxWindow è¾…åŠ©ç±»åˆ›å»ºçª—å£
+		// CAxWindow ä¼šè‡ªåŠ¨å¤„ç†æ­£ç¡®çš„ç±»å("AtlAxWin" æˆ– "AtlAxWinLic") å’Œæ¨¡å—å¥æŸ„ï¼Œé¿å… 1407 é”™è¯¯
 		CAxWindow wndIE;
 		m_hWndIEOwner = wndIE.Create(hWndParent, &rcCtrl, _T("Shell.Explorer.2"),
 			DUI_WNDSTYLE_DIALOG & ~WS_CAPTION);
 
 		if (m_hWndIEOwner)
 		{
-			// Ê¹µÃ JS ½Å±¾µ÷ÓÃ window.external.XXX() Ê±£¬ÄÜÖ±½ÓÓ³Éäµ½±¾ÀàµÄ Invoke
+			// ä½¿å¾— JS è„šæœ¬è°ƒç”¨ window.external.XXX() æ—¶ï¼Œèƒ½ç›´æ¥æ˜ å°„åˆ°æœ¬ç±»çš„ Invoke
 			wndIE.SetExternalDispatch(static_cast<IDispatch*>(this));
 
-			// ´ÓËŞÖ÷´°¿Ú»ñÈ¡ IWebBrowser2 ½Ó¿ÚÖ¸Õë
+			// ä»å®¿ä¸»çª—å£è·å– IWebBrowser2 æ¥å£æŒ‡é’ˆ
 			IUnknown* pUnk = NULL;
 			if (SUCCEEDED(AtlAxGetControl(m_hWndIEOwner, &pUnk)) && pUnk)
 			{
@@ -584,11 +686,11 @@ void CDUIWebBrowserCtrl::OnDuiWndManagerAttach()
 				pUnk->Release();
 			}
 
-			// [ÖØÒª] ÉèÖÃ¾²Ä¬Ä£Ê½
-			// ÓÉÓÚ WebBrowser(IE11) ÄÚºËÎŞ·¨½âÎöÏÖ´úÍøÒ³ÖĞµÄ ES6+ Óï·¨(Èç¼ıÍ·º¯Êı)£¬
-			// »á±ØÈ»µ¼ÖÂ "Syntax Error" (Óï·¨´íÎó)¡£
-			// ÕâÖÖ´íÎóÎŞ·¨ĞŞ¸´(ÒıÇæ²»Ö§³Ö)£¬Èç¹û²»¿ªÆô Silent£¬¾Í»áµ¯³ö±¨´í¿ò´ò¶ÏÓÃ»§¡£
-			// ¿ªÆô Silent ÊÇ´¦Àí´ËÀà¼æÈİĞÔÎÊÌâµÄÎ¨Ò»±ê×¼×ö·¨¡£
+			// [é‡è¦] è®¾ç½®é™é»˜æ¨¡å¼
+			// ç”±äº WebBrowser(IE11) å†…æ ¸æ— æ³•è§£æç°ä»£ç½‘é¡µä¸­çš„ ES6+ è¯­æ³•(å¦‚ç®­å¤´å‡½æ•°)ï¼Œ
+			// ä¼šå¿…ç„¶å¯¼è‡´ "Syntax Error" (è¯­æ³•é”™è¯¯)ã€‚
+			// è¿™ç§é”™è¯¯æ— æ³•ä¿®å¤(å¼•æ“ä¸æ”¯æŒ)ï¼Œå¦‚æœä¸å¼€å¯ Silentï¼Œå°±ä¼šå¼¹å‡ºæŠ¥é”™æ¡†æ‰“æ–­ç”¨æˆ·ã€‚
+			// å¼€å¯ Silent æ˜¯å¤„ç†æ­¤ç±»å…¼å®¹æ€§é—®é¢˜çš„å”¯ä¸€æ ‡å‡†åšæ³•ã€‚
 			if (m_pWebBrowser)
 			{
 				// VARIANT_TRUE = -1
@@ -612,8 +714,6 @@ void CDUIWebBrowserCtrl::OnDuiWndManagerDetach()
 	__super::OnDuiWndManagerDetach();
 
 	Close();
-
-	StopTimer(m_uRefreshTimerID);
 
 	return;
 }
@@ -658,12 +758,12 @@ void CDUIWebBrowserCtrl::PaintBkImage(HDC hDC)
 	CDUIRect rcCtrl = GetBorderRect();
 	CDUIMemDC MemDC(hDC, rcCtrl);
 
-	// [¹Ø¼ü²½Öè] Ê¹ÓÃ PrintWindow Ìæ´ú BitBlt
-	// BitBlt Ö»ÄÜ¿¾ÆÁ(ÆÁÄ»±ØĞë¿É¼û)£¬PrintWindow ÄÜÇ¿ÆÈ´°¿Ú»­µ½ hMemDC ÉÏ
-	// 0 ÊÇÄ¬ÈÏ±êÖ¾£¬Ò²¿ÉÒÔ³¢ÊÔ PW_RENDERFULLCONTENT (Ğè Win8.1+)
+	// [å…³é”®æ­¥éª¤] ä½¿ç”¨ PrintWindow æ›¿ä»£ BitBlt
+	// BitBlt åªèƒ½çƒ¤å±(å±å¹•å¿…é¡»å¯è§)ï¼ŒPrintWindow èƒ½å¼ºè¿«çª—å£ç”»åˆ° hMemDC ä¸Š
+	// 0 æ˜¯é»˜è®¤æ ‡å¿—ï¼Œä¹Ÿå¯ä»¥å°è¯• PW_RENDERFULLCONTENT (éœ€ Win8.1+)
 	BOOL bPrinted = ::PrintWindow(m_hWndIEServer, MemDC, 0);
 
-	// Èç¹û PrintWindow Ê§°Ü£¨IE ÓĞÊ±»á¾Ü¾ø»æÖÆÀëÆÁ´°¿Ú£©£¬¿ÉÒÔ³¢ÊÔ·¢ËÍÏûÏ¢
+	// å¦‚æœ PrintWindow å¤±è´¥ï¼ˆIE æœ‰æ—¶ä¼šæ‹’ç»ç»˜åˆ¶ç¦»å±çª—å£ï¼‰ï¼Œå¯ä»¥å°è¯•å‘é€æ¶ˆæ¯
 	if (false == bPrinted)
 	{
 		::SendMessage(m_hWndIEServer, WM_PRINT, (WPARAM)MemDC.GetMemHDC(), PRF_CHILDREN | PRF_CLIENT | PRF_ERASEBKGND | PRF_OWNED);
@@ -679,7 +779,7 @@ HWND CDUIWebBrowserCtrl::FindIEServerWnd()
 	HWND hServer = ::FindWindowEx(m_hWndIEOwner, NULL, _T("Internet Explorer_Server"), NULL);
 	if (hServer) return hServer;
 
-	// Èç¹û²»ÊÇÖ±½Ó×Ó´°¿Ú£¬³¢ÊÔ±éÀú²éÕÒ (Í¨³£²ã¼¶: Shell Embedding -> Shell DocObject View -> Internet Explorer_Server)
+	// å¦‚æœä¸æ˜¯ç›´æ¥å­çª—å£ï¼Œå°è¯•éå†æŸ¥æ‰¾ (é€šå¸¸å±‚çº§: Shell Embedding -> Shell DocObject View -> Internet Explorer_Server)
 	struct tagFindContext { HWND hFound; } FindContext = { NULL };
 	::EnumChildWindows(m_hWndIEOwner, [](HWND hWnd, LPARAM lParam) -> BOOL 
 	{
@@ -701,7 +801,7 @@ HWND CDUIWebBrowserCtrl::FindIEUtilityWnd()
 {
 	if (NULL == m_hWndIEOwner) return NULL;
 
-	// ±éÀú²éÕÒ Internet Explorer_Hidden
+	// éå†æŸ¥æ‰¾ Internet Explorer_Hidden
 	struct tagFindContext { HWND hFound; } FindContext = { NULL };
 	::EnumWindows([](HWND hWnd, LPARAM lParam) -> BOOL
 	{
@@ -778,7 +878,7 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 	CDUIWebBrowserCtrl *pCtrl = (CDUIWebBrowserCtrl*)::GetProp(hWnd, g_strPropCtrl);
 	bool bNeedRepaint = false;
 
-	//ĞŞÕı Capture ×´Ì¬ÏÂµÄ×ø±êÆ«ÒÆ
+	//ä¿®æ­£ Capture çŠ¶æ€ä¸‹çš„åæ ‡åç§»
 	if (pCtrl && ::GetCapture() == hWnd)
 	{
 		POINT ptScreen;
@@ -787,7 +887,7 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 		HWND hMainWnd = pCtrl->GetWndHandle();
 		if (hMainWnd && ::IsWindow(hMainWnd))
 		{
-			// 1. ½«ÆÁÄ»×ø±ê×ªÎªÖ÷´°¿Ú¿Í»§Çø×ø±ê
+			// 1. å°†å±å¹•åæ ‡è½¬ä¸ºä¸»çª—å£å®¢æˆ·åŒºåæ ‡
 			POINT ptInMain = ptScreen;
 			::ScreenToClient(hMainWnd, &ptInMain);
 
@@ -806,10 +906,10 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 
 			} while (false);
 			
-			// 2. »ñÈ¡¿Ø¼şÔÚÖ÷´°¿ÚÖĞµÄÎ»ÖÃ
+			// 2. è·å–æ§ä»¶åœ¨ä¸»çª—å£ä¸­çš„ä½ç½®
 			CDUIRect rcCtrl = pCtrl->GetAbsoluteRect();
 
-			// 3. ¼ÆËãÏà¶ÔÓÚ¿Ø¼ş×óÉÏ½ÇµÄ×ø±ê (¼´ IE Ó¦¸Ã¿´µ½µÄÕıÈ·×ø±ê)
+			// 3. è®¡ç®—ç›¸å¯¹äºæ§ä»¶å·¦ä¸Šè§’çš„åæ ‡ (å³ IE åº”è¯¥çœ‹åˆ°çš„æ­£ç¡®åæ ‡)
 			CDUIPoint ptMouseInCtrl(ptInMain.x - rcCtrl.left, ptInMain.y - rcCtrl.top);
 
 			CDUIRect rcWnd;
@@ -817,7 +917,7 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 			ptMouseInCtrl.x += rcWnd.left;
 			ptMouseInCtrl.y += rcWnd.top;
 
-			// 4. ÖØĞ´ LPARAM
+			// 4. é‡å†™ LPARAM
 			lParam = MAKELPARAM(ptMouseInCtrl.x, ptMouseInCtrl.y);
 
 			bNeedRepaint = true;
@@ -825,32 +925,32 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 	}
 	else if (WM_NCDESTROY == uMsg || WM_DESTROY == uMsg)
 	{
-		// ÇåÀíÊôĞÔ
+		// æ¸…ç†å±æ€§
 		::RemoveProp(hWnd, g_strPropOldProc);
 		::RemoveProp(hWnd, g_strPropCtrl);
 	}
 
-	// µ÷ÓÃÔ­ÓĞ¹ı³Ì£¬ÈÃ IE ´¦Àí¹ö¶¯»òÂß¼­
+	// è°ƒç”¨åŸæœ‰è¿‡ç¨‹ï¼Œè®© IE å¤„ç†æ»šåŠ¨æˆ–é€»è¾‘
 	LRESULT lRes = 0;
 	if (oldProc)
 		lRes = ::CallWindowProc(oldProc, hWnd, uMsg, wParam, lParam);
 	else
 		lRes = ::DefWindowProc(hWnd, uMsg, wParam, lParam);
 
-	// Ö»ÓĞÔÚÕâÀïÀ¹½Ø²¢´¥·¢ÖØ»æ²ÅÊÇÓĞĞ§µÄ
-	// ÒòÎª IE ÔÚÆÁÄ»Íâ²»»á²úÉú WM_PAINT£¬ÎÒÃÇĞèÒª¸ù¾İ"¶¯×÷"À´Çı¶¯ÖØ»æ¡£
-	// µ±¼ì²âµ½ÒÔÏÂÏûÏ¢Ê±£¬ËµÃ÷Ò³ÃæÄÚÈİºÜ¿ÉÄÜ·¢ÉúÁË±ä»¯£¨¹ö¶¯¡¢µã»÷µÈ£©¡£
+	// åªæœ‰åœ¨è¿™é‡Œæ‹¦æˆªå¹¶è§¦å‘é‡ç»˜æ‰æ˜¯æœ‰æ•ˆçš„
+	// å› ä¸º IE åœ¨å±å¹•å¤–ä¸ä¼šäº§ç”Ÿ WM_PAINTï¼Œæˆ‘ä»¬éœ€è¦æ ¹æ®"åŠ¨ä½œ"æ¥é©±åŠ¨é‡ç»˜ã€‚
+	// å½“æ£€æµ‹åˆ°ä»¥ä¸‹æ¶ˆæ¯æ—¶ï¼Œè¯´æ˜é¡µé¢å†…å®¹å¾ˆå¯èƒ½å‘ç”Ÿäº†å˜åŒ–ï¼ˆæ»šåŠ¨ã€ç‚¹å‡»ç­‰ï¼‰ã€‚
 	if (pCtrl && ::IsWindow(pCtrl->GetWndHandle()))
 	{
 		switch (uMsg)
 		{
-			case WM_MOUSEWHEEL: // ¹öÂÖ¹ö¶¯
-			case WM_VSCROLL:    // ´¹Ö±¹ö¶¯ÌõÏûÏ¢
-			case WM_HSCROLL:    // Ë®Æ½¹ö¶¯ÌõÏûÏ¢
-			case WM_KEYDOWN:    // ¼üÅÌ°´¼ü (ÈçÉÏÏÂ×óÓÒ¼ü)
+			case WM_MOUSEWHEEL: // æ»šè½®æ»šåŠ¨
+			case WM_VSCROLL:    // å‚ç›´æ»šåŠ¨æ¡æ¶ˆæ¯
+			case WM_HSCROLL:    // æ°´å¹³æ»šåŠ¨æ¡æ¶ˆæ¯
+			case WM_KEYDOWN:    // é”®ç›˜æŒ‰é”® (å¦‚ä¸Šä¸‹å·¦å³é”®)
 			case WM_KEYUP:
-			case WM_CHAR:       // ×Ö·ûÊäÈë
-			case WM_LBUTTONDOWN:// Êó±êµã»÷½»»¥
+			case WM_CHAR:       // å­—ç¬¦è¾“å…¥
+			case WM_LBUTTONDOWN:// é¼ æ ‡ç‚¹å‡»äº¤äº’
 			case WM_LBUTTONUP:
 			case WM_RBUTTONUP:
 			{
@@ -864,8 +964,8 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 			}
 			case WM_TIMER:
 			{
-				// [¿ÉÑ¡] Èç¹ûĞèÒªÖ§³ÖÍøÒ³¶¯»­(ÈçGIF)»òÆ½»¬¹ö¶¯¹ßĞÔ£¬¿ÉÒÔ·Å¿ª WM_TIMER
-				// µ«Ğè×¢ÒâÕâ»áÔö¼Ó CPU Õ¼ÓÃ£¬½¨ÒéÖ»ÔÚÌØ¶¨Âß¼­ÏÂ¿ªÆô
+				// [å¯é€‰] å¦‚æœéœ€è¦æ”¯æŒç½‘é¡µåŠ¨ç”»(å¦‚GIF)æˆ–å¹³æ»‘æ»šåŠ¨æƒ¯æ€§ï¼Œå¯ä»¥æ”¾å¼€ WM_TIMER
+				// ä½†éœ€æ³¨æ„è¿™ä¼šå¢åŠ  CPU å ç”¨ï¼Œå»ºè®®åªåœ¨ç‰¹å®šé€»è¾‘ä¸‹å¼€å¯
 				// bNeedRepaint = true; 
 				break;
 			}
@@ -873,7 +973,7 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 
 		if (bNeedRepaint)
 		{
-			// Ö÷¶¯±ê¼Ç DUI ¿Ø¼şÎŞĞ§£¬DUI ÏûÏ¢Ñ­»·»áÔÚËæºóµ÷ÓÃ PaintBkImage -> PrintWindow
+			// ä¸»åŠ¨æ ‡è®° DUI æ§ä»¶æ— æ•ˆï¼ŒDUI æ¶ˆæ¯å¾ªç¯ä¼šåœ¨éšåè°ƒç”¨ PaintBkImage -> PrintWindow
 			pCtrl->Invalidate();
 		}
 	}

@@ -1,4 +1,4 @@
-#ifndef __DUIWEBBROWSERCTRL_H__
+ï»¿#ifndef __DUIWEBBROWSERCTRL_H__
 #define __DUIWEBBROWSERCTRL_H__
 
 #pragma once
@@ -7,7 +7,7 @@
 //WebBrowser
 #include <ExDisp.h>
 
-// JS»Øµ÷º¯ÊıÀàĞÍ¶¨Òå: ½ÓÊÕ²ÎÊıÊı×é£¬·µ»Ø½á¹û
+// JSå›è°ƒå‡½æ•°ç±»å‹å®šä¹‰: æ¥æ”¶å‚æ•°æ•°ç»„ï¼Œè¿”å›ç»“æœ
 typedef std::function<CComVariant(const std::vector<CComVariant>&)> JSCallbackFunc;
 
 //////////////////////////////////////////////////////////////////////////
@@ -34,8 +34,8 @@ protected:
 	//variant
 protected:
 	CMMString							m_strUrlCur;
-	IWebBrowser2 *						m_pWebBrowser = NULL;	// IE COM ½Ó¿Ú
-	HWND								m_hWndIEOwner = NULL;		// ActiveX ËŞÖ÷´°¿Ú
+	IWebBrowser2 *						m_pWebBrowser = NULL;	// IE COM æ¥å£
+	HWND								m_hWndIEOwner = NULL;		// ActiveX å®¿ä¸»çª—å£
 	HWND								m_hWndIEServer = NULL;
 	HWND								m_hWndIEUtility = NULL;
 	UINT_PTR							m_uRefreshTimerID = 0;

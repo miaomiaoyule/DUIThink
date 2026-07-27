@@ -358,3 +358,4 @@
 #define IDC_RadioBoxHomePage 				(101107)
 #define IDC_RadioBoxControlView 				(101108)
 #define IDC_RadioBoxStaticView 				(101109)
+#define IDC_WebBrowserCtrl_101110 				(101110)
