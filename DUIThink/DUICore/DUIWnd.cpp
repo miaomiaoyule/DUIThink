@@ -12,14 +12,12 @@ static Uint32 SDLCALL __DuiSdlTimerProc(void *userdata, SDL_TimerID timerID, Uin
 	CDUIWnd *pWnd = static_cast<CDUIWnd *>(userdata);
 	if (pWnd == NULL) return 0;
 
-	// 走异步消息队列，复用现有 WM_TIMER -> OnTimer 分发
 	if (0 == pWnd->PostMessage(WM_TIMER, (WPARAM)timerID, 0))
 	{
-		// 窗口无效或投递失败则停止该定时器
 		return 0;
 	}
 
-	return interval; // 保持周期触发
+	return interval;
 }
 #endif
 
@@ -66,7 +64,10 @@ CDUIWnd::~CDUIWnd()
 	if (DuiIsWindow(m_hWnd))
 	{
 #if defined(DuiPlatform_SDL)
-		Close(Dui_CtrlIDInner_BtnCancel);
+		SDL_RemoveEventWatch(&CDUIWnd::SDLEventWatch, this);
+		SDL_DestroyWindow(m_hWnd);
+		m_hWnd = NULL;
+		m_uWndID = 0;
 #else
 		if (m_hDCPaint)
 		{
@@ -197,7 +198,6 @@ void CDUIWnd::OnWinDragEnter(IDataObject *pIDataObject, DWORD dwKeyState, POINTL
 			GlobalUnlock(medium.hGlobal);
 			ReleaseStgMedium(&medium);
 
-			//检测CFSTR_FILENAMEMAP与CF_HDROP文件数量保持一致,如不一致清空filenamemap
 			if (m_DropData.vecFileNameMap.size() > 0)
 			{
 				if (m_DropData.vecFileNameMap.size() != m_DropData.vecDropFiles.size())
@@ -487,13 +487,34 @@ HWND CDUIWnd::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwE
 #if defined(DuiPlatform_SDL)
 	m_hWndParent = hWndParent;
 	m_ptCreate = { x, y };
-	m_hWnd = SDL_CreateWindow(WStringToUtf8(lpszName).c_str(), cx, cy, SDL_WINDOW_RESIZABLE);
-	if (NULL == m_hWnd) return nullptr;
+
+	if (cx <= 0) cx = 800;
+	if (cy <= 0) cy = 600;
+
+	SDL_WindowFlags uFlags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN;
+	m_hWnd = SDL_CreateWindow(WStringToUtf8(NULL == lpszName ? _T("") : lpszName).c_str(), cx, cy, uFlags);
+	if (NULL == m_hWnd) return NULL;
 
 	m_uWndID = SDL_GetWindowID(m_hWnd);
-	SDL_SetWindowPosition(m_hWnd, x, y);
+	if (CW_USEDEFAULT != x && CW_USEDEFAULT != y)
+	{
+		SDL_SetWindowPosition(m_hWnd, x, y);
+	}
+	if (hWndParent)
+	{
+		SDL_SetWindowParent(m_hWnd, hWndParent);
+	}
+
+	//注册用户事件类型（全局只注册一次）
+	GetSdlUserEventType();
+	SDL_AddEventWatch(&CDUIWnd::SDLEventWatch, this);
+
+	//对齐 Win32 CreateWindow 的 WM_CREATE 时机
+	OnWndMessage(WM_CREATE, 0, 0);
+
 	return m_hWnd;
 #elif defined(__APPLE__) && defined(__MACH__)
+	return NULL;
 #elif defined(_WIN32) || defined(_WIN64)
 	if (GetSuperClassName() != NULL && !RegisterSuperclass()) return NULL;
 	if (GetSuperClassName() == NULL && !RegisterWindowClass()) return NULL;
@@ -505,6 +526,7 @@ HWND CDUIWnd::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwE
 	m_uWndID = (UINT)m_hWnd;
 	return m_hWnd;
 #else
+	return NULL;
 #endif
 }
 
@@ -627,6 +649,11 @@ UINT CDUIWnd::DoModal()
 		SDL_PushEvent(&quitEvent);
 	}
 
+	if (0 == nRet)
+	{
+		nRet = (m_uCtrlIDClose == 0) ? Dui_CtrlIDInner_BtnCancel : m_uCtrlIDClose;
+	}
+
 	return nRet;
 #else
 	//create
@@ -725,6 +752,11 @@ UINT CDUIWnd::DoBlock()
 		SDL_Event quitEvent = {};
 		quitEvent.type = SDL_EVENT_QUIT;
 		SDL_PushEvent(&quitEvent);
+	}
+
+	if (0 == nRet)
+	{
+		nRet = (m_uCtrlIDClose == 0) ? Dui_CtrlIDInner_BtnCancel : m_uCtrlIDClose;
 	}
 
 	return nRet;
@@ -943,9 +975,8 @@ LRESULT CDUIWnd::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*=
 		return 0;
 	}
 
-	//register
-	const Uint32 uEventType = SDL_RegisterEvents(1);
-	if (uEventType == static_cast<Uint32>(-1))
+	const Uint32 uEventType = GetSdlUserEventType();
+	if (uEventType == 0 || uEventType == static_cast<Uint32>(-1))
 	{
 		ASSERT(false);
 		return 0;
@@ -1758,7 +1789,7 @@ POINT CDUIWnd::GetMousePosDown() const
 CDUIRect CDUIWnd::GetClientRect() const
 {
 #if defined(DuiPlatform_SDL)
-	if (false == DuiIsWindow(m_hWnd)) return;
+	if (false == DuiIsWindow(m_hWnd)) return CDUIRect();
 
 	int cx = 0;
 	int cy = 0;
@@ -1775,12 +1806,12 @@ CDUIRect CDUIWnd::GetClientRect() const
 CDUIRect CDUIWnd::GetWindowRect()
 {
 #if defined(DuiPlatform_SDL)
-	if (false == DuiIsWindow(m_hWnd)) return;
+	if (false == DuiIsWindow(m_hWnd)) return CDUIRect();
 
-	int cx = 0;
-	int cy = 0;
+	int x = 0, y = 0, cx = 0, cy = 0;
+	SDL_GetWindowPosition(m_hWnd, &x, &y);
 	SDL_GetWindowSize(m_hWnd, &cx, &cy);
-	CDUIRect rcWnd(0, 0, cx, cy);
+	CDUIRect rcWnd(x, y, x + cx, y + cy);
 #else
 	CDUIRect rcWnd;
 	::GetWindowRect(m_hWnd, &rcWnd);
@@ -2816,7 +2847,9 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 #endif
 
 	//init
+#if !defined(DuiPlatform_SDL)
 	CMMDragDrop::UnRegister();
+#endif
 	m_uTimerID = 0x1000;
 	m_bMouseTracking = false;
 	m_bRefreshToolTipNeeded = false;
@@ -2864,7 +2897,21 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIWnd::OnClose(WPARAM wParam, LPARAM lParam)
 {
+#if defined(DuiPlatform_SDL)
+	m_uCtrlIDClose = (UINT)wParam;
+	if (DuiIsWindow(m_hWnd))
+	{
+		SDL_HideWindow(m_hWnd);
+		SDL_RemoveEventWatch(&CDUIWnd::SDLEventWatch, this);
+		SDL_DestroyWindow(m_hWnd);
+		m_hWnd = NULL;
+		m_uWndID = 0;
+	}
+	OnFinalMessage();
+	return 0;
+#else
 	return OnOldWndProc(WM_CLOSE, wParam, lParam);
+#endif
 }
 
 LRESULT CDUIWnd::OnDestroy(WPARAM wParam, LPARAM lParam)
@@ -2995,7 +3042,32 @@ LRESULT CDUIWnd::OnSysCommand(WPARAM wParam, LPARAM lParam)
 		return 0;
 	}
 
-#if defined(WIN32) && !defined(UNDER_CE)
+#if defined(DuiPlatform_SDL)
+	switch (wParam)
+	{
+	case SC_MINIMIZE:
+		SDL_MinimizeWindow(m_hWnd);
+		break;
+	case SC_MAXIMIZE:
+		SDL_MaximizeWindow(m_hWnd);
+		break;
+	case SC_RESTORE:
+		SDL_RestoreWindow(m_hWnd);
+		break;
+	default:
+		break;
+	}
+
+	CDUIControlBase *pBtnMax = FindControl(Dui_CtrlIDInner_BtnMax);
+	CDUIControlBase *pBtnRestore = FindControl(Dui_CtrlIDInner_BtnRestore);
+	if (pBtnMax && pBtnRestore)
+	{
+		pBtnMax->SetVisible(false == DuiIsZoomed(m_hWnd));
+		pBtnRestore->SetVisible(DuiIsZoomed(m_hWnd));
+	}
+
+	return 0;
+#elif defined(WIN32) && !defined(UNDER_CE)
 	BOOL bZoomed = DuiIsZoomed(m_hWnd);
 	LRESULT lRes = OnOldWndProc(WM_SYSCOMMAND, wParam, lParam);
 	if (DuiIsZoomed(m_hWnd) != bZoomed && false == DuiIsIconic(m_hWnd))
@@ -3009,11 +3081,11 @@ LRESULT CDUIWnd::OnSysCommand(WPARAM wParam, LPARAM lParam)
 			pBtnRestore->SetVisible(DuiIsZoomed(m_hWnd));
 		}
 	}
-#else
-	LRESULT lRes = OnOldWndProc(WM_SYSCOMMAND, wParam, lParam);
-#endif
 
 	return lRes;
+#else
+	return OnOldWndProc(WM_SYSCOMMAND, wParam, lParam);
+#endif
 }
 
 LRESULT CDUIWnd::OnLButtonDown(WPARAM wParam, LPARAM lParam)
@@ -3739,10 +3811,10 @@ LRESULT CDUIWnd::OnPaint(CDUIRect rcPaint)
 	if (false == ::IntersectRect(&rcPaint, &rcPaint, &rcClient)) return lRes;
 	if (rcPaint.Empty()) return lRes;
 
-	// 这里假设 m_pBmpBackgroundBits 已由你的渲染流程填充为 BGRA32（含 alpha）
-	if (NULL == m_pBmpBackgroundBits) return lRes;
+	EnsurePaintScene();
+	if (NULL == m_pBmpBackgroundBits || NULL == m_hMemDcBackground) return lRes;
 
-	// layered: 透明窗体总体透明度
+	// layered opacity
 	if (IsWndLayered())
 	{
 		const float fOpacity = max(0.0f, min(1.0f, GetWndAlpha() / 255.0f));
@@ -3760,6 +3832,8 @@ LRESULT CDUIWnd::OnPaint(CDUIRect rcPaint)
 	const int nHeight = rcClient.GetHeight();
 	const int nPitch = nWidth * 4; // BGRA32
 
+	CDUIRenderEngine::ClearPixel(m_pBmpBackgroundBits, nWidth, rcPaint);
+
 	//paint
 	try
 	{
@@ -3776,7 +3850,6 @@ LRESULT CDUIWnd::OnPaint(CDUIRect rcPaint)
 	SDL_Surface *pSrc = SDL_CreateSurfaceFrom(nWidth, nHeight, SDL_PIXELFORMAT_BGRA32, m_pBmpBackgroundBits, nPitch);
 	if (NULL == pSrc) return lRes;
 
-	// 整窗拷贝（异形由像素 alpha 决定）
 	SDL_BlitSurface(pSrc, NULL, pWinSurface, NULL);
 	SDL_DestroySurface(pSrc);
 
@@ -4335,19 +4408,226 @@ CDUIControlBase * CALLBACK CDUIWnd::__FindControlsFromUpdate(CDUIControlBase *pT
 }
 
 #if defined(DuiPlatform_SDL)
+Uint32 CDUIWnd::GetSdlUserEventType()
+{
+	static Uint32 s_uUserEvent = 0;
+	if (0 == s_uUserEvent)
+	{
+		s_uUserEvent = SDL_RegisterEvents(1);
+	}
+
+	return s_uUserEvent;
+}
+
+UINT CDUIWnd::SdlKeycodeToVK(SDL_Keycode key)
+{
+	switch (key)
+	{
+	case SDLK_RETURN: return VK_RETURN;
+	case SDLK_ESCAPE: return VK_ESCAPE;
+	case SDLK_BACKSPACE: return VK_BACK;
+	case SDLK_TAB: return VK_TAB;
+	case SDLK_SPACE: return VK_SPACE;
+	case SDLK_LEFT: return VK_LEFT;
+	case SDLK_RIGHT: return VK_RIGHT;
+	case SDLK_UP: return VK_UP;
+	case SDLK_DOWN: return VK_DOWN;
+	case SDLK_HOME: return VK_HOME;
+	case SDLK_END: return VK_END;
+	case SDLK_PAGEUP: return VK_PRIOR;
+	case SDLK_PAGEDOWN: return VK_NEXT;
+	case SDLK_DELETE: return VK_DELETE;
+	case SDLK_LCTRL:
+	case SDLK_RCTRL: return VK_CONTROL;
+	case SDLK_LSHIFT:
+	case SDLK_RSHIFT: return VK_SHIFT;
+	case SDLK_LALT:
+	case SDLK_RALT: return VK_MENU;
+	default:
+		if (key >= SDLK_A && key <= SDLK_Z)
+		{
+			return (UINT)('A' + (key - SDLK_A));
+		}
+		if (key >= SDLK_0 && key <= SDLK_9)
+		{
+			return (UINT)('0' + (key - SDLK_0));
+		}
+		if (key >= SDLK_F1 && key <= SDLK_F12)
+		{
+			return (UINT)(VK_F1 + (key - SDLK_F1));
+		}
+		return (UINT)key;
+	}
+}
+
+void CDUIWnd::EnsurePaintScene()
+{
+#if defined(_WIN32) || defined(_WIN64)
+	CDUIRect rcClient = GetClientRect();
+	if (rcClient.Empty()) return;
+
+	if (m_hBmpBackground && m_hMemDcBackground && m_pBmpBackgroundBits)
+	{
+		BITMAP bm = {};
+		if (::GetObject(m_hBmpBackground, sizeof(bm), &bm)
+			&& bm.bmWidth == rcClient.GetWidth()
+			&& bm.bmHeight == rcClient.GetHeight())
+		{
+			return;
+		}
+	}
+
+	ReleasePaintScene();
+
+	m_hMemDcBackground = ::CreateCompatibleDC(NULL);
+	m_hBmpBackground = CDUIRenderEngine::CreateARGB32Bitmap(NULL, rcClient.GetWidth(), rcClient.GetHeight(), &m_pBmpBackgroundBits);
+	if (m_hMemDcBackground && m_hBmpBackground && m_pBmpBackgroundBits)
+	{
+		m_hBmpBackgroundOld = (HBITMAP)::SelectObject(m_hMemDcBackground, m_hBmpBackground);
+	}
+#else
+	(void)0;
+#endif
+}
+
+void CDUIWnd::OnSdlWindowEvent(const SDL_Event &e)
+{
+	switch (e.type)
+	{
+	case SDL_EVENT_WINDOW_SHOWN:
+		OnWndMessage(WM_SHOWWINDOW, TRUE, 0);
+		Invalidate();
+		break;
+	case SDL_EVENT_WINDOW_HIDDEN:
+		OnWndMessage(WM_SHOWWINDOW, FALSE, 0);
+		break;
+	case SDL_EVENT_WINDOW_EXPOSED:
+		OnWndMessage(WM_PAINT, 0, 0);
+		break;
+	case SDL_EVENT_WINDOW_MOVED:
+		OnWndMessage(WM_MOVE, 0, MAKELPARAM(e.window.data1, e.window.data2));
+		break;
+	case SDL_EVENT_WINDOW_RESIZED:
+	case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+		ReleasePaintScene();
+		OnWndMessage(WM_SIZE, SIZE_RESTORED, MAKELPARAM(e.window.data1, e.window.data2));
+		Invalidate();
+		break;
+	case SDL_EVENT_WINDOW_MINIMIZED:
+		OnWndMessage(WM_SIZE, SIZE_MINIMIZED, 0);
+		break;
+	case SDL_EVENT_WINDOW_MAXIMIZED:
+		OnWndMessage(WM_SIZE, SIZE_MAXIMIZED, 0);
+		Invalidate();
+		break;
+	case SDL_EVENT_WINDOW_RESTORED:
+		OnWndMessage(WM_SIZE, SIZE_RESTORED, 0);
+		Invalidate();
+		break;
+	case SDL_EVENT_WINDOW_FOCUS_GAINED:
+		OnWndMessage(WM_SETFOCUS, 0, 0);
+		break;
+	case SDL_EVENT_WINDOW_FOCUS_LOST:
+		OnWndMessage(WM_KILLFOCUS, 0, 0);
+		break;
+	case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+		OnWndMessage(WM_CLOSE, 0, 0);
+		break;
+	case SDL_EVENT_WINDOW_DESTROYED:
+		OnWndMessage(WM_DESTROY, 0, 0);
+		break;
+	default:
+		break;
+	}
+}
+
+void CDUIWnd::OnSdlMouseEvent(const SDL_Event &e)
+{
+	const UINT uKeyState = MapKeyState();
+	int x = 0;
+	int y = 0;
+
+	switch (e.type)
+	{
+	case SDL_EVENT_MOUSE_MOTION:
+		x = (int)e.motion.x;
+		y = (int)e.motion.y;
+		OnWndMessage(WM_MOUSEMOVE, uKeyState, MAKELPARAM(x, y));
+		break;
+	case SDL_EVENT_MOUSE_BUTTON_DOWN:
+		x = (int)e.button.x;
+		y = (int)e.button.y;
+		if (SDL_BUTTON_LEFT == e.button.button)
+		{
+			OnWndMessage((e.button.clicks >= 2) ? WM_LBUTTONDBLCLK : WM_LBUTTONDOWN, uKeyState, MAKELPARAM(x, y));
+		}
+		else if (SDL_BUTTON_RIGHT == e.button.button)
+		{
+			OnWndMessage((e.button.clicks >= 2) ? WM_RBUTTONDBLCLK : WM_RBUTTONDOWN, uKeyState, MAKELPARAM(x, y));
+		}
+		else if (SDL_BUTTON_MIDDLE == e.button.button)
+		{
+			OnWndMessage(WM_MBUTTONDOWN, uKeyState, MAKELPARAM(x, y));
+		}
+		break;
+	case SDL_EVENT_MOUSE_BUTTON_UP:
+		x = (int)e.button.x;
+		y = (int)e.button.y;
+		if (SDL_BUTTON_LEFT == e.button.button)
+		{
+			OnWndMessage(WM_LBUTTONUP, uKeyState, MAKELPARAM(x, y));
+		}
+		else if (SDL_BUTTON_RIGHT == e.button.button)
+		{
+			OnWndMessage(WM_RBUTTONUP, uKeyState, MAKELPARAM(x, y));
+		}
+		else if (SDL_BUTTON_MIDDLE == e.button.button)
+		{
+			OnWndMessage(WM_MBUTTONUP, uKeyState, MAKELPARAM(x, y));
+		}
+		break;
+	case SDL_EVENT_MOUSE_WHEEL:
+	{
+		float fx = 0, fy = 0;
+		SDL_GetMouseState(&fx, &fy);
+		x = (int)fx;
+		y = (int)fy;
+		const int nDelta = (int)(e.wheel.y * WHEEL_DELTA);
+		OnWndMessage(WM_MOUSEWHEEL, MAKEWPARAM(uKeyState, nDelta), MAKELPARAM(x, y));
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void CDUIWnd::OnSdlKeyEvent(const SDL_Event &e)
+{
+	const UINT uVK = SdlKeycodeToVK(e.key.key);
+	const bool bSys = (0 != (e.key.mod & SDL_KMOD_ALT));
+
+	if (SDL_EVENT_KEY_DOWN == e.type)
+	{
+		OnWndMessage(bSys ? WM_SYSKEYDOWN : WM_KEYDOWN, uVK, 0);
+	}
+	else if (SDL_EVENT_KEY_UP == e.type)
+	{
+		OnWndMessage(bSys ? WM_SYSKEYUP : WM_KEYUP, uVK, 0);
+	}
+}
+
 bool SDLCALL CDUIWnd::SDLEventWatch(void *userdata, SDL_Event *e)
 {
 	CDUIWnd *self = static_cast<CDUIWnd *>(userdata);
-	if (NULL == self || e->window.windowID != self->m_uWndID) return false;
+	if (NULL == self || NULL == e) return false;
 
-	//user event
-	if (e->type == SDL_RegisterEvents(1))
+	const Uint32 uUserEvent = GetSdlUserEventType();
+	if (uUserEvent != 0 && e->type == uUserEvent)
 	{
 		tagDuiSdlAsyncMsg *pAsyncMsg = static_cast<tagDuiSdlAsyncMsg *>(e->user.data1);
 		if (pAsyncMsg && pAsyncMsg->pWnd == self)
 		{
 			self->OnWndMessage(pAsyncMsg->uMsg, pAsyncMsg->wParam, pAsyncMsg->lParam);
-
 			MMSafeDelete(pAsyncMsg);
 			e->user.data1 = NULL;
 		}
@@ -4355,69 +4635,88 @@ bool SDLCALL CDUIWnd::SDLEventWatch(void *userdata, SDL_Event *e)
 		return false;
 	}
 
-	//event
-	switch (e->type)
+	SDL_WindowID uWndID = 0;
+	if (e->type >= SDL_EVENT_WINDOW_FIRST && e->type <= SDL_EVENT_WINDOW_LAST)
 	{
-		case SDL_EVENT_WINDOW_SHOWN:
-		case SDL_EVENT_WINDOW_HIDDEN:
-		case SDL_EVENT_WINDOW_RESIZED:
-		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
-		case SDL_EVENT_WINDOW_DESTROYED:
-		{
-			self->OnSdlWindowEvent(*e);
-		
-			break;
-		}
-		case SDL_EVENT_MOUSE_MOTION:
-		case SDL_EVENT_MOUSE_BUTTON_DOWN:
-		case SDL_EVENT_MOUSE_BUTTON_UP:
-		{
-			self->OnSdlMouseEvent(*e);
-
-			break;
-		}
-		case SDL_EVENT_KEY_DOWN:
-		case SDL_EVENT_KEY_UP:
-		{
-			self->OnSdlKeyEvent(*e);
-
-			break;
-		}
-		case SDL_EVENT_TEXT_EDITING:
-		{
-			if (self && self->m_pFocusCtrl)
-			{
-				// 尝试把焦点控件转换为可处理 IME 的编辑控件
-				CDUIThinkEditCtrl *pEdit = MMInterfaceHelper(CDUIThinkEditCtrl, self->m_pFocusCtrl);
-				if (pEdit)
-				{
-					pEdit->OnSdlTextEditing(e->text.text, /*start*/0, /*length*/0);
-				}
-			}
-
-			break;
-		}
-		case SDL_TEXTINPUT:
-		{
-			// 提交文本事件（最终文本）
-			if (self && self->m_pFocusCtrl)
-			{
-				CDUIThinkEditCtrl *pEdit = MMInterfaceHelper(CDUIThinkEditCtrl, self->m_pFocusCtrl);
-				if (pEdit)
-				{
-					// e->text.text 为 UTF-8 提交文本
-					pEdit->OnSdlTextInput(e->text.text);
-				}
-			}
-			break;
-		}
-		default:
-		{
-			break;
-		}
+		uWndID = e->window.windowID;
+	}
+	else if (e->type == SDL_EVENT_MOUSE_MOTION || e->type == SDL_EVENT_MOUSE_BUTTON_DOWN
+		|| e->type == SDL_EVENT_MOUSE_BUTTON_UP || e->type == SDL_EVENT_MOUSE_WHEEL)
+	{
+		uWndID = e->motion.windowID;
+	}
+	else if (e->type == SDL_EVENT_KEY_DOWN || e->type == SDL_EVENT_KEY_UP)
+	{
+		uWndID = e->key.windowID;
+	}
+	else if (e->type == SDL_EVENT_TEXT_EDITING)
+	{
+		uWndID = e->edit.windowID;
+	}
+	else if (e->type == SDL_EVENT_TEXT_INPUT)
+	{
+		uWndID = e->text.windowID;
+	}
+	else
+	{
+		return false;
 	}
 
-	//false allow the event to be processed by other SDL event handlers
+	if (uWndID != self->m_uWndID) return false;
+
+	switch (e->type)
+	{
+	case SDL_EVENT_WINDOW_SHOWN:
+	case SDL_EVENT_WINDOW_HIDDEN:
+	case SDL_EVENT_WINDOW_EXPOSED:
+	case SDL_EVENT_WINDOW_MOVED:
+	case SDL_EVENT_WINDOW_RESIZED:
+	case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+	case SDL_EVENT_WINDOW_MINIMIZED:
+	case SDL_EVENT_WINDOW_MAXIMIZED:
+	case SDL_EVENT_WINDOW_RESTORED:
+	case SDL_EVENT_WINDOW_FOCUS_GAINED:
+	case SDL_EVENT_WINDOW_FOCUS_LOST:
+	case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+	case SDL_EVENT_WINDOW_DESTROYED:
+		self->OnSdlWindowEvent(*e);
+		break;
+	case SDL_EVENT_MOUSE_MOTION:
+	case SDL_EVENT_MOUSE_BUTTON_DOWN:
+	case SDL_EVENT_MOUSE_BUTTON_UP:
+	case SDL_EVENT_MOUSE_WHEEL:
+		self->OnSdlMouseEvent(*e);
+		break;
+	case SDL_EVENT_KEY_DOWN:
+	case SDL_EVENT_KEY_UP:
+		self->OnSdlKeyEvent(*e);
+		break;
+	case SDL_EVENT_TEXT_EDITING:
+	{
+		CDUIThinkEditCtrl *pEdit = MMInterfaceHelper(CDUIThinkEditCtrl, self->m_pFocusCtrl);
+		if (pEdit && e->edit.text)
+		{
+			DuiMessage DuiMsg = {};
+			DuiMsg.strText = CA2CT(e->edit.text, CP_UTF8);
+			pEdit->OnDuiTextEditing(DuiMsg);
+		}
+		break;
+	}
+	case SDL_EVENT_TEXT_INPUT:
+	{
+		CDUIThinkEditCtrl *pEdit = MMInterfaceHelper(CDUIThinkEditCtrl, self->m_pFocusCtrl);
+		if (pEdit && e->text.text)
+		{
+			DuiMessage DuiMsg = {};
+			DuiMsg.strText = CA2CT(e->text.text, CP_UTF8);
+			pEdit->OnDuiTextInput(DuiMsg);
+		}
+		break;
+	}
+	default:
+		break;
+	}
+
 	return false;
 }
 #else
@@ -4568,11 +4867,24 @@ void CDUIWnd::ForegroundWindow(HWND hWnd)
 UINT CDUIWnd::MapKeyState()
 {
 	UINT uState = 0;
+#if defined(DuiPlatform_SDL)
+	SDL_Keymod mod = SDL_GetModState();
+	if (mod & SDL_KMOD_CTRL) uState |= MK_CONTROL;
+	if (mod & SDL_KMOD_SHIFT) uState |= MK_SHIFT;
+	if (mod & SDL_KMOD_ALT) uState |= MK_ALT;
+
+	float x = 0, y = 0;
+	SDL_MouseButtonFlags buttons = SDL_GetGlobalMouseState(&x, &y);
+	if (buttons & SDL_BUTTON_LMASK) uState |= MK_LBUTTON;
+	if (buttons & SDL_BUTTON_RMASK) uState |= MK_RBUTTON;
+	if (buttons & SDL_BUTTON_MMASK) uState |= MK_MBUTTON;
+#else
 	if (::GetKeyState(VK_CONTROL) < 0) uState |= MK_CONTROL;
 	if (::GetKeyState(VK_RBUTTON) < 0) uState |= MK_RBUTTON;
 	if (::GetKeyState(VK_LBUTTON) < 0) uState |= MK_LBUTTON;
 	if (::GetKeyState(VK_MBUTTON) < 0) uState |= MK_MBUTTON;
 	if (::GetKeyState(VK_SHIFT) < 0) uState |= MK_SHIFT;
 	if (::GetKeyState(VK_MENU) < 0) uState |= MK_ALT;
+#endif
 	return uState;
 }

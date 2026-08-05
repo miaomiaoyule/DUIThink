@@ -403,6 +403,9 @@ private:
 	void OnSdlWindowEvent(const SDL_Event& e);
 	void OnSdlMouseEvent(const SDL_Event& e);
 	void OnSdlKeyEvent(const SDL_Event& e);
+	void EnsurePaintScene();
+	static Uint32 GetSdlUserEventType();
+	static UINT SdlKeycodeToVK(SDL_Keycode key);
 #else
 	bool RegisterSuperclass();
 	bool RegisterWindowClass();

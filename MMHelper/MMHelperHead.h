@@ -2,15 +2,22 @@
 #define __MM_HELPER_H__
 
 //////////////////////////////////////////////////////////////////////////
-//导出定义
 #ifndef MMHELPER_API
 	#ifdef MMHELPLIB
 		#define MMHELPER_API
 	#else
-		#ifdef MMHELPER_DLL
-			#define MMHELPER_API _declspec(dllexport)
+		#if defined(_MSC_VER)
+			#ifdef MMHELPER_DLL
+				#define MMHELPER_API __declspec(dllexport)
+			#else
+				#define MMHELPER_API __declspec(dllimport)
+			#endif
 		#else
-			#define MMHELPER_API _declspec(dllimport)
+			#ifdef MMHELPER_DLL
+				#define MMHELPER_API __attribute__((visibility("default")))
+			#else
+				#define MMHELPER_API
+			#endif
 		#endif
 	#endif
 #endif
@@ -46,15 +53,29 @@
 #endif /* _HAS_NODISCARD */
 
 //////////////////////////////////////////////////////////////////////////////////
-//包含文件
 #include <stdio.h>
 #include <stdlib.h>
-#include <tchar.h>
 #include <assert.h>
-#include <malloc.h>
 #include <stddef.h>
 #include <time.h>
 #include <math.h>
+#include <string.h>
+#if defined(_WIN32) || defined(_WIN64)
+#include <tchar.h>
+#include <malloc.h>
+#else
+#include <wchar.h>
+#ifndef _T
+#ifdef UNICODE
+#define _T(x) L##x
+#else
+#define _T(x) x
+#endif
+#endif
+#ifndef TEXT
+#define TEXT _T
+#endif
+#endif
 
 #include <vector>
 #include <set>
@@ -73,11 +94,14 @@
 #include <codecvt>
 using namespace std;
 
+//可通过编译宏关闭：-UDuiPlatform_SDL 或在工程里改成未定义
+#ifndef DuiPlatform_SDL
 #define DuiPlatform_SDL
+#endif
+
 #if defined(DuiPlatform_SDL)
-	#include "../ThirdDepend/SDL3/SDL.h"
-	typedef SDL_Window* HWND;
-	typedef SDL_DisplayID HMONITOR;
+	#include "MMPlatformTypes.h"
+
 	typedef char CHAR;
 	typedef CHAR *LPSTR;
 	typedef const CHAR *LPCSTR;
@@ -93,8 +117,12 @@ using namespace std;
 	typedef TCHAR *LPTSTR;
 	typedef const TCHAR *LPCTSTR;
 
+#ifndef CP_ACP
 #define CP_ACP 0
+#endif
+#ifndef CP_UTF8
 #define CP_UTF8 1
+#endif
 #else
 	#include <windows.h>
 	#include <windowsx.h>
@@ -129,8 +157,10 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 //////////////////////////////////////////////////////////////////////////
 #define MMSvgEnable
 #ifdef MMSvgEnable
+#if defined(_WIN32) || defined(_WIN64)
 #include "../ThirdDepend/svg/Include/svg.h"
 
+#ifdef _MSC_VER
 #ifdef _DEBUG
 	#ifdef _DLL
 		#ifdef _WIN64
@@ -160,10 +190,11 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 		#endif
 	#endif
 #endif
+#endif // _MSC_VER
+#endif // _WIN32
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////
-//导出文件
 #include "MMDefine.h"
 #include "MMHash.h"
 #include "MMString.h"

@@ -139,8 +139,10 @@ private:
 	std::vector<BYTE>					m_vecZipData;
 
 	//gdiplus
-	ULONG_PTR							m_uToken;
+#if defined(_WIN32) || defined(_WIN64)
+	ULONG_PTR							m_uToken = 0;
 	Gdiplus::GdiplusStartupInput		m_GdiplusInput;
+#endif
 
 	//override
 protected:	

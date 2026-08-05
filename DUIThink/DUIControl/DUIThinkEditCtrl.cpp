@@ -1861,7 +1861,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiTextEditing(const DuiMessage &Msg)
 	{
 		SetReplaceSel(Msg.strText);
 
-		if (SDL_IsTextInputActive())
+		if (SDL_TextInputActive(GetWndHandle()))
 		{
 			SDL_StopTextInput(GetWndHandle());
 		}

@@ -41,7 +41,7 @@ bool CMMAsyncObject::Init()
 
 	//window
 #if defined(DuiPlatform_SDL)
-	m_hWndAsync = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SDL_WINDOW_HIDDEN);
+	m_hWndAsync = SDL_CreateWindow("", 1, 1, SDL_WINDOW_HIDDEN);
 	if (m_hWndAsync == nullptr)
 	{
 		assert(false);
@@ -105,6 +105,7 @@ bool CMMAsyncObject::UnInit()
 			}
 		}
 
+		SDL_RemoveEventWatch(&CMMAsyncObject::SDLEventWatch, this);
 		SDL_DestroyWindow(m_hWndAsync);
 
 		m_hWndAsync = NULL;
@@ -132,11 +133,10 @@ bool CMMAsyncObject::PostMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 #if defined(DuiPlatform_SDL)
 	if (m_hWndAsync == nullptr || m_uMsgAsyncTask == 0) return false;
 
-	// 构造自定义消息结构（可复用已有的项目结构）
 	tagMMSdlAsyncMsg *pAsyncMsg = new (std::nothrow) tagMMSdlAsyncMsg();
 	if (pAsyncMsg == nullptr) return false;
 
-	pAsyncMsg->pWnd = reinterpret_cast<CMMAsyncObject*>(this); // 根据需要存放指针
+	pAsyncMsg->pWnd = reinterpret_cast<CMMAsyncObject*>(this);
 	pAsyncMsg->uMsg = uMsg;
 	pAsyncMsg->wParam = wParam;
 	pAsyncMsg->lParam = lParam;
@@ -373,7 +373,6 @@ Uint32 SDLCALL CMMAsyncObject::SDLTimerCallback(void *userdata, SDL_TimerID time
 	SDLTmrCallbackParam *p = static_cast<SDLTmrCallbackParam *>(userdata);
 	if (p == nullptr || p->self == nullptr) return 0;
 
-	// 构造自定义消息结构（与 PostMessage 一致）
 	tagMMSdlAsyncMsg *pAsyncMsg = new (std::nothrow) tagMMSdlAsyncMsg();
 	if (pAsyncMsg != nullptr)
 	{
@@ -392,12 +391,10 @@ Uint32 SDLCALL CMMAsyncObject::SDLTimerCallback(void *userdata, SDL_TimerID time
 
 		if (SDL_PushEvent(&e) == 0)
 		{
-			// 推送失败，释放消息对象
 			delete pAsyncMsg;
 		}
 	}
 
-	// 对于重复定时器返回相同的 interval，否则返回 0 表示不再重复
 	return p->repeat ? interval : 0;
 }
 #else

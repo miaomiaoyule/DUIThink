@@ -8,9 +8,11 @@
 CDUIGlobal::CDUIGlobal(void)
 	: CMMServiceItem(&m_ThreadPool)
 {
+#if defined(_WIN32) || defined(_WIN64)
 	//Gdiplus
 	m_uToken = 0;
 	Gdiplus::GdiplusStartup(&m_uToken, &m_GdiplusInput, NULL);
+#endif
 
 	return;
 }
@@ -3413,6 +3415,23 @@ void CDUIGlobal::ReleaseDui()
 
 void CDUIGlobal::MessageLoop()
 {
+#if defined(DuiPlatform_SDL)
+	SDL_Event e = {};
+	while (true)
+	{
+		if (false == SDL_WaitEvent(&e))
+		{
+			assert(false);
+			MMTRACE(_T("EXCEPTION: SDL_WaitEvent failed\n"));
+			continue;
+		}
+
+		if (SDL_EVENT_QUIT == e.type)
+		{
+			break;
+		}
+	}
+#else
 	BOOL bRet = 0;
 	MSG Msg = {};
 	while ((bRet = GetMessage(&Msg, NULL, 0, 0)) != 0)
@@ -3443,6 +3462,7 @@ void CDUIGlobal::MessageLoop()
 			}
 		}
 	}
+#endif
 
 	return;
 }

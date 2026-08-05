@@ -3,16 +3,29 @@
 		#define MMHELPLIB
 		#define DUITHINK_API
 	#else
-		#ifdef DUITHINKSDK
-			#define DUITHINK_API __declspec(dllexport)
+		#if defined(_MSC_VER)
+			#ifdef DUITHINKSDK
+				#define DUITHINK_API __declspec(dllexport)
+			#else
+				#define DUITHINK_API __declspec(dllimport)
+			#endif
 		#else
-			#define DUITHINK_API __declspec(dllimport)
+			#ifdef DUITHINKSDK
+				#define DUITHINK_API __attribute__((visibility("default")))
+			#else
+				#define DUITHINK_API
+			#endif
 		#endif
 	#endif
 #endif
 
+#if defined(_MSC_VER)
 #define DUITHINK_COMDAT __declspec(selectany)
+#else
+#define DUITHINK_COMDAT __attribute__((weak))
+#endif
 
+#if defined(_MSC_VER)
 #if defined _M_IX86
 #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #elif defined _M_IA64
@@ -22,28 +35,42 @@
 #else
 #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
+#endif
 
 //////////////////////////////////////////////////////////////////////////
+// MMHelper first so SDL HWND / platform types are ready before GDI+
+#include "../MMHelper/MMHelperHead.h"
+
+#if defined(_WIN32) || defined(_WIN64)
 #include <comdef.h>
 #include <gdiplus.h>
 #include <ShlDisp.h>
-
+#include <olectl.h>
 using namespace Gdiplus;
-using namespace std;
 
+#if defined(_MSC_VER)
 #pragma comment(lib, "Msimg32.lib")
 #pragma comment(lib, "Gdiplus.lib")
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "Imm32.lib")
+#endif
+#else
+// non-Windows: GDI+ not available; render backend TBD
+namespace Gdiplus
+{
+	class Bitmap;
+	enum TextRenderingHint { TextRenderingHintSystemDefault = 0 };
+}
+#endif
+
+using namespace std;
 
 //////////////////////////////////////////////////////////////////////////
-#include "../MMHelper/MMHelperHead.h"
 #include "../ThirdDepend/tinyxml2/tinyxml2.h"
 #include "../ThirdDepend/webp/src/webp/decode.h"
 #include "../ThirdDepend/webp/src/webp/demux.h"
 #include "../ThirdDepend/webp/src/webp/encode.h"
 #include "../ThirdDepend/webp/src/webp/mux.h"
-#include <olectl.h>
 using namespace tinyxml2;
 
 #if defined(DuiPlatform_SDL)
