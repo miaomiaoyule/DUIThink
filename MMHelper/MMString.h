@@ -3,90 +3,44 @@
 
 #pragma once
 
-//////////////////////////////////////////////////////////////////////////
-//class MMHELPER_API CMMString
-//{
-//public:
-//	enum { MAX_LOCAL_STRING_LEN = 32 };
-//
-//	CMMString();
-//	CMMString(const TCHAR ch, int nCount = 1);
-//	CMMString(const CMMString &src);
-//	CMMString(LPCTSTR lpszStr, int nLen = -1);
-//	CMMString(LPCSTR lpszStr);
-//	~CMMString();
-//
-//protected:
-//	LPTSTR								m_lpszStr = NULL;
-//
-//	//method
-//public:
-//	void clear();
-//	int length() const;
-//	bool empty() const;
-//	TCHAR GetAt(int nIndex) const;
-//	void SetAt(int nIndex, TCHAR ch);
-//	void Append(LPCTSTR lpszStr);
-//	void Assign(LPCTSTR lpszStr, int nLength = -1);
-//	void Insert(int nPos, TCHAR ch);
-//	void Insert(int nPos, LPCTSTR lpszStr);
-//	LPCTSTR GetBuffer(int nLength = 0) const;
-//	void Resize(UINT uSize);
-//
-//	operator LPCTSTR() const;
-//	TCHAR & operator[] (int nIndex) const;
-//	const CMMString & operator=(const CMMString &src);
-//	const CMMString & operator=(const TCHAR ch);
-//	const CMMString & operator=(LPCTSTR lpszStr);
-//#ifdef _UNICODE	    
-//	const CMMString & CMMString::operator=(LPCSTR lpStr);
-//	const CMMString & CMMString::operator+=(LPCSTR lpStr);
-//#else			    
-//	const CMMString & CMMString::operator=(LPCWSTR lpwStr);
-//	const CMMString & CMMString::operator+=(LPCWSTR lpwStr);
-//#endif
-//	CMMString operator+(const TCHAR ch) const;
-//	CMMString operator+(const CMMString &src) const;
-//	CMMString operator+(LPCTSTR lpszStr) const;
-//	const CMMString & operator += (const CMMString &src);
-//	const CMMString & operator += (LPCTSTR lpszStr);
-//	const CMMString & operator += (const TCHAR ch);
-//
-//	bool operator == (const CMMString &Right) const;
-//	bool operator == (LPCTSTR lpszStr) const;
-//	bool operator != (LPCTSTR lpszStr) const;
-//	bool operator != (const CMMString &Right) const;
-//	bool operator <= (LPCTSTR lpszStr) const;
-//	bool operator <  (LPCTSTR lpszStr) const;
-//	bool operator >= (LPCTSTR lpszStr) const;
-//	bool operator >  (LPCTSTR lpszStr) const;
-//
-//	int Compare(LPCTSTR lpszStr) const;
-//	int CompareNoCase(LPCTSTR lpszStr) const;
-//
-//	void MakeUpper();
-//	void MakeLower();
-//
-//	CMMString Left(int nLength) const;
-//	CMMString Mid(int iPos, int nLength = -1) const;
-//	CMMString Right(int nLength) const;
-//	CMMString Trim(TCHAR ch = _T(' '));
-//	CMMString TrimLeft(TCHAR ch = _T(' '));
-//	CMMString TrimRight(TCHAR ch = _T(' '));
-//
-//	int Find(TCHAR ch, int iPos = 0) const;
-//	int Find(LPCTSTR lpszStr, int iPos = 0) const;
-//	int rfind(TCHAR ch) const;
-//	int Replace(LPCTSTR lpszFrom, LPCTSTR lpszTo);
-//
-//	int __cdecl Format(LPCTSTR pstrFormat, ...);
-//	int __cdecl Format(LPCTSTR pstrFormat, va_list Args);
-//	int __cdecl SmallFormat(LPCTSTR pstrFormat, ...);
-//};
-//
-//MMHELPER_API CMMString operator+(const TCHAR ch, const CMMString &src);
-//MMHELPER_API CMMString operator+(LPCTSTR lpszStr, const CMMString &src);
-//MMHELPER_API bool operator == (LPCTSTR lpszStr, const CMMString &src);
+////////////////////////////////////////////////////////////////////////////
+inline std::string WStringToUtf8(const std::wstring& ws)
+{
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	return conv.to_bytes(ws);
+}
+
+inline std::wstring Utf8ToWString(const std::string& str)
+{
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	return conv.from_bytes(str);
+}
+
+inline std::wstring CA2CT(const std::string &s, int nCodePage = CP_ACP)
+{
+	if (s.empty()) return {};
+	try
+	{
+		std::string localeName;
+		if (CP_ACP == nCodePage)
+		{
+			localeName = "zh_CN.GB18030";
+		}
+		else if (CP_UTF8 == nCodePage)
+		{
+			localeName = "en_US.UTF-8";
+		}
+
+		// codecvt_byname 依赖平台对 localeName 的支持（例如 "zh_CN.GB18030" 或 "en_US.UTF-8"）
+		auto cvt = std::make_unique<std::codecvt_byname<wchar_t, char, std::mbstate_t>>(localeName.c_str());
+		std::wstring_convert<std::codecvt_byname<wchar_t, char, std::mbstate_t>> conv(cvt.release());
+		return conv.from_bytes(s);
+	}
+	catch (...)
+	{
+		return L"";
+	}
+}
 
 ////////////////////////////////////////////////////////////////////////////
 class CMMString :
@@ -102,12 +56,12 @@ public:
 
 	}
 	CMMString(LPCSTR lpszStr)
-		: std::wstring((LPCTSTR)CA2CT(NULL == lpszStr ? ("") : lpszStr))
+		: std::wstring(CA2CT(NULL == lpszStr ? ("") : lpszStr))
 	{
 
 	}
 	CMMString(LPCSTR lpszStr, int nLen)
-		: std::wstring((LPCTSTR)CA2CT(std::string(NULL == lpszStr ? ("") : lpszStr, nLen < 0 ? strlen(lpszStr) : nLen).c_str()))
+		: std::wstring(CA2CT(std::string(NULL == lpszStr ? ("") : lpszStr, nLen < 0 ? strlen(lpszStr) : nLen).c_str()))
 	{
 
 	}
@@ -141,11 +95,13 @@ public:
 	{
 
 	}
+#ifndef DuiPlatform_SDL
 	CMMString(CString &strSrc)
 		: std::wstring(strSrc)
 	{
 
 	}
+#endif
 	CMMString Mid(int nFrom) const
 	{
 		return length() > nFrom ? c_str() + nFrom : _T("");
@@ -359,7 +315,7 @@ public:
 	{
 		if (NULL == lpszRight) return *this;
 
-		__super::operator = ((LPCTSTR)CA2CT(lpszRight));
+		__super::operator = (CA2CT(lpszRight));
 
 		return *this;
 	}

@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "DUIEditCtrl.h"
 
+#ifndef DuiPlatform_SDL
 //////////////////////////////////////////////////////////////////////////
 class CDUIEditWnd : public CDUIWnd
 {
@@ -830,3 +831,5 @@ void CDUIEditCtrl::OnEditDestroy()
 
 	return;
 }
+
+#endif

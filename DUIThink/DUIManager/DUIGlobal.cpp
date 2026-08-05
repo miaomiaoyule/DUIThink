@@ -63,6 +63,11 @@ bool CDUIGlobal::Init(HINSTANCE hInstance)
 	LoadConfigCtrl(Dui_FileDesignCtrl);
 #endif
 
+	//platform
+#if defined(DuiPlatform_SDL)
+	bool bRes = SDL_Init(SDL_INIT_VIDEO);
+#endif
+
 	return true;
 }
 
@@ -112,6 +117,11 @@ bool CDUIGlobal::UnInit()
 
 	m_vecModuleExtendDll.clear();
 	m_mapShadowText.clear();
+
+	//platform
+#if defined(DuiPlatform_SDL)
+	SDL_Quit();
+#endif
 
 	return true;
 }
@@ -323,6 +333,39 @@ bool CDUIGlobal::TranslateMessage(const LPMSG pMsg)
 	}
 
 	return false;
+}
+
+MapWnd CDUIGlobal::GetWndAll()
+{
+	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+
+	return m_mapWnd;
+}
+
+tagDuiFile CDUIGlobal::GetWndInfo(CDUIWnd *pWnd)
+{
+	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+
+	auto FindIt = m_mapWnd.find(pWnd);
+	if (FindIt == m_mapWnd.end()) return {};
+
+	return FindIt->second;
+}
+
+CDUIWnd * CDUIGlobal::GetWndByHandle(HWND hWnd)
+{
+	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+
+	auto FindIt = find_if(m_mapWnd.begin(), m_mapWnd.end(), [=](const std::pair<CDUIWnd *, tagDuiFile> &Wnd)
+	{
+		return Wnd.first->GetWndHandle() == hWnd;
+	});
+	if (FindIt != m_mapWnd.end())
+	{
+		return FindIt->first;
+	}
+
+	return NULL;
 }
 
 void CDUIGlobal::PerformSwitchRes(int nIndexRes)
@@ -3199,23 +3242,6 @@ void CDUIGlobal::AddWnd(CDUIWnd *pWnd)
 	m_mapWnd[pWnd] = { DuiType_Dlg, _T("") };
 
 	return;
-}
-
-MapWnd CDUIGlobal::GetWndAll()
-{
-	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
-
-	return m_mapWnd;
-}
-
-tagDuiFile CDUIGlobal::GetWndInfo(CDUIWnd *pWnd)
-{
-	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
-
-	auto FindIt = m_mapWnd.find(pWnd);
-	if (FindIt == m_mapWnd.end()) return {};
-
-	return FindIt->second;
 }
 
 void CDUIGlobal::RenameWnd(const CMMString &strNameOld, const CMMString &strNameNew)

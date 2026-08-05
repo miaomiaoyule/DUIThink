@@ -2,6 +2,8 @@
 #include "MMSocketClientItem.h"
 #include "WebSocket/SHA1.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 COverLapped::COverLapped(enOperationType OperationType)
 	: m_OperationType(OperationType)
@@ -800,3 +802,5 @@ void CMMSocketClientItem::DecryptBufferWS(std::vector<BYTE> &vecBuffer)
 
 	//return wDataSize;
 }
+
+#endif

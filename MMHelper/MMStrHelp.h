@@ -17,6 +17,7 @@ public:
 	static std::string FormatA(const char *lpszFmt, ...);
 	static std::wstring FormatW(const wchar_t *lpszFmt, ...);
 	static CMMString Format(LPCTSTR lpszFmt, ...);
+	static bool IsUTF8Encode(std::vector<BYTE> vecData);
 	static CMMString ConvertAuto(std::string strFrom);
 	static RECT ParseRect(LPCTSTR lpszStr);
 	static SIZE ParseSize(LPCTSTR lpszStr);

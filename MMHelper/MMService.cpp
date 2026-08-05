@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "MMService.h"
 
+#ifndef DuiPlatform_SDL
+
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -941,4 +943,6 @@ bool CMMService::GetImportIDEx(TCHAR szMachineID[Len_Machine_ID], TCHAR szCPUID[
 
 	return true;
 }
+
 //////////////////////////////////////////////////////////////////////////////////
+#endif

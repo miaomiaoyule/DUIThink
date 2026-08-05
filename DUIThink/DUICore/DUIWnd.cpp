@@ -6,6 +6,23 @@
 #define GetPIDLItem(pida, i)			(LPCITEMIDLIST)(((LPBYTE)pida)+(pida)->aoffset[i+1])
 #define Dui_ControlDrag					_T("DUIThinkControlDrag")
 
+#if defined(DuiPlatform_SDL)
+static Uint32 SDLCALL __DuiSdlTimerProc(void *userdata, SDL_TimerID timerID, Uint32 interval)
+{
+	CDUIWnd *pWnd = static_cast<CDUIWnd *>(userdata);
+	if (pWnd == NULL) return 0;
+
+	// 走异步消息队列，复用现有 WM_TIMER -> OnTimer 分发
+	if (0 == pWnd->PostMessage(WM_TIMER, (WPARAM)timerID, 0))
+	{
+		// 窗口无效或投递失败则停止该定时器
+		return 0;
+	}
+
+	return interval; // 保持周期触发
+}
+#endif
+
 ////////////////////////////////////////////////////////////////////
 MMImplement_ClassName(CDUIWnd)
 
@@ -16,9 +33,11 @@ DuiBegin_Message_Map(CDUIWnd, CDUINotifyPump)
 DuiEnd_Message_Map()
 
 CDUIWnd::CDUIWnd(LPCTSTR lpszDuiName, HWND hWndParent)
-	: m_strDuiName(lpszDuiName)
-	, m_hWndParent(hWndParent)
-	, m_hWnd(NULL)
+#if defined(DuiPlatform_SDL)
+	: CDUIWndSDL(lpszDuiName, hWndParent)
+#else
+	: CDUIWndWin32(lpszDuiName, hWndParent)
+#endif
 	, m_OldWndProc(::DefWindowProc)
 	, m_bSubWindow(false)
 {
@@ -44,8 +63,11 @@ CDUIWnd::~CDUIWnd()
 	ReleasePaintScene();
 
 	//wnd dc
-	if (IsWindow(m_hWnd))
+	if (DuiIsWindow(m_hWnd))
 	{
+#if defined(DuiPlatform_SDL)
+		Close(Dui_CtrlIDInner_BtnCancel);
+#else
 		if (m_hDCPaint)
 		{
 			::ReleaseDC(m_hWnd, m_hDCPaint);
@@ -54,6 +76,8 @@ CDUIWnd::~CDUIWnd()
 
 		Close(Dui_CtrlIDInner_BtnCancel);
 		::SetWindowLongPtr(m_hWnd, GWLP_USERDATA, NULL);
+#endif
+
 		UnSubWindow();
 		OnFinalMessage();
 	}
@@ -91,7 +115,7 @@ bool CDUIWnd::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 	{
 		AdjustWndSize();
 
-		CDUIRect rcClient(0, 0, GetClientSize().cx, GetClientSize().cy);
+		CDUIRect rcClient = GetClientRect();
 		m_pRootCtrl->OnDuiSize(rcClient);
 
 		Invalidate();
@@ -115,7 +139,7 @@ void CDUIWnd::OnWinDragEnter(IDataObject *pIDataObject, DWORD dwKeyState, POINTL
 
 	// parse IDataObject
 	CDUIPoint ptMouse = { pt.x, pt.y };
-	ScreenToClient(m_hWnd, &ptMouse);
+	DuiScreenToClient(m_hWnd, &ptMouse);
 	m_ptMousePosLast = ptMouse;
 	m_DropData.ptMouse = ptMouse;
 	m_DropData.pIDataObject = pIDataObject;
@@ -262,7 +286,7 @@ void CDUIWnd::OnWinDragOver(DWORD dwKeyState, POINTL pt, DWORD *pdwEffect)
 	if (NULL == m_pRootCtrl) return;
 
 	POINT ptMouse = { pt.x, pt.y };
-	ScreenToClient(m_hWnd, &ptMouse);
+	DuiScreenToClient(m_hWnd, &ptMouse);
 	if (m_DropData.ptMouse == ptMouse
 		&& m_DropData.dwKeyState == dwKeyState)
 	{
@@ -330,7 +354,7 @@ void CDUIWnd::OnWinDrop(IDataObject *pIDataObject, POINTL pt, DWORD *pdwEffect)
 	if (NULL == m_pRootCtrl) return;
 
 	POINT ptMouse = { pt.x, pt.y };
-	ScreenToClient(m_hWnd, &ptMouse);
+	DuiScreenToClient(m_hWnd, &ptMouse);
 	m_ptMousePosLast = ptMouse;
 	m_DropData.pIDataObject = pIDataObject;
 	m_DropData.ptMouse = ptMouse;
@@ -430,7 +454,7 @@ CMMString CDUIWnd::GetDescribe() const
 
 HWND CDUIWnd::GetWndHandle() const
 {
-	return m_hWnd;
+	return __super::GetWndHandle();
 }
 
 HDC CDUIWnd::GetWndDC()
@@ -453,25 +477,46 @@ UINT CDUIWnd::GetClassStyle() const
 	return CS_DBLCLKS;
 }
 
-HWND CDUIWnd::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwExStyle, const RECT rc, HMENU hMenu)
+HWND CDUIWnd::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwExStyle, const RECT rc)
 {
-	return Create(hWndParent, lpszName, dwStyle, dwExStyle, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, hMenu);
+	return Create(hWndParent, lpszName, dwStyle, dwExStyle, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
 }
 
-HWND CDUIWnd::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx, int cy, HMENU hMenu)
+HWND CDUIWnd::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx, int cy)
 {
+#if defined(DuiPlatform_SDL)
+	m_hWndParent = hWndParent;
+	m_ptCreate = { x, y };
+	m_hWnd = SDL_CreateWindow(WStringToUtf8(lpszName).c_str(), cx, cy, SDL_WINDOW_RESIZABLE);
+	if (NULL == m_hWnd) return nullptr;
+
+	m_uWndID = SDL_GetWindowID(m_hWnd);
+	SDL_SetWindowPosition(m_hWnd, x, y);
+	return m_hWnd;
+#elif defined(__APPLE__) && defined(__MACH__)
+#elif defined(_WIN32) || defined(_WIN64)
 	if (GetSuperClassName() != NULL && !RegisterSuperclass()) return NULL;
 	if (GetSuperClassName() == NULL && !RegisterWindowClass()) return NULL;
 	HINSTANCE hInstance = CDUIGlobal::GetInstance()->GetInstanceHandle();
 	m_hWndParent = hWndParent;
 	m_ptCreate = { x, y };
-	m_hWnd = ::CreateWindowEx(dwExStyle, GetClass(), lpszName, dwStyle, x, y, cx, cy, hWndParent, hMenu, hInstance, MMStaticPtr(CDUIWnd, this));
+	m_hWnd = ::CreateWindowEx(dwExStyle, GetClass(), lpszName, dwStyle, x, y, cx, cy, hWndParent, NULL, hInstance, MMStaticPtr(CDUIWnd, this));
 	ASSERT(m_hWnd != NULL);
+	m_uWndID = (UINT)m_hWnd;
 	return m_hWnd;
+#else
+#endif
 }
 
 HWND CDUIWnd::SubWindow(HWND hWnd)
 {
+#if defined(DuiPlatform_SDL)
+	m_hWnd = hWnd;
+	m_uWndID = SDL_GetWindowID(hWnd);
+	m_bSubWindow = true;
+	SDL_AddEventWatch(&CDUIWnd::SDLEventWatch, this);
+	return m_hWnd;
+#else
 	ASSERT(::IsWindow(hWnd));
 	ASSERT(m_hWnd == NULL);
 	m_OldWndProc = SubclassWindow(hWnd, __WndProc);
@@ -480,10 +525,18 @@ HWND CDUIWnd::SubWindow(HWND hWnd)
 	m_hWnd = hWnd;
 	::SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LPARAM>(this));
 	return m_hWnd;
+#endif
 }
 
 void CDUIWnd::UnSubWindow()
 {
+#if defined(DuiPlatform_SDL)
+	SDL_RemoveEventWatch(&CDUIWnd::SDLEventWatch, this);
+	m_hWnd = nullptr;
+	m_uWndID = 0;
+	m_bSubWindow = false;
+	return;
+#else
 	ASSERT(::IsWindow(m_hWnd));
 	if (!::IsWindow(m_hWnd)) return;
 	if (!m_bSubWindow) return;
@@ -491,19 +544,91 @@ void CDUIWnd::UnSubWindow()
 	m_OldWndProc = ::DefWindowProc;
 	m_bSubWindow = false;
 	return;
+#endif
 }
 
 void CDUIWnd::ShowWindow(bool bShow /*= true*/, bool bTakeFocus /*= false*/)
 {
+#if defined(DuiPlatform_SDL)
+	if (m_hWnd == nullptr) return;
+
+	if (bShow)
+	{
+		SDL_ShowWindow(m_hWnd);
+
+		// SDL 没有 SW_SHOWNOACTIVATE 的完全等价语义
+		// 需要抢焦点时用 RaiseWindow
+		if (bTakeFocus)
+		{
+			SDL_RaiseWindow(m_hWnd);
+		}
+	}
+	else
+	{
+		SDL_HideWindow(m_hWnd);
+	}
+
+	return;
+#else
 	ASSERT(::IsWindow(m_hWnd));
 	if (!::IsWindow(m_hWnd)) return;
 	::ShowWindow(m_hWnd, bShow ? (bTakeFocus ? SW_SHOW : SW_SHOWNOACTIVATE) : SW_HIDE);
 
 	return;
+#endif
 }
 
 UINT CDUIWnd::DoModal()
 {
+#if defined(DuiPlatform_SDL)
+	//create
+	if (false == DuiIsWindow(m_hWnd))
+	{
+		Create(m_hWndParent, _T(""), DUI_WNDSTYLE_DIALOG, DUI_WNDSTYLE_EX_DIALOG);
+	}
+	if (false == DuiIsWindow(m_hWnd))
+	{
+		return 0;
+	}
+
+	//SDL 下没有与 EnableWindow(parent,false) 完全等价的跨平台通用实现，这里先省略父窗禁用
+	UINT nRet = 0;
+
+	//show
+	ShowWindow(true, false);
+
+	//message
+	SDL_Event e = {};
+	while (DuiIsWindowVisible(m_hWnd))
+	{
+		if (false == SDL_WaitEvent(&e))
+		{
+			assert(false);
+			MMTRACE(_T("EXCEPTION: SDL_WaitEvent failed\n"));
+			break;
+		}
+		if (SDL_EVENT_QUIT == e.type)
+		{
+			break;
+		}
+		if ((SDL_EVENT_WINDOW_CLOSE_REQUESTED == e.type || SDL_EVENT_WINDOW_DESTROYED == e.type)
+			&& e.window.windowID == m_uWndID)
+		{
+			nRet = (m_uCtrlIDClose == 0) ? Dui_CtrlIDInner_BtnCancel : m_uCtrlIDClose;
+			break;
+		}
+	}
+
+	//quit
+	if (SDL_EVENT_QUIT == e.type)
+	{
+		SDL_Event quitEvent = {};
+		quitEvent.type = SDL_EVENT_QUIT;
+		SDL_PushEvent(&quitEvent);
+	}
+
+	return nRet;
+#else
 	//create
 	if (false == IsWindow(m_hWnd))
 	{
@@ -550,10 +675,60 @@ UINT CDUIWnd::DoModal()
 	if (Msg.message == WM_QUIT) ::PostQuitMessage(Msg.wParam);
 
 	return nRet;
+#endif
 }
 
 UINT CDUIWnd::DoBlock()
 {
+#if defined(DuiPlatform_SDL)
+	//create
+	if (false == DuiIsWindow(m_hWnd))
+	{
+		Create(m_hWndParent, _T(""), DUI_WNDSTYLE_DIALOG, DUI_WNDSTYLE_EX_DIALOG);
+	}
+	if (false == DuiIsWindow(m_hWnd))
+	{
+		return 0;
+	}
+
+	//SDL 下没有与 EnableWindow(parent,false) 完全等价的跨平台通用实现，这里先省略父窗禁用
+	UINT nRet = 0;
+
+	//show
+	ShowWindow(true, false);
+
+	//message
+	SDL_Event e = {};
+	while (DuiIsWindowVisible(m_hWnd))
+	{
+		if (false == SDL_WaitEvent(&e))
+		{
+			assert(false);
+			MMTRACE(_T("EXCEPTION: SDL_WaitEvent failed\n"));
+			break;
+		}
+		if (SDL_EVENT_QUIT == e.type)
+		{
+			break;
+		}
+		if ((SDL_EVENT_WINDOW_CLOSE_REQUESTED == e.type || SDL_EVENT_WINDOW_DESTROYED == e.type)
+			&& e.window.windowID == m_uWndID)
+		{
+			nRet = (m_uCtrlIDClose == 0) ? Dui_CtrlIDInner_BtnCancel : m_uCtrlIDClose;
+			break;
+		}
+	}
+
+	//quit
+	if (SDL_EVENT_QUIT == e.type)
+	{
+		SDL_Event quitEvent = {};
+		quitEvent.type = SDL_EVENT_QUIT;
+		SDL_PushEvent(&quitEvent);
+	}
+
+	return nRet;
+#else
 	//create
 	if (false == IsWindow(m_hWnd))
 	{
@@ -590,11 +765,12 @@ UINT CDUIWnd::DoBlock()
 	if (Msg.message == WM_QUIT) ::PostQuitMessage(Msg.wParam);
 
 	return nRet;
+#endif
 }
 
 void CDUIWnd::Close(UINT nRet)
 {
-	if (false == ::IsWindow(m_hWnd)) return;
+	if (false == DuiIsWindow(m_hWnd)) return;
 
 	PostMessage(WM_CLOSE, (WPARAM)nRet, 0L);
 
@@ -603,6 +779,59 @@ void CDUIWnd::Close(UINT nRet)
 
 void CDUIWnd::CenterWindow()
 {
+#if defined(DuiPlatform_SDL)
+	if (m_hWnd == NULL) return;
+
+	int nDlgWidth = 0;
+	int nDlgHeight = 0;
+	SDL_GetWindowSize(m_hWnd, &nDlgWidth, &nDlgHeight);
+	if (nDlgWidth <= 0 || nDlgHeight <= 0) return;
+
+	// 工作区（优先当前窗口所在显示器）
+	SDL_Rect rcArea = { 0, 0, nDlgWidth, nDlgHeight };
+	SDL_DisplayID nDisplayID = SDL_GetDisplayForWindow(m_hWnd);
+	if (nDisplayID != 0)
+	{
+		if (false == SDL_GetDisplayUsableBounds(nDisplayID, &rcArea))
+		{
+			SDL_GetDisplayBounds(nDisplayID, &rcArea);
+		}
+	}
+
+	// 参考中心区域：优先父窗口，否则用工作区
+	SDL_Rect rcCenter = rcArea;
+	if (m_hWndParent != NULL)
+	{
+		int xParent = 0;
+		int yParent = 0;
+		int cxParent = 0;
+		int cyParent = 0;
+		SDL_GetWindowPosition(m_hWndParent, &xParent, &yParent);
+		SDL_GetWindowSize(m_hWndParent, &cxParent, &cyParent);
+
+		if (cxParent > 0 && cyParent > 0)
+		{
+			rcCenter.x = xParent;
+			rcCenter.y = yParent;
+			rcCenter.w = cxParent;
+			rcCenter.h = cyParent;
+		}
+	}
+
+	int xLeft = rcCenter.x + (rcCenter.w - nDlgWidth) / 2;
+	int yTop = rcCenter.y + (rcCenter.h - nDlgHeight) / 2;
+
+	// 限制在工作区内
+	if (xLeft < rcArea.x) xLeft = rcArea.x;
+	else if (xLeft + nDlgWidth > rcArea.x + rcArea.w) xLeft = rcArea.x + rcArea.w - nDlgWidth;
+
+	if (yTop < rcArea.y) yTop = rcArea.y;
+	else if (yTop + nDlgHeight > rcArea.y + rcArea.h) yTop = rcArea.y + rcArea.h - nDlgHeight;
+
+	SDL_SetWindowPosition(m_hWnd, xLeft, yTop);
+
+	return;
+#else
 	ASSERT(::IsWindow(m_hWnd));
 	ASSERT((GetWindowStyle(m_hWnd) & WS_CHILD) == 0);
 	RECT rcDlg = {};
@@ -641,10 +870,37 @@ void CDUIWnd::CenterWindow()
 	::SetWindowPos(m_hWnd, NULL, xLeft, yTop, -1, -1, SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE);
 
 	return;
+#endif
 }
 
 void CDUIWnd::SetIcon(UINT nRes)
 {
+#if defined(DuiPlatform_SDL)
+	if (m_hWnd == NULL) return;
+
+	// Linux 下没有 Win32 的 HICON/WM_SETICON 体系，
+	// 这里将 nRes 解释为 DUI 图片资源索引。
+	CDUIImageBase *pImage = CDUIGlobal::GetInstance()->GetImageResource((int)nRes);
+	if (pImage == NULL) return;
+
+	CMMString strIconFile = pImage->GetImageFileFull();
+	if (strIconFile.empty()) return;
+
+	std::string strIconFileUtf8 = WStringToUtf8(strIconFile);
+
+	// 优先 PNG（SDL3 3.4+），失败再尝试 BMP
+	SDL_Surface *pSurfaceIcon = SDL_LoadPNG(strIconFileUtf8.c_str());
+	if (pSurfaceIcon == NULL)
+	{
+		pSurfaceIcon = SDL_LoadBMP(strIconFileUtf8.c_str());
+	}
+	if (pSurfaceIcon == NULL) return;
+
+	SDL_SetWindowIcon(m_hWnd, pSurfaceIcon);
+	SDL_DestroySurface(pSurfaceIcon);
+
+	return;
+#else
 	HINSTANCE hInstance = CDUIGlobal::GetInstance()->GetInstanceHandle();
 	HICON hIcon = (HICON)::LoadImage(hInstance, MAKEINTRESOURCE(nRes), IMAGE_ICON,
 		(::GetSystemMetrics(SM_CXICON) + 15) & ~15, (::GetSystemMetrics(SM_CYICON) + 15) & ~15,	// 防止高DPI下图标模糊
@@ -659,22 +915,91 @@ void CDUIWnd::SetIcon(UINT nRes)
 	::SendMessage(m_hWnd, WM_SETICON, (WPARAM)false, (LPARAM)hIcon);
 
 	return;
+#endif
 }
 
 LRESULT CDUIWnd::SendMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/)
 {
+#if defined(DuiPlatform_SDL)
+	if (false == DuiIsWindow(m_hWnd))
+	{
+		ASSERT(false);
+		return 0;
+	}
+
+	return OnWndMessage(uMsg, wParam, lParam);
+#else
 	ASSERT(::IsWindow(m_hWnd));
 	return ::SendMessage(m_hWnd, uMsg, wParam, lParam);
+#endif
 }
 
 LRESULT CDUIWnd::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/)
 {
+#if defined(DuiPlatform_SDL)
+	if (false == DuiIsWindow(m_hWnd))
+	{
+		ASSERT(false);
+		return 0;
+	}
+
+	//register
+	const Uint32 uEventType = SDL_RegisterEvents(1);
+	if (uEventType == static_cast<Uint32>(-1))
+	{
+		ASSERT(false);
+		return 0;
+	}
+
+	//construct
+	tagDuiSdlAsyncMsg *pAsyncMsg = new (std::nothrow) tagDuiSdlAsyncMsg();
+	if (NULL == pAsyncMsg) return 0;
+
+	pAsyncMsg->pWnd = this;
+	pAsyncMsg->uMsg = uMsg;
+	pAsyncMsg->wParam = wParam;
+	pAsyncMsg->lParam = lParam;
+
+	//push
+	SDL_Event e = {};
+	e.type = uEventType;
+	e.user.timestamp = SDL_GetTicksNS();
+	e.user.windowID = m_uWndID;
+	e.user.code = 0;
+	e.user.data1 = pAsyncMsg;
+	e.user.data2 = NULL;
+	if (false == SDL_PushEvent(&e))
+	{
+		MMSafeDelete(pAsyncMsg);
+
+		return 0;
+	}
+
+	return 1;
+#else
 	ASSERT(::IsWindow(m_hWnd));
 	return ::PostMessage(m_hWnd, uMsg, wParam, lParam);
+#endif
 }
 
 void CDUIWnd::ResizeWnd(int cx /*= -1*/, int cy /*= -1*/)
 {
+#if defined(DuiPlatform_SDL)
+	if (false == DuiIsWindow(m_hWnd)) return;
+
+	int nWidth = 0;
+	int nHeight = 0;
+	SDL_GetWindowSize(m_hWnd, &nWidth, &nHeight);
+
+	if (cx != -1) nWidth = cx;
+	if (cy != -1) nHeight = cy;
+
+	if (nWidth <= 0 || nHeight <= 0) return;
+
+	SDL_SetWindowSize(m_hWnd, nWidth, nHeight);
+
+	return;
+#else
 	ASSERT(::IsWindow(m_hWnd));
 
 	CDUIRect rcWnd;
@@ -685,10 +1010,52 @@ void CDUIWnd::ResizeWnd(int cx /*= -1*/, int cy /*= -1*/)
 	::SetWindowPos(m_hWnd, NULL, 0, 0, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 
 	return;
+#endif
 }
 
 void CDUIWnd::AdjustWndPos()
 {
+#if defined(DuiPlatform_SDL)
+	if (false == DuiIsWindow(m_hWnd)) return;
+
+	int x = 0;
+	int y = 0;
+	int w = 0;
+	int h = 0;
+	SDL_GetWindowPosition(m_hWnd, &x, &y);
+	SDL_GetWindowSize(m_hWnd, &w, &h);
+
+	SDL_Rect rcWork = { 0, 0, w, h };
+	SDL_DisplayID nDisplayID = SDL_GetDisplayForWindow(m_hWnd);
+	if (nDisplayID != 0)
+	{
+		if (false == SDL_GetDisplayUsableBounds(nDisplayID, &rcWork))
+		{
+			SDL_GetDisplayBounds(nDisplayID, &rcWork);
+		}
+	}
+
+	if (x < rcWork.x)
+	{
+		x = rcWork.x;
+	}
+	if (x + w > rcWork.x + rcWork.w)
+	{
+		x = rcWork.x + rcWork.w - w;
+	}
+	if (y < rcWork.y)
+	{
+		y = rcWork.y;
+	}
+	if (y + h > rcWork.y + rcWork.h)
+	{
+		y = rcWork.y + rcWork.h - h;
+	}
+
+	SDL_SetWindowPosition(m_hWnd, x, y);
+
+	return;
+#else
 	if (false == IsWindow(m_hWnd)) return;
 
 	CDUIRect rcWnd = GetWindowRect();
@@ -716,6 +1083,7 @@ void CDUIWnd::AdjustWndPos()
 	MoveWindow(m_hWnd, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), TRUE);
 
 	return;
+#endif
 }
 
 LPCTSTR CDUIWnd::GetSuperClassName() const
@@ -725,25 +1093,46 @@ LPCTSTR CDUIWnd::GetSuperClassName() const
 
 void CDUIWnd::SetCapture()
 {
+#if defined(DuiPlatform_SDL)
+	if (false == DuiIsWindow(m_hWnd)) return;
+
+	SDL_CaptureMouse(true);
+
+	return;
+#else
 	::SetCapture(m_hWnd);
+#endif
 }
 
 void CDUIWnd::ReleaseCapture()
 {
+#if defined(DuiPlatform_SDL)
+	SDL_CaptureMouse(false);
+
+	return;
+#else
 	::ReleaseCapture();
+#endif
 }
 
 bool CDUIWnd::IsCaptured()
 {
+#if defined(DuiPlatform_SDL)
+	if (false == DuiIsWindow(m_hWnd)) return;
+
+	SDL_WindowFlags uFlags = SDL_GetWindowFlags(m_hWnd);
+	return (uFlags & SDL_WINDOW_MOUSE_CAPTURE) == SDL_WINDOW_MOUSE_CAPTURE;
+#else
 	return ::GetCapture() == m_hWnd;
+#endif
 }
 
-CDUIControlBase* CDUIWnd::GetCaptureControl()
+CDUIControlBase * CDUIWnd::GetCaptureControl()
 {
 	return m_pCaptureCtrl;
 }
 
-CDUIControlBase* CDUIWnd::GetFocusControl()
+CDUIControlBase * CDUIWnd::GetFocusControl()
 {
 	return m_pFocusCtrl;
 }
@@ -771,6 +1160,16 @@ void CDUIWnd::SetFocusControl(CDUIControlBase *pFocusCtrl)
 	MMInterfaceHelper(CDUIEditCtrl, m_pFocusCtrl, pEditFocus);
 	MMInterfaceHelper(CDUIHotKeyCtrl, m_pFocusCtrl, pHotKeyFocus);
 
+#if defined(DuiPlatform_SDL)
+	if (m_pFocusCtrl
+		&& SDL_GetKeyboardFocus() != m_hWnd
+		&& NULL == pEditFocus
+		&& NULL == pHotKeyFocus)
+	{
+		// SDL 没有 Win32 SetFocus 的完全等价接口，这里用 Raise 触发前台/焦点请求
+		SDL_RaiseWindow(m_hWnd);
+	}
+#else
 	if (m_pFocusCtrl
 		&& GetFocus() != m_hWnd
 		&& NULL == pEditFocus
@@ -778,6 +1177,7 @@ void CDUIWnd::SetFocusControl(CDUIControlBase *pFocusCtrl)
 	{
 		::SetFocus(m_hWnd);
 	}
+#endif
 
 	return;
 }
@@ -871,9 +1271,17 @@ CDUIContainerCtrl * CDUIWnd::DetachRootCtrl()
 	RemoveAllRadioBoxGroup();
 	RemoveAllTimer();
 
-	if (IsWindow(m_hWndTooltip)) DestroyWindow(m_hWndTooltip);
+#if defined(DuiPlatform_SDL)
+	// Linux 侧目前未实现 Win32 tooltip window，直接清空句柄即可
+	m_hWndTooltip = NULL;
+#else
+	if (IsWindow(m_hWndTooltip))
+	{
+		DestroyWindow(m_hWndTooltip);
+	}
 
 	m_hWndTooltip = NULL;
+#endif
 
 	return pRootCtrl;
 }
@@ -972,11 +1380,21 @@ bool CDUIWnd::SetTimer(CDUIPropertyObject *pPropObj, UINT uTimerID, UINT uElapse
 		{
 			if (TimerInfo.bKilled == true)
 			{
+#if defined(DuiPlatform_SDL)
+				SDL_TimerID uSdlTimer = SDL_AddTimer(uElapse, __DuiSdlTimerProc, this);
+				if (0 != uSdlTimer)
+				{
+					TimerInfo.uWinTimer = (UINT)uSdlTimer;
+					TimerInfo.bKilled = false;
+					return true;
+				}
+#else
 				if (::SetTimer(m_hWnd, TimerInfo.uWinTimer, uElapse, NULL))
 				{
 					TimerInfo.bKilled = false;
 					return true;
 				}
+#endif
 
 				return false;
 			}
@@ -985,16 +1403,25 @@ bool CDUIWnd::SetTimer(CDUIPropertyObject *pPropObj, UINT uTimerID, UINT uElapse
 		}
 	}
 
-	m_uTimerID = (++m_uTimerID) % 0xF0; //0xf1-0xfe特殊用途
-	if (false == ::SetTimer(m_hWnd, m_uTimerID, uElapse, NULL)) return false;
-
 	DuiTimerInfo TimerInfo;
 	TimerInfo.hWnd = m_hWnd;
 	TimerInfo.pPropObj = pPropObj;
 	TimerInfo.pControl = MMInterfaceHelper(CDUIControlBase, pPropObj);
 	TimerInfo.nLocalID = uTimerID;
-	TimerInfo.uWinTimer = m_uTimerID;
 	TimerInfo.bKilled = false;
+
+#if defined(DuiPlatform_SDL)
+	SDL_TimerID uSdlTimer = SDL_AddTimer(uElapse, __DuiSdlTimerProc, this);
+	if (0 == uSdlTimer) return false;
+
+	TimerInfo.uWinTimer = (UINT)uSdlTimer;
+#else
+	m_uTimerID = (++m_uTimerID) % 0xF0; //0xf1-0xfe特殊用途
+	if (false == ::SetTimer(m_hWnd, m_uTimerID, uElapse, NULL)) return false;
+
+	TimerInfo.uWinTimer = m_uTimerID;
+#endif
+
 	m_vecTimers.push_back(TimerInfo);
 
 	return true;
@@ -1030,7 +1457,11 @@ bool CDUIWnd::KillTimer(CDUIPropertyObject *pPropObj, UINT uTimerID)
 		{
 			if (TimerInfo.bKilled == false)
 			{
+#if defined(DuiPlatform_SDL)
+				SDL_RemoveTimer((SDL_TimerID)TimerInfo.uWinTimer);
+#else
 				if (::IsWindow(m_hWnd)) ::KillTimer(TimerInfo.hWnd, TimerInfo.uWinTimer);
+#endif
 
 				TimerInfo.bKilled = true;
 
@@ -1053,7 +1484,14 @@ bool CDUIWnd::KillTimer(CDUIPropertyObject *pPropObj)
 
 		if (TimerInfo.pPropObj == pPropObj)
 		{
-			if (false == TimerInfo.bKilled) ::KillTimer(TimerInfo.hWnd, TimerInfo.uWinTimer);
+			if (false == TimerInfo.bKilled)
+			{
+#if defined(DuiPlatform_SDL)
+				SDL_RemoveTimer((SDL_TimerID)TimerInfo.uWinTimer);
+#else
+				::KillTimer(TimerInfo.hWnd, TimerInfo.uWinTimer);
+#endif
+			}
 
 			m_vecTimers.erase(m_vecTimers.begin() + i);
 		}
@@ -1068,7 +1506,14 @@ bool CDUIWnd::RemoveAllTimer()
 	{
 		if (TimerInfo.bKilled == false)
 		{
-			if (::IsWindow(m_hWnd)) ::KillTimer(m_hWnd, TimerInfo.uWinTimer);
+			if (DuiIsWindow(m_hWnd))
+			{
+#if defined(DuiPlatform_SDL)
+				SDL_RemoveTimer((SDL_TimerID)TimerInfo.uWinTimer);
+#else
+				::KillTimer(m_hWnd, TimerInfo.uWinTimer);
+#endif
+			}
 		}
 	}
 
@@ -1184,6 +1629,9 @@ void CDUIWnd::RefreshToolTip(CMMString strToolTip)
 	m_ToolTip.hinst = hInst;
 	m_ToolTip.lpszText = const_cast<LPTSTR>((LPCTSTR)strToolTip);
 	m_ToolTip.rect = m_pHoverCtrl->GetAbsoluteRect();
+
+#if defined(DuiPlatform_SDL)
+#else
 	if (NULL == m_hWndTooltip)
 	{
 		m_hWndTooltip = ::CreateWindowEx(0, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, m_hWnd, NULL, hInst, NULL);
@@ -1194,22 +1642,33 @@ void CDUIWnd::RefreshToolTip(CMMString strToolTip)
 	::SendMessage(m_hWndTooltip, TTM_SETTIPTEXTCOLOR, RGB(DUIARGBGetR(m_pHoverCtrl->GetToolTipTextColor()), DUIARGBGetG(m_pHoverCtrl->GetToolTipTextColor()), DUIARGBGetB(m_pHoverCtrl->GetToolTipTextColor())), 0);
 	::SendMessage(m_hWndTooltip, TTM_SETTOOLINFO, 0, (LPARAM)&m_ToolTip);
 	::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, TRUE, (LPARAM)&m_ToolTip);
+#endif
 
 	return;
 }
 
 void CDUIWnd::RefreshLayout()
 {
+#if defined(DuiPlatform_SDL)
+	if (false == DuiIsWindow(m_hWnd)) return;
+
+	int cx = 0;
+	int cy = 0;
+	SDL_GetWindowSize(m_hWnd, &cx, &cy);
+	CDUIRect rcClient(0, 0, cx, cy);
+
+	SDL_WindowFlags uFlags = SDL_GetWindowFlags(m_hWnd);
+	if (false == IsRefreshViewNeeded() || NULL == m_pRootCtrl || rcClient.Empty() || (uFlags & SDL_WINDOW_MINIMIZED)) return;
+#else
 	CDUIRect rcClient;
 	::GetClientRect(m_hWnd, &rcClient);
 
+	if (false == IsRefreshViewNeeded() || NULL == m_pRootCtrl || rcClient.Empty() || ::IsIconic(m_hWnd)) return;
+#endif
+
 	//layout
 	bool bNeedLayoutMsg = false;
-	if (false == IsRefreshViewNeeded()) return;
-	if (NULL == m_pRootCtrl || rcClient.Empty() || ::IsIconic(m_hWnd)) return;
-
 	m_bRefreshViewNeeded = false;
-
 	if (m_pRootCtrl && m_pRootCtrl->IsRefreshViewNeeded())
 	{
 		m_pRootCtrl->OnDuiSize(rcClient);
@@ -1225,6 +1684,7 @@ void CDUIWnd::RefreshLayout()
 		}
 	}
 
+	//notify
 	if (m_bFirstLayout)
 	{
 		SendNotify(m_pRootCtrl, DuiNotify_WndInited, 0, 0);
@@ -1233,6 +1693,8 @@ void CDUIWnd::RefreshLayout()
 	{
 		SendNotify(m_pRootCtrl, DuiNotify_WndLayout, 0, 0);
 	}
+
+	//animate wnd
 	if (m_bFirstLayout)
 	{
 		//animation wnd
@@ -1253,7 +1715,20 @@ void CDUIWnd::Invalidate()
 {
 	if (NULL == m_hWnd) return;
 
+#if defined(DuiPlatform_SDL)
+	NeedRefreshView();
+
+	// 请求一次窗口重绘事件（SDL3）
+	SDL_Event e = {};
+	e.type = SDL_EVENT_WINDOW_EXPOSED;
+	e.window.timestamp = SDL_GetTicksNS();
+	e.window.windowID = m_uWndID;
+	e.window.data1 = 0;
+	e.window.data2 = 0;
+	SDL_PushEvent(&e);
+#else
 	InvalidateRect(m_hWnd, NULL, TRUE);
+#endif
 
 	return;
 }
@@ -1280,18 +1755,36 @@ POINT CDUIWnd::GetMousePosDown() const
 	return m_ptMousePosDown;
 }
 
-SIZE CDUIWnd::GetClientSize() const
+CDUIRect CDUIWnd::GetClientRect() const
 {
+#if defined(DuiPlatform_SDL)
+	if (false == DuiIsWindow(m_hWnd)) return;
+
+	int cx = 0;
+	int cy = 0;
+	SDL_GetWindowSize(m_hWnd, &cx, &cy);
+	CDUIRect rcClient(0, 0, cx, cy);
+#else
 	RECT rcClient = {};
 	::GetClientRect(m_hWnd, &rcClient);
+#endif
 
-	return CDUISize(rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
+	return rcClient;
 }
 
 CDUIRect CDUIWnd::GetWindowRect()
 {
+#if defined(DuiPlatform_SDL)
+	if (false == DuiIsWindow(m_hWnd)) return;
+
+	int cx = 0;
+	int cy = 0;
+	SDL_GetWindowSize(m_hWnd, &cx, &cy);
+	CDUIRect rcWnd(0, 0, cx, cy);
+#else
 	CDUIRect rcWnd;
 	::GetWindowRect(m_hWnd, &rcWnd);
+#endif
 
 	return rcWnd;
 }
@@ -1428,8 +1921,12 @@ LPBYTE CDUIWnd::GetBackgroundBits()
 
 bool CDUIWnd::CreateCaret(HBITMAP hBmp, int nWidth, int nHeight)
 {
-	if (false == IsWindow(m_hWnd)) return false;
+	if (false == DuiIsWindow(m_hWnd)) return false;
+
+#if defined(DuiPlatform_SDL)
+#else
 	if (false == ::CreateCaret(m_hWnd, hBmp, nWidth, nHeight)) return false;
+#endif
 
 	m_bCaretActive = false;
 	m_rcCaret.right = m_rcCaret.left + nWidth;
@@ -1449,6 +1946,9 @@ void CDUIWnd::ShowCaret(bool bShow)
 
 	m_bCaretActive = bShow;
 
+#if defined(DuiPlatform_SDL)
+	// SDL 下无系统插入光标 API，靠框架绘制光标
+#else
 	if (IsShowCaret())
 	{
 		::ShowCaret(GetWndHandle());
@@ -1459,6 +1959,7 @@ void CDUIWnd::ShowCaret(bool bShow)
 	}
 
 	::HideCaret(GetWndHandle());
+#endif
 
 	Invalidate();
 
@@ -2166,17 +2667,30 @@ LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		case WM_PAINT:
 		{
+			bool bUpdate = false;
+
+#if defined(DuiPlatform_SDL)
+			CDUIRect rcPaint = GetClientRect();
+			bUpdate = true;
+#else
 			CDUIRect rcPaint;
 			bool bUpdate = ::GetUpdateRect(m_hWnd, &rcPaint, FALSE);
+#endif
 
 #ifdef DUI_DESIGN
 			bUpdate = true;
 			if (rcPaint.Empty())
 			{
-				GetClientRect(m_hWnd, &rcPaint);
+				rcPaint = GetClientRect();
 			}
 #endif
 
+#if defined(DuiPlatform_SDL)
+			if (bUpdate)
+			{
+				lRes = OnPaint(rcPaint);
+			}
+#else
 			if (bUpdate)
 			{
 				PAINTSTRUCT ps = {};
@@ -2186,6 +2700,7 @@ LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				::EndPaint(m_hWnd, &ps);
 			}
+#endif
 
 			//design refresh
 			if (g_pIDuiWndNotify)
@@ -2229,6 +2744,9 @@ LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		case WM_COMMAND:
 		{
+#if defined(DuiPlatform_SDL)
+			return OnCommand(wParam, lParam);
+#else
 			if (lParam == 0)
 			{
 				return OnCommand(wParam, lParam);
@@ -2238,6 +2756,7 @@ LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			lRes = ::SendMessage(hWndChild, OCM__BASE + uMsg, wParam, lParam);
 			
 			return lRes;
+#endif
 		}
 		case WM_IME_COMPOSITION:
 		{
@@ -2246,13 +2765,16 @@ LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_CTLCOLOREDIT:
 		case WM_CTLCOLORSTATIC:
 		{
+#if defined(DuiPlatform_SDL)
+#else
 			// Refer To: http://msdn.microsoft.com/en-us/library/bb761691(v=vs.85).aspx
 			// Read-only or disabled edit controls do not send the WM_CTLCOLOREDIT message; instead, they send the WM_CTLCOLORSTATIC message.
 			if (lParam == 0) break;
 
 			HWND hWndChild = (HWND)lParam;
 			lRes = ::SendMessage(hWndChild, OCM__BASE + uMsg, wParam, lParam);
-			
+#endif
+
 			return lRes;
 		}
 	}
@@ -2262,20 +2784,18 @@ LRESULT CDUIWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIWnd::OnOldWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+#if defined(DuiPlatform_SDL)
+	return 0;
+#else
 	if (m_OldWndProc) return ::CallWindowProc(m_OldWndProc, m_hWnd, uMsg, wParam, lParam);
 
 	return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+#endif
 }
 
 LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 {
 	LRESULT lRes = OnOldWndProc(WM_CREATE, wParam, lParam);
-
-	//modify
-	LONG lStyle = ::GetWindowLong(m_hWnd, GWL_STYLE);
-	lStyle &= ~WS_CAPTION;
-	//lStyle &= ~WS_SYSMENU;
-	::SetWindowLong(m_hWnd, GWL_STYLE, lStyle);
 
 	//root
 	CDUIContainerCtrl *pRootCtrl = dynamic_cast<CDUIContainerCtrl*>(CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), this));
@@ -2284,9 +2804,19 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 		OutputDebugString(CDUIGlobal::GetInstance()->GetDuiLastError());
 	}
 
+#if defined(DuiPlatform_SDL)
+#else
+	//modify
+	LONG lStyle = ::GetWindowLong(m_hWnd, GWL_STYLE);
+	lStyle &= ~WS_CAPTION;
+	//lStyle &= ~WS_SYSMENU;
+	::SetWindowLong(m_hWnd, GWL_STYLE, lStyle);
+
+	m_hDCPaint = ::GetDC(m_hWnd);
+#endif
+
 	//init
 	CMMDragDrop::UnRegister();
-	m_hDCPaint = ::GetDC(m_hWnd);
 	m_uTimerID = 0x1000;
 	m_bMouseTracking = false;
 	m_bRefreshToolTipNeeded = false;
@@ -2301,7 +2831,11 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 	//center wnd
 	if (CW_USEDEFAULT == m_ptCreate.x
 		&& CW_USEDEFAULT == m_ptCreate.y
+#if defined(DuiPlatform_SDL)
+		&& SDL_GetWindowParent(m_hWnd) == NULL)
+#else
 		&& 0 == (lStyle & WS_CHILD))
+#endif
 	{
 		CenterWindow();
 	}
@@ -2311,8 +2845,8 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 	CDUIControlBase *pBtnRestore = FindControl(Dui_CtrlIDInner_BtnRestore);
 	if (pBtnMax && pBtnRestore)
 	{
-		pBtnMax->SetVisible(false == ::IsZoomed(m_hWnd));
-		pBtnRestore->SetVisible(::IsZoomed(m_hWnd));
+		pBtnMax->SetVisible(false == DuiIsZoomed(m_hWnd));
+		pBtnRestore->SetVisible(DuiIsZoomed(m_hWnd));
 	}
 
 	//init func
@@ -2345,7 +2879,7 @@ LRESULT CDUIWnd::OnDestroy(WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIWnd::OnNcActivate(WPARAM wParam, LPARAM lParam)
 {
-	if (false == ::IsIconic(m_hWnd)) return (wParam == 0) ? TRUE : FALSE;
+	if (false == DuiIsIconic(m_hWnd)) return (wParam == 0) ? TRUE : FALSE;
 
 	return OnOldWndProc(WM_NCACTIVATE, wParam, lParam);
 }
@@ -2363,13 +2897,11 @@ LRESULT CDUIWnd::OnNcPaint(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWnd::OnNcHitTest(WPARAM wParam, LPARAM lParam)
 {
 	POINT pt = {};
-	GetCursorPos(&pt);
-	::ScreenToClient(m_hWnd, &pt);
+	DuiGetCursorPos(&pt);
+	DuiScreenToClient(m_hWnd, &pt);
+	CDUIRect rcClient = GetClientRect();
 
-	CDUIRect rcClient;
-	::GetClientRect(m_hWnd, &rcClient);
-
-	if (false == ::IsZoomed(m_hWnd) && rcClient.PtInRect(pt))
+	if (false == DuiIsZoomed(m_hWnd) && rcClient.PtInRect(pt))
 	{
 		RECT rcSizeBox = GetResizeTrack();
 		if (pt.y < rcClient.top + rcSizeBox.top)
@@ -2405,12 +2937,34 @@ LRESULT CDUIWnd::OnGetMinMaxInfo(WPARAM wParam, LPARAM lParam)
 {
 	LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
 
+#if defined(DuiPlatform_SDL)
+	SDL_DisplayID displayID = SDL_GetDisplayForWindow(m_hWnd);
+
+	SDL_Rect sdlMonitor = {};
+	SDL_Rect sdlWork = {};
+	if (displayID != 0)
+	{
+		if (false == SDL_GetDisplayBounds(displayID, &sdlMonitor))
+		{
+			sdlMonitor = { 0, 0, 0, 0 };
+		}
+		if (false == SDL_GetDisplayUsableBounds(displayID, &sdlWork))
+		{
+			sdlWork = sdlMonitor;
+		}
+	}
+
+	CDUIRect rcMonitor(sdlMonitor.x, sdlMonitor.y, sdlMonitor.x + sdlMonitor.w, sdlMonitor.y + sdlMonitor.h);
+	CDUIRect rcWork(sdlWork.x, sdlWork.y, sdlWork.x + sdlWork.w, sdlWork.y + sdlWork.h);
+	rcWork.Offset(-rcMonitor.left, -rcMonitor.top);
+#else
 	MONITORINFO oMonitor = {};
 	oMonitor.cbSize = sizeof(oMonitor);
 	::GetMonitorInfo(::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST), &oMonitor);
 	CDUIRect rcWork = oMonitor.rcWork;
 	CDUIRect rcMonitor = oMonitor.rcMonitor;
 	rcWork.Offset(-oMonitor.rcMonitor.left, -oMonitor.rcMonitor.top);
+#endif
 
 	// 计算最大化时，正确的原点坐标
 	lpMMI->ptMaxPosition.x = rcWork.left;
@@ -2442,17 +2996,17 @@ LRESULT CDUIWnd::OnSysCommand(WPARAM wParam, LPARAM lParam)
 	}
 
 #if defined(WIN32) && !defined(UNDER_CE)
-	BOOL bZoomed = ::IsZoomed(m_hWnd);
+	BOOL bZoomed = DuiIsZoomed(m_hWnd);
 	LRESULT lRes = OnOldWndProc(WM_SYSCOMMAND, wParam, lParam);
-	if (::IsZoomed(m_hWnd) != bZoomed && false == IsIconic(m_hWnd))
+	if (DuiIsZoomed(m_hWnd) != bZoomed && false == DuiIsIconic(m_hWnd))
 	{
 		CDUIControlBase *pBtnMax = FindControl(Dui_CtrlIDInner_BtnMax);
 		CDUIControlBase *pBtnRestore = FindControl(Dui_CtrlIDInner_BtnRestore);
 
 		if (pBtnMax && pBtnRestore)
 		{
-			pBtnMax->SetVisible(false == ::IsZoomed(m_hWnd));
-			pBtnRestore->SetVisible(::IsZoomed(m_hWnd));
+			pBtnMax->SetVisible(false == DuiIsZoomed(m_hWnd));
+			pBtnRestore->SetVisible(DuiIsZoomed(m_hWnd));
 		}
 	}
 #else
@@ -2466,7 +3020,7 @@ LRESULT CDUIWnd::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
 
-	::SetCapture(m_hWnd);
+	SetCapture();
 
 	//msg
 	DuiMessage DuiMsg = {};
@@ -2498,7 +3052,7 @@ LRESULT CDUIWnd::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
 
-	::ReleaseCapture();
+	ReleaseCapture();
 
 	//msg
 	DuiMessage DuiMsg = {};
@@ -2528,7 +3082,7 @@ LRESULT CDUIWnd::OnLButtonDlk(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
 	
-	::SetCapture(m_hWnd);
+	SetCapture();
 
 	//msg
 	DuiMessage DuiMsg = {};
@@ -2559,7 +3113,7 @@ LRESULT CDUIWnd::OnRButtonDown(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
 
-	::SetCapture(m_hWnd);
+	SetCapture();
 
 	//msg
 	DuiMessage DuiMsg = {};
@@ -2591,7 +3145,7 @@ LRESULT CDUIWnd::OnRButtonUp(WPARAM wParam, LPARAM lParam)
 {
 	CDUIPoint pt(lParam);
 
-	::ReleaseCapture();
+	ReleaseCapture();
 
 	//msg
 	DuiMessage DuiMsg = {};
@@ -2696,6 +3250,8 @@ LRESULT CDUIWnd::OnMouseMove(WPARAM wParam, LPARAM lParam)
 		//tooltip
 		if (false == m_bMouseTracking)
 		{
+#if defined(DuiPlatform_SDL)
+#else
 			TRACKMOUSEEVENT tme = {};
 			tme.cbSize = sizeof(TRACKMOUSEEVENT);
 			tme.dwFlags = TME_HOVER | TME_LEAVE;
@@ -2703,6 +3259,7 @@ LRESULT CDUIWnd::OnMouseMove(WPARAM wParam, LPARAM lParam)
 			tme.dwHoverTime = NULL == m_hWndTooltip ? m_nToolTipHoverTime : (DWORD)::SendMessage(m_hWndTooltip, TTM_GETDELAYTIME, TTDT_INITIAL, 0L);
 			BOOL bRes = _TrackMouseEvent(&tme);
 			m_bMouseTracking = true;
+#endif
 		}
 
 		CDUIControlBase *pControl = FindSubControlByPoint(m_pRootCtrl, pt);
@@ -2722,7 +3279,10 @@ LRESULT CDUIWnd::OnMouseMove(WPARAM wParam, LPARAM lParam)
 		//leave
 		if (m_hWndTooltip)
 		{
+#if defined(DuiPlatform_SDL)
+#else
 			::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, false, (LPARAM)&m_ToolTip);
+#endif
 		}
 		auto vecMouseEnterCtrl = m_vecMouseEnterCtrl;
 		for (int n = vecMouseEnterCtrl.size() - 1; n >= 0; n--)
@@ -2817,8 +3377,18 @@ LRESULT CDUIWnd::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	m_vecMouseEnterCtrl.clear();
 
 	//提示窗体
-	if (m_hWndTooltip) ::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, false, (LPARAM)&m_ToolTip);
-	if (m_bMouseTracking && m_hWnd) ::SendMessage(m_hWnd, WM_MOUSEMOVE, 0, (LPARAM)-1);
+	if (m_hWndTooltip)
+	{
+#if defined(DuiPlatform_SDL)
+#else
+		::SendMessage(m_hWndTooltip, TTM_TRACKACTIVATE, false, (LPARAM)&m_ToolTip);
+#endif
+	}
+	if (m_bMouseTracking && m_hWnd) 
+	{
+		SendMessage(WM_MOUSEMOVE, 0, (LPARAM)-1);
+	}
+
 	m_bMouseTracking = false;
 
 	return OnOldWndProc(WM_MOUSELEAVE, wParam, lParam);
@@ -2830,7 +3400,7 @@ LRESULT CDUIWnd::OnMouseWheel(WPARAM wParam, LPARAM lParam)
 	POINT pt = {};
 	pt.x = (INT)((SHORT)(LOWORD(lParam)));
 	pt.y = (INT)((SHORT)(HIWORD(lParam)));
-	::ScreenToClient(m_hWnd, &pt);
+	DuiScreenToClient(m_hWnd, &pt);
 	m_ptMousePosLast = pt;
 
 	//msg
@@ -2869,7 +3439,7 @@ LRESULT CDUIWnd::OnMouseWheel(WPARAM wParam, LPARAM lParam)
 	}
 
 	// Let's make sure that the scroll item below the cursor is the same as before...
-	::SendMessage(m_hWnd, WM_MOUSEMOVE, 0, (LPARAM)MAKELPARAM(m_ptMousePosLast.x, m_ptMousePosLast.y));
+	SendMessage(WM_MOUSEMOVE, 0, (LPARAM)MAKELPARAM(m_ptMousePosLast.x, m_ptMousePosLast.y));
 
 	return OnOldWndProc(WM_MOUSEWHEEL, wParam, lParam);
 }
@@ -3155,12 +3725,6 @@ LRESULT CDUIWnd::OnPaint(CDUIRect rcPaint)
 {
 	LRESULT lRes = 0;
 
-	//layered
-	DWORD dwStyle = ::GetWindowLong(m_hWnd, GWL_EXSTYLE);
-	DWORD dwNewStyle = IsWndLayered() ? (dwStyle | WS_EX_LAYERED) : (dwStyle & ~WS_EX_LAYERED);
-	if (dwStyle != dwNewStyle) ::SetWindowLong(m_hWnd, GWL_EXSTYLE, dwNewStyle);
-	dwStyle = ::GetWindowLong(m_hWnd, GWL_EXSTYLE);
-
 	//layout
 	RefreshLayout();
 
@@ -3170,9 +3734,62 @@ LRESULT CDUIWnd::OnPaint(CDUIRect rcPaint)
 	//animation wnd
 	if (IsAnimatingWnd()) return lRes;
 
+#if defined(DuiPlatform_SDL)
+	CDUIRect rcClient = GetClientRect();
+	if (false == ::IntersectRect(&rcPaint, &rcPaint, &rcClient)) return lRes;
+	if (rcPaint.Empty()) return lRes;
+
+	// 这里假设 m_pBmpBackgroundBits 已由你的渲染流程填充为 BGRA32（含 alpha）
+	if (NULL == m_pBmpBackgroundBits) return lRes;
+
+	// layered: 透明窗体总体透明度
+	if (IsWndLayered())
+	{
+		const float fOpacity = max(0.0f, min(1.0f, GetWndAlpha() / 255.0f));
+		SDL_SetWindowOpacity(m_hWnd, fOpacity);
+	}
+	else
+	{
+		SDL_SetWindowOpacity(m_hWnd, 1.0f);
+	}
+
+	SDL_Surface *pWinSurface = SDL_GetWindowSurface(m_hWnd);
+	if (NULL == pWinSurface) return lRes;
+
+	const int nWidth = rcClient.GetWidth();
+	const int nHeight = rcClient.GetHeight();
+	const int nPitch = nWidth * 4; // BGRA32
+
+	//paint
+	try
+	{
+		int iSaveDC = ::SaveDC(m_hMemDcBackground);
+		m_pRootCtrl->OnDraw(m_hMemDcBackground, rcPaint);
+		::RestoreDC(m_hMemDcBackground, iSaveDC);
+	}
+	catch (const std::exception& exception)
+	{
+		OutputDebugString(CA2CT(exception.what()));
+		CDUIGlobal::GetInstance()->SetDuiLastError((LPCTSTR)CA2CT(exception.what()));
+	}
+
+	SDL_Surface *pSrc = SDL_CreateSurfaceFrom(nWidth, nHeight, SDL_PIXELFORMAT_BGRA32, m_pBmpBackgroundBits, nPitch);
+	if (NULL == pSrc) return lRes;
+
+	// 整窗拷贝（异形由像素 alpha 决定）
+	SDL_BlitSurface(pSrc, NULL, pWinSurface, NULL);
+	SDL_DestroySurface(pSrc);
+
+	SDL_UpdateWindowSurface(m_hWnd);
+#else
+	//layered
+	DWORD dwStyle = ::GetWindowLong(m_hWnd, GWL_EXSTYLE);
+	DWORD dwNewStyle = IsWndLayered() ? (dwStyle | WS_EX_LAYERED) : (dwStyle & ~WS_EX_LAYERED);
+	if (dwStyle != dwNewStyle) ::SetWindowLong(m_hWnd, GWL_EXSTYLE, dwNewStyle);
+	dwStyle = ::GetWindowLong(m_hWnd, GWL_EXSTYLE);
+
 	//Should we paint?
-	CDUIRect rcClient;
-	::GetClientRect(m_hWnd, &rcClient);
+	CDUIRect rcClient = GetClientRect();
 	if (false == ::IntersectRect(&rcPaint, &rcPaint, &rcClient)) return lRes;
 	if (NULL == m_pRootCtrl || rcPaint.Empty()) return lRes;
 
@@ -3218,8 +3835,7 @@ LRESULT CDUIWnd::OnPaint(CDUIRect rcPaint)
 	//update
 	if (dwStyle & WS_EX_LAYERED)
 	{
-		CDUIRect rcWnd = {};
-		::GetWindowRect(m_hWnd, &rcWnd);
+		CDUIRect rcWnd = GetWindowRect();
 		POINT pt = { rcWnd.left, rcWnd.top };
 		SIZE szWindow = { rcWnd.GetWidth(), rcWnd.GetHeight() };
 		POINT ptSrc = { 0, 0 };
@@ -3232,6 +3848,7 @@ LRESULT CDUIWnd::OnPaint(CDUIRect rcPaint)
 
 	::BitBlt(m_hDCPaint, rcPaint.left, rcPaint.top, rcPaint.GetWidth(), rcPaint.GetHeight(),
 		m_hMemDcBackground, rcPaint.left, rcPaint.top, SRCCOPY);
+#endif
 
 	return lRes;
 }
@@ -3242,7 +3859,7 @@ LRESULT CDUIWnd::OnContextMenu(WPARAM wParam, LPARAM lParam)
 	{
 		//pt
 		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-		::ScreenToClient(m_hWnd, &pt);
+		DuiScreenToClient(m_hWnd, &pt);
 
 		//menu ctrl
 		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
@@ -3283,10 +3900,22 @@ LRESULT CDUIWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 {
 	do
 	{
+#if defined(DuiPlatform_SDL)
+		SDL_Window *pWndFocus = SDL_GetKeyboardFocus();
+		if (m_hWnd == pWndFocus
+			|| (pWndFocus != NULL && SDL_GetWindowParent(pWndFocus) == m_hWnd))
+		{
+			break;
+		}
+#else
 		HWND hWndFocus = GetFocus();
 		if (m_hWnd == hWndFocus
 			|| (m_hWnd == GetParent(hWndFocus) && (GetWindowLong(hWndFocus, GWL_STYLE) & WS_CHILD))
-			|| (m_hWnd == ::GetWindowOwner(hWndFocus) && (GetWindowLong(hWndFocus, GWL_STYLE) & WS_CHILD))) break;
+			|| (m_hWnd == ::GetWindowOwner(hWndFocus) && (GetWindowLong(hWndFocus, GWL_STYLE) & WS_CHILD)))
+		{
+			break;
+		}
+#endif
 
 		SetFocusControl(NULL);
 
@@ -3303,8 +3932,8 @@ LRESULT CDUIWnd::OnSetCursor(WPARAM wParam, LPARAM lParam)
 		if (m_pCaptureCtrl) return 1;
 
 		POINT pt = { 0 };
-		::GetCursorPos(&pt);
-		::ScreenToClient(m_hWnd, &pt);
+		DuiGetCursorPos(&pt);
+		DuiScreenToClient(m_hWnd, &pt);
 		CDUIControlBase *pControl = FindControl(pt);
 		if (NULL == pControl) break;
 		if ((pControl->GetControlFlags() & DUIFLAG_SETCURSOR) == 0) break;
@@ -3336,7 +3965,7 @@ LRESULT CDUIWnd::OnCommand(WPARAM wParam, LPARAM lParam)
 		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
 		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-		::ScreenToClient(m_hWnd, &pt);
+		DuiScreenToClient(m_hWnd, &pt);
 
 		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
 
@@ -3365,8 +3994,8 @@ LRESULT CDUIWnd::OnImeComPosition(WPARAM wParam, LPARAM lParam)
 		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
 		POINT pt = {};
-		GetCursorPos(&pt);
-		::ScreenToClient(m_hWnd, &pt);
+		DuiGetCursorPos(&pt);
+		DuiScreenToClient(m_hWnd, &pt);
 
 		DuiMessage DuiMsg = {};
 		DuiMsg.wParam = wParam;
@@ -3490,12 +4119,12 @@ void CDUIWnd::OnDpiChanged(int nScalePre)
 	SetDpi(CDUIGlobal::GetInstance()->GetDpi());
 
 	//wndsize
-	if (false == ::IsZoomed(GetWndHandle()))
+	if (false == DuiIsZoomed(GetWndHandle()))
 	{
 		CDUIRect rcWnd = GetWindowRect();
 		rcWnd.right = rcWnd.left + (rcWnd.GetWidth()) * (GetScale() * 1.0f / nScalePre);
 		rcWnd.bottom = rcWnd.top + (rcWnd.GetHeight()) * (GetScale() * 1.0f / nScalePre);
-		SetWindowPos(GetWndHandle(), NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
+		DuiSetWindowPos(GetWndHandle(), NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
 	}
 
 	//refresh
@@ -3512,7 +4141,7 @@ void CDUIWnd::OnDpiChanged(int nScalePre)
 
 void CDUIWnd::AdjustWndSize()
 {
-	if (false == IsWindow(m_hWnd)) return;
+	if (false == DuiIsWindow(m_hWnd)) return;
 
 	CDUISize szWndInit = GetWndInitSize();
 	if (szWndInit.cx > 0 && szWndInit.cy > 0)
@@ -3523,7 +4152,7 @@ void CDUIWnd::AdjustWndSize()
 		szWndInit.cy = szWndMax.cy > 0 ? min(szWndInit.cy, szWndMax.cy) : szWndInit.cy;
 		szWndInit.cx = max(szWndInit.cx, szWndMin.cx);
 		szWndInit.cy = max(szWndInit.cy, szWndMin.cy);
-		::SetWindowPos(m_hWnd, NULL, 0, 0, szWndInit.cx, szWndInit.cy, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
+		DuiSetWindowPos(m_hWnd, NULL, 0, 0, szWndInit.cx, szWndInit.cy, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 	}
 
 	return;
@@ -3601,7 +4230,7 @@ void CDUIWnd::PostAppMsg()
 {
 	if (false == m_bPostedAppMsg)
 	{
-		::PostMessage(m_hWnd, WM_DUIAPP, 0, 0);
+		PostMessage(WM_DUIAPP, 0, 0);
 
 		m_bPostedAppMsg = true;
 	}
@@ -3624,6 +4253,174 @@ void CDUIWnd::ReleasePaintScene()
 	return;
 }
 
+VecDuiControlBase & CDUIWnd::GetFoundControls()
+{
+	return m_vecFoundControls;
+}
+
+CDUIControlBase * CALLBACK CDUIWnd::__FindControlFromIDHash(CDUIControlBase *pThis, LPVOID pData)
+{
+	CDUIWnd *pManager = static_cast<CDUIWnd*>(pData);
+	UINT uCtrlID = pThis->GetCtrlID();
+	if (0 == uCtrlID) return NULL;
+	// Add this control to the hash list
+	pManager->m_mapControl[uCtrlID] = pThis;
+	return NULL; // Attempt to add all controls
+}
+
+CDUIControlBase * CALLBACK CDUIWnd::__FindControlFromCount(CDUIControlBase* /*pThis*/, LPVOID pData)
+{
+	int* pnCount = static_cast<int*>(pData);
+	(*pnCount)++;
+	return NULL;  // Count all controls
+}
+
+CDUIControlBase * CALLBACK CDUIWnd::__FindControlFromPoint(CDUIControlBase *pThis, LPVOID pData)
+{
+	LPPOINT pPoint = static_cast<LPPOINT>(pData);
+	return ::PtInRect(&pThis->GetAbsoluteRect(), *pPoint) ? pThis : NULL;
+}
+
+CDUIControlBase * CALLBACK CDUIWnd::__FindControlFromShortcut(CDUIControlBase *pThis, LPVOID pData)
+{
+	if (false == pThis->IsVisible()) return NULL;
+
+	DuiFindShortCut *pFindShortCut = static_cast<DuiFindShortCut*>(pData);
+	if (pFindShortCut->chChar == toupper(pThis->GetShortcut())) return pThis;
+
+	return NULL;
+}
+
+CDUIControlBase * CALLBACK CDUIWnd::__FindControlFromDrop(CDUIControlBase *pThis, LPVOID pData)
+{
+	LPPOINT pPoint = static_cast<LPPOINT>(pData);
+	return ::PtInRect(&pThis->GetAbsoluteRect(), *pPoint) && pThis->IsWinDropEnabled() ? pThis : nullptr;
+}
+
+CDUIControlBase * CALLBACK CDUIWnd::__FindControlFromID(CDUIControlBase *pThis, LPVOID pData)
+{
+	UINT uFindID = *(static_cast<UINT*>(pData));
+	UINT uCtrlID = pThis->GetCtrlID();
+
+	return (uFindID == uCtrlID) ? pThis : NULL;
+}
+
+CDUIControlBase * CALLBACK CDUIWnd::__FindControlsFromClass(CDUIControlBase *pThis, LPVOID pData)
+{
+	LPCTSTR pstrType = static_cast<LPCTSTR>(pData);
+	LPCTSTR pType = pThis->GetClass();
+	if (_tcscmp(pstrType, _T("*")) == 0 || _tcscmp(pstrType, pType) == 0)
+	{
+		if (pThis->GetWndOwner())
+		{
+			pThis->GetWndOwner()->GetFoundControls().push_back(pThis);
+		}
+	}
+
+	return NULL;
+}
+
+CDUIControlBase * CALLBACK CDUIWnd::__FindControlsFromUpdate(CDUIControlBase *pThis, LPVOID pData)
+{
+	if (NULL == pThis) return NULL;
+
+	if (pThis->IsRefreshViewNeeded() && pThis->GetWndOwner())
+	{
+		pThis->GetWndOwner()->GetFoundControls().push_back(pThis);
+
+		return pThis;
+	}
+
+	return nullptr;
+}
+
+#if defined(DuiPlatform_SDL)
+bool SDLCALL CDUIWnd::SDLEventWatch(void *userdata, SDL_Event *e)
+{
+	CDUIWnd *self = static_cast<CDUIWnd *>(userdata);
+	if (NULL == self || e->window.windowID != self->m_uWndID) return false;
+
+	//user event
+	if (e->type == SDL_RegisterEvents(1))
+	{
+		tagDuiSdlAsyncMsg *pAsyncMsg = static_cast<tagDuiSdlAsyncMsg *>(e->user.data1);
+		if (pAsyncMsg && pAsyncMsg->pWnd == self)
+		{
+			self->OnWndMessage(pAsyncMsg->uMsg, pAsyncMsg->wParam, pAsyncMsg->lParam);
+
+			MMSafeDelete(pAsyncMsg);
+			e->user.data1 = NULL;
+		}
+
+		return false;
+	}
+
+	//event
+	switch (e->type)
+	{
+		case SDL_EVENT_WINDOW_SHOWN:
+		case SDL_EVENT_WINDOW_HIDDEN:
+		case SDL_EVENT_WINDOW_RESIZED:
+		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+		case SDL_EVENT_WINDOW_DESTROYED:
+		{
+			self->OnSdlWindowEvent(*e);
+		
+			break;
+		}
+		case SDL_EVENT_MOUSE_MOTION:
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
+		case SDL_EVENT_MOUSE_BUTTON_UP:
+		{
+			self->OnSdlMouseEvent(*e);
+
+			break;
+		}
+		case SDL_EVENT_KEY_DOWN:
+		case SDL_EVENT_KEY_UP:
+		{
+			self->OnSdlKeyEvent(*e);
+
+			break;
+		}
+		case SDL_EVENT_TEXT_EDITING:
+		{
+			if (self && self->m_pFocusCtrl)
+			{
+				// 尝试把焦点控件转换为可处理 IME 的编辑控件
+				CDUIThinkEditCtrl *pEdit = MMInterfaceHelper(CDUIThinkEditCtrl, self->m_pFocusCtrl);
+				if (pEdit)
+				{
+					pEdit->OnSdlTextEditing(e->text.text, /*start*/0, /*length*/0);
+				}
+			}
+
+			break;
+		}
+		case SDL_TEXTINPUT:
+		{
+			// 提交文本事件（最终文本）
+			if (self && self->m_pFocusCtrl)
+			{
+				CDUIThinkEditCtrl *pEdit = MMInterfaceHelper(CDUIThinkEditCtrl, self->m_pFocusCtrl);
+				if (pEdit)
+				{
+					// e->text.text 为 UTF-8 提交文本
+					pEdit->OnSdlTextInput(e->text.text);
+				}
+			}
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
+
+	//false allow the event to be processed by other SDL event handlers
+	return false;
+}
+#else
 bool CDUIWnd::RegisterSuperclass()
 {
 	// Get the class information from an existing
@@ -3737,90 +4534,22 @@ LRESULT CALLBACK CDUIWnd::__ControlProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 		return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 }
-
-VecDuiControlBase & CDUIWnd::GetFoundControls()
-{
-	return m_vecFoundControls;
-}
-
-CDUIControlBase * CALLBACK CDUIWnd::__FindControlFromIDHash(CDUIControlBase *pThis, LPVOID pData)
-{
-	CDUIWnd *pManager = static_cast<CDUIWnd*>(pData);
-	UINT uCtrlID = pThis->GetCtrlID();
-	if (0 == uCtrlID) return NULL;
-	// Add this control to the hash list
-	pManager->m_mapControl[uCtrlID] = pThis;
-	return NULL; // Attempt to add all controls
-}
-
-CDUIControlBase * CALLBACK CDUIWnd::__FindControlFromCount(CDUIControlBase* /*pThis*/, LPVOID pData)
-{
-	int* pnCount = static_cast<int*>(pData);
-	(*pnCount)++;
-	return NULL;  // Count all controls
-}
-
-CDUIControlBase * CALLBACK CDUIWnd::__FindControlFromPoint(CDUIControlBase *pThis, LPVOID pData)
-{
-	LPPOINT pPoint = static_cast<LPPOINT>(pData);
-	return ::PtInRect(&pThis->GetAbsoluteRect(), *pPoint) ? pThis : NULL;
-}
-
-CDUIControlBase * CALLBACK CDUIWnd::__FindControlFromShortcut(CDUIControlBase *pThis, LPVOID pData)
-{
-	if (false == pThis->IsVisible()) return NULL;
-
-	DuiFindShortCut *pFindShortCut = static_cast<DuiFindShortCut*>(pData);
-	if (pFindShortCut->chChar == toupper(pThis->GetShortcut())) return pThis;
-
-	return NULL;
-}
-
-CDUIControlBase * CALLBACK CDUIWnd::__FindControlFromDrop(CDUIControlBase *pThis, LPVOID pData)
-{
-	LPPOINT pPoint = static_cast<LPPOINT>(pData);
-	return ::PtInRect(&pThis->GetAbsoluteRect(), *pPoint) && pThis->IsWinDropEnabled() ? pThis : nullptr;
-}
-
-CDUIControlBase * CALLBACK CDUIWnd::__FindControlFromID(CDUIControlBase *pThis, LPVOID pData)
-{
-	UINT uFindID = *(static_cast<UINT*>(pData));
-	UINT uCtrlID = pThis->GetCtrlID();
-
-	return (uFindID == uCtrlID) ? pThis : NULL;
-}
-
-CDUIControlBase * CALLBACK CDUIWnd::__FindControlsFromClass(CDUIControlBase *pThis, LPVOID pData)
-{
-	LPCTSTR pstrType = static_cast<LPCTSTR>(pData);
-	LPCTSTR pType = pThis->GetClass();
-	if (_tcscmp(pstrType, _T("*")) == 0 || _tcscmp(pstrType, pType) == 0)
-	{
-		if (pThis->GetWndOwner())
-		{
-			pThis->GetWndOwner()->GetFoundControls().push_back(pThis);
-		}
-	}
-
-	return NULL;
-}
-
-CDUIControlBase * CALLBACK CDUIWnd::__FindControlsFromUpdate(CDUIControlBase *pThis, LPVOID pData)
-{
-	if (NULL == pThis) return NULL;
-
-	if (pThis->IsRefreshViewNeeded() && pThis->GetWndOwner())
-	{
-		pThis->GetWndOwner()->GetFoundControls().push_back(pThis);
-
-		return pThis;
-	}
-
-	return nullptr;
-}
+#endif
 
 void CDUIWnd::ForegroundWindow(HWND hWnd)
 {
+#if defined(DuiPlatform_SDL)
+	// SDL 下 hWnd 实际为 SDL_Window*
+	if (hWnd == nullptr) return;
+
+	// 尝试显示并提升窗口：这是 SDL 上最直接的跨平台方法。
+	// 注意：许多 Linux 窗口管理器有防止抢焦点的策略，可能无法强制获得键盘焦点。
+	SDL_ShowWindow(hWnd);
+	SDL_RaiseWindow(hWnd);
+
+	// 有些平台上可以尝试额外手段（例如通过原生 API），但那会引入平台特定代码。
+	return;
+#else
 	HWND hWndForground = GetForegroundWindow();
 	DWORD dwThreadIDForground = ::GetWindowThreadProcessId(hWndForground, NULL);
 	DWORD dwThreadIDCur = ::GetCurrentThreadId();
@@ -3833,6 +4562,7 @@ void CDUIWnd::ForegroundWindow(HWND hWnd)
 	::AttachThreadInput(dwThreadIDCur, dwThreadIDForground, FALSE);
 
 	return;
+#endif
 }
 
 UINT CDUIWnd::MapKeyState()

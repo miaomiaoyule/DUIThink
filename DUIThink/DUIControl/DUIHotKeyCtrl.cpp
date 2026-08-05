@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "DUIHotKeyCtrl.h"
+#ifndef DuiPlatform_SDL
 
 //////////////////////////////////////////////////////////////////////////
 class CDUIHotKeyWnd : public CDUIWnd
@@ -623,3 +624,5 @@ BYTE CDUIHotKeyCtrl::ModToHotkey(BYTE cbModifierFlag)
 
 	return cbModifierFlag;
 }
+
+#endif

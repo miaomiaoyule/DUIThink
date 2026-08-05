@@ -1,5 +1,8 @@
 #include "StdAfx.h"
 #include "DUIWebBrowserCtrl.h"
+
+#ifndef DuiPlatform_SDL
+
 #include <atlbase.h>
 #include <atlhost.h>
 
@@ -880,4 +883,7 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 
 	return lRes;
 }
+
 //////////////////////////////////////////////////////////////////////////
+
+#endif

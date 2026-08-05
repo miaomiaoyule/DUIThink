@@ -1,6 +1,8 @@
 #ifndef __MM_DEFINETCPSOCKETSERVER_H__
 #define __MM_DEFINETCPSOCKETSERVER_H__
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////////////
 #define MDM_Engine_Core					(1)
 #define SUB_ToS_Validate				(1)
@@ -105,5 +107,5 @@ struct M_MMSocketClientItem_Close : public tagMMServiceMsg
 };
 
 //////////////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

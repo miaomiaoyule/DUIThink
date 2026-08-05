@@ -1,6 +1,8 @@
 #ifndef __MM_FILE_H__
 #define __MM_FILE_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,8 +69,6 @@ public:
 	// Parameter: 	CMMString & strName Àý£ºText.txt
 	//************************************
 	static bool ParseFilePathName(LPCTSTR lpszFileFull, CMMString &strPath, CMMString &strName);
-
-	static bool IsUTF8Encode(std::vector<BYTE> vecData);
 
 	//************************************
 	// Description:	
@@ -242,6 +242,6 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif
 

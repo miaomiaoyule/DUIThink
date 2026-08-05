@@ -27,7 +27,11 @@ private:
 	int											m_nThreadRunning = 0;
 	std::vector<std::thread>					m_vecThreadWorker;
 	std::deque<std::function<void()>>			m_deqFuncTask;
+#if defined(DuiPlatform_SDL)
+	SDL_sem *									m_hEvent = nullptr;
+#else
 	HANDLE										m_hEvent = NULL;
+#endif
 
 public:
 	void Run(int nThreadCount = 1);

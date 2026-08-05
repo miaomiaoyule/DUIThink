@@ -1,5 +1,6 @@
 #ifndef __DUIHOTKEYCTRL_H__
 #define __DUIHOTKEYCTRL_H__
+#ifndef DuiPlatform_SDL
 
 #pragma once
 #pragma pack(1)
@@ -87,4 +88,5 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()
+#endif
 #endif

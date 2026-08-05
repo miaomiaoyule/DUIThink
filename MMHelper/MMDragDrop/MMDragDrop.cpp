@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "MMDragDrop.h"
+
+#ifndef DuiPlatform_SDL
+
 #include <strsafe.h>
 
 //////////////////////////////////////////////////////////////////////////
@@ -201,4 +204,7 @@ bool CMMDragDrop::QueryDrop(DWORD dwKeyState, LPDWORD pdwEffect)
 	return (DROPEFFECT_NONE == *pdwEffect) ? false : true;
 }
 #endif
+
 //////////////////////////////////////////////////////////////////////////
+
+#endif

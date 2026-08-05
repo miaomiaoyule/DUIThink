@@ -331,6 +331,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>/wd 4996 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>../ThirdDepend</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

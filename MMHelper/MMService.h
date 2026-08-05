@@ -1,6 +1,8 @@
 #ifndef __MM_SERVICE_H__
 #define __MM_SERVICE_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 #include "winioctl.h"
@@ -140,5 +142,5 @@ private:
 };
 
 //////////////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

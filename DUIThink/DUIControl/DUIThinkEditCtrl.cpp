@@ -141,18 +141,12 @@ LRESULT CDUIThinkEditCtrl::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, 
 	{
 		if (IsFocused())
 		{
+			m_pWndOwner->UpdateImeCompositionPos();
+
+#ifndef DuiPlatform_SDL
 			HIMC hImc = ::ImmGetContext(m_pWndOwner->GetWndHandle());
 			if (hImc)
 			{
-				//pos
-				POINT ptCaret;
-				::GetCaretPos(&ptCaret);
-				COMPOSITIONFORM Composition;
-				Composition.dwStyle = CFS_POINT;
-				Composition.ptCurrentPos.x = ptCaret.x;
-				Composition.ptCurrentPos.y = ptCaret.y;
-				ImmSetCompositionWindow(hImc, &Composition);
-
 				//font
 				do
 				{
@@ -173,6 +167,7 @@ LRESULT CDUIThinkEditCtrl::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, 
 				
 				ImmReleaseContext(m_pWndOwner->GetWndHandle(), hImc);
 			}
+#endif
 
 			return 0;
 		}
@@ -1648,33 +1643,101 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	__super::OnDuiContextMenu(Msg);
 
 	//menu
-	HMENU hPopMenu = CreatePopupMenu();
-	AppendMenu(hPopMenu, 0, ID_MENU_UNDO, _T("撤销(&U)"));
-	AppendMenu(hPopMenu, 0, ID_MENU_REDO, _T("重做(&R)"));
-	AppendMenu(hPopMenu, MF_SEPARATOR, 0, _T(""));
-	AppendMenu(hPopMenu, 0, ID_MENU_CUT, _T("剪切(&X)"));
-	AppendMenu(hPopMenu, 0, ID_MENU_COPY, _T("复制(&C)"));
-	AppendMenu(hPopMenu, 0, ID_MENU_PASTE, _T("粘帖(&V)"));
-	AppendMenu(hPopMenu, 0, ID_MENU_CLEAR, _T("清空(&L)"));
-	AppendMenu(hPopMenu, MF_SEPARATOR, 0, _T(""));
-	AppendMenu(hPopMenu, 0, ID_MENU_SELECTALL, _T("全选(&A)"));
+	CDUIMenu Menu;
+	Menu.LoadMenu(_T(""));
+	if (NULL == g_pDuiMenuWndRoot) return;
+
+	CDUIMenuCtrl *pMenuRoot = new CDUIMenuCtrl();
+	if (NULL == pMenuRoot) return;
+
+	pMenuRoot->Init();
+	g_pDuiMenuWndRoot->SetMenuView(pMenuRoot);
+
+	//create item
+	auto GenerateItem = [](UINT uID, LPCTSTR lpszText) -> CDUIMenuItemCtrl *
+	{
+		CDUIMenuItemCtrl *pMenuItem = new CDUIMenuItemCtrl();
+		pMenuItem->Init();
+		pMenuItem->SetText(lpszText);
+		pMenuItem->SetCtrlID(uID);
+		pMenuItem->SetTag(uID);
+
+		if (MMInvalidString(lpszText))
+		{
+			pMenuItem->SetLineMenu(true);
+		}
+
+		return pMenuItem;
+	};
+
+	//menu
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_UNDO, _T("撤销(&U)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_REDO, _T("重做(&R)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(0, _T("")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_CUT, _T("剪切(&X)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_COPY, _T("复制(&C)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_PASTE, _T("粘贴(&V)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_CLEAR, _T("清空(&L)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(0, _T("")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_SELECTALL, _T("全选(&A)")));
 
 	//enable
-	UINT uUndo = (CanUndo() ? 0 : MF_GRAYED);
-	::EnableMenuItem(hPopMenu, ID_MENU_UNDO, MF_BYCOMMAND | uUndo);
-	UINT uRedo = (CanRedo() ? 0 : MF_GRAYED);
-	EnableMenuItem(hPopMenu, ID_MENU_REDO, MF_BYCOMMAND | uRedo);
-	UINT uSel = (GetSelectString().empty()) ? MF_GRAYED : 0;
-	UINT uReadonly = IsReadOnly() ? MF_GRAYED : 0;
-	EnableMenuItem(hPopMenu, ID_MENU_CUT, MF_BYCOMMAND | uSel | uReadonly);
-	EnableMenuItem(hPopMenu, ID_MENU_COPY, MF_BYCOMMAND | uSel);
-	EnableMenuItem(hPopMenu, ID_MENU_CLEAR, MF_BYCOMMAND | uSel | uReadonly);
-	EnableMenuItem(hPopMenu, ID_MENU_PASTE, MF_BYCOMMAND | uReadonly);
+	CDUIMenuItemCtrl *pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_UNDO);
+	if (pMenuItem) pMenuItem->SetEnabled(CanUndo());
+	pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_REDO);
+	if (pMenuItem) pMenuItem->SetEnabled(CanRedo());
+	bool bHasSel = false == GetSelectString().empty();
+	pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_CUT);
+	if (pMenuItem) pMenuItem->SetEnabled(bHasSel && false == IsReadOnly());
+	pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_COPY);
+	if (pMenuItem) pMenuItem->SetEnabled(bHasSel);
+	pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_CLEAR);
+	if (pMenuItem) pMenuItem->SetEnabled(bHasSel && false == IsReadOnly());
+	pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_PASTE);
+	if (pMenuItem) pMenuItem->SetEnabled(false == IsReadOnly());
 
+	//popup
 	CDUIPoint ptScreen = Msg.ptMouse;
-	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptScreen);
-	TrackPopupMenu(hPopMenu, TPM_RIGHTBUTTON, ptScreen.x, ptScreen.y, 0, m_pWndOwner->GetWndHandle(), NULL);
-	DestroyMenu(hPopMenu);
+	::DuiClientToScreen(m_pWndOwner->GetWndHandle(), &ptScreen);
+	tagDuiMenuCmd MenuCmd = Menu.TrackPopupMenu(GetWndHandle(), ptScreen);
+	switch (MenuCmd.uMenuID)
+	{
+		case ID_MENU_UNDO:
+		{
+			Undo();
+			break;
+		}
+		case ID_MENU_REDO:
+		{
+			Redo();
+			break;
+		}
+		case ID_MENU_CUT:
+		{
+			Cut();
+			break;
+		}
+		case ID_MENU_COPY:
+		{
+			Copy();
+			break;
+		}
+		case ID_MENU_PASTE:
+		{
+			Paste();
+			break;
+		}
+		case ID_MENU_CLEAR:
+		{
+			Clear();
+			break;
+		}
+		case ID_MENU_SELECTALL:
+		{
+			SetSelAll();
+			break;
+		}
+	}
 
 	return 0;
 }
@@ -1743,6 +1806,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 
 	__super::OnDuiImeComPosition(Msg);
 
+#ifndef DuiPlatform_SDL
 	//emoji
 	CMMString strBuff;
 	HIMC hImc = ::ImmGetContext(m_pWndOwner->GetWndHandle());
@@ -1772,8 +1836,47 @@ LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 
 		ImmReleaseContext(m_pWndOwner->GetWndHandle(), hImc);
 	}
+#endif
 
 	return 0;
+}
+
+LRESULT CDUIThinkEditCtrl::OnDuiTextEditing(const DuiMessage &Msg)
+{
+	if (NULL == m_pWndOwner || Msg.strText.empty()) return;
+
+	bool bHaveEmoji = false;
+	std::vector<tagMMStringEmoji> vecText = CMMStrHelp::ParseStringForEmoji(Msg.strText);
+	for (auto &Item : vecText)
+	{
+		if (Item.bEmoji)
+		{
+			bHaveEmoji = true;
+
+			break;
+		}
+	}
+
+	if (bHaveEmoji)
+	{
+		SetReplaceSel(Msg.strText);
+
+		if (SDL_IsTextInputActive())
+		{
+			SDL_StopTextInput(GetWndHandle());
+		}
+	}
+
+	return;
+}
+
+LRESULT CDUIThinkEditCtrl::OnDuiTextInput(const DuiMessage &Msg)
+{
+	if (NULL == m_pWndOwner || Msg.strText.empty()) return;
+
+	SetReplaceSel(Msg.strText);
+
+	return;
 }
 
 void CDUIThinkEditCtrl::InitProperty()
@@ -2268,14 +2371,14 @@ void CDUIThinkEditCtrl::PerformMoveCaretHoriz(bool bLeft, bool bSelect, bool bAd
 
 		m_bShowCaret = true;
 		Invalidate();
-		UpdateWindow(m_pWndOwner->GetWndHandle());
+		DuiUpdateWindow(m_pWndOwner->GetWndHandle());
 
 		return;
 	}
 
 	m_bShowCaret = true;
 	Invalidate();
-	UpdateWindow(m_pWndOwner->GetWndHandle());
+	DuiUpdateWindow(m_pWndOwner->GetWndHandle());
 
 	return;
 }
@@ -2355,7 +2458,7 @@ void CDUIThinkEditCtrl::PerformMoveCaretVert(bool bUp)
 
 	m_bShowCaret = true;
 	Invalidate();
-	UpdateWindow(m_pWndOwner->GetWndHandle());
+	DuiUpdateWindow(m_pWndOwner->GetWndHandle());
 
 	return;
 }

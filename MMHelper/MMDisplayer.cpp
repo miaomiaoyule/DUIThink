@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MMDisplayer.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hDCMonitor, LPRECT lprcMonitor, LPARAM dwData)
 {
@@ -653,4 +655,4 @@ CMMRectF CMMDisplayer::PerformAdjustPosition(IN CMMRectF rcAbsOfMonitor)
 	return rcAbsOfMonitor;
 }
 
-
+#endif

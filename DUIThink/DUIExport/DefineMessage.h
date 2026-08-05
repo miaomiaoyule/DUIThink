@@ -115,6 +115,7 @@ typedef struct tagDuiMessage
 	POINT								ptMouse = {};
 	TCHAR								chKey = 0;
 	WORD								wKeyState = 0;
+	CMMString							strText;			
 	CDUIControlBase *					pMsgCtrl = NULL;
 }DuiMessage;
 

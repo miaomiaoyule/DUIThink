@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "MMShellExecute.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 CMMShellExecute::CMMShellExecute()
 	: CMMServiceItem(&m_ThreadPool)
@@ -314,3 +316,5 @@ void CMMShellExecute::OnSubOpenMode(PtrMsgMMShellExecuteOpenMode pRecvData)
 	//return hr;
 	return;
 }
+
+#endif

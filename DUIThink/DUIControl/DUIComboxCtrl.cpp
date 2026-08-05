@@ -71,7 +71,7 @@ CDUIComboxWnd::~CDUIComboxWnd()
 
 void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 {
-	if (NULL == m_pOwner || NULL == pComboxView || IsWindow(GetWndHandle())) return;
+	if (NULL == m_pOwner || NULL == pComboxView || DuiIsWindow(GetWndHandle())) return;
 
 	m_pWndOwner = static_cast<CDUIWnd*>(m_pOwner->GetWndOwner());
 
@@ -96,7 +96,7 @@ void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 
 	//dropsize
 	CDUIRect rcWnd;
-	::GetWindowRect(m_pWndOwner->GetWndHandle(), &rcWnd);
+	::DuiGetWindowRect(m_pWndOwner->GetWndHandle(), &rcWnd);
 	m_pComboxView->SetPadding(0, 0, 0, 0);
 	m_pComboxView->RefreshView();
 	CDUISize szTotalRange = m_pComboxView->GetTotalRange();
@@ -112,7 +112,7 @@ void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 	//monitor
 	MONITORINFO oMonitor = {};
 	oMonitor.cbSize = sizeof(oMonitor);
-	::GetMonitorInfo(::MonitorFromWindow(*this, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
+	::DuiGetMonitorInfo(::DuiMonitorFromWindow(*this, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
 	CDUIRect rcWork = oMonitor.rcWork;
 	if (rcCombox.bottom > rcWork.bottom)
 	{
@@ -123,13 +123,13 @@ void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 		rcCombox.Offset(0, rcOwner.bottom + rcWnd.top - rcCombox.top);
 	}
 
-	SetWindowPos(m_hWnd, NULL, rcCombox.left, rcCombox.top, rcCombox.GetWidth(), rcCombox.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
+	DuiSetWindowPos(m_hWnd, NULL, rcCombox.left, rcCombox.top, rcCombox.GetWidth(), rcCombox.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
 	// HACK: Don't deselect the parent's caption
 	HWND hWndParent = m_hWnd;
-	while (::GetParent(hWndParent) != NULL) hWndParent = ::GetParent(hWndParent);
-	::ShowWindow(m_hWnd, SW_SHOW);
-	::SendMessage(hWndParent, WM_NCACTIVATE, TRUE, 0L);
+	while (::DuiGetParent(hWndParent) != NULL) hWndParent = ::DuiGetParent(hWndParent);
+	::DuiShowWindow(m_hWnd, SW_SHOW);
+	::DuiSendMessage(hWndParent, WM_NCACTIVATE, TRUE, 0L);
 
 	return;
 }
@@ -784,7 +784,7 @@ void CDUIComboxCtrl::RemoveAll()
 bool CDUIComboxCtrl::Active()
 {
 	if (NULL == m_pWndOwner) return false;
-	if (NULL == m_pComboxWindow || IsWindow(m_pComboxWindow->GetWndHandle())) return false;
+	if (NULL == m_pComboxWindow || DuiIsWindow(m_pComboxWindow->GetWndHandle())) return false;
 	if (false == CDUICheckBoxCtrl::Active()) return false;
 
 	if (NULL == m_pShowListView)
@@ -793,7 +793,8 @@ bool CDUIComboxCtrl::Active()
 
 		if (NULL == m_pShowListView)
 		{
-			MessageBox(m_pWndOwner->GetWndHandle(), _T("Please Select Bind UI of ComboxView£¬It Must Be ListviewCtrl"), NULL, NULL);
+			DuiMessageBox(m_pWndOwner->GetWndHandle(), _T("Please Select Bind UI of ComboxView£¬It Must Be ListviewCtrl"), NULL, NULL);
+
 			return false;
 		}
 	}
@@ -813,7 +814,7 @@ bool CDUIComboxCtrl::Active()
 
 bool CDUIComboxCtrl::UnActive()
 {
-	if (NULL == m_pComboxWindow || false == IsWindow(m_pComboxWindow->GetWndHandle())) return false;
+	if (NULL == m_pComboxWindow || false == DuiIsWindow(m_pComboxWindow->GetWndHandle())) return false;
 
 	m_pComboxWindow->UnInit();
 
@@ -822,7 +823,7 @@ bool CDUIComboxCtrl::UnActive()
 
 bool CDUIComboxCtrl::IsActive() const
 {
-	return m_pComboxWindow && IsWindow(m_pComboxWindow->GetWndHandle());
+	return m_pComboxWindow && DuiIsWindow(m_pComboxWindow->GetWndHandle());
 }
 
 void CDUIComboxCtrl::InitProperty()

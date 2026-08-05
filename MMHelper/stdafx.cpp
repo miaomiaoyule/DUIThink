@@ -23,3 +23,12 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...)
 
 #endif
 }
+
+bool DuiIsWindow(HWND hWnd)
+{
+#if defined(DuiPlatform_SDL)
+	return (NULL != hWnd && SDL_GetWindowFromID(SDL_GetWindowID((SDL_Window *)hWnd)) == (SDL_Window *)hWnd);
+#else
+	return ::IsWindow(hWnd) == TRUE;
+#endif
+}

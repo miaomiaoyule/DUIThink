@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MMDpi.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 typedef HRESULT(WINAPI *LPSetProcessDpiAwareness)(_In_ enMMPROCESS_DPI_AWARENESS value);
 typedef HRESULT(WINAPI *LPGetProcessDpiAwareness)(_In_  HANDLE hprocess, _Out_ enMMPROCESS_DPI_AWARENESS *value);
@@ -297,3 +299,4 @@ RECT CMMDpi::ScaleVerify(RECT rcTarget, RECT rcScaleBack) const
 }
 
 ////////////////////////////////////////////////////////////////////////////
+#endif

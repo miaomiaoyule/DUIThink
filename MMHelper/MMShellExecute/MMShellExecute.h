@@ -1,6 +1,8 @@
 #ifndef __MM_SHELLEXECUTE_H__
 #define __MM_SHELLEXECUTE_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 #include "Define.h"
@@ -39,6 +41,6 @@ protected:
 };
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif
 

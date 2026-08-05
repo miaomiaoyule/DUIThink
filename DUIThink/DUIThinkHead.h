@@ -24,31 +24,8 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-#define GDIPVER 0x0110
-
-#include <vector>
-#include <set>
-#include <map>
-#include <unordered_map>
-#include <string>
-#include <algorithm>
-
-#include <time.h>
-#include <math.h>
-#include <windows.h>
-#include <windowsx.h>
-#include <commctrl.h>
-#include <stddef.h>
-#include <richedit.h>
-#include <tchar.h>
-#include <assert.h>
-#include <crtdbg.h>
-#include <malloc.h>
 #include <comdef.h>
 #include <gdiplus.h>
-#include <assert.h>
-#include <atlstr.h>
-#include <RichOle.h>
 #include <ShlDisp.h>
 
 using namespace Gdiplus;
@@ -68,6 +45,11 @@ using namespace std;
 #include "../ThirdDepend/webp/src/webp/mux.h"
 #include <olectl.h>
 using namespace tinyxml2;
+
+#if defined(DuiPlatform_SDL)
+#else
+	#define GDIPVER 0x0110
+#endif
 
 #if _MSC_VER < 1900
 #ifdef _DEBUG
@@ -258,6 +240,9 @@ using namespace tinyxml2;
 #include "DUICore/DUIRender.h"
 #include "DUICore/DUINotifyPump.h"
 #include "DUICore/DUIAnimation.h"
+#include "DUICore/DUIPlatform/DUIWndBase.h"
+#include "DUICore/DUIPlatform/DUIWndSDL.h"
+#include "DUICore/DUIPlatform/DUIWndWin32.h"
 #include "DUICore/DUIWnd.h"
 
 #include "DUIControl/DUIControlBase.h"
@@ -309,4 +294,26 @@ extern DUITHINK_API tagDuiMenuCmd g_DuiMenuCmd;
 extern DUITHINK_API tagDuiCalendarCmd g_DuiCalendarCmd;
 extern DUITHINK_API CDUIMenuWnd * g_pDuiMenuWndRoot;
 extern DUITHINK_API CDUICalendarWnd * g_pDuiCalendarWnd;
+DUITHINK_API bool DuiIsWindowVisible(HWND hWnd);
+DUITHINK_API bool DuiIsIconic(HWND hWnd);
+DUITHINK_API bool DuiIsZoomed(HWND hWnd);
+DUITHINK_API void DuiInvalidateRect(HWND hWnd, LPCRECT lpRect, bool bErase);
+DUITHINK_API BOOL DuiScreenToClient(HWND hWnd, LPPOINT lpPoint);
+DUITHINK_API BOOL DuiClientToScreen(HWND hWnd, LPPOINT lpPoint);
+DUITHINK_API void DuiGetCursorPos(LPPOINT lpPoint);
+DUITHINK_API void DuiSetCursorPos(int X, int Y);
+DUITHINK_API void DuiGetCaretPos(LPPOINT lpPoint);
+DUITHINK_API HWND DuiGetParent(HWND hWnd);
+DUITHINK_API HWND DuiGetFocus();
+DUITHINK_API void DuiGetWindowRect(HWND hWnd, LPRECT lpRect);
+DUITHINK_API void DuiGetMonitorInfo(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo);
+DUITHINK_API void DuiSetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags);
+DUITHINK_API void DuiMoveWindow(HWND hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+DUITHINK_API void DuiMessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType);
+DUITHINK_API void DuiSetForegroundWindow(HWND hWnd);
+DUITHINK_API void DuiSetFocus(HWND hWnd);
+DUITHINK_API void DuiShowWindow(HWND hWnd, int nCmdShow);
+DUITHINK_API bool DuiSendMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+DUITHINK_API HMONITOR DuiMonitorFromWindow(HWND hWnd, DWORD dwFlags);
+DUITHINK_API void DuiUpdateWindow(HWND hWnd);
 //////////////////////////////////////////////////////////////////////////

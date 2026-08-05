@@ -7,11 +7,16 @@
 #define VER_CDUIWnd INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIWnd = { 0xD5D0FF1C,0x106B,0x48C7,0xAD,0xA9,0x8C,0xA3,0x43,0x80,0x1F,0x74 };
 class DUITHINK_API CDUIWnd
-	: public CDUIPropertyObject
+#if defined DuiPlatform_SDL
+	: public CDUIWndSDL
+#else
+	: public CDUIWndWin32
+	, public CMMDragDrop
+#endif
+	, public CDUIPropertyObject
 	, public CDUIAnimationWnd
 	, public CDUINotifyPump
 #if (NTDDI_VERSION >= NTDDI_VISTA)
-	, public CMMDragDrop
 	, public IDuiPreMessage
 #endif
 {
@@ -60,10 +65,6 @@ private:
 
 	//variant
 protected:
-	//wnd
-	CMMString							m_strDuiName;
-	HWND								m_hWndParent = NULL;
-	HWND								m_hWnd = NULL;
 	WNDPROC								m_OldWndProc = NULL;
 	bool								m_bSubWindow = false;
 	CDUIPoint							m_ptCreate = {};
@@ -99,7 +100,6 @@ protected:
 	//caret
 	CDUIRect							m_rcCaret;
 	bool								m_bCaretActive = false;
-	bool								m_bCaretShowing = false;
 
 	//ctrl
 	CDUIContainerCtrl *					m_pRootCtrl = NULL;
@@ -147,14 +147,14 @@ public:
 	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
 	CMMString GetDescribe() const override;
 
-	virtual HWND GetWndHandle() const;
+	HWND GetWndHandle() const override;
 	virtual HDC GetWndDC() override;
 	virtual operator HWND() const;
 	virtual CMMString GetDuiName() const;
 	virtual UINT GetClassStyle() const;
 
-	virtual HWND Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwExStyle, const RECT rc, HMENU hMenu = NULL);
-	virtual HWND Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwExStyle, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int cx = CW_USEDEFAULT, int cy = CW_USEDEFAULT, HMENU hMenu = NULL);
+	virtual HWND Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwExStyle, const RECT rc);
+	virtual HWND Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwExStyle, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int cx = CW_USEDEFAULT, int cy = CW_USEDEFAULT);
 	virtual HWND SubWindow(HWND hWnd);
 	virtual void UnSubWindow();
 	virtual void ShowWindow(bool bShow = true, bool bTakeFocus = true);
@@ -229,7 +229,7 @@ public:
 	virtual POINT GetMousePosDown() const;
 
 	//window
-	virtual SIZE GetClientSize() const;
+	virtual CDUIRect GetClientRect() const;
 	virtual CDUIRect GetWindowRect();
 	virtual SIZE GetWndInitSize();
 	virtual void SetWndInitSize(int cx, int cy);
@@ -387,12 +387,6 @@ protected:
 	void ReleasePaintScene();
 
 private:
-	bool RegisterSuperclass();
-	bool RegisterWindowClass();
-
-	static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	static LRESULT CALLBACK __ControlProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 	VecDuiControlBase & GetFoundControls();
 	static CDUIControlBase * CALLBACK __FindControlFromIDHash(CDUIControlBase *pThis, LPVOID pData);
 	static CDUIControlBase * CALLBACK __FindControlFromCount(CDUIControlBase *pThis, LPVOID pData);
@@ -402,6 +396,19 @@ private:
 	static CDUIControlBase * CALLBACK __FindControlFromID(CDUIControlBase *pThis, LPVOID pData);
 	static CDUIControlBase * CALLBACK __FindControlsFromClass(CDUIControlBase *pThis, LPVOID pData);
 	static CDUIControlBase * CALLBACK __FindControlsFromUpdate(CDUIControlBase *pThis, LPVOID pData);
+
+#if defined(DuiPlatform_SDL)
+	static bool SDLCALL SDLEventWatch(void *userdata, SDL_Event *e);
+
+	void OnSdlWindowEvent(const SDL_Event& e);
+	void OnSdlMouseEvent(const SDL_Event& e);
+	void OnSdlKeyEvent(const SDL_Event& e);
+#else
+	bool RegisterSuperclass();
+	bool RegisterWindowClass();
+	static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK __ControlProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+#endif
 
 	//static
 public:

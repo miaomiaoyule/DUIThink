@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MMDropSource.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 STDMETHODIMP CMMDropSource::QueryInterface(/* [in] */ REFIID riid, /* [iid_is][out] */ void __RPC_FAR *__RPC_FAR *ppvObject) 
 {
@@ -59,3 +61,5 @@ STDMETHODIMP CMMDropSource::GiveFeedback(
 
 	return S_OK;
 }
+
+#endif

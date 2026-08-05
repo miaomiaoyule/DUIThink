@@ -46,6 +46,9 @@
     <Filter Include="Define">
       <UniqueIdentifier>{b686be5d-09cb-4706-9a41-7fc8308b5d52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DUICore\DUIPlatform">
+      <UniqueIdentifier>{63a28f6f-e317-42ca-ab54-108f2aef59af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -333,6 +336,15 @@
     <ClInclude Include="DUIUtils\stb_image_write.h">
       <Filter>DUIUtils</Filter>
     </ClInclude>
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndSDL.h">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndWin32.h">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndBase.h">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -574,6 +586,15 @@
     </ClCompile>
     <ClCompile Include="DUIExport\DUIStruct.cpp">
       <Filter>DUIExport</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndSDL.cpp">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndWin32.cpp">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndBase.cpp">
+      <Filter>DUICore\DUIPlatform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

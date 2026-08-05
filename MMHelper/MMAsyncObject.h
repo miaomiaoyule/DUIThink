@@ -4,6 +4,15 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
+struct tagMMSdlAsyncMsg
+{
+	CMMAsyncObject *					pWnd = NULL;
+	UINT								uMsg = 0;
+	WPARAM								wParam = 0;
+	LPARAM								lParam = 0;
+};
+
+//////////////////////////////////////////////////////////////////////////
 class MMHELPER_API CMMAsyncObject
 {
 	MMDeclare_ClassName(CMMAsyncObject)
@@ -18,14 +27,23 @@ public:
 	};
 	struct TimerInfo : public TaskBase
 	{
-		bool							repeat = false;
+		bool							bRepeat = false;
+#if defined(DuiPlatform_SDL)
+		Uint32							uTimerIDSdl = 0;
+		void *							sdlTimerParam = nullptr;
+#endif
 	};
 
 protected:
 	std::recursive_mutex				m_AsyncDataLock;
 	HWND								m_hWndAsync = NULL;
+	Uint32								m_uWndID = 0;
+#if defined DuiPlatform_SDL
+	Uint32								m_uMsgAsyncTask = 0;
+#else
 	const UINT							m_uMsgAsyncTask = WM_APP + 1;
-	
+#endif
+
 	// Map timer id -> TimerInfo
 	std::map<UINT_PTR, TimerInfo>		m_TimerTasks;
 	std::atomic<UINT_PTR>				m_NextTimerId{ 1 };
@@ -47,7 +65,12 @@ protected:
 	UINT_PTR StartTimerInternal(unsigned int ms, std::function<void()>&& fn, bool repeat);
 
 protected:
+#if defined(DuiPlatform_SDL)
+	static bool SDLCALL SDLEventWatch(void *userdata, SDL_Event *e);
+	static Uint32 SDLCALL SDLTimerCallback(void *userdata, SDL_TimerID timerID, Uint32 interval);
+#else
 	static LRESULT CALLBACK OnWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+#endif
 };
 
 //////////////////////////////////////////////////////////////////////////

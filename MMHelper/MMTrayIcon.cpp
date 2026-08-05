@@ -1,6 +1,8 @@
 ﻿#include "StdAfx.h"
 #include "MMTrayIcon.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 CMMTrayIcon::CMMTrayIcon(void)
 {
@@ -293,3 +295,5 @@ RECT CMMTrayIcon::GetTrayIconPos(HWND hWndOwner)
 
 	return rcPos;
 }
+
+#endif

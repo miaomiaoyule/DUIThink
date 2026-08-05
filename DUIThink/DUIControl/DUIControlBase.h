@@ -325,6 +325,8 @@ protected:
 	virtual LRESULT OnDuiContextMenu(const DuiMessage &Msg);
 	virtual LRESULT OnDuiCommand(const DuiMessage &Msg);
 	virtual LRESULT OnDuiImeComPosition(const DuiMessage &Msg);
+	virtual LRESULT OnDuiTextEditing(const DuiMessage &Msg);
+	virtual LRESULT OnDuiTextInput(const DuiMessage &Msg);
 
 	virtual bool OnWinDragStart(const CDUIPoint &pt, const DuiMessage &Msg);
 	virtual bool OnWinDragEnter(const tagDuiDropData *pDropData, DWORD *pdwEffect);

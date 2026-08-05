@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MMWinTCPing.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 CMMWinTCPing::CMMWinTCPing()
 {
@@ -119,3 +121,5 @@ bool CMMWinTCPing::Ping(DWORD dwServerIP, WORD wPort, DWORD dwTimeout)
 
 	return false;
 }
+
+#endif

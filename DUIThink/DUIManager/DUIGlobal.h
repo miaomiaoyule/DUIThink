@@ -169,6 +169,11 @@ public:
 	bool RemovePreMessagePtr(IDuiPreMessage *pInterface);
 	bool TranslateMessage(const LPMSG pMsg);
 
+	//wnd
+	MapWnd GetWndAll();
+	tagDuiFile GetWndInfo(CDUIWnd *pWnd);
+	CDUIWnd * GetWndByHandle(HWND hWnd);
+
 	//switch skin
 	void PerformSwitchRes(int nIndexRes);
 	int GetSwitchResIndex();
@@ -335,8 +340,6 @@ protected:
 
 	//Wnd
 	void AddWnd(CDUIWnd *pWnd);
-	MapWnd GetWndAll();
-	tagDuiFile GetWndInfo(CDUIWnd *pWnd);
 	void RenameWnd(const CMMString &strNameOld, const CMMString &strNameNew);
 	void RenameWnd(CDUIWnd *pWnd, const CMMString &strNameNew);
 	void SetWndDuiType(CDUIWnd *pWnd, enDuiType DuiType);

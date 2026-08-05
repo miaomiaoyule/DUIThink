@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MMFile.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 #define FILEKIND(ext, type) mapFileType[ext] = type
 
@@ -454,60 +456,6 @@ bool CMMFile::ParseFilePathName(LPCTSTR lpszFileFull, CMMString &strPath, CMMStr
 	strName = strFile.Right(strFile.length() - nPos - 1);
 
 	return true;
-}
-
-bool CMMFile::IsUTF8Encode(std::vector<BYTE> vecData)
-{
-	if (vecData.empty()) return false;
-
-	unsigned char byte;
-	int nIndex = 0;
-	int continuation_bytes = 0;
-
-	while (nIndex < vecData.size())
-	{
-		byte = vecData[nIndex++];
-
-		if (continuation_bytes == 0)
-		{
-			// Check leading byte
-			if (byte <= 0x7F)
-			{
-				// ASCII character, continue
-				continue;
-			}
-			else if (byte >= 0xC2 && byte <= 0xDF)
-			{
-				continuation_bytes = 1;
-			}
-			else if (byte >= 0xE0 && byte <= 0xEF)
-			{
-				continuation_bytes = 2;
-			}
-			else if (byte >= 0xF0 && byte <= 0xF4)
-			{
-				continuation_bytes = 3;
-			}
-			else
-			{
-				return false; // Not a valid UTF-8 leading byte
-			}
-		}
-		else
-		{
-			// Check continuation byte
-			if (byte >= 0x80 && byte <= 0xBF)
-			{
-				continuation_bytes--;
-			}
-			else
-			{
-				return false; // Not a valid UTF-8 continuation byte
-			}
-		}
-	}
-
-	return continuation_bytes == 0; // All continuation bytes must be matched
 }
 
 enMMFileEncode CMMFile::GetFileEncode(FILE *pFile)
@@ -1348,3 +1296,5 @@ bool CMMFile::OperatorSelectFolder(HWND hWndParent, OUT CMMString &strFolderSele
 
 	return true;
 }
+
+#endif

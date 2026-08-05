@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MMProcess.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 bool CMMProcess::CreateFileLink(CMMString strFileFull, CMMString strPathTo, CMMString strNameLink)
 {
@@ -405,3 +407,5 @@ void CMMProcess::LaunchAsExplorerFromAdmin(CString strFile, CString strCmdLine)
 
 	return;
 }
+
+#endif

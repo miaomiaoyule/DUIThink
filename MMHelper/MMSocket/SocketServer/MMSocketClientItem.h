@@ -1,6 +1,8 @@
 #ifndef __MM_SOCKETCLIENTITEM_H__
 #define __MM_SOCKETCLIENTITEM_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 class CMMTCPSocketServer;
@@ -140,5 +142,5 @@ private:
 typedef std::vector<CMMSocketClientItem *> VecSocketClientItem;
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

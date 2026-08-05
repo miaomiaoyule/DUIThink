@@ -1,6 +1,8 @@
 #ifndef __MM_DEFINETCPSOCKETCLIENT_H__
 #define __MM_DEFINETCPSOCKETCLIENT_H__
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 enum enSocketNotifyType
 {
@@ -24,5 +26,5 @@ struct tagSocketNotifyTask
 typedef std::vector<tagSocketNotifyTask> VecSocketNotifyTask;
 
 //////////////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

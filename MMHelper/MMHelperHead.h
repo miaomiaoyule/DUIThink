@@ -51,7 +51,17 @@
 #include <stdlib.h>
 #include <tchar.h>
 #include <assert.h>
+#include <malloc.h>
+#include <stddef.h>
+#include <time.h>
+#include <math.h>
+
 #include <vector>
+#include <set>
+#include <map>
+#include <unordered_map>
+#include <string>
+#include <algorithm>
 #include <atomic>
 #include <memory>
 #include <functional>
@@ -59,35 +69,59 @@
 #include <mutex>
 #include <iostream>
 #include <fstream>
-#include <algorithm>
-#include <map>
-#include <unordered_map>
 #include <thread>
-#include <windows.h>
-#include <Tlhelp32.h>  
-#include <ObjBase.h>
-#include <atltypes.h>
-#include <atlstr.h>
-#include <nb30.h>
-#include <CommCtrl.h>
-#include <inaddr.h>
-#include <winsock2.h>
-#include <iphlpapi.h>
-#include <ShTypes.h>
-#include <ShlObj.h>
-#include <Shlwapi.h>
-#include <ShellAPI.h>
-#include <winternl.h>
-#include <WtsApi32.h>
+#include <codecvt>
 using namespace std;
 
-#pragma comment(lib, "ws2_32.lib")
-#pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "wldap32.lib")
-#pragma comment(lib, "Bcrypt.lib")
-#pragma comment(lib, "Userenv.lib")
-#pragma comment(lib, "version.lib")
-#pragma comment(lib, "Wtsapi32.lib")
+#define DuiPlatform_SDL
+#if defined(DuiPlatform_SDL)
+	#include "../ThirdDepend/SDL3/SDL.h"
+	typedef SDL_Window* HWND;
+	typedef SDL_DisplayID HMONITOR;
+	typedef char CHAR;
+	typedef CHAR *LPSTR;
+	typedef const CHAR *LPCSTR;
+	typedef wchar_t WCHAR;
+	typedef WCHAR *LPWSTR;
+	typedef const WCHAR *LPCWSTR;
+
+#ifdef UNICODE
+	typedef WCHAR   TCHAR;
+#else
+	typedef CHAR   TCHAR;
+#endif
+	typedef TCHAR *LPTSTR;
+	typedef const TCHAR *LPCTSTR;
+
+#define CP_ACP 0
+#define CP_UTF8 1
+#else
+	#include <windows.h>
+	#include <windowsx.h>
+	#include <Tlhelp32.h>  
+	#include <ObjBase.h>
+	#include <atltypes.h>
+	#include <atlstr.h>
+	#include <nb30.h>
+	#include <CommCtrl.h>
+	#include <inaddr.h>
+	#include <winsock2.h>
+	#include <iphlpapi.h>
+	#include <ShTypes.h>
+	#include <ShlObj.h>
+	#include <Shlwapi.h>
+	#include <ShellAPI.h>
+	#include <winternl.h>
+	#include <WtsApi32.h>
+	
+	#pragma comment(lib, "ws2_32.lib")
+	#pragma comment(lib, "winmm.lib")
+	#pragma comment(lib, "wldap32.lib")
+	#pragma comment(lib, "Bcrypt.lib")
+	#pragma comment(lib, "Userenv.lib")
+	#pragma comment(lib, "version.lib")
+	#pragma comment(lib, "Wtsapi32.lib")
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
@@ -169,7 +203,9 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMSocket/SocketServer/Define.h"
 #include "MMSocket/SocketServer/MMSocketClientItem.h"
 #include "MMSocket/SocketServer/MMTCPSocketServer.h"
+//////////////////////////////////////////////////////////////////////////////////
 
+MMHELPER_API bool DuiIsWindow(HWND hWnd);
 //////////////////////////////////////////////////////////////////////////////////
 
 #endif

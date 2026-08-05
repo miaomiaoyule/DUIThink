@@ -159,6 +159,8 @@ protected:
 	LRESULT OnDuiContextMenu(const DuiMessage &Msg) override;
 	LRESULT OnDuiCommand(const DuiMessage &Msg) override;
 	LRESULT OnDuiImeComPosition(const DuiMessage &Msg) override;
+	LRESULT OnDuiTextEditing(const DuiMessage &Msg) override;
+	LRESULT OnDuiTextInput(const DuiMessage &Msg) override;
 
 	//property 
 protected:

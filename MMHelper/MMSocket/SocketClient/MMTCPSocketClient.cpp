@@ -1,6 +1,8 @@
 #include "Stdafx.h"
 #include "MMTCPSocketClient.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////						
 #define WM_SOCKET_EVENT					(WM_USER + 1989)	
 #define WM_SOCKET_SEND					(WM_USER + 1990)
@@ -698,3 +700,4 @@ LRESULT CMMTCPSocketClient::OnSubSocketEventClose(WPARAM wParam, LPARAM lParam)
 Implement_MMCreateModule(MMTCPSocketClient);
 
 //////////////////////////////////////////////////////////////////////////
+#endif

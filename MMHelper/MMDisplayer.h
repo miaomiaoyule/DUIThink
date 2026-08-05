@@ -1,6 +1,8 @@
 #ifndef __MM_DISPLAYER_H__
 #define __MM_DISPLAYER_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
@@ -213,5 +215,6 @@ public:
 	static CMMRectF PerformAdjustPosition(IN CMMRectF rcAbsOfMonitor);
 };
 
+#endif
 #endif
 

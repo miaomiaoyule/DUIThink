@@ -18,20 +18,33 @@ void CMMThreadPool::Run(int nThreadCount)
 
 	while (m_bStoping)
 	{
+#if defined(DuiPlatform_SDL)
+		SDL_Delay(100);
+#else
 		Sleep(100);
+#endif
 	}
 
 	if (m_bInited) return;
 
 	m_bInited = true;
+#if defined(DuiPlatform_SDL)
+	m_hEvent = SDL_CreateSemaphore(0);
+#else
 	m_hEvent = CreateEvent(0, FALSE, FALSE, 0);
+#endif
 	m_nThreadCount = nThreadCount;
 	for (int i = 0; i < nThreadCount; i++)
 	{
 		m_vecThreadWorker.push_back(std::thread(std::bind(&CMMThreadPool::Work, this)));
 	}
 
+#if defined(DuiPlatform_SDL)
+	// post once to wake up any waiting worker
+	SDL_SemPost(m_hEvent);
+#else
 	SetEvent(m_hEvent);
+#endif
 
 	return;
 }
@@ -48,7 +61,11 @@ void CMMThreadPool::Stop()
 		std::lock_guard<std::recursive_mutex> Lock(m_RunningLock);
 		if (m_nThreadRunning <= 0) break;
 
+#if defined(DuiPlatform_SDL)
+		SDL_SemPost(m_hEvent);
+#else
 		SetEvent(m_hEvent);
+#endif
 	}
 	{
 		std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
@@ -63,7 +80,15 @@ void CMMThreadPool::Stop()
 
 		m_vecThreadWorker.clear();
 		m_mapServiceMsg.clear();
+#if defined(DuiPlatform_SDL)
+		if (m_hEvent)
+		{
+			SDL_DestroySemaphore(m_hEvent);
+			m_hEvent = nullptr;
+		}
+#else
 		MMSafeCloseHandle(m_hEvent);
+#endif
 		m_bInited = false;
 		m_bStoping = false;
 	}
@@ -81,7 +106,11 @@ bool CMMThreadPool::Push(PtrMMServiceMsg pMsg)
 	auto &queMsg = m_mapServiceMsg[pMsg->pDest];
 	queMsg.push_back(pMsg);
 
+#if defined(DuiPlatform_SDL)
+	if (m_hEvent) SDL_SemPost(m_hEvent);
+#else
 	SetEvent(m_hEvent);
+#endif
 
 	return true;
 }
@@ -109,16 +138,22 @@ bool CMMThreadPool::PushTask(std::function<void()> pFunc)
 
 	m_deqFuncTask.push_back(pFunc);
 
+#if defined(DuiPlatform_SDL)
+	if (m_hEvent) SDL_SemPost(m_hEvent);
+#else
 	SetEvent(m_hEvent);
+#endif
 
 	return true;
 }
 
 void CMMThreadPool::Work()
 {
+#ifndef DuiPlatform_SDL
 	// Init Com
 	::CoInitialize(nullptr);
 	::OleInitialize(nullptr);
+#endif
 
 	{
 		std::lock_guard<std::recursive_mutex> Lock(m_RunningLock);
@@ -146,7 +181,13 @@ void CMMThreadPool::Work()
 				}
 				else
 				{
+#if defined(DuiPlatform_SDL)
+					// 等待信号，无限等待
+					if (m_hEvent) SDL_SemWait(m_hEvent);
+#else
 					DWORD dwRes = WaitForSingleObject(m_hEvent, INFINITE);
+					(void)dwRes;
+#endif
 				}
 			}
 		}
@@ -166,8 +207,10 @@ void CMMThreadPool::Work()
 		assert(false);
 	}
 
+#ifndef DuiPlatform_SDL
 	::CoUninitialize();
 	::OleUninitialize();
+#endif
 
 	return;
 }

@@ -1,6 +1,8 @@
 #ifndef __MM_REGMONITOR_H__
 #define __MM_REGMONITOR_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 //inner
@@ -50,5 +52,5 @@ protected:
 };
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

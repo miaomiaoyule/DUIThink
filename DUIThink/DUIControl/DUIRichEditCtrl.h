@@ -1,5 +1,9 @@
 #ifndef __DUIRICHEDITCTRL_H__
 #define __DUIRICHEDITCTRL_H__
+#ifndef DuiPlatform_SDL
+
+#include <richedit.h>
+#include <RichOle.h>
 
 #pragma once
 #pragma pack(1)
@@ -255,4 +259,6 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()
+
+#endif
 #endif

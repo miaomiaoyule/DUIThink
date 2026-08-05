@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "MMVersion.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 #define _WIN32_WINNT_NT4                    0x0400
 #define _WIN32_WINNT_WIN2K                  0x0500
@@ -200,3 +202,5 @@ bool CMMVersion::IsWindowsServer()
 	
 	return false == VerifyVersionInfoW(&osvi, VER_PRODUCT_TYPE, dwlConditionMask);
 }
+
+#endif

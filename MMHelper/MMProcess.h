@@ -1,6 +1,8 @@
 #ifndef __MM_PROCESS_H__
 #define __MM_PROCESS_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
@@ -52,4 +54,5 @@ public:
 	static void LaunchAsExplorerFromAdmin(CString strFile, CString strCmdLine);
 };
 
+#endif
 #endif

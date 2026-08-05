@@ -1738,6 +1738,16 @@ LRESULT CDUIControlBase::OnDuiImeComPosition(const DuiMessage &Msg)
 	return 0;
 }
 
+LRESULT CDUIControlBase::OnDuiTextEditing(const DuiMessage &Msg)
+{
+	return 0;
+}
+
+LRESULT CDUIControlBase::OnDuiTextInput(const DuiMessage &Msg)
+{
+	return 0;
+}
+
 bool CDUIControlBase::OnWinDragStart(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	if (false == IsWinDragEnabled()) return false;
