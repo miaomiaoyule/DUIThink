@@ -305,7 +305,7 @@ public:
 		strThis.MakeLower();
 		strRight.MakeLower();
 
-		return lstrcmp(strThis, strRight);
+		return strThis.compare(strRight);
 	}
 	TCHAR & operator[](int nPos)
 	{
@@ -383,27 +383,27 @@ public:
 	}
 	friend bool operator == (const CMMString &strLeft, const CMMString &strRight)
 	{
-		return 0 == lstrcmp(strLeft, strRight);
+		return 0 == strLeft.compare(strRight);
 	}
 	friend bool operator == (const CMMString &strLeft, LPCTSTR lpszRight)
 	{
-		return 0 == lstrcmp(strLeft, lpszRight);
+		return 0 == strLeft.compare(lpszRight);
 	}
 	friend bool operator == (LPCTSTR lpszLeft, const CMMString &strRight)
 	{
-		return 0 == lstrcmp(lpszLeft, strRight);
+		return 0 == strRight.compare(lpszLeft);
 	}
 	friend bool operator != (LPCTSTR lpszLeft, const CMMString &strRight)
 	{
-		return 0 != lstrcmp(lpszLeft, strRight);
+		return 0 != strRight.compare(lpszLeft);
 	}
 	friend bool operator != (const CMMString &strLeft, const CMMString &strRight)
 	{
-		return 0 != lstrcmp(strLeft, strRight);
+		return 0 != strLeft.compare(strRight);
 	}
 	friend bool operator != (const CMMString &strLeft, LPCTSTR lpszRight)
 	{
-		return 0 != lstrcmp(strLeft, lpszRight);
+		return 0 != strLeft.compare(lpszRight);
 	}
 };
 

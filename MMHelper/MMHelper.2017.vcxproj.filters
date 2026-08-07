@@ -37,6 +37,9 @@
     <Filter Include="MMDragDrop">
       <UniqueIdentifier>{634f8bdf-a662-42b4-8c26-f49b59f1ad2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MMUtils">
+      <UniqueIdentifier>{8f3f7fda-09d2-4829-9085-fa2d3cc384c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -180,6 +183,18 @@
     <ClInclude Include="MMResource.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MMPlatformTypes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MMUtils\MMPoint.h">
+      <Filter>MMUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MMUtils\MMRect.h">
+      <Filter>MMUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="MMUtils\MMSize.h">
+      <Filter>MMUtils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -289,6 +304,15 @@
     </ClCompile>
     <ClCompile Include="MMResource.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MMUtils\MMPoint.cpp">
+      <Filter>MMUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="MMUtils\MMRect.cpp">
+      <Filter>MMUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="MMUtils\MMSize.cpp">
+      <Filter>MMUtils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

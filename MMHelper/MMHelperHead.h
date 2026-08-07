@@ -94,11 +94,7 @@
 #include <codecvt>
 using namespace std;
 
-//可通过编译宏关闭：-UDuiPlatform_SDL 或在工程里改成未定义
-#ifndef DuiPlatform_SDL
 #define DuiPlatform_SDL
-#endif
-
 #if defined(DuiPlatform_SDL)
 	#include "MMPlatformTypes.h"
 
@@ -214,6 +210,9 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMDisplayer.h"
 #include "MMTrayIcon.h"
 #include "MMEncrypt.h"
+#include "MMUtils/MMPoint.h"
+#include "MMUtils/MMSize.h"
+#include "MMUtils/MMRect.h"
 #include "MMMagnetBox.h"
 #include "MMServiceModel/MMServiceMsg.h"
 #include "MMServiceModel/MMServiceItem.h"

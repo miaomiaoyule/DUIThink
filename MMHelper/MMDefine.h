@@ -1,5 +1,5 @@
-// Written by ³ÇÄÏ»¨ÒÑ¿ª QQ:284168136 QQGroup:885314879
-// Copyright (c) ³ÇÄÏ»¨ÒÑ¿ª
+ï»¿// Written by åŸå—èŠ±å·²å¼€ QQ:284168136 QQGroup:885314879
+// Copyright (c) åŸå—èŠ±å·²å¼€
 //
 // This code may be used in compiled form in any way you desire. These
 // source files may be redistributed by any means PROVIDING it is 
@@ -11,7 +11,7 @@
 // computer whatsoever. It's free, so don't hassle me about it.
 //
 // Acknowledgements :
-// ³ÇÄÏ»¨ÒÑ¿ª QQ:284168136 QQGroup:885314879
+// åŸå—èŠ±å·²å¼€ QQ:284168136 QQGroup:885314879
 //
 // Beware of bugs.
 //
@@ -22,18 +22,18 @@
 typedef DWORD DROPEFFECT;
 
 //////////////////////////////////////////////////////////////////////////////////
-//ÎŞĞ§ÊıÖµ
-#define INVALID_BYTE							((BYTE)(0xFF))						//ÎŞĞ§ÊıÖµ
-#define INVALID_WORD							((WORD)(0xFFFF))					//ÎŞĞ§ÊıÖµ
-#define INVALID_DWORD							((DWORD)(0xFFFFFFFF))				//ÎŞĞ§ÊıÖµ
+//æ— æ•ˆæ•°å€¼
+#define INVALID_BYTE							((BYTE)(0xFF))						//æ— æ•ˆæ•°å€¼
+#define INVALID_WORD							((WORD)(0xFFFF))					//æ— æ•ˆæ•°å€¼
+#define INVALID_DWORD							((DWORD)(0xFFFFFFFF))				//æ— æ•ˆæ•°å€¼
 
 #ifndef PI
 #define PI										(3.141592653589793f)
 #endif
 
-#define Len_MD5									(33)								//¼ÓÃÜÃÜÂë
-#define Len_Machine_ID							(33)								//ĞòÁĞ³¤¶È
-#define Len_Network_ID							(13)								//Íø¿¨³¤¶È
+#define Len_MD5									(33)								//åŠ å¯†å¯†ç 
+#define Len_Machine_ID							(33)								//åºåˆ—é•¿åº¦
+#define Len_Network_ID							(13)								//ç½‘å¡é•¿åº¦
 
 //////////////////////////////////////////////////////////////////////////////////
 #ifdef _UNICODE
@@ -42,7 +42,7 @@ typedef DWORD DROPEFFECT;
 #define CountStringBuffer CountStringBufferA
 #endif
 
-//´æ´¢³¤¶È
+//å­˜å‚¨é•¿åº¦
 #define CountStringBufferA(String)				((UINT)((lstrlenA(String) + 1) * sizeof(CHAR)))
 #define CountStringBufferW(String)				((UINT)((lstrlenW(String) + 1) * sizeof(WCHAR)))
 

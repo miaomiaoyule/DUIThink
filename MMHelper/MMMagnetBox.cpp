@@ -23,7 +23,7 @@ void CMMMagnetBox::SceneInit(int nMagnetType, int nMagnetValue)
 	return;
 }
 
-void CMMMagnetBox::PushBox(int nIndex, CRect rcBox)
+void CMMMagnetBox::PushBox(int nIndex, CMMRect rcBox)
 {
 	m_mapMagnetBox[nIndex] = rcBox;
 
@@ -52,7 +52,7 @@ CMMMagnetBox::tagFindMagnetBox CMMMagnetBox::GetNearestMagnetBox(int nIndex)
 	return FindMagnetBox;
 }
 
-CRect CMMMagnetBox::MoveBox(int nIndex, IN CPoint ptOffset)
+CMMRect CMMMagnetBox::MoveBox(int nIndex, IN CMMPoint ptOffset)
 {
 	auto FindIt = m_mapMagnetBox.find(nIndex);
 	if (FindIt == m_mapMagnetBox.end())
@@ -62,7 +62,7 @@ CRect CMMMagnetBox::MoveBox(int nIndex, IN CPoint ptOffset)
 		return {};
 	}
 
-	CRect rcBox = FindIt->second;
+	CMMRect rcBox = FindIt->second;
 
 	//can move
 	if (false == MoveOffset(nIndex, ptOffset, ptOffset))
@@ -71,7 +71,7 @@ CRect CMMMagnetBox::MoveBox(int nIndex, IN CPoint ptOffset)
 	}
 
 	//move
-	rcBox.OffsetRect(ptOffset);
+	rcBox.Offset(ptOffset);
 	FindIt->second = rcBox;
 	int nMoveDirection = MagnetType_None, nBorderNeares = MagnetType_None;
 	ptOffset.x < 0 ? nMoveDirection |= MagnetType_Left, nBorderNeares |= (MagnetType_Left | MagnetType_Right) : 0;
@@ -82,31 +82,31 @@ CRect CMMMagnetBox::MoveBox(int nIndex, IN CPoint ptOffset)
 	//magnet
 	tagFindMagnetBox FindMagnetBox;
 	FindNearestMagnetBox(nIndex, nMoveDirection, nBorderNeares, FindMagnetBox);
-	CRect rcBoxPre = rcBox;
+	CMMRect rcBoxPre = rcBox;
 	
 	if (-1 != FindMagnetBox.rcBoxLeft.nIndex)
 	{
 		tagMagnetBox &rcBoxLeft = FindMagnetBox.rcBoxLeft;
 		int nLeft = MagnetType_Left == rcBoxLeft.MagnetType ? rcBoxLeft.left : rcBoxLeft.right + MIN_OFFSET_MAGNET;
-		rcBox.OffsetRect(POINT{ nLeft - rcBox.left, 0 });
+		rcBox.Offset(POINT{ nLeft - rcBox.left, 0 });
 	}
 	if (-1 != FindMagnetBox.rcBoxRight.nIndex)
 	{
 		tagMagnetBox &rcBoxRight = FindMagnetBox.rcBoxRight;
 		int nRight = MagnetType_Left == rcBoxRight.MagnetType ? rcBoxRight.left - MIN_OFFSET_MAGNET : rcBoxRight.right;
-		rcBox.OffsetRect(POINT{ nRight - rcBox.right, 0 });
+		rcBox.Offset(POINT{ nRight - rcBox.right, 0 });
 	}
 	if (-1 != FindMagnetBox.rcBoxTop.nIndex)
 	{
 		tagMagnetBox &rcBoxTop = FindMagnetBox.rcBoxTop;
 		int nTop = MagnetType_Top == rcBoxTop.MagnetType ? rcBoxTop.top : rcBoxTop.bottom + MIN_OFFSET_MAGNET;
-		rcBox.OffsetRect(POINT{ 0, nTop - rcBox.top });
+		rcBox.Offset(POINT{ 0, nTop - rcBox.top });
 	}
 	if (-1 != FindMagnetBox.rcBoxBottom.nIndex)
 	{
 		tagMagnetBox &rcBoxBottom = FindMagnetBox.rcBoxBottom;
 		int nBottom = MagnetType_Top == rcBoxBottom.MagnetType ? rcBoxBottom.top - MIN_OFFSET_MAGNET : rcBoxBottom.bottom;
-		rcBox.OffsetRect(POINT{ 0, nBottom - rcBox.bottom });
+		rcBox.Offset(POINT{ 0, nBottom - rcBox.bottom });
 	}
 	
 	FindIt->second = rcBox;
@@ -124,7 +124,7 @@ CRect CMMMagnetBox::MoveBox(int nIndex, IN CPoint ptOffset)
 	return rcBox;
 }
 
-CRect CMMMagnetBox::StretchBox(int nIndex, IN CRect rcStretch, OUT bool &bMagnet)
+CMMRect CMMMagnetBox::StretchBox(int nIndex, IN CMMRect rcStretch, OUT bool &bMagnet)
 {
 	bMagnet = false;
 
@@ -136,7 +136,7 @@ CRect CMMMagnetBox::StretchBox(int nIndex, IN CRect rcStretch, OUT bool &bMagnet
 		return {};
 	}
 
-	CRect rcBox = FindIt->second;
+	CMMRect rcBox = FindIt->second;
 
 	//can stretch
 	if (false == StretchOffset(nIndex, rcStretch, rcStretch))
@@ -163,7 +163,7 @@ CRect CMMMagnetBox::StretchBox(int nIndex, IN CRect rcStretch, OUT bool &bMagnet
 	//magnet
 	tagFindMagnetBox FindMagnetBox;
 	FindNearestMagnetBox(nIndex, nMoveDirection, nBorderNeares, FindMagnetBox);
-	CRect rcBoxPre = rcBox;
+	CMMRect rcBoxPre = rcBox;
 
 	if (-1 != FindMagnetBox.rcBoxLeft.nIndex)
 	{
@@ -217,7 +217,7 @@ void CMMMagnetBox::InitBoxMagnetInfo(int nIndex)
 	return;
 }
 
-bool CMMMagnetBox::MoveOffset(int nIndex, IN CPoint ptOffset, OUT CPoint &ptOffsetRealy)
+bool CMMMagnetBox::MoveOffset(int nIndex, IN CMMPoint ptOffset, OUT CMMPoint &ptOffsetRealy)
 {
 	InitBoxMagnetInfo(nIndex);
 
@@ -273,7 +273,7 @@ bool CMMMagnetBox::MoveOffset(int nIndex, IN CPoint ptOffset, OUT CPoint &ptOffs
 	return true;
 }
 
-bool CMMMagnetBox::StretchOffset(int nIndex, IN CRect rcStretch, OUT CRect &rcStretchRealy)
+bool CMMMagnetBox::StretchOffset(int nIndex, IN CMMRect rcStretch, OUT CMMRect &rcStretchRealy)
 {
 	InitBoxMagnetInfo(nIndex);
 
@@ -343,12 +343,12 @@ void CMMMagnetBox::FindNearestMagnetBox(int nIndex, int nMoveDirection, int nBor
 	auto FindIt = m_mapMagnetBox.find(nIndex);
 	if (FindIt == m_mapMagnetBox.end()) return;
 
-	CRect rcBox = FindIt->second;
+	CMMRect rcBox = FindIt->second;
 	for (auto &BoxItem : m_mapMagnetBox)
 	{
 		if (BoxItem.first == nIndex) continue;
 
-		CRect rcBoxItem = BoxItem.second;
+		CMMRect rcBoxItem = BoxItem.second;
 
 		//no direction
 		if (MagnetType_None == nMoveDirection)
@@ -418,7 +418,7 @@ void CMMMagnetBox::FindNearestMagnetBox(int nIndex, int nMoveDirection, int nBor
 	return;
 }
 
-void CMMMagnetBox::VerifyBoxLeftDirection(int nIndex, CRect rcBoxItem, CRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox)
+void CMMMagnetBox::VerifyBoxLeftDirection(int nIndex, CMMRect rcBoxItem, CMMRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox)
 {
 	//left
 	auto &FindBoxLeft = FindMagnetBox.rcBoxLeft;
@@ -480,7 +480,7 @@ void CMMMagnetBox::VerifyBoxLeftDirection(int nIndex, CRect rcBoxItem, CRect rcB
 	return;
 }
 
-void CMMMagnetBox::VerifyBoxRightDirection(int nIndex, CRect rcBoxItem, CRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox)
+void CMMMagnetBox::VerifyBoxRightDirection(int nIndex, CMMRect rcBoxItem, CMMRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox)
 {
 	//right
 	auto &FindBoxRight = FindMagnetBox.rcBoxRight;
@@ -542,7 +542,7 @@ void CMMMagnetBox::VerifyBoxRightDirection(int nIndex, CRect rcBoxItem, CRect rc
 	return;
 }
 
-void CMMMagnetBox::VerifyBoxTopDirection(int nIndex, CRect rcBoxItem, CRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox)
+void CMMMagnetBox::VerifyBoxTopDirection(int nIndex, CMMRect rcBoxItem, CMMRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox)
 {
 	//top
 	auto &FindBoxTop = FindMagnetBox.rcBoxTop;
@@ -604,7 +604,7 @@ void CMMMagnetBox::VerifyBoxTopDirection(int nIndex, CRect rcBoxItem, CRect rcBo
 	return;
 }
 
-void CMMMagnetBox::VerifyBoxBottomDirection(int nIndex, CRect rcBoxItem, CRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox)
+void CMMMagnetBox::VerifyBoxBottomDirection(int nIndex, CMMRect rcBoxItem, CMMRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox)
 {
 	//bottom
 	auto &FindBoxBottom = FindMagnetBox.rcBoxBottom;

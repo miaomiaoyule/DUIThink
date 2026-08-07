@@ -5,21 +5,14 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUISize : public SIZE
+class DUITHINK_API CDUISize : public CMMSize
 {
 public:
 	CDUISize();
 	CDUISize(long cx, long cy);
 	CDUISize(SIZE sz);
 	~CDUISize();
-
-	bool operator == (const SIZE &sz) const;
-	bool operator == (const CDUISize &sz) const;
-	bool operator != (const SIZE &sz) const;
-	bool operator != (const CDUISize &sz) const;
 };
-
-DUITHINK_API bool operator == (const SIZE &szFirst, const CDUISize &szNext);
 
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()

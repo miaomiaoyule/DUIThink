@@ -12,18 +12,18 @@
 #define MagnetType_Right				(0x04)
 #define MagnetType_Bottom				(0x08)
 
-typedef std::unordered_map<int, CRect> MapMagnetBox;
+typedef std::unordered_map<int, CMMRect> MapMagnetBox;
 
 //////////////////////////////////////////////////////////////////////////
 class MMHELPER_API CMMMagnetBox
 {
 public:
-	struct tagMagnetBox : public CRect
+	struct tagMagnetBox : public CMMRect
 	{
 		int							nIndex = -1;
 		int							MagnetType = MagnetType_None;
 
-		virtual tagMagnetBox & operator = (_In_ const CRect &rcRight)
+		virtual tagMagnetBox & operator = (_In_ const CMMRect &rcRight)
 		{
 			__super::operator = (rcRight);
 			
@@ -49,29 +49,29 @@ protected:
 	int								m_nMagnetValue = 12;
 	bool							m_bBoxMovingX = false;
 	bool							m_bBoxMovingY = false;
-	CPoint							m_ptPullTotal = {};
-	CRect							m_rcPullTotal = {};
+	CMMPoint							m_ptPullTotal = {};
+	CMMRect							m_rcPullTotal = {};
 
 public:
 	void SceneInit(int nMagnetType = MagnetType_Left | MagnetType_Top | MagnetType_Right | MagnetType_Bottom, int nMagnetValue = 12);
-	void PushBox(int nIndex, CRect rcBox);
+	void PushBox(int nIndex, CMMRect rcBox);
 	void RemoveAt(int nIndex);
 	void RemoveAll();
 	tagFindMagnetBox GetNearestMagnetBox(int nIndex);
 
-	CRect MoveBox(int nIndex, IN CPoint ptOffset);
-	CRect StretchBox(int nIndex, IN CRect rcStretch, OUT bool &bMagnet);
+	CMMRect MoveBox(int nIndex, IN CMMPoint ptOffset);
+	CMMRect StretchBox(int nIndex, IN CMMRect rcStretch, OUT bool &bMagnet);
 
 	//help
 protected:
 	void InitBoxMagnetInfo(int nIndex);
-	bool MoveOffset(int nIndex, IN CPoint ptOffset, OUT CPoint &ptOffsetRealy);
-	bool StretchOffset(int nIndex, IN CRect rcStretch, OUT CRect &rcStretchRealy);
+	bool MoveOffset(int nIndex, IN CMMPoint ptOffset, OUT CMMPoint &ptOffsetRealy);
+	bool StretchOffset(int nIndex, IN CMMRect rcStretch, OUT CMMRect &rcStretchRealy);
 	void FindNearestMagnetBox(int nIndex, int nMoveDirection, int nBorderNearest, tagFindMagnetBox &FindMagnetBox);
-	void VerifyBoxLeftDirection(int nIndex, CRect rcBoxItem, CRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox);
-	void VerifyBoxRightDirection(int nIndex, CRect rcBoxItem, CRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox);
-	void VerifyBoxTopDirection(int nIndex, CRect rcBoxItem, CRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox);
-	void VerifyBoxBottomDirection(int nIndex, CRect rcBoxItem, CRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox);
+	void VerifyBoxLeftDirection(int nIndex, CMMRect rcBoxItem, CMMRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox);
+	void VerifyBoxRightDirection(int nIndex, CMMRect rcBoxItem, CMMRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox);
+	void VerifyBoxTopDirection(int nIndex, CMMRect rcBoxItem, CMMRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox);
+	void VerifyBoxBottomDirection(int nIndex, CMMRect rcBoxItem, CMMRect rcBox, int nBorderNearest, tagFindMagnetBox &FindMagnetBox);
 };
 
 //////////////////////////////////////////////////////////////////////////

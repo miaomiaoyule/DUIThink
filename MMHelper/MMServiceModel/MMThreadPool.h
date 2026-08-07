@@ -28,7 +28,7 @@ private:
 	std::vector<std::thread>					m_vecThreadWorker;
 	std::deque<std::function<void()>>			m_deqFuncTask;
 #if defined(DuiPlatform_SDL)
-	SDL_sem *									m_hEvent = nullptr;
+	SDL_Semaphore *								m_hEvent = nullptr;
 #else
 	HANDLE										m_hEvent = NULL;
 #endif

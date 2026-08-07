@@ -11,11 +11,11 @@
 void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...)
 {
 #ifdef _DEBUG
-	CString strMsg;
+	CMMString strMsg;
 	va_list Args;
 
 	va_start(Args, pstrFormat);
-	strMsg.FormatV(pstrFormat, Args);
+	strMsg.Format(pstrFormat, Args);
 	va_end(Args);
 
 	strMsg += _T("\n");

@@ -688,6 +688,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClInclude Include="MMCommandLine.h" />
     <ClInclude Include="MMMD5CheckSum.h" />
     <ClInclude Include="MMModule.h" />
+    <ClInclude Include="MMPlatformTypes.h" />
     <ClInclude Include="MMProcess.h" />
     <ClInclude Include="MMReDirection.h" />
     <ClInclude Include="MMRegMonitor.h" />
@@ -712,6 +713,9 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClInclude Include="MMString.h" />
     <ClInclude Include="MMSvg.h" />
     <ClInclude Include="MMTrayIcon.h" />
+    <ClInclude Include="MMUtils\MMPoint.h" />
+    <ClInclude Include="MMUtils\MMRect.h" />
+    <ClInclude Include="MMUtils\MMSize.h" />
     <ClInclude Include="MMVersion.h" />
     <ClInclude Include="MMWinTCPing.h" />
     <ClInclude Include="stdafx.h" />
@@ -805,6 +809,9 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClCompile Include="MMString.cpp" />
     <ClCompile Include="MMSvg.cpp" />
     <ClCompile Include="MMTrayIcon.cpp" />
+    <ClCompile Include="MMUtils\MMPoint.cpp" />
+    <ClCompile Include="MMUtils\MMRect.cpp" />
+    <ClCompile Include="MMUtils\MMSize.cpp" />
     <ClCompile Include="MMVersion.cpp" />
     <ClCompile Include="MMWinTCPing.cpp" />
     <ClCompile Include="stdafx.cpp">

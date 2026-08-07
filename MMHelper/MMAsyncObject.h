@@ -1,9 +1,10 @@
-#ifndef __MM_ASYNCOBJECT_H__
+﻿#ifndef __MM_ASYNCOBJECT_H__
 #define __MM_ASYNCOBJECT_H__
 
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
+class CMMAsyncObject;
 struct tagMMSdlAsyncMsg
 {
 	CMMAsyncObject *					pWnd = NULL;

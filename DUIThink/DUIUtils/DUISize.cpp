@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "DUISize.h"
 
-
+//////////////////////////////////////////////////////////////////////////
 CDUISize::CDUISize(void)
 {
 	cx = cy = 0;
@@ -22,29 +22,4 @@ CDUISize::CDUISize(SIZE sz)
 
 CDUISize::~CDUISize(void)
 {
-}
-
-bool CDUISize::operator == (const SIZE &sz) const
-{
-	return cx == sz.cx && cy == sz.cy;
-}
-
-bool CDUISize::operator == (const CDUISize &sz) const
-{
-	return cx == sz.cx && cy == sz.cy;
-}
-
-bool CDUISize::operator != (const SIZE &sz) const
-{
-	return false == operator==(sz);
-}
-
-bool CDUISize::operator != (const CDUISize &sz) const
-{
-	return false == operator==(sz);
-}
-
-bool operator == (const SIZE &szFirst, const CDUISize &szNext)
-{
-	return szNext == szFirst;
 }

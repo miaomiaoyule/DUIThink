@@ -1,4 +1,4 @@
-#ifndef __MM_COMMANDLINE_H__
+ï»¿#ifndef __MM_COMMANDLINE_H__
 #define __MM_COMMANDLINE_H__
 
 #pragma once
@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 /**
  * cmdline use / split, key and value cannot have /
- * for example£º"/Key1 Value1 /Key2 Value2 /Key3 Value3"
+ * for exampleï¼š"/Key1 Value1 /Key2 Value2 /Key3 Value3"
  */
 class MMHELPER_API CMMCommandLine
 {

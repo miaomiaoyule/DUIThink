@@ -11,20 +11,8 @@
 #if defined(DuiPlatform_SDL)
 
 #include "../ThirdDepend/SDL3/SDL.h"
-
-//////////////////////////////////////////////////////////////////////////
-#if defined(_WIN32) || defined(_WIN64)
-
-// Remap HWND while including windows.h so GDI types remain available for paint.
-#define HWND NativeWinHWND_DontUse
-#include <windows.h>
-#include <windowsx.h>
-#include <CommCtrl.h>
-#undef HWND
 typedef SDL_Window *HWND;
 typedef SDL_DisplayID HMONITOR;
-
-#else
 
 //////////////////////////////////////////////////////////////////////////
 // basic integer types
@@ -366,7 +354,15 @@ inline int lstrlenW(const wchar_t *lpString) { return lpString ? (int)wcslen(lpS
 #define lstrlen lstrlenA
 #endif
 
-#endif // _WIN32
+#ifndef MinMax
+#define min(a,b) (((a) < (b)) ? (a) : (b))
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#endif
+
+#else
+#include <windows.h>
+#include <windowsx.h>
+#include <CommCtrl.h>
 
 #endif // DuiPlatform_SDL
 
