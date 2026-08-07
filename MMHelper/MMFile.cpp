@@ -1020,19 +1020,19 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 	{
 		case FileEncode_UTF8_Bom:
 		{
-			CStringA strDataA = CT2CA(strData, CP_UTF8);
+			std::string strDataA = CT2CA(strData, CP_UTF8);
 
 			if (bClearOld)
 			{
-				CStringA strSign;
-				strSign.GetBufferSetLength(3);
-				strSign.SetAt(0, 0xEF);
-				strSign.SetAt(1, 0xBB);
-				strSign.SetAt(2, 0xBF);
-				strDataA.Insert(0, strSign);
+				std::string strSign;
+				strSign.resize(3);
+				strSign[0] = 0xEF;
+				strSign[1] = 0xBB;
+				strSign[2] = 0xBF;
+				strDataA.insert(0, strSign);
 			}
 
-			fwrite(strDataA, strDataA.GetLength(), 1, pFile);
+			fwrite(strDataA.c_str(), strDataA.size(), 1, pFile);
 			
 			break;
 		}
@@ -1059,18 +1059,18 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 		}
 		case FileEncode_UTF8:
 		{
-			CStringA strDataA = CT2CA(strData, CP_UTF8);
+			std::string strDataA = CT2CA(strData, CP_UTF8);
 
-			fwrite(strDataA, strDataA.GetLength(), 1, pFile);
+			fwrite(strDataA.c_str(), strDataA.size(), 1, pFile);
 
 			break;
 		}
 		case FileEncode_Ansi:
 		default:
 		{
-			CStringA strDataA = CT2CA(strData);
+			std::string strDataA = CT2CA(strData);
 
-			fwrite(strDataA, strDataA.GetLength(), 1, pFile);
+			fwrite(strDataA.c_str(), strDataA.size(), 1, pFile);
 
 			break;
 		}
