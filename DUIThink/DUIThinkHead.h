@@ -41,29 +41,25 @@
 // MMHelper first so SDL HWND / platform types are ready before GDI+
 #include "../MMHelper/MMHelperHead.h"
 
-#if defined(_WIN32) || defined(_WIN64)
-#include <comdef.h>
-#include <gdiplus.h>
-#include <ShlDisp.h>
-#include <olectl.h>
-using namespace Gdiplus;
-
-#if defined(_MSC_VER)
-#pragma comment(lib, "Msimg32.lib")
-#pragma comment(lib, "Gdiplus.lib")
-#pragma comment(lib, "comctl32.lib")
-#pragma comment(lib, "Imm32.lib")
-#endif
+#if defined(DuiPlatform_SDL)
+	// non-Windows: GDI+ not available; render backend TBD
+	namespace Gdiplus
+	{
+		class Bitmap;
+		enum TextRenderingHint { TextRenderingHintSystemDefault = 0 };
+	}
 #else
-// non-Windows: GDI+ not available; render backend TBD
-namespace Gdiplus
-{
-	class Bitmap;
-	enum TextRenderingHint { TextRenderingHintSystemDefault = 0 };
-}
+	#include <comdef.h>
+	#include <gdiplus.h>
+	#include <ShlDisp.h>
+	#include <olectl.h>
+	using namespace Gdiplus;
+	
+	#pragma comment(lib, "Msimg32.lib")
+	#pragma comment(lib, "Gdiplus.lib")
+	#pragma comment(lib, "comctl32.lib")
+	#pragma comment(lib, "Imm32.lib")
 #endif
-
-using namespace std;
 
 //////////////////////////////////////////////////////////////////////////
 #include "../ThirdDepend/tinyxml2/tinyxml2.h"

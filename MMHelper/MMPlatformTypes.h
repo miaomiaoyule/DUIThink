@@ -8,8 +8,7 @@
 #ifndef __MM_PLATFORM_TYPES_H__
 #define __MM_PLATFORM_TYPES_H__
 
-#if defined(DuiPlatform_SDL)
-
+#include <wchar.h>
 #include "../ThirdDepend/SDL3/SDL.h"
 
 // SDL3 static lib pulls these Win32 deps (shared SDL3.dll already embeds them).
@@ -20,6 +19,7 @@
 #else
 #pragma comment(lib, "../lib/SDL3-static.lib")
 #endif
+
 #pragma comment(lib, "winmm.lib")      // timeBeginPeriod / timeEndPeriod
 #pragma comment(lib, "setupapi.lib")   // SetupDi*
 //#pragma comment(lib, "cfgmgr32.lib")   // CM_Get_* / CM_Locate_DevNode
@@ -34,6 +34,17 @@ typedef SDL_DisplayID HMONITOR;
 
 //////////////////////////////////////////////////////////////////////////
 // basic integer types
+#ifndef _T
+#ifdef UNICODE
+#define _T(x) L##x
+#else
+#define _T(x) x
+#endif
+#endif
+#ifndef TEXT
+#define TEXT _T
+#endif
+
 typedef char CHAR;
 typedef CHAR *LPSTR;
 typedef const CHAR *LPCSTR;
@@ -425,6 +436,15 @@ inline int _ttoi(const char *s) { return s ? atoi(s) : 0; }
 #endif
 #endif
 
+// MSVC tchar.h maps _tcstol -> wcstol / strtol; provide for DuiPlatform_SDL
+#ifndef _tcstol
+#ifdef UNICODE
+#define _tcstol wcstol
+#else
+#define _tcstol strtol
+#endif
+#endif
+
 #ifndef _ASSERTE
 #define _ASSERTE(expr) assert(expr)
 #endif
@@ -648,12 +668,5 @@ inline int lstrlenW(const wchar_t *lpString) { return lpString ? (int)wcslen(lpS
 #else
 #define lstrlen lstrlenA
 #endif
-
-#else
-#include <windows.h>
-#include <windowsx.h>
-#include <CommCtrl.h>
-
-#endif // DuiPlatform_SDL
 
 #endif // __MM_PLATFORM_TYPES_H__

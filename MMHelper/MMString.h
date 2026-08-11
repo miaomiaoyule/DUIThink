@@ -269,51 +269,120 @@ public:
 	{
 		if (NULL == pstrFormat) return *this;
 
-		#if _MSC_VER <= 1400
-			TCHAR *szBuffer = NULL;
-			int size = 512, nLen, counts;
-			szBuffer = (TCHAR*)malloc(size);
-			ZeroMemory(szBuffer, size);
-			while (TRUE) 
+#if defined(_MSC_VER) && (_MSC_VER <= 1400)
+		TCHAR *szBuffer = NULL;
+		int size = 512, nLen, counts;
+		szBuffer = (TCHAR *)malloc(size);
+		ZeroMemory(szBuffer, size);
+		while (TRUE)
+		{
+			counts = size / sizeof(TCHAR);
+			nLen = _vsntprintf(szBuffer, counts, pstrFormat, Args);
+			if (nLen != -1 && nLen < counts)
 			{
-				counts = size / sizeof(TCHAR);
-				nLen = _vsntprintf(szBuffer, counts, pstrFormat, Args);
-				if (nLen != -1 && nLen < counts) 
-				{
-					break;
-				}
-				if (nLen == -1) 
-				{
-					size *= 2;
-				}
-				else 
-				{
-					size += 1 * sizeof(TCHAR);
-				}
-			
-				if ((szBuffer = (TCHAR*)realloc(szBuffer, size)) != NULL) 
-				{
-					ZeroMemory(szBuffer, size);
-				}
-				else 
-				{
-					break;
-				}
+				break;
 			}
-			
-			Assign(szBuffer);
+			if (nLen == -1)
+			{
+				size *= 2;
+			}
+			else
+			{
+				size += 1 * sizeof(TCHAR);
+			}
+
+			if ((szBuffer = (TCHAR *)realloc(szBuffer, size)) != NULL)
+			{
+				ZeroMemory(szBuffer, size);
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		Assign(szBuffer);
+		free(szBuffer);
+#elif defined(DuiPlatform_SDL)
+		// Non-MSVC: no _vsntprintf; vswprintf often cannot query with NULL/0 ¡ª grow buffer
+		size_t capacity = 256;
+		TCHAR *szBuffer = NULL;
+		for (;;)
+		{
+			TCHAR *pNew = (TCHAR *)realloc(szBuffer, capacity * sizeof(TCHAR));
+			if (NULL == pNew)
+			{
+				free(szBuffer);
+				clear();
+				return *this;
+			}
+			szBuffer = pNew;
+			ZeroMemory(szBuffer, capacity * sizeof(TCHAR));
+
+			va_list argsCopy;
+			va_copy(argsCopy, Args);
+#ifdef UNICODE
+			int nLen = vswprintf(szBuffer, capacity, pstrFormat, argsCopy);
+#else
+			int nLen = vsnprintf(szBuffer, capacity, pstrFormat, argsCopy);
+#endif
+			va_end(argsCopy);
+
+#ifdef UNICODE
+			if (nLen >= 0 && (size_t)nLen < capacity)
+			{
+				assign(szBuffer, (size_t)nLen);
+				free(szBuffer);
+				return *this;
+			}
+			if (capacity >= (size_t)1024 * 1024)
+			{
+				free(szBuffer);
+				clear();
+				return *this;
+			}
+			capacity *= 2;
+#else
+			if (nLen < 0)
+			{
+				free(szBuffer);
+				clear();
+				return *this;
+			}
+			if ((size_t)nLen >= capacity)
+			{
+				capacity = (size_t)nLen + 1;
+				continue;
+			}
+			assign(szBuffer, (size_t)nLen);
 			free(szBuffer);
-			return nLen;
-		#else
-			int nLen = _vsntprintf(NULL, 0, pstrFormat, Args);
-			int nSize = (nLen + 1) * sizeof(TCHAR);
-			TCHAR *szBuffer = (TCHAR*)malloc(nSize);
-			ZeroMemory(szBuffer, nSize);
-			nLen = _vsntprintf(szBuffer, nLen + 1, pstrFormat, Args);
-			operator = (szBuffer);
-			free(szBuffer);
-		#endif
-			
+			return *this;
+#endif
+		}
+#else
+		// MSVC: _vsntprintf(NULL,0,...) can query required length
+		va_list argsLen;
+		va_copy(argsLen, Args);
+		int nLen = _vsntprintf(NULL, 0, pstrFormat, argsLen);
+		va_end(argsLen);
+		if (nLen < 0)
+		{
+			clear();
+			return *this;
+		}
+		int nSize = (nLen + 1) * sizeof(TCHAR);
+		TCHAR *szBuffer = (TCHAR *)malloc(nSize);
+		if (NULL == szBuffer)
+		{
+			clear();
+			return *this;
+		}
+		ZeroMemory(szBuffer, nSize);
+		_vsntprintf(szBuffer, nLen + 1, pstrFormat, Args);
+		operator = (szBuffer);
+		free(szBuffer);
+#endif
+
 		return *this;
 	}
 	CMMString & Format(LPCTSTR pstrFormat, ...)

@@ -60,22 +60,6 @@
 #include <time.h>
 #include <math.h>
 #include <string.h>
-#if defined(_WIN32) || defined(_WIN64)
-#include <tchar.h>
-#include <malloc.h>
-#else
-#include <wchar.h>
-#ifndef _T
-#ifdef UNICODE
-#define _T(x) L##x
-#else
-#define _T(x) x
-#endif
-#endif
-#ifndef TEXT
-#define TEXT _T
-#endif
-#endif
 
 #include <vector>
 #include <set>
@@ -98,6 +82,8 @@ using namespace std;
 #if defined(DuiPlatform_SDL)
 	#include "MMPlatformTypes.h"
 #else
+	#include <tchar.h>
+	#include <malloc.h>
 	#include <windows.h>
 	#include <windowsx.h>
 	#include <Tlhelp32.h>  
