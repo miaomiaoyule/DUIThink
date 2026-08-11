@@ -97,28 +97,6 @@ using namespace std;
 #define DuiPlatform_SDL
 #if defined(DuiPlatform_SDL)
 	#include "MMPlatformTypes.h"
-
-	typedef char CHAR;
-	typedef CHAR *LPSTR;
-	typedef const CHAR *LPCSTR;
-	typedef wchar_t WCHAR;
-	typedef WCHAR *LPWSTR;
-	typedef const WCHAR *LPCWSTR;
-
-#ifdef UNICODE
-	typedef WCHAR   TCHAR;
-#else
-	typedef CHAR   TCHAR;
-#endif
-	typedef TCHAR *LPTSTR;
-	typedef const TCHAR *LPCTSTR;
-
-#ifndef CP_ACP
-#define CP_ACP 0
-#endif
-#ifndef CP_UTF8
-#define CP_UTF8 1
-#endif
 #else
 	#include <windows.h>
 	#include <windowsx.h>

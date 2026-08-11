@@ -22,11 +22,11 @@ std::string CMMStrHelp::FormatA(const char *lpszFmt, ...)
 
 std::wstring CMMStrHelp::FormatW(const wchar_t *lpszFmt, ...)
 {
-	CStringW strRes;
+	CMMString strRes;
 	va_list args;
 	va_start(args, lpszFmt);
 
-	strRes.FormatV(lpszFmt, args);
+	strRes.Format(lpszFmt, args);
 
 	va_end(args);
 
@@ -207,7 +207,7 @@ std::vector<CMMString> CMMStrHelp::ParseStrFromString(LPCSTR lpszString, LPCSTR 
 			}
 			default:
 			{
-				CStringA strSub(lpszString, lpszSub - lpszString);
+				std::string strSub(lpszString, lpszSub - lpszString);
 				vecResult.push_back((LPCTSTR)CA2CT(strSub, nCodePage));
 
 				break;

@@ -4,6 +4,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////
+#if defined(DuiPlatform_SDL)
 inline std::string WStringToUtf8(const std::wstring& ws)
 {
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
@@ -16,31 +17,80 @@ inline std::wstring Utf8ToWString(const std::string& str)
 	return conv.from_bytes(str);
 }
 
-inline std::wstring CA2CT(const std::string &s, int nCodePage = CP_ACP)
+inline std::wstring GbkToWString(const std::string &str)
 {
-	if (s.empty()) return {};
-	try
-	{
-		std::string localeName;
-		if (CP_ACP == nCodePage)
-		{
-			localeName = "zh_CN.GB18030";
-		}
-		else if (CP_UTF8 == nCodePage)
-		{
-			localeName = "en_US.UTF-8";
-		}
+	if (str.empty()) return std::wstring();
 
-		// codecvt_byname 依赖平台对 localeName 的支持（例如 "zh_CN.GB18030" 或 "en_US.UTF-8"）
-		auto cvt = std::make_unique<std::codecvt_byname<wchar_t, char, std::mbstate_t>>(localeName.c_str());
-		std::wstring_convert<std::codecvt_byname<wchar_t, char, std::mbstate_t>> conv(cvt.release());
-		return conv.from_bytes(s);
+#ifdef DUI_HAVE_ICONV
+	iconv_t cd = iconv_open("WCHAR_T", "GBK");
+	if (cd == (iconv_t)-1) {
+		// iconv 不可用，回退
+		std::wstring out;
+		out.reserve(str.size());
+		for (unsigned char c : str) out.push_back(static_cast<wchar_t>(c));
+		return out;
 	}
-	catch (...)
-	{
-		return L"";
+	size_t inbytes = str.size();
+	size_t outbytes = (inbytes + 1) * sizeof(wchar_t);
+	std::vector<char> outbuf(outbytes);
+	char *inptr = const_cast<char *>(str.data());
+	char *outptr = outbuf.data();
+	size_t res = iconv(cd, &inptr, &inbytes, &outptr, &outbytes);
+	iconv_close(cd);
+	if (res == (size_t)-1) {
+		// 转换失败，回退逐字节扩展
+		std::wstring out;
+		out.reserve(str.size());
+		for (unsigned char c : str) out.push_back(static_cast<wchar_t>(c));
+		return out;
 	}
+	size_t written = (outbuf.size() - outbytes) / sizeof(wchar_t);
+	return std::wstring(reinterpret_cast<wchar_t *>(outbuf.data()), written);
+#else
+	// 无 iconv：保底逐字节扩展（结果可能不是正确的中文）
+	std::wstring out;
+	out.reserve(str.size());
+	for (unsigned char c : str) out.push_back(static_cast<wchar_t>(c));
+	return out;
+#endif
 }
+
+inline std::wstring AnsiToWString(const std::string &str)
+{
+	if (str.empty()) return std::wstring();
+
+	// POSIX 平台：ANSI 通常就是某个本地编码，尝试用 iconv 从 "CHAR" -> "WCHAR_T"
+#ifdef DUI_HAVE_ICONV
+	iconv_t cd = iconv_open("WCHAR_T", "CHAR");
+	if (cd == (iconv_t)-1) {
+		std::wstring out;
+		out.reserve(str.size());
+		for (unsigned char c : str) out.push_back(static_cast<wchar_t>(c));
+		return out;
+	}
+	size_t inbytes = str.size();
+	size_t outbytes = (inbytes + 1) * sizeof(wchar_t);
+	std::vector<char> outbuf(outbytes);
+	char *inptr = const_cast<char *>(str.data());
+	char *outptr = outbuf.data();
+	size_t res = iconv(cd, &inptr, &inbytes, &outptr, &outbytes);
+	iconv_close(cd);
+	if (res == (size_t)-1) {
+		std::wstring out;
+		out.reserve(str.size());
+		for (unsigned char c : str) out.push_back(static_cast<wchar_t>(c));
+		return out;
+	}
+	size_t written = (outbuf.size() - outbytes) / sizeof(wchar_t);
+	return std::wstring(reinterpret_cast<wchar_t *>(outbuf.data()), written);
+#else
+	std::wstring out;
+	out.reserve(str.size());
+	for (unsigned char c : str) out.push_back(static_cast<wchar_t>(c));
+	return out;
+#endif
+}
+#endif
 
 ////////////////////////////////////////////////////////////////////////////
 class CMMString :
@@ -55,16 +105,29 @@ public:
 	{
 
 	}
+#if defined(DuiPlatform_SDL)
 	CMMString(LPCSTR lpszStr)
-		: std::wstring(CA2CT(NULL == lpszStr ? ("") : lpszStr))
+		: std::wstring(GbkToWString(NULL == lpszStr ? ("") : lpszStr))
 	{
 
 	}
 	CMMString(LPCSTR lpszStr, int nLen)
-		: std::wstring(CA2CT(std::string(NULL == lpszStr ? ("") : lpszStr, nLen < 0 ? strlen(lpszStr) : nLen).c_str()))
+		: std::wstring(GbkToWString(std::string(NULL == lpszStr ? ("") : lpszStr, nLen < 0 ? strlen(lpszStr) : nLen)))
 	{
 
 	}
+#else
+	CMMString(LPCSTR lpszStr)
+		: std::wstring((LPCTSTR)CA2CT(NULL == lpszStr ? ("") : lpszStr))
+	{
+
+	}
+	CMMString(LPCSTR lpszStr, int nLen)
+		: std::wstring((LPCTSTR)CA2CT(std::string(NULL == lpszStr ? ("") : lpszStr, nLen < 0 ? strlen(lpszStr) : nLen).c_str()))
+	{
+
+	}
+#endif
 	CMMString(CHAR ch, int nCount)
 		: CMMString((TCHAR)ch, nCount)
 	{
@@ -91,6 +154,11 @@ public:
 
 	}
 	CMMString(const CMMString &strSrc)
+		: std::wstring(strSrc)
+	{
+
+	}
+	CMMString(const std::wstring &strSrc)
 		: std::wstring(strSrc)
 	{
 
@@ -315,8 +383,11 @@ public:
 	{
 		if (NULL == lpszRight) return *this;
 
-		__super::operator = (CA2CT(lpszRight));
-
+#if defined(DuiPlatform_SDL)
+		__super::operator = (GbkToWString(lpszRight));
+#else
+		__super::operator = ((LPCTSTR)CA2CT(lpszRight));
+#endif
 		return *this;
 	}
 	CMMString & operator = (LPCTSTR lpszRight)
@@ -420,6 +491,86 @@ namespace std
 		}
 	};
 }
+
+#if defined(DuiPlatform_SDL)
+inline std::string MMStringToUtf8(const std::wstring &ws) { return WStringToUtf8(ws); }
+inline std::wstring Utf8ToMMString(const std::string &str) { return Utf8ToWString(str); }
+
+inline CMMString CA2CT(const std::string &s, int nCodePage = CP_ACP)
+{
+	if (s.empty()) return {};
+
+	// UTF-8: stable path, avoid codecvt_byname + unique_ptr
+	if (CP_UTF8 == nCodePage)
+	{
+		try
+		{
+			return Utf8ToWString(s);
+		}
+		catch (...)
+		{
+			return L"";
+		}
+	}
+
+	try
+	{
+		// codecvt_byname dtor is protected; cannot use unique_ptr/default_delete.
+		// wstring_convert takes ownership of the new facet.
+		const char *pszLocale = "zh_CN.GB18030";
+		std::wstring_convert<std::codecvt_byname<wchar_t, char, std::mbstate_t>> conv(
+			new std::codecvt_byname<wchar_t, char, std::mbstate_t>(pszLocale));
+		return conv.from_bytes(s);
+	}
+	catch (...)
+	{
+		try
+		{
+			return Utf8ToWString(s);
+		}
+		catch (...)
+		{
+			return L"";
+		}
+	}
+}
+
+inline std::string CT2CA(const CMMString &s, int nCodePage = CP_ACP)
+{
+	if (s.empty()) return std::string();
+
+	if (nCodePage == CP_UTF8)
+	{
+		try 
+		{
+			return WStringToUtf8(s);
+		}
+		catch (...) 
+		{
+			return std::string();
+		}
+	}
+
+	try
+	{
+		const char *pszLocale = "zh_CN.GB18030";
+		std::wstring_convert<std::codecvt_byname<wchar_t, char, std::mbstate_t>> conv(
+			new std::codecvt_byname<wchar_t, char, std::mbstate_t>(pszLocale));
+		return conv.to_bytes(s);
+	}
+	catch (...)
+	{
+		try 
+		{
+			return WStringToUtf8(s);
+		}
+		catch (...) 
+		{
+			return std::string();
+		}
+	}
+}
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 

@@ -41,7 +41,7 @@ void CMMThreadPool::Run(int nThreadCount)
 
 #if defined(DuiPlatform_SDL)
 	// post once to wake up any waiting worker
-	SDL_SemPost(m_hEvent);
+	SDL_SignalSemaphore(m_hEvent);
 #else
 	SetEvent(m_hEvent);
 #endif
@@ -62,7 +62,7 @@ void CMMThreadPool::Stop()
 		if (m_nThreadRunning <= 0) break;
 
 #if defined(DuiPlatform_SDL)
-		SDL_SemPost(m_hEvent);
+		SDL_SignalSemaphore(m_hEvent);
 #else
 		SetEvent(m_hEvent);
 #endif
@@ -107,7 +107,7 @@ bool CMMThreadPool::Push(PtrMMServiceMsg pMsg)
 	queMsg.push_back(pMsg);
 
 #if defined(DuiPlatform_SDL)
-	if (m_hEvent) SDL_SemPost(m_hEvent);
+	if (m_hEvent) SDL_SignalSemaphore(m_hEvent);
 #else
 	SetEvent(m_hEvent);
 #endif
@@ -139,7 +139,7 @@ bool CMMThreadPool::PushTask(std::function<void()> pFunc)
 	m_deqFuncTask.push_back(pFunc);
 
 #if defined(DuiPlatform_SDL)
-	if (m_hEvent) SDL_SemPost(m_hEvent);
+	if (m_hEvent) SDL_SignalSemaphore(m_hEvent);
 #else
 	SetEvent(m_hEvent);
 #endif
@@ -183,7 +183,7 @@ void CMMThreadPool::Work()
 				{
 #if defined(DuiPlatform_SDL)
 					// 等待信号，无限等待
-					if (m_hEvent) SDL_SemWait(m_hEvent);
+					if (m_hEvent) SDL_WaitSemaphore(m_hEvent);
 #else
 					DWORD dwRes = WaitForSingleObject(m_hEvent, INFINITE);
 					(void)dwRes;

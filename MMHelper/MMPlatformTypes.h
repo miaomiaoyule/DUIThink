@@ -1,4 +1,4 @@
-// Written by 城南花已开 QQ:284168136 QQGroup:885314879
+﻿// Written by 城南花已开 QQ:284168136 QQGroup:885314879
 // Copyright (c) 城南花已开
 //
 // Win32-shaped types for DuiPlatform_SDL.
@@ -11,12 +11,45 @@
 #if defined(DuiPlatform_SDL)
 
 #include "../ThirdDepend/SDL3/SDL.h"
+
+// SDL3 static lib pulls these Win32 deps (shared SDL3.dll already embeds them).
+// SDL3 headers do not require SDL_STATIC_LIB for consumers; DLL_EXPORT is only for building SDL itself.
+#if defined(_WIN32) || defined(_WIN64)
+#ifdef _DEBUG
+#pragma comment(lib, "../lib/SDL3-staticd.lib")
+#else
+#pragma comment(lib, "../lib/SDL3-static.lib")
+#endif
+#pragma comment(lib, "winmm.lib")      // timeBeginPeriod / timeEndPeriod
+#pragma comment(lib, "setupapi.lib")   // SetupDi*
+//#pragma comment(lib, "cfgmgr32.lib")   // CM_Get_* / CM_Locate_DevNode
+#pragma comment(lib, "version.lib")    // GetFileVersionInfo* / VerQueryValue
+#pragma comment(lib, "imm32.lib")      // Imm*
+#pragma comment(lib, "ole32.lib")
+#pragma comment(lib, "uuid.lib")       // IID_IAgileObject
+#endif
+
 typedef SDL_Window *HWND;
 typedef SDL_DisplayID HMONITOR;
 
 //////////////////////////////////////////////////////////////////////////
 // basic integer types
+typedef char CHAR;
+typedef CHAR *LPSTR;
+typedef const CHAR *LPCSTR;
+typedef wchar_t WCHAR;
+typedef WCHAR *LPWSTR;
+typedef const WCHAR *LPCWSTR;
+#ifdef UNICODE
+typedef WCHAR   TCHAR;
+#else
+typedef CHAR   TCHAR;
+#endif
+typedef TCHAR *LPTSTR;
+typedef const TCHAR *LPCTSTR;
+
 typedef unsigned char BYTE;
+typedef unsigned char UCHAR;
 typedef unsigned short WORD;
 typedef unsigned long DWORD;
 typedef unsigned int UINT;
@@ -63,6 +96,60 @@ typedef void *HMENU;
 typedef void *HGDIOBJ;
 typedef void *HANDLE;
 typedef void *HZIPDT;
+typedef void *LPVOID;
+typedef void *PVOID;
+typedef void VOID;
+
+//////////////////////////////////////////////////////////////////////////
+// COM-style GUID (NOT SDL_GUID — SDL_GUID is joystick/device id: Uint8[16])
+#ifndef GUID_DEFINED
+#define GUID_DEFINED
+typedef struct _GUID
+{
+	unsigned long  Data1;
+	unsigned short Data2;
+	unsigned short Data3;
+	unsigned char  Data4[8];
+} GUID;
+#endif
+typedef GUID IID;
+typedef GUID CLSID;
+
+#ifdef __cplusplus
+#define REFGUID const GUID &
+#define REFIID const IID &
+#define REFCLSID const CLSID &
+inline bool operator==(const GUID &a, const GUID &b)
+{
+	return a.Data1 == b.Data1
+		&& a.Data2 == b.Data2
+		&& a.Data3 == b.Data3
+		&& 0 == memcmp(a.Data4, b.Data4, 8);
+}
+inline bool operator!=(const GUID &a, const GUID &b)
+{
+	return !(a == b);
+}
+#else
+#define REFGUID const GUID *
+#define REFIID const IID *
+#define REFCLSID const CLSID *
+#endif
+
+#ifndef InlineIsEqualGUID
+#define InlineIsEqualGUID(rguid1, rguid2) (*(rguid1) == *(rguid2))
+#endif
+#ifndef IsEqualGUID
+#define IsEqualGUID(rguid1, rguid2) InlineIsEqualGUID(rguid1, rguid2)
+#endif
+#ifndef IsEqualIID
+#define IsEqualIID(riid1, riid2) IsEqualGUID(riid1, riid2)
+#endif
+
+// MSVC extension used across the framework
+#ifndef interface
+#define interface struct
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 // string types (also defined in MMHelperHead; keep consistent)
@@ -101,9 +188,6 @@ typedef struct tagMONITORINFO
 	RECT rcWork;
 	DWORD dwFlags;
 } MONITORINFO, *LPMONITORINFO;
-
-typedef SDL_Window *HWND;
-typedef SDL_DisplayID HMONITOR;
 
 typedef struct tagMSG
 {
@@ -316,6 +400,31 @@ typedef struct tagTOOLINFO
 #define DIB_RGB_COLORS 0
 #define BI_RGB 0L
 
+#ifndef INADDR_NONE
+#define INADDR_NONE ((DWORD)0xffffffff)
+#endif
+#ifndef INADDR_ANY
+#define INADDR_ANY ((DWORD)0x00000000)
+#endif
+
+#ifndef OUT
+#define OUT
+#endif
+#ifndef IN
+#define IN
+#endif
+#ifndef OPTIONAL
+#define OPTIONAL
+#endif
+
+#ifndef _ttoi
+#ifdef UNICODE
+inline int _ttoi(const wchar_t *s) { return s ? (int)wcstol(s, NULL, 10) : 0; }
+#else
+inline int _ttoi(const char *s) { return s ? atoi(s) : 0; }
+#endif
+#endif
+
 #ifndef _ASSERTE
 #define _ASSERTE(expr) assert(expr)
 #endif
@@ -328,9 +437,160 @@ inline void OutputDebugStringW(const wchar_t *) {}
 #define OutputDebugString OutputDebugStringA
 #endif
 #endif
-#ifndef FreeLibrary
-inline BOOL FreeLibrary(HMODULE) { return TRUE; }
+// dynamic library — use SDL, do not call Win32 LoadLibrary under DuiPlatform_SDL
+#ifndef FARPROC
+typedef void (*FARPROC)();
 #endif
+inline HMODULE DuiLoadLibraryA(const char *lpszFile)
+{
+	if (NULL == lpszFile || 0 == lpszFile[0]) return NULL;
+	return (HMODULE)SDL_LoadObject(lpszFile);
+}
+inline FARPROC DuiGetProcAddress(HMODULE hModule, const char *lpszProc)
+{
+	if (NULL == hModule || NULL == lpszProc) return NULL;
+	return (FARPROC)SDL_LoadFunction((SDL_SharedObject*)hModule, lpszProc);
+}
+inline BOOL DuiFreeLibrary(HMODULE hModule)
+{
+	if (NULL == hModule) return FALSE;
+	SDL_UnloadObject((SDL_SharedObject*)hModule);
+	return TRUE;
+}
+inline HMODULE DuiGetModuleHandle(const char * /*lpszModule*/)
+{
+	// SDL has no exact GetModuleHandle(NULL); return NULL = "current image" fallback
+	return NULL;
+}
+inline HMODULE DuiLoadLibraryW(const wchar_t *lpszFile)
+{
+	if (NULL == lpszFile) return NULL;
+	char szUtf8[MAX_PATH * 4] = {};
+	int nOut = 0;
+	for (int i = 0; lpszFile[i] && nOut + 4 < (int)sizeof(szUtf8); ++i)
+	{
+		unsigned int ch = (unsigned int)lpszFile[i];
+		if (ch < 0x80)
+		{
+			szUtf8[nOut++] = (char)ch;
+		}
+		else if (ch < 0x800)
+		{
+			szUtf8[nOut++] = (char)(0xC0 | (ch >> 6));
+			szUtf8[nOut++] = (char)(0x80 | (ch & 0x3F));
+		}
+		else
+		{
+			szUtf8[nOut++] = (char)(0xE0 | (ch >> 12));
+			szUtf8[nOut++] = (char)(0x80 | ((ch >> 6) & 0x3F));
+			szUtf8[nOut++] = (char)(0x80 | (ch & 0x3F));
+		}
+	}
+	return DuiLoadLibraryA(szUtf8);
+}
+
+#ifndef LoadLibraryA
+#define LoadLibraryA DuiLoadLibraryA
+#endif
+#ifndef LoadLibraryW
+#define LoadLibraryW DuiLoadLibraryW
+#endif
+#ifndef GetProcAddress
+#define GetProcAddress DuiGetProcAddress
+#endif
+#ifndef FreeLibrary
+#define FreeLibrary DuiFreeLibrary
+#endif
+#ifndef GetModuleHandleA
+#define GetModuleHandleA DuiGetModuleHandle
+#endif
+#ifndef GetModuleHandleW
+#define GetModuleHandleW DuiGetModuleHandle
+#endif
+#ifdef UNICODE
+#ifndef LoadLibrary
+#define LoadLibrary LoadLibraryW
+#endif
+#ifndef GetModuleHandle
+#define GetModuleHandle GetModuleHandleW
+#endif
+#else
+#ifndef LoadLibrary
+#define LoadLibrary LoadLibraryA
+#endif
+#ifndef GetModuleHandle
+#define GetModuleHandle GetModuleHandleA
+#endif
+#endif
+#ifndef MinMax
+#define min(a,b) (((a) < (b)) ? (a) : (b))
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef GET_X_LPARAM
+#define GET_X_LPARAM(lp) ((int)(short)LOWORD(lp))
+#endif
+#ifndef GET_Y_LPARAM
+#define GET_Y_LPARAM(lp) ((int)(short)HIWORD(lp))
+#endif
+
+inline BOOL SetRectEmpty(LPRECT lprc)
+{
+	if (NULL == lprc) return FALSE;
+	lprc->left = lprc->top = lprc->right = lprc->bottom = 0;
+	return TRUE;
+}
+
+inline BOOL IsRectEmpty(LPCRECT lprc)
+{
+	if (NULL == lprc) return TRUE;
+	return (lprc->left >= lprc->right || lprc->top >= lprc->bottom) ? TRUE : FALSE;
+}
+
+inline BOOL EqualRect(LPCRECT lprc1, LPCRECT lprc2)
+{
+	if (NULL == lprc1 || NULL == lprc2) return FALSE;
+	return (lprc1->left == lprc2->left
+		&& lprc1->top == lprc2->top
+		&& lprc1->right == lprc2->right
+		&& lprc1->bottom == lprc2->bottom) ? TRUE : FALSE;
+}
+
+inline BOOL CopyRect(LPRECT lprcDst, LPCRECT lprcSrc)
+{
+	if (NULL == lprcDst || NULL == lprcSrc) return FALSE;
+	*lprcDst = *lprcSrc;
+	return TRUE;
+}
+
+inline BOOL OffsetRect(LPRECT lprc, int dx, int dy)
+{
+	if (NULL == lprc) return FALSE;
+	lprc->left += dx;
+	lprc->top += dy;
+	lprc->right += dx;
+	lprc->bottom += dy;
+	return TRUE;
+}
+
+inline BOOL InflateRect(LPRECT lprc, int dx, int dy)
+{
+	if (NULL == lprc) return FALSE;
+	lprc->left -= dx;
+	lprc->top -= dy;
+	lprc->right += dx;
+	lprc->bottom += dy;
+	return TRUE;
+}
+
+// Win32 semantics: left/top inclusive, right/bottom exclusive
+inline BOOL PtInRect(LPCRECT lprc, POINT pt)
+{
+	if (NULL == lprc) return FALSE;
+	return (pt.x >= lprc->left && pt.x < lprc->right
+		&& pt.y >= lprc->top && pt.y < lprc->bottom) ? TRUE : FALSE;
+}
+
 inline BOOL IntersectRect(LPRECT lprcDst, LPCRECT lprcSrc1, LPCRECT lprcSrc2)
 {
 	if (NULL == lprcDst || NULL == lprcSrc1 || NULL == lprcSrc2) return FALSE;
@@ -338,8 +598,43 @@ inline BOOL IntersectRect(LPRECT lprcDst, LPCRECT lprcSrc1, LPCRECT lprcSrc2)
 	lprcDst->top = (lprcSrc1->top > lprcSrc2->top) ? lprcSrc1->top : lprcSrc2->top;
 	lprcDst->right = (lprcSrc1->right < lprcSrc2->right) ? lprcSrc1->right : lprcSrc2->right;
 	lprcDst->bottom = (lprcSrc1->bottom < lprcSrc2->bottom) ? lprcSrc1->bottom : lprcSrc2->bottom;
-	return (lprcDst->left < lprcDst->right && lprcDst->top < lprcDst->bottom) ? TRUE : FALSE;
+	if (lprcDst->left >= lprcDst->right || lprcDst->top >= lprcDst->bottom)
+	{
+		SetRectEmpty(lprcDst);
+		return FALSE;
+	}
+	return TRUE;
 }
+
+inline BOOL UnionRect(LPRECT lprcDst, LPCRECT lprcSrc1, LPCRECT lprcSrc2)
+{
+	if (NULL == lprcDst || NULL == lprcSrc1 || NULL == lprcSrc2) return FALSE;
+
+	const BOOL bEmpty1 = IsRectEmpty(lprcSrc1);
+	const BOOL bEmpty2 = IsRectEmpty(lprcSrc2);
+	if (bEmpty1 && bEmpty2)
+	{
+		SetRectEmpty(lprcDst);
+		return FALSE;
+	}
+	if (bEmpty1)
+	{
+		*lprcDst = *lprcSrc2;
+		return TRUE;
+	}
+	if (bEmpty2)
+	{
+		*lprcDst = *lprcSrc1;
+		return TRUE;
+	}
+
+	lprcDst->left = min(lprcSrc1->left, lprcSrc2->left);
+	lprcDst->top = min(lprcSrc1->top, lprcSrc2->top);
+	lprcDst->right = max(lprcSrc1->right, lprcSrc2->right);
+	lprcDst->bottom = max(lprcSrc1->bottom, lprcSrc2->bottom);
+	return TRUE;
+}
+
 #ifndef ZeroMemory
 #define ZeroMemory(Destination, Length) memset((Destination), 0, (Length))
 #endif
@@ -352,11 +647,6 @@ inline int lstrlenW(const wchar_t *lpString) { return lpString ? (int)wcslen(lpS
 #define lstrlen lstrlenW
 #else
 #define lstrlen lstrlenA
-#endif
-
-#ifndef MinMax
-#define min(a,b) (((a) < (b)) ? (a) : (b))
-#define max(a,b) (((a) > (b)) ? (a) : (b))
 #endif
 
 #else

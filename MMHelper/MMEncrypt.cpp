@@ -71,7 +71,7 @@ CMMString CMMEncrypt::XorDecrypt(CMMString strSrc)
 	if (wEncrypPassLen != (((wSoureLength + ENCRYPT_KEY_LEN - 1) / ENCRYPT_KEY_LEN)*ENCRYPT_KEY_LEN * 8)) return _T("");
 
 	//解开密码
-	for (INT i = 0; i < wSoureLength; i++)
+	for (int i = 0; i < wSoureLength; i++)
 	{
 		//获取密钥
 		WCHAR szKeyBuffer[5];

@@ -73,8 +73,12 @@ CMMString CMMMD5Checksum::GetMD5(FILE *pFile)
 
 CMMString CMMMD5Checksum::GetMD5(const CMMString &strFilePath)
 {
-	//打开文件
+#if defined(DuiPlatform_SDL)
+	FILE *pFile = fopen(CT2CA(strFilePath.c_str()).c_str(), "rb");
+#else
 	FILE *pFile = fopen((LPCSTR)CT2CA(strFilePath.c_str()), "rb");
+#endif
+
 	if (NULL == pFile)
 	{
 		return _T("");

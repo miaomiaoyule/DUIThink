@@ -19,12 +19,21 @@
 //////////////////////////////////////////////////////////////////////////////////
 //base interface
 #define VER_IMMUnknown INTERFACE_VERSION(1,1)
-static const GUID IID_IMMUnknown = { 0x5feec21e,0xdbf3,0x46f0,0x9f,0x57,0xd1,0xcd,0x71,0x1c,0x46,0xde };
+static const GUID IID_IMMUnknown = { 0x5feec21e,0xdbf3,0x46f0,{ 0x9f,0x57,0xd1,0xcd,0x71,0x1c,0x46,0xde } };
 struct IMMUnknown
 {
 	virtual ~IMMUnknown() {}
-	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) = NULL;
+	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) = 0;
 };
+
+// portable dll export for module create entry
+#ifndef MM_MODULE_EXPORT
+	#if defined(_MSC_VER)
+		#define MM_MODULE_EXPORT extern "C" __declspec(dllexport)
+	#else
+		#define MM_MODULE_EXPORT extern "C" __attribute__((visibility("default")))
+	#endif
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 //版本比较
@@ -94,7 +103,7 @@ protected:
 
 	//config
 public:
-	REFGUID								m_Guid = {};
+	GUID								m_Guid = {};
 	const DWORD							m_dwVersion = 0;
 	HINSTANCE							m_hDllInstance = NULL;
 	std::string							m_strCreateProc;
@@ -140,14 +149,18 @@ bool CMMTempldateHelper<IMMModelInterface>::CreateInstance()
 		assert(false == m_strCreateProc.empty());
 		assert(false == m_strModuleDllName.empty());
 
-		m_hDllInstance = ::LoadLibrary(m_strModuleDllName);
+		m_hDllInstance = LoadLibrary(m_strModuleDllName.c_str());
 		if (NULL == m_hDllInstance)
 		{
 			m_hDllInstance = GetModuleHandle(NULL);
-			m_strDescribe.Format(_T("“%s”模块加载失败，转当前模块"), m_strModuleDllName);
+			m_strDescribe.Format(_T("“%s”模块加载失败，转当前模块"), m_strModuleDllName.c_str());
 		}
 
-		MMModuleCreateProc *CreateProc = (MMModuleCreateProc*)GetProcAddress(m_hDllInstance, m_strCreateProc.c_str());
+		MMModuleCreateProc *CreateProc = NULL;
+		if (m_hDllInstance)
+		{
+			CreateProc = (MMModuleCreateProc*)GetProcAddress(m_hDllInstance, m_strCreateProc.c_str());
+		}
 		if (NULL == CreateProc)
 		{
 			m_strDescribe.Format(_T("找不到组件创建函数“%s”"), (LPCTSTR)CA2CT(m_strCreateProc.c_str()));
@@ -187,7 +200,7 @@ bool CMMTempldateHelper<IMMModelInterface>::CloseInstance()
 
 	if (m_hDllInstance != NULL)
 	{
-		::FreeLibrary(m_hDllInstance);
+		FreeLibrary(m_hDllInstance);
 		m_hDllInstance = NULL;
 	}
 
@@ -228,31 +241,31 @@ public:																										\
 };
 
 #define Implement_MMCreateModule(ObjectName)																	\
-extern "C" __declspec(dllexport) VOID * Create##ObjectName(REFGUID Guid, DWORD dwInterfaceVer)				\
+MM_MODULE_EXPORT VOID * Create##ObjectName(REFGUID Guid, DWORD dwInterfaceVer)								\
 {																											\
-	C##ObjectName * p##ObjectName=NULL;																	\
+	C##ObjectName * p##ObjectName=NULL;																		\
 	try																										\
 	{																										\
 		p##ObjectName = new C##ObjectName();																\
 		if (p##ObjectName == NULL) throw _T("创建失败");													\
-		VOID * pObject = p##ObjectName->QueryInterface(Guid, dwInterfaceVer);									\
+		VOID * pObject = p##ObjectName->QueryInterface(Guid, dwInterfaceVer);								\
 		if (pObject == NULL) throw _T("接口查询失败");														\
 		return pObject;																						\
 	}																										\
 	catch (...) {}																							\
-	MMSafeDelete(p##ObjectName);																				\
+	MMSafeDelete(p##ObjectName);																			\
 	return NULL;																							\
 }
 
-#define Implement_MMStaticModule(ObjectName)																	\
-extern "C" __declspec(dllexport) VOID * Create##ObjectName(REFGUID Guid, DWORD dwInterfaceVer)		\
+#define Implement_MMStaticModule(ObjectName)																\
+MM_MODULE_EXPORT VOID * Create##ObjectName(REFGUID Guid, DWORD dwInterfaceVer)								\
 {																											\
-	C##ObjectName * p##ObjectName=NULL;																	\
+	C##ObjectName * p##ObjectName=NULL;																		\
 	try																										\
 	{																										\
-		p##ObjectName = C##ObjectName::GetInstance();																\
+		p##ObjectName = C##ObjectName::GetInstance();														\
 		if (p##ObjectName == NULL) throw _T("创建失败");													\
-		VOID * pObject = p##ObjectName->QueryInterface(Guid, dwInterfaceVer);									\
+		VOID * pObject = p##ObjectName->QueryInterface(Guid, dwInterfaceVer);								\
 		if (pObject == NULL) throw _T("接口查询失败");														\
 		return pObject;																						\
 	}																										\
@@ -338,6 +351,7 @@ IMMUnknown * CMMInterfaceHelper<IMMModelInterface>::Get()
 }
 
 //////////////////////////////////////////////////////////////////////////
+#if !defined(DuiPlatform_SDL)
 template <typename IDL>
 class CMMSafeIDL
 {
@@ -385,12 +399,16 @@ public:
 		{
 			m_pIDL = ILCloneFull(Right);
 		}
+
+		return *this;
 	}
 	CMMSafeIDL & operator = (CMMSafeIDL &Right)
 	{
 		this->operator = (Right.Get());
+		return *this;
 	}
 };
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 class CMMSafeModule
@@ -398,7 +416,7 @@ class CMMSafeModule
 public:
 	CMMSafeModule(CMMString strModuleFile)
 	{
-		m_hModule = LoadLibrary(strModuleFile);
+		m_hModule = LoadLibrary(strModuleFile.c_str());
 
 		return;
 	}

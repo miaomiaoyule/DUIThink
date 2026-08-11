@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "MMService.h"
 
-#ifndef DuiPlatform_SDL
+#if !defined(DuiPlatform_SDL)
 
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib, "Ws2_32.lib")
@@ -19,39 +19,31 @@
 #define IDE_ATA_IDENTIFY				0xEC  //  Returns ID sector for ATA.
 #define DFP_RECEIVE_DRIVE_DATA			0x0007c088
 
-//×´Ì¬ÐÅÏ¢
 struct tagAstatInfo
 {
-	ADAPTER_STATUS						AdapterStatus;						//Íø¿¨×´Ì¬
-	NAME_BUFFER							NameBuff[16];						//Ãû×Ö»º³å
+	ADAPTER_STATUS						AdapterStatus;
+	NAME_BUFFER							NameBuff[16];
 };
 
 //////////////////////////////////////////////////////////////////////////////////
 bool CMMService::SetClipboardString(HWND hWnd, LPCTSTR pszString)
 {
-	//±äÁ¿¶¨Òå
 	HANDLE hData = NULL;
 	BOOL bOpenClopboard = FALSE;
 
-	//Ö´ÐÐÂß¼­
 	__try
 	{
-		//´ò¿ª¿½±´
 		bOpenClopboard = OpenClipboard(hWnd);
 		if (bOpenClopboard == FALSE) __leave;
 
-		//Çå¿Õ¿½±´
 		if (EmptyClipboard() == FALSE) __leave;
 
-		//ÉêÇëÄÚ´æ
 		hData = GlobalAlloc(GMEM_MOVEABLE | GMEM_ZEROINIT, CountStringBuffer(pszString));
 		if (hData == NULL) __leave;
 
-		//¸´ÖÆÊý¾Ý
 		lstrcpy((LPTSTR)GlobalLock(hData), pszString);
 		GlobalUnlock(hData);
 
-		//ÉèÖÃÊý¾Ý
 #ifndef _UNICODE
 		::SetClipboardData(CF_TEXT, hData);
 #else
@@ -59,13 +51,10 @@ bool CMMService::SetClipboardString(HWND hWnd, LPCTSTR pszString)
 #endif
 	}
 
-	//ÖÕÖ¹³ÌÐò
 	__finally
 	{
-		//¹Ø±Õ¿½±´
 		if (bOpenClopboard == TRUE) CloseClipboard();
 
-		//´íÎóÅÐ¶Ï
 		if (AbnormalTermination() == TRUE)
 		{
 			assert(FALSE);
@@ -127,10 +116,7 @@ bool CMMService::SetClipboardFiles(HWND hWndOwner, std::vector<CMMString> vecFil
 	{
 		EmptyClipboard();
 
-		//¿ÉÒÔÉèÖÃ¼ôÇÐ°åÄÚÈÝÎªÍÏ¶¯ÎÄ¼þ
 		SetClipboardData(CF_HDROP, hGblFiles);
-
-		//¿ÉÒÔÉèÖÃ¼ôÇÐ°åÄÚÈÝÎª¸´ÖÆ»òÕß¼ôÇÐ±êÊ¶
 		SetClipboardData(uDropEffect, hGblEffect);
 
 		CloseClipboard();
@@ -252,7 +238,6 @@ int CMMService::GetCompileDate()
 	return  nYear * 10000 + nMonth * 100 + nDay;
 }
 
-//IP·­Òë
 CMMString CMMService::IPAddrToString(DWORD dwIPAddr)
 {
 	struct in_addr in;
@@ -275,17 +260,14 @@ DWORD CMMService::StringToIPAddr(CMMString strIPAddr)
 	return dwIPAddr;
 }
 
-//»úÆ÷±êÊ¶
 bool CMMService::GetMachineID(TCHAR szMachineID[Len_Machine_ID])
 {
 	GetImportIDEx(szMachineID);
 	if (_T('0') != szMachineID[0]) return true;
 
-	//Íø¿¨±êÊ¶
 	TCHAR szMACAddress[Len_Network_ID] = {};
 	GetMACAddress(szMACAddress);
 
-	//×ª»»ÐÅÏ¢
 	CMMString strMacAddr = CMMMD5Checksum::GetMD5((BYTE*)szMACAddress, sizeof(szMACAddress));
 	lstrcpyn(szMachineID, strMacAddr, MMCountString(szMachineID));
 
@@ -300,49 +282,39 @@ CMMString CMMService::GetMachineID()
 	return szMachineID;
 }
 
-//Íø¿¨µØÖ·
 bool CMMService::GetMACAddress(TCHAR szMACAddress[Len_Network_ID])
 {
-	//±äÁ¿¶¨Òå
 	HINSTANCE hInstance = NULL;
 
-	//Ö´ÐÐÂß¼­
 	__try
 	{
-		//¼ÓÔØ DLL
+		//DLL
 		hInstance = LoadLibrary(_T("NetApi32.dll"));
 		if (hInstance == NULL) __leave;
 
-		//»ñÈ¡º¯Êý
 		typedef BYTE __stdcall NetBiosProc(NCB * Ncb);
 		NetBiosProc * pNetBiosProc = (NetBiosProc *)GetProcAddress(hInstance, "Netbios");
 		if (pNetBiosProc == NULL) __leave;
 
-		//±äÁ¿¶¨Òå
 		NCB Ncb;
 		LANA_ENUM LanaEnum;
 		ZeroMemory(&Ncb, sizeof(Ncb));
 		ZeroMemory(&LanaEnum, sizeof(LanaEnum));
 
-		//Ã¶¾ÙÍø¿¨
 		Ncb.ncb_command = NCBENUM;
 		Ncb.ncb_length = sizeof(LanaEnum);
 		Ncb.ncb_buffer = (BYTE *)&LanaEnum;
 		if ((pNetBiosProc(&Ncb) != NRC_GOODRET) || (LanaEnum.length == 0)) __leave;
 
-		//»ñÈ¡µØÖ·
 		if (LanaEnum.length > 0)
 		{
-			//±äÁ¿¶¨Òå
 			tagAstatInfo Adapter;
 			ZeroMemory(&Adapter, sizeof(Adapter));
 
-			//ÖØÖÃÍø¿¨
 			Ncb.ncb_command = NCBRESET;
 			Ncb.ncb_lana_num = LanaEnum.lana[0];
 			if (pNetBiosProc(&Ncb) != NRC_GOODRET) __leave;
 
-			//»ñÈ¡×´Ì¬
 			Ncb.ncb_command = NCBASTAT;
 			Ncb.ncb_length = sizeof(Adapter);
 			Ncb.ncb_buffer = (BYTE *)&Adapter;
@@ -350,7 +322,6 @@ bool CMMService::GetMACAddress(TCHAR szMACAddress[Len_Network_ID])
 			strcpy((char *)Ncb.ncb_callname, "*");
 			if (pNetBiosProc(&Ncb) != NRC_GOODRET) __leave;
 
-			//»ñÈ¡µØÖ·
 			for (INT i = 0; i < 6; i++)
 			{
 				assert((i * 2) < Len_Network_ID);
@@ -359,17 +330,13 @@ bool CMMService::GetMACAddress(TCHAR szMACAddress[Len_Network_ID])
 		}
 	}
 
-	//½áÊøÇåÀí
 	__finally
 	{
-		//ÊÍ·Å×ÊÔ´
 		if (hInstance != NULL)
 		{
 			FreeLibrary(hInstance);
 			hInstance = NULL;
 		}
-
-		//´íÎó¶ÏÑÔ
 		if (AbnormalTermination() == TRUE)
 		{
 			assert(FALSE);
@@ -379,9 +346,6 @@ bool CMMService::GetMACAddress(TCHAR szMACAddress[Len_Network_ID])
 	return true;
 }
 
-//@szSystemInfo	len=4096		// ÔÚ³ÌÐòÖ´ÐÐÍê±Ïºó£¬´Ë´¦´æ´¢È¡µÃµÄÏµÍ³ÌØÕ÷Âë
-//@uSystemInfoLen= 0;			// ÔÚ³ÌÐòÖ´ÐÐÍê±Ïºó£¬´Ë´¦´æ´¢È¡µÃµÄÏµÍ³ÌØÕ÷ÂëµÄ³¤¶È
-//Íø¿¨ MAC µØÖ·£¬×¢Òâ: MAC µØÖ·ÊÇ¿ÉÒÔÔÚ×¢²á±íÖÐÐÞ¸ÄµÄ
 BOOL CMMService::GetMacAddr(BYTE* szSystemInfo, UINT uSystemInfoLen)
 {
 	UINT uErrorCode = 0;
@@ -426,7 +390,6 @@ BOOL CMMService::GetMacAddr(BYTE* szSystemInfo, UINT uSystemInfoLen)
 	return TRUE;
 }
 
-// Ó²ÅÌÐòÁÐºÅ£¬×¢Òâ£ºÓÐµÄÓ²ÅÌÃ»ÓÐÐòÁÐºÅ
 BOOL CMMService::GetHdiskSerial(BYTE* szSystemInfo, UINT uSystemInfoLen)
 {
 	OSVERSIONINFOEX ovi = {};
@@ -518,13 +481,11 @@ BOOL CMMService::DoIdentify(HANDLE hPhysicalDriveIOCTL, PSENDCMDINPARAMS pSCIP,
 
 bool CMMService::RegisterHotKey(HWND hWnd, UINT uKeyID, WORD wHotKey)
 {
-	//±äÁ¿¶¨Òå
 	BYTE cbModifiers = 0;
 	if (HIBYTE(wHotKey)&HOTKEYF_ALT) cbModifiers |= MOD_ALT;
 	if (HIBYTE(wHotKey)&HOTKEYF_SHIFT) cbModifiers |= MOD_SHIFT;
 	if (HIBYTE(wHotKey)&HOTKEYF_CONTROL) cbModifiers |= MOD_CONTROL;
 
-	//×¢²áÈÈ¼ü
 	BOOL bSuccess = ::RegisterHotKey(hWnd, uKeyID, cbModifiers, LOBYTE(wHotKey));
 
 	return (bSuccess == TRUE) ? true : false;
@@ -532,20 +493,16 @@ bool CMMService::RegisterHotKey(HWND hWnd, UINT uKeyID, WORD wHotKey)
 
 bool CMMService::UnRegisterHotKey(HWND hWnd, UINT uKeyID)
 {
-	//×¢ÏúÈÈ¼ü
 	BOOL bSuccess = ::UnregisterHotKey(hWnd, uKeyID);
 
 	return (bSuccess == TRUE) ? true : false;
 }
 
-//½ø³ÌÄ¿Â¼
 bool CMMService::GetWorkDirectory(OUT TCHAR szWorkDirectory[], IN WORD wBufferCount)
 {
-	//Ä£¿éÂ·¾¶
 	TCHAR szModulePath[MAX_PATH] = _T("");
 	GetModuleFileName(NULL, szModulePath, MMCountArray(szModulePath));
 
-	//·ÖÎöÎÄ¼þ
 	for (INT i = lstrlen(szModulePath); i >= 0; i--)
 	{
 		if (szModulePath[i] == _T('\\'))
@@ -555,7 +512,6 @@ bool CMMService::GetWorkDirectory(OUT TCHAR szWorkDirectory[], IN WORD wBufferCo
 		}
 	}
 
-	//ÉèÖÃ½á¹û
 	assert(szModulePath[0] != 0);
 	lstrcpyn(szWorkDirectory, szModulePath, wBufferCount);
 
@@ -649,7 +605,6 @@ CMMString CMMService::ProductGUID()
 	return strGUID;
 }
 
-//Ëæ»úÖµ
 int CMMService::RandValue(int nMin, int nMax)
 {
 	if (nMax <= nMin) return nMin;
@@ -790,7 +745,7 @@ BOOL CMMService::WinNTHDSerialNumAsScsiRead(BYTE* dwSerial, UINT* puSerialLen, U
 					{
 						if (*puSerialLen + 20U <= uMaxSerialLen)
 						{
-							// ÐòÁÐºÅ
+							// åºåˆ—å·
 							CopyMemory(dwSerial + *puSerialLen, ((USHORT*)pId) + 10, 20);
 
 							// Cut off the trailing blanks
@@ -800,7 +755,7 @@ BOOL CMMService::WinNTHDSerialNumAsScsiRead(BYTE* dwSerial, UINT* puSerialLen, U
 							}
 							*puSerialLen += i;
 
-							// ÐÍºÅ
+							// åž‹å·
 							CopyMemory(dwSerial + *puSerialLen, ((USHORT*)pId) + 27, 40);
 							// Cut off the trailing blanks
 							for (i = 40; i != 0U && ' ' == dwSerial[*puSerialLen + i - 1]; --i)
@@ -880,14 +835,14 @@ BOOL CMMService::WinNTHDSerialNumAsPhysicalRead(BYTE* dwSerial, UINT* puSerialLe
 					{
 						if (*puSerialLen + 20U <= uMaxSerialLen)
 						{
-							CopyMemory(dwSerial + *puSerialLen, ((USHORT*)(((PSENDCMDOUTPARAMS)IdOutCmd)->bBuffer)) + 10, 20);  // ÐòÁÐºÅ
+							CopyMemory(dwSerial + *puSerialLen, ((USHORT*)(((PSENDCMDOUTPARAMS)IdOutCmd)->bBuffer)) + 10, 20);  // åºåˆ—å·
 
 																																// Cut off the trailing blanks
 							UINT i = 0;
 							for (i = 20; i != 0U && ' ' == dwSerial[*puSerialLen + i - 1]; --i) {}
 							*puSerialLen += i;
 
-							CopyMemory(dwSerial + *puSerialLen, ((USHORT*)(((PSENDCMDOUTPARAMS)IdOutCmd)->bBuffer)) + 27, 40); // ÐÍºÅ
+							CopyMemory(dwSerial + *puSerialLen, ((USHORT*)(((PSENDCMDOUTPARAMS)IdOutCmd)->bBuffer)) + 27, 40); // åž‹å·
 
 																															   // Cut off the trailing blanks
 							for (i = 40; i != 0U && ' ' == dwSerial[*puSerialLen + i - 1]; --i) {}
@@ -909,10 +864,9 @@ BOOL CMMService::WinNTHDSerialNumAsPhysicalRead(BYTE* dwSerial, UINT* puSerialLe
 	return bInfoLoaded;
 }
 
-//»úÆ÷±êÊ¶
 bool CMMService::GetImportIDEx(TCHAR szMachineID[Len_Machine_ID], TCHAR szCPUID[20])
 {
-	// 1. CPU ÐòÁÐºÅ£¨CPUID£©
+	// 1. CPU
 	unsigned int cpuInfo[4] = { 0 };
 	__cpuid((int*)cpuInfo, 1); // eax=1 -> Processor Info
 	DWORD s1 = cpuInfo[3];     // EDX
@@ -924,24 +878,333 @@ bool CMMService::GetImportIDEx(TCHAR szMachineID[Len_Machine_ID], TCHAR szCPUID[
 	if (szCPUID)
 		_tcsncpy_s(szCPUID, 20, szCpuBuf, _TRUNCATE);
 
-	// 2. Ó²ÅÌÐòÁÐºÅ
+	// 2. ç¡¬ç›˜åºåˆ—å·
 	DWORD volumeSerial = 0;
 	if (!GetVolumeInformation(_T("C:\\"), nullptr, 0, &volumeSerial, nullptr, nullptr, nullptr, 0))
 		volumeSerial = 0;
 
-	// 3. ºÏ²¢ÐÅÏ¢
+	// 3. åˆå¹¶ä¿¡æ¯
 	BYTE buffer[64] = { 0 };
 	memcpy(buffer, &s1, sizeof(s1));
 	memcpy(buffer + 4, &s2, sizeof(s2));
 	memcpy(buffer + 8, &volumeSerial, sizeof(volumeSerial));
 
-	// 4. Éú³É MD5
+	// 4. ç”Ÿæˆ MD5
 	assert(Len_Machine_ID >= Len_MD5);
 	CMMString strMacAddr = CMMMD5Checksum::GetMD5(buffer, sizeof(s1) + sizeof(s2) + sizeof(volumeSerial));
 	assert(Len_Machine_ID >= (int)strMacAddr.size() + 1);
 	_tcsncpy_s(szMachineID, Len_Machine_ID, strMacAddr.c_str(), _TRUNCATE);
 
 	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+#else // DuiPlatform_SDL
+
+namespace
+{
+	void CopyTChar(TCHAR *pszDst, WORD wBufferCount, const CMMString &strSrc)
+	{
+		if (NULL == pszDst || 0 == wBufferCount) return;
+
+		pszDst[0] = 0;
+		const size_t nCopy = (strSrc.length() < (size_t)(wBufferCount - 1)) ? strSrc.length() : (size_t)(wBufferCount - 1);
+		if (nCopy > 0)
+		{
+			memcpy(pszDst, strSrc.c_str(), nCopy * sizeof(TCHAR));
+		}
+
+		pszDst[nCopy] = 0;
+	}
+
+	CMMString TrimTrailingSlash(CMMString strPath)
+	{
+		while (false == strPath.empty())
+		{
+			const TCHAR ch = strPath[strPath.length() - 1];
+			if (ch != _T('\\') && ch != _T('/')) break;
+			strPath.erase(strPath.length() - 1, 1);
+		}
+
+		return strPath;
+	}
+}
+
+bool CMMService::SetClipboardString(HWND /*hWnd*/, LPCTSTR lpszString)
+{
+	if (NULL == lpszString) lpszString = _T("");
+	const std::string strUtf8 = MMStringToUtf8(lpszString);
+	return SDL_SetClipboardText(strUtf8.c_str());
+}
+
+CMMString CMMService::GetClipboardString()
+{
+	char *pszText = SDL_GetClipboardText();
+	if (NULL == pszText) return CMMString();
+
+	CMMString strText = Utf8ToMMString(pszText).c_str();
+	SDL_free(pszText);
+	return strText;
+}
+
+std::vector<CMMString> CMMService::GetClipboardFile()
+{
+	return std::vector<CMMString>();
+}
+
+int CMMService::GetCompileDate()
+{
+	char sMonth[5] = "";
+	int nMonth = 0, nDay = 0, nYear = 0;
+	char sMonthName[] = "JanFebMarAprMayJunJulAugSepOctNovDec";
+	char sTime[20] = __DATE__;
+	sscanf(sTime, "%s %d %d", sMonth, &nDay, &nYear);
+	nMonth = (int)((strstr(sMonthName, sMonth) - sMonthName) / 3 + 1);
+	return nYear * 10000 + nMonth * 100 + nDay;
+}
+
+CMMString CMMService::IPAddrToString(DWORD dwIPAddr)
+{
+	const BYTE *p = (const BYTE *)&dwIPAddr;
+	CMMString strIP;
+	strIP.Format(_T("%u.%u.%u.%u"), (UINT)p[0], (UINT)p[1], (UINT)p[2], (UINT)p[3]);
+	return strIP;
+}
+
+DWORD CMMService::StringToIPAddr(CMMString strIPAddr)
+{
+	const std::string strUtf8 = MMStringToUtf8(strIPAddr);
+	unsigned int a = 0, b = 0, c = 0, d = 0;
+	if (4 != sscanf(strUtf8.c_str(), "%u.%u.%u.%u", &a, &b, &c, &d))
+	{
+		return INADDR_NONE;
+	}
+	if (a > 255 || b > 255 || c > 255 || d > 255)
+	{
+		return INADDR_NONE;
+	}
+
+	DWORD dwIPAddr = 0;
+	BYTE *p = (BYTE *)&dwIPAddr;
+	p[0] = (BYTE)a;
+	p[1] = (BYTE)b;
+	p[2] = (BYTE)c;
+	p[3] = (BYTE)d;
+	return dwIPAddr;
+}
+
+bool CMMService::GetWorkDirectory(OUT TCHAR szWorkDirectory[], IN WORD wBufferCount)
+{
+	if (NULL == szWorkDirectory || 0 == wBufferCount) return false;
+
+	CMMString strPath = TrimTrailingSlash(GetWorkDirectory());
+	CopyTChar(szWorkDirectory, wBufferCount, strPath);
+	return false == strPath.empty();
+}
+
+CMMString CMMService::GetWorkDirectory()
+{
+	const char *pszBase = SDL_GetBasePath();
+	if (NULL == pszBase) return CMMString();
+	return TrimTrailingSlash(Utf8ToMMString(pszBase));
+}
+
+CMMString CMMService::GetCurrentPath()
+{
+	char *pszPath = SDL_GetCurrentDirectory();
+	if (NULL == pszPath) return CMMString();
+
+	CMMString strPath = TrimTrailingSlash(Utf8ToMMString(pszPath));
+	SDL_free(pszPath);
+	return strPath;
+}
+
+CMMString CMMService::GetUserDataPath(CMMString strFolderName)
+{
+	const std::string strOrg = "DUIThink";
+	const std::string strApp = strFolderName.empty() ? "App" : MMStringToUtf8(strFolderName);
+	char *pszPath = SDL_GetPrefPath(strOrg.c_str(), strApp.c_str());
+	if (NULL == pszPath) return CMMString();
+
+	CMMString strPath = Utf8ToMMString(pszPath);
+	SDL_free(pszPath);
+
+	if (false == strPath.empty())
+	{
+		const TCHAR ch = strPath[strPath.length() - 1];
+		if (ch != _T('\\') && ch != _T('/'))
+		{
+#ifdef _WIN32
+			strPath += _T('\\');
+#else
+			strPath += _T('/');
+#endif
+		}
+	}
+
+	return strPath;
+}
+
+CMMString CMMService::GetLocalTempPath()
+{
+	const char *pszTemp = getenv("TMPDIR");
+	if (NULL == pszTemp || 0 == pszTemp[0]) pszTemp = getenv("TEMP");
+	if (NULL == pszTemp || 0 == pszTemp[0]) pszTemp = getenv("TMP");
+#ifdef _WIN32
+	if (NULL == pszTemp || 0 == pszTemp[0]) pszTemp = ".";
+#else
+	if (NULL == pszTemp || 0 == pszTemp[0]) pszTemp = "/tmp";
+#endif
+
+	CMMString strPath = Utf8ToMMString(pszTemp);
+	if (false == strPath.empty())
+	{
+		const TCHAR ch = strPath[strPath.length() - 1];
+		if (ch != _T('\\') && ch != _T('/'))
+		{
+#ifdef _WIN32
+			strPath += _T('\\');
+#else
+			strPath += _T('/');
+#endif
+		}
+	}
+
+	return strPath;
+}
+
+CMMString CMMService::GetAppName()
+{
+	const char *pszName = SDL_GetAppMetadataProperty(SDL_PROP_APP_METADATA_NAME_STRING);
+	if (pszName && pszName[0]) return Utf8ToMMString(pszName);
+
+	CMMString strPath = GetWorkDirectory();
+	const int nPos = (int)strPath.rfind(_T('\\'));
+	const int nPos2 = (int)strPath.rfind(_T('/'));
+	const int nSlash = max(nPos, nPos2);
+	if (nSlash >= 0 && nSlash + 1 < (int)strPath.length())
+	{
+		return CMMString(strPath.substr(nSlash + 1).c_str());
+	}
+
+	return strPath;
+}
+
+CMMString CMMService::GetAppFile()
+{
+	CMMString strDir = GetWorkDirectory();
+	CMMString strName = GetAppName();
+	if (strDir.empty()) return strName;
+	if (strName.empty()) return strDir;
+
+	const TCHAR ch = strDir[strDir.length() - 1];
+	if (ch == _T('\\') || ch == _T('/')) return strDir + strName;
+#ifdef _WIN32
+	return strDir + _T('\\') + strName;
+#else
+	return strDir + _T('/') + strName;
+#endif
+}
+
+CMMString CMMService::ProductGUID()
+{
+	GUID guid = {};
+	for (int i = 0; i < 4; ++i)
+	{
+		const Uint32 uBits = SDL_rand_bits();
+		memcpy(((BYTE *)&guid) + i * 4, &uBits, 4);
+	}
+
+	CMMString strGUID;
+	strGUID.Format(_T("{%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}"),
+		guid.Data1, guid.Data2,
+		guid.Data3, guid.Data4[0],
+		guid.Data4[1], guid.Data4[2],
+		guid.Data4[3], guid.Data4[4],
+		guid.Data4[5], guid.Data4[6],
+		guid.Data4[7]);
+
+	return strGUID;
+}
+
+int CMMService::RandValue(int nMin, int nMax)
+{
+	if (nMax <= nMin) return nMin;
+	const int nRange = nMax - nMin;
+	return nMin + (int)(SDL_rand(nRange));
+}
+
+double CMMService::RandValue(double lfMin, double lfMax)
+{
+	if (lfMax <= lfMin) return lfMin;
+	return lfMin + (lfMax - lfMin) * (double)SDL_randf();
+}
+
+bool CMMService::IsZero(DWORD dwNum)
+{
+	return (abs((long long)dwNum) <= 1e-15);
+}
+
+std::string CMMService::EncryptBase64(unsigned char const* bytes_to_encode, unsigned int in_len)
+{
+	static const std::string base64_chars =
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		"abcdefghijklmnopqrstuvwxyz"
+		"0123456789+/";
+
+	std::string ret;
+	int i = 0;
+	int j = 0;
+	unsigned char char_array_3[3];
+	unsigned char char_array_4[4];
+
+	while (in_len--)
+	{
+		char_array_3[i++] = *(bytes_to_encode++);
+		if (i == 3)
+		{
+			char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
+			char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
+			char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
+			char_array_4[3] = char_array_3[2] & 0x3f;
+
+			for (i = 0; (i < 4); i++) ret += base64_chars[char_array_4[i]];
+			i = 0;
+		}
+	}
+
+	if (i)
+	{
+		for (j = i; j < 3; j++) char_array_3[j] = '\0';
+
+		char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
+		char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
+		char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
+		char_array_4[3] = char_array_3[2] & 0x3f;
+
+		for (j = 0; (j < i + 1); j++) ret += base64_chars[char_array_4[j]];
+		while ((i++ < 3)) ret += '=';
+	}
+
+	return ret;
+}
+
+int CMMService::CompareVersion(LPCTSTR lpszVersion1, LPCTSTR lpszVersion2)
+{
+	if (NULL == lpszVersion1 || NULL == lpszVersion2) return 0;
+
+	std::vector<int> vecVersion1 = CMMStrHelp::ParseIntFromString(lpszVersion1, _T('.'));
+	std::vector<int> vecVersion2 = CMMStrHelp::ParseIntFromString(lpszVersion2, _T('.'));
+	int nCount = max((int)vecVersion1.size(), (int)vecVersion2.size());
+	for (int i = 0; i < nCount; i++)
+	{
+		int nV1 = (i < (int)vecVersion1.size()) ? vecVersion1[i] : 0;
+		int nV2 = (i < (int)vecVersion2.size()) ? vecVersion2[i] : 0;
+		if (nV1 > nV2) return 1;
+		if (nV1 < nV2) return -1;
+	}
+
+	return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////

@@ -90,7 +90,8 @@ void CMMRect::Clear()
 
 bool CMMRect::PtInRect(const CMMPoint &pt)
 {
-	return ::PtInRect(this, pt);
+	POINT point = { pt.x, pt.y };
+	return ::PtInRect(this, point) == TRUE;
 }
 
 bool CMMRect::RcInRect(const CMMRect &rc)

@@ -243,7 +243,7 @@ void DuiMessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType)
 	if (uType & MB_ICONERROR) flags |= SDL_MESSAGEBOX_ERROR;
 	else if (uType & MB_ICONWARNING) flags |= SDL_MESSAGEBOX_WARNING;
 	else if (uType & MB_ICONINFORMATION) flags |= SDL_MESSAGEBOX_INFORMATION;
-	SDL_ShowSimpleMessageBox(flags, WStringToUtf8(lpCaption).c_str(), WStringToUtf8(lpText).c_str(), (SDL_Window *)hWnd);
+	SDL_ShowSimpleMessageBox(flags, MMStringToUtf8(lpCaption).c_str(), MMStringToUtf8(lpText).c_str(), (SDL_Window *)hWnd);
 #else
 	::MessageBox(hWnd, lpText, lpCaption, uType);
 #endif

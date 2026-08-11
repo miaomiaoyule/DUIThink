@@ -1,10 +1,9 @@
 #ifndef __MM_SERVICE_H__
 #define __MM_SERVICE_H__
 
-#ifndef DuiPlatform_SDL
-
 #pragma once
 
+#if !defined(DuiPlatform_SDL)
 #include "winioctl.h"
 #include "Iprtrmib.h"
 #include "Iptypes.h"
@@ -57,13 +56,14 @@ typedef struct _SRB_IO_CONTROL
 
 typedef struct _GETVERSIONOUTPARAMS
 {
-	BYTE bVersion;      // Binary driver version.
-	BYTE bRevision;     // Binary driver revision.
-	BYTE bReserved;     // Not used.
-	BYTE bIDEDeviceMap; // Bit map of IDE devices.
-	DWORD fCapabilities; // Bit mask of driver capabilities.
-	DWORD dwReserved[4]; // For future use.
+	BYTE bVersion;
+	BYTE bRevision;
+	BYTE bReserved;
+	BYTE bIDEDeviceMap;
+	DWORD fCapabilities;
+	DWORD dwReserved[4];
 } GETVERSIONOUTPARAMS, *PGETVERSIONOUTPARAMS, *LPGETVERSIONOUTPARAMS;
+#endif // !DuiPlatform_SDL
 
 //////////////////////////////////////////////////////////////////////////
 class MMHELPER_API CMMService
@@ -72,46 +72,39 @@ class MMHELPER_API CMMService
 public:
 	//clipboard
 	static bool SetClipboardString(HWND hWnd, LPCTSTR lpszString);
-	static bool SetClipboardFiles(HWND hWndOwner, std::vector<CMMString> vecFiles, bool bCopy = true);
 	static CMMString GetClipboardString();
 	static std::vector<CMMString> GetClipboardFile();
+#if !defined(DuiPlatform_SDL)
+	static bool SetClipboardFiles(HWND hWndOwner, std::vector<CMMString> vecFiles, bool bCopy = true);
 	static DROPEFFECT GetClipboardDropEffect();
+#endif
 
 	//compile date
 	static int GetCompileDate();
-	
+
 	//IP to str
 	static CMMString IPAddrToString(DWORD dwIPAddr);
 	static DWORD StringToIPAddr(CMMString strIPAddr);
 
+#if !defined(DuiPlatform_SDL)
 	//machine
 	static bool GetMachineID(TCHAR szMachineID[Len_Machine_ID]);
 	static CMMString GetMachineID();
 	static bool GetMACAddress(TCHAR szMACAddress[Len_Network_ID]);
 	static BOOL GetMacAddr(BYTE* szSystemInfo, UINT uSystemInfoLen);
 	static BOOL GetHdiskSerial(BYTE* szSystemInfo, UINT uSystemInfoLen);
-	static void GetCpuID(BYTE* szSystemInfo, UINT uSystemInfoLen) /* CPU ID */;	
-	static BOOL DoIdentify( HANDLE hPhysicalDriveIOCTL, PSENDCMDINPARAMS pSCIP, PSENDCMDOUTPARAMS pSCOP, BYTE bIDCmd, BYTE bDriveNum, PDWORD lpcbBytesReturned );
+	static void GetCpuID(BYTE* szSystemInfo, UINT uSystemInfoLen);
+	static BOOL DoIdentify(HANDLE hPhysicalDriveIOCTL, PSENDCMDINPARAMS pSCIP, PSENDCMDOUTPARAMS pSCOP, BYTE bIDCmd, BYTE bDriveNum, PDWORD lpcbBytesReturned);
 
 	//hotkey
 	static bool RegisterHotKey(HWND hWnd, UINT uKeyID, WORD wHotKey);
 	static bool UnRegisterHotKey(HWND hWnd, UINT uKeyID);
+#endif
 
 	//work dir
-	//************************************
-	// Description:	get work directory
-	// Parameter: 	LPCTSTR szWorkDirectory Àý£ºC:\user\desktop
-	// Parameter: 	WORD wBufferCount /* size of szWorkDirectory on word*/
-	//************************************
 	static bool GetWorkDirectory(OUT TCHAR szWorkDirectory[], IN WORD wBufferCount);
-	//************************************
-	// Description:	get work directory
-	// Return: 		CMMString Àý£ºC:\windows
-	//************************************
 	static CMMString GetWorkDirectory();
 	static CMMString GetCurrentPath();
-	//localappdata path + folder
-	//Return: 		CMMString Àý£º"C:\Users\XXX\AppData\Local\strFolderName\"
 	static CMMString GetUserDataPath(CMMString strFolderName);
 	static CMMString GetLocalTempPath();
 	static CMMString GetAppName();
@@ -131,16 +124,14 @@ public:
 	//version
 	static int CompareVersion(LPCTSTR lpszVersion1, LPCTSTR lpszVersion2);
 
+#if !defined(DuiPlatform_SDL)
 	//help
 private:
-	//Ó²ÅÌÐòÁÐºÅ
 	static BOOL WinNTHDSerialNumAsScsiRead(BYTE* dwSerial, UINT* puSerialLen, UINT uMaxSerialLen);
-	//Ó²ÅÌÂë
 	static BOOL WinNTHDSerialNumAsPhysicalRead(BYTE* dwSerial, UINT* puSerialLen, UINT uMaxSerialLen);
-	//»úÆ÷±êÊ¶
 	static bool GetImportIDEx(TCHAR szMachineID[Len_Machine_ID], TCHAR szCPUID[20] = NULL);
+#endif
 };
 
 //////////////////////////////////////////////////////////////////////////////////
-#endif
 #endif

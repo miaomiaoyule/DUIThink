@@ -492,7 +492,7 @@ HWND CDUIWnd::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwE
 	if (cy <= 0) cy = 600;
 
 	SDL_WindowFlags uFlags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN;
-	m_hWnd = SDL_CreateWindow(WStringToUtf8(NULL == lpszName ? _T("") : lpszName).c_str(), cx, cy, uFlags);
+	m_hWnd = SDL_CreateWindow(MMStringToUtf8(NULL == lpszName ? _T("") : lpszName).c_str(), cx, cy, uFlags);
 	if (NULL == m_hWnd) return NULL;
 
 	m_uWndID = SDL_GetWindowID(m_hWnd);
@@ -918,7 +918,7 @@ void CDUIWnd::SetIcon(UINT nRes)
 	CMMString strIconFile = pImage->GetImageFileFull();
 	if (strIconFile.empty()) return;
 
-	std::string strIconFileUtf8 = WStringToUtf8(strIconFile);
+	std::string strIconFileUtf8 = MMStringToUtf8(strIconFile);
 
 	// ”≈œ» PNG£®SDL3 3.4+£©£¨ ß∞‹‘Ÿ≥¢ ‘ BMP
 	SDL_Surface *pSurfaceIcon = SDL_LoadPNG(strIconFileUtf8.c_str());
