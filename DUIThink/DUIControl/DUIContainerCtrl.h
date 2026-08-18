@@ -19,6 +19,7 @@ class DUITHINK_API CDUIContainerCtrl
 	friend class CDUIControlBase;
 	friend class CDUIScrollBarCtrl;
 	friend class CDUIWnd;
+	friend class CDUIWndBase;
 	friend class CDUIListHeaderCtrl;
 	friend class CDUIListViewCtrl;
 	friend class CDTDesignerDoc;
@@ -78,7 +79,7 @@ public:
 	//basic
 	UINT InitCtrlID() override;
 	void RefreshCtrlID(bool bSelfSingle = false) override;
-	bool SetWndOwner(CDUIWnd *pWndOwner) override;
+	bool SetWndOwner(CDUIWndBase *pWndOwner) override;
 	void SetVisible(bool bVisible = true) override;
 
 	//modal

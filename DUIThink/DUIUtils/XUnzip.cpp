@@ -1,6 +1,52 @@
 #include "StdAfx.h"
 #include "XUnzip.h"
 
+#if defined(DuiPlatform_SDL)
+// Full XUnzip implementation is Win32-only. Stubs keep DUIThink linking under SDL;
+// replace with a portable unzip later for zip resource packs.
+
+HZIPDT OpenZipU(void * /*z*/, unsigned int /*len*/, DWORD /*flags*/, const LPCTSTR /*pPassword*/)
+{
+	return NULL;
+}
+
+ZRESULT CloseZipU(HZIPDT /*hz*/)
+{
+	return ZR_NOTINITED;
+}
+
+ZRESULT GetZipItemA(HZIPDT /*hz*/, int /*index*/, ZIPENTRYA * /*ze*/)
+{
+	return ZR_NOTINITED;
+}
+
+ZRESULT GetZipItemW(HZIPDT /*hz*/, int /*index*/, ZIPENTRYW * /*ze*/)
+{
+	return ZR_NOTINITED;
+}
+
+ZRESULT FindZipItemA(HZIPDT /*hz*/, const TCHAR * /*name*/, bool /*ic*/, int * /*index*/, ZIPENTRYA * /*ze*/)
+{
+	return ZR_NOTINITED;
+}
+
+ZRESULT FindZipItemW(HZIPDT /*hz*/, const TCHAR * /*name*/, bool /*ic*/, int * /*index*/, ZIPENTRYW * /*ze*/)
+{
+	return ZR_NOTINITED;
+}
+
+ZRESULT UnzipItem(HZIPDT /*hz*/, int /*index*/, void * /*dst*/, unsigned int /*len*/, DWORD /*flags*/)
+{
+	return ZR_NOTINITED;
+}
+
+bool IsZipHandleU(HZIPDT hz)
+{
+	return hz == 0;
+}
+
+#else // !DuiPlatform_SDL
+
 typedef struct tm_unz_s
 {
 	unsigned int tm_sec;            // seconds after the minute - [0,59]
@@ -4316,4 +4362,5 @@ bool IsZipHandleU(HZIPDT hz)
 	return (han->flag == 1);
 }
 
+#endif // DuiPlatform_SDL
 

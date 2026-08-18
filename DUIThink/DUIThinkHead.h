@@ -49,6 +49,7 @@
 		enum TextRenderingHint { TextRenderingHintSystemDefault = 0 };
 	}
 #else
+	#define GDIPVER 0x0110
 	#include <comdef.h>
 	#include <gdiplus.h>
 	#include <ShlDisp.h>
@@ -68,11 +69,6 @@
 #include "../ThirdDepend/webp/src/webp/encode.h"
 #include "../ThirdDepend/webp/src/webp/mux.h"
 using namespace tinyxml2;
-
-#if defined(DuiPlatform_SDL)
-#else
-	#define GDIPVER 0x0110
-#endif
 
 #if _MSC_VER < 1900
 #ifdef _DEBUG
@@ -215,7 +211,6 @@ using namespace tinyxml2;
 #include "Define/DefineAttribute.h"
 #include "Define/DefineProp.h"
 #include "Define/DefineMessage.h"
-#include "Define/DefineWndManager.h"
 
 #include "DUIUtils/stb_image.h"
 #include "DUIUtils/XUnzip.h"

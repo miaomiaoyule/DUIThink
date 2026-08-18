@@ -14,6 +14,7 @@ class DUITHINK_API CDUIRadioBoxCtrl
 	: public CDUICheckBoxCtrl
 {
 	friend class CDUIWnd;
+	friend class CDUIWndBase;
 
 	DuiDeclare_CreateControl(CDUIRadioBoxCtrl)
 	MMDeclare_ClassName(CDUIRadioBoxCtrl)

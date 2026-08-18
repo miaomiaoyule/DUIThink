@@ -572,6 +572,93 @@ bool CDUIXmlPack::LoadDuiXml(LPCTSTR lpszFile, tinyxml2::XMLDocument &DuiXml)
 	return true;
 }
 
+void CDUIXmlPack::LoadWnd(LPCTSTR lpszFile, CDUIWnd *pWnd)
+{
+	if (MMInvalidString(lpszFile))
+	{
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("duifile:[%s]不存在"), lpszFile));
+
+		return;
+	}
+
+	DWORD dwTickCount = GetTickCount();
+
+	tinyxml2::XMLDocument xmlDoc;
+	if (false == LoadDuiXml(lpszFile, xmlDoc))
+	{
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("duifile:[%s]提取xml解析失败"), lpszFile));
+
+		return;
+	}
+
+	MMTRACE(_T("LoadDuiFile:%s-Time:%u"), lpszFile, GetTickCount() - dwTickCount);
+
+	return LoadWnd(xmlDoc, pWnd);
+}
+
+void CDUIXmlPack::LoadWnd(tinyxml2::XMLDocument &DuiXml, CDUIWnd *pWnd)
+{
+	if (NULL == pWnd) return;
+
+	DWORD dwTickCount = GetTickCount();
+
+	//root
+	tinyxml2::XMLElement *pXMLRoot = DuiXml.RootElement();
+	if (NULL == pXMLRoot)
+	{
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("解析xml为空")));
+
+		return;
+	}
+
+	//element
+	tinyxml2::XMLElement *pNodeXml = pXMLRoot->FirstChildElement();
+	if (NULL == pNodeXml)
+	{
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("解析xml节点错误")));
+
+		return;
+	}
+
+	//attribute
+	do
+	{
+		//refresh attribute
+		if (pWnd->IsInitComplete())
+		{
+			CDUIAttributeObject Attribute;
+			LoadAtrributeFromXML(pNodeXml, &Attribute);
+
+			CMMString strName = Attribute.GetAttributeName();
+			CDUIAttributeObject *pAttributeRefresh = pWnd->GetAttributeObj(strName);
+			if (pAttributeRefresh)
+			{
+				LoadAtrributeFromXML(pNodeXml, pAttributeRefresh);
+			}
+
+			continue;
+		}
+
+		//new attribute
+		if (false == pWnd->AddAttributeBuffer(pNodeXml))
+		{
+			assert(false);
+		}
+
+		continue;
+
+	} while (pNodeXml = pNodeXml->NextSiblingElement(), pNodeXml);
+
+	if (pWnd)
+	{
+		pWnd->Init();
+	}
+
+	MMTRACE(_T("LoadWnd:%s-Time:%u"), _T(""), GetTickCount() - dwTickCount);
+
+	return;
+}
+
 CDUIControlBase * CDUIXmlPack::LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWnd *pWnd)
 {
 	DWORD dwTickCount = GetTickCount();

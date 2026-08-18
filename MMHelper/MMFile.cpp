@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "MMFile.h"
 
-#ifndef DuiPlatform_SDL
-
 //////////////////////////////////////////////////////////////////////////
 #define FILEKIND(ext, type) mapFileType[ext] = type
 
@@ -296,7 +294,15 @@ CMMString CMMFile::CombinFile(LPCTSTR lpszPath, LPCTSTR lpszFileName)
 enMMFileType CMMFile::ParseFileType(LPCTSTR lpszFile)
 {
 	if (MMInvalidString(lpszFile)) return FileType_None;
+#if defined DuiPlatform_SDL
+	SDL_PathInfo info;
+	if (SDL_GetPathInfo(CT2CA(lpszFile), &info) && info.type == SDL_PATHTYPE_DIRECTORY) 
+	{
+		return FileType_Dir;
+	}
+#else
 	if (::PathIsDirectory(lpszFile)) return FileType_Dir;
+#endif
 
 	CMMString strFile = lpszFile;
 
@@ -472,7 +478,7 @@ enMMFileEncode CMMFile::GetFileEncode(FILE *pFile)
 	int nSizeRead = fread(vecData.data(), 1, nFileSize, pFile);
 	if (vecData.size() < 2)
 	{
-		return IsUTF8Encode(vecData) ? FileEncode_UTF8 : FileEncode_Ansi;
+		return CMMStrHelp::IsUTF8Encode(vecData) ? FileEncode_UTF8 : FileEncode_Ansi;
 	}
 
 	unsigned char ch = vecData[0];
@@ -495,7 +501,7 @@ enMMFileEncode CMMFile::GetFileEncode(FILE *pFile)
 		}
 		default:
 		{
-			return IsUTF8Encode(vecData) ? FileEncode_UTF8 : FileEncode_Ansi;
+			return CMMStrHelp::IsUTF8Encode(vecData) ? FileEncode_UTF8 : FileEncode_Ansi;
 		}
 	}
 
@@ -508,7 +514,7 @@ enMMFileEncode CMMFile::GetFileEncode(const char *pStr)
 
 	if (strlen(pStr) < 2)
 	{
-		return IsUTF8Encode(std::vector<BYTE>(pStr, pStr + strlen(pStr))) ? FileEncode_UTF8 : FileEncode_Ansi;
+		return CMMStrHelp::IsUTF8Encode(std::vector<BYTE>(pStr, pStr + strlen(pStr))) ? FileEncode_UTF8 : FileEncode_Ansi;
 	}
 
 	unsigned char ch = pStr[0];
@@ -532,21 +538,11 @@ enMMFileEncode CMMFile::GetFileEncode(const char *pStr)
 		}
 		default:
 		{
-			return IsUTF8Encode(std::vector<BYTE>(pStr, pStr + strlen(pStr))) ? FileEncode_UTF8 : FileEncode_Ansi;
+			return CMMStrHelp::IsUTF8Encode(std::vector<BYTE>(pStr, pStr + strlen(pStr))) ? FileEncode_UTF8 : FileEncode_Ansi;
 		}
 	}
 
 	return FileEncode_Ansi;
-}
-
-PCIDLIST_ABSOLUTE CMMFile::GetPCIDLFromPath(LPCTSTR lpszFileFull)
-{
-	PIDLIST_ABSOLUTE pCID = NULL;
-	HRESULT hRes = ::SHParseDisplayName(lpszFileFull, NULL, &pCID, NULL, NULL);
-
-	if (false == SUCCEEDED(hRes)) return NULL;
-
-	return pCID;
 }
 
 bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData, DWORD dwSizeLimit)
@@ -557,27 +553,8 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 	{
 		strFile = CMMService::GetWorkDirectory() + _T('\\') + strFile;
 	}
-	{
-		HANDLE hFile = CreateFile(strFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (INVALID_HANDLE_VALUE == hFile) return false;
 
-		DWORD dwFileSize = 0;
-		dwFileSize = ::GetFileSize(hFile, NULL);
-		if (dwFileSize <= 0 || dwFileSize >= (DWORD)-1)
-		{
-			CloseHandle(hFile);
-
-			return true;
-		}
-
-		dwFileSize = min(dwFileSize, dwSizeLimit);
-		vecData.resize(dwFileSize);
-		ReadFile(hFile, vecData.data(), dwFileSize, &dwFileSize, NULL);
-		CloseHandle(hFile);
-
-		return true;
-	}
-
+#if defined DuiPlatform_SDL
 	FILE *pFile = fopen(CT2CA(strFile), "rb");
 	if (NULL == pFile) return false;
 
@@ -602,6 +579,28 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 	fclose(pFile);
 
 	return true;
+#else
+	{
+		HANDLE hFile = CreateFile(strFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (INVALID_HANDLE_VALUE == hFile) return false;
+
+		DWORD dwFileSize = 0;
+		dwFileSize = ::GetFileSize(hFile, NULL);
+		if (dwFileSize <= 0 || dwFileSize >= (DWORD)-1)
+		{
+			CloseHandle(hFile);
+
+			return true;
+		}
+
+		dwFileSize = min(dwFileSize, dwSizeLimit);
+		vecData.resize(dwFileSize);
+		ReadFile(hFile, vecData.data(), dwFileSize, &dwFileSize, NULL);
+		CloseHandle(hFile);
+
+		return true;
+	}
+#endif
 }
 
 bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
@@ -618,7 +617,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 		case FileEncode_Ansi:
 		{
 			strData = (LPCTSTR)CA2CT((LPCSTR)pByte);
-			
+
 			return true;
 		}
 		case FileEncode_Unicode:
@@ -627,7 +626,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 			{
 				pByte += 2;
 				strData = (LPCTSTR)pByte;
-				
+
 				return true;
 			}
 
@@ -645,9 +644,9 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 					pByte[(nSwap << 1) + 0] = pByte[(nSwap << 1) + 1];
 					pByte[(nSwap << 1) + 1] = nTemp;
 				}
-				
+
 				strData = (LPCTSTR)pByte;
-				
+
 				return true;
 			}
 
@@ -659,7 +658,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 			{
 				pByte += 3;
 				strData = (LPCTSTR)CA2CT((LPCSTR)pByte, CP_UTF8);
-				
+
 				return true;
 			}
 
@@ -668,12 +667,23 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 		case FileEncode_UTF8:
 		{
 			strData = (LPCTSTR)CA2CT((LPCSTR)pByte, CP_UTF8);
-			
+
 			return true;
 		}
 	}
 
 	return false;
+}
+
+#ifndef DuiPlatform_SDL
+PCIDLIST_ABSOLUTE CMMFile::GetPCIDLFromPath(LPCTSTR lpszFileFull)
+{
+	PIDLIST_ABSOLUTE pCID = NULL;
+	HRESULT hRes = ::SHParseDisplayName(lpszFileFull, NULL, &pCID, NULL, NULL);
+
+	if (false == SUCCEEDED(hRes)) return NULL;
+
+	return pCID;
 }
 
 CMMString CMMFile::GetFileTip(IN LPCTSTR lpszFileFull)
@@ -1296,5 +1306,4 @@ bool CMMFile::OperatorSelectFolder(HWND hWndParent, OUT CMMString &strFolderSele
 
 	return true;
 }
-
 #endif

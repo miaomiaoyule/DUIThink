@@ -20,6 +20,8 @@ public:
 	static bool SaveXmlUI(LPCTSTR lpszFile, CDUIWnd *pWnd);
 	static CMMString SaveDui(CDUIPropertyObject *pPropObj, bool bIncludeChild = true);
 	static bool LoadDuiXml(LPCTSTR lpszFile, tinyxml2::XMLDocument &DuiXml);
+	static void LoadWnd(LPCTSTR lpszFile, CDUIWnd *pWnd);
+	static void LoadWnd(tinyxml2::XMLDocument &DuiXml, CDUIWnd *pWnd);
 	static CDUIControlBase * LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWnd *pWnd);
 	static CDUIControlBase * LoadDui(LPCTSTR lpszFile, CDUIWnd *pWnd);
 	static CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);

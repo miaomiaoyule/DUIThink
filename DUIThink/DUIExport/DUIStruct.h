@@ -501,6 +501,7 @@ typedef std::vector<DuiTimerInfo> VecDuiTimerInfo;
 //////////////////////////////////////////////////////////////////////////
 struct tagDuiDropData
 {
+#ifndef DuiPlatform_SDL
 	DWORD								dwKeyState = 0;
 	DWORD								dwEffect = DROPEFFECT_COPY | DROPEFFECT_MOVE | DROPEFFECT_LINK;
 	CMMDragDrop *						pDragDropFrom = NULL;
@@ -513,6 +514,7 @@ struct tagDuiDropData
 	bool								bAsyncMode = true;
 	WPARAM								wParam = 0;
 	LPARAM								lParam = 0;
+#endif
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -531,7 +533,7 @@ typedef std::vector<tagDuiKLineChartItem> VecDuiKLineChartItem;
 #if defined(DuiPlatform_SDL)
 struct tagDuiSdlAsyncMsg
 {
-	CDUIWnd *							pWnd = NULL;
+	CDUIWndSDL *						pWnd = NULL;
 	UINT								uMsg = 0;
 	WPARAM								wParam = 0;
 	LPARAM								lParam = 0;

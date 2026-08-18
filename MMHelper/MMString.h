@@ -93,6 +93,24 @@ inline std::wstring AnsiToWString(const std::string &str)
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
+class CMMStringA : public std::string
+{
+public:
+	CMMStringA()
+	{
+	}
+	CMMStringA(const std::string &strSrc)
+		: std::string(strSrc)
+	{
+
+	}
+	operator LPCSTR() const
+	{
+		return c_str();
+	}
+};
+
+////////////////////////////////////////////////////////////////////////////
 class CMMString :
 #ifdef UNICODE
 	public std::wstring
@@ -604,9 +622,9 @@ inline CMMString CA2CT(const std::string &s, int nCodePage = CP_ACP)
 	}
 }
 
-inline std::string CT2CA(const CMMString &s, int nCodePage = CP_ACP)
+inline CMMStringA CT2CA(const CMMString &s, int nCodePage = CP_ACP)
 {
-	if (s.empty()) return std::string();
+	if (s.empty()) return CMMStringA();
 
 	if (nCodePage == CP_UTF8)
 	{
@@ -616,7 +634,7 @@ inline std::string CT2CA(const CMMString &s, int nCodePage = CP_ACP)
 		}
 		catch (...) 
 		{
-			return std::string();
+			return CMMStringA();
 		}
 	}
 
@@ -635,7 +653,7 @@ inline std::string CT2CA(const CMMString &s, int nCodePage = CP_ACP)
 		}
 		catch (...) 
 		{
-			return std::string();
+			return CMMStringA();
 		}
 	}
 }

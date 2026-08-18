@@ -71,7 +71,7 @@ public:
 	CMMString GetDescribe() const override;
 
 	//basic
-	bool SetWndOwner(CDUIWnd *pWndOwner) override;
+	bool SetWndOwner(CDUIWndBase *pWndOwner) override;
 
 	//refresh
 	void RefreshView() override;

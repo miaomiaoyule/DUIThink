@@ -233,7 +233,6 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="Define\DefineMessage.h" />
     <ClInclude Include="Define\DefineProp.h" />
     <ClInclude Include="Define\DefineResource.h" />
-    <ClInclude Include="Define\DefineWndManager.h" />
     <ClInclude Include="DUIAttribute\DUIAttributeBool.h" />
     <ClInclude Include="DUIAttribute\DUIAttributeColor.h" />
     <ClInclude Include="DUIAttribute\DUIAttributeColorSwitch.h" />

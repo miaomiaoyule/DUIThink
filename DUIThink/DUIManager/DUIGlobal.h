@@ -139,7 +139,7 @@ private:
 	std::vector<BYTE>					m_vecZipData;
 
 	//gdiplus
-#if defined(_WIN32) || defined(_WIN64)
+#ifndef DuiPlatform_SDL
 	ULONG_PTR							m_uToken = 0;
 	Gdiplus::GdiplusStartupInput		m_GdiplusInput;
 #endif
@@ -188,6 +188,7 @@ public:
 	bool SetScale(int nScale);
 
 	//ui
+	void LoadWnd(const CMMString &strName, CDUIWnd *pWnd);
 	CDUIControlBase * LoadDui(const CMMString &strName, CDUIWnd *pWnd = NULL);
 	CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
 	CDUIControlBase * ParseDui(LPCTSTR lpszXml);

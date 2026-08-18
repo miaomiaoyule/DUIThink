@@ -8,7 +8,7 @@
 CDUIGlobal::CDUIGlobal(void)
 	: CMMServiceItem(&m_ThreadPool)
 {
-#if defined(_WIN32) || defined(_WIN64)
+#ifndef DuiPlatform_SDL
 	//Gdiplus
 	m_uToken = 0;
 	Gdiplus::GdiplusStartup(&m_uToken, &m_GdiplusInput, NULL);
@@ -99,8 +99,10 @@ bool CDUIGlobal::UnInit()
 	CloseProject();
 
 	//third
+#ifndef DuiPlatform_SDL
 #ifdef MMSvgEnable
 	CMMSvg::GetInstance()->UnInit();
+#endif
 #endif
 
 	//extend dll
@@ -419,6 +421,35 @@ bool CDUIGlobal::SetScale(int nScale)
 	if (nScale < 100 || nScale == GetScale()) return false;
 
 	return SetDpi(MulDiv(nScale, 96, 100));
+}
+
+void CDUIGlobal::LoadWnd(const CMMString &strName, CDUIWnd *pWnd)
+{
+	//has
+	auto FindIt = find_if(m_vecDui.begin(), m_vecDui.end(), [&](tagDuiFile &DuiFile)
+	{
+		return DuiFile.strName == strName;
+	});
+	if (FindIt == m_vecDui.end())
+	{
+		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]²»´æÔÚ\n"), strName.c_str()));
+
+		return;
+	}
+
+	enDuiType DuiType = FindIt->DuiType;
+
+	//load
+	CMMString strFileFull = GetDuiPath(DuiType) + FindIt->strFile;
+	CDUIXmlPack::LoadWnd(strFileFull, pWnd);
+
+	if (pWnd)
+	{
+		RenameWnd(pWnd, strName);
+		SetWndDuiType(pWnd, DuiType);
+	}
+
+	return;
 }
 
 CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWnd *pWnd)

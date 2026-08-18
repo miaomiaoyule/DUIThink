@@ -191,23 +191,8 @@
 
 #if defined(WEBP_USE_THREAD)
 #if defined(_WIN32)
-#include <windows.h>
-
-#if _WIN32_WINNT >= 0x0600
-// clang-format off
-#define WEBP_DSP_INIT_VARS(func)               \
-  static VP8CPUInfo func##_last_cpuinfo_used = \
-      (VP8CPUInfo)&func##_last_cpuinfo_used;   \
-  static SRWLOCK func##_lock = SRWLOCK_INIT
-#define WEBP_DSP_INIT(func)                                \
-  do {                                                     \
-    AcquireSRWLockExclusive(&func##_lock);                 \
-    if (func##_last_cpuinfo_used != VP8GetCPUInfo) func(); \
-    func##_last_cpuinfo_used = VP8GetCPUInfo;              \
-    ReleaseSRWLockExclusive(&func##_lock);                 \
-  } while (0)
-// clang-format on
-#else   // _WIN32_WINNT < 0x0600
+// Avoid #include <windows.h> so DuiPlatform_SDL / XP toolsets can build without
+// pulling WinDef HWND. DSP init is idempotent; one-shot volatile check is enough.
 // clang-format off
 #define WEBP_DSP_INIT_VARS(func)                        \
   static volatile VP8CPUInfo func##_last_cpuinfo_used = \
@@ -219,7 +204,6 @@
     func##_last_cpuinfo_used = VP8GetCPUInfo;             \
   } while (0)
 // clang-format on
-#endif  // _WIN32_WINNT >= 0x0600
 #else   // !defined(_WIN32)
 // NOLINTNEXTLINE
 #include <pthread.h>

@@ -129,7 +129,7 @@ public:
 	CMMString GetDescribe() const override;
 
 	//basic
-	bool SetWndOwner(CDUIWnd *pWndOwner) override;
+	bool SetWndOwner(CDUIWndBase *pWndOwner) override;
 
 	//calendar;
 	virtual bool IsHeaderVisible();

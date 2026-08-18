@@ -33,18 +33,6 @@ typedef SDL_Window *HWND;
 typedef SDL_DisplayID HMONITOR;
 
 //////////////////////////////////////////////////////////////////////////
-// basic integer types
-#ifndef _T
-#ifdef UNICODE
-#define _T(x) L##x
-#else
-#define _T(x) x
-#endif
-#endif
-#ifndef TEXT
-#define TEXT _T
-#endif
-
 typedef char CHAR;
 typedef CHAR *LPSTR;
 typedef const CHAR *LPCSTR;
@@ -59,15 +47,19 @@ typedef CHAR   TCHAR;
 typedef TCHAR *LPTSTR;
 typedef const TCHAR *LPCTSTR;
 
+typedef short SHORT;
+typedef int INT;
+typedef long LONG;
+typedef long long LONGLONG;
 typedef unsigned char BYTE;
 typedef unsigned char UCHAR;
 typedef unsigned short WORD;
 typedef unsigned long DWORD;
 typedef unsigned int UINT;
-typedef long LONG;
 typedef unsigned long ULONG;
-typedef long long LONGLONG;
 typedef unsigned long long ULONGLONG;
+typedef BYTE* LPBYTE;
+typedef DWORD ARGB;
 #ifdef __LP64__
 typedef long long INT_PTR;
 typedef unsigned long long UINT_PTR;
@@ -110,6 +102,64 @@ typedef void *HZIPDT;
 typedef void *LPVOID;
 typedef void *PVOID;
 typedef void VOID;
+
+//////////////////////////////////////////////////////////////////////////
+/*
+* DrawText() Format Flags
+*/
+#define DT_TOP                      0x00000000
+#define DT_LEFT                     0x00000000
+#define DT_CENTER                   0x00000001
+#define DT_RIGHT                    0x00000002
+#define DT_VCENTER                  0x00000004
+#define DT_BOTTOM                   0x00000008
+#define DT_WORDBREAK                0x00000010
+#define DT_SINGLELINE               0x00000020
+#define DT_CALCRECT                 0x00000400
+#define DT_PATH_ELLIPSIS            0x00004000
+#define DT_END_ELLIPSIS             0x00008000
+#define DT_WORD_ELLIPSIS            0x00040000
+
+//////////////////////////////////////////////////////////////////////////
+#ifdef _MAC
+#define CALLBACK    PASCAL
+#define WINAPI      CDECL
+#define WINAPIV     CDECL
+#define APIENTRY    WINAPI
+#define APIPRIVATE  CDECL
+#ifdef _68K_
+#define PASCAL      __pascal
+#else
+#define PASCAL
+#endif
+#elif (_MSC_VER >= 800) || defined(_STDCALL_SUPPORTED)
+#define CALLBACK    __stdcall
+#define WINAPI      __stdcall
+#define WINAPIV     __cdecl
+#define APIENTRY    WINAPI
+#define APIPRIVATE  __stdcall
+#define PASCAL      __stdcall
+#else
+#define CALLBACK
+#define WINAPI
+#define WINAPIV
+#define APIENTRY    WINAPI
+#define APIPRIVATE
+#define PASCAL      pascal
+#endif
+
+/*
+* Dialog Box Command IDs
+*/
+#define IDOK						1
+#define IDCANCEL					2
+#define IDABORT						3
+#define IDRETRY						4
+#define IDIGNORE					5
+#define IDYES						6
+#define IDNO						7
+#define IDCLOSE						8
+#define IDHELP						9
 
 //////////////////////////////////////////////////////////////////////////
 // COM-style GUID (NOT SDL_GUID — SDL_GUID is joystick/device id: Uint8[16])
@@ -164,10 +214,27 @@ inline bool operator!=(const GUID &a, const GUID &b)
 
 //////////////////////////////////////////////////////////////////////////
 // string types (also defined in MMHelperHead; keep consistent)
+// basic integer types
+#ifndef _T
+#ifdef UNICODE
+#define _T(x) L##x
+#else
+#define _T(x) x
+#endif
+#endif
+#ifndef TEXT
+#define TEXT _T
+#endif
+
 #ifndef CP_ACP
 #define CP_ACP 0
 #define CP_UTF8 1
 #endif
+
+#undef FAR
+#undef  NEAR
+#define FAR							far
+#define NEAR						near
 
 //////////////////////////////////////////////////////////////////////////
 // geometry
@@ -222,6 +289,83 @@ typedef struct tagTOOLINFO
 } TOOLINFO, *PTOOLINFO, *LPTOOLINFO;
 
 //////////////////////////////////////////////////////////////////////////
+/* Logical Font */
+/* Font Weights */
+#define FW_DONTCARE					0
+#define FW_THIN						100
+#define FW_EXTRALIGHT				200
+#define FW_LIGHT					300
+#define FW_NORMAL					400
+#define FW_MEDIUM					500
+#define FW_SEMIBOLD					600
+#define FW_BOLD						700
+#define FW_EXTRABOLD				800
+#define FW_HEAVY					900
+
+#define ANSI_CHARSET				0
+#define DEFAULT_CHARSET				1
+#define SYMBOL_CHARSET				2
+#define SHIFTJIS_CHARSET			128
+#define HANGEUL_CHARSET				129
+#define HANGUL_CHARSET				129
+#define GB2312_CHARSET				134
+#define CHINESEBIG5_CHARSET			136
+#define OEM_CHARSET					255
+#define JOHAB_CHARSET				130
+#define HEBREW_CHARSET				177
+#define ARABIC_CHARSET				178
+#define GREEK_CHARSET				161
+#define TURKISH_CHARSET				162
+#define VIETNAMESE_CHARSET			163
+#define THAI_CHARSET				222
+#define EASTEUROPE_CHARSET			238
+#define RUSSIAN_CHARSET				204
+#define MAC_CHARSET					77
+#define BALTIC_CHARSET				186
+
+#define CLEARTYPE_QUALITY			5
+#define LF_FACESIZE					32
+typedef struct tagLOGFONTA
+{
+	LONG      lfHeight;
+	LONG      lfWidth;
+	LONG      lfEscapement;
+	LONG      lfOrientation;
+	LONG      lfWeight;
+	BYTE      lfItalic;
+	BYTE      lfUnderline;
+	BYTE      lfStrikeOut;
+	BYTE      lfCharSet;
+	BYTE      lfOutPrecision;
+	BYTE      lfClipPrecision;
+	BYTE      lfQuality;
+	BYTE      lfPitchAndFamily;
+	CHAR      lfFaceName[LF_FACESIZE];
+} LOGFONTA;
+typedef struct tagLOGFONTW
+{
+	LONG      lfHeight;
+	LONG      lfWidth;
+	LONG      lfEscapement;
+	LONG      lfOrientation;
+	LONG      lfWeight;
+	BYTE      lfItalic;
+	BYTE      lfUnderline;
+	BYTE      lfStrikeOut;
+	BYTE      lfCharSet;
+	BYTE      lfOutPrecision;
+	BYTE      lfClipPrecision;
+	BYTE      lfQuality;
+	BYTE      lfPitchAndFamily;
+	WCHAR     lfFaceName[LF_FACESIZE];
+} LOGFONTW;
+#ifdef UNICODE
+typedef LOGFONTW LOGFONT;
+#else
+typedef LOGFONTA LOGFONT;
+#endif // UNICODE
+
+//////////////////////////////////////////////////////////////////////////
 #ifndef NULL
 #ifdef __cplusplus
 #define NULL 0
@@ -233,6 +377,36 @@ typedef struct tagTOOLINFO
 #ifndef MAX_PATH
 #define MAX_PATH 260
 #endif
+
+#ifndef DECLARE_HANDLE
+#define DECLARE_HANDLE(name) typedef struct name##__ { int unused; } *name
+#endif
+
+#ifndef FILETIME_DEFINED
+#define FILETIME_DEFINED
+typedef struct _FILETIME
+{
+	DWORD dwLowDateTime;
+	DWORD dwHighDateTime;
+} FILETIME, *PFILETIME, *LPFILETIME;
+#endif
+
+#ifndef _SYSTEMTIME_
+#define _SYSTEMTIME_
+typedef struct _SYSTEMTIME
+{
+	WORD wYear;
+	WORD wMonth;
+	WORD wDayOfWeek;
+	WORD wDay;
+	WORD wHour;
+	WORD wMinute;
+	WORD wSecond;
+	WORD wMilliseconds;
+} 	SYSTEMTIME;
+typedef struct _SYSTEMTIME *PSYSTEMTIME;
+typedef struct _SYSTEMTIME *LPSYSTEMTIME;
+#endif // !_SYSTEMTIME
 
 #define LOBYTE(w) ((BYTE)((DWORD_PTR)(w) & 0xff))
 #define HIBYTE(w) ((BYTE)(((DWORD_PTR)(w) >> 8) & 0xff))
@@ -445,6 +619,14 @@ inline int _ttoi(const char *s) { return s ? atoi(s) : 0; }
 #endif
 #endif
 
+#ifndef _tcscmp
+#ifdef UNICODE
+#define _tcscmp wcscmp
+#else
+#define _tcscmp strcmp
+#endif
+#endif
+
 #ifndef _ASSERTE
 #define _ASSERTE(expr) assert(expr)
 #endif
@@ -653,6 +835,51 @@ inline BOOL UnionRect(LPRECT lprcDst, LPCRECT lprcSrc1, LPCRECT lprcSrc2)
 	lprcDst->right = max(lprcSrc1->right, lprcSrc2->right);
 	lprcDst->bottom = max(lprcSrc1->bottom, lprcSrc2->bottom);
 	return TRUE;
+}
+
+inline int MulDiv(int nNumber, int nNumerator, int nDenominator)
+{
+	using int64 = long long;
+
+	int64 prod = static_cast<int64>(nNumber) * static_cast<int64>(nNumerator);
+	int64 denom = static_cast<int64>(nDenominator);
+
+	if (denom == 0) 
+	{
+		return (prod >= 0) ? INT_MAX : INT_MIN;
+	}
+
+	int64 q = prod / denom;
+	int64 r = prod % denom;
+
+	int64 abs_r = (r >= 0) ? r : -r;
+	int64 abs_d = (denom >= 0) ? denom : -denom;
+
+	if (abs_r * 2 >= abs_d) 
+	{
+		if ((prod ^ denom) >= 0) q += 1;
+		else q -= 1;
+	}
+
+	if (q > INT_MAX) return INT_MAX;
+	if (q < INT_MIN) return INT_MIN;
+
+	return static_cast<int>(q);
+}
+
+static const std::chrono::steady_clock::time_point g_tick_start = std::chrono::steady_clock::now();
+inline DWORD GetTickCount() noexcept
+{
+	using namespace std::chrono;
+	auto ms = duration_cast<milliseconds>(steady_clock::now() - g_tick_start).count();
+	return static_cast<DWORD>(ms & 0xFFFFFFFFu);
+}
+
+inline ULONGLONG GetTickCount64() noexcept
+{
+	using namespace std::chrono;
+	auto ms = duration_cast<milliseconds>(steady_clock::now() - g_tick_start).count();
+	return static_cast<ULONGLONG>(ms);
 }
 
 #ifndef ZeroMemory

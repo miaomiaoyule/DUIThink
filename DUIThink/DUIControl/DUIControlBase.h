@@ -12,6 +12,8 @@ class DUITHINK_API CDUIControlBase
 {
 	friend class CDUIXmlPack;
 	friend class CDUIWnd;
+	friend class CDUIWndBase;
+	friend class CDUIWndSDL;
 	friend class CDUIContainerCtrl;
 	friend class CDUIVerticalLayoutCtrl;
 	friend class CDUIHorizontalLayoutCtrl;
@@ -89,7 +91,7 @@ protected:
 protected:
 	CDUIContainerCtrl *					m_pParent = NULL;
 	CDUIControlBase *					m_pOwnerModelCtrl = NULL;
-	CDUIWnd *							m_pWndOwner = NULL;
+	CDUIWndBase *						m_pWndOwner = NULL;
 
 	//pos
 	CDUIRect							m_rcModalParent;
@@ -140,8 +142,8 @@ public:
 	virtual bool SetCtrlID(UINT uID);
 	virtual void RefreshCtrlID(bool bSelfSingle = false);
 	virtual HWND GetWndHandle();
-	virtual bool SetWndOwner(CDUIWnd *pWndOwner);
-	virtual CDUIWnd * GetWndOwner() override;
+	virtual bool SetWndOwner(CDUIWndBase *pWndOwner);
+	virtual CDUIWndBase * GetWndOwner() override;
 	virtual void SetParent(CDUIContainerCtrl *pParent);
 	virtual CDUIContainerCtrl * GetParent() const;
 	virtual CDUIControlBase * GetPrevSiblingCtrl();

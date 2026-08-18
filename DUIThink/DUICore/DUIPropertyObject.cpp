@@ -147,7 +147,7 @@ const CMMDpi & CDUIPropertyObject::GetDpiObj()
 	return CDUIGlobal::GetInstance()->GetDpiObj();
 }
 
-CDUIWnd * CDUIPropertyObject::GetWndOwner()
+CDUIWndBase * CDUIPropertyObject::GetWndOwner()
 {
 	return NULL;
 }

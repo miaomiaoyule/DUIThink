@@ -1,8 +1,6 @@
 #ifndef __MM_FILE_H__
 #define __MM_FILE_H__
 
-#ifndef DuiPlatform_SDL
-
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
@@ -83,12 +81,6 @@ public:
 	static enMMFileEncode GetFileEncode(const char *pStr);
 
 	//************************************
-	// Description:	解析文件的PCID
-	// Parameter: 	LPCTSTR lpszFileFull 例：C:\Text.txt 
-	//************************************
-	static PCIDLIST_ABSOLUTE GetPCIDLFromPath(LPCTSTR lpszFileFull);
-
-	//************************************
 	// Description:	读取文件数据
 	// Parameter: 	IN LPCTSTR lpszFileFull 例：C:\Text.txt 
 	// Parameter: 	OUT std::vector<BYTE> vecData
@@ -102,6 +94,13 @@ public:
 	// Parameter: 	CMMString &strData
 	//************************************
 	static bool GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData);
+
+#ifndef DuiPlatform_SDL
+	//************************************
+	// Description:	解析文件的PCID
+	// Parameter: 	LPCTSTR lpszFileFull 例：C:\Text.txt 
+	//************************************
+	static PCIDLIST_ABSOLUTE GetPCIDLFromPath(LPCTSTR lpszFileFull);
 
 	//************************************
 	// Description:	读取文件tip
@@ -239,9 +238,9 @@ public:
 	// Parameter: 	HWND hWndParent															
 	//************************************
 	static bool OperatorSelectFolder(HWND hWndParent, OUT CMMString &strFolderSelect);
+#endif
 };
 
 //////////////////////////////////////////////////////////////////////////
-#endif
 #endif
 

@@ -81,10 +81,10 @@ static const GUID IID_IDuiWndNotify = { 0xC78CF794,0x6ABD,0x4688,0x92,0x1C,0xC9,
 interface DUITHINK_API IDuiWndNotify : public IDuiInterface
 {
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
-	virtual void OnDuiWndCreate(CDUIWnd *pWnd) = NULL;
-	virtual void OnDuiWndDestroy(CDUIWnd *pWnd) = NULL;
-	virtual void OnDuiWndPaint(CDUIWnd *pWnd) {}
-	virtual void OnDuiWndSize(CDUIWnd *pWnd) {}
+	virtual void OnDuiWndCreate(CDUIWndBase *pWnd) = NULL;
+	virtual void OnDuiWndDestroy(CDUIWndBase *pWnd) = NULL;
+	virtual void OnDuiWndPaint(CDUIWndBase *pWnd) {}
+	virtual void OnDuiWndSize(CDUIWndBase *pWnd) {}
 };
 
 //////////////////////////////////////////////////////////////////////////
