@@ -17,6 +17,7 @@ class CDUIAttributeCombox;
 class CDUIAttributeSize;
 class CDUIAttributeColor;
 class CDUIAttributeTextStyle;
+class CDUIWndBase;
 class CDUIWnd;
 class CDUIWndSDL;
 class CDUIResourceBase;

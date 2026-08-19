@@ -98,7 +98,6 @@ typedef void *HMODULE;
 typedef void *HMENU;
 typedef void *HGDIOBJ;
 typedef void *HANDLE;
-typedef void *HZIPDT;
 typedef void *LPVOID;
 typedef void *PVOID;
 typedef void VOID;
