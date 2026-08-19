@@ -42,12 +42,8 @@
 #include "../MMHelper/MMHelperHead.h"
 
 #if defined(DuiPlatform_SDL)
-	// non-Windows: GDI+ not available; render backend TBD
-	namespace Gdiplus
-	{
-		class Bitmap;
-		enum TextRenderingHint { TextRenderingHintSystemDefault = 0 };
-	}
+	#include "DUICore/DUIRender/DUIGdiplusPortable.h"
+	using namespace Gdiplus;
 #else
 	#define GDIPVER 0x0110
 	#include <comdef.h>

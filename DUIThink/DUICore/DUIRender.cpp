@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#if !defined(DuiPlatform_SDL)
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_STATIC
 #include "../DUIUtils/stb_image_write.h"
@@ -2540,3 +2541,4 @@ const CDUIMemDC &CDUIMemDC::operator = (CDUIMemDC)
 }
 
 //////////////////////////////////////////////////////////////////////////
+#endif // !DuiPlatform_SDL

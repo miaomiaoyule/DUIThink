@@ -3,6 +3,10 @@
 
 #pragma once
 
+#if defined(DuiPlatform_SDL)
+#include "DUIRender/IDuiCanvas.h"
+#endif
+
 /////////////////////////////////////////////////////////////////////////////////////
 class DUITHINK_API CDUIRenderClip
 {

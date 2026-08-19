@@ -646,6 +646,14 @@ inline int _ttoi(const char *s) { return s ? atoi(s) : 0; }
 #endif
 #endif
 
+#ifndef _tcsncpy
+#ifdef UNICODE
+#define _tcsncpy wcsncpy
+#else
+#define _tcsncpy strncpy
+#endif
+#endif
+
 #ifndef _ASSERTE
 #define _ASSERTE(expr) assert(expr)
 #endif
@@ -914,5 +922,78 @@ inline int lstrlenW(const wchar_t *lpString) { return lpString ? (int)wcslen(lpS
 #else
 #define lstrlen lstrlenA
 #endif
+
+//////////////////////////////////////////////////////////////////////////
+// GDI object shims (implemented in DUIThink raster backend)
+typedef struct tagBITMAP
+{
+	LONG   bmType;
+	LONG   bmWidth;
+	LONG   bmHeight;
+	LONG   bmWidthBytes;
+	WORD   bmPlanes;
+	WORD   bmBitsPixel;
+	LPVOID bmBits;
+} BITMAP, *PBITMAP, *LPBITMAP;
+
+typedef struct _BLENDFUNCTION
+{
+	BYTE BlendOp;
+	BYTE BlendFlags;
+	BYTE SourceConstantAlpha;
+	BYTE AlphaFormat;
+} BLENDFUNCTION, *PBLENDFUNCTION;
+
+#define AC_SRC_OVER					0x00
+#define AC_SRC_ALPHA				0x01
+#define ULW_ALPHA					0x00000002
+#define OBJ_PEN						1
+#define OBJ_BRUSH					2
+#define OBJ_DC						3
+#define OBJ_FONT					6
+#define OBJ_BITMAP					7
+#define OBJ_REGION					8
+#define OBJ_MEMDC					10
+#define LOGPIXELSX					88
+#define LOGPIXELSY					90
+#define DEFAULT_GUI_FONT			17
+#define HOLLOW_BRUSH				5
+#define TRANSPARENT					1
+#define DT_NOPREFIX					0x00000800
+
+BOOL DeleteObject(HGDIOBJ hObject);
+BOOL DeleteDC(HDC hdc);
+HDC CreateCompatibleDC(HDC hdc);
+HGDIOBJ SelectObject(HDC hdc, HGDIOBJ hgdiobj);
+BOOL BitBlt(HDC hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, HDC hdcSrc, int nXSrc, int nYSrc, DWORD dwRop);
+DWORD GetObjectType(HGDIOBJ h);
+int SaveDC(HDC hdc);
+BOOL RestoreDC(HDC hdc, int nSavedDC);
+HFONT CreateFontIndirect(const LOGFONT *lplf);
+HGDIOBJ GetStockObject(int i);
+int GetObject(HGDIOBJ h, int c, LPVOID pv);
+int GetDeviceCaps(HDC hdc, int nIndex);
+BOOL UpdateLayeredWindow(HWND hWnd, HDC hdcDst, POINT *pptDst, SIZE *psize, HDC hdcSrc, POINT *pptSrc, DWORD crKey, BLENDFUNCTION *pblend, DWORD dwFlags);
+
+inline BOOL GetWindowRect(HWND hWnd, LPRECT lpRect)
+{
+	if (NULL == hWnd || NULL == lpRect) return FALSE;
+	int x = 0, y = 0, w = 0, h = 0;
+	SDL_GetWindowPosition(hWnd, &x, &y);
+	SDL_GetWindowSize(hWnd, &w, &h);
+	lpRect->left = x;
+	lpRect->top = y;
+	lpRect->right = x + w;
+	lpRect->bottom = y + h;
+	return TRUE;
+}
+
+inline BOOL SetWindowPos(HWND hWnd, HWND, int X, int Y, int cx, int cy, UINT uFlags)
+{
+	if (NULL == hWnd) return FALSE;
+	if (0 == (uFlags & SWP_NOMOVE)) SDL_SetWindowPosition(hWnd, X, Y);
+	if (0 == (uFlags & SWP_NOSIZE) && cx > 0 && cy > 0) SDL_SetWindowSize(hWnd, cx, cy);
+	return TRUE;
+}
 
 #endif // __MM_PLATFORM_TYPES_H__
