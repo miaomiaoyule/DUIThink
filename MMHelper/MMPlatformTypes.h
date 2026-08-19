@@ -40,9 +40,9 @@ typedef wchar_t WCHAR;
 typedef WCHAR *LPWSTR;
 typedef const WCHAR *LPCWSTR;
 #ifdef UNICODE
-typedef WCHAR   TCHAR;
+typedef WCHAR TCHAR;
 #else
-typedef CHAR   TCHAR;
+typedef CHAR TCHAR;
 #endif
 typedef TCHAR *LPTSTR;
 typedef const TCHAR *LPCTSTR;
@@ -493,23 +493,31 @@ typedef struct _SYSTEMTIME *LPSYSTEMTIME;
 #define WM_ENABLE 0x000A
 #define WM_SETTEXT 0x000C
 #define WM_GETTEXT 0x000D
+#define WM_GETTEXTLENGTH 0x000E
 #define WM_PAINT 0x000F
 #define WM_CLOSE 0x0010
 #define WM_QUIT 0x0012
 #define WM_ERASEBKGND 0x0014
 #define WM_SHOWWINDOW 0x0018
+#define WM_ACTIVATEAPP 0x001C
 #define WM_SETCURSOR 0x0020
 #define WM_MOUSEACTIVATE 0x0021
 #define WM_GETMINMAXINFO 0x0024
+#define WM_DRAWITEM 0x002B
+#define WM_MEASUREITEM 0x002C
 #define WM_WINDOWPOSCHANGING 0x0046
 #define WM_WINDOWPOSCHANGED 0x0047
+#define WM_NOTIFY 0x004E
 #define WM_CONTEXTMENU 0x007B
+#define WM_GETICON 0x007F
+#define WM_SETICON 0x0080
 #define WM_NCCREATE 0x0081
 #define WM_NCDESTROY 0x0082
 #define WM_NCCALCSIZE 0x0083
 #define WM_NCHITTEST 0x0084
 #define WM_NCPAINT 0x0085
 #define WM_NCACTIVATE 0x0086
+#define WM_NCMOUSEMOVE 0x00A0
 #define WM_KEYDOWN 0x0100
 #define WM_KEYUP 0x0101
 #define WM_CHAR 0x0102
@@ -519,6 +527,8 @@ typedef struct _SYSTEMTIME *LPSYSTEMTIME;
 #define WM_COMMAND 0x0111
 #define WM_SYSCOMMAND 0x0112
 #define WM_TIMER 0x0113
+#define WM_HSCROLL 0x0114
+#define WM_VSCROLL 0x0115
 #define WM_MOUSEMOVE 0x0200
 #define WM_LBUTTONDOWN 0x0201
 #define WM_LBUTTONUP 0x0202
@@ -529,7 +539,9 @@ typedef struct _SYSTEMTIME *LPSYSTEMTIME;
 #define WM_MBUTTONDOWN 0x0207
 #define WM_MBUTTONUP 0x0208
 #define WM_MOUSEWHEEL 0x020A
+#define WM_PARENTNOTIFY 0x0210
 #define WM_SIZING 0x0214
+#define WM_CAPTURECHANGED 0x0215
 #define WM_MOVING 0x0216
 #define WM_ENTERSIZEMOVE 0x0231
 #define WM_EXITSIZEMOVE 0x0232
@@ -616,6 +628,14 @@ inline int _ttoi(const char *s) { return s ? atoi(s) : 0; }
 #define _tcstol wcstol
 #else
 #define _tcstol strtol
+#endif
+#endif
+
+#ifndef _tcstoul
+#ifdef UNICODE
+#define _tcstoul wcstoul
+#else
+#define _tcstoul strtoul
 #endif
 #endif
 

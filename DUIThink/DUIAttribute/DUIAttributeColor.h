@@ -35,7 +35,6 @@ public:
 	virtual bool SetColorValueB(BYTE cbB);
 
 	virtual ARGB GetColorValue();
-	virtual Color GetColorObject();
 
 	//attribute
 protected:

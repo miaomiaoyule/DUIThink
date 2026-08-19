@@ -100,11 +100,6 @@ ARGB CDUIAttributeColor::GetColorValue()
 	return m_dwColor;
 }
 
-Color CDUIAttributeColor::GetColorObject()
-{
-	return Color(m_dwColor);
-}
-
 bool CDUIAttributeColor::SetAttribute(LPCSTR lpszName, LPCSTR lpszValue)
 {
 	if (__super::SetAttribute(lpszName, lpszValue)) return true;

@@ -227,13 +227,6 @@ ARGB CDUIAttributeColorSwitch::GetColorValue()
 	return pColorBaseCur ? pColorBaseCur->GetColor() : 0;
 }
 
-Color CDUIAttributeColorSwitch::GetColorObject()
-{
-	CDUIColorBase *pColorBaseCur = GetColorBaseCur();
-
-	return pColorBaseCur ? pColorBaseCur->GetColor() : 0;
-}
-
 vector<CMMString> CDUIAttributeColorSwitch::GetColorResSwitch()
 {
 	return CDUIGlobal::GetInstance()->GetAttriColorResSwitch(m_uValueHash);

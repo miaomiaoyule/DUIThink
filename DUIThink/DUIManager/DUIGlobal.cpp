@@ -251,6 +251,9 @@ bool CDUIGlobal::LoadProjectFromZip(void *pData, UINT uDataLen, LPCTSTR lpszPass
 
 bool CDUIGlobal::LoadProjectFromResZip(HINSTANCE hResModule, LPCTSTR lpszZipName, LPCTSTR lpszPassword, LPCTSTR lpszProjName, LPCTSTR lpszResType)
 {
+#if defined DuiPlatform_SDL
+	return false;
+#else
 	if (NULL == hResModule) return false;
 
 	m_hInstanceResource = hResModule;
@@ -282,6 +285,7 @@ bool CDUIGlobal::LoadProjectFromResZip(HINSTANCE hResModule, LPCTSTR lpszZipName
 	m_bProjectExist = true;
 
 	return true;
+#endif
 }
 
 CMMString CDUIGlobal::GetDuiLastError()
@@ -528,6 +532,9 @@ Gdiplus::Bitmap * CDUIGlobal::GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPC
 	Gdiplus::Bitmap *pBmpText = m_mapShadowText[ShadowText];
 	if (pBmpText) return pBmpText;
 
+#if defined DuiPlatform_SDL
+	return NULL;
+#else
 	//generate
 	HDC hDCScreen = CreateDC(L"DISPLAY", NULL, NULL, NULL);
 	if (NULL == hDCScreen) return NULL;
@@ -544,6 +551,7 @@ Gdiplus::Bitmap * CDUIGlobal::GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPC
 	m_mapShadowText[ShadowText] = pBmpText;
 
 	return pBmpText;
+#endif
 }
 
 int CDUIGlobal::GetFontResourceCount()
@@ -714,7 +722,7 @@ bool CDUIGlobal::RemoveImageResource(const CMMString &strName)
 	m_mapResourceImage.erase(FindIt);
 
 	CMMString strImage = pImageBase->GetImageFileFull();
-	if (true == PathFileExists(strImage) && false == DeleteFile(strImage))
+	if (true == DuiPathFileExists(strImage) && false == DuiDeleteFile(strImage))
 	{
 		assert(false);
 		return false;
@@ -826,7 +834,7 @@ bool CDUIGlobal::RemoveDui(const CMMString &strName)
 
 	//file
 	CMMString strFile = GetDuiFileFull(strName);
-	::DeleteFile(strFile);
+	DuiDeleteFile(strFile);
 
 	m_vecDui.erase(FindIt);
 
@@ -893,18 +901,6 @@ CMMString CDUIGlobal::GetDuiPath(enDuiType DuiType)
 HINSTANCE CDUIGlobal::GetInstanceHandle()
 {
 	return m_hInstance;
-}
-
-CMMString CDUIGlobal::GetInstancePath()
-{
-	if (NULL == m_hInstance) return _T('\0');
-
-	TCHAR szModule[MAX_PATH + 1] = {};
-	::GetModuleFileName(m_hInstance, szModule, MAX_PATH);
-	CMMString strInstancePath = szModule;
-	int pos = strInstancePath.rfind(_T('\\'));
-	if (pos >= 0) strInstancePath = strInstancePath.Left(pos + 1);
-	return strInstancePath;
 }
 
 HINSTANCE CDUIGlobal::GetResourceDll()
@@ -1440,7 +1436,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 	{
 		assert(false);
 		CMMString strWarning = CMMStrHelp::Format(_T("Failed of Load [%s]，Please Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
-		MessageBox(NULL, strWarning, NULL, NULL);
+		DuiMessageBox(NULL, strWarning, NULL, NULL);
 
 		return;
 	}
@@ -1476,7 +1472,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 					assert(false);
 					CMMString strWarning;
 					strWarning.Format(_T("Failed load extenddll【%s】, Make sure it in the running directory"), strDllName.c_str());
-					MessageBox(NULL, strWarning, NULL, NULL);
+					DuiMessageBox(NULL, strWarning, NULL, NULL);
 
 					continue;
 				}
@@ -1496,7 +1492,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 bool CDUIGlobal::SetProjectPath(LPCTSTR lpszPath)
 {
 	if (DuiFileResType_File == GetDuiFileResType()
-		&& (false == ::PathFileExists(lpszPath) || false == ::PathIsDirectory(lpszPath))) return false;
+		&& (false == ::DuiPathFileExists(lpszPath) || false == ::DuiPathIsDirectory(lpszPath))) return false;
 
 	m_strProjectPath = lpszPath;
 	m_strSkinDir = m_strProjectPath + Dui_Resource_ImageRes + _T('\\');
@@ -1599,20 +1595,7 @@ bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
 			strFile = GetProjectPath() + strFile;
 		}
 
-		HANDLE hFile = ::CreateFile(strFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (INVALID_HANDLE_VALUE == hFile) return false;
-
-		DWORD dwSize = ::GetFileSize(hFile, NULL);
-		DWORD dwRead = 0;
-		vecData.resize(dwSize);
-		::ReadFile(hFile, vecData.data(), dwSize, &dwRead, NULL);
-		::CloseHandle(hFile);
-
-		if (dwRead != dwSize)
-		{
-			vecData.clear();
-			return false;
-		}
+		return CMMFile::GetFileData(strFile, vecData);
 	}
 
 	return true;
@@ -1710,7 +1693,7 @@ bool CDUIGlobal::AddColorResource(CDUIColorBase *pResourceObj)
 bool CDUIGlobal::AddDui(enDuiType DuiType, const CMMString &strName, const CMMString &strFile)
 {
 	CMMString strFileFull = GetDuiPath(DuiType) + strFile;
-	if (DuiFileResType_File == GetDuiFileResType() && false == PathFileExists(strFileFull))
+	if (DuiFileResType_File == GetDuiFileResType() && false == DuiPathFileExists(strFileFull))
 	{
 		assert(false);
 		return false;
@@ -1719,7 +1702,7 @@ bool CDUIGlobal::AddDui(enDuiType DuiType, const CMMString &strName, const CMMSt
 	CMMString strDuiFile = GetDuiFile(strName);
 	if (false == strDuiFile.empty())
 	{
-		::MessageBox(NULL, _T("Have Same Name DirectUI"), NULL, NULL);
+		::DuiMessageBox(NULL, _T("Have Same Name DirectUI"), NULL, NULL);
 
 		return false;
 	}
@@ -1808,9 +1791,9 @@ bool CDUIGlobal::RenameDui(const CMMString &strNameOld, const CMMString &strName
 	CMMString strFileNameNew = strNameNew + _T(".xml");
 	CMMString strFileNew = GetDuiPath(DuiType) + strFileNameNew;
 
-	if (false == MoveFile(strFileOld, strFileNew))
+	if (false == DuiMoveFile(strFileOld, strFileNew))
 	{
-		MessageBox(NULL, _T("Error Because Same Filename。"), _T("提示"), MB_ICONINFORMATION);
+		DuiMessageBox(NULL, _T("Error Because Same Filename。"), _T("提示"), MB_ICONINFORMATION);
 		return false;
 	}
 
@@ -2643,13 +2626,13 @@ bool CDUIGlobal::SaveAttriCombox(tinyxml2::XMLElement *pNode)
 		//item
 		for (auto &Item : AttriCombox.vecItem)
 		{
-			CStringA strKey;
-			strKey.Format(("%s%d"), Dui_Key_AttriComboxItem, Item.nItem);
+			CMMString strKey;
+			strKey.Format(_T("%s%d"), (LPCTSTR)CA2CT(Dui_Key_AttriComboxItem), Item.nItem);
 
-			CStringA strValue;
-			strValue.Format(StrComboxItem, Item.nItem, (LPCSTR)CT2CA(Item.strDescribe));
+			CMMString strValue;
+			strValue.Format((LPCTSTR)CA2CT(StrComboxItem), Item.nItem, Item.strDescribe.GetBuffer());
 
-			pValue->SetAttribute(strKey, strValue);
+			pValue->SetAttribute(CT2CA(strKey), CT2CA(strValue));
 		}
 
 		pNode->LinkEndChild(pValue);
@@ -3572,7 +3555,8 @@ LPCTSTR DUI__TraceMsg(UINT uMsg)
 	MSGDEF(WM_GETICON);
 	MSGDEF(WM_GETTEXT);
 	MSGDEF(WM_GETTEXTLENGTH);
-	static TCHAR szMsg[10];
-	::wsprintf(szMsg, _T("0x%04X"), uMsg);
-	return szMsg;
+	
+	CMMString strMsg;
+	strMsg.Format(_T("0x%04X"), uMsg);
+	return strMsg;
 }

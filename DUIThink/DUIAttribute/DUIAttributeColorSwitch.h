@@ -55,7 +55,6 @@ public:
 	//color
 	virtual bool IsEmpty() override;
 	virtual ARGB GetColorValue();
-	virtual Color GetColorObject();
 
 	virtual vector<CMMString> GetColorResSwitch();
 	virtual bool SetColorResSwitch(const vector<CMMString> &vecColorRes);

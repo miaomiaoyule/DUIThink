@@ -39,3 +39,59 @@ bool DuiIsWindow(HWND hWnd)
 	return ::IsWindow(hWnd) == TRUE;
 #endif
 }
+
+bool DuiPathFileExists(LPCTSTR lpszFile)
+{
+#if defined(DuiPlatform_SDL)
+	if (SDL_GetPathInfo(CT2CA(lpszFile), NULL)) return true;
+
+	return false;
+#else
+	return PathFileExists(lpszFile);
+#endif
+}
+
+bool DuiPathIsDirectory(LPCTSTR lpszFile)
+{
+#if defined(DuiPlatform_SDL)
+	SDL_PathInfo info;
+	if (SDL_GetPathInfo(CT2CA(lpszFile), &info) && info.type == SDL_PATHTYPE_DIRECTORY) 
+	{
+		return true;
+	}
+
+	return false;
+#else
+	return PathIsDirectory(lpszFile);
+#endif
+}
+
+bool DuiDeleteFile(LPCTSTR lpszFile)
+{
+#if defined(DuiPlatform_SDL)
+	if (false == SDL_RemovePath(CT2CA(lpszFile)))
+	{
+		SDL_Log("delete failed: %s", SDL_GetError());
+		return false;
+	}
+
+	return true;
+#else
+	return DeleteFile(lpszFile);
+#endif
+}
+
+BOOL DuiMoveFile(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName)
+{
+#if defined(DuiPlatform_SDL)
+	if (false == SDL_RenamePath(CT2CA(lpExistingFileName), CT2CA(lpNewFileName))) 
+	{
+		SDL_Log("move failed: %s", SDL_GetError());
+		return false;
+	}
+
+	return true;
+#else
+	return MoveFile(lpExistingFileName, lpNewFileName);
+#endif
+}

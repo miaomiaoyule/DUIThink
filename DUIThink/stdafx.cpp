@@ -233,19 +233,19 @@ void DuiMoveWindow(HWND hWnd, int X, int Y, int nWidth, int nHeight, bool bRepai
 #endif
 }
 
-void DuiMessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType)
+int DuiMessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType)
 {
 #if defined(DuiPlatform_SDL)
-	if (false == DuiIsWindow(hWnd)) return;
+	if (false == DuiIsWindow(hWnd)) return 0;
 
 	// SDL does not have a built-in message box, so we can use SDL_ShowSimpleMessageBox
 	SDL_MessageBoxFlags flags = 0;
 	if (uType & MB_ICONERROR) flags |= SDL_MESSAGEBOX_ERROR;
 	else if (uType & MB_ICONWARNING) flags |= SDL_MESSAGEBOX_WARNING;
 	else if (uType & MB_ICONINFORMATION) flags |= SDL_MESSAGEBOX_INFORMATION;
-	SDL_ShowSimpleMessageBox(flags, MMStringToUtf8(lpCaption).c_str(), MMStringToUtf8(lpText).c_str(), (SDL_Window *)hWnd);
+	return SDL_ShowSimpleMessageBox(flags, MMStringToUtf8(lpCaption).c_str(), MMStringToUtf8(lpText).c_str(), (SDL_Window *)hWnd);
 #else
-	::MessageBox(hWnd, lpText, lpCaption, uType);
+	return ::MessageBox(hWnd, lpText, lpCaption, uType);
 #endif
 }
 

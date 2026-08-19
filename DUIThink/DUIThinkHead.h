@@ -327,7 +327,7 @@ DUITHINK_API void DuiGetWindowRect(HWND hWnd, LPRECT lpRect);
 DUITHINK_API void DuiGetMonitorInfo(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo);
 DUITHINK_API void DuiSetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags);
 DUITHINK_API void DuiMoveWindow(HWND hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-DUITHINK_API void DuiMessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType);
+DUITHINK_API int DuiMessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType);
 DUITHINK_API void DuiSetForegroundWindow(HWND hWnd);
 DUITHINK_API void DuiSetFocus(HWND hWnd);
 DUITHINK_API void DuiShowWindow(HWND hWnd, int nCmdShow);

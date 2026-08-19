@@ -244,7 +244,6 @@ public:
 
 	//res info
 	HINSTANCE GetInstanceHandle();
-	CMMString GetInstancePath();
 	HINSTANCE GetResourceDll();
 	HZIPDT GetResourceZipHandle();
 	enDuiFileResType GetDuiFileResType();
