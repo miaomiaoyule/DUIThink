@@ -195,6 +195,9 @@
     <ClInclude Include="MMUtils\MMSize.h">
       <Filter>MMUtils</Filter>
     </ClInclude>
+    <ClInclude Include="MMTime.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -313,6 +316,9 @@
     </ClCompile>
     <ClCompile Include="MMUtils\MMSize.cpp">
       <Filter>MMUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="MMTime.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

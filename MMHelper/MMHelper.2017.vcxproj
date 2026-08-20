@@ -712,6 +712,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClInclude Include="MMStrHelp.h" />
     <ClInclude Include="MMString.h" />
     <ClInclude Include="MMSvg.h" />
+    <ClInclude Include="MMTime.h" />
     <ClInclude Include="MMTrayIcon.h" />
     <ClInclude Include="MMUtils\MMPoint.h" />
     <ClInclude Include="MMUtils\MMRect.h" />
@@ -808,6 +809,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClCompile Include="MMStrHelp.cpp" />
     <ClCompile Include="MMString.cpp" />
     <ClCompile Include="MMSvg.cpp" />
+    <ClCompile Include="MMTime.cpp" />
     <ClCompile Include="MMTrayIcon.cpp" />
     <ClCompile Include="MMUtils\MMPoint.cpp" />
     <ClCompile Include="MMUtils\MMRect.cpp" />
