@@ -335,6 +335,7 @@ void CDUIImageBase::ConstructResource(int nScale)
 	//svg
 	if (DuiImageType_Svg == ImageType)
 	{
+#ifndef DuiPlatform_SDL
 #ifdef MMSvgEnable
 		tagDuiImageInfo ImageInfo = {};
 		ImageInfo.ImageType = DuiImageType_Svg;
@@ -342,6 +343,7 @@ void CDUIImageBase::ConstructResource(int nScale)
 
 		ImageInfo.bAlpha = true;
 		m_mapDpiImageInfo[nScale] = ImageInfo;
+#endif
 #endif
 
 		return;

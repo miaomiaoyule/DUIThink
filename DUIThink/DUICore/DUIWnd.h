@@ -55,6 +55,10 @@ protected:
 	CDUIWnd * GetWndOwner() override;
 	void DispatchModelMouseEvent(CDUIControlBase *pCtrl, MouseEventPtr pFunc, const CDUIPoint &pt, const DuiMessage &Msg, bool bClick) override;
 	void DispatchModelKeyboardEvent(CDUIControlBase *pCtrl, KeyboardEventPtr pFunc, const DuiMessage &Msg) override;
+
+	//help
+public:
+	static UINT MapKeyState();
 };
 
 //////////////////////////////////////////////////////////////////////////

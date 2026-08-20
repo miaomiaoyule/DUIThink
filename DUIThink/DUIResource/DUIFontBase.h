@@ -29,7 +29,6 @@ protected:
 	bool								m_bItalic = false;
 	bool								m_bUnderline = false;
 	bool								m_bStrikeOut = false;
-	TEXTMETRIC							m_TextMetric = {};
 
 	//override
 public:

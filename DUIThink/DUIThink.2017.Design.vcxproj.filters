@@ -49,6 +49,9 @@
     <Filter Include="DUICore\DUIPlatform">
       <UniqueIdentifier>{63a28f6f-e317-42ca-ab54-108f2aef59af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DUICore\DUIRender">
+      <UniqueIdentifier>{6f7c1266-cf74-429d-bb32-70f11a499191}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -342,6 +345,21 @@
     <ClInclude Include="DUICore\DUIPlatform\DUIWndBase.h">
       <Filter>DUICore\DUIPlatform</Filter>
     </ClInclude>
+    <ClInclude Include="DUICore\DUIRender\DUICanvasRaster.h">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIRender\DUIGdiplusPortable.h">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIRender\DUIPaintSceneSDL.h">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIRender\IDuiCanvas.h">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClInclude>
+    <ClInclude Include="DUIUtils\stb_truetype.h">
+      <Filter>DUIUtils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -592,6 +610,15 @@
     </ClCompile>
     <ClCompile Include="DUICore\DUIPlatform\DUIWndBase.cpp">
       <Filter>DUICore\DUIPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIRender\DUICanvasRaster.cpp">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIRender\DUINativeGdi.cpp">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIRender\DUIPaintSceneSDL.cpp">
+      <Filter>DUICore\DUIRender</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

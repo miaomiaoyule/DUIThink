@@ -7,7 +7,7 @@ static const GUID IID_CDUIWndSDL = { 0xfb0000bc, 0xedd4, 0x4b04, 0x85, 0x42, 0xe
 class CDUIWndSDL : public CDUIWndBase
 {
 public:
-	CDUIWndSDL(LPCTSTR lpszDuiName, HWND hWndParent);
+	CDUIWndSDL(LPCTSTR lpszDuiName = NULL, HWND hWndParent = NULL);
 	virtual ~CDUIWndSDL();
 
 	//method
@@ -60,7 +60,7 @@ public:
 
 	//help
 protected:
-	void UpdateImeCompositionPos();
+	void UpdateImeCompositionPos() override;
 	void PerformCalcWndMinMaxInfo();
 
 	//message

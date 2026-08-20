@@ -29,7 +29,7 @@ CMMString CMMEncrypt::XorEncrypt(CMMString strSrc)
 
 	//生成密钥
 	WORD wRandKey[ENCRYPT_KEY_LEN];
-	wRandKey[0] = lstrlenW(strSrc);
+	wRandKey[0] = lstrlen(strSrc);
 	for (WORD i = 1; i < MMCountArray(wRandKey); i++) wRandKey[i] = rand() % 0xFFFF;
 
 	//步骤准备
@@ -54,7 +54,7 @@ CMMString CMMEncrypt::XorDecrypt(CMMString strSrc)
 	WCHAR szSrcData[MAX_SOURCE_LEN] = L"";
 
 	//效验长度
-	WORD wEncrypPassLen = lstrlenW(strSrc);
+	WORD wEncrypPassLen = lstrlen(strSrc);
 	if (wEncrypPassLen < ENCRYPT_KEY_LEN * 8) return _T("");
 
 	//提取长度

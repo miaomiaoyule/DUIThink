@@ -722,7 +722,7 @@ bool CDUIGlobal::RemoveImageResource(const CMMString &strName)
 	m_mapResourceImage.erase(FindIt);
 
 	CMMString strImage = pImageBase->GetImageFileFull();
-	if (true == DuiPathFileExists(strImage) && false == DuiDeleteFile(strImage))
+	if (true == PathFileExists(strImage) && false == DeleteFile(strImage))
 	{
 		assert(false);
 		return false;
@@ -834,7 +834,7 @@ bool CDUIGlobal::RemoveDui(const CMMString &strName)
 
 	//file
 	CMMString strFile = GetDuiFileFull(strName);
-	DuiDeleteFile(strFile);
+	DeleteFile(strFile);
 
 	m_vecDui.erase(FindIt);
 
@@ -1436,7 +1436,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 	{
 		assert(false);
 		CMMString strWarning = CMMStrHelp::Format(_T("Failed of Load [%s]，Please Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
-		DuiMessageBox(NULL, strWarning, NULL, NULL);
+		MessageBox(NULL, strWarning, NULL, NULL);
 
 		return;
 	}
@@ -1472,7 +1472,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 					assert(false);
 					CMMString strWarning;
 					strWarning.Format(_T("Failed load extenddll【%s】, Make sure it in the running directory"), strDllName.c_str());
-					DuiMessageBox(NULL, strWarning, NULL, NULL);
+					MessageBox(NULL, strWarning, NULL, NULL);
 
 					continue;
 				}
@@ -1492,7 +1492,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 bool CDUIGlobal::SetProjectPath(LPCTSTR lpszPath)
 {
 	if (DuiFileResType_File == GetDuiFileResType()
-		&& (false == ::DuiPathFileExists(lpszPath) || false == ::DuiPathIsDirectory(lpszPath))) return false;
+		&& (false == ::PathFileExists(lpszPath) || false == ::DuiPathIsDirectory(lpszPath))) return false;
 
 	m_strProjectPath = lpszPath;
 	m_strSkinDir = m_strProjectPath + Dui_Resource_ImageRes + _T('\\');
@@ -1693,7 +1693,7 @@ bool CDUIGlobal::AddColorResource(CDUIColorBase *pResourceObj)
 bool CDUIGlobal::AddDui(enDuiType DuiType, const CMMString &strName, const CMMString &strFile)
 {
 	CMMString strFileFull = GetDuiPath(DuiType) + strFile;
-	if (DuiFileResType_File == GetDuiFileResType() && false == DuiPathFileExists(strFileFull))
+	if (DuiFileResType_File == GetDuiFileResType() && false == PathFileExists(strFileFull))
 	{
 		assert(false);
 		return false;
@@ -1702,7 +1702,7 @@ bool CDUIGlobal::AddDui(enDuiType DuiType, const CMMString &strName, const CMMSt
 	CMMString strDuiFile = GetDuiFile(strName);
 	if (false == strDuiFile.empty())
 	{
-		::DuiMessageBox(NULL, _T("Have Same Name DirectUI"), NULL, NULL);
+		::MessageBox(NULL, _T("Have Same Name DirectUI"), NULL, NULL);
 
 		return false;
 	}
@@ -1793,7 +1793,7 @@ bool CDUIGlobal::RenameDui(const CMMString &strNameOld, const CMMString &strName
 
 	if (false == DuiMoveFile(strFileOld, strFileNew))
 	{
-		DuiMessageBox(NULL, _T("Error Because Same Filename。"), _T("提示"), MB_ICONINFORMATION);
+		MessageBox(NULL, _T("Error Because Same Filename。"), _T("提示"), MB_ICONINFORMATION);
 		return false;
 	}
 

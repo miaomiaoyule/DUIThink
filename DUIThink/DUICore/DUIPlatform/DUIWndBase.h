@@ -8,6 +8,9 @@ class CDUIWndBase
 	, public CDUINotifyPump
 	, public IDuiPreMessage
 {
+	friend class CDUIContainerCtrl;
+	friend class CDUIThinkEditCtrl;
+
 	MMDeclare_ClassName(CDUIWndBase)
 	DuiDeclare_Message_Map()
 
@@ -17,7 +20,7 @@ public:
 	using ModelEventPtr = LRESULT (CDUIControlBase::*)(const DuiMessage&);
 
 public:
-	CDUIWndBase(LPCTSTR lpszDuiName, HWND hWndParent);
+	CDUIWndBase(LPCTSTR lpszDuiName = NULL, HWND hWndParent = NULL);
 	virtual ~CDUIWndBase();
 	//attribute
 protected:
@@ -342,6 +345,7 @@ protected:
 
 	//help
 protected:
+	virtual void UpdateImeCompositionPos() {}
 	virtual void OnDuiDelayDelete();
 	virtual void OnDpiChanged(int nScalePre);
 	virtual void AdjustWndSize();

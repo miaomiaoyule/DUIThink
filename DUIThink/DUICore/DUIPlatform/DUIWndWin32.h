@@ -8,7 +8,7 @@ class CDUIWndWin32
 	, public CMMDragDrop
 {
 public:
-	CDUIWndWin32(LPCTSTR lpszDuiName, HWND hWndParent);
+	CDUIWndWin32(LPCTSTR lpszDuiName = NULL, HWND hWndParent = NULL);
 	virtual ~CDUIWndWin32();
 	//variant
 protected:
@@ -100,7 +100,7 @@ protected:
 
 	//help
 protected:
-	void UpdateImeCompositionPos();
+	void UpdateImeCompositionPos() override;
 	void ReleasePaintScene() override;
 
 	//wnd

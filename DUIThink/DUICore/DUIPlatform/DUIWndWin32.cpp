@@ -17,7 +17,7 @@ CDUIWndWin32::~CDUIWndWin32()
 {	ReleasePaintScene();
 
 	//release dc
-	if (DuiIsWindow(m_hWnd))
+	if (IsWindow(m_hWnd))
 	{
 		if (m_hDCPaint)
 		{
@@ -30,7 +30,7 @@ CDUIWndWin32::~CDUIWndWin32()
 	UnSubWindow();
 
 	//close window
-	if (DuiIsWindow(m_hWnd))
+	if (IsWindow(m_hWnd))
 	{
 		Close(Dui_CtrlIDInner_BtnCancel);
 		::SetWindowLongPtr(m_hWnd, GWLP_USERDATA, NULL);
@@ -53,7 +53,7 @@ void CDUIWndWin32::OnWinDragEnter(IDataObject *pIDataObject, DWORD dwKeyState, P
 
 	// parse IDataObject
 	CDUIPoint ptMouse = { pt.x, pt.y };
-	DuiScreenToClient(m_hWnd, &ptMouse);
+	ScreenToClient(m_hWnd, &ptMouse);
 	m_ptMousePosLast = ptMouse;
 	m_DropData.ptMouse = ptMouse;
 	m_DropData.pIDataObject = pIDataObject;
@@ -199,7 +199,7 @@ void CDUIWndWin32::OnWinDragOver(DWORD dwKeyState, POINTL pt, DWORD *pdwEffect)
 	if (NULL == m_pRootCtrl) return;
 
 	POINT ptMouse = { pt.x, pt.y };
-	DuiScreenToClient(m_hWnd, &ptMouse);
+	ScreenToClient(m_hWnd, &ptMouse);
 	if (m_DropData.ptMouse == ptMouse
 		&& m_DropData.dwKeyState == dwKeyState)
 	{
@@ -267,7 +267,7 @@ void CDUIWndWin32::OnWinDrop(IDataObject *pIDataObject, POINTL pt, DWORD *pdwEff
 	if (NULL == m_pRootCtrl) return;
 
 	POINT ptMouse = { pt.x, pt.y };
-	DuiScreenToClient(m_hWnd, &ptMouse);
+	ScreenToClient(m_hWnd, &ptMouse);
 	m_ptMousePosLast = ptMouse;
 	m_DropData.pIDataObject = pIDataObject;
 	m_DropData.ptMouse = ptMouse;
@@ -709,7 +709,7 @@ void CDUIWndWin32::Invalidate()
 
 bool CDUIWndWin32::CreateCaret(HBITMAP hBmp, int nWidth, int nHeight)
 {
-	if (false == DuiIsWindow(m_hWnd)) return false;
+	if (false == IsWindow(m_hWnd)) return false;
 	if (false == ::CreateCaret(m_hWnd, hBmp, nWidth, nHeight)) return false;
 
 	return __super::CreateCaret(hBmp, nWidth, nHeight);
@@ -977,11 +977,11 @@ LRESULT CDUIWndWin32::OnClose(WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWndWin32::OnNcHitTest(WPARAM wParam, LPARAM lParam)
 {
 	POINT pt = {};
-	DuiGetCursorPos(&pt);
-	DuiScreenToClient(m_hWnd, &pt);
+	GetCursorPos(&pt);
+	ScreenToClient(m_hWnd, &pt);
 	CDUIRect rcClient = GetClientRect();
 
-	if (false == DuiIsZoomed(m_hWnd) && rcClient.PtInRect(pt))
+	if (false == IsZoomed(m_hWnd) && rcClient.PtInRect(pt))
 	{
 		RECT rcSizeBox = GetResizeTrack();
 		if (pt.y < rcClient.top + rcSizeBox.top)
@@ -1049,17 +1049,17 @@ LRESULT CDUIWndWin32::OnSysCommand(WPARAM wParam, LPARAM lParam)
 	}
 
 #if defined(WIN32) && !defined(UNDER_CE)
-	BOOL bZoomed = DuiIsZoomed(m_hWnd);
+	BOOL bZoomed = IsZoomed(m_hWnd);
 	LRESULT lRes = OnOldWndProc(WM_SYSCOMMAND, wParam, lParam);
-	if (DuiIsZoomed(m_hWnd) != bZoomed && false == DuiIsIconic(m_hWnd))
+	if (IsZoomed(m_hWnd) != bZoomed && false == DuiIsIconic(m_hWnd))
 	{
 		CDUIControlBase *pBtnMax = FindControl(Dui_CtrlIDInner_BtnMax);
 		CDUIControlBase *pBtnRestore = FindControl(Dui_CtrlIDInner_BtnRestore);
 
 		if (pBtnMax && pBtnRestore)
 		{
-			pBtnMax->SetVisible(false == DuiIsZoomed(m_hWnd));
-			pBtnRestore->SetVisible(DuiIsZoomed(m_hWnd));
+			pBtnMax->SetVisible(false == IsZoomed(m_hWnd));
+			pBtnRestore->SetVisible(IsZoomed(m_hWnd));
 		}
 	}
 
@@ -1178,8 +1178,8 @@ LRESULT CDUIWndWin32::OnImeComPosition(WPARAM wParam, LPARAM lParam)
 		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
 		POINT pt = {};
-		DuiGetCursorPos(&pt);
-		DuiScreenToClient(m_hWnd, &pt);
+		GetCursorPos(&pt);
+		ScreenToClient(m_hWnd, &pt);
 
 		DuiMessage DuiMsg = {};
 		DuiMsg.wParam = wParam;

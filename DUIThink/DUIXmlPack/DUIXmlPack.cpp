@@ -19,14 +19,14 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	xmlDoc.LinkEndChild(pXmlVersionRes);
 
 	//image res file
-	CStringA strImageRes;
+	CMMStringA strImageRes;
 	strImageRes = strImageRes + Dui_Resource_ImageRes + (".xml");
 	tinyxml2::XMLElement *pXmlImageRes = xmlDoc.NewElement(Dui_Resource_ImageRes);
 	pXmlImageRes->SetAttribute(Dui_Resource_Key_ImageResFile, strImageRes);
 	xmlDoc.LinkEndChild(pXmlImageRes);
 
 	//font res file
-	CStringA strFontRes;
+	CMMStringA strFontRes;
 	strFontRes = strFontRes + Dui_Resource_FontRes + (".xml");
 	tinyxml2::XMLElement *pXmlFontRes = xmlDoc.NewElement(Dui_Resource_FontRes);
 	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResFile, strFontRes);
@@ -34,21 +34,21 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	xmlDoc.LinkEndChild(pXmlFontRes);
 
 	//color res file
-	CStringA strColorRes;
+	CMMStringA strColorRes;
 	strColorRes = strColorRes + Dui_Resource_ColorRes + (".xml");
 	tinyxml2::XMLElement *pXmlColorRes = xmlDoc.NewElement(Dui_Resource_ColorRes);
 	pXmlColorRes->SetAttribute(Dui_Resource_Key_ColorResFile, strColorRes);
 	xmlDoc.LinkEndChild(pXmlColorRes);
 
 	//attribute file
-	CStringA strAttribute;
+	CMMStringA strAttribute;
 	strAttribute = strAttribute + Dui_Resource_Attribute + (".xml");
 	tinyxml2::XMLElement *pXmlAttribute = xmlDoc.NewElement(Dui_Resource_Attribute);
 	pXmlAttribute->SetAttribute(Dui_Resource_Key_AttributeFile, strAttribute);
 	xmlDoc.LinkEndChild(pXmlAttribute);
 
 	//ctrl id file
-	CStringA strCtrlID;
+	CMMStringA strCtrlID;
 	strCtrlID = strCtrlID + Dui_Resource_CtrlID + (".h");
 	tinyxml2::XMLElement *pXmlCtrlID = xmlDoc.NewElement(Dui_Resource_CtrlID);
 	pXmlCtrlID->SetAttribute(Dui_Resource_Key_CtrlIDFile, strCtrlID);
@@ -439,8 +439,8 @@ bool CDUIXmlPack::SaveCtrlID(const MapDuiControlID &mapCtrlID)
 	lstrcpyn(szPath, strProjectPath, MMCountString(szPath));
 	::PathAddBackslash(szPath);
 
-	CStringA strCtrlIDFile;
-	strCtrlIDFile = CStringA(szPath) + Dui_Resource_CtrlID + (".h");
+	CMMStringA strCtrlIDFile;
+	strCtrlIDFile = CMMStringA(szPath) + Dui_Resource_CtrlID + (".h");
 
 	FILE *pFile = fopen(strCtrlIDFile, "w+");
 	if (NULL == pFile)
@@ -450,17 +450,18 @@ bool CDUIXmlPack::SaveCtrlID(const MapDuiControlID &mapCtrlID)
 	}
 
 	//write
-	CStringA strTip = ("//you should not modify this\n");
-	fwrite(strTip.GetBuffer(), strTip.GetLength(), 1, pFile);
+	CMMStringA strTip = ("//you should not modify this\n");
+	fwrite(strTip.c_str(), strTip.length(), 1, pFile);
 
-	CStringA strInfo;
+	CMMString strInfo;
 	for (auto &Item : mapCtrlID)
 	{
 		if (Item.first < Dui_CtrlIDInner_Finish) continue;
 
-		strInfo.AppendFormat("#define %s \t\t\t\t(%u)\n", (LPCSTR)CT2CA(Item.second), Item.first);
+		strInfo.AppendFormat(_T("#define %s \t\t\t\t(%u)\n"), Item.second.c_str(), Item.first);
 	}
-	fwrite(strInfo.GetBuffer(), strInfo.GetLength(), 1, pFile);
+	std::string strInfoA = CT2CA(strInfo);
+	fwrite(strInfoA.c_str(), strInfoA.length(), 1, pFile);
 
 	//close
 	fclose(pFile);
@@ -789,8 +790,8 @@ CDUIControlBase * CDUIXmlPack::ParseDui(LPCTSTR lpszXml)
 	if (NULL == lpszXml) return NULL;
 
 	tinyxml2::XMLDocument xmlDoc;
-	CStringA strXml = lpszXml;
-	xmlDoc.Parse(strXml, strXml.GetLength());
+	CMMStringA strXml = lpszXml;
+	xmlDoc.Parse(strXml, strXml.length());
 
 	return ParseDui(xmlDoc.RootElement());
 }

@@ -8,22 +8,6 @@
 //////////////////////////////////////////////////////////////////////////
 #if defined(_WIN32) || defined(_WIN64)
 
-#if defined(DuiPlatform_SDL)
-#ifndef APIENTRY
-#ifdef _MSC_VER
-#define APIENTRY __stdcall
-#else
-#define APIENTRY
-#endif
-#endif
-#ifndef DLL_PROCESS_ATTACH
-#define DLL_PROCESS_ATTACH 1
-#define DLL_THREAD_ATTACH  2
-#define DLL_THREAD_DETACH  3
-#define DLL_PROCESS_DETACH 0
-#endif
-#endif
-
 BOOL APIENTRY DllMain(HMODULE /*hModule*/,
 	DWORD ul_reason_for_call,
 	LPVOID /*lpReserved*/)

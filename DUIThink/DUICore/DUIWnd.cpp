@@ -185,7 +185,7 @@ bool CDUIWnd::RemoveAllTimer()
 	{
 		if (TimerInfo.bKilled == false)
 		{
-			if (DuiIsWindow(m_hWnd))
+			if (IsWindow(m_hWnd))
 			{
 #if defined(DuiPlatform_SDL)
 				SDL_RemoveTimer((SDL_TimerID)TimerInfo.uWinTimer);
@@ -339,8 +339,8 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 	CDUIControlBase *pBtnRestore = FindControl(Dui_CtrlIDInner_BtnRestore);
 	if (pBtnMax && pBtnRestore)
 	{
-		pBtnMax->SetVisible(false == DuiIsZoomed(m_hWnd));
-		pBtnRestore->SetVisible(DuiIsZoomed(m_hWnd));
+		pBtnMax->SetVisible(false == IsZoomed(m_hWnd));
+		pBtnRestore->SetVisible(IsZoomed(m_hWnd));
 	}
 
 	//init func
@@ -536,8 +536,8 @@ LRESULT CDUIWnd::OnSetCursor(WPARAM wParam, LPARAM lParam)
 		if (m_pCaptureCtrl) return 1;
 
 		POINT pt = { 0 };
-		DuiGetCursorPos(&pt);
-		DuiScreenToClient(m_hWnd, &pt);
+		GetCursorPos(&pt);
+		ScreenToClient(m_hWnd, &pt);
 		CDUIControlBase *pControl = FindControl(pt);
 		if (NULL == pControl) break;
 		if ((pControl->GetControlFlags() & DUIFLAG_SETCURSOR) == 0) break;
@@ -613,4 +613,13 @@ void CDUIWnd::DispatchModelKeyboardEvent(CDUIControlBase *pCtrl, KeyboardEventPt
 	}
 
 	return;
+}
+
+UINT CDUIWnd::MapKeyState()
+{
+#if defined(DuiPlatform_SDL)
+	return CDUIWndSDL().MapKeyState();
+#else
+	return CDUIWndWin32().MapKeyState();
+#endif
 }

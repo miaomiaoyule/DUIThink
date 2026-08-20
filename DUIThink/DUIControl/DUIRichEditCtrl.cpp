@@ -668,14 +668,14 @@ BOOL CDUITextHost::TxScreenToClient(LPPOINT lppt)
 {
 	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return false;
 
-	return DuiScreenToClient(m_pOwnerCtrl->GetWndOwner()->GetWndHandle(), lppt);
+	return ScreenToClient(m_pOwnerCtrl->GetWndOwner()->GetWndHandle(), lppt);
 }
 
 BOOL CDUITextHost::TxClientToScreen(LPPOINT lppt)
 {
 	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return false;
 
-	return DuiClientToScreen(m_pOwnerCtrl->GetWndOwner()->GetWndHandle(), lppt);
+	return ClientToScreen(m_pOwnerCtrl->GetWndOwner()->GetWndHandle(), lppt);
 }
 
 HRESULT CDUITextHost::TxActivate(LONG *plOldState)
@@ -2454,7 +2454,7 @@ LRESULT CDUIRichEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	EnableMenuItem(hPopMenu, ID_RICH_PASTE, MF_BYCOMMAND | uReadonly);
 
 	CDUIPoint ptScreen = Msg.ptMouse;
-	::DuiClientToScreen(m_pWndOwner->GetWndHandle(), &ptScreen);
+	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptScreen);
 	TrackPopupMenu(hPopMenu, TPM_RIGHTBUTTON, ptScreen.x, ptScreen.y, 0, m_pWndOwner->GetWndHandle(), NULL);
 	DestroyMenu(hPopMenu);
 

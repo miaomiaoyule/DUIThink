@@ -199,11 +199,4 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMSocket/SocketServer/MMTCPSocketServer.h"
 //////////////////////////////////////////////////////////////////////////////////
 
-MMHELPER_API bool DuiIsWindow(HWND hWnd);
-MMHELPER_API bool DuiPathFileExists(LPCTSTR lpszFile);
-MMHELPER_API bool DuiPathIsDirectory(LPCTSTR lpszFile);
-MMHELPER_API bool DuiDeleteFile(LPCTSTR lpszFile);
-MMHELPER_API BOOL DuiMoveFile(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName);
-//////////////////////////////////////////////////////////////////////////////////
-
 #endif

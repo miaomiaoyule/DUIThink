@@ -5,8 +5,8 @@
 #if defined DuiPlatform_SDL
 
 //////////////////////////////////////////////////////////////////////////
-CDUIWndSDL::CDUIWndSDL(LPCTSTR lpszDuiName, HWND hWndParent)
-	: CDUIWndBase(lpszDuiName, hWndParent)
+CDUIWndSDL::CDUIWndSDL(LPCTSTR lpszName, HWND hWndParent)
+	: CDUIWndBase(lpszName, hWndParent)
 {
 
 }
@@ -19,7 +19,7 @@ CDUIWndSDL::~CDUIWndSDL()
 	ReleasePaintScene();
 
 	//wnd dc
-	if (DuiIsWindow(m_hWnd))
+	if (IsWindow(m_hWnd))
 	{
 		SDL_SetWindowHitTest(m_hWnd, NULL, NULL);
 		SDL_RemoveEventWatch(&SDLEventWatch, this);
@@ -105,7 +105,7 @@ HWND CDUIWndSDL::SubWindow(HWND hWnd)
 
 void CDUIWndSDL::UnSubWindow()
 {
-	if (!::DuiIsWindow(m_hWnd)) return;
+	if (!::IsWindow(m_hWnd)) return;
 	if (!m_bSubWindow) return;
 	SDL_SetWindowHitTest(m_hWnd, NULL, NULL);
 	SDL_RemoveEventWatch(&SDLEventWatch, this);
@@ -141,11 +141,11 @@ void CDUIWndSDL::ShowWindow(bool bShow /*= true*/, bool bTakeFocus /*= false*/)
 UINT CDUIWndSDL ::DoModal()
 {
 	//create
-	if (false == DuiIsWindow(m_hWnd))
+	if (false == IsWindow(m_hWnd))
 	{
 		Create(m_hWndParent, _T(""), DUI_WNDSTYLE_DIALOG, DUI_WNDSTYLE_EX_DIALOG);
 	}
-	if (false == DuiIsWindow(m_hWnd))
+	if (false == IsWindow(m_hWnd))
 	{
 		return 0;
 	}
@@ -158,7 +158,7 @@ UINT CDUIWndSDL ::DoModal()
 
 	//message
 	SDL_Event e = {};
-	while (DuiIsWindowVisible(m_hWnd))
+	while (IsWindowVisible(m_hWnd))
 	{
 		if (false == SDL_WaitEvent(&e))
 		{
@@ -197,11 +197,11 @@ UINT CDUIWndSDL ::DoModal()
 UINT CDUIWndSDL::DoBlock()
 {
 	//create
-	if (false == DuiIsWindow(m_hWnd))
+	if (false == IsWindow(m_hWnd))
 	{
 		Create(m_hWndParent, _T(""), DUI_WNDSTYLE_DIALOG, DUI_WNDSTYLE_EX_DIALOG);
 	}
-	if (false == DuiIsWindow(m_hWnd))
+	if (false == IsWindow(m_hWnd))
 	{
 		return 0;
 	}
@@ -214,7 +214,7 @@ UINT CDUIWndSDL::DoBlock()
 
 	//message
 	SDL_Event e = {};
-	while (DuiIsWindowVisible(m_hWnd))
+	while (IsWindowVisible(m_hWnd))
 	{
 		if (false == SDL_WaitEvent(&e))
 		{
@@ -335,7 +335,7 @@ void CDUIWndSDL::SetIcon(UINT nRes)
 
 LRESULT CDUIWndSDL::SendMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/)
 {
-	if (false == DuiIsWindow(m_hWnd))
+	if (false == IsWindow(m_hWnd))
 	{
 		ASSERT(false);
 		return 0;
@@ -346,7 +346,7 @@ LRESULT CDUIWndSDL::SendMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam 
 
 LRESULT CDUIWndSDL::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/)
 {
-	if (false == DuiIsWindow(m_hWnd))
+	if (false == IsWindow(m_hWnd))
 	{
 		ASSERT(false);
 		return 0;
@@ -388,7 +388,7 @@ LRESULT CDUIWndSDL::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam 
 
 void CDUIWndSDL::SetCapture()
 {
-	if (false == DuiIsWindow(m_hWnd)) return;
+	if (false == IsWindow(m_hWnd)) return;
 
 	SDL_CaptureMouse(true);
 
@@ -404,7 +404,7 @@ void CDUIWndSDL::ReleaseCapture()
 
 bool CDUIWndSDL::IsCaptured()
 {
-	if (false == DuiIsWindow(m_hWnd)) return;
+	if (false == IsWindow(m_hWnd)) return false;
 
 	SDL_WindowFlags uFlags = SDL_GetWindowFlags(m_hWnd);
 	return (uFlags & SDL_WINDOW_MOUSE_CAPTURE) == SDL_WINDOW_MOUSE_CAPTURE;
@@ -439,7 +439,7 @@ void CDUIWndSDL::RefreshToolTip(CMMString strToolTip)
 
 void CDUIWndSDL::ResizeWnd(int cx /*= -1*/, int cy /*= -1*/)
 {
-	if (false == DuiIsWindow(m_hWnd)) return;
+	if (false == IsWindow(m_hWnd)) return;
 
 	int nWidth = 0;
 	int nHeight = 0;
@@ -457,7 +457,7 @@ void CDUIWndSDL::ResizeWnd(int cx /*= -1*/, int cy /*= -1*/)
 
 void CDUIWndSDL::AdjustWndPos()
 {
-	if (false == DuiIsWindow(m_hWnd)) return;
+	if (false == IsWindow(m_hWnd)) return;
 
 	int x = 0;
 	int y = 0;
@@ -512,7 +512,7 @@ bool CDUIWndSDL::IsMinimized()
 
 CDUIRect CDUIWndSDL::GetClientRect() const
 {
-	if (false == DuiIsWindow(m_hWnd)) return CDUIRect();
+	if (false == IsWindow(m_hWnd)) return CDUIRect();
 
 	int cx = 0;
 	int cy = 0;
@@ -524,7 +524,7 @@ CDUIRect CDUIWndSDL::GetClientRect() const
 
 CDUIRect CDUIWndSDL::GetWindowRect()
 {
-	if (false == DuiIsWindow(m_hWnd)) return CDUIRect();
+	if (false == IsWindow(m_hWnd)) return CDUIRect();
 
 	int x = 0, y = 0, cx = 0, cy = 0;
 	SDL_GetWindowPosition(m_hWnd, &x, &y);
@@ -554,7 +554,7 @@ void CDUIWndSDL::Invalidate()
 
 bool CDUIWndSDL::CreateCaret(HBITMAP hBmp, int nWidth, int nHeight)
 {
-	if (false == DuiIsWindow(m_hWnd)) return false;
+	if (false == IsWindow(m_hWnd)) return false;
 
 	return __super::CreateCaret(hBmp, nWidth, nHeight);
 }
@@ -576,7 +576,7 @@ void CDUIWndSDL::SetCaretPos(CDUIPoint pt)
 void CDUIWndSDL::UpdateImeCompositionPos()
 {
 	POINT pt = {};
-	DuiGetCaretPos(&pt);
+	GetCaretPos(&pt);
 
 	SDL_Rect rect = {};
 	rect.x = pt.x;
@@ -644,7 +644,7 @@ void CDUIWndSDL::PerformCalcWndMinMaxInfo()
 SDL_HitTestResult SDLCALL CDUIWndSDL::SDLEnableHitTest(SDL_Window *win, const SDL_Point *pt, void *userdata)
 {
 	CDUIWndSDL *pWnd = static_cast<CDUIWndSDL *>(userdata);
-	if (!pWnd || !DuiIsWindow(pWnd->m_hWnd)) return SDL_HITTEST_NORMAL;
+	if (!pWnd || !IsWindow(pWnd->m_hWnd)) return SDL_HITTEST_NORMAL;
 
 	// 将全局屏幕坐标转换为窗口客户区坐标（SDL 回调传入的是窗口相对坐标）
 	int x = pt->x;
@@ -655,7 +655,7 @@ SDL_HitTestResult SDLCALL CDUIWndSDL::SDLEnableHitTest(SDL_Window *win, const SD
 	CDUIRect rcClient = pWnd->GetClientRect();
 
 	// 参考原 OnNcHitTest 逻辑判断边缘与标题栏
-	if (false == DuiIsZoomed(pWnd->m_hWnd) && rcClient.PtInRect(cpt))
+	if (false == IsZoomed(pWnd->m_hWnd) && rcClient.PtInRect(cpt))
 	{
 		RECT rcSizeBox = pWnd->GetResizeTrack();
 		if (y < rcClient.top + rcSizeBox.top)
@@ -725,7 +725,7 @@ LRESULT CDUIWndSDL::OnOldWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 LRESULT CDUIWndSDL::OnClose(WPARAM wParam, LPARAM lParam)
 {
 	m_uCtrlIDClose = (UINT)wParam;
-	if (DuiIsWindow(m_hWnd))
+	if (IsWindow(m_hWnd))
 	{
 		ReleasePaintScene();
 		SDL_HideWindow(m_hWnd);
@@ -769,8 +769,8 @@ LRESULT CDUIWndSDL::OnSysCommand(WPARAM wParam, LPARAM lParam)
 	CDUIControlBase *pBtnRestore = FindControl(Dui_CtrlIDInner_BtnRestore);
 	if (pBtnMax && pBtnRestore)
 	{
-		pBtnMax->SetVisible(false == DuiIsZoomed(m_hWnd));
-		pBtnRestore->SetVisible(DuiIsZoomed(m_hWnd));
+		pBtnMax->SetVisible(false == IsZoomed(m_hWnd));
+		pBtnRestore->SetVisible(IsZoomed(m_hWnd));
 	}
 
 	return 0;
@@ -893,7 +893,7 @@ UINT CDUIWndSDL::SdlKeycodeToVK(SDL_Keycode key)
 
 void CDUIWndSDL::EnsurePaintScene()
 {
-	if (false == DuiIsWindow(m_hWnd)) return;
+	if (false == IsWindow(m_hWnd)) return;
 
 	const CDUIRect rcClient = GetClientRect();
 	const int nWidth = max(1, rcClient.GetWidth());
@@ -1133,9 +1133,9 @@ bool SDLCALL CDUIWndSDL::SDLEventWatch(void *userdata, SDL_Event *e)
 		{
 			if (self->m_pFocusCtrl && e->edit.text)
 			{
-				DuiMessage DuiMsg = {};
-				DuiMsg.strText = CA2CT(e->edit.text, CP_UTF8);
-				self->m_pFocusCtrl->OnDuiTextEditing(DuiMsg);
+				DuiMessage Msg = {};
+				Msg.strText = CA2CT(e->edit.text, CP_UTF8);
+				self->m_pFocusCtrl->OnDuiTextEditing(Msg);
 			}
 			break;
 		}
@@ -1143,9 +1143,9 @@ bool SDLCALL CDUIWndSDL::SDLEventWatch(void *userdata, SDL_Event *e)
 		{
 			if (self->m_pFocusCtrl && e->text.text)
 			{
-				DuiMessage DuiMsg = {};
-				DuiMsg.strText = CA2CT(e->text.text, CP_UTF8);
-				self->m_pFocusCtrl->OnDuiTextInput(DuiMsg);
+				DuiMessage Msg = {};
+				Msg.strText = CA2CT(e->text.text, CP_UTF8);
+				self->m_pFocusCtrl->OnDuiTextInput(Msg);
 			}
 			break;
 		}

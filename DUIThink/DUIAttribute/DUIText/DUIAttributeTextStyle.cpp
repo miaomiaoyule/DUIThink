@@ -458,7 +458,7 @@ CDUISize CDUIAttributeTextStyle::MeasureString(LPCTSTR lpszText)
 	MMInterfaceHelper(CDUIControlBase, m_pOwner, pOwnerCtrl);
 	if (NULL == pOwnerCtrl) return {};
 
-	CDUIWnd *pWndManager = pOwnerCtrl->GetWndOwner();
+	CDUIWndBase *pWndManager = pOwnerCtrl->GetWndOwner();
 	if (NULL == pWndManager) return {};
 
 	tagDuiTextStyle TextStyle = GetTextStyle();

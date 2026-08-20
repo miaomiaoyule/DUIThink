@@ -30,7 +30,7 @@ bool CMMAsyncObject::Init()
 {
 	std::lock_guard<std::recursive_mutex> Lock(m_AsyncDataLock);
 
-	if (DuiIsWindow(m_hWndAsync))
+	if (IsWindow(m_hWndAsync))
 	{
 #ifndef DuiPlatform_SDL
 		::SetWindowLongPtr(m_hWndAsync, GWLP_USERDATA, (LONG_PTR)this);
@@ -88,7 +88,7 @@ bool CMMAsyncObject::UnInit()
 {
 	std::lock_guard<std::recursive_mutex> Lock(m_AsyncDataLock);
 
-	if (DuiIsWindow(m_hWndAsync))
+	if (IsWindow(m_hWndAsync))
 	{
 #if defined(DuiPlatform_SDL)
 		for (auto &kv : m_TimerTasks)

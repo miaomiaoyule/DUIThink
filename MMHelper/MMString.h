@@ -17,6 +17,22 @@ inline std::wstring Utf8ToWString(const std::string& str)
 	return conv.from_bytes(str);
 }
 
+inline std::string WStringToGbk(const std::wstring &src)
+{
+	try
+	{
+		const char *pszLocale = "zh_CN.GB18030";
+		std::wstring_convert<std::codecvt_byname<wchar_t, char, std::mbstate_t>> conv(
+			new std::codecvt_byname<wchar_t, char, std::mbstate_t>(pszLocale));
+		return conv.to_bytes(src);
+	}
+	catch (...)
+	{
+	}
+
+	return "";
+}
+
 inline std::wstring GbkToWString(const std::string &str)
 {
 	if (str.empty()) return std::wstring();
@@ -104,6 +120,11 @@ public:
 	{
 
 	}
+	CMMStringA(LPCTSTR lpszStr)
+		: std::string(WStringToGbk(lpszStr))
+	{
+
+	}
 	operator LPCSTR() const
 	{
 		return c_str();
@@ -111,6 +132,13 @@ public:
 	operator LPSTR() const
 	{
 		return (LPSTR)c_str();
+	}
+	friend CMMStringA operator + (LPCTSTR lpszLeft, const CMMStringA &strRight)
+	{
+		CMMStringA strTemp(WStringToGbk(lpszLeft));
+		strTemp += strRight;
+
+		return strTemp;
 	}
 };
 

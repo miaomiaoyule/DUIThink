@@ -163,7 +163,7 @@ UINT CDUIWndBase::DoBlock()
 
 void CDUIWndBase::Close(UINT nRet)
 {
-	if (false == DuiIsWindow(m_hWnd)) return;
+	if (false == IsWindow(m_hWnd)) return;
 
 	PostMessage(WM_CLOSE, (WPARAM)nRet, 0L);
 
@@ -202,7 +202,7 @@ void CDUIWndBase::ReleaseCapture()
 
 bool CDUIWndBase::IsCaptured()
 {
-	return;
+	return false;
 }
 
 CDUIControlBase * CDUIWndBase::GetCaptureControl()
@@ -781,7 +781,7 @@ LPBYTE CDUIWndBase::GetBackgroundBits()
 
 bool CDUIWndBase::CreateCaret(HBITMAP hBmp, int nWidth, int nHeight)
 {
-	if (false == DuiIsWindow(m_hWnd)) return false;
+	if (false == IsWindow(m_hWnd)) return false;
 
 	m_bCaretActive = false;
 	m_rcCaret.right = m_rcCaret.left + nWidth;
@@ -1342,7 +1342,7 @@ LRESULT CDUIWndBase::OnDestroy(WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIWndBase::OnNcActivate(WPARAM wParam, LPARAM lParam)
 {
-	if (false == DuiIsIconic(m_hWnd)) return (wParam == 0) ? TRUE : FALSE;
+	if (false == IsIconic(m_hWnd)) return (wParam == 0) ? TRUE : FALSE;
 
 	return OnOldWndProc(WM_NCACTIVATE, wParam, lParam);
 }
@@ -1599,7 +1599,7 @@ LRESULT CDUIWndBase::OnMouseWheel(WPARAM wParam, LPARAM lParam)
 	POINT pt = {};
 	pt.x = (INT)((SHORT)(LOWORD(lParam)));
 	pt.y = (INT)((SHORT)(HIWORD(lParam)));
-	DuiScreenToClient(m_hWnd, &pt);
+	ScreenToClient(m_hWnd, &pt);
 	m_ptMousePosLast = pt;
 
 	//msg
@@ -1931,7 +1931,7 @@ LRESULT CDUIWndBase::OnContextMenu(WPARAM wParam, LPARAM lParam)
 	{
 		//pt
 		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-		DuiScreenToClient(m_hWnd, &pt);
+		ScreenToClient(m_hWnd, &pt);
 
 		//menu ctrl
 		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
@@ -1990,7 +1990,7 @@ LRESULT CDUIWndBase::OnCommand(WPARAM wParam, LPARAM lParam)
 		if (NULL == m_pFocusCtrl && NULL == m_pCaptureCtrl) break;
 
 		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-		DuiScreenToClient(m_hWnd, &pt);
+		ScreenToClient(m_hWnd, &pt);
 
 		m_pEventCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
 
@@ -2109,12 +2109,12 @@ void CDUIWndBase::OnDpiChanged(int nScalePre)
 	SetDpi(CDUIGlobal::GetInstance()->GetDpi());
 
 	//wndsize
-	if (false == DuiIsZoomed(GetWndHandle()))
+	if (false == IsZoomed(GetWndHandle()))
 	{
 		CDUIRect rcWnd = GetWindowRect();
 		rcWnd.right = rcWnd.left + (rcWnd.GetWidth()) * (GetScale() * 1.0f / nScalePre);
 		rcWnd.bottom = rcWnd.top + (rcWnd.GetHeight()) * (GetScale() * 1.0f / nScalePre);
-		DuiSetWindowPos(GetWndHandle(), NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
+		SetWindowPos(GetWndHandle(), NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
 	}
 
 	//refresh
@@ -2131,7 +2131,7 @@ void CDUIWndBase::OnDpiChanged(int nScalePre)
 
 void CDUIWndBase::AdjustWndSize()
 {
-	if (false == DuiIsWindow(m_hWnd)) return;
+	if (false == IsWindow(m_hWnd)) return;
 
 	CDUISize szWndInit = GetWndInitSize();
 	if (szWndInit.cx > 0 && szWndInit.cy > 0)
@@ -2142,7 +2142,7 @@ void CDUIWndBase::AdjustWndSize()
 		szWndInit.cy = szWndMax.cy > 0 ? min(szWndInit.cy, szWndMax.cy) : szWndInit.cy;
 		szWndInit.cx = max(szWndInit.cx, szWndMin.cx);
 		szWndInit.cy = max(szWndInit.cy, szWndMin.cy);
-		DuiSetWindowPos(m_hWnd, NULL, 0, 0, szWndInit.cx, szWndInit.cy, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
+		SetWindowPos(m_hWnd, NULL, 0, 0, szWndInit.cx, szWndInit.cy, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 	}
 
 	return;

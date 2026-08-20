@@ -36,14 +36,14 @@ CDUICalendarWnd::~CDUICalendarWnd()
 void CDUICalendarWnd::Init(HWND hWndParent)
 {
 	assert(m_pShowCalendarView);
-	if (DuiIsWindow(m_hWnd) || NULL == m_pShowCalendarView) return;
+	if (IsWindow(m_hWnd) || NULL == m_pShowCalendarView) return;
 
 	Create(hWndParent, _T("DuiCalendarWnd"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE | WS_EX_TOPMOST);
 
 	// HACK: Don't deselect the parent's caption
 	hWndParent = m_hWnd;
-	while (::DuiGetParent(hWndParent)) hWndParent = ::DuiGetParent(hWndParent);
-	::DuiSendMessage(hWndParent, WM_NCACTIVATE, TRUE, 0L);
+	while (::GetParent(hWndParent)) hWndParent = ::GetParent(hWndParent);
+	::SendMessage(hWndParent, WM_NCACTIVATE, TRUE, 0L);
 
 	//focus
 	m_pShowCalendarView->SetFocus();
@@ -101,18 +101,18 @@ LRESULT CDUICalendarWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 	__super::OnKillFocus(wParam, lParam);
 
 #ifdef DUI_DESIGN
-	HMONITOR hMonitor = DuiMonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONULL);
+	HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONULL);
 	if (NULL == hMonitor) return 0;
 #endif
 
-	if (g_pDuiCalendarWnd && DuiIsWindow(g_pDuiCalendarWnd->GetWndHandle()))
+	if (g_pDuiCalendarWnd && IsWindow(g_pDuiCalendarWnd->GetWndHandle()))
 	{
 		HWND hWndFocus = (HWND)wParam;
 		while (hWndFocus)
 		{
 			if (hWndFocus == g_pDuiCalendarWnd->GetWndHandle()) return 0;
 
-			hWndFocus = DuiGetParent(hWndFocus);
+			hWndFocus = GetParent(hWndFocus);
 		}
 
 		g_pDuiCalendarWnd->UnInit();
@@ -152,14 +152,14 @@ void CDUICalendarWnd::AdjustCalendar()
 	CDUIRect rcWnd = GetWindowRect();
 	MONITORINFO oMonitor = {};
 	oMonitor.cbSize = sizeof(oMonitor);
-	::DuiGetMonitorInfo(::DuiMonitorFromWindow(m_hWnd, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
+	::GetMonitorInfo(::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
 	CDUIRect rcWork = oMonitor.rcWork;
 
 	//adjust pt
 	if (-1 == m_ptTrack.x && -1 == m_ptTrack.y)
 	{
 		CDUIRect rcWndParent;
-		::DuiGetWindowRect(::DuiGetParent(m_hWnd), &rcWndParent);
+		::GetWindowRect(::GetParent(m_hWnd), &rcWndParent);
 
 		m_ptTrack.x = rcWndParent.left + rcWndParent.GetWidth() / 2 - rcWnd.GetWidth() / 2;
 		m_ptTrack.y = rcWndParent.top + rcWndParent.GetHeight() / 2 - rcWnd.GetHeight() / 2;
@@ -170,8 +170,8 @@ void CDUICalendarWnd::AdjustCalendar()
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(rcWork.right - rcWnd.right, 0);
 	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight());
 
-	DuiSetForegroundWindow(m_hWnd);
-	DuiMoveWindow(m_hWnd, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), FALSE);
+	SetForegroundWindow(m_hWnd);
+	MoveWindow(m_hWnd, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), FALSE);
 
 	return;
 }
@@ -299,7 +299,7 @@ CMMString CDUICalendarCtrl::GetDescribe() const
 	return Dui_Ctrl_Calendar;
 }
 
-bool CDUICalendarCtrl::SetWndOwner(CDUIWnd *pWndOwner)
+bool CDUICalendarCtrl::SetWndOwner(CDUIWndBase *pWndOwner)
 {
 	if (m_pWndOwner)
 	{

@@ -2596,8 +2596,8 @@ void CDUIListViewCtrl::PerformMouseDragSel()
 
 	//range
 	CDUIPoint ptMouse = {};
-	DuiGetCursorPos(&ptMouse);
-	DuiScreenToClient(m_pWndOwner->GetWndHandle(), &ptMouse);
+	GetCursorPos(&ptMouse);
+	ScreenToClient(m_pWndOwner->GetWndHandle(), &ptMouse);
 	m_rcMouseDragSel = CDUIRect
 	(
 		min(ptMouse.x, m_ptMouseDown.x),

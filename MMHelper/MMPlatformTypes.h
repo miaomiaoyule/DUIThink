@@ -115,6 +115,7 @@ typedef void VOID;
 #define DT_WORDBREAK                0x00000010
 #define DT_SINGLELINE               0x00000020
 #define DT_CALCRECT                 0x00000400
+#define DT_EDITCONTROL              0x00002000
 #define DT_PATH_ELLIPSIS            0x00004000
 #define DT_END_ELLIPSIS             0x00008000
 #define DT_WORD_ELLIPSIS            0x00040000
@@ -147,6 +148,13 @@ typedef void VOID;
 #define PASCAL      pascal
 #endif
 
+#ifndef DLL_PROCESS_ATTACH
+#define DLL_PROCESS_ATTACH 1
+#define DLL_THREAD_ATTACH  2
+#define DLL_THREAD_DETACH  3
+#define DLL_PROCESS_DETACH 0
+#endif
+
 /*
 * Dialog Box Command IDs
 */
@@ -159,6 +167,34 @@ typedef void VOID;
 #define IDNO						7
 #define IDCLOSE						8
 #define IDHELP						9
+
+#define MONITOR_DEFAULTTONULL       0x00000000
+#define MONITOR_DEFAULTTOPRIMARY    0x00000001
+#define MONITOR_DEFAULTTONEAREST    0x00000002
+
+//////////////////////////////////////////////////////////////////////////
+// string types (also defined in MMHelperHead; keep consistent)
+// basic integer types
+#ifndef _T
+#ifdef UNICODE
+#define _T(x) L##x
+#else
+#define _T(x) x
+#endif
+#endif
+#ifndef TEXT
+#define TEXT _T
+#endif
+
+#ifndef CP_ACP
+#define CP_ACP 0
+#define CP_UTF8 1
+#endif
+
+#undef FAR
+#undef  NEAR
+#define FAR							far
+#define NEAR						near
 
 //////////////////////////////////////////////////////////////////////////
 // COM-style GUID (NOT SDL_GUID — SDL_GUID is joystick/device id: Uint8[16])
@@ -212,159 +248,6 @@ inline bool operator!=(const GUID &a, const GUID &b)
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-// string types (also defined in MMHelperHead; keep consistent)
-// basic integer types
-#ifndef _T
-#ifdef UNICODE
-#define _T(x) L##x
-#else
-#define _T(x) x
-#endif
-#endif
-#ifndef TEXT
-#define TEXT _T
-#endif
-
-#ifndef CP_ACP
-#define CP_ACP 0
-#define CP_UTF8 1
-#endif
-
-#undef FAR
-#undef  NEAR
-#define FAR							far
-#define NEAR						near
-
-//////////////////////////////////////////////////////////////////////////
-// geometry
-typedef struct tagRECT
-{
-	LONG left;
-	LONG top;
-	LONG right;
-	LONG bottom;
-} RECT, *PRECT, *LPRECT;
-typedef const RECT *LPCRECT;
-
-typedef struct tagPOINT
-{
-	LONG x;
-	LONG y;
-} POINT, *PPOINT, *LPPOINT;
-
-typedef struct tagSIZE
-{
-	LONG cx;
-	LONG cy;
-} SIZE, *PSIZE, *LPSIZE;
-
-typedef struct tagMONITORINFO
-{
-	DWORD cbSize;
-	RECT rcMonitor;
-	RECT rcWork;
-	DWORD dwFlags;
-} MONITORINFO, *LPMONITORINFO;
-
-typedef struct tagMSG
-{
-	HWND hwnd;
-	UINT message;
-	WPARAM wParam;
-	LPARAM lParam;
-	DWORD time;
-	POINT pt;
-} MSG, *PMSG, *LPMSG;
-
-typedef struct tagTOOLINFO
-{
-	UINT cbSize;
-	UINT uFlags;
-	HWND hwnd;
-	UINT_PTR uId;
-	RECT rect;
-	HINSTANCE hinst;
-	void *lpszText;
-} TOOLINFO, *PTOOLINFO, *LPTOOLINFO;
-
-//////////////////////////////////////////////////////////////////////////
-/* Logical Font */
-/* Font Weights */
-#define FW_DONTCARE					0
-#define FW_THIN						100
-#define FW_EXTRALIGHT				200
-#define FW_LIGHT					300
-#define FW_NORMAL					400
-#define FW_MEDIUM					500
-#define FW_SEMIBOLD					600
-#define FW_BOLD						700
-#define FW_EXTRABOLD				800
-#define FW_HEAVY					900
-
-#define ANSI_CHARSET				0
-#define DEFAULT_CHARSET				1
-#define SYMBOL_CHARSET				2
-#define SHIFTJIS_CHARSET			128
-#define HANGEUL_CHARSET				129
-#define HANGUL_CHARSET				129
-#define GB2312_CHARSET				134
-#define CHINESEBIG5_CHARSET			136
-#define OEM_CHARSET					255
-#define JOHAB_CHARSET				130
-#define HEBREW_CHARSET				177
-#define ARABIC_CHARSET				178
-#define GREEK_CHARSET				161
-#define TURKISH_CHARSET				162
-#define VIETNAMESE_CHARSET			163
-#define THAI_CHARSET				222
-#define EASTEUROPE_CHARSET			238
-#define RUSSIAN_CHARSET				204
-#define MAC_CHARSET					77
-#define BALTIC_CHARSET				186
-
-#define CLEARTYPE_QUALITY			5
-#define LF_FACESIZE					32
-typedef struct tagLOGFONTA
-{
-	LONG      lfHeight;
-	LONG      lfWidth;
-	LONG      lfEscapement;
-	LONG      lfOrientation;
-	LONG      lfWeight;
-	BYTE      lfItalic;
-	BYTE      lfUnderline;
-	BYTE      lfStrikeOut;
-	BYTE      lfCharSet;
-	BYTE      lfOutPrecision;
-	BYTE      lfClipPrecision;
-	BYTE      lfQuality;
-	BYTE      lfPitchAndFamily;
-	CHAR      lfFaceName[LF_FACESIZE];
-} LOGFONTA;
-typedef struct tagLOGFONTW
-{
-	LONG      lfHeight;
-	LONG      lfWidth;
-	LONG      lfEscapement;
-	LONG      lfOrientation;
-	LONG      lfWeight;
-	BYTE      lfItalic;
-	BYTE      lfUnderline;
-	BYTE      lfStrikeOut;
-	BYTE      lfCharSet;
-	BYTE      lfOutPrecision;
-	BYTE      lfClipPrecision;
-	BYTE      lfQuality;
-	BYTE      lfPitchAndFamily;
-	WCHAR     lfFaceName[LF_FACESIZE];
-} LOGFONTW;
-#ifdef UNICODE
-typedef LOGFONTW LOGFONT;
-#else
-typedef LOGFONTA LOGFONT;
-#endif // UNICODE
-
-//////////////////////////////////////////////////////////////////////////
 #ifndef NULL
 #ifdef __cplusplus
 #define NULL 0
@@ -380,32 +263,6 @@ typedef LOGFONTA LOGFONT;
 #ifndef DECLARE_HANDLE
 #define DECLARE_HANDLE(name) typedef struct name##__ { int unused; } *name
 #endif
-
-#ifndef FILETIME_DEFINED
-#define FILETIME_DEFINED
-typedef struct _FILETIME
-{
-	DWORD dwLowDateTime;
-	DWORD dwHighDateTime;
-} FILETIME, *PFILETIME, *LPFILETIME;
-#endif
-
-#ifndef _SYSTEMTIME_
-#define _SYSTEMTIME_
-typedef struct _SYSTEMTIME
-{
-	WORD wYear;
-	WORD wMonth;
-	WORD wDayOfWeek;
-	WORD wDay;
-	WORD wHour;
-	WORD wMinute;
-	WORD wSecond;
-	WORD wMilliseconds;
-} 	SYSTEMTIME;
-typedef struct _SYSTEMTIME *PSYSTEMTIME;
-typedef struct _SYSTEMTIME *LPSYSTEMTIME;
-#endif // !_SYSTEMTIME
 
 #define LOBYTE(w) ((BYTE)((DWORD_PTR)(w) & 0xff))
 #define HIBYTE(w) ((BYTE)(((DWORD_PTR)(w) >> 8) & 0xff))
@@ -465,6 +322,7 @@ typedef struct _SYSTEMTIME *LPSYSTEMTIME;
 #define VK_SHIFT 0x10
 #define VK_CONTROL 0x11
 #define VK_MENU 0x12
+#define VK_CAPITAL 0x14
 #define VK_ESCAPE 0x1B
 #define VK_SPACE 0x20
 #define VK_PRIOR 0x21
@@ -475,11 +333,21 @@ typedef struct _SYSTEMTIME *LPSYSTEMTIME;
 #define VK_UP 0x26
 #define VK_RIGHT 0x27
 #define VK_DOWN 0x28
+#define VK_INSERT 0x2D
 #define VK_DELETE 0x2E
 #define VK_LWIN 0x5B
 #define VK_RWIN 0x5C
 #define VK_F1 0x70
+#define VK_F4 0x73
 #define VK_F12 0x7B
+#define VK_NUMLOCK 0x90
+#define VK_SCROLL  0x91
+#define VK_LSHIFT  0xA0
+#define VK_RSHIFT  0xA1
+#define VK_LCONTROL 0xA2
+#define VK_RCONTROL 0xA3
+#define VK_LMENU   0xA4
+#define VK_RMENU   0xA5
 
 #define WM_NULL 0x0000
 #define WM_CREATE 0x0001
@@ -523,6 +391,7 @@ typedef struct _SYSTEMTIME *LPSYSTEMTIME;
 #define WM_SYSKEYDOWN 0x0104
 #define WM_SYSKEYUP 0x0105
 #define WM_SYSCHAR 0x0106
+#define WM_IME_COMPOSITION 0x010F
 #define WM_COMMAND 0x0111
 #define WM_SYSCOMMAND 0x0112
 #define WM_TIMER 0x0113
@@ -587,10 +456,12 @@ typedef struct _SYSTEMTIME *LPSYSTEMTIME;
 #define WS_MAXIMIZEBOX 0x00010000L
 #define WS_OVERLAPPEDWINDOW (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX)
 #define WS_POPUPWINDOW (WS_POPUP | WS_BORDER | WS_SYSMENU)
+#define WS_EX_TOPMOST 0x00000008L
 #define WS_EX_WINDOWEDGE 0x00000100L
 #define WS_EX_TOOLWINDOW 0x00000080L
 #define WS_EX_DLGMODALFRAME 0x00000001L
 #define WS_EX_LAYERED 0x00080000L
+#define WS_EX_NOACTIVATE 0x08000000L
 
 #define SRCCOPY 0x00CC0020
 #define DIB_RGB_COLORS 0
@@ -613,50 +484,34 @@ typedef struct _SYSTEMTIME *LPSYSTEMTIME;
 #define OPTIONAL
 #endif
 
-#ifndef _ttoi
 #ifdef UNICODE
-inline int _ttoi(const wchar_t *s) { return s ? (int)wcstol(s, NULL, 10) : 0; }
-#else
-inline int _ttoi(const char *s) { return s ? atoi(s) : 0; }
-#endif
-#endif
-
-// MSVC tchar.h maps _tcstol -> wcstol / strtol; provide for DuiPlatform_SDL
-#ifndef _tcstol
-#ifdef UNICODE
+#define _ttoi _wtoi
+#define _ttol _wtol
+#define _tcstod wcstod
 #define _tcstol wcstol
-#else
-#define _tcstol strtol
-#endif
-#endif
-
-#ifndef _tcstoul
-#ifdef UNICODE
 #define _tcstoul wcstoul
-#else
-#define _tcstoul strtoul
-#endif
-#endif
-
-#ifndef _tcscmp
-#ifdef UNICODE
 #define _tcscmp wcscmp
-#else
-#define _tcscmp strcmp
-#endif
-#endif
-
-#ifndef _tcsncpy
-#ifdef UNICODE
 #define _tcsncpy wcsncpy
+#define lstrlen wcslen
+#define lstrcmp wcscmp
+#define lstrcpyn wcsncpy
 #else
+#define _ttoi atoi
+#define _ttol atol
+#define _tcstod strtod
+#define _tcstol strtol
+#define _tcstoul strtoul
+#define _tcscmp strcmp
 #define _tcsncpy strncpy
-#endif
+#define lstrlen strlen
+#define lstrcmp strcmp
+#define lstrcpyn strncpy
 #endif
 
 #ifndef _ASSERTE
 #define _ASSERTE(expr) assert(expr)
 #endif
+
 #ifndef OutputDebugString
 inline void OutputDebugStringA(const char *) {}
 inline void OutputDebugStringW(const wchar_t *) {}
@@ -666,76 +521,7 @@ inline void OutputDebugStringW(const wchar_t *) {}
 #define OutputDebugString OutputDebugStringA
 #endif
 #endif
-// dynamic library — use SDL, do not call Win32 LoadLibrary under DuiPlatform_SDL
-#ifndef FARPROC
-typedef void (*FARPROC)();
-#endif
-inline HMODULE DuiLoadLibraryA(const char *lpszFile)
-{
-	if (NULL == lpszFile || 0 == lpszFile[0]) return NULL;
-	return (HMODULE)SDL_LoadObject(lpszFile);
-}
-inline FARPROC DuiGetProcAddress(HMODULE hModule, const char *lpszProc)
-{
-	if (NULL == hModule || NULL == lpszProc) return NULL;
-	return (FARPROC)SDL_LoadFunction((SDL_SharedObject*)hModule, lpszProc);
-}
-inline BOOL DuiFreeLibrary(HMODULE hModule)
-{
-	if (NULL == hModule) return FALSE;
-	SDL_UnloadObject((SDL_SharedObject*)hModule);
-	return TRUE;
-}
-inline HMODULE DuiGetModuleHandle(const char * /*lpszModule*/)
-{
-	// SDL has no exact GetModuleHandle(NULL); return NULL = "current image" fallback
-	return NULL;
-}
-inline HMODULE DuiLoadLibraryW(const wchar_t *lpszFile)
-{
-	if (NULL == lpszFile) return NULL;
-	char szUtf8[MAX_PATH * 4] = {};
-	int nOut = 0;
-	for (int i = 0; lpszFile[i] && nOut + 4 < (int)sizeof(szUtf8); ++i)
-	{
-		unsigned int ch = (unsigned int)lpszFile[i];
-		if (ch < 0x80)
-		{
-			szUtf8[nOut++] = (char)ch;
-		}
-		else if (ch < 0x800)
-		{
-			szUtf8[nOut++] = (char)(0xC0 | (ch >> 6));
-			szUtf8[nOut++] = (char)(0x80 | (ch & 0x3F));
-		}
-		else
-		{
-			szUtf8[nOut++] = (char)(0xE0 | (ch >> 12));
-			szUtf8[nOut++] = (char)(0x80 | ((ch >> 6) & 0x3F));
-			szUtf8[nOut++] = (char)(0x80 | (ch & 0x3F));
-		}
-	}
-	return DuiLoadLibraryA(szUtf8);
-}
 
-#ifndef LoadLibraryA
-#define LoadLibraryA DuiLoadLibraryA
-#endif
-#ifndef LoadLibraryW
-#define LoadLibraryW DuiLoadLibraryW
-#endif
-#ifndef GetProcAddress
-#define GetProcAddress DuiGetProcAddress
-#endif
-#ifndef FreeLibrary
-#define FreeLibrary DuiFreeLibrary
-#endif
-#ifndef GetModuleHandleA
-#define GetModuleHandleA DuiGetModuleHandle
-#endif
-#ifndef GetModuleHandleW
-#define GetModuleHandleW DuiGetModuleHandle
-#endif
 #ifdef UNICODE
 #ifndef LoadLibrary
 #define LoadLibrary LoadLibraryW
@@ -762,6 +548,143 @@ inline HMODULE DuiLoadLibraryW(const wchar_t *lpszFile)
 #ifndef GET_Y_LPARAM
 #define GET_Y_LPARAM(lp) ((int)(short)HIWORD(lp))
 #endif
+
+#ifndef ZeroMemory
+#define ZeroMemory(Destination, Length) memset((Destination), 0, (Length))
+#endif
+#ifndef CopyMemory
+#define CopyMemory(Destination, Source, Length) memcpy((Destination), (Source), (Length))
+#endif
+
+//////////////////////////////////////////////////////////////////////////
+// geometry
+typedef struct tagRECT
+{
+	LONG left;
+	LONG top;
+	LONG right;
+	LONG bottom;
+} RECT, *PRECT, *LPRECT;
+typedef const RECT *LPCRECT;
+
+typedef struct tagPOINT
+{
+	LONG x;
+	LONG y;
+} POINT, *PPOINT, *LPPOINT;
+
+typedef struct tagSIZE
+{
+	LONG cx;
+	LONG cy;
+} SIZE, *PSIZE, *LPSIZE;
+
+typedef struct tagMONITORINFO
+{
+	DWORD cbSize;
+	RECT rcMonitor;
+	RECT rcWork;
+	DWORD dwFlags;
+} MONITORINFO, *LPMONITORINFO;
+
+typedef struct tagMSG
+{
+	HWND hwnd;
+	UINT message;
+	WPARAM wParam;
+	LPARAM lParam;
+	DWORD time;
+	POINT pt;
+} MSG, *PMSG, *LPMSG;
+
+typedef struct tagTOOLINFO
+{
+	UINT cbSize;
+	UINT uFlags;
+	HWND hwnd;
+	UINT_PTR uId;
+	RECT rect;
+	HINSTANCE hinst;
+	void *lpszText;
+} TOOLINFO, *PTOOLINFO, *LPTOOLINFO;
+
+#ifndef FILETIME_DEFINED
+#define FILETIME_DEFINED
+typedef struct _FILETIME
+{
+	DWORD dwLowDateTime;
+	DWORD dwHighDateTime;
+} FILETIME, *PFILETIME, *LPFILETIME;
+#endif
+
+#ifndef _SYSTEMTIME_
+#define _SYSTEMTIME_
+typedef struct _SYSTEMTIME
+{
+	WORD wYear;
+	WORD wMonth;
+	WORD wDayOfWeek;
+	WORD wDay;
+	WORD wHour;
+	WORD wMinute;
+	WORD wSecond;
+	WORD wMilliseconds;
+} 	SYSTEMTIME;
+typedef struct _SYSTEMTIME *PSYSTEMTIME;
+typedef struct _SYSTEMTIME *LPSYSTEMTIME;
+#endif // !_SYSTEMTIME
+
+// dynamic library — use SDL, do not call Win32 LoadLibrary under DuiPlatform_SDL
+#ifndef FARPROC
+typedef void (*FARPROC)();
+#endif
+inline HMODULE LoadLibraryA(const char *lpszFile)
+{
+	if (NULL == lpszFile || 0 == lpszFile[0]) return NULL;
+	return (HMODULE)SDL_LoadObject(lpszFile);
+}
+inline FARPROC GetProcAddress(HMODULE hModule, const char *lpszProc)
+{
+	if (NULL == hModule || NULL == lpszProc) return NULL;
+	return (FARPROC)SDL_LoadFunction((SDL_SharedObject*)hModule, lpszProc);
+}
+inline BOOL FreeLibrary(HMODULE hModule)
+{
+	if (NULL == hModule) return FALSE;
+	SDL_UnloadObject((SDL_SharedObject*)hModule);
+	return TRUE;
+}
+inline HMODULE GetModuleHandle(const char * /*lpszModule*/)
+{
+	// SDL has no exact GetModuleHandle(NULL); return NULL = "current image" fallback
+	return NULL;
+}
+inline HMODULE LoadLibraryW(const wchar_t *lpszFile)
+{
+	if (NULL == lpszFile) return NULL;
+	char szUtf8[MAX_PATH * 4] = {};
+	int nOut = 0;
+	for (int i = 0; lpszFile[i] && nOut + 4 < (int)sizeof(szUtf8); ++i)
+	{
+		unsigned int ch = (unsigned int)lpszFile[i];
+		if (ch < 0x80)
+		{
+			szUtf8[nOut++] = (char)ch;
+		}
+		else if (ch < 0x800)
+		{
+			szUtf8[nOut++] = (char)(0xC0 | (ch >> 6));
+			szUtf8[nOut++] = (char)(0x80 | (ch & 0x3F));
+		}
+		else
+		{
+			szUtf8[nOut++] = (char)(0xE0 | (ch >> 12));
+			szUtf8[nOut++] = (char)(0x80 | ((ch >> 6) & 0x3F));
+			szUtf8[nOut++] = (char)(0x80 | (ch & 0x3F));
+		}
+	}
+	return LoadLibraryA(szUtf8);
+}
 
 inline BOOL SetRectEmpty(LPRECT lprc)
 {
@@ -871,7 +794,7 @@ inline int MulDiv(int nNumber, int nNumerator, int nDenominator)
 	int64 prod = static_cast<int64>(nNumber) * static_cast<int64>(nNumerator);
 	int64 denom = static_cast<int64>(nDenominator);
 
-	if (denom == 0) 
+	if (denom == 0)
 	{
 		return (prod >= 0) ? INT_MAX : INT_MIN;
 	}
@@ -882,7 +805,7 @@ inline int MulDiv(int nNumber, int nNumerator, int nDenominator)
 	int64 abs_r = (r >= 0) ? r : -r;
 	int64 abs_d = (denom >= 0) ? denom : -denom;
 
-	if (abs_r * 2 >= abs_d) 
+	if (abs_r * 2 >= abs_d)
 	{
 		if ((prod ^ denom) >= 0) q += 1;
 		else q -= 1;
@@ -909,19 +832,150 @@ inline ULONGLONG GetTickCount64() noexcept
 	return static_cast<ULONGLONG>(ms);
 }
 
-#ifndef ZeroMemory
-#define ZeroMemory(Destination, Length) memset((Destination), 0, (Length))
-#endif
-#ifndef CopyMemory
-#define CopyMemory(Destination, Source, Length) memcpy((Destination), (Source), (Length))
-#endif
-inline int lstrlenA(const char *lpString) { return lpString ? (int)strlen(lpString) : 0; }
-inline int lstrlenW(const wchar_t *lpString) { return lpString ? (int)wcslen(lpString) : 0; }
-#ifdef UNICODE
-#define lstrlen lstrlenW
+inline void safe_localtime(const std::time_t *tt, std::tm *outTm)
+{
+#if defined(_MSC_VER)
+	localtime_s(outTm, tt);
+#elif defined(__STDC_LIB_EXT1__)
+	localtime_s(outTm, tt);
 #else
-#define lstrlen lstrlenA
+	localtime_r(tt, outTm);
 #endif
+}
+
+inline void GetLocalTime(SYSTEMTIME *pst)
+{
+	if (pst == nullptr) return;
+
+	using namespace std::chrono;
+	auto now = system_clock::now();
+	auto now_ms = duration_cast<milliseconds>(now.time_since_epoch());
+	std::time_t t = system_clock::to_time_t(now);
+
+	std::tm local_tm;
+	safe_localtime(&t, &local_tm);
+
+	//wDayOfWeek: Windows: 0 = Sunday, tm_wday follows same convention
+	pst->wYear = static_cast<WORD>(local_tm.tm_year + 1900);
+	pst->wMonth = static_cast<WORD>(local_tm.tm_mon + 1);
+	pst->wDayOfWeek = static_cast<WORD>(local_tm.tm_wday);
+	pst->wDay = static_cast<WORD>(local_tm.tm_mday);
+	pst->wHour = static_cast<WORD>(local_tm.tm_hour);
+	pst->wMinute = static_cast<WORD>(local_tm.tm_min);
+	pst->wSecond = static_cast<WORD>(local_tm.tm_sec);
+
+	//high-resolution system_clock 的残余量
+	pst->wMilliseconds = static_cast<WORD>(now_ms.count() % 1000ULL);
+
+	return;
+}
+
+MMHELPER_API inline bool IsWindow(HWND hWnd);
+MMHELPER_API inline bool PathFileExists(LPCTSTR lpszFile);
+MMHELPER_API inline bool PathIsDirectory(LPCTSTR lpszFile);
+MMHELPER_API inline LPTSTR PathAddBackslash(LPTSTR lpszPath);
+MMHELPER_API inline bool DeleteFile(LPCTSTR lpszFile);
+MMHELPER_API inline BOOL MoveFile(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName);
+MMHELPER_API inline bool IsWindowVisible(HWND hWnd);
+MMHELPER_API inline bool IsIconic(HWND hWnd);
+MMHELPER_API inline bool IsZoomed(HWND hWnd);
+MMHELPER_API inline void InvalidateRect(HWND hWnd, LPCRECT lpRect, bool bErase);
+MMHELPER_API inline BOOL ScreenToClient(HWND hWnd, LPPOINT lpPoint);
+MMHELPER_API inline BOOL ClientToScreen(HWND hWnd, LPPOINT lpPoint);
+MMHELPER_API inline void GetCursorPos(LPPOINT lpPoint);
+MMHELPER_API inline void SetCursorPos(int X, int Y);
+MMHELPER_API inline void GetCaretPos(LPPOINT lpPoint);
+MMHELPER_API inline HWND GetParent(HWND hWnd);
+MMHELPER_API inline HWND GetFocus();
+MMHELPER_API inline void GetWindowRect(HWND hWnd, LPRECT lpRect);
+MMHELPER_API inline void GetMonitorInfo(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo);
+MMHELPER_API inline short GetKeyState(int vKey);
+MMHELPER_API inline void SetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags);
+MMHELPER_API inline void MoveWindow(HWND hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+MMHELPER_API inline int MessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType);
+MMHELPER_API inline void SetForegroundWindow(HWND hWnd);
+MMHELPER_API inline void SetFocus(HWND hWnd);
+MMHELPER_API inline void ShowWindow(HWND hWnd, int nCmdShow);
+MMHELPER_API inline bool SendMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+MMHELPER_API inline HMONITOR MonitorFromWindow(HWND hWnd, DWORD dwFlags);
+MMHELPER_API inline void UpdateWindow(HWND hWnd);
+
+//////////////////////////////////////////////////////////////////////////
+/* Logical Font */
+/* Font Weights */
+#define FW_DONTCARE					0
+#define FW_THIN						100
+#define FW_EXTRALIGHT				200
+#define FW_LIGHT					300
+#define FW_NORMAL					400
+#define FW_MEDIUM					500
+#define FW_SEMIBOLD					600
+#define FW_BOLD						700
+#define FW_EXTRABOLD				800
+#define FW_HEAVY					900
+
+#define ANSI_CHARSET				0
+#define DEFAULT_CHARSET				1
+#define SYMBOL_CHARSET				2
+#define SHIFTJIS_CHARSET			128
+#define HANGEUL_CHARSET				129
+#define HANGUL_CHARSET				129
+#define GB2312_CHARSET				134
+#define CHINESEBIG5_CHARSET			136
+#define OEM_CHARSET					255
+#define JOHAB_CHARSET				130
+#define HEBREW_CHARSET				177
+#define ARABIC_CHARSET				178
+#define GREEK_CHARSET				161
+#define TURKISH_CHARSET				162
+#define VIETNAMESE_CHARSET			163
+#define THAI_CHARSET				222
+#define EASTEUROPE_CHARSET			238
+#define RUSSIAN_CHARSET				204
+#define MAC_CHARSET					77
+#define BALTIC_CHARSET				186
+
+#define CLEARTYPE_QUALITY			5
+#define LF_FACESIZE					32
+typedef struct tagLOGFONTA
+{
+	LONG      lfHeight;
+	LONG      lfWidth;
+	LONG      lfEscapement;
+	LONG      lfOrientation;
+	LONG      lfWeight;
+	BYTE      lfItalic;
+	BYTE      lfUnderline;
+	BYTE      lfStrikeOut;
+	BYTE      lfCharSet;
+	BYTE      lfOutPrecision;
+	BYTE      lfClipPrecision;
+	BYTE      lfQuality;
+	BYTE      lfPitchAndFamily;
+	CHAR      lfFaceName[LF_FACESIZE];
+} LOGFONTA;
+typedef struct tagLOGFONTW
+{
+	LONG      lfHeight;
+	LONG      lfWidth;
+	LONG      lfEscapement;
+	LONG      lfOrientation;
+	LONG      lfWeight;
+	BYTE      lfItalic;
+	BYTE      lfUnderline;
+	BYTE      lfStrikeOut;
+	BYTE      lfCharSet;
+	BYTE      lfOutPrecision;
+	BYTE      lfClipPrecision;
+	BYTE      lfQuality;
+	BYTE      lfPitchAndFamily;
+	WCHAR     lfFaceName[LF_FACESIZE];
+} LOGFONTW;
+#ifdef UNICODE
+typedef LOGFONTW LOGFONT;
+#else
+typedef LOGFONTA LOGFONT;
+#endif // UNICODE
 
 //////////////////////////////////////////////////////////////////////////
 // GDI object shims (implemented in DUIThink raster backend)
@@ -974,26 +1028,5 @@ HGDIOBJ GetStockObject(int i);
 int GetObject(HGDIOBJ h, int c, LPVOID pv);
 int GetDeviceCaps(HDC hdc, int nIndex);
 BOOL UpdateLayeredWindow(HWND hWnd, HDC hdcDst, POINT *pptDst, SIZE *psize, HDC hdcSrc, POINT *pptSrc, DWORD crKey, BLENDFUNCTION *pblend, DWORD dwFlags);
-
-inline BOOL GetWindowRect(HWND hWnd, LPRECT lpRect)
-{
-	if (NULL == hWnd || NULL == lpRect) return FALSE;
-	int x = 0, y = 0, w = 0, h = 0;
-	SDL_GetWindowPosition(hWnd, &x, &y);
-	SDL_GetWindowSize(hWnd, &w, &h);
-	lpRect->left = x;
-	lpRect->top = y;
-	lpRect->right = x + w;
-	lpRect->bottom = y + h;
-	return TRUE;
-}
-
-inline BOOL SetWindowPos(HWND hWnd, HWND, int X, int Y, int cx, int cy, UINT uFlags)
-{
-	if (NULL == hWnd) return FALSE;
-	if (0 == (uFlags & SWP_NOMOVE)) SDL_SetWindowPosition(hWnd, X, Y);
-	if (0 == (uFlags & SWP_NOSIZE) && cx > 0 && cy > 0) SDL_SetWindowSize(hWnd, cx, cy);
-	return TRUE;
-}
 
 #endif // __MM_PLATFORM_TYPES_H__

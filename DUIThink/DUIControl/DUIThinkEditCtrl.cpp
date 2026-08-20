@@ -1645,10 +1645,10 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	//menu
 	CDUIMenu Menu;
 	Menu.LoadMenu(_T(""));
-	if (NULL == g_pDuiMenuWndRoot) return;
+	if (NULL == g_pDuiMenuWndRoot) return 0;
 
 	CDUIMenuCtrl *pMenuRoot = new CDUIMenuCtrl();
-	if (NULL == pMenuRoot) return;
+	if (NULL == pMenuRoot) return 0;
 
 	pMenuRoot->Init();
 	g_pDuiMenuWndRoot->SetMenuView(pMenuRoot);
@@ -1698,7 +1698,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 
 	//popup
 	CDUIPoint ptScreen = Msg.ptMouse;
-	::DuiClientToScreen(m_pWndOwner->GetWndHandle(), &ptScreen);
+	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptScreen);
 	tagDuiMenuCmd MenuCmd = Menu.TrackPopupMenu(GetWndHandle(), ptScreen);
 	switch (MenuCmd.uMenuID)
 	{
@@ -1843,7 +1843,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 
 LRESULT CDUIThinkEditCtrl::OnDuiTextEditing(const DuiMessage &Msg)
 {
-	if (NULL == m_pWndOwner || Msg.strText.empty()) return;
+	if (NULL == m_pWndOwner || Msg.strText.empty()) return 0;
 
 	bool bHaveEmoji = false;
 	std::vector<tagMMStringEmoji> vecText = CMMStrHelp::ParseStringForEmoji(Msg.strText);
@@ -1867,16 +1867,16 @@ LRESULT CDUIThinkEditCtrl::OnDuiTextEditing(const DuiMessage &Msg)
 		}
 	}
 
-	return;
+	return 0;
 }
 
 LRESULT CDUIThinkEditCtrl::OnDuiTextInput(const DuiMessage &Msg)
 {
-	if (NULL == m_pWndOwner || Msg.strText.empty()) return;
+	if (NULL == m_pWndOwner || Msg.strText.empty()) return 0;
 
 	SetReplaceSel(Msg.strText);
 
-	return;
+	return 0;
 }
 
 void CDUIThinkEditCtrl::InitProperty()
@@ -2371,14 +2371,14 @@ void CDUIThinkEditCtrl::PerformMoveCaretHoriz(bool bLeft, bool bSelect, bool bAd
 
 		m_bShowCaret = true;
 		Invalidate();
-		DuiUpdateWindow(m_pWndOwner->GetWndHandle());
+		UpdateWindow(m_pWndOwner->GetWndHandle());
 
 		return;
 	}
 
 	m_bShowCaret = true;
 	Invalidate();
-	DuiUpdateWindow(m_pWndOwner->GetWndHandle());
+	UpdateWindow(m_pWndOwner->GetWndHandle());
 
 	return;
 }
@@ -2458,7 +2458,7 @@ void CDUIThinkEditCtrl::PerformMoveCaretVert(bool bUp)
 
 	m_bShowCaret = true;
 	Invalidate();
-	DuiUpdateWindow(m_pWndOwner->GetWndHandle());
+	UpdateWindow(m_pWndOwner->GetWndHandle());
 
 	return;
 }
