@@ -32,7 +32,7 @@ void CDUIAttriImageSection::Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect
 	if (NULL == pImageBaseCur || NULL == m_pOwner) return;
 
 	//info
-	CDUIWnd *pWnd = GetOwnerWnd();
+	CDUIWndBase *pWnd = GetOwnerWnd();
 	if (NULL == pWnd) return;
 
 	tagDuiImageSection ImageSection = GetImageSection();
@@ -46,7 +46,7 @@ void CDUIAttriImageSection::Draw(HBITMAP hBitmap, Gdiplus::Bitmap *pBitmap, cons
 {
 	if (NULL == hBitmap && NULL == pBitmap) return;
 
-	CDUIWnd *pWnd = GetOwnerWnd();
+	CDUIWndBase *pWnd = GetOwnerWnd();
 	if (NULL == pWnd) return;
 
 	HBITMAP hBmpPaint = hBitmap;
@@ -126,7 +126,7 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 	CDUIImageBase *pImageBaseCur = GetCurImageBase();
 	if (NULL == pImageBaseCur || NULL == pImageBaseCur->GetHandle(GetScale())) return;
 
-	CDUIWnd *pWnd = GetOwnerWnd();
+	CDUIWndBase *pWnd = GetOwnerWnd();
 	if (NULL == pWnd) return;
 
 	//dest

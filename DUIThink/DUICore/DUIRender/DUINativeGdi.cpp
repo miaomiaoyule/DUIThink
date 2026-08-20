@@ -38,6 +38,15 @@ BOOL BitBlt(HDC hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, HDC hd
 	return TRUE;
 }
 
+BOOL StretchBlt(HDC hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, HDC hdcSrc, int nXSrc, int nYSrc, int wSrc, int hSrc, DWORD rop)
+{
+	IDuiCanvas *pDst = DuiCanvasFromHDC(hdcDest);
+	IDuiCanvas *pSrc = DuiCanvasFromHDC(hdcSrc);
+	if (NULL == pDst || NULL == pSrc) return FALSE;
+	pDst->StretchBlitFrom(pSrc, nXDest, nYDest, nWidth, nHeight, nXSrc, nYSrc, wSrc, hSrc);
+	return TRUE;
+}
+
 DWORD GetObjectType(HGDIOBJ h)
 {
 	IDuiNativeGdi *pNative = (IDuiNativeGdi *)h;

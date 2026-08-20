@@ -860,4 +860,14 @@ void CDUICanvasRaster::BlitFrom(IDuiCanvas *pSrc, int xDst, int yDst, int nWidth
 	BlitImageRect(pSrc->GetBits(), pSrc->GetWidth(), pSrc->GetHeight(), rcDst, rcSrc, 255);
 }
 
+void CDUICanvasRaster::StretchBlitFrom(IDuiCanvas *pSrc, int xDst, int yDst, int nWidth, int nHeight, int xSrc, int ySrc, int wSrc, int hSrc)
+{
+	if (NULL == pSrc || NULL == pSrc->GetBits()) return;
+	if (nWidth <= 0 || nHeight <= 0 || wSrc <= 0 || hSrc <= 0) return;
+
+	RECT rcDst = { xDst, yDst, xDst + nWidth, yDst + nHeight };
+	RECT rcSrc = { xSrc, ySrc, xSrc + wSrc, ySrc + hSrc };
+	BlitImageRect(pSrc->GetBits(), pSrc->GetWidth(), pSrc->GetHeight(), rcDst, rcSrc, 255);
+}
+
 #endif

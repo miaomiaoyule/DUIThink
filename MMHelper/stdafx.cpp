@@ -1,11 +1,11 @@
-// stdafx.cpp : Ö»°üÀ¨±ê×¼°üº¬ÎÄ¼şµÄÔ´ÎÄ¼ş
-// MMHelper.pch ½«×÷ÎªÔ¤±àÒëÍ·
-// stdafx.obj ½«°üº¬Ô¤±àÒëÀàĞÍĞÅÏ¢
+ï»¿// stdafx.cpp : åªåŒ…æ‹¬æ ‡å‡†åŒ…å«æ–‡ä»¶çš„æºæ–‡ä»¶
+// MMHelper.pch å°†ä½œä¸ºé¢„ç¼–è¯‘å¤´
+// stdafx.obj å°†åŒ…å«é¢„ç¼–è¯‘ç±»å‹ä¿¡æ¯
 
 #include "stdafx.h"
 
-// TODO: ÔÚ STDAFX.H ÖĞÒıÓÃÈÎºÎËùĞèµÄ¸½¼ÓÍ·ÎÄ¼ş£¬
-//¶ø²»ÊÇÔÚ´ËÎÄ¼şÖĞÒıÓÃ
+// TODO: åœ¨ STDAFX.H ä¸­å¼•ç”¨ä»»ä½•æ‰€éœ€çš„é™„åŠ å¤´æ–‡ä»¶ï¼Œ
+//è€Œä¸æ˜¯åœ¨æ­¤æ–‡ä»¶ä¸­å¼•ç”¨
 
 //////////////////////////////////////////////////////////////////////////
 // v141_xp / older uuid.lib often lack IID_IAgileObject; SDL3 static refs it.
@@ -170,6 +170,59 @@ void SetCursorPos(int X, int Y)
 	return;
 }
 
+static SDL_SystemCursor DuiIdcToSdlSystemCursor(int idc)
+{
+	switch (idc)
+	{
+	case 32512: return SDL_SYSTEM_CURSOR_DEFAULT;      // IDC_ARROW
+	case 32513: return SDL_SYSTEM_CURSOR_TEXT;         // IDC_IBEAM
+	case 32514: return SDL_SYSTEM_CURSOR_WAIT;         // IDC_WAIT
+	case 32515: return SDL_SYSTEM_CURSOR_CROSSHAIR;    // IDC_CROSS
+	case 32516: return SDL_SYSTEM_CURSOR_N_RESIZE;     // IDC_UPARROW (closest)
+	case 32642: return SDL_SYSTEM_CURSOR_NWSE_RESIZE;  // IDC_SIZENWSE
+	case 32643: return SDL_SYSTEM_CURSOR_NESW_RESIZE;  // IDC_SIZENESW
+	case 32644: return SDL_SYSTEM_CURSOR_EW_RESIZE;    // IDC_SIZEWE
+	case 32645: return SDL_SYSTEM_CURSOR_NS_RESIZE;    // IDC_SIZENS
+	case 32646: return SDL_SYSTEM_CURSOR_MOVE;         // IDC_SIZEALL
+	case 32648: return SDL_SYSTEM_CURSOR_NOT_ALLOWED;  // IDC_NO
+	case 32649: return SDL_SYSTEM_CURSOR_POINTER;      // IDC_HAND
+	default:    return SDL_SYSTEM_CURSOR_DEFAULT;
+	}
+}
+
+static SDL_Cursor *DuiGetCachedSystemCursor(SDL_SystemCursor id)
+{
+	static SDL_Cursor *s_cursors[SDL_SYSTEM_CURSOR_COUNT] = {};
+	if (id < 0 || id >= SDL_SYSTEM_CURSOR_COUNT)
+		return NULL;
+	if (NULL == s_cursors[id])
+		s_cursors[id] = SDL_CreateSystemCursor(id);
+	return s_cursors[id];
+}
+
+HCURSOR LoadCursor(HINSTANCE /*hInstance*/, LPCTSTR lpCursorName)
+{
+	if (NULL == lpCursorName)
+		return NULL;
+
+	// System cursors use MAKEINTRESOURCE(id): pointer value holds the ID in the low word.
+	const ULONG_PTR idValue = (ULONG_PTR)lpCursorName;
+	if (idValue > 0xFFFF)
+	{
+		// Named / module resource cursors are not supported under SDL yet.
+		return (HCURSOR)DuiGetCachedSystemCursor(SDL_SYSTEM_CURSOR_DEFAULT);
+	}
+
+	return (HCURSOR)DuiGetCachedSystemCursor(DuiIdcToSdlSystemCursor((int)idValue));
+}
+
+HCURSOR SetCursor(HCURSOR hCursor)
+{
+	HCURSOR hPrev = (HCURSOR)SDL_GetCursor();
+	SDL_SetCursor((SDL_Cursor *)hCursor);
+	return hPrev;
+}
+
 void GetCaretPos(LPPOINT lpPoint)
 {
 	if (NULL == lpPoint) return;
@@ -234,68 +287,104 @@ void GetMonitorInfo(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo)
 
 short GetKeyState(int vKey)
 {
-	// ĞèÒª SDL ³õÊ¼»¯£¨ÖÁÉÙ VIDEO / INPUT£©£¬·ñÔò·µ»Ø 0
-	if (SDL_WasInit(0) == 0)
+	// Win32 semantics: bit15 = currently down, bit0 = toggle on (Caps/Num/Scroll)
+	auto downBit = [](bool down) -> short { return down ? (short)0x8000 : (short)0; };
+
+	// Mouse buttons
+	if (vKey == VK_LBUTTON || vKey == VK_RBUTTON || vKey == VK_MBUTTON)
 	{
-		// ÈÔÔÊĞíµ÷ÓÃ SDL_GetKeyboardState£¬¼´Ê¹Î´ÏÔÊ½³õÊ¼»¯Ò²¿ÉÄÜ¹¤×÷£¬µ«ÕâÀï±£ÊØ·µ»Ø 0
-		// ÈôÏ£Íû¼´Ê¹Î´µ÷ÓÃ SDL_Init Ò²ÄÜ¾¡Á¿¹¤×÷£¬¿ÉÒÔÒÆ³ı´Ë·ÖÖ§¡£
-		return 0;
+		const SDL_MouseButtonFlags buttons = SDL_GetMouseState(NULL, NULL);
+		if (vKey == VK_LBUTTON) return downBit((buttons & SDL_BUTTON_LMASK) != 0);
+		if (vKey == VK_RBUTTON) return downBit((buttons & SDL_BUTTON_RMASK) != 0);
+		return downBit((buttons & SDL_BUTTON_MMASK) != 0);
 	}
 
-	// ĞŞÊÎ·û£¨Caps/Num/Scroll£©Ê¹ÓÃ SDL µÄ ModState
-	SDL_Keymod mods = SDL_GetModState();
+	int numkeys = 0;
+	const bool *state = SDL_GetKeyboardState(&numkeys);
+	const SDL_Keymod mods = SDL_GetModState();
 
-	// ´¦ÀíÇĞ»»¼ü£¨·µ»ØµÍÎ»£©
+	auto scDown = [state, numkeys](SDL_Scancode sc) -> bool
+	{
+		return state && (int)sc >= 0 && (int)sc < numkeys && state[sc];
+	};
+
+	// Toggle keys: low bit = locked, high bit = currently held
 	if (vKey == VK_CAPITAL)
 	{
-		return (mods & SDL_KMOD_CAPS) ? 1 : 0;
+		short r = (mods & SDL_KMOD_CAPS) ? (short)1 : (short)0;
+		if (scDown(SDL_SCANCODE_CAPSLOCK)) r |= (short)0x8000;
+		return r;
 	}
 	if (vKey == VK_NUMLOCK)
 	{
-		return (mods & SDL_KMOD_NUM) ? 1 : 0;
+		short r = (mods & SDL_KMOD_NUM) ? (short)1 : (short)0;
+		if (scDown(SDL_SCANCODE_NUMLOCKCLEAR)) r |= (short)0x8000;
+		return r;
 	}
 	if (vKey == VK_SCROLL)
 	{
-		return (mods & SDL_KMOD_SCROLL) ? 1 : 0;
+		short r = (mods & SDL_KMOD_SCROLL) ? (short)1 : (short)0;
+		if (scDown(SDL_SCANCODE_SCROLLLOCK)) r |= (short)0x8000;
+		return r;
 	}
 
-	// »ñÈ¡µ±Ç°¼üÅÌÉ¨ÃèÂëÊı×é
-	const Uint8 *state = SDL_GetKeyboardState(NULL);
-	if (!state) return 0;
+	// Modifiers (generic vs left/right)
+	if (vKey == VK_SHIFT)
+		return downBit(scDown(SDL_SCANCODE_LSHIFT) || scDown(SDL_SCANCODE_RSHIFT));
+	if (vKey == VK_LSHIFT) return downBit(scDown(SDL_SCANCODE_LSHIFT));
+	if (vKey == VK_RSHIFT) return downBit(scDown(SDL_SCANCODE_RSHIFT));
 
-	// ³£ÓÃ×éºÏ¼ü£º×óÓÒÇø·Ö
-	if (vKey == VK_SHIFT || vKey == VK_LSHIFT || vKey == VK_RSHIFT)
+	if (vKey == VK_CONTROL)
+		return downBit(scDown(SDL_SCANCODE_LCTRL) || scDown(SDL_SCANCODE_RCTRL));
+	if (vKey == VK_LCONTROL) return downBit(scDown(SDL_SCANCODE_LCTRL));
+	if (vKey == VK_RCONTROL) return downBit(scDown(SDL_SCANCODE_RCTRL));
+
+	if (vKey == VK_MENU) // Alt
+		return downBit(scDown(SDL_SCANCODE_LALT) || scDown(SDL_SCANCODE_RALT));
+	if (vKey == VK_LMENU) return downBit(scDown(SDL_SCANCODE_LALT));
+	if (vKey == VK_RMENU) return downBit(scDown(SDL_SCANCODE_RALT));
+
+	SDL_Scancode sc = SDL_SCANCODE_UNKNOWN;
+	switch (vKey)
 	{
-		return (state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT]) ? static_cast<short>(0x8000) : 0;
-	}
-	if (vKey == VK_CONTROL || vKey == VK_LCONTROL || vKey == VK_RCONTROL)
-	{
-		return (state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_RCTRL]) ? static_cast<short>(0x8000) : 0;
-	}
-	if (vKey == VK_MENU || vKey == VK_LMENU || vKey == VK_RMENU) // Alt
-	{
-		return (state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT]) ? static_cast<short>(0x8000) : 0;
+	case VK_BACK:   sc = SDL_SCANCODE_BACKSPACE; break;
+	case VK_TAB:    sc = SDL_SCANCODE_TAB; break;
+	case VK_RETURN: sc = SDL_SCANCODE_RETURN; break;
+	case VK_ESCAPE: sc = SDL_SCANCODE_ESCAPE; break;
+	case VK_SPACE:  sc = SDL_SCANCODE_SPACE; break;
+	case VK_PRIOR:  sc = SDL_SCANCODE_PAGEUP; break;
+	case VK_NEXT:   sc = SDL_SCANCODE_PAGEDOWN; break;
+	case VK_END:    sc = SDL_SCANCODE_END; break;
+	case VK_HOME:   sc = SDL_SCANCODE_HOME; break;
+	case VK_LEFT:   sc = SDL_SCANCODE_LEFT; break;
+	case VK_UP:     sc = SDL_SCANCODE_UP; break;
+	case VK_RIGHT:  sc = SDL_SCANCODE_RIGHT; break;
+	case VK_DOWN:   sc = SDL_SCANCODE_DOWN; break;
+	case VK_INSERT: sc = SDL_SCANCODE_INSERT; break;
+	case VK_DELETE: sc = SDL_SCANCODE_DELETE; break;
+	case VK_LWIN:   sc = SDL_SCANCODE_LGUI; break;
+	case VK_RWIN:   sc = SDL_SCANCODE_RGUI; break;
+	default:
+		if (vKey >= '0' && vKey <= '9')
+			sc = (SDL_Scancode)(SDL_SCANCODE_0 + (vKey - '0'));
+		else if (vKey >= 'A' && vKey <= 'Z')
+			sc = (SDL_Scancode)(SDL_SCANCODE_A + (vKey - 'A'));
+		else if (vKey >= VK_F1 && vKey <= VK_F12)
+			sc = (SDL_Scancode)(SDL_SCANCODE_F1 + (vKey - VK_F1));
+		else
+		{
+			// Fallback: treat vKey as SDL_Keycode (works for overlapping ASCII values)
+			SDL_Keycode key = (SDL_Keycode)vKey;
+			if (vKey >= 'A' && vKey <= 'Z')
+				key = (SDL_Keycode)(vKey - 'A' + 'a');
+			sc = SDL_GetScancodeFromKey(key, NULL);
+		}
+		break;
 	}
 
-	// ×ÖÄ¸ºÍÊı×Ö£º³¢ÊÔ°Ñ vKey (ASCII/ĞéÄâ¼ü) Ó³Éäµ½ SDL_Keycode£¨¶Ô×ÖÄ¸×ªĞ¡Ğ´£©
-	if ((vKey >= 0x30 && vKey <= 0x39) || (vKey >= 0x41 && vKey <= 0x5A))
-	{
-		// ¶Ô A-Z Ê¹ÓÃĞ¡Ğ´ keycode
-		SDL_Keycode keycode = (vKey >= 0x41 && vKey <= 0x5A) ? static_cast<SDL_Keycode>(std::tolower(vKey)) : static_cast<SDL_Keycode>(vKey);
-		SDL_Scancode sc = SDL_GetScancodeFromKey(keycode);
-		if (sc != SDL_SCANCODE_UNKNOWN)
-			return state[sc] ? static_cast<short>(0x8000) : 0;
-	}
-
-	// ÊÔÌ½ĞÔÍ¨ÓÃÓ³Éä£ºÖ±½Ó°Ñ vKey µ±×÷ SDL_Keycode ´«Èë£¨¶ÔÒ»Ğ©¼ü¿ÉÄÜÓĞĞ§£©
-	{
-		SDL_Scancode sc = SDL_GetScancodeFromKey(static_cast<SDL_Keycode>(vKey));
-		if (sc != SDL_SCANCODE_UNKNOWN)
-			return state[sc] ? static_cast<short>(0x8000) : 0;
-	}
-
-	// Î´Ê¶±ğ£º·µ»Ø 0
-	return 0;
+	if (sc == SDL_SCANCODE_UNKNOWN)
+		return 0;
+	return downBit(scDown(sc));
 }
 
 void SetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags)

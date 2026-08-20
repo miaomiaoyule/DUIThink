@@ -75,6 +75,7 @@ public:
 	virtual void DrawText(IDuiFont *pFont, RECT &rc, LPCTSTR lpszText, DWORD dwColor, DWORD dwStyle) = 0;
 	virtual SIZE MeasureText(IDuiFont *pFont, LPCTSTR lpszText, DWORD dwStyle, int nMaxWidth) = 0;
 	virtual void BlitFrom(IDuiCanvas *pSrc, int xDst, int yDst, int nWidth, int nHeight, int xSrc, int ySrc) = 0;
+	virtual void StretchBlitFrom(IDuiCanvas *pSrc, int xDst, int yDst, int nWidth, int nHeight, int xSrc, int ySrc, int wSrc, int hSrc) = 0;
 };
 
 //////////////////////////////////////////////////////////////////////////

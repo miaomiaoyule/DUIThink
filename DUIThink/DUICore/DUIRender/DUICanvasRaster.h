@@ -95,6 +95,7 @@ public:
 	void DrawText(IDuiFont *pFont, RECT &rc, LPCTSTR lpszText, DWORD dwColor, DWORD dwStyle) override;
 	SIZE MeasureText(IDuiFont *pFont, LPCTSTR lpszText, DWORD dwStyle, int nMaxWidth) override;
 	void BlitFrom(IDuiCanvas *pSrc, int xDst, int yDst, int nWidth, int nHeight, int xSrc, int ySrc) override;
+	void StretchBlitFrom(IDuiCanvas *pSrc, int xDst, int yDst, int nWidth, int nHeight, int xSrc, int ySrc, int wSrc, int hSrc) override;
 
 protected:
 	struct ClipState

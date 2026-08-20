@@ -432,7 +432,9 @@ bool CDUIControlBase::Active()
 
 	if (m_pWndOwner && false == GetActiveUrl().empty())
 	{
+#ifndef DuiPlatform_SDL
 		::ShellExecute(m_pWndOwner->GetWndHandle(), NULL, GetActiveUrl(), NULL, NULL, SW_SHOW);
+#endif
 	}
 
 	return true;
@@ -1244,7 +1246,9 @@ void CDUIControlBase::SetWinDragEnabled(bool bDragEnabled)
 
 	if (IsWinDragEnabled() && m_pWndOwner)
 	{
+#ifndef DuiPlatform_SDL
 		m_pWndOwner->Register(m_pWndOwner->GetWndHandle());
+#endif
 	}
 
 	return;
@@ -1263,7 +1267,9 @@ void CDUIControlBase::SetWinDropEnabled(bool bDropEnabled)
 
 	if (IsWinDropEnabled() && m_pWndOwner)
 	{
+#ifndef DuiPlatform_SDL
 		m_pWndOwner->Register(m_pWndOwner->GetWndHandle());
+#endif
 	}
 
 	return;
@@ -1284,7 +1290,9 @@ bool CDUIControlBase::OnDuiLButtonDown(const CDUIPoint& pt, const DuiMessage& Ms
 	}
 	if (m_pWndOwner && false == GetActiveUrl().empty())
 	{
+#ifndef DuiPlatform_SDL
 		::ShellExecute(m_pWndOwner->GetWndHandle(), NULL, GetActiveUrl(), NULL, NULL, SW_SHOW);
+#endif
 	}
 
 	//border separate
@@ -1604,7 +1612,9 @@ void CDUIControlBase::OnDuiWndManagerAttach()
 
 	if (IsWinDragEnabled() || IsWinDropEnabled())
 	{
+#ifndef DuiPlatform_SDL
 		m_pWndOwner->Register(m_pWndOwner->GetWndHandle());
+#endif
 	}
 
 	return;

@@ -49,6 +49,7 @@ typedef const TCHAR *LPCTSTR;
 
 typedef short SHORT;
 typedef int INT;
+typedef float REAL;
 typedef long LONG;
 typedef long long LONGLONG;
 typedef unsigned char BYTE;
@@ -312,6 +313,30 @@ inline bool operator!=(const GUID &a, const GUID &b)
 #define MK_CONTROL 0x0008
 #define MK_MBUTTON 0x0010
 #define MK_ALT 0x1000
+
+#ifndef MAKEINTRESOURCE
+#ifdef UNICODE
+#define MAKEINTRESOURCE(i) ((LPWSTR)((ULONG_PTR)((WORD)(i))))
+#else
+#define MAKEINTRESOURCE(i) ((LPSTR)((ULONG_PTR)((WORD)(i))))
+#endif
+#endif
+
+// Win32 system cursor IDs (match enDuiCursor)
+#ifndef IDC_ARROW
+#define IDC_ARROW       MAKEINTRESOURCE(32512)
+#define IDC_IBEAM       MAKEINTRESOURCE(32513)
+#define IDC_WAIT        MAKEINTRESOURCE(32514)
+#define IDC_CROSS       MAKEINTRESOURCE(32515)
+#define IDC_UPARROW     MAKEINTRESOURCE(32516)
+#define IDC_SIZENWSE    MAKEINTRESOURCE(32642)
+#define IDC_SIZENESW    MAKEINTRESOURCE(32643)
+#define IDC_SIZEWE      MAKEINTRESOURCE(32644)
+#define IDC_SIZENS      MAKEINTRESOURCE(32645)
+#define IDC_SIZEALL     MAKEINTRESOURCE(32646)
+#define IDC_NO          MAKEINTRESOURCE(32648)
+#define IDC_HAND        MAKEINTRESOURCE(32649)
+#endif
 
 #define VK_LBUTTON 0x01
 #define VK_RBUTTON 0x02
@@ -884,6 +909,8 @@ MMHELPER_API inline BOOL ScreenToClient(HWND hWnd, LPPOINT lpPoint);
 MMHELPER_API inline BOOL ClientToScreen(HWND hWnd, LPPOINT lpPoint);
 MMHELPER_API inline void GetCursorPos(LPPOINT lpPoint);
 MMHELPER_API inline void SetCursorPos(int X, int Y);
+MMHELPER_API inline HCURSOR LoadCursor(HINSTANCE hInstance, LPCTSTR lpCursorName);
+MMHELPER_API inline HCURSOR SetCursor(HCURSOR hCursor);
 MMHELPER_API inline void GetCaretPos(LPPOINT lpPoint);
 MMHELPER_API inline HWND GetParent(HWND hWnd);
 MMHELPER_API inline HWND GetFocus();
@@ -1020,6 +1047,7 @@ BOOL DeleteDC(HDC hdc);
 HDC CreateCompatibleDC(HDC hdc);
 HGDIOBJ SelectObject(HDC hdc, HGDIOBJ hgdiobj);
 BOOL BitBlt(HDC hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, HDC hdcSrc, int nXSrc, int nYSrc, DWORD dwRop);
+BOOL StretchBlt(HDC hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, HDC hdcSrc, int nXSrc, int nYSrc, int wSrc, int hSrc, DWORD rop);
 DWORD GetObjectType(HGDIOBJ h);
 int SaveDC(HDC hdc);
 BOOL RestoreDC(HDC hdc, int nSavedDC);

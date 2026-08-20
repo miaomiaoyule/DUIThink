@@ -1492,7 +1492,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 bool CDUIGlobal::SetProjectPath(LPCTSTR lpszPath)
 {
 	if (DuiFileResType_File == GetDuiFileResType()
-		&& (false == ::PathFileExists(lpszPath) || false == ::DuiPathIsDirectory(lpszPath))) return false;
+		&& (false == ::PathFileExists(lpszPath) || false == ::PathIsDirectory(lpszPath))) return false;
 
 	m_strProjectPath = lpszPath;
 	m_strSkinDir = m_strProjectPath + Dui_Resource_ImageRes + _T('\\');
@@ -1791,7 +1791,7 @@ bool CDUIGlobal::RenameDui(const CMMString &strNameOld, const CMMString &strName
 	CMMString strFileNameNew = strNameNew + _T(".xml");
 	CMMString strFileNew = GetDuiPath(DuiType) + strFileNameNew;
 
-	if (false == DuiMoveFile(strFileOld, strFileNew))
+	if (false == MoveFile(strFileOld, strFileNew))
 	{
 		MessageBox(NULL, _T("Error Because Same Filename°£"), _T("Ã· æ"), MB_ICONINFORMATION);
 		return false;

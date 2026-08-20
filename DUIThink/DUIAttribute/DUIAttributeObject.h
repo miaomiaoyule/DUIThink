@@ -62,7 +62,7 @@ public:
 	virtual LPCTSTR GetAttributeName();
 	virtual enDuiAttributeType GetAttributeType();
 	virtual CDUIPropertyObject * GetOwner();
-	virtual CDUIWnd * GetOwnerWnd();
+	virtual CDUIWndBase * GetOwnerWnd();
 	virtual CDUIAttributeGroup * GetGroup();
 	virtual LPCTSTR GetGroupName();
 

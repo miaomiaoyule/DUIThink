@@ -168,6 +168,7 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 	//dial
 	m_AttributeImageClockDial.Draw(hDC, m_rcAbsolute, m_rcPaint);
 
+#ifndef DuiPlatform_SDL
 	//center
 	CDUIPoint ptCenter;
 	ptCenter.x = m_rcAbsolute.left + GetWidth() / 2;
@@ -307,6 +308,7 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 		rcCenterDot.bottom = rcCenterDot.top + m_pBmpClockCenterDot->GetHeight();
 		Gp.DrawImage(m_pBmpClockCenterDot, rcCenterDot.left, rcCenterDot.top, m_pBmpClockCenterDot->GetWidth(), m_pBmpClockCenterDot->GetHeight());
 	}
+#endif
 
 	return;
 }
