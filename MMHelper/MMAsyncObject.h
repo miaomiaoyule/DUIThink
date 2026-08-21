@@ -38,7 +38,7 @@ public:
 protected:
 	std::recursive_mutex				m_AsyncDataLock;
 	HWND								m_hWndAsync = NULL;
-	Uint32								m_uWndID = 0;
+	uint32_t							m_uWndID = 0;
 #if defined DuiPlatform_SDL
 	Uint32								m_uMsgAsyncTask = 0;
 #else

@@ -4,7 +4,6 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////
-#if defined(DuiPlatform_SDL)
 inline std::string WStringToUtf8(const std::wstring& ws)
 {
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
@@ -19,6 +18,7 @@ inline std::wstring Utf8ToWString(const std::string& str)
 
 inline std::string WStringToGbk(const std::wstring &src)
 {
+#ifdef DuiPlatform_SDL
 	try
 	{
 		const char *pszLocale = "zh_CN.GB18030";
@@ -29,6 +29,9 @@ inline std::string WStringToGbk(const std::wstring &src)
 	catch (...)
 	{
 	}
+#else
+	return CT2CA(src.c_str());
+#endif
 
 	return "";
 }
@@ -106,7 +109,6 @@ inline std::wstring AnsiToWString(const std::string &str)
 	return out;
 #endif
 }
-#endif
 
 ////////////////////////////////////////////////////////////////////////////
 class CMMStringA : public std::string
@@ -125,6 +127,16 @@ public:
 	{
 
 	}
+	CMMStringA(LPCSTR lpszStr)
+		: std::string(lpszStr)
+	{
+
+	}
+	CMMStringA(LPCSTR lpszStr, int nLen)
+		: std::string(lpszStr, nLen)
+	{
+
+	}
 	operator LPCSTR() const
 	{
 		return c_str();
@@ -132,6 +144,26 @@ public:
 	operator LPSTR() const
 	{
 		return (LPSTR)c_str();
+	}
+	void SetAt(int nPos, CHAR ch)
+	{
+		if (nPos < 0 || nPos >= length()) return;
+
+		operator[](nPos) = ch;
+
+		return;
+	}
+	void Insert(int nPos, LPCSTR lpszStr)
+	{
+		if (nPos < 0 || nPos >= length()) return;
+
+		insert(nPos, lpszStr);
+
+		return;
+	}
+	int GetLength()
+	{
+		return length();
 	}
 	friend CMMStringA operator + (LPCTSTR lpszLeft, const CMMStringA &strRight)
 	{
@@ -143,106 +175,101 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////
-class CMMString :
-#ifdef UNICODE
-	public std::wstring
-#else
-	public std::string
-#endif
+class CMMStringW : public std::wstring
 {
 public:
-	CMMString()
+	CMMStringW()
 	{
 
 	}
 #if defined(DuiPlatform_SDL)
-	CMMString(LPCSTR lpszStr)
+	CMMStringW(LPCSTR lpszStr)
 		: std::wstring(GbkToWString(NULL == lpszStr ? ("") : lpszStr))
 	{
 
 	}
-	CMMString(LPCSTR lpszStr, int nLen)
+	CMMStringW(LPCSTR lpszStr, int nLen)
 		: std::wstring(GbkToWString(std::string(NULL == lpszStr ? ("") : lpszStr, nLen < 0 ? strlen(lpszStr) : nLen)))
 	{
 
 	}
 #else
-	CMMString(LPCSTR lpszStr)
+	CMMStringW(LPCSTR lpszStr)
 		: std::wstring((LPCTSTR)CA2CT(NULL == lpszStr ? ("") : lpszStr))
 	{
 
 	}
-	CMMString(LPCSTR lpszStr, int nLen)
+	CMMStringW(LPCSTR lpszStr, int nLen)
 		: std::wstring((LPCTSTR)CA2CT(std::string(NULL == lpszStr ? ("") : lpszStr, nLen < 0 ? strlen(lpszStr) : nLen).c_str()))
 	{
 
 	}
 #endif
-	CMMString(CHAR ch, int nCount)
-		: CMMString((TCHAR)ch, nCount)
+	CMMStringW(CHAR ch, int nCount)
+		: CMMStringW((TCHAR)ch, nCount)
 	{
 
 	}
-	CMMString(TCHAR ch)
+	CMMStringW(TCHAR ch)
 		: std::wstring(1, ch)
 	{
 
 	}
-	CMMString(TCHAR ch, int nCount)
+	CMMStringW(TCHAR ch, int nCount)
 		: std::wstring(nCount, ch)
 	{
 
 	}
-	CMMString(LPCTSTR lpszStr)
+	CMMStringW(LPCTSTR lpszStr)
 		: std::wstring(NULL == lpszStr ? _T("") : lpszStr)
 	{
 
 	}
-	CMMString(LPCTSTR lpszStr, int nLen)
+	CMMStringW(LPCTSTR lpszStr, int nLen)
 		: std::wstring(NULL == lpszStr ? _T("") : lpszStr, nLen < 0 ? lstrlen(lpszStr) : nLen)
 	{
 
 	}
-	CMMString(const CMMString &strSrc)
+	CMMStringW(const CMMStringW &strSrc)
 		: std::wstring(strSrc)
 	{
 
 	}
-	CMMString(const std::wstring &strSrc)
+	CMMStringW(const std::wstring &strSrc)
 		: std::wstring(strSrc)
 	{
 
 	}
 #ifndef DuiPlatform_SDL
-	CMMString(CString &strSrc)
+	CMMStringW(CString &strSrc)
 		: std::wstring(strSrc)
 	{
 
 	}
 #endif
-	CMMString Mid(int nFrom) const
+	CMMStringW Mid(int nFrom) const
 	{
 		return length() > nFrom ? c_str() + nFrom : _T("");
 	}
-	CMMString Mid(int nFrom, int nCount) const
+	CMMStringW Mid(int nFrom, int nCount) const
 	{
-		return length() > nFrom ? CMMString(c_str() + nFrom, nCount) : CMMString(_T(""));
+		return length() > nFrom ? CMMStringW(c_str() + nFrom, nCount) : CMMStringW(_T(""));
 	}
-	CMMString Left(int nCount) const
+	CMMStringW Left(int nCount) const
 	{
-		return CMMString(c_str(), min(length(), nCount));
+		return CMMStringW(c_str(), min(length(), nCount));
 	}
-	CMMString Right(int nCount) const
+	CMMStringW Right(int nCount) const
 	{
 		return (c_str() + max(0, (int)length() - nCount));
 	}
-	CMMString & MakeLower()
+	CMMStringW & MakeLower()
 	{
 		std::transform(begin(), end(), begin(), tolower);
 
 		return *this;
 	}
-	CMMString & Trim(TCHAR ch = _T(' '))
+	CMMStringW & Trim(TCHAR ch = _T(' '))
 	{
 		while (length() > 0 && (front() == ch || (_T(' ') == ch && (_T('\t') == front() || _T('\n') == front()))))
 		{
@@ -255,11 +282,11 @@ public:
 
 		return *this;
 	}
-	CMMString & Trim(LPCTSTR pszTargets)
+	CMMStringW & Trim(LPCTSTR pszTargets)
 	{
 		return TrimLeft(pszTargets).TrimRight(pszTargets);
 	}
-	CMMString & TrimLeft(LPCTSTR pszTargets)
+	CMMStringW & TrimLeft(LPCTSTR pszTargets)
 	{
 		int nLen = lstrlen(pszTargets);
 		while (Left(nLen) == pszTargets)
@@ -269,11 +296,11 @@ public:
 
 		return(*this);
 	}
-	CMMString & TrimRight(TCHAR ch)
+	CMMStringW & TrimRight(TCHAR ch)
 	{
-		return TrimRight(CMMString(ch).c_str());
+		return TrimRight(CMMStringW(ch).c_str());
 	}
-	CMMString & TrimRight(LPCTSTR pszTargets)
+	CMMStringW & TrimRight(LPCTSTR pszTargets)
 	{
 		int nLen = lstrlen(pszTargets);
 		while (Right(nLen) == pszTargets)
@@ -283,17 +310,17 @@ public:
 
 		return(*this);
 	}
-	CMMString & Replace(TCHAR chSrc, TCHAR chDest)
+	CMMStringW & Replace(TCHAR chSrc, TCHAR chDest)
 	{
 		std::replace(begin(), end(), chSrc, chDest);
 
 		return *this;
 	}
-	CMMString & Replace(LPCTSTR lpszSrc, LPCTSTR lpszDest)
+	CMMStringW & Replace(LPCTSTR lpszSrc, LPCTSTR lpszDest)
 	{
 		if (lstrlen(lpszSrc) <= 0) return *this;
 
-		CMMString strTemp;
+		CMMStringW strTemp;
 		int nPosFrom = 0;
 		int nPosFind = find(lpszSrc);
 		while (-1 != nPosFind)
@@ -315,7 +342,7 @@ public:
 
 		return *this;
 	}
-	CMMString & Format(LPCTSTR pstrFormat, va_list Args)
+	CMMStringW & Format(LPCTSTR pstrFormat, va_list Args)
 	{
 		if (NULL == pstrFormat) return *this;
 
@@ -435,7 +462,7 @@ public:
 
 		return *this;
 	}
-	CMMString & Format(LPCTSTR pstrFormat, ...)
+	CMMStringW & Format(LPCTSTR pstrFormat, ...)
 	{
 		va_list Args;
 
@@ -445,12 +472,12 @@ public:
 
 		return *this;
 	}
-	CMMString & AppendFormat(LPCTSTR pstrFormat, ...)
+	CMMStringW & AppendFormat(LPCTSTR pstrFormat, ...)
 	{
 		va_list Args;
 
 		va_start(Args, pstrFormat);
-		CMMString strTemp;
+		CMMStringW strTemp;
 		strTemp.Format(pstrFormat, Args);
 		operator += (strTemp);
 		va_end(Args);
@@ -487,8 +514,8 @@ public:
 	}
 	int CompareNoCase(LPCTSTR lpszRight)
 	{
-		CMMString strThis = *this;
-		CMMString strRight = lpszRight;
+		CMMStringW strThis = *this;
+		CMMStringW strRight = lpszRight;
 		strThis.MakeLower();
 		strRight.MakeLower();
 
@@ -498,7 +525,7 @@ public:
 	{
 		return __super::operator[](nPos);
 	}
-	CMMString & operator = (LPCSTR lpszRight)
+	CMMStringW & operator = (LPCSTR lpszRight)
 	{
 		if (NULL == lpszRight) return *this;
 
@@ -509,7 +536,7 @@ public:
 #endif
 		return *this;
 	}
-	CMMString & operator = (LPCTSTR lpszRight)
+	CMMStringW & operator = (LPCTSTR lpszRight)
 	{
 		if (NULL == lpszRight) return *this;
 
@@ -532,71 +559,79 @@ public:
 	{
 		return c_str();
 	}
-	friend CMMString operator + (const CMMString &strLeft, TCHAR ch)
+	friend CMMStringW operator + (const CMMStringW &strLeft, TCHAR ch)
 	{
-		CMMString strTemp = strLeft;
+		CMMStringW strTemp = strLeft;
 		strTemp.operator += (ch);
 
 		return strTemp;
 	}
-	friend CMMString operator + (const CMMString &strLeft, CHAR ch)
+	friend CMMStringW operator + (const CMMStringW &strLeft, CHAR ch)
 	{
-		CMMString strTemp = strLeft;
+		CMMStringW strTemp = strLeft;
 		strTemp.operator += (ch);
 
 		return strTemp;
 	}
-	friend CMMString operator + (TCHAR ch, const CMMString &strRight)
+	friend CMMStringW operator + (TCHAR ch, const CMMStringW &strRight)
 	{
-		CMMString strTemp(ch);
+		CMMStringW strTemp(ch);
 		strTemp += strRight;
 
 		return strTemp;
 	}
-	friend CMMString operator + (const CMMString &strLeft, LPCTSTR lpszRight)
+	friend CMMStringW operator + (const CMMStringW &strLeft, LPCTSTR lpszRight)
 	{
-		CMMString strTemp = strLeft;
+		CMMStringW strTemp = strLeft;
 		strTemp += lpszRight;
 		return strTemp;
 	}
-	friend CMMString operator + (const CMMString &strLeft, const CMMString &strRight)
+	friend CMMStringW operator + (const CMMStringW &strLeft, const CMMStringW &strRight)
 	{
-		CMMString strTemp = strLeft;
+		CMMStringW strTemp = strLeft;
 		strTemp += strRight;
 		return strTemp;
 	}
-	friend CMMString operator + (LPCTSTR lpszLeft, const CMMString &strRight)
+	friend CMMStringW operator + (LPCTSTR lpszLeft, const CMMStringW &strRight)
 	{
-		CMMString strLeft = lpszLeft;
+		CMMStringW strLeft = lpszLeft;
 		strLeft += strRight;
 		return strLeft;
 	}
-	friend bool operator == (const CMMString &strLeft, const CMMString &strRight)
+	friend bool operator == (const CMMStringW &strLeft, const CMMStringW &strRight)
 	{
 		return 0 == strLeft.compare(strRight);
 	}
-	friend bool operator == (const CMMString &strLeft, LPCTSTR lpszRight)
+	friend bool operator == (const CMMStringW &strLeft, LPCTSTR lpszRight)
 	{
 		return 0 == strLeft.compare(lpszRight);
 	}
-	friend bool operator == (LPCTSTR lpszLeft, const CMMString &strRight)
+	friend bool operator == (LPCTSTR lpszLeft, const CMMStringW &strRight)
 	{
 		return 0 == strRight.compare(lpszLeft);
 	}
-	friend bool operator != (LPCTSTR lpszLeft, const CMMString &strRight)
+	friend bool operator != (LPCTSTR lpszLeft, const CMMStringW &strRight)
 	{
 		return 0 != strRight.compare(lpszLeft);
 	}
-	friend bool operator != (const CMMString &strLeft, const CMMString &strRight)
+	friend bool operator != (const CMMStringW &strLeft, const CMMStringW &strRight)
 	{
 		return 0 != strLeft.compare(strRight);
 	}
-	friend bool operator != (const CMMString &strLeft, LPCTSTR lpszRight)
+	friend bool operator != (const CMMStringW &strLeft, LPCTSTR lpszRight)
 	{
 		return 0 != strLeft.compare(lpszRight);
 	}
 };
 
+//////////////////////////////////////////////////////////////////////////
+#ifdef UNICODE
+typedef CMMStringW CMMString;
+#else
+typedef CMMString CMMStringA;
+#endif
+
+//////////////////////////////////////////////////////////////////////////
 //hash
 namespace std
 {

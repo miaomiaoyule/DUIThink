@@ -360,6 +360,9 @@
     <ClInclude Include="DUIUtils\stb_truetype.h">
       <Filter>DUIUtils</Filter>
     </ClInclude>
+    <ClInclude Include="DUICore\DUIRender\DUIGdiPortable.h">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -614,7 +617,7 @@
     <ClCompile Include="DUICore\DUIRender\DUICanvasRaster.cpp">
       <Filter>DUICore\DUIRender</Filter>
     </ClCompile>
-    <ClCompile Include="DUICore\DUIRender\DUINativeGdi.cpp">
+    <ClCompile Include="DUICore\DUIRender\DUIGdiPortable.cpp">
       <Filter>DUICore\DUIRender</Filter>
     </ClCompile>
     <ClCompile Include="DUICore\DUIRender\DUIPaintSceneSDL.cpp">

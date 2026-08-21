@@ -8,7 +8,7 @@ namespace {
 	{
 		CMMAsyncObject * self;
 		UINT_PTR id;
-		Uint32 interval;
+		uint32_t interval;
 		bool repeat;
 	};
 }

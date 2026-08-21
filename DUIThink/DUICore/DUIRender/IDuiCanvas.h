@@ -3,6 +3,7 @@
 
 #pragma once
 
+#ifdef DuiPlatform_SDL
 // Portable 2D canvas. HDC on DuiPlatform_SDL is IDuiCanvas*.
 // Phase 1: CDUICanvasRaster (CPU BGRA) + SDL_Texture present.
 // Phase 2: swap implementation to Skia GPU (GL / GLES / Metal).
@@ -117,4 +118,6 @@ inline HDC DuiHDCFromCanvas(IDuiCanvas *pCanvas)
 	return (HDC)pCanvas;
 }
 
+//////////////////////////////////////////////////////////////////////////
+#endif
 #endif

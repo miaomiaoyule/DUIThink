@@ -5,6 +5,8 @@
 
 #include "IDuiCanvas.h"
 
+#ifdef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 class DUITHINK_API CDUIImageRaster : public IDuiImage
 {
@@ -125,4 +127,7 @@ protected:
 	LPBYTE m_pExternalBits = NULL; // non-owning; set by SelectBitmap
 	std::vector<ClipState> m_vecClip;
 };
+
+//////////////////////////////////////////////////////////////////////////
+#endif
 #endif

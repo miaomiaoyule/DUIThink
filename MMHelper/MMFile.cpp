@@ -983,7 +983,7 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 			if (bClearOld)
 			{
 				CMMStringA strSign;
-				strSign.GetBufferSetLength(3);
+				strSign.reserve(3);
 				strSign.SetAt(0, 0xEF);
 				strSign.SetAt(1, 0xBB);
 				strSign.SetAt(2, 0xBF);

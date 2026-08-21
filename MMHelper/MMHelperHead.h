@@ -78,7 +78,7 @@
 #include <codecvt>
 using namespace std;
 
-#define DuiPlatform_SDL
+//#define DuiPlatform_SDL
 #if defined(DuiPlatform_SDL)
 	#include "MMPlatformTypes.h"
 #else
