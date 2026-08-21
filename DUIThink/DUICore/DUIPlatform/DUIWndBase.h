@@ -207,8 +207,6 @@ public:
 	//window
 	virtual void ResizeWnd(int cx = -1, int cy = -1);
 	virtual void AdjustWndPos();
-#undef IsMinimized
-#undef IsMaximized
 	virtual bool IsMaximized();
 	virtual bool IsMinimized();
 	virtual CDUIRect GetClientRect() const;

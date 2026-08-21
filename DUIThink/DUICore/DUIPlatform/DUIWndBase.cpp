@@ -1344,7 +1344,7 @@ LRESULT CDUIWndBase::OnDestroy(WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIWndBase::OnNcActivate(WPARAM wParam, LPARAM lParam)
 {
-	if (false == IsIconic(m_hWnd)) return (wParam == 0) ? TRUE : FALSE;
+	if (false == IsMinimized()) return (wParam == 0) ? TRUE : FALSE;
 
 	return OnOldWndProc(WM_NCACTIVATE, wParam, lParam);
 }
@@ -2121,7 +2121,7 @@ void CDUIWndBase::OnDpiChanged(int nScalePre)
 	SetDpi(CDUIGlobal::GetInstance()->GetDpi());
 
 	//wndsize
-	if (false == IsZoomed(GetWndHandle()))
+	if (false == IsMaximized())
 	{
 		CDUIRect rcWnd = GetWindowRect();
 		rcWnd.right = rcWnd.left + (rcWnd.GetWidth()) * (GetScale() * 1.0f / nScalePre);

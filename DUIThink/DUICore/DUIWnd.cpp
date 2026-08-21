@@ -341,8 +341,8 @@ LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 	CDUIControlBase *pBtnRestore = FindControl(Dui_CtrlIDInner_BtnRestore);
 	if (pBtnMax && pBtnRestore)
 	{
-		pBtnMax->SetVisible(false == IsZoomed(m_hWnd));
-		pBtnRestore->SetVisible(IsZoomed(m_hWnd));
+		pBtnMax->SetVisible(false == IsMaximized());
+		pBtnRestore->SetVisible(IsMaximized());
 	}
 
 	//init func

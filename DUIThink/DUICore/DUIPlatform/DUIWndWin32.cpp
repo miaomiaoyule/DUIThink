@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
-#include "DUIWndWin32.h"
+#include "DUIWndWin32.h"
+
 #ifndef DuiPlatform_SDL
 
 //////////////////////////////////////////////////////////////////////////
@@ -11,8 +12,9 @@
 CDUIWndWin32::CDUIWndWin32(LPCTSTR lpszDuiName, HWND hWndParent)
 	: CDUIWndBase(lpszDuiName, hWndParent)
 	, m_OldWndProc(::DefWindowProc)
-{
-}
+{
+}
+
 CDUIWndWin32::~CDUIWndWin32()
 {	ReleasePaintScene();
 
@@ -37,7 +39,8 @@ CDUIWndWin32::~CDUIWndWin32()
 	}
 
 	return;
-}
+}
+
 #if (NTDDI_VERSION >= NTDDI_VISTA)
 void CDUIWndWin32::OnWinDragEnter(IDataObject *pIDataObject, DWORD dwKeyState, POINTL pt, DWORD *pdwEffect)
 {
@@ -552,6 +555,18 @@ void CDUIWndWin32::SetIcon(UINT nRes)
 	return;
 }
 
+LRESULT CDUIWndWin32::SendMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/)
+{
+	ASSERT(::IsWindow(m_hWnd));
+	return ::SendMessage(m_hWnd, uMsg, wParam, lParam);
+}
+
+LRESULT CDUIWndWin32::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/)
+{
+	ASSERT(::IsWindow(m_hWnd));
+	return ::PostMessage(m_hWnd, uMsg, wParam, lParam);
+}
+
 void CDUIWndWin32::SetCapture()
 {
 	::SetCapture(m_hWnd);
@@ -986,7 +1001,7 @@ LRESULT CDUIWndWin32::OnNcHitTest(WPARAM wParam, LPARAM lParam)
 	ScreenToClient(m_hWnd, &pt);
 	CDUIRect rcClient = GetClientRect();
 
-	if (false == IsZoomed(m_hWnd) && rcClient.PtInRect(pt))
+	if (false == IsMaximized() && rcClient.PtInRect(pt))
 	{
 		RECT rcSizeBox = GetResizeTrack();
 		if (pt.y < rcClient.top + rcSizeBox.top)
@@ -1054,17 +1069,17 @@ LRESULT CDUIWndWin32::OnSysCommand(WPARAM wParam, LPARAM lParam)
 	}
 
 #if defined(WIN32) && !defined(UNDER_CE)
-	BOOL bZoomed = IsZoomed(m_hWnd);
+	BOOL bZoomed = IsMaximized();
 	LRESULT lRes = OnOldWndProc(WM_SYSCOMMAND, wParam, lParam);
-	if (IsZoomed(m_hWnd) != bZoomed && false == IsIconic(m_hWnd))
+	if (IsMaximized() != bZoomed && false == IsMinimized())
 	{
 		CDUIControlBase *pBtnMax = FindControl(Dui_CtrlIDInner_BtnMax);
 		CDUIControlBase *pBtnRestore = FindControl(Dui_CtrlIDInner_BtnRestore);
 
 		if (pBtnMax && pBtnRestore)
 		{
-			pBtnMax->SetVisible(false == IsZoomed(m_hWnd));
-			pBtnRestore->SetVisible(IsZoomed(m_hWnd));
+			pBtnMax->SetVisible(false == IsMaximized());
+			pBtnRestore->SetVisible(IsMaximized());
 		}
 	}
 
@@ -1219,14 +1234,17 @@ void CDUIWndWin32::UpdateImeCompositionPos()
 	{
 		//Set composition window position near caret position
 		POINT point;
-		GetCaretPos(&point);
+		GetCaretPos(&point);
+
 		COMPOSITIONFORM Composition;
 		Composition.dwStyle = CFS_POINT;
 		Composition.ptCurrentPos.x = point.x;
 		Composition.ptCurrentPos.y = point.y;
-		ImmSetCompositionWindow(hIMC, &Composition);
+		ImmSetCompositionWindow(hIMC, &Composition);
+
 		ImmReleaseContext(GetWndHandle(), hIMC);
-	}
+	}
+
 	return;
 }void CDUIWndWin32::ReleasePaintScene()
 {
@@ -1367,5 +1385,6 @@ LRESULT CALLBACK CDUIWndWin32::__ControlProc(HWND hWnd, UINT uMsg, WPARAM wParam
 	::AttachThreadInput(dwThreadIDCur, dwThreadIDForground, FALSE);
 
 	return;
-}
+}
+
 #endif
