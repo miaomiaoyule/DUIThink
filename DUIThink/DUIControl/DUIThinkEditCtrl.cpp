@@ -1845,6 +1845,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiTextEditing(const DuiMessage &Msg)
 {
 	if (NULL == m_pWndOwner || Msg.strText.empty()) return 0;
 
+#if defined DuiPlatform_SDL
 	bool bHaveEmoji = false;
 	std::vector<tagMMStringEmoji> vecText = CMMStrHelp::ParseStringForEmoji(Msg.strText);
 	for (auto &Item : vecText)
@@ -1866,6 +1867,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiTextEditing(const DuiMessage &Msg)
 			SDL_StopTextInput(GetWndHandle());
 		}
 	}
+#endif
 
 	return 0;
 }

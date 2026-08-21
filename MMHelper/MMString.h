@@ -1,4 +1,4 @@
-#ifndef __MM_STRING_H__
+ï»¿#ifndef __MM_STRING_H__
 #define __MM_STRING_H__
 
 #pragma once
@@ -43,7 +43,7 @@ inline std::wstring GbkToWString(const std::string &str)
 #ifdef DUI_HAVE_ICONV
 	iconv_t cd = iconv_open("WCHAR_T", "GBK");
 	if (cd == (iconv_t)-1) {
-		// iconv ²»¿ÉÓÃ£¬»ØÍË
+		// iconv ä¸å¯ç”¨ï¼Œå›é€€
 		std::wstring out;
 		out.reserve(str.size());
 		for (unsigned char c : str) out.push_back(static_cast<wchar_t>(c));
@@ -57,7 +57,7 @@ inline std::wstring GbkToWString(const std::string &str)
 	size_t res = iconv(cd, &inptr, &inbytes, &outptr, &outbytes);
 	iconv_close(cd);
 	if (res == (size_t)-1) {
-		// ×ª»»Ê§°Ü£¬»ØÍËÖğ×Ö½ÚÀ©Õ¹
+		// è½¬æ¢å¤±è´¥ï¼Œå›é€€é€å­—èŠ‚æ‰©å±•
 		std::wstring out;
 		out.reserve(str.size());
 		for (unsigned char c : str) out.push_back(static_cast<wchar_t>(c));
@@ -66,7 +66,7 @@ inline std::wstring GbkToWString(const std::string &str)
 	size_t written = (outbuf.size() - outbytes) / sizeof(wchar_t);
 	return std::wstring(reinterpret_cast<wchar_t *>(outbuf.data()), written);
 #else
-	// ÎŞ iconv£º±£µ×Öğ×Ö½ÚÀ©Õ¹£¨½á¹û¿ÉÄÜ²»ÊÇÕıÈ·µÄÖĞÎÄ£©
+	// æ—  iconvï¼šä¿åº•é€å­—èŠ‚æ‰©å±•ï¼ˆç»“æœå¯èƒ½ä¸æ˜¯æ­£ç¡®çš„ä¸­æ–‡ï¼‰
 	std::wstring out;
 	out.reserve(str.size());
 	for (unsigned char c : str) out.push_back(static_cast<wchar_t>(c));
@@ -78,7 +78,7 @@ inline std::wstring AnsiToWString(const std::string &str)
 {
 	if (str.empty()) return std::wstring();
 
-	// POSIX Æ½Ì¨£ºANSI Í¨³£¾ÍÊÇÄ³¸ö±¾µØ±àÂë£¬³¢ÊÔÓÃ iconv ´Ó "CHAR" -> "WCHAR_T"
+	// POSIX å¹³å°ï¼šANSI é€šå¸¸å°±æ˜¯æŸä¸ªæœ¬åœ°ç¼–ç ï¼Œå°è¯•ç”¨ iconv ä» "CHAR" -> "WCHAR_T"
 #ifdef DUI_HAVE_ICONV
 	iconv_t cd = iconv_open("WCHAR_T", "CHAR");
 	if (cd == (iconv_t)-1) {
@@ -381,7 +381,7 @@ public:
 		Assign(szBuffer);
 		free(szBuffer);
 #elif defined(DuiPlatform_SDL)
-		// Non-MSVC: no _vsntprintf; vswprintf often cannot query with NULL/0 ¡ª grow buffer
+		// Non-MSVC: no _vsntprintf; vswprintf often cannot query with NULL/0 â€” grow buffer
 		size_t capacity = 256;
 		TCHAR *szBuffer = NULL;
 		for (;;)
@@ -625,26 +625,16 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////
-#ifdef UNICODE
-typedef CMMStringW CMMString;
+#if defined(DuiPlatform_SDL)
+// è·¨å¹³å°ç»Ÿä¸€å®½å­—ç¬¦ï¼ˆæˆ–æ”¹æˆç»Ÿä¸€ UTF-8 çš„ CMMStringAï¼‰
+using CMMString = CMMStringW;
 #else
-typedef CMMString CMMStringA;
+#if defined(UNICODE) || defined(_UNICODE)
+using CMMString = CMMStringW;
+#else
+using CMMString = CMMStringA;
 #endif
-
-//////////////////////////////////////////////////////////////////////////
-//hash
-namespace std
-{
-	template<> struct hash<CMMString>
-	{
-		inline uint32_t operator()(const CMMString &str) const
-		{
-			//forbid CMMHash::GetHash(str) to avoid dependency, and use FNV-1a algorithm directly here
-			//if CMMHash::GetHash(str) connot delay load MMHelper dll
-			return MM_Fnv1a_append_bytes(MM_FNV_offset_basis, (const unsigned char*)str.c_str(), sizeof(TCHAR) * str.length());
-		}
-	};
-}
+#endif
 
 #if defined(DuiPlatform_SDL)
 inline std::string MMStringToUtf8(const std::wstring &ws) { return WStringToUtf8(ws); }

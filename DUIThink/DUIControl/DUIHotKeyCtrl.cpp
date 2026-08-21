@@ -237,8 +237,7 @@ LRESULT CDUIHotKeyWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				Bitmap *pBmp = CDUIRenderEngine::GetAlphaBitmap(hBmpBk);
 				if (NULL == pBmp) break;
 
-				CDUIRect rcClient;
-				GetClientRect(m_hWnd, &rcClient);
+				CDUIRect rcClient = GetClientRect();
 				Gp.DrawImage(pBmp, rcClient.left, rcClient.top, rcClient.GetWidth(), rcClient.GetHeight());
 
 				MMSafeDelete(pBmp);

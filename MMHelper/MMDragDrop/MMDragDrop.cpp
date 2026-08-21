@@ -27,13 +27,13 @@ CMMDragDrop::~CMMDragDrop()
 
 void CMMDragDrop::Register(HWND hWnd)
 {
-	if (hWnd == m_hWnd) return;
+	if (hWnd == m_hWndListen) return;
 
 	if (SUCCEEDED(m_hResOleInit))
 	{
 		if (SUCCEEDED(RegisterDragDrop(hWnd, this)))
 		{
-			m_hWnd = hWnd;
+			m_hWndListen = hWnd;
 		}
 	}
 
@@ -42,12 +42,12 @@ void CMMDragDrop::Register(HWND hWnd)
 
 void CMMDragDrop::UnRegister()
 {
-	if (IsWindow(m_hWnd))
+	if (IsWindow(m_hWndListen))
 	{
-		RevokeDragDrop(m_hWnd);
+		RevokeDragDrop(m_hWndListen);
 	}
 
-	m_hWnd = NULL;
+	m_hWndListen = NULL;
 
 	return;
 }
@@ -78,7 +78,7 @@ IFACEMETHODIMP CMMDragDrop::DragEnter(IDataObject *pIDataObject, DWORD dwKeyStat
 {
 	if (m_pIDropTargetHelper)
 	{
-		m_pIDropTargetHelper->DragEnter(m_hWnd, pIDataObject, (LPPOINT)&pt, *pdwEffect);
+		m_pIDropTargetHelper->DragEnter(m_hWndListen, pIDataObject, (LPPOINT)&pt, *pdwEffect);
 	}
 
 	pIDataObject ? pIDataObject->QueryInterface(&m_pIDataObject) : E_NOINTERFACE;

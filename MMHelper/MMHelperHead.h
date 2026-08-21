@@ -156,8 +156,8 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 
 //////////////////////////////////////////////////////////////////////////////////
 #include "MMDefine.h"
-#include "MMHash.h"
 #include "MMString.h"
+#include "MMHash.h"
 #include "MMModule.h"
 #include "MMFile.h"
 #include "MMTime.h"

@@ -14,6 +14,7 @@ class DUITHINK_API CDUIControlBase
 	friend class CDUIWnd;
 	friend class CDUIWndBase;
 	friend class CDUIWndSDL;
+	friend class CDUIWndWin32;
 	friend class CDUIContainerCtrl;
 	friend class CDUIVerticalLayoutCtrl;
 	friend class CDUIHorizontalLayoutCtrl;

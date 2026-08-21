@@ -73,6 +73,7 @@ public:
 	void SetCaretPos(CDUIPoint pt) override;
 
 	//window dragdrop
+	void Register(HWND hWnd) override;
 	virtual bool BeginDragDrop(CDUIControlBase *pControl, WPARAM wParam, LPARAM lParam, int nFlag = DROPEFFECT_MOVE | DROPEFFECT_COPY | DROPEFFECT_LINK);
 	virtual void EndDragDrop();
 #if (NTDDI_VERSION >= NTDDI_VISTA)

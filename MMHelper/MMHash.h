@@ -3,8 +3,6 @@
 
 #pragma once
 
-class CMMString;
-
 //////////////////////////////////////////////////////////////////////////
 const static uint32_t MM_FNV_offset_basis = 2166136261U;
 const static uint32_t MM_FNV_prime = 16777619U;
@@ -30,6 +28,22 @@ public:
 	static uint32_t GetHash(LPCTSTR lpszStr);
 	static uint32_t GetHash(const std::vector<CMMString> &vecStr);
 };
+
+
+//////////////////////////////////////////////////////////////////////////
+//hash
+namespace std
+{
+	template<> struct hash<CMMString>
+	{
+		inline uint32_t operator()(const CMMString &str) const
+		{
+			//forbid CMMHash::GetHash(str) to avoid dependency, and use FNV-1a algorithm directly here
+			//if CMMHash::GetHash(str) connot delay load MMHelper dll
+			return MM_Fnv1a_append_bytes(MM_FNV_offset_basis, (const unsigned char*)str.c_str(), sizeof(TCHAR) * str.length());
+		}
+	};
+}
 
 //////////////////////////////////////////////////////////////////////////
 

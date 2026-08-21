@@ -13,7 +13,7 @@ public:
 
 protected:
 	CDUIEditCtrl *						m_pOwner = NULL;
-	CDUIWnd *							m_pWndOwner = NULL;
+	CDUIWndBase *						m_pWndOwner = NULL;
 	HBRUSH								m_hBkBrush = NULL;
 
 public:

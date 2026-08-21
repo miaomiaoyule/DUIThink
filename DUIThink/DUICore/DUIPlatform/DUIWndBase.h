@@ -10,6 +10,7 @@ class CDUIWndBase
 {
 	friend class CDUIContainerCtrl;
 	friend class CDUIThinkEditCtrl;
+	friend class CDUIRichEditCtrl;
 
 	MMDeclare_ClassName(CDUIWndBase)
 	DuiDeclare_Message_Map()
@@ -55,7 +56,7 @@ protected:
 	CMMString									m_strDuiName;
 	HWND										m_hWndParent = NULL;
 	HWND										m_hWnd = NULL;
-	Uint32										m_uWndID = 0;
+	uint32_t									m_uWndID = 0;
 	bool										m_bSubWindow = false;
 	CDUIPoint									m_ptCreate = {};
 	UINT										m_uCtrlIDClose = 0;
@@ -206,6 +207,8 @@ public:
 	//window
 	virtual void ResizeWnd(int cx = -1, int cy = -1);
 	virtual void AdjustWndPos();
+#undef IsMinimized
+#undef IsMaximized
 	virtual bool IsMaximized();
 	virtual bool IsMinimized();
 	virtual CDUIRect GetClientRect() const;
@@ -274,6 +277,9 @@ public:
 	virtual CDUIControlBase * FindSubControlByPoint(CDUIContainerCtrl *pParent, POINT pt);
 	virtual CDUIControlBase * FindSubControlByID(CDUIContainerCtrl *pParent, UINT uCtrlID);
 	virtual VecDuiControlBase FindSubControlsByClass(CDUIContainerCtrl *pParent, LPCTSTR pstrClass);
+
+	//dragdrop
+	virtual void Register(HWND hWnd) {}
 
 	//override
 protected:

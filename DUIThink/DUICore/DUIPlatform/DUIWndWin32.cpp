@@ -746,6 +746,13 @@ void CDUIWndWin32::SetCaretPos(CDUIPoint pt)
 	return;
 }
 
+void CDUIWndWin32::Register(HWND hWnd)
+{
+	CMMDragDrop::Register(hWnd);
+
+	return;
+}
+
 bool CDUIWndWin32::BeginDragDrop(CDUIControlBase *pControl, WPARAM wParam, LPARAM lParam, int nFlag)
 {
 	if (NULL == pControl) return false;
@@ -892,8 +899,6 @@ LRESULT CDUIWndWin32::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_PAINT:
 		{
-			bool bUpdate = false;
-
 			CDUIRect rcPaint;
 			bool bUpdate = ::GetUpdateRect(m_hWnd, &rcPaint, FALSE);
 
@@ -1051,7 +1056,7 @@ LRESULT CDUIWndWin32::OnSysCommand(WPARAM wParam, LPARAM lParam)
 #if defined(WIN32) && !defined(UNDER_CE)
 	BOOL bZoomed = IsZoomed(m_hWnd);
 	LRESULT lRes = OnOldWndProc(WM_SYSCOMMAND, wParam, lParam);
-	if (IsZoomed(m_hWnd) != bZoomed && false == DuiIsIconic(m_hWnd))
+	if (IsZoomed(m_hWnd) != bZoomed && false == IsIconic(m_hWnd))
 	{
 		CDUIControlBase *pBtnMax = FindControl(Dui_CtrlIDInner_BtnMax);
 		CDUIControlBase *pBtnRestore = FindControl(Dui_CtrlIDInner_BtnRestore);
@@ -1214,7 +1219,7 @@ void CDUIWndWin32::UpdateImeCompositionPos()
 	{
 		//Set composition window position near caret position
 		POINT point;
-		DuiGetCaretPos(&point);
+		GetCaretPos(&point);
 		COMPOSITIONFORM Composition;
 		Composition.dwStyle = CFS_POINT;
 		Composition.ptCurrentPos.x = point.x;

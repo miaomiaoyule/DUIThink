@@ -2,6 +2,7 @@
 #include "DUIWnd.h"
 
 //////////////////////////////////////////////////////////////////////////
+#if defined(DuiPlatform_SDL)
 static Uint32 SDLCALL __DuiSdlTimerProc(void *userdata, SDL_TimerID timerID, Uint32 interval)
 {
 	CDUIWndBase *pWnd = static_cast<CDUIWndBase *>(userdata);
@@ -14,6 +15,7 @@ static Uint32 SDLCALL __DuiSdlTimerProc(void *userdata, SDL_TimerID timerID, Uin
 
 	return interval;
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////
 MMImplement_ClassName(CDUIWnd)
