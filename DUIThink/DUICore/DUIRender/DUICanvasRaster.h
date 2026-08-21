@@ -97,6 +97,10 @@ public:
 	void BlitFrom(IDuiCanvas *pSrc, int xDst, int yDst, int nWidth, int nHeight, int xSrc, int ySrc) override;
 	void StretchBlitFrom(IDuiCanvas *pSrc, int xDst, int yDst, int nWidth, int nHeight, int xSrc, int ySrc, int wSrc, int hSrc) override;
 
+	// GDI SelectObject(HBITMAP): draw into the selected image buffer (CDUIMemDC path)
+	bool SelectBitmap(IDuiImage *pImage);
+	RECT GetClipBoxRect() const;
+
 protected:
 	struct ClipState
 	{
@@ -118,6 +122,7 @@ protected:
 	int m_nHeight = 0;
 	int m_nPitch = 0;
 	std::vector<BYTE> m_vecBits;
+	LPBYTE m_pExternalBits = NULL; // non-owning; set by SelectBitmap
 	std::vector<ClipState> m_vecClip;
 };
 #endif

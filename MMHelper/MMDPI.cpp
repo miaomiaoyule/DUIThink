@@ -1,27 +1,67 @@
 #include "stdafx.h"
 #include "MMDpi.h"
 
-#ifndef DuiPlatform_SDL
-
-//////////////////////////////////////////////////////////////////////////
-typedef HRESULT(WINAPI *LPSetProcessDpiAwareness)(_In_ enMMPROCESS_DPI_AWARENESS value);
-typedef HRESULT(WINAPI *LPGetProcessDpiAwareness)(_In_  HANDLE hprocess, _Out_ enMMPROCESS_DPI_AWARENESS *value);
-typedef HRESULT(WINAPI *LPGetDpiForMonitor)(_In_ HMONITOR hmonitor, _In_ enMMMONITOR_DPI_TYPE dpiType, _Out_ UINT *dpiX, _Out_ UINT *dpiY);
-
 //////////////////////////////////////////////////////////////////////////
 enMMPROCESS_DPI_AWARENESS CMMDpi::m_ProcessDPIAwareness = MMPROCESS_PER_MONITOR_DPI_AWARE;
 
 CMMDpi::CMMDpi()
 {
 	SetDpi(96);
-
-	return;
 }
+
+#if defined(DuiPlatform_SDL)
+
+int CMMDpi::GetDpiOfMainMonitor()
+{
+	int nCount = 0;
+	SDL_DisplayID *pIDs = SDL_GetDisplays(&nCount);
+	if (NULL == pIDs || nCount <= 0)
+	{
+		return 96;
+	}
+	const float fScale = SDL_GetDisplayContentScale(pIDs[0]);
+	SDL_free(pIDs);
+	if (fScale <= 0.0f) return 96;
+	return (int)(96.0f * fScale + 0.5f);
+}
+
+int CMMDpi::GetDpiOfMonitor(HMONITOR hMonitor)
+{
+	if (NULL == hMonitor) return GetDpiOfMainMonitor();
+	const float fScale = SDL_GetDisplayContentScale((SDL_DisplayID)(uintptr_t)hMonitor);
+	if (fScale <= 0.0f) return 96;
+	return (int)(96.0f * fScale + 0.5f);
+}
+
+int CMMDpi::GetDpiOfMonitorNearestToPoint(POINT pt)
+{
+	const SDL_Point sdlPt = { pt.x, pt.y };
+	const SDL_DisplayID id = SDL_GetDisplayForPoint(&sdlPt);
+	if (0 == id) return GetDpiOfMainMonitor();
+	return GetDpiOfMonitor((HMONITOR)(uintptr_t)id);
+}
+
+enMMPROCESS_DPI_AWARENESS CMMDpi::GetProcessDPIAwareness()
+{
+	return m_ProcessDPIAwareness;
+}
+
+bool CMMDpi::SetProcessDPIAwareness(enMMPROCESS_DPI_AWARENESS Awareness)
+{
+	m_ProcessDPIAwareness = Awareness;
+	return true;
+}
+
+#else
+
+//////////////////////////////////////////////////////////////////////////
+typedef HRESULT(WINAPI *LPSetProcessDpiAwareness)(_In_ enMMPROCESS_DPI_AWARENESS value);
+typedef HRESULT(WINAPI *LPGetProcessDpiAwareness)(_In_  HANDLE hprocess, _Out_ enMMPROCESS_DPI_AWARENESS *value);
+typedef HRESULT(WINAPI *LPGetDpiForMonitor)(_In_ HMONITOR hmonitor, _In_ enMMMONITOR_DPI_TYPE dpiType, _Out_ UINT *dpiX, _Out_ UINT *dpiY);
 
 int CMMDpi::GetDpiOfMainMonitor()
 {
 	HMONITOR hMonitor = ::MonitorFromPoint({ 1,1 }, MONITOR_DEFAULTTOPRIMARY);
-
 	return GetDpiOfMonitor(hMonitor);
 }
 
@@ -107,6 +147,9 @@ bool CMMDpi::SetProcessDPIAwareness(enMMPROCESS_DPI_AWARENESS Awareness)
 	return false;
 }
 
+#endif // DuiPlatform_SDL
+
+//////////////////////////////////////////////////////////////////////////
 int CMMDpi::GetScale() const
 {
 	if (MMPROCESS_DPI_UNAWARE == m_ProcessDPIAwareness)
@@ -297,6 +340,3 @@ RECT CMMDpi::ScaleVerify(RECT rcTarget, RECT rcScaleBack) const
 
 	return rcScaleBack;
 }
-
-////////////////////////////////////////////////////////////////////////////
-#endif

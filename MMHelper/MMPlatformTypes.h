@@ -61,16 +61,19 @@ typedef unsigned long ULONG;
 typedef unsigned long long ULONGLONG;
 typedef BYTE* LPBYTE;
 typedef DWORD ARGB;
+typedef DWORD COLORREF;
 #ifdef __LP64__
 typedef long long INT_PTR;
 typedef unsigned long long UINT_PTR;
 typedef unsigned long long ULONG_PTR;
 typedef long long LONG_PTR;
+typedef unsigned long long SIZE_T;
 #else
 typedef int INT_PTR;
 typedef unsigned int UINT_PTR;
 typedef unsigned long ULONG_PTR;
 typedef long LONG_PTR;
+typedef unsigned long SIZE_T;
 #endif
 typedef ULONG_PTR DWORD_PTR;
 typedef LONG_PTR LRESULT;
@@ -115,7 +118,9 @@ typedef void VOID;
 #define DT_BOTTOM                   0x00000008
 #define DT_WORDBREAK                0x00000010
 #define DT_SINGLELINE               0x00000020
+#define DT_NOCLIP                   0x00000100
 #define DT_CALCRECT                 0x00000400
+#define DT_NOPREFIX                 0x00000800
 #define DT_EDITCONTROL              0x00002000
 #define DT_PATH_ELLIPSIS            0x00004000
 #define DT_END_ELLIPSIS             0x00008000
@@ -517,6 +522,7 @@ inline bool operator!=(const GUID &a, const GUID &b)
 #define _tcstoul wcstoul
 #define _tcscmp wcscmp
 #define _tcsncpy wcsncpy
+#define _tcslen wcslen
 #define lstrlen wcslen
 #define lstrcmp wcscmp
 #define lstrcpyn wcsncpy
@@ -528,6 +534,7 @@ inline bool operator!=(const GUID &a, const GUID &b)
 #define _tcstoul strtoul
 #define _tcscmp strcmp
 #define _tcsncpy strncpy
+#define _tcslen strlen
 #define lstrlen strlen
 #define lstrcmp strcmp
 #define lstrcpyn strncpy
@@ -1039,8 +1046,52 @@ typedef struct _BLENDFUNCTION
 #define LOGPIXELSY					90
 #define DEFAULT_GUI_FONT			17
 #define HOLLOW_BRUSH				5
+#define NULL_BRUSH					5
 #define TRANSPARENT					1
 #define DT_NOPREFIX					0x00000800
+#define PS_SOLID					0
+#define PS_INSIDEFRAME				0x00000040
+#define RGN_AND						1
+#define DIB_RGB_COLORS				0
+#define BI_RGB						0L
+
+#ifndef GetRValue
+#define GetRValue(rgb) ((BYTE)((rgb) & 0xff))
+#define GetGValue(rgb) ((BYTE)(((rgb) >> 8) & 0xff))
+#define GetBValue(rgb) ((BYTE)(((rgb) >> 16) & 0xff))
+#endif
+
+typedef void *HPEN;
+// HRGN already typedef'd above as void*
+
+typedef struct tagBITMAPINFOHEADER
+{
+	DWORD biSize;
+	LONG  biWidth;
+	LONG  biHeight;
+	WORD  biPlanes;
+	WORD  biBitCount;
+	DWORD biCompression;
+	DWORD biSizeImage;
+	LONG  biXPelsPerMeter;
+	LONG  biYPelsPerMeter;
+	DWORD biClrUsed;
+	DWORD biClrImportant;
+} BITMAPINFOHEADER, *LPBITMAPINFOHEADER;
+
+typedef struct tagRGBQUAD
+{
+	BYTE rgbBlue;
+	BYTE rgbGreen;
+	BYTE rgbRed;
+	BYTE rgbReserved;
+} RGBQUAD;
+
+typedef struct tagBITMAPINFO
+{
+	BITMAPINFOHEADER bmiHeader;
+	RGBQUAD bmiColors[1];
+} BITMAPINFO, *LPBITMAPINFO;
 
 BOOL DeleteObject(HGDIOBJ hObject);
 BOOL DeleteDC(HDC hdc);
@@ -1056,5 +1107,53 @@ HGDIOBJ GetStockObject(int i);
 int GetObject(HGDIOBJ h, int c, LPVOID pv);
 int GetDeviceCaps(HDC hdc, int nIndex);
 BOOL UpdateLayeredWindow(HWND hWnd, HDC hdcDst, POINT *pptDst, SIZE *psize, HDC hdcSrc, POINT *pptSrc, DWORD crKey, BLENDFUNCTION *pblend, DWORD dwFlags);
+
+HRGN CreateRectRgnIndirect(const RECT *lprect);
+HRGN CreateEllipticRgnIndirect(const RECT *lprect);
+HRGN CreateRoundRectRgn(int x1, int y1, int x2, int y2, int w, int h);
+int CombineRgn(HRGN hrgnDest, HRGN hrgnSrc1, HRGN hrgnSrc2, int fnCombineMode);
+int SelectClipRgn(HDC hdc, HRGN hrgn);
+int GetClipBox(HDC hdc, LPRECT lprect);
+HPEN CreatePen(int iStyle, int cWidth, DWORD color);
+BOOL Rectangle(HDC hdc, int left, int top, int right, int bottom);
+BOOL RoundRect(HDC hdc, int left, int top, int right, int bottom, int width, int height);
+int SetBkMode(HDC hdc, int mode);
+int SetTextColor(HDC hdc, DWORD color);
+int DrawText(HDC hdc, LPCTSTR lpchText, int cchText, LPRECT lprc, UINT format);
+HDC GetDC(HWND hWnd);
+int ReleaseDC(HWND hWnd, HDC hDC);
+void GdiFlush();
+int GetDIBits(HDC hdc, HBITMAP hbm, UINT start, UINT cLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT usage);
+HBITMAP CreateCompatibleBitmap(HDC hdc, int cx, int cy);
+HBITMAP CreateDIBSection(HDC hdc, const BITMAPINFO *pbmi, UINT usage, void **ppvBits, HANDLE hSection, DWORD offset);
+BOOL WINAPI AlphaBlend(HDC hdcDest, int xoriginDest, int yoriginDest, int wDest, int hDest,
+	HDC hdcSrc, int xoriginSrc, int yoriginSrc, int wSrc, int hSrc, BLENDFUNCTION ftn);
+int DrawShadowText(HDC hdc, LPCTSTR lpchText, int cchText, LPRECT lprc, UINT format,
+	DWORD crText, DWORD crShadow, int dx, int dy);
+BOOL GetTextExtentPoint32(HDC hdc, LPCTSTR lpString, int c, LPSIZE psizl);
+
+#ifndef HRESULT
+typedef long HRESULT;
+#endif
+#ifndef E_FAIL
+#define E_FAIL ((HRESULT)0x80004005L)
+#endif
+#ifndef HGLOBAL
+typedef void *HGLOBAL;
+#endif
+#ifndef GMEM_FIXED
+#define GMEM_FIXED 0x0000
+#endif
+
+struct IStream
+{
+	virtual ~IStream() {}
+	virtual ULONG Release() { delete this; return 0; }
+};
+
+HGLOBAL GlobalAlloc(UINT uFlags, SIZE_T dwBytes);
+LPVOID GlobalLock(HGLOBAL hMem);
+BOOL GlobalUnlock(HGLOBAL hMem);
+HRESULT CreateStreamOnHGlobal(HGLOBAL hGlobal, BOOL fDeleteOnRelease, IStream **ppstm);
 
 #endif // __MM_PLATFORM_TYPES_H__

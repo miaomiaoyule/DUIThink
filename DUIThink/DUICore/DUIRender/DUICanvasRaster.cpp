@@ -335,11 +335,16 @@ CDUICanvasRaster::~CDUICanvasRaster()
 
 int CDUICanvasRaster::GetWidth() const { return m_nWidth; }
 int CDUICanvasRaster::GetHeight() const { return m_nHeight; }
-LPBYTE CDUICanvasRaster::GetBits() { return m_vecBits.empty() ? NULL : m_vecBits.data(); }
+LPBYTE CDUICanvasRaster::GetBits()
+{
+	if (m_pExternalBits) return m_pExternalBits;
+	return m_vecBits.empty() ? NULL : m_vecBits.data();
+}
 int CDUICanvasRaster::GetPitch() const { return m_nPitch; }
 
 bool CDUICanvasRaster::Resize(int nWidth, int nHeight)
 {
+	m_pExternalBits = NULL;
 	m_nWidth = max(1, nWidth);
 	m_nHeight = max(1, nHeight);
 	m_nPitch = m_nWidth * 4;
@@ -350,6 +355,37 @@ bool CDUICanvasRaster::Resize(int nWidth, int nHeight)
 	State.rcClip = { 0, 0, m_nWidth, m_nHeight };
 	m_vecClip.push_back(State);
 	return true;
+}
+
+bool CDUICanvasRaster::SelectBitmap(IDuiImage *pImage)
+{
+	if (NULL == pImage || NULL == pImage->GetBits()) return false;
+	m_pExternalBits = pImage->GetBits();
+	m_nWidth = max(1, pImage->GetWidth());
+	m_nHeight = max(1, pImage->GetHeight());
+	m_nPitch = pImage->GetPitch() > 0 ? pImage->GetPitch() : m_nWidth * 4;
+	m_vecBits.clear();
+	if (m_vecClip.empty())
+	{
+		ClipState State;
+		State.rcClip = { 0, 0, m_nWidth, m_nHeight };
+		m_vecClip.push_back(State);
+	}
+	else
+	{
+		m_vecClip.front().rcClip = { 0, 0, m_nWidth, m_nHeight };
+	}
+	return true;
+}
+
+RECT CDUICanvasRaster::GetClipBoxRect() const
+{
+	if (m_vecClip.empty())
+	{
+		RECT rc = { 0, 0, m_nWidth, m_nHeight };
+		return rc;
+	}
+	return m_vecClip.back().rcClip;
 }
 
 void CDUICanvasRaster::Save()
@@ -430,7 +466,9 @@ void CDUICanvasRaster::BlendPixel(int x, int y, DWORD dwColor, BYTE cbCoverage)
 	const BYTE sa = DUIARGBGetA(dwSrc);
 	if (0 == sa) return;
 
-	BYTE *p = m_vecBits.data() + y * m_nPitch + x * 4;
+	BYTE *pBits = GetBits();
+	if (NULL == pBits) return;
+	BYTE *p = pBits + y * m_nPitch + x * 4;
 	const BYTE sr = DUIARGBGetR(dwSrc);
 	const BYTE sg = DUIARGBGetG(dwSrc);
 	const BYTE sb = DUIARGBGetB(dwSrc);
@@ -444,10 +482,12 @@ void CDUICanvasRaster::BlendPixel(int x, int y, DWORD dwColor, BYTE cbCoverage)
 
 void CDUICanvasRaster::ClearRect(const RECT &rc)
 {
+	BYTE *pBits = GetBits();
+	if (NULL == pBits) return;
 	const RECT rcDraw = IntersectClip(rc);
 	for (int y = rcDraw.top; y < rcDraw.bottom; ++y)
 	{
-		memset(m_vecBits.data() + y * m_nPitch + rcDraw.left * 4, 0, (rcDraw.right - rcDraw.left) * 4);
+		memset(pBits + y * m_nPitch + rcDraw.left * 4, 0, (rcDraw.right - rcDraw.left) * 4);
 	}
 }
 
@@ -689,7 +729,9 @@ void CDUICanvasRaster::BlitImageRect(const BYTE *pBGRA, int nImgW, int nImgH, co
 			const BYTE *pS = pBGRA + (nSrcY * nImgW + nSrcX) * 4;
 			const BYTE sa = (BYTE)((pS[3] * cbAlpha + 127) / 255);
 			if (0 == sa || false == ClipPixel(x, y)) continue;
-			BYTE *pD = m_vecBits.data() + y * m_nPitch + x * 4;
+			BYTE *pBase = GetBits();
+			if (NULL == pBase) continue;
+			BYTE *pD = pBase + y * m_nPitch + x * 4;
 			const BYTE inv = (BYTE)(255 - sa);
 			pD[0] = (BYTE)((pS[0] * cbAlpha + 127) / 255 + (pD[0] * inv + 127) / 255);
 			pD[1] = (BYTE)((pS[1] * cbAlpha + 127) / 255 + (pD[1] * inv + 127) / 255);

@@ -620,6 +620,9 @@
     <ClCompile Include="DUICore\DUIRender\DUIPaintSceneSDL.cpp">
       <Filter>DUICore\DUIRender</Filter>
     </ClCompile>
+    <ClCompile Include="DUICore\DUIRender\DUIGdiplusPortable.cpp">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DUIThink.rc">

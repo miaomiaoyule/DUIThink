@@ -18,14 +18,16 @@ CDUIWndBase::CDUIWndBase(LPCTSTR lpszDuiName, HWND hWndParent)
 	SetDpi(CDUIGlobal::GetInstance()->GetDpi());
 
 	return;
-}
+}
+
 CDUIWndBase::~CDUIWndBase()
 {	CDUIAnimationWnd::UnInit();	OnDuiDelayDelete();
 	ReleaseRootCtrl();
 	OnFinalMessage();
 
 	return;
-}
+}
+
 bool CDUIWndBase::RegisterControlListen(IDuiControlListen *pIDuiControlListen)
 {
 	if (false == __super::RegisterControlListen(pIDuiControlListen)) return false;
@@ -1921,6 +1923,16 @@ LRESULT CDUIWndBase::OnSysChar(WPARAM wParam, LPARAM lParam)
 }
 
 LRESULT CDUIWndBase::OnPaint(CDUIRect rcPaint)
+{
+	return 0;
+}
+
+LRESULT CDUIWndBase::OnGetMinMaxInfo(WPARAM /*wParam*/, LPARAM /*lParam*/)
+{
+	return 0;
+}
+
+LRESULT CDUIWndBase::OnImeComPosition(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	return 0;
 }

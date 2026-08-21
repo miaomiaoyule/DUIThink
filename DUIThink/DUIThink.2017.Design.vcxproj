@@ -399,6 +399,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUICore\DUIRender.cpp" />
     <ClCompile Include="DUICore\DUIRender\DUICanvasRaster.cpp" />
     <ClCompile Include="DUICore\DUIRender\DUINativeGdi.cpp" />
+    <ClCompile Include="DUICore\DUIRender\DUIGdiplusPortable.cpp" />
     <ClCompile Include="DUICore\DUIRender\DUIPaintSceneSDL.cpp" />
     <ClCompile Include="DUICore\DUIWnd.cpp" />
     <ClCompile Include="DUIExport\DUIStruct.cpp" />
