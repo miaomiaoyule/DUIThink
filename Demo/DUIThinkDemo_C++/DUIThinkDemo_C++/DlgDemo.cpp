@@ -10,8 +10,8 @@ DuiBegin_Message_Map(CDlgDemo, CDUIWnd)
 	Dui_On_Notify_Ctrl(DuiNotify_Timer, IDC_TabViewControls, OnTimerTabViewControls)
 DuiEnd_Message_Map()
 
-CDlgDemo::CDlgDemo(LPCTSTR lpszDuiName)
-	: CDUIWnd(lpszDuiName)
+CDlgDemo::CDlgDemo()
+	: CDUIWnd(_T("DlgMain"))
 {
 	return;
 }
@@ -49,6 +49,7 @@ void CDlgDemo::OnFindControl()
 	__super::OnFindControl();
 
 	Dui_DDX_Control(CDUIContainerCtrl, m_pTabViewControls, IDC_TabViewControls)
+	Dui_DDX_Control(CDUIRadioBoxCtrl, m_pRadioBoxHomePageCtrl, IDC_RadioBoxHomePage)
 
 	return;
 }
@@ -84,9 +85,13 @@ void CDlgDemo::OnInitDialog()
 
 	//tray
 	{
+#ifndef DuiPlatform_SDL
 		m_TrayIcon.CreateTrayIcon(m_hWnd, CDUIGlobal::GetInstance()->GetInstanceHandle(), IDI_DUITHINKDEMOC, _T("DUIThinkDemo"), WM_DEMO_TRAYICON);
 		m_pTabViewControls->SetTimer(Time_TrayIcon_ID, Time_TrayIcon_Elapse);
+#endif
 	}
+
+	m_pRadioBoxHomePageCtrl->Select();
 
 	CenterWindow();
 
@@ -99,8 +104,10 @@ void CDlgDemo::OnTimerTabViewControls(const DuiNotify &Notify)
 	{
 		case Time_TrayIcon_ID:
 		{
+#ifndef DuiPlatform_SDL
 			m_bShowTrayIcon = !m_bShowTrayIcon;
 			m_TrayIcon.ShowIcon(m_bShowTrayIcon);
+#endif
 
 			break;
 		}
@@ -129,6 +136,7 @@ void CDlgDemo::OnWMDemoTrayIcon(WPARAM wParam, LPARAM lParam)
 	else if (WM_MOUSEMOVE == lParam)
 	{
 		//icon pos
+#ifndef DuiPlatform_SDL
 		CDUIRect rcTrayIcon = CMMTrayIcon::GetTrayIconPos(m_hWnd);
 
 		//win11
@@ -161,6 +169,7 @@ void CDlgDemo::OnWMDemoTrayIcon(WPARAM wParam, LPARAM lParam)
 		MMSafeDelete(m_pDlgChatTip);
 		m_pDlgChatTip = new CDlgChatTip(rcTrayIcon);
 		m_pDlgChatTip->Create(m_hWnd, _T(""), DUI_WNDSTYLE_DIALOG, DUI_WNDSTYLE_EX_DIALOG | WS_EX_TOPMOST);
+#endif
 	}
 
 	return;

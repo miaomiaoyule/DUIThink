@@ -355,6 +355,7 @@
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>../ThirdDepend</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -838,6 +839,11 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUICore\DUIPlatform\DUIWndBase.h" />
     <ClInclude Include="DUICore\DUIPlatform\DUIWndSDL.h" />
     <ClInclude Include="DUICore\DUIPlatform\DUIWndWin32.h" />
+    <ClInclude Include="DUICore\DUIRender\DUICanvasRaster.h" />
+    <ClInclude Include="DUICore\DUIRender\DUIGdiplusPortable.h" />
+    <ClInclude Include="DUICore\DUIRender\DUIGdiPortable.h" />
+    <ClInclude Include="DUICore\DUIRender\DUIPaintSceneSDL.h" />
+    <ClInclude Include="DUICore\DUIRender\IDuiCanvas.h" />
     <ClInclude Include="DUICore\DUIWnd.h" />
     <ClInclude Include="DUIExport\DefineAnimation.h" />
     <ClInclude Include="DUIExport\DefineAttribute.h" />
@@ -929,10 +935,9 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUICore\DUINotifyPump.cpp" />
     <ClCompile Include="DUICore\DUIPropertyObject.cpp" />
     <ClCompile Include="DUICore\DUIRender.cpp" />
-    <ClCompile Include="DUICore\DUIRender_SDL.cpp" />
     <ClCompile Include="DUICore\DUIRender\DUICanvasRaster.cpp" />
-    <ClCompile Include="DUICore\DUIRender\DUINativeGdi.cpp" />
     <ClCompile Include="DUICore\DUIRender\DUIGdiplusPortable.cpp" />
+    <ClCompile Include="DUICore\DUIRender\DUIGdiPortable.cpp" />
     <ClCompile Include="DUICore\DUIRender\DUIPaintSceneSDL.cpp" />
     <ClCompile Include="DUICore\DUIPlatform\DUIWndBase.cpp" />
     <ClCompile Include="DUICore\DUIPlatform\DUIWndSDL.cpp" />

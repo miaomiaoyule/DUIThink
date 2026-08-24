@@ -97,6 +97,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>../../../ThirdDepend</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -208,7 +209,6 @@ if exist "../../../bin\DUIThink.201764.dll" copy "../../../bin\DUIThink.201764.d
     <ClInclude Include="QQ\QQView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="Usage\AnimateDlg\AnimateDlgView.h" />
     <ClInclude Include="Usage\DpiDlg\DpiDlgView.h" />
     <ClInclude Include="Usage\SvgImage\SvgImageView.h" />

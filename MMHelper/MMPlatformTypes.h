@@ -26,7 +26,8 @@
 #pragma comment(lib, "version.lib")    // GetFileVersionInfo* / VerQueryValue
 #pragma comment(lib, "imm32.lib")      // Imm*
 #pragma comment(lib, "ole32.lib")
-#pragma comment(lib, "uuid.lib")       // IID_IAgileObject
+// uuid.lib on v141_xp may miss IID_IAgileObject; see IID_IAgileObject in this header
+#pragma comment(lib, "uuid.lib")
 #endif
 
 typedef SDL_Window *HWND;
@@ -248,6 +249,19 @@ inline bool operator!=(const GUID &a, const GUID &b)
 #define IsEqualIID(riid1, riid2) IsEqualGUID(riid1, riid2)
 #endif
 
+// v141_xp uuid.lib often lacks IID_IAgileObject; SDL3-static references it.
+// Put the definition in this header with selectany/weak so every module that
+// includes MMPlatformTypes.h gets the symbol — no per-module copy in stdafx.cpp.
+#if defined(_WIN32) || defined(_WIN64)
+#if defined(_MSC_VER)
+extern "C" __declspec(selectany) const GUID IID_IAgileObject =
+{ 0x94ea2b94, 0xe9cc, 0x49e0, { 0xc0, 0xff, 0xee, 0x64, 0xca, 0x8f, 0x5b, 0x90 } };
+#else
+extern "C" __attribute__((weak)) const GUID IID_IAgileObject =
+{ 0x94ea2b94, 0xe9cc, 0x49e0, { 0xc0, 0xff, 0xee, 0x64, 0xca, 0x8f, 0x5b, 0x90 } };
+#endif
+#endif
+
 // MSVC extension used across the framework
 #ifndef interface
 #define interface struct
@@ -443,6 +457,7 @@ inline bool operator!=(const GUID &a, const GUID &b)
 #define WM_MOVING 0x0216
 #define WM_ENTERSIZEMOVE 0x0231
 #define WM_EXITSIZEMOVE 0x0232
+#define WM_DROPFILES 0x0233
 #define WM_MOUSEHOVER 0x02A1
 #define WM_MOUSELEAVE 0x02A3
 #define WM_USER 0x0400
@@ -930,7 +945,6 @@ MMHELPER_API inline int MessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption,
 MMHELPER_API inline void SetForegroundWindow(HWND hWnd);
 MMHELPER_API inline void SetFocus(HWND hWnd);
 MMHELPER_API inline void ShowWindow(HWND hWnd, int nCmdShow);
-MMHELPER_API inline bool SendMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 MMHELPER_API inline HMONITOR MonitorFromWindow(HWND hWnd, DWORD dwFlags);
 MMHELPER_API inline void UpdateWindow(HWND hWnd);
 

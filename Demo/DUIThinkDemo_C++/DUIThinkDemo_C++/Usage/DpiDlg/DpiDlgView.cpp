@@ -66,11 +66,13 @@ void CDpiDlgView::OnDuiClickDpiDlg1(const DuiNotify &Notify)
 	strCmdLine = strCmdLine + _T(" /") + Name_DpiDlgKey + _T(" DlgDpi");
 	strCmdLine = strCmdLine + _T(" /") + Name_ParentWndKey + CMMStrHelp::Format(_T(" %u"), pIWndManager->GetWndHandle());
 	
+#ifndef DuiPlatform_SDL
 	TCHAR szFile[MAX_PATH] = {};
 	GetModuleFileName(GetModuleHandle(NULL), szFile, MMCountString(szFile));
 	CMMString strPath;
 	CMMFile::ParseFilePathName(szFile, strPath, CMMString());
 	ShellExecute(NULL, NULL, szFile, strCmdLine, strPath, SW_HIDE);
+#endif
 
 	return;
 }

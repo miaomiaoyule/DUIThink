@@ -119,6 +119,7 @@ void CDlgQQChat::OnDuiClickFont(const DuiNotify& Notify)
 {
 	if (NULL == m_pEditSendCtrl) return;
 
+#ifndef DuiPlatform_SDL
 	LOGFONT LogFont = {};
 	CHOOSEFONT FontInfo = {};
 	FontInfo.lStructSize = sizeof(FontInfo);
@@ -138,6 +139,7 @@ void CDlgQQChat::OnDuiClickFont(const DuiNotify& Notify)
 		TextStyle.vecFontResSwitch = { pFontBase->GetResourceName() };
 		m_pEditSendCtrl->SetTextStyle(TextStyle);
 	}
+#endif
 
 	return;
 }

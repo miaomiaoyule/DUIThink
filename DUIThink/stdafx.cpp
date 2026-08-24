@@ -1,17 +1,8 @@
-// stdafx.cpp : 只包括标准包含文件的源文件
-// DUIThink.pch 将作为预编译头
-// stdafx.obj 将包含预编译类型信息
+// stdafx.cpp : source file that includes just the standard includes
+// DUIThink.pch will be the pre-compiled header
+// stdafx.obj will contain the pre-compiled type information
 
 #include "stdafx.h"
-
-// TODO: 在 STDAFX.H 中
-// 引用任何所需的附加头文件，而不是在此文件中引用
-//////////////////////////////////////////////////////////////////////////
-#if defined(DuiPlatform_SDL) && (defined(_WIN32) || defined(_WIN64))
-// v141_xp uuid.lib lacks IID_IAgileObject; SDL3 static refs it when linked into this DLL.
-extern "C" const GUID IID_IAgileObject =
-{ 0x94ea2b94, 0xe9cc, 0x49e0, { 0xc0, 0xff, 0xee, 0x64, 0xca, 0x8f, 0x5b, 0x90 } };
-#endif
 
 //////////////////////////////////////////////////////////////////////////
 tagDuiMenuCmd							g_DuiMenuCmd;
@@ -24,3 +15,60 @@ CDUICalendarWnd *						g_pDuiCalendarWnd = NULL;
 IDuiWndNotify *							g_pIDuiWndNotify = NULL;
 
 //////////////////////////////////////////////////////////////////////////
+#ifdef DuiPlatform_SDL
+bool SendMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
+	if (false == IsWindow(hWnd)) return false;
+
+	CDUIWnd *pWnd = CDUIGlobal::GetInstance()->GetWndByHandle(hWnd);
+	if (NULL == pWnd) return false;
+
+	return 0 != pWnd->SendMessage(Msg, wParam, lParam);
+}
+
+bool PostMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
+	if (false == IsWindow(hWnd)) return false;
+
+	CDUIWnd *pWnd = CDUIGlobal::GetInstance()->GetWndByHandle(hWnd);
+	if (NULL == pWnd) return false;
+
+	return 0 != pWnd->PostMessage(Msg, wParam, lParam);
+}
+
+HWND FindWindow(LPCTSTR lpszClassName, LPCTSTR lpszTitle)
+{
+	// Match registered DUI windows (class = GetClass(), title = SDL window title).
+	// NULL class/title means "any", same as Win32 FindWindow.
+	MapWnd mapWnd = CDUIGlobal::GetInstance()->GetWndAll();
+	for (auto &Item : mapWnd)
+	{
+		CDUIWnd *pWnd = Item.first;
+		if (NULL == pWnd) continue;
+
+		HWND hWnd = pWnd->GetWndHandle();
+		if (false == IsWindow(hWnd)) continue;
+
+		if (lpszClassName && *lpszClassName)
+		{
+			LPCTSTR pszClass = pWnd->GetClass();
+			if (NULL == pszClass) continue;
+
+			if (0 != lstrcmp(pszClass, lpszClassName)) continue;
+		}
+
+		if (lpszTitle)
+		{
+			const char *pszUtf8 = SDL_GetWindowTitle((SDL_Window *)hWnd);
+			CMMString strTitle = CA2CT(pszUtf8, CP_UTF8);
+
+			if (0 != lstrcmp(strTitle, lpszTitle)) continue;
+		}
+
+		return hWnd;
+	}
+
+	return NULL;
+}
+
+#endif

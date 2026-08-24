@@ -4,7 +4,7 @@ class IDuiPaintScene;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIWndSDL INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIWndSDL = { 0xfb0000bc, 0xedd4, 0x4b04, 0x85, 0x42, 0xed, 0x2d, 0xe3, 0xb3, 0x42, 0x8 };
-class CDUIWndSDL : public CDUIWndBase
+class DUITHINK_API CDUIWndSDL : public CDUIWndBase
 {
 public:
 	CDUIWndSDL(LPCTSTR lpszDuiName = NULL, HWND hWndParent = NULL);

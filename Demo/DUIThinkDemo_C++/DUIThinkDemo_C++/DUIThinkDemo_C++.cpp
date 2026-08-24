@@ -17,15 +17,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
-	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(lpCmdLine);
-
-	// TODO: 在此处放置代码。
-
-	// 初始化全局字符串
-	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-	LoadStringW(hInstance, IDC_DUITHINKDEMOC, szWindowClass, MAX_LOADSTRING);
-
 	CDUIGlobal::GetInstance()->Init(hInstance);
 	//CDUIGlobal::GetInstance()->SetDpi(CMMDpi::GetDpiOfMainMonitor());
 	CDUIGlobal::GetInstance()->LoadProjectFromFile(_T("../DUIThinkDemo_C++.DuiProj/DUIThinkDemo_C++.DuiProj"));
@@ -59,7 +50,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 
 		//normal demo
-		CDlgDemo DlgDemo(_T("DlgMain"));
+		CDlgDemo DlgDemo;
 		DlgDemo.Create(NULL, _T("DUIThinkDemo"), DUI_WNDSTYLE_FRAME, DUI_WNDSTYLE_EX_FRAME);
 		DlgDemo.DoModal();
 

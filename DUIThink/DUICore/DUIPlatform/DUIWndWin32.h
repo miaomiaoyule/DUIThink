@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIWndWin32 INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIWndWin32 = { 0x66b5aa83, 0x3756, 0x4495, 0xad, 0xa0, 0xbd, 0x82, 0xa1, 0xdc, 0x27, 0x82 };
-class CDUIWndWin32 
+class DUITHINK_API CDUIWndWin32 
 	: public CDUIWndBase
 	, public CMMDragDrop
 {

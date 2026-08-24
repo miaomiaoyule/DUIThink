@@ -2,7 +2,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIWndBase INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIWndBase = { 0xaa660f7a, 0xd3b, 0x43c9, 0xb2, 0x8d, 0xb1, 0xe8, 0xbb, 0x83, 0x4, 0x94 };
-class CDUIWndBase
+class DUITHINK_API CDUIWndBase
 	: public CDUIPropertyObject
 	, public CDUIAnimationWnd
 	, public CDUINotifyPump

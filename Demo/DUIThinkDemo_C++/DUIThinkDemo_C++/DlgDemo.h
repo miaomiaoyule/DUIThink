@@ -9,13 +9,14 @@ class CDlgDemo : public CDUIWnd
 	DuiDeclare_Message_Map()
 
 public:
-	CDlgDemo(LPCTSTR lpszDuiName);
+	CDlgDemo();
 	~CDlgDemo();
 
 	//control
 protected:
 	//control
 	CDUIContainerCtrl *					m_pTabViewControls = NULL;
+	CDUIRadioBoxCtrl *					m_pRadioBoxHomePageCtrl = NULL;
 
 	//control view
 	CStaticView							m_StaticView;
@@ -35,9 +36,11 @@ protected:
 
 	//variant
 protected:
+#ifndef DuiPlatform_SDL
 	//tray
 	CMMTrayIcon							m_TrayIcon;
 	bool								m_bShowTrayIcon = true;
+#endif
 
 	//dialog
 protected:

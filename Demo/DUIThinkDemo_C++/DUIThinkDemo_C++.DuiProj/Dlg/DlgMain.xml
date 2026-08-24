@@ -65,7 +65,7 @@
             <ColorBorder Descr="" NameID="888955372" Visible="1" Modified="1" ValueID="2365708054"/>
             <ChildPaddingH Descr="" NameID="1645832614" Visible="1" Modified="1" ValueID="0" Value="10"/>
             <CDUIRadioBoxCtrl>
-                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="100008"/>
+                <ID Descr="" NameID="1494443624" Visible="0" Modified="1" ValueID="0" Value="101107"/>
                 <Position Descr="" NameID="2204219396" Visible="1" Modified="1" ValueID="3819726716"/>
                 <ImageBack Descr="" NameID="1407487721" Visible="1" Modified="1" ValueID="449895196"/>
                 <Text Descr="" NameID="3968762704" Visible="1" Modified="1" ValueID="3819596197"/>

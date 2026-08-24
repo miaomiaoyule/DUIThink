@@ -66,7 +66,13 @@ void CDlgDpi::OnDuiTimer(const DuiNotify &Notify)
 	{
 		if (m_hWndParent && false == IsWindow(m_hWndParent))
 		{
+#if defined DuiPlatform_SDL
+			SDL_Event quitEvent = {};
+			quitEvent.type = SDL_EVENT_QUIT;
+			SDL_PushEvent(&quitEvent);
+#else
 			PostQuitMessage(0);
+#endif
 		}
 
 		return;

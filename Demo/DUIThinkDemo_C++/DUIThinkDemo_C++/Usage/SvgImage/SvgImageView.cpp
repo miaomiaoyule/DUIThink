@@ -27,7 +27,9 @@ CSvgImageView::~CSvgImageView()
 		}
 	}
 
+#ifndef DuiPlatform_SDL
 	CMMSvg::GetInstance()->UnInit();
+#endif
 
 	return;
 }
@@ -60,7 +62,9 @@ void CSvgImageView::Attach(CDUIContainerCtrl *pViewBase)
 		m_pSvgImageViewCtrl->GetWndOwner()->AddINotify(this);
 	}
 
+#ifndef DuiPlatform_SDL
 	CMMSvg::GetInstance()->Init();
+#endif
 
 	//ctrl
 	m_pStaticSvgImageCtrl = MMInterfaceHelper(CDUIStaticCtrl, m_pSvgImageViewCtrl->FindSubControl(IDC_StaticSvgImage));
@@ -71,7 +75,9 @@ void CSvgImageView::Attach(CDUIContainerCtrl *pViewBase)
 
 	m_strTip = m_pStaticSvgImageCtrl->GetText();
 	
+#ifndef DuiPlatform_SDL
 	DragAcceptFiles(m_pSvgImageViewCtrl->GetWndOwner()->GetWndHandle(), m_pSvgImageViewCtrl->IsVisible());
+#endif
 
 	return;
 }
@@ -96,7 +102,9 @@ void CSvgImageView::OnDuiVisibleChangedSvgImageView(const DuiNotify &Notify)
 		|| NULL == m_pSvgImageViewCtrl->GetWndOwner()
 		|| m_pSvgImageViewCtrl != Notify.pNotifyCtrl) return;
 
+#ifndef DuiPlatform_SDL
 	DragAcceptFiles(m_pSvgImageViewCtrl->GetWndOwner()->GetWndHandle(), m_pSvgImageViewCtrl->IsVisible());
+#endif
 
 	return;
 }
@@ -107,6 +115,7 @@ void CSvgImageView::OnWMDropFile(WPARAM wParam, LPARAM lParam)
 		|| NULL == m_pStaticSvgImageCtrl
 		|| NULL == m_pSvgImageViewCtrl->GetWndOwner()->GetWndHandle()) return;
 
+#ifndef DuiPlatform_SDL
 	//activate us first !
 	SetActiveWindow(m_pSvgImageViewCtrl->GetWndOwner()->GetWndHandle());
 
@@ -122,6 +131,7 @@ void CSvgImageView::OnWMDropFile(WPARAM wParam, LPARAM lParam)
 	}
 
 	DragFinish(hDropInfo);
+#endif
 
 	//svgimage
 	ConstructSvgImageBk();
@@ -138,6 +148,7 @@ void CSvgImageView::ConstructSvgImageBk()
 	strExt.MakeLower();
 	if (_T("svg") == strExt)
 	{
+#ifndef DuiPlatform_SDL
 		HBITMAP hBitmap = NULL;
 		LPBYTE pBits = NULL;
 		int nWidth = 0, nHeight = 0;
@@ -145,6 +156,7 @@ void CSvgImageView::ConstructSvgImageBk()
 
 		m_pStaticSvgImageCtrl->SetCustomBmpBack(hBitmap, CustomBack_Center | CustomBack_VCenter | CustomBack_Scale);
 		m_pStaticSvgImageCtrl->SetText(_T(""));
+#endif
 
 		return;
 	}
