@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "DUIGlobal.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,24 @@ bool CDUIGlobal::Init(HINSTANCE hInstance)
 
 	UnInit();
 
-	CMMAsyncObject::Init();
+	// SDL VIDEO must be ready before any SDL_CreateWindow (incl. CMMAsyncObject).
+#if defined(DuiPlatform_SDL)
+	if (false == SDL_Init(SDL_INIT_VIDEO))
+	{
+		MMTRACE(_T("SDL_Init(VIDEO) failed: %s"), (LPCTSTR)CA2CT(SDL_GetError(), CP_ACP));
+		return false;
+	}
+#endif
+
+	if (false == CMMAsyncObject::Init())
+	{
+		MMTRACE(_T("CMMAsyncObject::Init failed"));
+#if defined(DuiPlatform_SDL)
+		SDL_Quit();
+#endif
+		return false;
+	}
+
 	CMMServiceItem::Init();
 
 	m_hInstance = hInstance;
@@ -63,11 +80,6 @@ bool CDUIGlobal::Init(HINSTANCE hInstance)
 	//design ctrl
 #ifdef DUI_DESIGN
 	LoadConfigCtrl(Dui_FileDesignCtrl);
-#endif
-
-	//platform
-#if defined(DuiPlatform_SDL)
-	bool bRes = SDL_Init(SDL_INIT_VIDEO);
 #endif
 
 	return true;
@@ -436,7 +448,7 @@ void CDUIGlobal::LoadWnd(const CMMString &strName, CDUIWnd *pWnd)
 	});
 	if (FindIt == m_vecDui.end())
 	{
-		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]≤ª¥Ê‘⁄\n"), strName.c_str()));
+		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]‰∏çÂ≠òÂú®\n"), strName.c_str()));
 
 		return;
 	}
@@ -465,7 +477,7 @@ CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWnd *pWnd)
 	});
 	if (FindIt == m_vecDui.end())
 	{
-		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]≤ª¥Ê‘⁄\n"), strName.c_str()));
+		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]‰∏çÂ≠òÂú®\n"), strName.c_str()));
 
 		return NULL;
 	}
@@ -1435,7 +1447,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 	if (false == bRes)
 	{
 		assert(false);
-		CMMString strWarning = CMMStrHelp::Format(_T("Failed of Load [%s]£¨Please Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
+		CMMString strWarning = CMMStrHelp::Format(_T("Failed of Load [%s]ÔºåPlease Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
 		MessageBox(NULL, strWarning, NULL, NULL);
 
 		return;
@@ -1471,7 +1483,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 				{
 					assert(false);
 					CMMString strWarning;
-					strWarning.Format(_T("Failed load extenddll°æ%s°ø, Make sure it in the running directory"), strDllName.c_str());
+					strWarning.Format(_T("Failed load extenddll„Äê%s„Äë, Make sure it in the running directory"), strDllName.c_str());
 					MessageBox(NULL, strWarning, NULL, NULL);
 
 					continue;
@@ -1793,7 +1805,7 @@ bool CDUIGlobal::RenameDui(const CMMString &strNameOld, const CMMString &strName
 
 	if (false == MoveFile(strFileOld, strFileNew))
 	{
-		MessageBox(NULL, _T("Error Because Same Filename°£"), _T("Ã· æ"), MB_ICONINFORMATION);
+		MessageBox(NULL, _T("Error Because Same Filename„ÄÇ"), _T("ÊèêÁ§∫"), MB_ICONINFORMATION);
 		return false;
 	}
 

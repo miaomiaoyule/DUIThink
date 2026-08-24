@@ -64,13 +64,18 @@ HWND CDUIWndSDL::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD 
 {
 	m_hWndParent = hWndParent;
 	m_ptCreate = { x, y };
+	(void)dwExStyle;
 
 	if (cx <= 0) cx = 800;
 	if (cy <= 0) cy = 600;
 
 	SDL_WindowFlags uFlags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN;
 	m_hWnd = SDL_CreateWindow(MMStringToUtf8(NULL == lpszName ? _T("") : lpszName).c_str(), cx, cy, uFlags);
-	if (NULL == m_hWnd) return NULL;
+	if (NULL == m_hWnd)
+	{
+		MMTRACE(_T("SDL_CreateWindow(%d,%d) failed: %s"), cx, cy, (LPCTSTR)CA2CT(SDL_GetError(), CP_ACP));
+		return NULL;
+	}
 
 	m_uWndID = SDL_GetWindowID(m_hWnd);
 	if (CW_USEDEFAULT != x && CW_USEDEFAULT != y)
@@ -82,12 +87,10 @@ HWND CDUIWndSDL::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD 
 		SDL_SetWindowParent(m_hWnd, hWndParent);
 	}
 
-	//注册用户事件类型（全局只注册一次）
 	GetSdlUserEventType();
 	SDL_AddEventWatch(&SDLEventWatch, this);
 	SDL_SetWindowHitTest(m_hWnd, &SDLEnableHitTest, this);
 
-	//对齐 Win32 CreateWindow 的 WM_CREATE 时机
 	OnWndMessage(WM_CREATE, 0, 0);
 
 	return m_hWnd;
