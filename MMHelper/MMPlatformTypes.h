@@ -11,23 +11,26 @@
 #include <wchar.h>
 #include "../ThirdDepend/SDL3/SDL.h"
 
-// SDL3 static lib pulls these Win32 deps (shared SDL3.dll already embeds them).
-// SDL3 headers do not require SDL_STATIC_LIB for consumers; DLL_EXPORT is only for building SDL itself.
+// SDL3 must live in exactly ONE module. Linking SDL3-static into MMHelper + DUIThink
+// (+ Demo) creates separate SDL states; Win32 then fails CreateWindowEx with
+// ERROR_INVALID_PARAMETER ("参数错误") because the SDL window class was registered
+// by another HINSTANCE. Only the MMHelper build embeds SDL; other modules import
+// SDL_* from MMHelper.dll (see SDL3_exports.def).
 #if defined(_WIN32) || defined(_WIN64)
+#if defined(MMHELPER_DLL) || defined(MMHELPLIB)
 #ifdef _DEBUG
 #pragma comment(lib, "../lib/SDL3-staticd.lib")
 #else
 #pragma comment(lib, "../lib/SDL3-static.lib")
 #endif
-
 #pragma comment(lib, "winmm.lib")      // timeBeginPeriod / timeEndPeriod
 #pragma comment(lib, "setupapi.lib")   // SetupDi*
-//#pragma comment(lib, "cfgmgr32.lib")   // CM_Get_* / CM_Locate_DevNode
 #pragma comment(lib, "version.lib")    // GetFileVersionInfo* / VerQueryValue
 #pragma comment(lib, "imm32.lib")      // Imm*
 #pragma comment(lib, "ole32.lib")
 // uuid.lib on v141_xp may miss IID_IAgileObject; see IID_IAgileObject in this header
 #pragma comment(lib, "uuid.lib")
+#endif
 #endif
 
 typedef SDL_Window *HWND;

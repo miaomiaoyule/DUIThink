@@ -41,9 +41,10 @@ bool CMMAsyncObject::Init()
 
 	//window
 #if defined(DuiPlatform_SDL)
-	m_hWndAsync = SDL_CreateWindow("", 1, 1, SDL_WINDOW_HIDDEN);
+	m_hWndAsync = SDL_CreateWindow("CMMAsyncObject", 64, 64, SDL_WINDOW_HIDDEN);
 	if (m_hWndAsync == nullptr)
 	{
+		MMTRACE(CA2CT(SDL_GetError(), CP_UTF8));
 		assert(false);
 		return false;
 	}

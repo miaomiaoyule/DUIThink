@@ -334,6 +334,7 @@
       <AdditionalIncludeDirectories>../ThirdDepend</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile>SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -357,6 +358,7 @@ if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigne
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile>SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -378,6 +380,7 @@ if exist "../Demo/DUIThinkDemo_C++/Debug" copy $(Configuration)\$(TargetFileName
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile>SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -399,6 +402,7 @@ copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Comman
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile>SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -491,6 +495,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile>SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -516,6 +521,7 @@ if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigne
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile>SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -541,6 +547,7 @@ if exist "../Demo/DUIThinkDemo_C++/Release" copy $(Configuration)\$(TargetFileNa
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile>SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -567,6 +574,7 @@ copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Comman
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile>SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>

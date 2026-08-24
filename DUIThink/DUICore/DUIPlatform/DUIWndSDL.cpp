@@ -69,24 +69,38 @@ HWND CDUIWndSDL::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD 
 	if (cx <= 0) cx = 800;
 	if (cy <= 0) cy = 600;
 
-	SDL_WindowFlags uFlags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN;
-	m_hWnd = SDL_CreateWindow(MMStringToUtf8(NULL == lpszName ? _T("") : lpszName).c_str(), cx, cy, uFlags);
+	std::string strTitle = MMStringToUtf8(NULL == lpszName ? _T("") : lpszName);
+	SDL_PropertiesID props = SDL_CreateProperties();
+	SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, strTitle.c_str());
+	SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, cx);
+	SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, cy);
+	if (dwStyle & WS_THICKFRAME)
+	{
+		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, true);
+	}
+	if (0 == (dwStyle & WS_VISIBLE))
+	{
+		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN, true);
+	}
+	if (CW_USEDEFAULT != x && CW_USEDEFAULT != y)
+	{
+		SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, x);
+		SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, y);
+	}
+	if (hWndParent)
+	{
+		SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_PARENT_POINTER, hWndParent);
+	}
+
+	m_hWnd = SDL_CreateWindowWithProperties(props);
+	SDL_DestroyProperties(props);
 	if (NULL == m_hWnd)
 	{
-		MMTRACE(_T("SDL_CreateWindow(%d,%d) failed: %s"), cx, cy, (LPCTSTR)CA2CT(SDL_GetError(), CP_ACP));
+		MMTRACE(_T("SDL_CreateWindowWithProperties failed: %s"), (LPCTSTR)CA2CT(SDL_GetError(), CP_ACP));
 		return NULL;
 	}
 
 	m_uWndID = SDL_GetWindowID(m_hWnd);
-	if (CW_USEDEFAULT != x && CW_USEDEFAULT != y)
-	{
-		SDL_SetWindowPosition(m_hWnd, x, y);
-	}
-	if (hWndParent)
-	{
-		SDL_SetWindowParent(m_hWnd, hWndParent);
-	}
-
 	GetSdlUserEventType();
 	SDL_AddEventWatch(&SDLEventWatch, this);
 	SDL_SetWindowHitTest(m_hWnd, &SDLEnableHitTest, this);
