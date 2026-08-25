@@ -17,6 +17,8 @@ EXPORTS
     SDL_AddTimer
     SDL_AddTimerNS
     SDL_AddVulkanRenderSemaphores
+    SDL_aligned_alloc
+    SDL_aligned_free
     SDL_asin
     SDL_asinf
     SDL_asprintf
@@ -58,6 +60,7 @@ EXPORTS
     SDL_BlitSurfaceUncheckedScaled
     SDL_BroadcastCondition
     SDL_bsearch
+    SDL_bsearch_r
     SDL_CalculateGPUTextureFormatSize
     SDL_calloc
     SDL_CancelGPUCommandBuffer
@@ -187,6 +190,12 @@ EXPORTS
     SDL_DrawGPUPrimitives
     SDL_DrawGPUPrimitivesIndirect
     SDL_DuplicateSurface
+    SDL_DYNAPI_entry
+    SDL_EGL_GetCurrentConfig
+    SDL_EGL_GetCurrentDisplay
+    SDL_EGL_GetProcAddress
+    SDL_EGL_GetWindowSurface
+    SDL_EGL_SetAttributeCallbacks
     SDL_EnableScreenSaver
     SDL_EndGPUComputePass
     SDL_EndGPUCopyPass
@@ -305,6 +314,7 @@ EXPORTS
     SDL_GetDisplayUsableBounds
     SDL_GetDXGIOutputInfo
     SDL_getenv
+    SDL_getenv_unsafe
     SDL_GetEnvironment
     SDL_GetEnvironmentVariable
     SDL_GetEnvironmentVariables
@@ -600,6 +610,21 @@ EXPORTS
     SDL_GetWindowSurface
     SDL_GetWindowSurfaceVSync
     SDL_GetWindowTitle
+    SDL_GL_CreateContext
+    SDL_GL_DestroyContext
+    SDL_GL_ExtensionSupported
+    SDL_GL_GetAttribute
+    SDL_GL_GetCurrentContext
+    SDL_GL_GetCurrentWindow
+    SDL_GL_GetProcAddress
+    SDL_GL_GetSwapInterval
+    SDL_GL_LoadLibrary
+    SDL_GL_MakeCurrent
+    SDL_GL_ResetAttributes
+    SDL_GL_SetAttribute
+    SDL_GL_SetSwapInterval
+    SDL_GL_SwapWindow
+    SDL_GL_UnloadLibrary
     SDL_GlobDirectory
     SDL_GlobStorageDirectory
     SDL_GPUSupportsProperties
@@ -637,9 +662,35 @@ EXPORTS
     SDL_HasSSE3
     SDL_HasSSE41
     SDL_HasSSE42
+    SDL_hid_ble_scan
+    SDL_hid_close
+    SDL_hid_device_change_count
+    SDL_hid_enumerate
+    SDL_hid_exit
+    SDL_hid_free_enumeration
+    SDL_hid_get_device_info
+    SDL_hid_get_feature_report
+    SDL_hid_get_indexed_string
+    SDL_hid_get_input_report
+    SDL_hid_get_manufacturer_string
+    SDL_hid_get_product_string
+    SDL_hid_get_properties
+    SDL_hid_get_report_descriptor
+    SDL_hid_get_serial_number_string
+    SDL_hid_init
+    SDL_hid_open
+    SDL_hid_open_path
+    SDL_hid_read
+    SDL_hid_read_timeout
+    SDL_hid_send_feature_report
+    SDL_hid_set_nonblocking
+    SDL_hid_write
     SDL_HideCursor
     SDL_HideWindow
     SDL_iconv
+    SDL_iconv_close
+    SDL_iconv_open
+    SDL_iconv_string
     SDL_Init
     SDL_InitHapticRumble
     SDL_InitSubSystem
@@ -684,13 +735,18 @@ EXPORTS
     SDL_KillProcess
     SDL_lltoa
     SDL_LoadBMP
+    SDL_LoadBMP_IO
     SDL_LoadFile
+    SDL_LoadFile_IO
     SDL_LoadFileAsync
     SDL_LoadFunction
     SDL_LoadObject
     SDL_LoadPNG
+    SDL_LoadPNG_IO
     SDL_LoadSurface
+    SDL_LoadSurface_IO
     SDL_LoadWAV
+    SDL_LoadWAV_IO
     SDL_LockAudioStream
     SDL_LockJoysticks
     SDL_LockMutex
@@ -701,7 +757,7 @@ EXPORTS
     SDL_LockSurface
     SDL_LockTexture
     SDL_LockTextureToSurface
-    SDL_Log
+    SDL_log
     SDL_log10
     SDL_log10f
     SDL_LogCritical
@@ -731,10 +787,14 @@ EXPORTS
     SDL_MemoryBarrierReleaseFunction
     SDL_memset
     SDL_memset4
+    SDL_Metal_CreateView
+    SDL_Metal_DestroyView
+    SDL_Metal_GetLayer
     SDL_MinimizeWindow
     SDL_MixAudio
     SDL_modf
     SDL_modff
+    SDL_murmur3_32
     SDL_OnApplicationDidChangeStatusBarOrientation
     SDL_OnApplicationDidEnterBackground
     SDL_OnApplicationDidEnterForeground
@@ -779,12 +839,17 @@ EXPORTS
     SDL_PutAudioStreamDataNoCopy
     SDL_PutAudioStreamPlanarData
     SDL_qsort
+    SDL_qsort_r
     SDL_QueryGPUFence
     SDL_Quit
     SDL_QuitSubSystem
     SDL_RaiseWindow
     SDL_rand
+    SDL_rand_bits
+    SDL_rand_bits_r
+    SDL_rand_r
     SDL_randf
+    SDL_randf_r
     SDL_ReadAsyncIO
     SDL_ReadIO
     SDL_ReadProcess
@@ -875,8 +940,11 @@ EXPORTS
     SDL_RunHapticEffect
     SDL_RunOnMainThread
     SDL_SaveBMP
+    SDL_SaveBMP_IO
     SDL_SaveFile
+    SDL_SaveFile_IO
     SDL_SavePNG
+    SDL_SavePNG_IO
     SDL_scalbn
     SDL_scalbnf
     SDL_ScaleSurface
@@ -909,6 +977,7 @@ EXPORTS
     SDL_SetCurrentThreadPriority
     SDL_SetCursor
     SDL_SetDefaultTextureScaleMode
+    SDL_setenv_unsafe
     SDL_SetEnvironmentVariable
     SDL_SetError
     SDL_SetErrorV
@@ -1076,6 +1145,7 @@ EXPORTS
     SDL_strrev
     SDL_strstr
     SDL_strtod
+    SDL_strtok_r
     SDL_strtol
     SDL_strtoll
     SDL_strtoul
@@ -1121,6 +1191,7 @@ EXPORTS
     SDL_UnlockTexture
     SDL_UnmapGPUTransferBuffer
     SDL_UnregisterApp
+    SDL_unsetenv_unsafe
     SDL_UnsetEnvironmentVariable
     SDL_UpdateGamepads
     SDL_UpdateHapticEffect
@@ -1141,6 +1212,13 @@ EXPORTS
     SDL_vsnprintf
     SDL_vsscanf
     SDL_vswprintf
+    SDL_Vulkan_CreateSurface
+    SDL_Vulkan_DestroySurface
+    SDL_Vulkan_GetInstanceExtensions
+    SDL_Vulkan_GetPresentationSupport
+    SDL_Vulkan_GetVkGetInstanceProcAddr
+    SDL_Vulkan_LoadLibrary
+    SDL_Vulkan_UnloadLibrary
     SDL_WaitAndAcquireGPUSwapchainTexture
     SDL_WaitAsyncIOResult
     SDL_WaitCondition

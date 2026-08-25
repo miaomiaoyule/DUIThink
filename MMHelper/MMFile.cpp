@@ -573,8 +573,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 	SDL_free(pData);
 	return true;
 
-	/*
-	FILE *pFile = fopen(CT2CA(strFile), "rb");
+	/*FILE *pFile = fopen(CT2CA(strFile), "rb");
 	if (NULL == pFile) return false;
 
 	fseek(pFile, 0, SEEK_END);
@@ -597,8 +596,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 
 	fclose(pFile);
 
-	return true;
-	*/
+	return true;	*/
 #else
 	{
 		HANDLE hFile = CreateFile(strFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);

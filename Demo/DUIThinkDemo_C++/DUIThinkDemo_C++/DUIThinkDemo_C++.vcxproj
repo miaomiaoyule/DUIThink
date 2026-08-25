@@ -25,6 +25,7 @@
     <RootNamespace>DUIThinkDemoC</RootNamespace>
     <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
+  <Import Project="$(ProjectDir)..\..\..\MMHelper\DuiPlatformSDL.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>

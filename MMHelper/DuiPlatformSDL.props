@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Single switch for DuiPlatform_SDL (Win32 vs SDL3).
+  Set DuiPlatformSDL to true/false here — do not #define DuiPlatform_SDL in MMHelperHead.h.
+  true  => PreprocessorDefinitions += DuiPlatform_SDL; MMHelper exports SDL via SDL3_exports.def
+  false => classic Win32 build; no SDL .def / no SDL link
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <DuiPlatformSDL Condition="'$(DuiPlatformSDL)'==''">true</DuiPlatformSDL>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(DuiPlatformSDL)'=='true'">
+    <ClCompile>
+      <PreprocessorDefinitions>DuiPlatform_SDL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>

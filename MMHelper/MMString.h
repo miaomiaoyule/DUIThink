@@ -156,7 +156,12 @@ public:
 
 	}
 	CMMStringA(LPCTSTR lpszStr)
+#if defined(DuiPlatform_SDL)
+		// SDL narrow strings are UTF-8
+		: std::string(WStringToUtf8(NULL == lpszStr ? L"" : lpszStr))
+#else
 		: std::string(WStringToGbk(lpszStr))
+#endif
 	{
 
 	}
@@ -200,7 +205,11 @@ public:
 	}
 	friend CMMStringA operator + (LPCTSTR lpszLeft, const CMMStringA &strRight)
 	{
+#if defined(DuiPlatform_SDL)
+		CMMStringA strTemp(WStringToUtf8(NULL == lpszLeft ? L"" : lpszLeft));
+#else
 		CMMStringA strTemp(WStringToGbk(lpszLeft));
+#endif
 		strTemp += strRight;
 
 		return strTemp;
@@ -216,13 +225,14 @@ public:
 
 	}
 #if defined(DuiPlatform_SDL)
+	// XML / SDL narrow text is UTF-8 (not GBK). GbkToWString via SDL_iconv often fails → empty.
 	CMMStringW(LPCSTR lpszStr)
-		: std::wstring(GbkToWString(NULL == lpszStr ? ("") : lpszStr))
+		: std::wstring(Utf8ToWString(NULL == lpszStr ? ("") : lpszStr))
 	{
 
 	}
 	CMMStringW(LPCSTR lpszStr, int nLen)
-		: std::wstring(GbkToWString(std::string(NULL == lpszStr ? ("") : lpszStr, nLen < 0 ? strlen(lpszStr) : nLen)))
+		: std::wstring(Utf8ToWString(std::string(NULL == lpszStr ? ("") : lpszStr, nLen < 0 ? strlen(lpszStr) : nLen)))
 	{
 
 	}
@@ -563,7 +573,7 @@ public:
 		if (NULL == lpszRight) return *this;
 
 #if defined(DuiPlatform_SDL)
-		__super::operator = (GbkToWString(lpszRight));
+		__super::operator = (Utf8ToWString(lpszRight));
 #else
 		__super::operator = ((LPCTSTR)CA2CT(lpszRight));
 #endif

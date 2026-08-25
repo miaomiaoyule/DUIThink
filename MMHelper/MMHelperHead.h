@@ -78,7 +78,8 @@
 #include <codecvt>
 using namespace std;
 
-#define DuiPlatform_SDL
+// SDL / Win32 switch: set <DuiPlatformSDL>true|false</DuiPlatformSDL> in MMHelper/DuiPlatformSDL.props
+// (injects DuiPlatform_SDL and gates SDL3_exports.def). Do not #define here.
 #if defined(DuiPlatform_SDL)
 	#include "MMPlatformTypes.h"
 #else
