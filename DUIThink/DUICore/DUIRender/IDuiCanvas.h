@@ -15,8 +15,11 @@ public:
 	enum enKind
 	{
 		Kind_Canvas = 1,
-		Kind_Image = 2,
-		Kind_Font = 3,
+		Kind_Image,
+		Kind_Font,
+		Kind_Region,
+		Kind_Pen,
+		Kind_Brush,
 	};
 
 	virtual ~IDuiNativeGdi() {}
@@ -54,9 +57,6 @@ public:
 
 	virtual void Save() = 0;
 	virtual void Restore() = 0;
-	virtual void ClipRect(const RECT &rc) = 0;
-	virtual void ClipRound(const RECT &rcItem, int nWidth, int nHeight) = 0;
-	virtual void ClipEllipse(const RECT &rcItem) = 0;
 
 	virtual void ClearRect(const RECT &rc) = 0;
 	virtual void FillRect(const RECT &rc, DWORD dwColor, DWORD dwColorGradient = 0) = 0;
@@ -77,6 +77,10 @@ public:
 	virtual SIZE MeasureText(IDuiFont *pFont, LPCTSTR lpszText, DWORD dwStyle, int nMaxWidth) = 0;
 	virtual void BlitFrom(IDuiCanvas *pSrc, int xDst, int yDst, int nWidth, int nHeight, int xSrc, int ySrc) = 0;
 	virtual void StretchBlitFrom(IDuiCanvas *pSrc, int xDst, int yDst, int nWidth, int nHeight, int xSrc, int ySrc, int wSrc, int hSrc) = 0;
+
+	virtual bool SelectBitmap(IDuiImage *pImage)  = 0;
+	virtual RECT GetClipBoxRect() const  = 0;
+	virtual void SelectClipRgn(HRGN hRgn)  = 0;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -92,6 +96,37 @@ public:
 	virtual bool Resize(int nWidth, int nHeight) = 0;
 	virtual void Present() = 0;
 	virtual void Present(const RECT &rcDirty) = 0;
+};
+
+//////////////////////////////////////////////////////////////////////////
+struct DuiGdiRegion : public IDuiNativeGdi
+{
+	enum enShape 
+	{ 
+		Shape_Rect = 0,
+		Shape_Round = 1, 
+		Shape_Ellipse = 2,
+	};
+
+	enShape shape = Shape_Rect;
+	CDUIRect rcRegion;
+	int nRoundX = 0;
+	int nRoundY = 0;
+	enKind GetNativeKind() const override { return Kind_Region; }
+};
+
+struct DuiGdiPen : public IDuiNativeGdi
+{
+	int nWidth = 1;
+	DWORD dwColor = 0;
+	enKind GetNativeKind() const override { return Kind_Pen; }
+};
+
+struct DuiGdiBrush : public IDuiNativeGdi
+{
+	DWORD dwColor = 0;
+	bool bHollow = false;
+	enKind GetNativeKind() const override { return Kind_Brush; }
 };
 
 //////////////////////////////////////////////////////////////////////////

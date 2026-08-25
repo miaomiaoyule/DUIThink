@@ -63,6 +63,14 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 class DUITHINK_API CDUICanvasRaster : public IDuiCanvas
 {
+protected:
+	int m_nWidth = 0;
+	int m_nHeight = 0;
+	int m_nPitch = 0;
+	std::vector<BYTE> m_vecBits;
+	LPBYTE m_pExternalBits = NULL; // non-owning; set by SelectBitmap
+	DuiGdiRegion m_ClipRegion;
+
 public:
 	CDUICanvasRaster(int nWidth, int nHeight);
 	virtual ~CDUICanvasRaster();
@@ -75,9 +83,6 @@ public:
 
 	void Save() override;
 	void Restore() override;
-	void ClipRect(const RECT &rc) override;
-	void ClipRound(const RECT &rcItem, int nWidth, int nHeight) override;
-	void ClipEllipse(const RECT &rcItem) override;
 
 	void ClearRect(const RECT &rc) override;
 	void FillRect(const RECT &rc, DWORD dwColor, DWORD dwColorGradient = 0) override;
@@ -100,32 +105,17 @@ public:
 	void StretchBlitFrom(IDuiCanvas *pSrc, int xDst, int yDst, int nWidth, int nHeight, int xSrc, int ySrc, int wSrc, int hSrc) override;
 
 	// GDI SelectObject(HBITMAP): draw into the selected image buffer (CDUIMemDC path)
-	bool SelectBitmap(IDuiImage *pImage);
-	RECT GetClipBoxRect() const;
+	bool SelectBitmap(IDuiImage *pImage) override;
+	RECT GetClipBoxRect() const override;
+	void SelectClipRgn(HRGN hRgn) override;
 
 protected:
-	struct ClipState
-	{
-		RECT rcClip = {};
-		int nKind = 0; // 0 rect, 1 round, 2 ellipse
-		RECT rcShape = {};
-		int nRoundX = 0;
-		int nRoundY = 0;
-	};
-
-	bool ClipPixel(int x, int y) const;
+	bool ClipPixel(int x, int y);
 	RECT IntersectClip(const RECT &rc) const;
 	void BlendPixel(int x, int y, DWORD dwColor, BYTE cbCoverage);
 	void FillShape(const RECT &rc, DWORD dwColor, DWORD dwColorGradient, int nKind, const RECT &rcRound);
 	void StrokeShape(const RECT &rc, int nWidth, DWORD dwColor, int nKind, const RECT &rcRound);
 	void BlitImageRect(const BYTE *pBGRA, int nImgW, int nImgH, const RECT &rcDst, const RECT &rcSrc, BYTE cbAlpha);
-
-	int m_nWidth = 0;
-	int m_nHeight = 0;
-	int m_nPitch = 0;
-	std::vector<BYTE> m_vecBits;
-	LPBYTE m_pExternalBits = NULL; // non-owning; set by SelectBitmap
-	std::vector<ClipState> m_vecClip;
 };
 
 //////////////////////////////////////////////////////////////////////////

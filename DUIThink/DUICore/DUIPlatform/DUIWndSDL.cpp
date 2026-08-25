@@ -815,17 +815,25 @@ LRESULT CDUIWndSDL::OnPaint(CDUIRect rcPaint)
 {
 	LRESULT lRes = 0;
 
+	//layout
 	RefreshLayout();
+	
+	//verify
 	if (NULL == m_pRootCtrl) return lRes;
+
+	//animation wnd
 	if (IsAnimatingWnd()) return lRes;
 
+	//Should we paint?
 	CDUIRect rcClient = GetClientRect();
 	if (false == ::IntersectRect(&rcPaint, &rcPaint, &rcClient)) return lRes;
 	if (rcPaint.Empty()) return lRes;
 
+	//scene
 	EnsurePaintScene();
 	if (NULL == m_pPaintScene || NULL == m_pPaintScene->GetCanvas()) return lRes;
 
+	//layered
 	if (IsWndLayered())
 	{
 		const float fOpacity = max(0.0f, min(1.0f, GetWndAlpha() / 255.0f));
@@ -836,6 +844,7 @@ LRESULT CDUIWndSDL::OnPaint(CDUIRect rcPaint)
 		SDL_SetWindowOpacity(m_hWnd, 1.0f);
 	}
 
+	//paint
 	IDuiCanvas *pCanvas = m_pPaintScene->GetCanvas();
 	pCanvas->ClearRect(rcPaint);
 

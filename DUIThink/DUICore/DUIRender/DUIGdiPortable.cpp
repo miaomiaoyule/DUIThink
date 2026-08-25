@@ -5,30 +5,6 @@
 #if defined(DuiPlatform_SDL)
 
 //////////////////////////////////////////////////////////////////////////
-struct DuiGdiRegion : public IDuiNativeGdi
-{
-	enum enShape { Shape_Rect = 0, Shape_Round = 1, Shape_Ellipse = 2 };
-	enShape shape = Shape_Rect;
-	RECT rc = {};
-	int rx = 0;
-	int ry = 0;
-	enKind GetNativeKind() const override { return (enKind)100; } // custom region
-};
-
-struct DuiGdiPen : public IDuiNativeGdi
-{
-	int nWidth = 1;
-	DWORD dwColor = 0;
-	enKind GetNativeKind() const override { return (enKind)101; }
-};
-
-struct DuiGdiBrush : public IDuiNativeGdi
-{
-	DWORD dwColor = 0;
-	bool bHollow = false;
-	enKind GetNativeKind() const override { return (enKind)102; }
-};
-
 static DuiGdiBrush g_HollowBrush;
 static thread_local HGDIOBJ t_selectedPen = NULL;
 static thread_local HGDIOBJ t_selectedBrush = NULL;
@@ -210,7 +186,7 @@ HRGN CreateRectRgnIndirect(const RECT *lprect)
 	if (NULL == lprect) return NULL;
 	DuiGdiRegion *p = new DuiGdiRegion();
 	p->shape = DuiGdiRegion::Shape_Rect;
-	p->rc = *lprect;
+	p->rcRegion = *lprect;
 	return (HRGN)p;
 }
 
@@ -219,7 +195,7 @@ HRGN CreateEllipticRgnIndirect(const RECT *lprect)
 	if (NULL == lprect) return NULL;
 	DuiGdiRegion *p = new DuiGdiRegion();
 	p->shape = DuiGdiRegion::Shape_Ellipse;
-	p->rc = *lprect;
+	p->rcRegion = *lprect;
 	return (HRGN)p;
 }
 
@@ -227,9 +203,9 @@ HRGN CreateRoundRectRgn(int x1, int y1, int x2, int y2, int w, int h)
 {
 	DuiGdiRegion *p = new DuiGdiRegion();
 	p->shape = DuiGdiRegion::Shape_Round;
-	p->rc = { x1, y1, x2, y2 };
-	p->rx = w;
-	p->ry = h;
+	p->rcRegion = { x1, y1, x2, y2 };
+	p->nRoundX = w;
+	p->nRoundY = h;
 	return (HRGN)p;
 }
 
@@ -241,43 +217,34 @@ int CombineRgn(HRGN hrgnDest, HRGN hrgnSrc1, HRGN hrgnSrc2, int fnCombineMode)
 	if (NULL == pD || NULL == pA || NULL == pB) return 0;
 	if (RGN_AND == fnCombineMode || 1 == fnCombineMode)
 	{
-		IntersectRect(&pD->rc, &pA->rc, &pB->rc);
+		IntersectRect(&pD->rcRegion, &pA->rcRegion, &pB->rcRegion);
 		if (DuiGdiRegion::Shape_Rect != pB->shape)
 		{
 			pD->shape = pB->shape;
-			pD->rx = pB->rx;
-			pD->ry = pB->ry;
+			pD->nRoundX = pB->nRoundX;
+			pD->nRoundY = pB->nRoundY;
 		}
 		else if (DuiGdiRegion::Shape_Rect != pA->shape)
 		{
 			pD->shape = pA->shape;
-			pD->rx = pA->rx;
-			pD->ry = pA->ry;
+			pD->nRoundX = pA->nRoundX;
+			pD->nRoundY = pA->nRoundY;
 		}
 		else pD->shape = DuiGdiRegion::Shape_Rect;
 		return 1;
 	}
-	pD->rc = pA->rc;
+	pD->rcRegion = pA->rcRegion;
 	pD->shape = pA->shape;
 	return 1;
 }
 
-int SelectClipRgn(HDC hdc, HRGN hrgn)
+int SelectClipRgn(HDC hdc, HRGN hRgn)
 {
 	IDuiCanvas *pCanvas = DuiCanvasFromHDC(hdc);
-	DuiGdiRegion *pRgn = (DuiGdiRegion *)hrgn;
 	if (NULL == pCanvas) return 0;
-	if (NULL == pRgn)
-	{
-		pCanvas->ClipRect({ 0, 0, pCanvas->GetWidth(), pCanvas->GetHeight() });
-		return 1;
-	}
-	if (DuiGdiRegion::Shape_Round == pRgn->shape)
-		pCanvas->ClipRound(pRgn->rc, pRgn->rx, pRgn->ry);
-	else if (DuiGdiRegion::Shape_Ellipse == pRgn->shape)
-		pCanvas->ClipEllipse(pRgn->rc);
-	else
-		pCanvas->ClipRect(pRgn->rc);
+
+	pCanvas->SelectClipRgn(hRgn);
+
 	return 1;
 }
 
@@ -309,12 +276,12 @@ BOOL Rectangle(HDC hdc, int left, int top, int right, int bottom)
 {
 	IDuiCanvas *pCanvas = DuiCanvasFromHDC(hdc);
 	if (NULL == pCanvas) return FALSE;
-	RECT rc = { left, top, right, bottom };
+	RECT rcRegion = { left, top, right, bottom };
 	DuiGdiPen *pPen = (DuiGdiPen *)t_selectedPen;
 	const int nWidth = pPen ? pPen->nWidth : 1;
 	const DWORD dwColor = pPen ? pPen->dwColor : DUIARGB(255, 0, 0, 0);
 	SIZE sz = {};
-	pCanvas->DrawRect(rc, nWidth, dwColor, sz, 0);
+	pCanvas->DrawRect(rcRegion, nWidth, dwColor, sz, 0);
 	return TRUE;
 }
 
@@ -322,12 +289,12 @@ BOOL RoundRect(HDC hdc, int left, int top, int right, int bottom, int width, int
 {
 	IDuiCanvas *pCanvas = DuiCanvasFromHDC(hdc);
 	if (NULL == pCanvas) return FALSE;
-	RECT rc = { left, top, right, bottom };
+	RECT rcRegion = { left, top, right, bottom };
 	RECT rcRound = { width, height, width, height };
 	DuiGdiPen *pPen = (DuiGdiPen *)t_selectedPen;
 	const int nWidth = pPen ? pPen->nWidth : 1;
 	const DWORD dwColor = pPen ? pPen->dwColor : DUIARGB(255, 0, 0, 0);
-	pCanvas->DrawRoundRect(rc, rcRound, nWidth, dwColor);
+	pCanvas->DrawRoundRect(rcRegion, rcRound, nWidth, dwColor);
 	return TRUE;
 }
 
@@ -346,10 +313,10 @@ int DrawText(HDC hdc, LPCTSTR lpchText, int cchText, LPRECT lprc, UINT format)
 	IDuiCanvas *pCanvas = DuiCanvasFromHDC(hdc);
 	if (NULL == pCanvas || NULL == lprc || NULL == lpchText) return 0;
 	CMMString text = (cchText < 0) ? CMMString(lpchText) : CMMString(lpchText, cchText);
-	RECT rc = *lprc;
+	RECT rcRegion = *lprc;
 	IDuiFont *pFont = DuiFontFromHFONT(t_selectedFont);
-	pCanvas->DrawText(pFont, rc, text.c_str(), t_textColor, format);
-	return rc.bottom - lprc->top;
+	pCanvas->DrawText(pFont, rcRegion, text.c_str(), t_textColor, format);
+	return rcRegion.bottom - lprc->top;
 }
 
 HDC GetDC(HWND) { return NULL; }

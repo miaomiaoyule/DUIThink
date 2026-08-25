@@ -63,13 +63,6 @@ static DWORD DuiLerpColor(DWORD c0, DWORD c1, float f)
 	return DUIARGB(DuiClampByte(a), DuiClampByte(r), DuiClampByte(g), DuiClampByte(b));
 }
 
-static RECT DuiIntersectRect(const RECT &a, const RECT &b)
-{
-	RECT rc = {};
-	IntersectRect(&rc, &a, &b);
-	return rc;
-}
-
 static bool DuiPointInRoundRect(float x, float y, const RECT &rc, int rx, int ry)
 {
 	if (x < rc.left || x >= rc.right || y < rc.top || y >= rc.bottom) return false;
@@ -349,11 +342,9 @@ bool CDUICanvasRaster::Resize(int nWidth, int nHeight)
 	m_nHeight = max(1, nHeight);
 	m_nPitch = m_nWidth * 4;
 	m_vecBits.assign((size_t)m_nPitch * (size_t)m_nHeight, 0);
-	m_vecClip.clear();
 
-	ClipState State;
-	State.rcClip = { 0, 0, m_nWidth, m_nHeight };
-	m_vecClip.push_back(State);
+	m_ClipRegion = {};
+	m_ClipRegion.rcRegion = { 0, 0, m_nWidth, m_nHeight };
 	return true;
 }
 
@@ -365,97 +356,61 @@ bool CDUICanvasRaster::SelectBitmap(IDuiImage *pImage)
 	m_nHeight = max(1, pImage->GetHeight());
 	m_nPitch = pImage->GetPitch() > 0 ? pImage->GetPitch() : m_nWidth * 4;
 	m_vecBits.clear();
-	if (m_vecClip.empty())
-	{
-		ClipState State;
-		State.rcClip = { 0, 0, m_nWidth, m_nHeight };
-		m_vecClip.push_back(State);
-	}
-	else
-	{
-		m_vecClip.front().rcClip = { 0, 0, m_nWidth, m_nHeight };
-	}
+	
 	return true;
 }
 
 RECT CDUICanvasRaster::GetClipBoxRect() const
 {
-	if (m_vecClip.empty())
-	{
-		RECT rc = { 0, 0, m_nWidth, m_nHeight };
-		return rc;
-	}
-	return m_vecClip.back().rcClip;
+	return m_ClipRegion.rcRegion;
+}
+
+void CDUICanvasRaster::SelectClipRgn(HRGN hRgn)
+{
+	DuiGdiRegion *pRgn = (DuiGdiRegion *)hRgn;
+	if (NULL == pRgn) return;
+
+	m_ClipRegion = *pRgn;
+
+	return;
 }
 
 void CDUICanvasRaster::Save()
 {
-	if (false == m_vecClip.empty())
-	{
-		m_vecClip.push_back(m_vecClip.back());
-	}
+	return;
 }
 
 void CDUICanvasRaster::Restore()
 {
-	if (m_vecClip.size() > 1)
-	{
-		m_vecClip.pop_back();
-	}
+	return;
 }
 
-void CDUICanvasRaster::ClipRect(const RECT &rc)
+bool CDUICanvasRaster::ClipPixel(int x, int y)
 {
-	if (m_vecClip.empty()) return;
-	ClipState &State = m_vecClip.back();
-	State.rcClip = DuiIntersectRect(State.rcClip, rc);
-	State.nKind = 0;
-}
+	if (m_ClipRegion.rcRegion.Empty()) return false;
 
-void CDUICanvasRaster::ClipRound(const RECT &rcItem, int nWidth, int nHeight)
-{
-	if (m_vecClip.empty()) return;
-	ClipState &State = m_vecClip.back();
-	State.rcClip = DuiIntersectRect(State.rcClip, rcItem);
-	State.nKind = 1;
-	State.rcShape = rcItem;
-	State.nRoundX = nWidth;
-	State.nRoundY = nHeight;
-}
-
-void CDUICanvasRaster::ClipEllipse(const RECT &rcItem)
-{
-	if (m_vecClip.empty()) return;
-	ClipState &State = m_vecClip.back();
-	State.rcClip = DuiIntersectRect(State.rcClip, rcItem);
-	State.nKind = 2;
-	State.rcShape = rcItem;
-}
-
-bool CDUICanvasRaster::ClipPixel(int x, int y) const
-{
-	if (m_vecClip.empty()) return false;
-	const ClipState &State = m_vecClip.back();
-	if (x < State.rcClip.left || x >= State.rcClip.right || y < State.rcClip.top || y >= State.rcClip.bottom)
+	if (false == m_ClipRegion.rcRegion.PtInRect(CMMPoint(x, y)))
 	{
 		return false;
 	}
-	if (1 == State.nKind)
+	if (DuiGdiRegion::Shape_Round == m_ClipRegion.shape)
 	{
-		return DuiPointInRoundRect((float)x + 0.5f, (float)y + 0.5f, State.rcShape, State.nRoundX, State.nRoundY);
+		return DuiPointInRoundRect((float)x + 0.5f, (float)y + 0.5f, m_ClipRegion.rcRegion, m_ClipRegion.nRoundX, m_ClipRegion.nRoundY);
 	}
-	if (2 == State.nKind)
+	if (DuiGdiRegion::Shape_Round == m_ClipRegion.shape)
 	{
-		return DuiPointInEllipse((float)x + 0.5f, (float)y + 0.5f, State.rcShape);
+		return DuiPointInEllipse((float)x + 0.5f, (float)y + 0.5f, m_ClipRegion.rcRegion);
 	}
 	return true;
 }
 
 RECT CDUICanvasRaster::IntersectClip(const RECT &rc) const
 {
-	RECT rcBound = { 0, 0, m_nWidth, m_nHeight };
-	RECT rcClip = m_vecClip.empty() ? rcBound : m_vecClip.back().rcClip;
-	return DuiIntersectRect(DuiIntersectRect(rc, rcClip), rcBound);
+	if (m_ClipRegion.rcRegion.Empty()) return rc;
+
+	RECT rcClip;
+	IntersectRect(&rcClip, &m_ClipRegion.rcRegion, &rc);
+	return rcClip;
 }
 
 void CDUICanvasRaster::BlendPixel(int x, int y, DWORD dwColor, BYTE cbCoverage)

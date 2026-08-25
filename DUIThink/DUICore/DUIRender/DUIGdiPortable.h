@@ -22,7 +22,7 @@ HRGN CreateRectRgnIndirect(const RECT *lprect);
 HRGN CreateEllipticRgnIndirect(const RECT *lprect);
 HRGN CreateRoundRectRgn(int x1, int y1, int x2, int y2, int w, int h);
 int CombineRgn(HRGN hrgnDest, HRGN hrgnSrc1, HRGN hrgnSrc2, int fnCombineMode);
-int SelectClipRgn(HDC hdc, HRGN hrgn);
+int SelectClipRgn(HDC hdc, HRGN hRgn);
 int GetClipBox(HDC hdc, LPRECT lprect);
 HPEN CreatePen(int iStyle, int cWidth, DWORD color);
 BOOL Rectangle(HDC hdc, int left, int top, int right, int bottom);
