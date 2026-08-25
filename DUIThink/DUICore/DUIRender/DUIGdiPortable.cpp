@@ -17,11 +17,13 @@ BOOL DeleteObject(HGDIOBJ hObject)
 	if (NULL == hObject) return FALSE;
 	if (hObject == &g_HollowBrush) return TRUE;
 	IDuiNativeGdi *pNative = (IDuiNativeGdi *)hObject;
-	const int kind = (int)pNative->GetNativeKind();
-	if (kind == 100 || kind == 101 || kind == 102
-		|| IDuiNativeGdi::Kind_Canvas == pNative->GetNativeKind()
-		|| IDuiNativeGdi::Kind_Image == pNative->GetNativeKind()
-		|| IDuiNativeGdi::Kind_Font == pNative->GetNativeKind())
+	const IDuiNativeGdi::enKind kind = pNative->GetNativeKind();
+	if (IDuiNativeGdi::Kind_Region == kind
+		|| IDuiNativeGdi::Kind_Pen == kind
+		|| IDuiNativeGdi::Kind_Brush == kind
+		|| IDuiNativeGdi::Kind_Canvas == kind
+		|| IDuiNativeGdi::Kind_Image == kind
+		|| IDuiNativeGdi::Kind_Font == kind)
 	{
 		delete pNative;
 		return TRUE;
@@ -46,27 +48,27 @@ HGDIOBJ SelectObject(HDC hdc, HGDIOBJ hgdiobj)
 {
 	if (NULL == hgdiobj) return NULL;
 	IDuiNativeGdi *pObj = (IDuiNativeGdi *)hgdiobj;
-	const int kind = (int)pObj->GetNativeKind();
+	const IDuiNativeGdi::enKind kind = pObj->GetNativeKind();
 
-	if (IDuiNativeGdi::Kind_Image == pObj->GetNativeKind())
+	if (IDuiNativeGdi::Kind_Image == kind)
 	{
 		CDUICanvasRaster *pCanvas = dynamic_cast<CDUICanvasRaster *>(DuiCanvasFromHDC(hdc));
 		if (pCanvas) pCanvas->SelectBitmap((IDuiImage *)pObj);
 		return NULL;
 	}
-	if (IDuiNativeGdi::Kind_Font == pObj->GetNativeKind())
+	if (IDuiNativeGdi::Kind_Font == kind)
 	{
 		HFONT old = t_selectedFont;
 		t_selectedFont = (HFONT)hgdiobj;
 		return (HGDIOBJ)old;
 	}
-	if (kind == 101)
+	if (IDuiNativeGdi::Kind_Pen == kind)
 	{
 		HGDIOBJ old = t_selectedPen;
 		t_selectedPen = hgdiobj;
 		return old;
 	}
-	if (kind == 102)
+	if (IDuiNativeGdi::Kind_Brush == kind)
 	{
 		HGDIOBJ old = t_selectedBrush;
 		t_selectedBrush = hgdiobj;
@@ -97,15 +99,14 @@ DWORD GetObjectType(HGDIOBJ h)
 {
 	IDuiNativeGdi *pNative = (IDuiNativeGdi *)h;
 	if (NULL == pNative) return 0;
-	const int kind = (int)pNative->GetNativeKind();
-	if (kind == 100) return OBJ_REGION;
-	if (kind == 101) return OBJ_PEN;
-	if (kind == 102) return OBJ_BRUSH;
 	switch (pNative->GetNativeKind())
 	{
 		case IDuiNativeGdi::Kind_Canvas: return OBJ_MEMDC;
 		case IDuiNativeGdi::Kind_Image: return OBJ_BITMAP;
 		case IDuiNativeGdi::Kind_Font: return OBJ_FONT;
+		case IDuiNativeGdi::Kind_Region: return OBJ_REGION;
+		case IDuiNativeGdi::Kind_Pen: return OBJ_PEN;
+		case IDuiNativeGdi::Kind_Brush: return OBJ_BRUSH;
 		default: break;
 	}
 	return 0;

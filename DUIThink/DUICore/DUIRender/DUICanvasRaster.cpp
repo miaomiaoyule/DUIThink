@@ -397,7 +397,7 @@ bool CDUICanvasRaster::ClipPixel(int x, int y)
 	{
 		return DuiPointInRoundRect((float)x + 0.5f, (float)y + 0.5f, m_ClipRegion.rcRegion, m_ClipRegion.nRoundX, m_ClipRegion.nRoundY);
 	}
-	if (DuiGdiRegion::Shape_Round == m_ClipRegion.shape)
+	if (DuiGdiRegion::Shape_Ellipse == m_ClipRegion.shape)
 	{
 		return DuiPointInEllipse((float)x + 0.5f, (float)y + 0.5f, m_ClipRegion.rcRegion);
 	}
@@ -408,7 +408,7 @@ RECT CDUICanvasRaster::IntersectClip(const RECT &rc) const
 {
 	if (m_ClipRegion.rcRegion.Empty()) return rc;
 
-	RECT rcClip;
+	RECT rcClip = {};
 	IntersectRect(&rcClip, &m_ClipRegion.rcRegion, &rc);
 	return rcClip;
 }
