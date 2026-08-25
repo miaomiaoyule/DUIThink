@@ -5,12 +5,9 @@
 
 #if defined(DuiPlatform_SDL)
 
-#include "IDuiCanvas.h"
-#include <vector>
-#include <cmath>
-
 // GDI+ API stand-in for DuiPlatform_SDL.
 // Graphics draws into IDuiCanvas* obtained from HDC (CDUICanvasRaster).
+class IDuiCanvas;
 
 namespace Gdiplus
 {

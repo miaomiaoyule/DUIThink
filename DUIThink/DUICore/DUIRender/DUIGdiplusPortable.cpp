@@ -218,8 +218,6 @@ Status Graphics::FillPath(Brush *brush, GraphicsPath *path)
 		RECT rcDst = { (LONG)bounds.X, (LONG)bounds.Y, (LONG)(bounds.X + bounds.Width), (LONG)(bounds.Y + bounds.Height) };
 		RECT rcSrc = { 0, 0, (LONG)pBmp->GetWidth(), (LONG)pBmp->GetHeight() };
 		m_pCanvas->Save();
-		// Approximate path clip with ellipse/rect of bounds — path fill with texture
-		m_pCanvas->ClipEllipse(rcDst);
 		m_pCanvas->DrawImage(pBmp->GetBits(), (int)pBmp->GetWidth(), (int)pBmp->GetHeight(), rcDst, rcSrc, {}, 255, false, false);
 		m_pCanvas->Restore();
 	}

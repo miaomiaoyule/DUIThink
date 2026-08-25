@@ -851,7 +851,6 @@ LRESULT CDUIWndSDL::OnPaint(CDUIRect rcPaint)
 	try
 	{
 		pCanvas->Save();
-		pCanvas->ClipRect(rcPaint);
 		m_pRootCtrl->OnDraw(m_pPaintScene->GetCanvasHDC(), rcPaint);
 		pCanvas->Restore();
 	}

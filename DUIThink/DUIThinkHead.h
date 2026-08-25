@@ -42,6 +42,9 @@
 #include "../MMHelper/MMHelperHead.h"
 
 #if defined(DuiPlatform_SDL)
+	#include "DUICore/DUIRender/DUIGdiplusPortable.h"
+	using namespace Gdiplus;
+
 	DUITHINK_API inline bool SendMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 	DUITHINK_API inline bool PostMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 	DUITHINK_API inline HWND FindWindow(LPCTSTR lpszClassName, LPCTSTR lpszTitle);
@@ -254,8 +257,7 @@ using namespace tinyxml2;
 #include "DUICore/DUIPropertyObject.h"
 #include "DUICore/DUIRender/IDuiCanvas.h"
 #include "DUICore/DUIRender/DUICanvasRaster.h"
-#include "DUICore/DUIRender/DUIGdiPortable.h"
-#include "DUICore/DUIRender/DUIGdiplusPortable.h"
+#include "DUICore/DUIRender/DUIGdiPortable.h";
 #include "DUICore/DUIRender/DUIPaintSceneSDL.h"
 #include "DUICore/DUIRender.h"
 #include "DUICore/DUINotifyPump.h"
