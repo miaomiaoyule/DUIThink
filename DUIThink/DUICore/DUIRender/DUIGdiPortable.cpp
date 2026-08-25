@@ -358,22 +358,30 @@ void GdiFlush() {}
 
 int GetDIBits(HDC, HBITMAP hbm, UINT, UINT cLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT)
 {
-	IDuiImage *pImage = DuiImageFromHBITMAP(hbm);
 	IDuiNativeGdi *pNative = (IDuiNativeGdi *)hbm;
 	if (NULL == pNative || NULL == lpvBits || NULL == lpbi) return 0;
+	if (IDuiNativeGdi::Kind_Image != pNative->GetNativeKind()
+		&& IDuiNativeGdi::Kind_Canvas != pNative->GetNativeKind())
+	{
+		return 0;
+	}
+
 	LPBYTE pSrc = pNative->GetBits();
 	const int nWidth = pNative->GetWidth();
 	const int nHeight = pNative->GetHeight();
 	if (NULL == pSrc || nWidth <= 0 || nHeight <= 0) return 0;
+
 	const int nPitch = nWidth * 4;
 	const UINT nCopy = min(cLines, (UINT)nHeight);
 	BYTE *pDst = (BYTE *)lpvBits;
-	// Emulate positive-height DIB: bottom-up rows
+	// Raster HBITMAPs are always top-down (same as CreateARGB32Bitmap bPositive=true / biHeight<0).
+	// Match Win32 GetDIBits: biHeight>0 => bottom-up output; biHeight<0 => top-down output.
+	const bool bBottomUp = lpbi->bmiHeader.biHeight > 0;
 	for (UINT y = 0; y < nCopy; ++y)
 	{
-		memcpy(pDst + y * nPitch, pSrc + (nHeight - 1 - (int)y) * nPitch, (size_t)nPitch);
+		const int nSrcY = bBottomUp ? (nHeight - 1 - (int)y) : (int)y;
+		memcpy(pDst + y * nPitch, pSrc + nSrcY * nPitch, (size_t)nPitch);
 	}
-	(void)pImage;
 	return (int)nCopy;
 }
 
@@ -394,6 +402,8 @@ HBITMAP CreateDIBSection(HDC, const BITMAPINFO *pbmi, UINT, void **ppvBits, HAND
 	if (NULL == pbmi) return NULL;
 	const int cx = abs(pbmi->bmiHeader.biWidth);
 	const int cy = abs(pbmi->bmiHeader.biHeight);
+	// Always top-down scanlines (Win32 equivalent: biHeight < 0 / CreateARGB32Bitmap bPositive=true).
+	// Callers that fill from stb/WebP must write top row first.
 	CDUIImageRaster *pImage = new CDUIImageRaster(max(1, cx), max(1, cy), true);
 	if (ppvBits) *ppvBits = pImage->GetBits();
 	return (HBITMAP)pImage;

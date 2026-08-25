@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "DUIImageBase.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "../DUIUtils/stb_image.h"
@@ -287,7 +287,7 @@ void CDUIImageBase::ConstructResource(int nScale)
 		}
 		if (DuiImageType_Svg == ImageType)
 		{
-			::MessageBox(NULL, _T("Extract Image Fail£°"), _T("Error"), MB_OK);
+			::MessageBox(NULL, _T("Extract Image FailÔºÅ"), _T("Error"), MB_OK);
 
 			return;
 		}
@@ -295,7 +295,7 @@ void CDUIImageBase::ConstructResource(int nScale)
 		strFile.Replace(strScale, _T(""));
 		if (false == CDUIGlobal::GetInstance()->ExtractResourceData(vecData, strFile) || vecData.empty())
 		{
-			//::MessageBox(NULL, _T("Extract Image Fail£°"), _T("Error"), MB_OK);
+			//::MessageBox(NULL, _T("Extract Image FailÔºÅ"), _T("Error"), MB_OK);
 
 			return;
 		}

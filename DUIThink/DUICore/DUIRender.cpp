@@ -2203,26 +2203,10 @@ Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPreMultiplyArgb
 
 	BITMAP bmp = {};
 	if (GetObject(hBitmap, sizeof(BITMAP), &bmp) == 0) return NULL;
+	if (bmp.bmWidth <= 0 || bmp.bmHeight <= 0) return NULL;
 
 	int nLinesize = bmp.bmWidth * 4;
-	LONG cbSize = nLinesize * bmp.bmHeight;
-	std::vector<BYTE> vecPixel;
-	vecPixel.resize(cbSize);
-	if (vecPixel.empty()) return NULL;
-
-	BITMAPINFO bmpInfo = {};
-	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-	bmpInfo.bmiHeader.biWidth = bmp.bmWidth;
-	bmpInfo.bmiHeader.biHeight = bmp.bmHeight;
-	bmpInfo.bmiHeader.biPlanes = 1;
-	bmpInfo.bmiHeader.biBitCount = 32; 
-	bmpInfo.bmiHeader.biCompression = BI_RGB;
-
-	HDC hDC = GetDC(NULL);
-	LONG cbCopied = GetDIBits(hDC, hBitmap, 0, bmp.bmHeight, vecPixel.data(), &bmpInfo, DIB_RGB_COLORS);
-	ReleaseDC(NULL, hDC);
-
-	if (cbCopied == 0) return NULL;
+	int nHeight = bmp.bmHeight;
 
 	Gdiplus::PixelFormat PixelFormat = bPreMultiplyArgb ? PixelFormat32bppPARGB : PixelFormat32bppARGB;
 	Bitmap *pBitmap = new Bitmap(bmp.bmWidth, bmp.bmHeight, PixelFormat);
@@ -2233,27 +2217,67 @@ Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPreMultiplyArgb
 	if (Ok != pBitmap->LockBits(&rect, ImageLockModeRead | ImageLockModeWrite, PixelFormat, &bitmapData))
 	{
 		MMSafeDelete(pBitmap);
-
 		return NULL;
 	}
 
 	BYTE *pixelsDest = (BYTE *)bitmapData.Scan0;
-	int nHeight = bmp.bmHeight;
+
+#if defined(DuiPlatform_SDL)
+	// SDL HBITMAPs are always top-down (stb / CreateARGB32Bitmap bPositive=true).
+	// Copy directly — avoid GetDIBits(+height) bottom-up + flip round-trip.
+	LPBYTE pSrcBits = (LPBYTE)bmp.bmBits;
+	if (NULL == pSrcBits)
+	{
+		pBitmap->UnlockBits(&bitmapData);
+		MMSafeDelete(pBitmap);
+		return NULL;
+	}
 	for (int y = 0; y < nHeight; y++)
 	{
-		//从下到上复制数据，因为前面设置高度为正数
+		memcpy(pixelsDest + y * nLinesize, pSrcBits + y * nLinesize, nLinesize);
+	}
+#else
+	LONG cbSize = nLinesize * nHeight;
+	std::vector<BYTE> vecPixel;
+	vecPixel.resize(cbSize);
+	if (vecPixel.empty())
+	{
+		pBitmap->UnlockBits(&bitmapData);
+		MMSafeDelete(pBitmap);
+		return NULL;
+	}
+
+	BITMAPINFO bmpInfo = {};
+	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bmpInfo.bmiHeader.biWidth = bmp.bmWidth;
+	bmpInfo.bmiHeader.biHeight = bmp.bmHeight;
+	bmpInfo.bmiHeader.biPlanes = 1;
+	bmpInfo.bmiHeader.biBitCount = 32;
+	bmpInfo.bmiHeader.biCompression = BI_RGB;
+
+	HDC hDC = GetDC(NULL);
+	LONG cbCopied = GetDIBits(hDC, hBitmap, 0, bmp.bmHeight, vecPixel.data(), &bmpInfo, DIB_RGB_COLORS);
+	ReleaseDC(NULL, hDC);
+
+	if (cbCopied == 0)
+	{
+		pBitmap->UnlockBits(&bitmapData);
+		MMSafeDelete(pBitmap);
+		return NULL;
+	}
+
+	for (int y = 0; y < nHeight; y++)
+	{
+		// GetDIBits with positive biHeight returns bottom-up; convert to top-down for GDI+.
 		memcpy_s(
 			(pixelsDest + y * nLinesize),
 			nLinesize,
 			(vecPixel.data() + (nHeight - y - 1) * nLinesize),
 			nLinesize);
 	}
+#endif
 
-	if (Ok != pBitmap->UnlockBits(&bitmapData))
-	{
-		MMSafeDelete(pBitmap);
-	}
-
+	pBitmap->UnlockBits(&bitmapData);
 	return pBitmap;
 }
 
