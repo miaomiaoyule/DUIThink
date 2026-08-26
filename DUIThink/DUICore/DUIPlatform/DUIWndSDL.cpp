@@ -749,6 +749,7 @@ LRESULT CDUIWndSDL::OnPaint(CDUIRect rcPaint)
 	}
 
 	m_pPaintScene->Present(rcPaint);
+
 	return lRes;
 }
 

@@ -433,6 +433,8 @@ void CDUICanvasRaster::BlendPixel(int x, int y, DWORD dwColor, BYTE cbCoverage)
 	p[1] = (BYTE)(sg + ((p[1] * inv + 127) / 255));
 	p[2] = (BYTE)(sr + ((p[2] * inv + 127) / 255));
 	p[3] = (BYTE)(sa + ((p[3] * inv + 127) / 255));
+
+	return;
 }
 
 void CDUICanvasRaster::ClearRect(const RECT &rc)
@@ -444,6 +446,8 @@ void CDUICanvasRaster::ClearRect(const RECT &rc)
 	{
 		memset(pBits + y * m_nPitch + rcDraw.left * 4, 0, (rcDraw.right - rcDraw.left) * 4);
 	}
+
+	return;
 }
 
 void CDUICanvasRaster::FillShape(const RECT &rc, DWORD dwColor, DWORD dwColorGradient, int nKind, const RECT &rcRound)
@@ -464,11 +468,15 @@ void CDUICanvasRaster::FillShape(const RECT &rc, DWORD dwColor, DWORD dwColorGra
 			if (bInside) BlendPixel(x, y, dwRow, 255);
 		}
 	}
+
+	return;
 }
 
 void CDUICanvasRaster::FillRect(const RECT &rc, DWORD dwColor, DWORD dwColorGradient)
 {
 	FillShape(rc, dwColor, dwColorGradient, 0, {});
+
+	return;
 }
 
 void CDUICanvasRaster::FillRoundRect(const RECT &rc, const RECT &rcRound, DWORD dwColor, DWORD dwColorGradient)
@@ -481,11 +489,15 @@ void CDUICanvasRaster::FillRoundRect(const RECT &rc, const RECT &rcRound, DWORD 
 	}
 	const int nR = max(rcUse.left, max(rcUse.top, max(rcUse.right, rcUse.bottom)));
 	FillShape(rc, dwColor, dwColorGradient, 1, { nR, nR, nR, nR });
+
+	return;
 }
 
 void CDUICanvasRaster::FillEllipse(const RECT &rc, DWORD dwColor, DWORD dwColorGradient)
 {
 	FillShape(rc, dwColor, dwColorGradient, 2, {});
+
+	return;
 }
 
 void CDUICanvasRaster::FillPolygon(const POINT *pPts, int nCount, DWORD dwColor, DWORD dwColorGradient)
@@ -540,6 +552,8 @@ void CDUICanvasRaster::FillPolygon(const POINT *pPts, int nCount, DWORD dwColor,
 			for (int x = x0; x < x1; ++x) BlendPixel(x, y, dwRow, 255);
 		}
 	}
+
+	return;
 }
 
 void CDUICanvasRaster::StrokeShape(const RECT &rc, int nWidth, DWORD dwColor, int nKind, const RECT &rcRound)
