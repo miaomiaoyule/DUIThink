@@ -23,6 +23,11 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...)
 
 #if defined(DuiPlatform_SDL)
 
+namespace
+{
+	std::unordered_map<SDL_Window *, CMMRect> g_mapWndUpdate;
+}
+
 bool IsWindow(HWND hWnd)
 {
 	return (NULL != hWnd && SDL_GetWindowFromID(SDL_GetWindowID((SDL_Window *)hWnd)) == (SDL_Window *)hWnd);
@@ -100,18 +105,74 @@ void InvalidateRect(HWND hWnd, LPCRECT lpRect, bool bErase)
 {
 	if (false == IsWindow(hWnd)) return;
 
-	SDL_Rect sdlRect = {};
-	if (NULL != lpRect)
-	{
-		sdlRect.x = lpRect->left;
-		sdlRect.y = lpRect->top;
-		sdlRect.w = lpRect->right - lpRect->left;
-		sdlRect.h = lpRect->bottom - lpRect->top;
-	}
+	//cur update
+	CMMRect rcUpdate;
+	GetUpdateRect(hWnd, &rcUpdate, false);
 
-	SDL_UpdateWindowSurfaceRects(hWnd, NULL == lpRect ? NULL : &sdlRect, NULL == lpRect ? 0 : 1);
+	//combin rect
+	CMMRect rcClient, rcInvalidate;
+	GetClientRect(hWnd, &rcClient);
+	if (lpRect)
+	{
+		if (false == IntersectRect(&rcInvalidate, lpRect, &rcClient))
+		{
+			return;
+		}
+	}
+	else
+	{
+		rcInvalidate = rcClient;
+	}
+	if (IsRectEmpty(&rcInvalidate))
+	{
+		return;
+	}
+	
+	UnionRect(&rcInvalidate, &rcInvalidate, &rcUpdate);
+	g_mapWndUpdate[hWnd] = rcInvalidate;
+	
+	//paint message
+	SDL_Event e = {};
+	e.type = SDL_EVENT_WINDOW_EXPOSED;
+	e.window.timestamp = SDL_GetTicksNS();
+	e.window.windowID = SDL_GetWindowID(hWnd);
+	e.window.data1 = 0;
+	e.window.data2 = 0;
+	SDL_PushEvent(&e);
 
 	return;
+}
+
+BOOL GetUpdateRect(HWND hWnd, LPRECT lpRect, BOOL bErase)
+{
+	if (false == IsWindow(hWnd)) return FALSE;
+
+	SDL_Window *pWindow = (SDL_Window *)hWnd;
+	auto it = g_mapWndUpdate.find(pWindow);
+	if (it == g_mapWndUpdate.end() || IsRectEmpty(&it->second))
+	{
+		if (lpRect)
+		{
+			SetRectEmpty(lpRect);
+		}
+		if (bErase)
+		{
+			g_mapWndUpdate.erase(hWnd);
+		}
+
+		return FALSE;
+	}
+
+	if (lpRect)
+	{
+		*lpRect = it->second;
+	}
+	if (bErase)
+	{
+		g_mapWndUpdate.erase(hWnd);
+	}
+
+	return TRUE;
 }
 
 BOOL ScreenToClient(HWND hWnd, LPPOINT lpPoint)
@@ -240,6 +301,7 @@ HWND GetFocus()
 void GetWindowRect(HWND hWnd, LPRECT lpRect)
 {
 	if (false == IsWindow(hWnd) || NULL == lpRect) return;
+
 	SDL_Window *pWindow = (SDL_Window *)hWnd;
 	int x, y, w, h;
 	SDL_GetWindowPosition(pWindow, &x, &y);
@@ -248,6 +310,21 @@ void GetWindowRect(HWND hWnd, LPRECT lpRect)
 	lpRect->top = y;
 	lpRect->right = x + w;
 	lpRect->bottom = y + h;
+
+	return;
+}
+
+void GetClientRect(HWND hWnd, LPRECT lpRect)
+{
+	if (false == IsWindow(hWnd) || NULL == lpRect) return;
+
+	int nWidth = 0;
+	int nHeight = 0;
+	SDL_GetWindowSize(hWnd, &nWidth, &nHeight);
+	lpRect->left = 0;
+	lpRect->top = 0;
+	lpRect->right = nWidth;
+	lpRect->bottom = nHeight;
 
 	return;
 }
@@ -474,7 +551,8 @@ void UpdateWindow(HWND hWnd)
 {
 	if (false == IsWindow(hWnd)) return;
 
-	SDL_UpdateWindowSurface((SDL_Window *)hWnd);
+	// Same as InvalidateRect: surface update does not drive Renderer paint.
+	InvalidateRect(hWnd, NULL, false);
 
 	return;
 }

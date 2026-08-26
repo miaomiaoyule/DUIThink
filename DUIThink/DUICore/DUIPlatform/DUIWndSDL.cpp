@@ -535,24 +535,16 @@ bool CDUIWndSDL::IsMinimized()
 
 CDUIRect CDUIWndSDL::GetClientRect() const
 {
-	if (false == IsWindow(m_hWnd)) return CDUIRect();
-
-	int cx = 0;
-	int cy = 0;
-	SDL_GetWindowSize(m_hWnd, &cx, &cy);
-	CDUIRect rcClient(0, 0, cx, cy);
+	CDUIRect rcClient;
+	::GetClientRect(m_hWnd, &rcClient);
 
 	return rcClient;
 }
 
 CDUIRect CDUIWndSDL::GetWindowRect()
 {
-	if (false == IsWindow(m_hWnd)) return CDUIRect();
-
-	int x = 0, y = 0, cx = 0, cy = 0;
-	SDL_GetWindowPosition(m_hWnd, &x, &y);
-	SDL_GetWindowSize(m_hWnd, &cx, &cy);
-	CDUIRect rcWnd(x, y, x + cx, y + cy);
+	CDUIRect rcWnd;
+	::GetWindowRect(m_hWnd, &rcWnd);
 
 	return rcWnd;
 }
@@ -563,14 +555,8 @@ void CDUIWndSDL::Invalidate()
 
 	NeedRefreshView();
 
-	// 请求一次窗口重绘事件（SDL3）
-	SDL_Event e = {};
-	e.type = SDL_EVENT_WINDOW_EXPOSED;
-	e.window.timestamp = SDL_GetTicksNS();
-	e.window.windowID = m_uWndID;
-	e.window.data1 = 0;
-	e.window.data2 = 0;
-	SDL_PushEvent(&e);
+	// Full-client dirty + coalesced EXPOSED (same path as control InvalidateRect)
+	::InvalidateRect(m_hWnd, NULL, TRUE);
 
 	return;
 }
@@ -603,8 +589,18 @@ LRESULT CDUIWndSDL::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_PAINT:
 		{
-			CDUIRect rcPaint = GetClientRect();
+			CDUIRect rcPaint;
+			BOOL bUpdate = ::GetUpdateRect(m_hWnd, &rcPaint, true);
 
+#ifdef DUI_DESIGN
+			bUpdate = true;
+			if (rcPaint.Empty())
+			{
+				rcPaint = GetClientRect();
+			}
+#endif
+
+			if (bUpdate)
 			{
 				lRes = OnPaint(rcPaint);
 			}
@@ -864,50 +860,81 @@ void CDUIWndSDL::OnSdlWindowEvent(const SDL_Event &e)
 	switch (e.type)
 	{
 		case SDL_EVENT_WINDOW_SHOWN:
+		{
 			OnWndMessage(WM_SHOWWINDOW, TRUE, 0);
-			Invalidate();
 			break;
+		}
 		case SDL_EVENT_WINDOW_HIDDEN:
+		{
 			OnWndMessage(WM_SHOWWINDOW, FALSE, 0);
 			break;
+		}
 		case SDL_EVENT_WINDOW_EXPOSED:
+		{
+			if (m_bWndMoving)
+			{
+				break;
+			}
+
 			OnWndMessage(WM_PAINT, 0, 0);
 			break;
+		}
 		case SDL_EVENT_WINDOW_MOVED:
+		{
+			m_bWndMoving = true;
 			OnWndMessage(WM_MOVE, 0, MAKELPARAM(e.window.data1, e.window.data2));
 			break;
+		}
 		case SDL_EVENT_WINDOW_RESIZED:
 		case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+		{
+			m_bWndMoving = false;
 			ReleasePaintScene();
 			OnWndMessage(WM_SIZE, SIZE_RESTORED, MAKELPARAM(e.window.data1, e.window.data2));
-			Invalidate();
 			break;
+		}
 		case SDL_EVENT_WINDOW_MINIMIZED:
+		{
 			OnWndMessage(WM_SIZE, SIZE_MINIMIZED, 0);
 			break;
+		}
 		case SDL_EVENT_WINDOW_MAXIMIZED:
+		{
 			OnWndMessage(WM_SIZE, SIZE_MAXIMIZED, 0);
-			Invalidate();
 			break;
+		}
 		case SDL_EVENT_WINDOW_RESTORED:
+		{
 			OnWndMessage(WM_SIZE, SIZE_RESTORED, 0);
-			Invalidate();
 			break;
+		}
 		case SDL_EVENT_WINDOW_FOCUS_GAINED:
+		{
 			OnWndMessage(WM_SETFOCUS, 0, 0);
 			break;
+		}
 		case SDL_EVENT_WINDOW_FOCUS_LOST:
+		{
 			OnWndMessage(WM_KILLFOCUS, 0, 0);
 			break;
+		}
 		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+		{
 			OnWndMessage(WM_CLOSE, 0, 0);
 			break;
+		}
 		case SDL_EVENT_WINDOW_DESTROYED:
+		{
 			OnWndMessage(WM_DESTROY, 0, 0);
 			break;
+		}
 		default:
+		{
 			break;
+		}
 	}
+
+	return;
 }
 
 void CDUIWndSDL::OnSdlMouseEvent(const SDL_Event &e)
@@ -916,14 +943,25 @@ void CDUIWndSDL::OnSdlMouseEvent(const SDL_Event &e)
 	int x = 0;
 	int y = 0;
 
+	auto EndWndMoving = [this]()
+	{
+		if (false == m_bWndMoving) return;
+		m_bWndMoving = false;
+		Invalidate();
+	};
+
 	switch (e.type)
 	{
 		case SDL_EVENT_MOUSE_MOTION:
+		{
+			//if (0 == (e.motion.state & SDL_BUTTON_LMASK)) EndWndMoving();
 			x = (int)e.motion.x;
 			y = (int)e.motion.y;
 			OnWndMessage(WM_MOUSEMOVE, uKeyState, MAKELPARAM(x, y));
 			break;
+		}
 		case SDL_EVENT_MOUSE_BUTTON_DOWN:
+		{
 			x = (int)e.button.x;
 			y = (int)e.button.y;
 			if (SDL_BUTTON_LEFT == e.button.button)
@@ -938,13 +976,17 @@ void CDUIWndSDL::OnSdlMouseEvent(const SDL_Event &e)
 			{
 				OnWndMessage(WM_MBUTTONDOWN, uKeyState, MAKELPARAM(x, y));
 			}
+
 			break;
+		}
 		case SDL_EVENT_MOUSE_BUTTON_UP:
+		{
 			x = (int)e.button.x;
 			y = (int)e.button.y;
 			if (SDL_BUTTON_LEFT == e.button.button)
 			{
 				OnWndMessage(WM_LBUTTONUP, uKeyState, MAKELPARAM(x, y));
+				EndWndMoving();
 			}
 			else if (SDL_BUTTON_RIGHT == e.button.button)
 			{
@@ -954,7 +996,9 @@ void CDUIWndSDL::OnSdlMouseEvent(const SDL_Event &e)
 			{
 				OnWndMessage(WM_MBUTTONUP, uKeyState, MAKELPARAM(x, y));
 			}
+
 			break;
+		}
 		case SDL_EVENT_MOUSE_WHEEL:
 		{
 			float fx = 0, fy = 0;
@@ -966,8 +1010,12 @@ void CDUIWndSDL::OnSdlMouseEvent(const SDL_Event &e)
 			break;
 		}
 		default:
+		{
 			break;
+		}
 	}
+
+	return;
 }
 
 void CDUIWndSDL::OnSdlKeyEvent(const SDL_Event &e)
@@ -983,6 +1031,8 @@ void CDUIWndSDL::OnSdlKeyEvent(const SDL_Event &e)
 	{
 		OnWndMessage(bSys ? WM_SYSKEYUP : WM_KEYUP, uVK, 0);
 	}
+
+	return;
 }
 
 Uint32 CDUIWndSDL::GetSdlUserEventType()
@@ -1021,6 +1071,7 @@ UINT CDUIWndSDL::SdlKeycodeToVK(SDL_Keycode key)
 		case SDLK_LALT:
 		case SDLK_RALT: return VK_MENU;
 		default:
+		{
 			if (key >= SDLK_A && key <= SDLK_Z)
 			{
 				return (UINT)('A' + (key - SDLK_A));
@@ -1033,7 +1084,9 @@ UINT CDUIWndSDL::SdlKeycodeToVK(SDL_Keycode key)
 			{
 				return (UINT)(VK_F1 + (key - SDLK_F1));
 			}
+
 			return (UINT)key;
+		}
 	}
 }
 

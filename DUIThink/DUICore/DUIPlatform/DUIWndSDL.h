@@ -16,6 +16,7 @@ public:
 	//variant
 protected:
 	IDuiPaintScene *							m_pPaintScene = NULL;
+	bool										m_bWndMoving = false;	// skip EXPOSED paint while dragging/moving
 
 	//method
 public:
