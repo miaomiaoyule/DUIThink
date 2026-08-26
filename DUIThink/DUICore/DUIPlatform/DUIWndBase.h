@@ -356,6 +356,7 @@ protected:
 	virtual void DelayDelete(CDUIControlBase *pControl);
 	virtual void DispatchNotifyAsyn();
 	virtual void PostAppMsg();
+	virtual void EnsurePaintScene();
 	virtual void ReleasePaintScene();
 	virtual void DispatchModelMouseEvent(CDUIControlBase *pCtrl, MouseEventPtr pFunc, const CDUIPoint &pt, const DuiMessage &Msg, bool bClick);
 	virtual void DispatchModelKeyboardEvent(CDUIControlBase *pCtrl, KeyboardEventPtr pFunc, const DuiMessage &Msg);

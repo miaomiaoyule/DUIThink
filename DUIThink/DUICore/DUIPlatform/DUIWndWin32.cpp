@@ -1139,14 +1139,7 @@ LRESULT CDUIWndWin32::OnPaint(CDUIRect rcPaint)
 		ReleasePaintScene();
 
 		//create
-		(dwStyle & WS_EX_LAYERED) ? rcPaint = rcClient : rcPaint;
-		m_hMemDcBackground = ::CreateCompatibleDC(m_hDCPaint);
-		m_hBmpBackground = CDUIRenderEngine::CreateARGB32Bitmap(m_hDCPaint, rcClient.GetWidth(), rcClient.GetHeight(), &m_pBmpBackgroundBits);
-
-		if (m_hMemDcBackground && m_hBmpBackground && m_pBmpBackgroundBits)
-		{
-			m_hBmpBackgroundOld = (HBITMAP)SelectObject(m_hMemDcBackground, m_hBmpBackground);
-		}
+		EnsurePaintScene();
 	}
 	if (NULL == m_hMemDcBackground || NULL == m_hBmpBackground || NULL == m_pBmpBackgroundBits)
 	{
@@ -1246,7 +1239,14 @@ void CDUIWndWin32::UpdateImeCompositionPos()
 	}
 
 	return;
-}void CDUIWndWin32::ReleasePaintScene()
+}void CDUIWndWin32::EnsurePaintScene(){	if (m_hMemDcBackground || NULL == m_hDCPaint) return;	CDUIRect rcClient = GetClientRect();
+	m_hMemDcBackground = ::CreateCompatibleDC(m_hDCPaint);
+	m_hBmpBackground = CDUIRenderEngine::CreateARGB32Bitmap(m_hDCPaint, rcClient.GetWidth(), rcClient.GetHeight(), &m_pBmpBackgroundBits);
+
+	if (m_hMemDcBackground && m_hBmpBackground && m_pBmpBackgroundBits)
+	{
+		m_hBmpBackgroundOld = (HBITMAP)SelectObject(m_hMemDcBackground, m_hBmpBackground);
+	}	return;}void CDUIWndWin32::ReleasePaintScene()
 {
 	if (m_hMemDcBackground)
 	{

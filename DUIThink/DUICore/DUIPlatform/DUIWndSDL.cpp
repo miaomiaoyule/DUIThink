@@ -43,6 +43,12 @@ CMMString CDUIWndSDL::GetDescribe() const
 	return Dui_WindowSDL;
 }
 
+HDC CDUIWndSDL::GetWndDC()
+{
+	EnsurePaintScene();
+	return m_hDCPaint;
+}
+
 UINT CDUIWndSDL::MapKeyState()
 {
 	UINT uState = 0;
@@ -590,120 +596,6 @@ void CDUIWndSDL::SetCaretPos(CDUIPoint pt)
 	return;
 }
 
-void CDUIWndSDL::UpdateImeCompositionPos()
-{
-	POINT pt = {};
-	GetCaretPos(&pt);
-
-	SDL_Rect rect = {};
-	rect.x = pt.x;
-	rect.y = pt.y;
-	rect.w = 1;
-	rect.h = 1;
-
-	HWND hWnd = GetWndHandle();
-	if (NULL == hWnd) return;
-
-	// SDL3: TextInputActive / SetTextInputArea
-	if (!SDL_TextInputActive(hWnd))
-	{
-		SDL_StartTextInput(hWnd);
-	}
-
-	SDL_SetTextInputArea(hWnd, &rect, 0);
-
-	return;
-}
-
-void CDUIWndSDL::PerformCalcWndMinMaxInfo()
-{
-	SDL_DisplayID displayID = SDL_GetDisplayForWindow(m_hWnd);
-	SDL_Rect sdlMonitor = {};
-	SDL_Rect sdlWork = {};
-	if (displayID != 0)
-	{
-		if (false == SDL_GetDisplayBounds(displayID, &sdlMonitor))
-		{
-			sdlMonitor = { 0, 0, 0, 0 };
-		}
-		if (false == SDL_GetDisplayUsableBounds(displayID, &sdlWork))
-		{
-			sdlWork = sdlMonitor;
-		}
-	}
-
-	CDUIRect rcMonitor(sdlMonitor.x, sdlMonitor.y, sdlMonitor.x + sdlMonitor.w, sdlMonitor.y + sdlMonitor.h);
-	CDUIRect rcWork(sdlWork.x, sdlWork.y, sdlWork.x + sdlWork.w, sdlWork.y + sdlWork.h);
-	rcWork.Offset(-rcMonitor.left, -rcMonitor.top);
-
-	CDUISize szWndMinSize = GetWndMinSize();
-	CDUISize szWndMaxSize = GetWndMaxSize();
-	if (szWndMinSize.cx > 0 || szWndMinSize.cy > 0) 
-	{
-		SDL_SetWindowMinimumSize(m_hWnd, max(1, szWndMinSize.cx), max(1, szWndMinSize.cy));
-	} 
-	else 
-	{
-		SDL_SetWindowMinimumSize(m_hWnd, 0, 0);
-	}
-	if (szWndMaxSize.cx > 0 || szWndMaxSize.cy > 0) 
-	{
-		SDL_SetWindowMaximumSize(m_hWnd, min(rcWork.GetWidth(), max(1, szWndMaxSize.cx)), min(rcWork.GetHeight(), max(1, szWndMaxSize.cy)));
-	} 
-	else 
-	{
-		SDL_SetWindowMaximumSize(m_hWnd, 0, 0);
-	}
-
-	return;
-}
-
-SDL_HitTestResult SDLCALL CDUIWndSDL::SDLEnableHitTest(SDL_Window *win, const SDL_Point *pt, void *userdata)
-{
-	CDUIWndSDL *pWnd = static_cast<CDUIWndSDL *>(userdata);
-	if (!pWnd || !IsWindow(pWnd->m_hWnd)) return SDL_HITTEST_NORMAL;
-
-	// 将全局屏幕坐标转换为窗口客户区坐标（SDL 回调传入的是窗口相对坐标）
-	int x = pt->x;
-	int y = pt->y;
-
-	// 客户区相对于窗口左上角，构造 CDUIPoint/rect 使用现有逻辑
-	CDUIPoint cpt(x, y);
-	CDUIRect rcClient = pWnd->GetClientRect();
-
-	// 参考原 OnNcHitTest 逻辑判断边缘与标题栏
-	if (false == IsZoomed(pWnd->m_hWnd) && rcClient.PtInRect(cpt))
-	{
-		RECT rcSizeBox = pWnd->GetResizeTrack();
-		if (y < rcClient.top + rcSizeBox.top)
-		{
-			if (x < rcClient.left + rcSizeBox.left) return SDL_HITTEST_RESIZE_TOPLEFT;
-			if (x > rcClient.right - rcSizeBox.right) return SDL_HITTEST_RESIZE_TOPRIGHT;
-			return SDL_HITTEST_RESIZE_TOP;
-		}
-		else if (y > rcClient.bottom - rcSizeBox.bottom)
-		{
-			if (x < rcClient.left + rcSizeBox.left) return SDL_HITTEST_RESIZE_BOTTOMLEFT;
-			if (x > rcClient.right - rcSizeBox.right) return SDL_HITTEST_RESIZE_BOTTOMRIGHT;
-			return SDL_HITTEST_RESIZE_BOTTOM;
-		}
-
-		if (x < rcClient.left + rcSizeBox.left) return SDL_HITTEST_RESIZE_LEFT;
-		if (x > rcClient.right - rcSizeBox.right) return SDL_HITTEST_RESIZE_RIGHT;
-	}
-
-	CDUIRect rcCaption(0, 0, rcClient.right, pWnd->GetCaptionHeight());
-	if (rcCaption.PtInRect(cpt))
-	{
-		CDUIControlBase *pControl = pWnd->FindControl(cpt);
-		if (NULL == pControl
-			|| (NULL == MMInterfaceHelper(CDUIButtonCtrl, pControl) && NULL == MMInterfaceHelper(CDUIProgressCtrl, pControl)))
-			return SDL_HITTEST_DRAGGABLE;
-	}
-
-	return SDL_HITTEST_NORMAL;
-}
-
 LRESULT CDUIWndSDL::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT lRes = 0;
@@ -864,56 +756,72 @@ LRESULT CDUIWndSDL::OnPaint(CDUIRect rcPaint)
 	return lRes;
 }
 
-Uint32 CDUIWndSDL::GetSdlUserEventType()
+void CDUIWndSDL::PerformCalcWndMinMaxInfo()
 {
-	static Uint32 s_uUserEvent = 0;
-	if (0 == s_uUserEvent)
+	SDL_DisplayID displayID = SDL_GetDisplayForWindow(m_hWnd);
+	SDL_Rect sdlMonitor = {};
+	SDL_Rect sdlWork = {};
+	if (displayID != 0)
 	{
-		s_uUserEvent = SDL_RegisterEvents(1);
+		if (false == SDL_GetDisplayBounds(displayID, &sdlMonitor))
+		{
+			sdlMonitor = { 0, 0, 0, 0 };
+		}
+		if (false == SDL_GetDisplayUsableBounds(displayID, &sdlWork))
+		{
+			sdlWork = sdlMonitor;
+		}
 	}
 
-	return s_uUserEvent;
+	CDUIRect rcMonitor(sdlMonitor.x, sdlMonitor.y, sdlMonitor.x + sdlMonitor.w, sdlMonitor.y + sdlMonitor.h);
+	CDUIRect rcWork(sdlWork.x, sdlWork.y, sdlWork.x + sdlWork.w, sdlWork.y + sdlWork.h);
+	rcWork.Offset(-rcMonitor.left, -rcMonitor.top);
+
+	CDUISize szWndMinSize = GetWndMinSize();
+	CDUISize szWndMaxSize = GetWndMaxSize();
+	if (szWndMinSize.cx > 0 || szWndMinSize.cy > 0) 
+	{
+		SDL_SetWindowMinimumSize(m_hWnd, max(1, szWndMinSize.cx), max(1, szWndMinSize.cy));
+	} 
+	else 
+	{
+		SDL_SetWindowMinimumSize(m_hWnd, 0, 0);
+	}
+	if (szWndMaxSize.cx > 0 || szWndMaxSize.cy > 0) 
+	{
+		SDL_SetWindowMaximumSize(m_hWnd, min(rcWork.GetWidth(), max(1, szWndMaxSize.cx)), min(rcWork.GetHeight(), max(1, szWndMaxSize.cy)));
+	} 
+	else 
+	{
+		SDL_SetWindowMaximumSize(m_hWnd, 0, 0);
+	}
+
+	return;
 }
 
-UINT CDUIWndSDL::SdlKeycodeToVK(SDL_Keycode key)
+void CDUIWndSDL::UpdateImeCompositionPos()
 {
-	switch (key)
+	POINT pt = {};
+	GetCaretPos(&pt);
+
+	SDL_Rect rect = {};
+	rect.x = pt.x;
+	rect.y = pt.y;
+	rect.w = 1;
+	rect.h = 1;
+
+	HWND hWnd = GetWndHandle();
+	if (NULL == hWnd) return;
+
+	// SDL3: TextInputActive / SetTextInputArea
+	if (!SDL_TextInputActive(hWnd))
 	{
-		case SDLK_RETURN: return VK_RETURN;
-		case SDLK_ESCAPE: return VK_ESCAPE;
-		case SDLK_BACKSPACE: return VK_BACK;
-		case SDLK_TAB: return VK_TAB;
-		case SDLK_SPACE: return VK_SPACE;
-		case SDLK_LEFT: return VK_LEFT;
-		case SDLK_RIGHT: return VK_RIGHT;
-		case SDLK_UP: return VK_UP;
-		case SDLK_DOWN: return VK_DOWN;
-		case SDLK_HOME: return VK_HOME;
-		case SDLK_END: return VK_END;
-		case SDLK_PAGEUP: return VK_PRIOR;
-		case SDLK_PAGEDOWN: return VK_NEXT;
-		case SDLK_DELETE: return VK_DELETE;
-		case SDLK_LCTRL:
-		case SDLK_RCTRL: return VK_CONTROL;
-		case SDLK_LSHIFT:
-		case SDLK_RSHIFT: return VK_SHIFT;
-		case SDLK_LALT:
-		case SDLK_RALT: return VK_MENU;
-		default:
-			if (key >= SDLK_A && key <= SDLK_Z)
-			{
-				return (UINT)('A' + (key - SDLK_A));
-			}
-			if (key >= SDLK_0 && key <= SDLK_9)
-			{
-				return (UINT)('0' + (key - SDLK_0));
-			}
-			if (key >= SDLK_F1 && key <= SDLK_F12)
-			{
-				return (UINT)(VK_F1 + (key - SDLK_F1));
-			}
-			return (UINT)key;
+		SDL_StartTextInput(hWnd);
 	}
+
+	SDL_SetTextInputArea(hWnd, &rect, 0);
+
+	return;
 }
 
 void CDUIWndSDL::EnsurePaintScene()
@@ -936,12 +844,8 @@ void CDUIWndSDL::EnsurePaintScene()
 	m_hDCPaint = m_pPaintScene->GetCanvasHDC();
 	m_hMemDcBackground = m_hDCPaint;
 	m_pBmpBackgroundBits = m_pPaintScene->GetBits();
-}
 
-HDC CDUIWndSDL::GetWndDC()
-{
-	EnsurePaintScene();
-	return m_hDCPaint;
+	return;
 }
 
 void CDUIWndSDL::ReleasePaintScene()
@@ -951,6 +855,8 @@ void CDUIWndSDL::ReleasePaintScene()
 	m_hMemDcBackground = NULL;
 	m_hBmpBackground = NULL;
 	m_pBmpBackgroundBits = NULL;
+
+	return;
 }
 
 void CDUIWndSDL::OnSdlWindowEvent(const SDL_Event &e)
@@ -1077,6 +983,104 @@ void CDUIWndSDL::OnSdlKeyEvent(const SDL_Event &e)
 	{
 		OnWndMessage(bSys ? WM_SYSKEYUP : WM_KEYUP, uVK, 0);
 	}
+}
+
+Uint32 CDUIWndSDL::GetSdlUserEventType()
+{
+	static Uint32 s_uUserEvent = 0;
+	if (0 == s_uUserEvent)
+	{
+		s_uUserEvent = SDL_RegisterEvents(1);
+	}
+
+	return s_uUserEvent;
+}
+
+UINT CDUIWndSDL::SdlKeycodeToVK(SDL_Keycode key)
+{
+	switch (key)
+	{
+		case SDLK_RETURN: return VK_RETURN;
+		case SDLK_ESCAPE: return VK_ESCAPE;
+		case SDLK_BACKSPACE: return VK_BACK;
+		case SDLK_TAB: return VK_TAB;
+		case SDLK_SPACE: return VK_SPACE;
+		case SDLK_LEFT: return VK_LEFT;
+		case SDLK_RIGHT: return VK_RIGHT;
+		case SDLK_UP: return VK_UP;
+		case SDLK_DOWN: return VK_DOWN;
+		case SDLK_HOME: return VK_HOME;
+		case SDLK_END: return VK_END;
+		case SDLK_PAGEUP: return VK_PRIOR;
+		case SDLK_PAGEDOWN: return VK_NEXT;
+		case SDLK_DELETE: return VK_DELETE;
+		case SDLK_LCTRL:
+		case SDLK_RCTRL: return VK_CONTROL;
+		case SDLK_LSHIFT:
+		case SDLK_RSHIFT: return VK_SHIFT;
+		case SDLK_LALT:
+		case SDLK_RALT: return VK_MENU;
+		default:
+			if (key >= SDLK_A && key <= SDLK_Z)
+			{
+				return (UINT)('A' + (key - SDLK_A));
+			}
+			if (key >= SDLK_0 && key <= SDLK_9)
+			{
+				return (UINT)('0' + (key - SDLK_0));
+			}
+			if (key >= SDLK_F1 && key <= SDLK_F12)
+			{
+				return (UINT)(VK_F1 + (key - SDLK_F1));
+			}
+			return (UINT)key;
+	}
+}
+
+SDL_HitTestResult SDLCALL CDUIWndSDL::SDLEnableHitTest(SDL_Window *win, const SDL_Point *pt, void *userdata)
+{
+	CDUIWndSDL *pWnd = static_cast<CDUIWndSDL *>(userdata);
+	if (!pWnd || !IsWindow(pWnd->m_hWnd)) return SDL_HITTEST_NORMAL;
+
+	// 将全局屏幕坐标转换为窗口客户区坐标（SDL 回调传入的是窗口相对坐标）
+	int x = pt->x;
+	int y = pt->y;
+
+	// 客户区相对于窗口左上角，构造 CDUIPoint/rect 使用现有逻辑
+	CDUIPoint cpt(x, y);
+	CDUIRect rcClient = pWnd->GetClientRect();
+
+	// 参考原 OnNcHitTest 逻辑判断边缘与标题栏
+	if (false == IsZoomed(pWnd->m_hWnd) && rcClient.PtInRect(cpt))
+	{
+		RECT rcSizeBox = pWnd->GetResizeTrack();
+		if (y < rcClient.top + rcSizeBox.top)
+		{
+			if (x < rcClient.left + rcSizeBox.left) return SDL_HITTEST_RESIZE_TOPLEFT;
+			if (x > rcClient.right - rcSizeBox.right) return SDL_HITTEST_RESIZE_TOPRIGHT;
+			return SDL_HITTEST_RESIZE_TOP;
+		}
+		else if (y > rcClient.bottom - rcSizeBox.bottom)
+		{
+			if (x < rcClient.left + rcSizeBox.left) return SDL_HITTEST_RESIZE_BOTTOMLEFT;
+			if (x > rcClient.right - rcSizeBox.right) return SDL_HITTEST_RESIZE_BOTTOMRIGHT;
+			return SDL_HITTEST_RESIZE_BOTTOM;
+		}
+
+		if (x < rcClient.left + rcSizeBox.left) return SDL_HITTEST_RESIZE_LEFT;
+		if (x > rcClient.right - rcSizeBox.right) return SDL_HITTEST_RESIZE_RIGHT;
+	}
+
+	CDUIRect rcCaption(0, 0, rcClient.right, pWnd->GetCaptionHeight());
+	if (rcCaption.PtInRect(cpt))
+	{
+		CDUIControlBase *pControl = pWnd->FindControl(cpt);
+		if (NULL == pControl
+			|| (NULL == MMInterfaceHelper(CDUIButtonCtrl, pControl) && NULL == MMInterfaceHelper(CDUIProgressCtrl, pControl)))
+			return SDL_HITTEST_DRAGGABLE;
+	}
+
+	return SDL_HITTEST_NORMAL;
 }
 
 bool SDLCALL CDUIWndSDL::SDLEventWatch(void *userdata, SDL_Event *e)

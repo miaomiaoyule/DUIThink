@@ -1,6 +1,9 @@
 ﻿#if defined DuiPlatform_SDL
+
 #pragma once
+
 class IDuiPaintScene;
+
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIWndSDL INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIWndSDL = { 0xfb0000bc, 0xedd4, 0x4b04, 0x85, 0x42, 0xed, 0x2d, 0xe3, 0xb3, 0x42, 0x8 };
@@ -10,10 +13,15 @@ public:
 	CDUIWndSDL(LPCTSTR lpszDuiName = NULL, HWND hWndParent = NULL);
 	virtual ~CDUIWndSDL();
 
+	//variant
+protected:
+	IDuiPaintScene *							m_pPaintScene = NULL;
+
 	//method
 public:
 	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
 	CMMString GetDescribe() const override;
+	HDC GetWndDC() override;
 	UINT MapKeyState() override;
 
 	//create
@@ -58,38 +66,36 @@ public:
 	void ShowCaret(bool bShow) override;
 	void SetCaretPos(CDUIPoint pt) override;
 
-	//help
-protected:
-	void UpdateImeCompositionPos() override;
-	void PerformCalcWndMinMaxInfo();
-
 	//message
 protected:
-	static SDL_HitTestResult SDLCALL SDLEnableHitTest(SDL_Window *win, const SDL_Point *pt, void *userdata);
 	LRESULT OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnOldWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnClose(WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnPaint(CDUIRect rcPaint) override;
-	HDC GetWndDC() override;
+
+	//help
+protected:
+	void PerformCalcWndMinMaxInfo();
+	void UpdateImeCompositionPos() override;
+	void EnsurePaintScene() override;
 	void ReleasePaintScene() override;
 
 	//wnd
 private:
-	static bool SDLCALL SDLEventWatch(void *userdata, SDL_Event *e);
-
 	void OnSdlWindowEvent(const SDL_Event& e);
 	void OnSdlMouseEvent(const SDL_Event& e);
 	void OnSdlKeyEvent(const SDL_Event& e);
-	void EnsurePaintScene();
 	static Uint32 GetSdlUserEventType();
 	static UINT SdlKeycodeToVK(SDL_Keycode key);
-
-	IDuiPaintScene *					m_pPaintScene = NULL;
+	static SDL_HitTestResult SDLCALL SDLEnableHitTest(SDL_Window *win, const SDL_Point *pt, void *userdata);
+	static bool SDLCALL SDLEventWatch(void *userdata, SDL_Event *e);
 
 	//static
 public:
 	static void ForegroundWindow(HWND hWnd);
 };
+
+//////////////////////////////////////////////////////////////////////////
 #endif

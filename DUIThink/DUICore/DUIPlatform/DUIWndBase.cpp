@@ -2219,6 +2219,11 @@ void CDUIWndBase::PostAppMsg()
 	return;
 }
 
+void CDUIWndBase::EnsurePaintScene()
+{
+	return;
+}
+
 void CDUIWndBase::ReleasePaintScene()
 {
 	return;

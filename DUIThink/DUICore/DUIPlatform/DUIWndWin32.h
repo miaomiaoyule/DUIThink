@@ -102,6 +102,7 @@ protected:
 	//help
 protected:
 	void UpdateImeCompositionPos() override;
+	void EnsurePaintScene() override;
 	void ReleasePaintScene() override;
 
 	//wnd
