@@ -48,13 +48,9 @@ bool CMMAsyncObject::Init()
 		assert(false);
 		return false;
 	}
-	if (m_uMsgAsyncTask == 0)
-	{
-		m_uMsgAsyncTask = SDL_RegisterEvents(1);
-	}
 
 	m_uWndID = SDL_GetWindowID(m_hWndAsync);
-	SDL_AddEventWatch(&CMMAsyncObject::SDLEventWatch, this);
+	MMSdlRegisterWnd(m_uWndID, this);
 #else
 	CMMString strClassName = GetClass() + CMMService::ProductGUID();
 
@@ -106,11 +102,10 @@ bool CMMAsyncObject::UnInit()
 			}
 		}
 
-		SDL_RemoveEventWatch(&CMMAsyncObject::SDLEventWatch, this);
+		MMSdlUnregisterWnd(m_uWndID);
 		SDL_DestroyWindow(m_hWndAsync);
 
 		m_hWndAsync = NULL;
-		m_uMsgAsyncTask = 0;
 #else
 		for (auto& kv : m_TimerTasks)
 		{
@@ -132,25 +127,28 @@ bool CMMAsyncObject::UnInit()
 bool CMMAsyncObject::PostMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 #if defined(DuiPlatform_SDL)
-	if (m_hWndAsync == nullptr || m_uMsgAsyncTask == 0) return false;
+	if (m_hWndAsync == nullptr) return false;
+
+	const Uint32 uEventType = MMSdlGetAsyncEventType();
+	if (0 == uEventType || uEventType == static_cast<Uint32>(-1)) return false;
 
 	tagMMSdlAsyncMsg *pAsyncMsg = new (std::nothrow) tagMMSdlAsyncMsg();
 	if (pAsyncMsg == nullptr) return false;
 
-	pAsyncMsg->pWnd = reinterpret_cast<CMMAsyncObject*>(this);
+	pAsyncMsg->pWnd = this;
 	pAsyncMsg->uMsg = uMsg;
 	pAsyncMsg->wParam = wParam;
 	pAsyncMsg->lParam = lParam;
 
 	SDL_Event e = {};
-	e.type = m_uMsgAsyncTask;
+	e.type = uEventType;
 	e.user.timestamp = SDL_GetTicksNS();
-	e.user.windowID = SDL_GetWindowID(m_hWndAsync);
+	e.user.windowID = m_uWndID;
 	e.user.code = 0;
 	e.user.data1 = pAsyncMsg;
 	e.user.data2 = nullptr;
 
-	if (SDL_PushEvent(&e) == 0)
+	if (SDL_PeepEvents(&e, 1, SDL_ADDEVENT, 0, 0) != 1)
 	{
 		delete pAsyncMsg;
 		return false;
@@ -205,14 +203,17 @@ LRESULT CMMAsyncObject::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, b
 		{
 			std::lock_guard<std::recursive_mutex> lock(m_AsyncDataLock);
 			auto it = m_TimerTasks.find(id);
-			if (it != m_TimerTasks.end())
+			if (it == m_TimerTasks.end())
 			{
-				fn = it->second.func;
-				bRepeat = it->second.bRepeat;
-				if (false == bRepeat)
-				{
-					StopTimer(it->first);
-				}
+				bHandled = true;
+				return 0;
+			}
+
+			fn = it->second.func;
+			bRepeat = it->second.bRepeat;
+			if (false == bRepeat)
+			{
+				StopTimer(it->first);
 			}
 		}
 
@@ -236,8 +237,11 @@ LRESULT CMMAsyncObject::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, b
 
 bool CMMAsyncObject::AsyncTask(std::function<void()> pFunc)
 {
-	if (!m_hWndAsync) return false;
-	auto pTask = new TaskBase{ std::move(pFunc) };
+	if (!pFunc) return false;
+
+	TaskBase *pTask = new (std::nothrow) TaskBase();
+	if (!pTask) return false;
+	pTask->func = std::move(pFunc);
 
 	BOOL ok = PostMessage(m_uMsgAsyncTask, reinterpret_cast<WPARAM>(pTask), 0);
 	if (!ok)
@@ -254,77 +258,74 @@ UINT_PTR CMMAsyncObject::TimerTask(unsigned int ms, bool bRepeat, std::function<
 	return StartTimerInternal(ms, std::move(pFunc), bRepeat);
 }
 
-// Stop timer by id
 bool CMMAsyncObject::StopTimer(UINT_PTR timerId)
 {
-	if (!m_hWndAsync) return false;
+	std::lock_guard<std::recursive_mutex> Lock(m_AsyncDataLock);
 
-	{
-		std::lock_guard<std::recursive_mutex> lock(m_AsyncDataLock);
-		auto it = m_TimerTasks.find(timerId);
-		if (it == m_TimerTasks.end()) return false;
+	auto it = m_TimerTasks.find(timerId);
+	if (it == m_TimerTasks.end()) return false;
 
 #if defined(DuiPlatform_SDL)
-		// Remove SDL timer and free param
-		if (it->second.uTimerIDSdl)
-		{
-			SDL_RemoveTimer((SDL_TimerID)it->second.uTimerIDSdl);
-			it->second.uTimerIDSdl = 0;
-		}
-		if (it->second.sdlTimerParam)
-		{
-			delete static_cast<SDLTmrCallbackParam*>(it->second.sdlTimerParam);
-			it->second.sdlTimerParam = nullptr;
-		}
+	if (it->second.uTimerIDSdl)
+	{
+		SDL_RemoveTimer((SDL_TimerID)it->second.uTimerIDSdl);
+		it->second.uTimerIDSdl = 0;
+	}
+	if (it->second.sdlTimerParam)
+	{
+		delete static_cast<SDLTmrCallbackParam*>(it->second.sdlTimerParam);
+		it->second.sdlTimerParam = nullptr;
+	}
 #else
+	if (IsWindow(m_hWndAsync))
+	{
 		::KillTimer(m_hWndAsync, timerId);
+	}
 #endif
 
-		m_TimerTasks.erase(it);
-	}
-
+	m_TimerTasks.erase(it);
 	return true;
 }
 
-UINT_PTR CMMAsyncObject::StartTimerInternal(unsigned int ms, std::function<void()> &&fn, bool repeat)
+UINT_PTR CMMAsyncObject::StartTimerInternal(unsigned int ms, std::function<void()>&& fn, bool repeat)
 {
-	if (!m_hWndAsync) return 0;
 	if (!fn) return 0;
 
 	UINT_PTR id = m_NextTimerId.fetch_add(1);
 
 #if defined(DuiPlatform_SDL)
-	// Setup SDL timer: allocate param and call SDL_AddTimer
 	SDLTmrCallbackParam *pParam = new (std::nothrow) SDLTmrCallbackParam();
-	if (pParam == nullptr)
-	{
-		return 0;
-	}
+	if (NULL == pParam) return 0;
 
 	pParam->self = this;
 	pParam->id = id;
 	pParam->interval = ms;
 	pParam->repeat = repeat;
 
-	SDL_TimerID sdlTimerId = SDL_AddTimer(ms, SDLTimerCallback, pParam);
-	if (sdlTimerId == 0)
+	SDL_TimerID uTimerID = SDL_AddTimer(ms, &CMMAsyncObject::SDLTimerCallback, pParam);
+	if (0 == uTimerID)
 	{
-		// failed -> cleanup
 		delete pParam;
 		return 0;
 	}
 
 	{
 		std::lock_guard<std::recursive_mutex> lock(m_AsyncDataLock);
-		m_TimerTasks[id].func = std::move(fn);
-		m_TimerTasks[id].bRepeat = repeat;
-		m_TimerTasks[id].uTimerIDSdl = (Uint32)sdlTimerId;
-		m_TimerTasks[id].sdlTimerParam = pParam;
+		TimerInfo &info = m_TimerTasks[id];
+		info.func = std::move(fn);
+		info.bRepeat = repeat;
+		info.uTimerIDSdl = (Uint32)uTimerID;
+		info.sdlTimerParam = pParam;
 	}
 
 	return id;
 #else
-	if (!::SetTimer(m_hWndAsync, id, ms, NULL))
+	if (false == IsWindow(m_hWndAsync))
+	{
+		return 0;
+	}
+
+	if (0 == ::SetTimer(m_hWndAsync, id, ms, NULL))
 	{
 		return 0;
 	}
@@ -341,32 +342,29 @@ UINT_PTR CMMAsyncObject::StartTimerInternal(unsigned int ms, std::function<void(
 
 //////////////////////////////////////////////////////////////////////////
 #if defined(DuiPlatform_SDL)
+void CMMAsyncObject::OnWndMessage(SDL_Event &e)
+{
+	SDLEventWatch(this, &e);
+}
+
 bool SDLCALL CMMAsyncObject::SDLEventWatch(void *userdata, SDL_Event *e)
 {
 	CMMAsyncObject *self = static_cast<CMMAsyncObject *>(userdata);
-	if (NULL == self || e->window.windowID != self->m_uWndID) return false;
+	if (NULL == self || NULL == e) return false;
 
-	//user event
-	if (e->type == self->m_uMsgAsyncTask)
+	if (e->type != MMSdlGetAsyncEventType()) return false;
+
+	tagMMSdlAsyncMsg *pAsyncMsg = static_cast<tagMMSdlAsyncMsg *>(e->user.data1);
+	if (pAsyncMsg && pAsyncMsg->pWnd == self)
 	{
-		tagMMSdlAsyncMsg *pAsyncMsg = static_cast<tagMMSdlAsyncMsg *>(e->user.data1);
-		if (pAsyncMsg && pAsyncMsg->pWnd == self)
-		{
-			bool bHandled = false;
-			self->HandleMessage(pAsyncMsg->uMsg, pAsyncMsg->wParam, pAsyncMsg->lParam, bHandled);
+		bool bHandled = false;
+		self->HandleMessage(pAsyncMsg->uMsg, pAsyncMsg->wParam, pAsyncMsg->lParam, bHandled);
 
-			MMSafeDelete(pAsyncMsg);
-			e->user.data1 = NULL;
-		}
-
-		return false;
+		MMSafeDelete(pAsyncMsg);
+		e->user.data1 = NULL;
 	}
 
-	//event
-	bool bHandled = false;
-	//self->HandleMessage(e->type, pAsyncMsg->wParam, pAsyncMsg->lParam, bHandled);
-
-	return true;
+	return false;
 }
 
 Uint32 SDLCALL CMMAsyncObject::SDLTimerCallback(void *userdata, SDL_TimerID timerID, Uint32 interval)
@@ -377,20 +375,20 @@ Uint32 SDLCALL CMMAsyncObject::SDLTimerCallback(void *userdata, SDL_TimerID time
 	tagMMSdlAsyncMsg *pAsyncMsg = new (std::nothrow) tagMMSdlAsyncMsg();
 	if (pAsyncMsg != nullptr)
 	{
-		pAsyncMsg->pWnd = reinterpret_cast<CMMAsyncObject *>(p->self);
+		pAsyncMsg->pWnd = p->self;
 		pAsyncMsg->uMsg = WM_TIMER;
 		pAsyncMsg->wParam = static_cast<WPARAM>(p->id);
 		pAsyncMsg->lParam = 0;
 
 		SDL_Event e = {};
-		e.type = p->self->m_uMsgAsyncTask;
+		e.type = MMSdlGetAsyncEventType();
 		e.user.timestamp = SDL_GetTicksNS();
 		e.user.windowID = p->self->m_uWndID;
 		e.user.code = 0;
 		e.user.data1 = pAsyncMsg;
 		e.user.data2 = nullptr;
 
-		if (SDL_PushEvent(&e) == 0)
+		if (SDL_PeepEvents(&e, 1, SDL_ADDEVENT, 0, 0) != 1)
 		{
 			delete pAsyncMsg;
 		}
@@ -421,7 +419,6 @@ LRESULT CALLBACK CMMAsyncObject::OnWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, 
 		}
 	}
 
-	lRes = ::DefWindowProc(hWnd, uMsg, wParam, lParam);
-	return lRes;
+	return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 #endif

@@ -69,7 +69,7 @@ void CDlgDpi::OnDuiTimer(const DuiNotify &Notify)
 #if defined DuiPlatform_SDL
 			SDL_Event quitEvent = {};
 			quitEvent.type = SDL_EVENT_QUIT;
-			SDL_PushEvent(&quitEvent);
+			SDL_PeepEvents(&quitEvent, 1, SDL_ADDEVENT, 0, 0);
 #else
 			PostQuitMessage(0);
 #endif

@@ -3452,6 +3452,8 @@ void CDUIGlobal::MessageLoop()
 			continue;
 		}
 
+		MMSdlDispatchEvent(e);
+
 		if (SDL_EVENT_QUIT == e.type)
 		{
 			break;

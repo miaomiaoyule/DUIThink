@@ -5,16 +5,12 @@
 
 //////////////////////////////////////////////////////////////////////////
 class CMMAsyncObject;
-struct tagMMSdlAsyncMsg
-{
-	CMMAsyncObject *					pWnd = NULL;
-	UINT								uMsg = 0;
-	WPARAM								wParam = 0;
-	LPARAM								lParam = 0;
-};
 
 //////////////////////////////////////////////////////////////////////////
 class MMHELPER_API CMMAsyncObject
+#if defined(DuiPlatform_SDL)
+	: public IMMWndSDL
+#endif
 {
 	MMDeclare_ClassName(CMMAsyncObject)
 
@@ -39,11 +35,7 @@ protected:
 	std::recursive_mutex				m_AsyncDataLock;
 	HWND								m_hWndAsync = NULL;
 	uint32_t							m_uWndID = 0;
-#if defined DuiPlatform_SDL
-	Uint32								m_uMsgAsyncTask = 0;
-#else
 	const UINT							m_uMsgAsyncTask = WM_APP + 1;
-#endif
 
 	// Map timer id -> TimerInfo
 	std::map<UINT_PTR, TimerInfo>		m_TimerTasks;
@@ -67,6 +59,7 @@ protected:
 
 protected:
 #if defined(DuiPlatform_SDL)
+	void OnWndMessage(SDL_Event &e) override;
 	static bool SDLCALL SDLEventWatch(void *userdata, SDL_Event *e);
 	static Uint32 SDLCALL SDLTimerCallback(void *userdata, SDL_TimerID timerID, Uint32 interval);
 #else

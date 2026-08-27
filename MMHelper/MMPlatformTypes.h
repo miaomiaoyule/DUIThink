@@ -1136,4 +1136,33 @@ LPVOID GlobalLock(HGLOBAL hMem);
 BOOL GlobalUnlock(HGLOBAL hMem);
 HRESULT CreateStreamOnHGlobal(HGLOBAL hGlobal, BOOL fDeleteOnRelease, IStream **ppstm);
 
+//////////////////////////////////////////////////////////////////////////
+class MMHELPER_API IMMWndSDL
+{
+public:
+	virtual ~IMMWndSDL() {}
+
+	// Called by MMSdlDispatchEvent for queued async / EXPOSED events.
+	virtual void OnWndMessage(SDL_Event &e) = 0;
+};
+
+struct tagMMSdlAsyncMsg
+{
+	IMMWndSDL *						pWnd = NULL;
+	UINT								uMsg = 0;
+	WPARAM								wParam = 0;
+	LPARAM								lParam = 0;
+};
+
+// One shared user-event type for all PostMessage-style async posts.
+MMHELPER_API Uint32 MMSdlGetAsyncEventType();
+
+// Register / unregister for EXPOSED lookup by SDL_WindowID.
+MMHELPER_API void MMSdlRegisterWnd(SDL_WindowID uWndID, IMMWndSDL *pWnd);
+MMHELPER_API void MMSdlUnregisterWnd(SDL_WindowID uWndID);
+
+// Single dispatch entry (like DispatchMessage): call after WaitEvent / PollEvent.
+MMHELPER_API void MMSdlDispatchEvent(SDL_Event &e);
+
+//////////////////////////////////////////////////////////////////////////
 #endif // __MM_PLATFORM_TYPES_H__

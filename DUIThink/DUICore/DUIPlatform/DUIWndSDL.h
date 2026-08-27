@@ -7,7 +7,9 @@ class IDuiPaintScene;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIWndSDL INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIWndSDL = { 0xfb0000bc, 0xedd4, 0x4b04, 0x85, 0x42, 0xed, 0x2d, 0xe3, 0xb3, 0x42, 0x8 };
-class DUITHINK_API CDUIWndSDL : public CDUIWndBase
+class DUITHINK_API CDUIWndSDL 
+	: public CDUIWndBase
+	, public IMMWndSDL
 {
 public:
 	CDUIWndSDL(LPCTSTR lpszDuiName = NULL, HWND hWndParent = NULL);
@@ -85,10 +87,10 @@ protected:
 
 	//wnd
 private:
+	void OnWndMessage(SDL_Event &e) override;
 	void OnSdlWindowEvent(const SDL_Event& e);
 	void OnSdlMouseEvent(const SDL_Event& e);
 	void OnSdlKeyEvent(const SDL_Event& e);
-	static Uint32 GetSdlUserEventType();
 	static UINT SdlKeycodeToVK(SDL_Keycode key);
 	static SDL_HitTestResult SDLCALL SDLEnableHitTest(SDL_Window *win, const SDL_Point *pt, void *userdata);
 	static bool SDLCALL SDLEventWatch(void *userdata, SDL_Event *e);

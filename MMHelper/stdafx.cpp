@@ -26,6 +26,8 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...)
 namespace
 {
 	std::unordered_map<SDL_Window *, CMMRect> g_mapWndUpdate;
+	std::unordered_map<SDL_WindowID, IMMWndSDL *> g_mapSdlWnd;
+	std::mutex g_csSdlWnd;
 }
 
 bool IsWindow(HWND hWnd)
@@ -138,7 +140,7 @@ void InvalidateRect(HWND hWnd, LPCRECT lpRect, bool bErase)
 	e.window.windowID = SDL_GetWindowID(hWnd);
 	e.window.data1 = 0;
 	e.window.data2 = 0;
-	SDL_PushEvent(&e);
+	SDL_PeepEvents(&e, 1, SDL_ADDEVENT, 0, 0);
 
 	return;
 }
@@ -555,6 +557,61 @@ void UpdateWindow(HWND hWnd)
 	InvalidateRect(hWnd, NULL, false);
 
 	return;
+}
+
+Uint32 MMSdlGetAsyncEventType()
+{
+	static Uint32 s_uAsyncEvent = 0;
+	if (0 == s_uAsyncEvent)
+	{
+		s_uAsyncEvent = SDL_RegisterEvents(1);
+	}
+
+	return s_uAsyncEvent;
+}
+
+void MMSdlRegisterWnd(SDL_WindowID uWndID, IMMWndSDL *pWnd)
+{
+	if (0 == uWndID || NULL == pWnd) return;
+
+	std::lock_guard<std::mutex> lock(g_csSdlWnd);
+	g_mapSdlWnd[uWndID] = pWnd;
+}
+
+void MMSdlUnregisterWnd(SDL_WindowID uWndID)
+{
+	if (0 == uWndID) return;
+
+	std::lock_guard<std::mutex> lock(g_csSdlWnd);
+	g_mapSdlWnd.erase(uWndID);
+}
+
+void MMSdlDispatchEvent(SDL_Event &e)
+{
+	IMMWndSDL *pWnd = NULL;
+
+	if (SDL_EVENT_WINDOW_EXPOSED == e.type)
+	{
+		std::lock_guard<std::mutex> lock(g_csSdlWnd);
+		auto it = g_mapSdlWnd.find(e.window.windowID);
+		if (it != g_mapSdlWnd.end())
+		{
+			pWnd = it->second;
+		}
+	}
+	else if (e.type == MMSdlGetAsyncEventType())
+	{
+		tagMMSdlAsyncMsg *pAsyncMsg = static_cast<tagMMSdlAsyncMsg *>(e.user.data1);
+		if (pAsyncMsg)
+		{
+			pWnd = pAsyncMsg->pWnd;
+		}
+	}
+
+	if (pWnd)
+	{
+		pWnd->OnWndMessage(e);
+	}
 }
 
 #endif

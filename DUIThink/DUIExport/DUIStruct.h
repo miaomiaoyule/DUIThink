@@ -530,17 +530,6 @@ struct tagDuiKLineChartItem
 typedef std::vector<tagDuiKLineChartItem> VecDuiKLineChartItem;
 
 //////////////////////////////////////////////////////////////////////////
-#if defined(DuiPlatform_SDL)
-struct tagDuiSdlAsyncMsg
-{
-	CDUIWndSDL *						pWnd = NULL;
-	UINT								uMsg = 0;
-	WPARAM								wParam = 0;
-	LPARAM								lParam = 0;
-};
-#endif
-
-//////////////////////////////////////////////////////////////////////////
 typedef std::unordered_map<CDUIWnd*, tagDuiFile> MapWnd;
 
 //////////////////////////////////////////////////////////////////////////

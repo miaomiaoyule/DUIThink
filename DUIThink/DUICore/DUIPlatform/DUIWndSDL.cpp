@@ -23,6 +23,7 @@ CDUIWndSDL::~CDUIWndSDL()
 	{
 		SDL_SetWindowHitTest(m_hWnd, NULL, NULL);
 		SDL_RemoveEventWatch(&SDLEventWatch, this);
+		MMSdlUnregisterWnd(m_uWndID);
 		SDL_DestroyWindow(m_hWnd);
 		m_hWnd = NULL;
 		m_uWndID = 0;
@@ -107,7 +108,7 @@ HWND CDUIWndSDL::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD 
 	}
 
 	m_uWndID = SDL_GetWindowID(m_hWnd);
-	GetSdlUserEventType();
+	MMSdlRegisterWnd(m_uWndID, this);
 	SDL_AddEventWatch(&SDLEventWatch, this);
 	SDL_SetWindowHitTest(m_hWnd, &SDLEnableHitTest, this);
 
@@ -121,6 +122,7 @@ HWND CDUIWndSDL::SubWindow(HWND hWnd)
 	m_hWnd = hWnd;
 	m_uWndID = SDL_GetWindowID(hWnd);
 	m_bSubWindow = true;
+	MMSdlRegisterWnd(m_uWndID, this);
 	SDL_AddEventWatch(&SDLEventWatch, this);
 	SDL_SetWindowHitTest(m_hWnd, &SDLEnableHitTest, this);
 	return m_hWnd;
@@ -132,6 +134,7 @@ void CDUIWndSDL::UnSubWindow()
 	if (!m_bSubWindow) return;
 	SDL_SetWindowHitTest(m_hWnd, NULL, NULL);
 	SDL_RemoveEventWatch(&SDLEventWatch, this);
+	MMSdlUnregisterWnd(m_uWndID);
 	m_hWnd = nullptr;
 	m_uWndID = 0;
 	m_bSubWindow = false;
@@ -189,6 +192,9 @@ UINT CDUIWndSDL::DoModal()
 			MMTRACE(_T("EXCEPTION: SDL_WaitEvent failed\n"));
 			break;
 		}
+
+		MMSdlDispatchEvent(e);
+
 		if (SDL_EVENT_QUIT == e.type)
 		{
 			break;
@@ -206,7 +212,7 @@ UINT CDUIWndSDL::DoModal()
 	{
 		SDL_Event quitEvent = {};
 		quitEvent.type = SDL_EVENT_QUIT;
-		SDL_PushEvent(&quitEvent);
+		SDL_PeepEvents(&quitEvent, 1, SDL_ADDEVENT, 0, 0);
 	}
 
 	if (0 == nRet)
@@ -245,6 +251,9 @@ UINT CDUIWndSDL::DoBlock()
 			MMTRACE(_T("EXCEPTION: SDL_WaitEvent failed\n"));
 			break;
 		}
+
+		MMSdlDispatchEvent(e);
+
 		if (SDL_EVENT_QUIT == e.type)
 		{
 			break;
@@ -262,7 +271,7 @@ UINT CDUIWndSDL::DoBlock()
 	{
 		SDL_Event quitEvent = {};
 		quitEvent.type = SDL_EVENT_QUIT;
-		SDL_PushEvent(&quitEvent);
+		SDL_PeepEvents(&quitEvent, 1, SDL_ADDEVENT, 0, 0);
 	}
 
 	if (0 == nRet)
@@ -375,7 +384,7 @@ LRESULT CDUIWndSDL::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam 
 		return 0;
 	}
 
-	const Uint32 uEventType = GetSdlUserEventType();
+	const Uint32 uEventType = MMSdlGetAsyncEventType();
 	if (uEventType == 0 || uEventType == static_cast<Uint32>(-1))
 	{
 		ASSERT(false);
@@ -383,7 +392,7 @@ LRESULT CDUIWndSDL::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam 
 	}
 
 	//construct
-	tagDuiSdlAsyncMsg *pAsyncMsg = new (std::nothrow) tagDuiSdlAsyncMsg();
+	tagMMSdlAsyncMsg *pAsyncMsg = new (std::nothrow) tagMMSdlAsyncMsg();
 	if (NULL == pAsyncMsg) return 0;
 
 	pAsyncMsg->pWnd = this;
@@ -399,7 +408,7 @@ LRESULT CDUIWndSDL::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam 
 	e.user.code = 0;
 	e.user.data1 = pAsyncMsg;
 	e.user.data2 = NULL;
-	if (false == SDL_PushEvent(&e))
+	if (SDL_PeepEvents(&e, 1, SDL_ADDEVENT, 0, 0) != 1)
 	{
 		MMSafeDelete(pAsyncMsg);
 
@@ -636,6 +645,7 @@ LRESULT CDUIWndSDL::OnClose(WPARAM wParam, LPARAM lParam)
 		SDL_HideWindow(m_hWnd);
 		SDL_SetWindowHitTest(m_hWnd, NULL, NULL);
 		SDL_RemoveEventWatch(&SDLEventWatch, this);
+		MMSdlUnregisterWnd(m_uWndID);
 		SDL_DestroyWindow(m_hWnd);
 		m_hWnd = NULL;
 		m_uWndID = 0;
@@ -856,6 +866,13 @@ void CDUIWndSDL::ReleasePaintScene()
 	return;
 }
 
+void CDUIWndSDL::OnWndMessage(SDL_Event &e)
+{
+	SDLEventWatch(this, &e);
+
+	return;
+}
+
 void CDUIWndSDL::OnSdlWindowEvent(const SDL_Event &e)
 {
 	switch (e.type)
@@ -1035,17 +1052,6 @@ void CDUIWndSDL::OnSdlKeyEvent(const SDL_Event &e)
 	return;
 }
 
-Uint32 CDUIWndSDL::GetSdlUserEventType()
-{
-	static Uint32 s_uUserEvent = 0;
-	if (0 == s_uUserEvent)
-	{
-		s_uUserEvent = SDL_RegisterEvents(1);
-	}
-
-	return s_uUserEvent;
-}
-
 UINT CDUIWndSDL::SdlKeycodeToVK(SDL_Keycode key)
 {
 	switch (key)
@@ -1141,10 +1147,10 @@ bool SDLCALL CDUIWndSDL::SDLEventWatch(void *userdata, SDL_Event *e)
 	CDUIWndSDL *self = static_cast<CDUIWndSDL *>(userdata);
 	if (NULL == self || NULL == e) return false;
 
-	const Uint32 uUserEvent = GetSdlUserEventType();
-	if (uUserEvent != 0 && e->type == uUserEvent)
+	const Uint32 uAsyncEvent = MMSdlGetAsyncEventType();
+	if (uAsyncEvent != 0 && e->type == uAsyncEvent)
 	{
-		tagDuiSdlAsyncMsg *pAsyncMsg = static_cast<tagDuiSdlAsyncMsg *>(e->user.data1);
+		tagMMSdlAsyncMsg *pAsyncMsg = static_cast<tagMMSdlAsyncMsg *>(e->user.data1);
 		if (pAsyncMsg && pAsyncMsg->pWnd == self)
 		{
 			self->OnWndMessage(pAsyncMsg->uMsg, pAsyncMsg->wParam, pAsyncMsg->lParam);
