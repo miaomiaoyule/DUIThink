@@ -590,7 +590,6 @@ void MMSdlDispatchEvent(SDL_Event &e)
 {
 	IMMWndSDL *pWnd = NULL;
 
-	if (SDL_EVENT_WINDOW_EXPOSED == e.type)
 	{
 		std::lock_guard<std::mutex> lock(g_csSdlWnd);
 		auto it = g_mapSdlWnd.find(e.window.windowID);
@@ -599,7 +598,7 @@ void MMSdlDispatchEvent(SDL_Event &e)
 			pWnd = it->second;
 		}
 	}
-	else if (e.type == MMSdlGetAsyncEventType())
+	if (NULL == pWnd && e.type == MMSdlGetAsyncEventType())
 	{
 		tagMMSdlAsyncMsg *pAsyncMsg = static_cast<tagMMSdlAsyncMsg *>(e.user.data1);
 		if (pAsyncMsg)

@@ -899,7 +899,14 @@ void CDUIWndSDL::OnSdlWindowEvent(const SDL_Event &e)
 		}
 		case SDL_EVENT_WINDOW_MOVED:
 		{
-			m_bWndMoving = true;
+			// SetWindowPos / animation also fires MOVED. Only suppress EXPOSED during
+			// real title-bar drag (LMB down). Otherwise the flag sticks and paint never resumes.
+			const bool bDragMove = 0 != (SDL_GetGlobalMouseState(NULL, NULL) & SDL_BUTTON_LMASK);
+			if (bDragMove)
+			{
+				m_bWndMoving = true;
+			}
+
 			OnWndMessage(WM_MOVE, 0, MAKELPARAM(e.window.data1, e.window.data2));
 			break;
 		}
@@ -971,7 +978,8 @@ void CDUIWndSDL::OnSdlMouseEvent(const SDL_Event &e)
 	{
 		case SDL_EVENT_MOUSE_MOTION:
 		{
-			//if (0 == (e.motion.state & SDL_BUTTON_LMASK)) EndWndMoving();
+			// HITTEST_DRAGGABLE may not deliver BUTTON_UP; clear moving when LMB released.
+			if (0 == (e.motion.state & SDL_BUTTON_LMASK)) EndWndMoving();
 			x = (int)e.motion.x;
 			y = (int)e.motion.y;
 			OnWndMessage(WM_MOUSEMOVE, uKeyState, MAKELPARAM(x, y));

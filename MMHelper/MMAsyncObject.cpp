@@ -150,7 +150,7 @@ bool CMMAsyncObject::PostMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	if (SDL_PeepEvents(&e, 1, SDL_ADDEVENT, 0, 0) != 1)
 	{
-		delete pAsyncMsg;
+		MMSafeDelete(pAsyncMsg);
 		return false;
 	}
 
@@ -390,7 +390,7 @@ Uint32 SDLCALL CMMAsyncObject::SDLTimerCallback(void *userdata, SDL_TimerID time
 
 		if (SDL_PeepEvents(&e, 1, SDL_ADDEVENT, 0, 0) != 1)
 		{
-			delete pAsyncMsg;
+			MMSafeDelete(pAsyncMsg);
 		}
 	}
 
