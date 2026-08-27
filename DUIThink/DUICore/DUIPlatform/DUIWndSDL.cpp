@@ -890,7 +890,6 @@ void CDUIWndSDL::OnSdlWindowEvent(const SDL_Event &e)
 		case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
 		{
 			m_bWndMoving = false;
-			ReleasePaintScene();
 			OnWndMessage(WM_SIZE, SIZE_RESTORED, MAKELPARAM(e.window.data1, e.window.data2));
 			break;
 		}
