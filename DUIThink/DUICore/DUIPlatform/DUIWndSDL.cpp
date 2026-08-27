@@ -161,7 +161,7 @@ void CDUIWndSDL::ShowWindow(bool bShow /*= true*/, bool bTakeFocus /*= false*/)
 	return;
 }
 
-UINT CDUIWndSDL ::DoModal()
+UINT CDUIWndSDL::DoModal()
 {
 	//create
 	if (false == IsWindow(m_hWnd))
