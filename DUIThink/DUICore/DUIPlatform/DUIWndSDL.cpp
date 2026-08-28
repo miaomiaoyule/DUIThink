@@ -22,7 +22,6 @@ CDUIWndSDL::~CDUIWndSDL()
 	if (IsWindow(m_hWnd))
 	{
 		SDL_SetWindowHitTest(m_hWnd, NULL, NULL);
-		SDL_RemoveEventWatch(&SDLEventWatch, this);
 		MMSdlUnregisterWnd(m_uWndID);
 		SDL_DestroyWindow(m_hWnd);
 		m_hWnd = NULL;
@@ -81,6 +80,8 @@ HWND CDUIWndSDL::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD 
 	SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, strTitle.c_str());
 	SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, cx);
 	SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, cy);
+	// Match Win32 OnCreate: strip WS_CAPTION — DUI draws its own chrome.
+	SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, true);
 	if (dwStyle & WS_THICKFRAME)
 	{
 		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, true);
@@ -109,7 +110,6 @@ HWND CDUIWndSDL::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD 
 
 	m_uWndID = SDL_GetWindowID(m_hWnd);
 	MMSdlRegisterWnd(m_uWndID, this);
-	SDL_AddEventWatch(&SDLEventWatch, this);
 	SDL_SetWindowHitTest(m_hWnd, &SDLEnableHitTest, this);
 
 	OnWndMessage(WM_CREATE, 0, 0);
@@ -123,7 +123,6 @@ HWND CDUIWndSDL::SubWindow(HWND hWnd)
 	m_uWndID = SDL_GetWindowID(hWnd);
 	m_bSubWindow = true;
 	MMSdlRegisterWnd(m_uWndID, this);
-	SDL_AddEventWatch(&SDLEventWatch, this);
 	SDL_SetWindowHitTest(m_hWnd, &SDLEnableHitTest, this);
 	return m_hWnd;
 }
@@ -133,7 +132,6 @@ void CDUIWndSDL::UnSubWindow()
 	if (!::IsWindow(m_hWnd)) return;
 	if (!m_bSubWindow) return;
 	SDL_SetWindowHitTest(m_hWnd, NULL, NULL);
-	SDL_RemoveEventWatch(&SDLEventWatch, this);
 	MMSdlUnregisterWnd(m_uWndID);
 	m_hWnd = nullptr;
 	m_uWndID = 0;
@@ -644,7 +642,6 @@ LRESULT CDUIWndSDL::OnClose(WPARAM wParam, LPARAM lParam)
 		ReleasePaintScene();
 		SDL_HideWindow(m_hWnd);
 		SDL_SetWindowHitTest(m_hWnd, NULL, NULL);
-		SDL_RemoveEventWatch(&SDLEventWatch, this);
 		MMSdlUnregisterWnd(m_uWndID);
 		SDL_DestroyWindow(m_hWnd);
 		m_hWnd = NULL;
@@ -1026,10 +1023,11 @@ void CDUIWndSDL::OnSdlMouseEvent(const SDL_Event &e)
 		}
 		case SDL_EVENT_MOUSE_WHEEL:
 		{
-			float fx = 0, fy = 0;
-			SDL_GetMouseState(&fx, &fy);
-			x = (int)fx;
-			y = (int)fy;
+			float fGlobalX = 0.0f;
+			float fGlobalY = 0.0f;
+			SDL_GetGlobalMouseState(&fGlobalX, &fGlobalY);
+			x = (int)fGlobalX;
+			y = (int)fGlobalY;
 			const int nDelta = (int)(e.wheel.y * WHEEL_DELTA);
 			OnWndMessage(WM_MOUSEWHEEL, MAKEWPARAM(uKeyState, nDelta), MAKELPARAM(x, y));
 			break;
