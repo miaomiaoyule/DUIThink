@@ -309,14 +309,21 @@ int SetTextColor(HDC, DWORD color)
 	return (int)old;
 }
 
-int DrawText(HDC hdc, LPCTSTR lpchText, int cchText, LPRECT lprc, UINT format)
+int DrawText(HDC hdc, LPCTSTR lpchText, int cchText, LPRECT lprc, UINT dwStyle)
 {
 	IDuiCanvas *pCanvas = DuiCanvasFromHDC(hdc);
 	if (NULL == pCanvas || NULL == lprc || NULL == lpchText) return 0;
+
 	CMMString text = (cchText < 0) ? CMMString(lpchText) : CMMString(lpchText, cchText);
 	RECT rcRegion = *lprc;
 	IDuiFont *pFont = DuiFontFromHFONT(t_selectedFont);
-	pCanvas->DrawText(pFont, rcRegion, text.c_str(), t_textColor, format);
+	pCanvas->DrawText(pFont, rcRegion, text.c_str(), t_textColor, dwStyle);
+
+	if (dwStyle & DT_CALCRECT)
+	{
+		*lprc = rcRegion;
+	}
+
 	return rcRegion.bottom - lprc->top;
 }
 
@@ -384,11 +391,11 @@ BOOL WINAPI AlphaBlend(HDC hdcDest, int xoriginDest, int yoriginDest, int wDest,
 		hdcSrc, xoriginSrc, yoriginSrc, wSrc, hSrc, SRCCOPY);
 }
 
-int DrawShadowText(HDC hdc, LPCTSTR lpchText, int cchText, LPRECT lprc, UINT format,
+int DrawShadowText(HDC hdc, LPCTSTR lpchText, int cchText, LPRECT lprc, UINT dwStyle,
 	DWORD crText, DWORD, int, int)
 {
 	SetTextColor(hdc, crText);
-	return DrawText(hdc, lpchText, cchText, lprc, format);
+	return DrawText(hdc, lpchText, cchText, lprc, dwStyle);
 }
 
 BOOL GetTextExtentPoint32(HDC, LPCTSTR lpString, int c, LPSIZE psizl)

@@ -29,7 +29,7 @@ BOOL Rectangle(HDC hdc, int left, int top, int right, int bottom);
 BOOL RoundRect(HDC hdc, int left, int top, int right, int bottom, int width, int height);
 int SetBkMode(HDC hdc, int mode);
 int SetTextColor(HDC hdc, DWORD color);
-int DrawText(HDC hdc, LPCTSTR lpchText, int cchText, LPRECT lprc, UINT format);
+int DrawText(HDC hdc, LPCTSTR lpchText, int cchText, LPRECT lprc, UINT dwStyle);
 HDC GetDC(HWND hWnd);
 int ReleaseDC(HWND hWnd, HDC hDC);
 void GdiFlush();
@@ -38,7 +38,7 @@ HBITMAP CreateCompatibleBitmap(HDC hdc, int cx, int cy);
 HBITMAP CreateDIBSection(HDC hdc, const BITMAPINFO *pbmi, UINT usage, void **ppvBits, HANDLE hSection, DWORD offset);
 BOOL WINAPI AlphaBlend(HDC hdcDest, int xoriginDest, int yoriginDest, int wDest, int hDest,
 	HDC hdcSrc, int xoriginSrc, int yoriginSrc, int wSrc, int hSrc, BLENDFUNCTION ftn);
-int DrawShadowText(HDC hdc, LPCTSTR lpchText, int cchText, LPRECT lprc, UINT format,
+int DrawShadowText(HDC hdc, LPCTSTR lpchText, int cchText, LPRECT lprc, UINT dwStyle,
 	DWORD crText, DWORD crShadow, int dx, int dy);
 BOOL GetTextExtentPoint32(HDC hdc, LPCTSTR lpString, int c, LPSIZE psizl);
 
