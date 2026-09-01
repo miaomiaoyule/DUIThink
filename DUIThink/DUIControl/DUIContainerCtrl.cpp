@@ -606,11 +606,11 @@ void CDUIContainerCtrl::SetScrollPos(SIZE szPos)
 {
 	int cx = 0;
 	int cy = 0;
-	if (m_pHorizScrollBarCtrl && m_pHorizScrollBarCtrl->IsVisible())
+	if (m_pHorizScrollBarCtrl)
 	{
 		m_pHorizScrollBarCtrl->SetCurValue(szPos.cx);
 	}
-	if (m_pVertScrollBarCtrl && m_pVertScrollBarCtrl->IsVisible())
+	if (m_pVertScrollBarCtrl)
 	{
 		m_pVertScrollBarCtrl->SetCurValue(szPos.cy);
 	}
@@ -1124,7 +1124,7 @@ void CDUIContainerCtrl::RemoveAll()
 	}
 
 	m_vecChilds.clear();
-
+	SetScrollPos({});
 	NeedRefreshView();
 
 	return;
