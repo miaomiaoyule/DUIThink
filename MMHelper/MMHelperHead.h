@@ -61,6 +61,8 @@
 #include <math.h>
 #include <string.h>
 
+#include <cwctype>
+#include <cwchar>
 #include <vector>
 #include <set>
 #include <map>
@@ -78,6 +80,7 @@
 #include <codecvt>
 using namespace std;
 
+//////////////////////////////////////////////////////////////////////////////////
 // SDL / Win32 switch: set <DuiPlatformSDL>true|false</DuiPlatformSDL> in MMHelper/DuiPlatformSDL.props
 // (injects DuiPlatform_SDL and gates SDL3_exports.def). Do not #define here.
 #if defined(DuiPlatform_SDL)
@@ -110,6 +113,10 @@ using namespace std;
 	#pragma comment(lib, "Userenv.lib")
 	#pragma comment(lib, "version.lib")
 	#pragma comment(lib, "Wtsapi32.lib")
+
+#ifndef MMDeclare_Super
+#define MMDeclare_Super(BaseClass) using Super = BaseClass;
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////
