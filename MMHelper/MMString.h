@@ -143,10 +143,90 @@ inline std::wstring AnsiToWString(const std::string &str)
 #endif
 }
 
+#if defined(DuiPlatform_SDL) && (defined(UNICODE) || defined(_UNICODE)) && !defined(_MSC_VER)
+// glibc/Bionic vswprintf only: %s is char*. MSVC _vsnwprintf keeps %s as wchar_t*
+// and must NOT go through this adapter (Windows / future MSVC-Android).
+inline std::wstring MMAdaptMsvcWidePrintfFormat(const wchar_t *pszFmt)
+{
+	std::wstring strOut;
+	if (NULL == pszFmt) return strOut;
+	strOut.reserve(wcslen(pszFmt) + 16);
+	const wchar_t *p = pszFmt;
+	while (*p)
+	{
+		if (L'%' != *p)
+		{
+			strOut.push_back(*p++);
+			continue;
+		}
+		strOut.push_back(*p++);
+		if (0 == *p) break;
+		if (L'%' == *p)
+		{
+			strOut.push_back(*p++);
+			continue;
+		}
+		while (*p && wcschr(L"-+ #0", *p)) strOut.push_back(*p++);
+		if (L'*' == *p) strOut.push_back(*p++);
+		else while (*p >= L'0' && *p <= L'9') strOut.push_back(*p++);
+		if (L'.' == *p)
+		{
+			strOut.push_back(*p++);
+			if (L'*' == *p) strOut.push_back(*p++);
+			else while (*p >= L'0' && *p <= L'9') strOut.push_back(*p++);
+		}
+		bool bLong = false;
+		bool bShort = false;
+		if (L'l' == *p)
+		{
+			bLong = true;
+			strOut.push_back(*p++);
+			if (L'l' == *p) strOut.push_back(*p++);
+		}
+		else if (L'h' == *p)
+		{
+			bShort = true;
+			strOut.push_back(*p++);
+			if (L'h' == *p) strOut.push_back(*p++);
+		}
+		else if (L'w' == *p || L'L' == *p || L'z' == *p || L't' == *p || L'j' == *p)
+		{
+			if (L'w' == *p) bLong = true;
+			strOut.push_back(*p++);
+		}
+		else if (L'I' == *p)
+		{
+			strOut.push_back(*p++);
+			if ((L'6' == *p && p[1] == L'4') || (L'3' == *p && p[1] == L'2'))
+			{
+				strOut.push_back(*p++);
+				strOut.push_back(*p++);
+			}
+		}
+		if (0 == *p) break;
+		if (L's' == *p && false == bLong && false == bShort)
+		{
+			strOut.append(L"ls");
+			++p;
+			continue;
+		}
+		if (L'S' == *p && false == bLong && false == bShort)
+		{
+			strOut.push_back(L's');
+			++p;
+			continue;
+		}
+		strOut.push_back(*p++);
+	}
+	return strOut;
+}
+#endif
+
 ////////////////////////////////////////////////////////////////////////////
 class CMMStringA : public std::string
 {
 public:
+	MMDeclare_Super(std::string)
 	CMMStringA()
 	{
 	}
@@ -220,6 +300,7 @@ public:
 class CMMStringW : public std::wstring
 {
 public:
+	MMDeclare_Super(std::wstring)
 	CMMStringW()
 	{
 
@@ -308,7 +389,8 @@ public:
 	}
 	CMMStringW & MakeLower()
 	{
-		std::transform(begin(), end(), begin(), tolower);
+		std::transform(begin(), end(), begin(),
+			[](wchar_t ch) { return static_cast<wchar_t>(towlower(ch)); });
 
 		return *this;
 	}
@@ -442,7 +524,12 @@ public:
 			va_list argsCopy;
 			va_copy(argsCopy, Args);
 #ifdef UNICODE
-			int nLen = vswprintf(szBuffer, capacity, pstrFormat, argsCopy);
+#if defined(_MSC_VER)
+			int nLen = _vsnwprintf(szBuffer, capacity, pstrFormat, argsCopy);
+#else
+			const std::wstring strFmt = MMAdaptMsvcWidePrintfFormat(pstrFormat);
+			int nLen = vswprintf(szBuffer, capacity, strFmt.c_str(), argsCopy);
+#endif
 #else
 			int nLen = vsnprintf(szBuffer, capacity, pstrFormat, argsCopy);
 #endif
