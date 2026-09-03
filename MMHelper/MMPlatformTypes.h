@@ -9,6 +9,13 @@
 #define __MM_PLATFORM_TYPES_H__
 
 #include <wchar.h>
+#include <climits>
+#include <ctime>
+#include <cstdint>
+#include <cerrno>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
 #include "../ThirdDepend/SDL3/SDL.h"
 
 // SDL3 must live in exactly ONE module. Linking SDL3-static into MMHelper + DUIThink
@@ -56,6 +63,10 @@ typedef int INT;
 typedef float REAL;
 typedef long LONG;
 typedef long long LONGLONG;
+#ifndef _MSC_VER
+typedef long long __int64;
+typedef unsigned long long __uint64;
+#endif
 typedef unsigned char BYTE;
 typedef unsigned char UCHAR;
 typedef unsigned short WORD;
@@ -64,8 +75,8 @@ typedef unsigned int UINT;
 typedef unsigned long ULONG;
 typedef unsigned long long ULONGLONG;
 typedef BYTE* LPBYTE;
-typedef DWORD ARGB;
-typedef DWORD COLORREF;
+typedef UINT ARGB;
+typedef UINT COLORREF;
 #ifdef __LP64__
 typedef long long INT_PTR;
 typedef unsigned long long UINT_PTR;
@@ -131,6 +142,42 @@ typedef void VOID;
 #define DT_WORD_ELLIPSIS            0x00040000
 
 //////////////////////////////////////////////////////////////////////////
+// // MSVC SAL / CRT shims for GCC/Clang (DuiPlatform_SDL / non-Windows)
+#ifndef _In_
+#define _In_
+#endif
+#ifndef _Out_
+#define _Out_
+#endif
+#ifndef _Inout_
+#define _Inout_
+#endif
+#ifndef _In_opt_
+#define _In_opt_
+#endif
+#ifndef _Out_opt_
+#define _Out_opt_
+#endif
+#ifndef _Inout_opt_
+#define _Inout_opt_
+#endif
+#ifndef _Success_
+#define _Success_(x)
+#endif
+
+// Calling-convention keywords are MSVC-only; GCC/Clang treat them as empty.
+#ifndef _MSC_VER
+#ifndef __cdecl
+#define __cdecl
+#endif
+#ifndef __stdcall
+#define __stdcall
+#endif
+#ifndef __fastcall
+#define __fastcall
+#endif
+#endif
+
 #ifdef _MAC
 #define CALLBACK    PASCAL
 #define WINAPI      CDECL
@@ -155,7 +202,19 @@ typedef void VOID;
 #define WINAPIV
 #define APIENTRY    WINAPI
 #define APIPRIVATE
-#define PASCAL      pascal
+#define PASCAL
+#endif
+
+// MSVC __super = immediate base. GCC/Clang have no equivalent; map it to Super.
+// Declare Super once next to the base list (MMDeclare_Super). Changing inheritance
+// only updates that typedef, not every __super:: call site.
+#if !defined(_MSC_VER)
+#ifndef __super
+#define __super Super
+#endif
+#endif
+#ifndef MMDeclare_Super
+#define MMDeclare_Super(BaseClass) using Super = BaseClass;
 #endif
 
 #ifndef DLL_PROCESS_ATTACH
@@ -201,10 +260,16 @@ typedef void VOID;
 #define CP_UTF8 1
 #endif
 
+// FAR/NEAR are no-ops outside 16-bit / MSVC segmented models.
 #undef FAR
-#undef  NEAR
+#undef NEAR
+#ifdef _MSC_VER
 #define FAR							far
 #define NEAR						near
+#else
+#define FAR
+#define NEAR
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 // COM-style GUID (NOT SDL_GUID — SDL_GUID is joystick/device id: Uint8[16])
@@ -271,10 +336,15 @@ extern "C" __attribute__((weak)) const GUID IID_IAgileObject =
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-#ifndef NULL
+// Force integer NULL so "virtual void Foo() = NULL;" is a legal pure-specifier
+// under GCC/Clang (system headers often define NULL as ((void*)0)).
 #ifdef __cplusplus
+#ifdef NULL
+#undef NULL
+#endif
 #define NULL 0
 #else
+#ifndef NULL
 #define NULL ((void *)0)
 #endif
 #endif
@@ -295,7 +365,7 @@ extern "C" __attribute__((weak)) const GUID IID_IAgileObject =
 #define MAKEWORD(a, b) ((WORD)(((BYTE)((DWORD_PTR)(a) & 0xff)) | ((WORD)((BYTE)((DWORD_PTR)(b) & 0xff))) << 8))
 #define MAKELPARAM(l, h) ((LPARAM)(DWORD)MAKELONG(l, h))
 #define MAKEWPARAM(l, h) ((WPARAM)(DWORD)MAKELONG(l, h))
-#define RGB(r, g, b) ((DWORD)(((BYTE)(r) | ((WORD)((BYTE)(g)) << 8)) | (((DWORD)(BYTE)(b)) << 16)))
+#define RGB(r, g, b) ((COLORREF)(((BYTE)(r) | ((WORD)((BYTE)(g)) << 8)) | (((COLORREF)(BYTE)(b)) << 16)))
 
 #define SW_HIDE 0
 #define SW_SHOWNORMAL 1
@@ -736,6 +806,92 @@ inline HMODULE LoadLibraryW(const wchar_t *lpszFile)
 	return LoadLibraryA(szUtf8);
 }
 
+// MSVC qsort_s: compare(context, a, b). SDL_qsort_r uses the same order.
+inline void qsort_s(void *base, size_t num, size_t width,
+	int (__cdecl *compare)(void *, const void *, const void *), void *context)
+{
+	SDL_qsort_r(base, num, width, compare, context);
+}
+
+#if !defined(_MSC_VER)
+#ifndef errno_t
+typedef int errno_t;
+#endif
+#ifndef __time64_t
+typedef std::int64_t __time64_t;
+#endif
+inline __time64_t _time64(__time64_t *t)
+{
+	const __time64_t now = static_cast<__time64_t>(std::time(nullptr));
+	if (t) *t = now;
+	return now;
+}
+inline __time64_t _mktime64(struct tm *t)
+{
+	return static_cast<__time64_t>(std::mktime(t));
+}
+inline errno_t _gmtime64_s(struct tm *ptm, const __time64_t *timer)
+{
+	if (!ptm || !timer) return EINVAL;
+	const time_t t = static_cast<time_t>(*timer);
+#if defined(_WIN32)
+	return gmtime_s(ptm, &t);
+#else
+	return gmtime_r(&t, ptm) ? 0 : EINVAL;
+#endif
+}
+inline errno_t _localtime64_s(struct tm *ptm, const __time64_t *timer)
+{
+	if (!ptm || !timer) return EINVAL;
+	const time_t t = static_cast<time_t>(*timer);
+#if defined(_WIN32)
+	return localtime_s(ptm, &t);
+#else
+	return localtime_r(&t, ptm) ? 0 : EINVAL;
+#endif
+}
+
+inline int _wtoi(const wchar_t *str)
+{
+	return str ? static_cast<int>(wcstol(str, nullptr, 10)) : 0;
+}
+inline long _wtol(const wchar_t *str)
+{
+	return str ? wcstol(str, nullptr, 10) : 0L;
+}
+inline int _vscprintf(const char *format, va_list argptr)
+{
+	va_list argsCopy;
+	va_copy(argsCopy, argptr);
+	const int ret = vsnprintf(nullptr, 0, format, argsCopy);
+	va_end(argsCopy);
+	return ret;
+}
+#ifndef _vsnprintf
+#define _vsnprintf vsnprintf
+#endif
+inline char *_ultoa(unsigned long value, char *str, int radix)
+{
+	if (!str) return nullptr;
+	if (radix == 16) snprintf(str, 32, "%lx", value);
+	else if (radix == 8) snprintf(str, 32, "%lo", value);
+	else snprintf(str, 32, "%lu", value);
+	return str;
+}
+inline char *_ltoa(long value, char *str, int radix)
+{
+	if (!str) return nullptr;
+	if (radix == 16) snprintf(str, 32, "%lx", (unsigned long)value);
+	else if (radix == 8) snprintf(str, 32, "%lo", (unsigned long)value);
+	else snprintf(str, 32, "%ld", value);
+	return str;
+}
+inline char *_itoa(int value, char *str, int radix)
+{
+	return _ltoa(static_cast<long>(value), str, radix);
+}
+#endif
+
 inline BOOL SetRectEmpty(LPRECT lprc)
 {
 	if (NULL == lprc) return FALSE;
@@ -920,38 +1076,42 @@ inline void GetLocalTime(SYSTEMTIME *pst)
 	return;
 }
 
-MMHELPER_API inline bool IsWindow(HWND hWnd);
-MMHELPER_API inline bool PathFileExists(LPCTSTR lpszFile);
-MMHELPER_API inline bool PathIsDirectory(LPCTSTR lpszFile);
-MMHELPER_API inline LPTSTR PathAddBackslash(LPTSTR lpszPath);
-MMHELPER_API inline bool DeleteFile(LPCTSTR lpszFile);
-MMHELPER_API inline BOOL MoveFile(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName);
-MMHELPER_API inline bool IsWindowVisible(HWND hWnd);
-MMHELPER_API inline bool IsIconic(HWND hWnd);
-MMHELPER_API inline bool IsZoomed(HWND hWnd);
-MMHELPER_API inline void InvalidateRect(HWND hWnd, LPCRECT lpRect, bool bErase);
-MMHELPER_API inline BOOL GetUpdateRect(HWND hWnd, LPRECT lpRect, BOOL bErase);
-MMHELPER_API inline BOOL ScreenToClient(HWND hWnd, LPPOINT lpPoint);
-MMHELPER_API inline BOOL ClientToScreen(HWND hWnd, LPPOINT lpPoint);
-MMHELPER_API inline void GetCursorPos(LPPOINT lpPoint);
-MMHELPER_API inline void SetCursorPos(int X, int Y);
-MMHELPER_API inline HCURSOR LoadCursor(HINSTANCE hInstance, LPCTSTR lpCursorName);
-MMHELPER_API inline HCURSOR SetCursor(HCURSOR hCursor);
-MMHELPER_API inline void GetCaretPos(LPPOINT lpPoint);
-MMHELPER_API inline HWND GetParent(HWND hWnd);
-MMHELPER_API inline HWND GetFocus();
-MMHELPER_API inline void GetWindowRect(HWND hWnd, LPRECT lpRect);
-MMHELPER_API inline void GetClientRect(HWND hWnd, LPRECT lpRect);
-MMHELPER_API inline void GetMonitorInfo(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo);
-MMHELPER_API inline short GetKeyState(int vKey);
-MMHELPER_API inline void SetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags);
-MMHELPER_API inline void MoveWindow(HWND hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-MMHELPER_API inline int MessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType);
-MMHELPER_API inline void SetForegroundWindow(HWND hWnd);
-MMHELPER_API inline void SetFocus(HWND hWnd);
-MMHELPER_API inline void ShowWindow(HWND hWnd, int nCmdShow);
-MMHELPER_API inline HMONITOR MonitorFromWindow(HWND hWnd, DWORD dwFlags);
-MMHELPER_API inline void UpdateWindow(HWND hWnd);
+// Defined in stdafx.cpp (DuiPlatform_SDL) — not header-inline (GCC ODR).
+MMHELPER_API bool IsWindow(HWND hWnd);
+MMHELPER_API bool PathFileExists(LPCTSTR lpszFile);
+MMHELPER_API bool PathIsDirectory(LPCTSTR lpszFile);
+MMHELPER_API LPTSTR PathAddBackslash(LPTSTR lpszPath);
+MMHELPER_API bool DeleteFile(LPCTSTR lpszFile);
+MMHELPER_API BOOL MoveFile(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName);
+MMHELPER_API bool IsWindowVisible(HWND hWnd);
+MMHELPER_API bool IsIconic(HWND hWnd);
+MMHELPER_API bool IsZoomed(HWND hWnd);
+MMHELPER_API void InvalidateRect(HWND hWnd, LPCRECT lpRect, bool bErase);
+MMHELPER_API BOOL GetUpdateRect(HWND hWnd, LPRECT lpRect, BOOL bErase);
+MMHELPER_API void EndPaintInvalidate(HWND hWnd);
+MMHELPER_API BOOL ScreenToClient(HWND hWnd, LPPOINT lpPoint);
+MMHELPER_API BOOL ClientToScreen(HWND hWnd, LPPOINT lpPoint);
+MMHELPER_API void GetCursorPos(LPPOINT lpPoint);
+MMHELPER_API void SetCursorPos(int X, int Y);
+MMHELPER_API HCURSOR LoadCursor(HINSTANCE hInstance, LPCTSTR lpCursorName);
+MMHELPER_API HCURSOR SetCursor(HCURSOR hCursor);
+MMHELPER_API void GetCaretPos(LPPOINT lpPoint);
+MMHELPER_API HWND GetParent(HWND hWnd);
+MMHELPER_API HWND GetFocus();
+MMHELPER_API void GetWindowRect(HWND hWnd, LPRECT lpRect);
+MMHELPER_API void GetClientRect(HWND hWnd, LPRECT lpRect);
+MMHELPER_API void GetMonitorInfo(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo);
+MMHELPER_API short GetKeyState(int vKey);
+MMHELPER_API void SetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags);
+MMHELPER_API void MoveWindow(HWND hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+MMHELPER_API int MessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType);
+MMHELPER_API void SetForegroundWindow(HWND hWnd);
+MMHELPER_API void SetFocus(HWND hWnd);
+MMHELPER_API void ShowWindow(HWND hWnd, int nCmdShow);
+MMHELPER_API HMONITOR MonitorFromWindow(HWND hWnd, DWORD dwFlags);
+MMHELPER_API void UpdateWindow(HWND hWnd);
+MMHELPER_API LRESULT SendMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+MMHELPER_API BOOL PostMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
 //////////////////////////////////////////////////////////////////////////
 /* Logical Font */
