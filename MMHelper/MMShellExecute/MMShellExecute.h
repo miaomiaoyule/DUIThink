@@ -10,6 +10,7 @@
 //////////////////////////////////////////////////////////////////////////
 class MMHELPER_API CMMShellExecute : public CMMServiceItem
 {
+	MMDeclare_Super(CMMServiceItem)
 private:
 	CMMShellExecute();
 	~CMMShellExecute();

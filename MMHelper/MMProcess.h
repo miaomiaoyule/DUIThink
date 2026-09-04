@@ -10,10 +10,10 @@ class MMHELPER_API CMMProcess
 {
 public:
 	//************************************
-	// Description:	CreateLink On strPathTo For strFileFull£¬you need init com interface
-	// Parameter: 	CMMString strFileFull Àý£ºc:\aa.exe
-	// Parameter: 	CMMString strPathTo Àý£ºd:\
-	// Parameter: 	CMMString lpszStr Àý£ºlnkName
+	// Description:	CreateLink On strPathTo For strFileFullï¼Œyou need init com interface
+	// Parameter: 	CMMString strFileFull ä¾‹ï¼šc:\aa.exe
+	// Parameter: 	CMMString strPathTo ä¾‹ï¼šd:\
+	// Parameter: 	CMMString lpszStr ä¾‹ï¼šlnkName
 	//************************************
 	static bool CreateFileLink(CMMString strFileFull, CMMString strPathTo, CMMString strNameLink);
 

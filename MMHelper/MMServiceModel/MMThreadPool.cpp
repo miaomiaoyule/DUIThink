@@ -182,7 +182,7 @@ void CMMThreadPool::Work()
 				else
 				{
 #if defined(DuiPlatform_SDL)
-					// µÈ´ıĞÅºÅ£¬ÎŞÏŞµÈ´ı
+					// ç­‰å¾…ä¿¡å·ï¼Œæ— é™ç­‰å¾…
 					if (m_hEvent) SDL_WaitSemaphore(m_hEvent);
 #else
 					DWORD dwRes = WaitForSingleObject(m_hEvent, INFINITE);

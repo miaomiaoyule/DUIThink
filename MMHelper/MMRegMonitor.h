@@ -23,6 +23,7 @@ typedef std::vector<IMMRegNotify*> VecMMRegNotify;
 class MMHELPER_API CMMRegMonitor
 	: public CMMServiceItem
 {
+	MMDeclare_Super(CMMServiceItem)
 public:
 	CMMRegMonitor(HKEY hKeyMain, CMMString strKeySub);
 	~CMMRegMonitor();

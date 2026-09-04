@@ -15,7 +15,7 @@ bool CMMProcess::CreateFileLink(CMMString strFileFull, CMMString strPathTo, CMMS
 	CMMString strPathFrom;
 	CMMFile::ParseFilePathName(strFileFull, strPathFrom, CMMString());
 
-	//ÕâÀïÊÇÎÒÃÇÒª´´½¨¿ì½İ·½Ê½µÄÔ­Ê¼ÎÄ¼şµØÖ·
+	//è¿™é‡Œæ˜¯æˆ‘ä»¬è¦åˆ›å»ºå¿«æ·æ–¹å¼çš„åŸå§‹æ–‡ä»¶åœ°å€
 	IPersistFile* pIPF = NULL;
 	pisl->SetPath(strFileFull);
 	pisl->SetWorkingDirectory(strPathFrom);
@@ -26,7 +26,7 @@ bool CMMProcess::CreateFileLink(CMMString strFileFull, CMMString strPathTo, CMMS
 		return false;
 	}
 	
-	//ÕâÀïÊÇÎÒÃÇÒª´´½¨¿ì½İ·½Ê½µÄÄ¿±êµØÖ·
+	//è¿™é‡Œæ˜¯æˆ‘ä»¬è¦åˆ›å»ºå¿«æ·æ–¹å¼çš„ç›®æ ‡åœ°å€
 	TCHAR szPath[MAX_PATH] = { 0 };
 	lstrcpyn(szPath, strPathTo, MMCountString(szPath));
 	PathAddBackslash(szPath);
@@ -49,11 +49,11 @@ HANDLE CMMProcess::FindProcessParent(HANDLE hProcess)
 	PROCESSENTRY32 Pe32 = {};
 	Pe32.dwSize = sizeof(Pe32);
 
-	//¸øÏµÍ³ÄÚµÄËùÓĞ½ø³ÌÅÄÒ»¸ö¿ìÕÕ--¸Äº¯ÊıÓÃÓÚ»ñÈ¡ÏµÍ³Ö¸¶¨½ø³ÌµÄ¿ìÕÕ£¬Ò²¿ÉÒÔ´«Èë²»Í¬²ÎÊı»ñÈ¡±»ÕâĞ©½ø³ÌÊ¹ÓÃµÄ¶Ñ¡¢Ä£¿éºÍÏß³ÌµÄ¿ìÕÕ
+	//ç»™ç³»ç»Ÿå†…çš„æ‰€æœ‰è¿›ç¨‹æ‹ä¸€ä¸ªå¿«ç…§--æ”¹å‡½æ•°ç”¨äºè·å–ç³»ç»ŸæŒ‡å®šè¿›ç¨‹çš„å¿«ç…§ï¼Œä¹Ÿå¯ä»¥ä¼ å…¥ä¸åŒå‚æ•°è·å–è¢«è¿™äº›è¿›ç¨‹ä½¿ç”¨çš„å †ã€æ¨¡å—å’Œçº¿ç¨‹çš„å¿«ç…§
 	HANDLE hProcessSnap = ::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	if (INVALID_HANDLE_VALUE == hProcessSnap)
 	{
-		printf("CreateToolhelp32Snapshot µ÷ÓÃÊ§°Ü£¡\n");
+		printf("CreateToolhelp32Snapshot è°ƒç”¨å¤±è´¥ï¼\n");
 		return INVALID_HANDLE_VALUE;
 	}
 
@@ -217,7 +217,7 @@ bool CMMProcess::GetProcessCmdline(HANDLE hProcess, CMMString &strCmdLine)
 	LPVOID                    lpAddress;
 	RTL_USER_PROCESS_PARAMETERS para;
 
-	//»ñÈ¡ĞÅÏ¢
+	//è·å–ä¿¡æ¯
 	HMODULE hModule = LoadLibrary(_T("ntdll.dll"));
 	if (NULL == hModule) return false;
 
@@ -290,10 +290,10 @@ void CMMProcess::LaunchAsExplorerFromSystem(CString strFile, CString strCmdLine)
 		DWORD dwSessionId = WTSGetActiveConsoleSessionId();
 		//INFOLOG("WTSGetActiveConsoleSessionId Error:{}-dwSessionId:{}", GetLastError(), dwSessionId);
 
-		//»ñÈ¡µ±Ç°»á»°µÄ»á»° ID
+		//è·å–å½“å‰ä¼šè¯çš„ä¼šè¯ ID
 		//ProcessIdToSessionId(GetCurrentProcessId(), &dwSessionId);
 
-		//»ñÈ¡µ±Ç°ÓÃ»§µÄ·ÃÎÊÁîÅÆ
+		//è·å–å½“å‰ç”¨æˆ·çš„è®¿é—®ä»¤ç‰Œ
 		if (!WTSQueryUserToken(dwSessionId, &hToken))
 		{
 			DWORD err = GetLastError();
@@ -301,7 +301,7 @@ void CMMProcess::LaunchAsExplorerFromSystem(CString strFile, CString strCmdLine)
 			break;
 		}
 
-		//¸´ÖÆ·ÃÎÊÁîÅÆ£¬ÒÔ±ãÔÚĞÂ½ø³ÌÖĞÊ¹ÓÃ
+		//å¤åˆ¶è®¿é—®ä»¤ç‰Œï¼Œä»¥ä¾¿åœ¨æ–°è¿›ç¨‹ä¸­ä½¿ç”¨
 		if (!DuplicateTokenEx(hToken, MAXIMUM_ALLOWED, NULL, SecurityImpersonation, TokenPrimary, &hTokenDup))
 		{
 			DWORD err = GetLastError();
@@ -310,7 +310,7 @@ void CMMProcess::LaunchAsExplorerFromSystem(CString strFile, CString strCmdLine)
 			break;
 		}
 
-		//ÆôÓÃÈ¨ÏŞ
+		//å¯ç”¨æƒé™
 		tp.PrivilegeCount = 1;
 		tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
 		if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &tp.Privileges[0].Luid))
@@ -331,7 +331,7 @@ void CMMProcess::LaunchAsExplorerFromSystem(CString strFile, CString strCmdLine)
 			break;
 		}
 
-		//ÇĞ»»µ½ĞÂ½ø³ÌµÄ·ÃÎÊÁîÅÆ
+		//åˆ‡æ¢åˆ°æ–°è¿›ç¨‹çš„è®¿é—®ä»¤ç‰Œ
 		CString strDesktop = _T("winsta0\\default");
 		si.lpDesktop = strDesktop.GetBuffer();
 		si.dwFlags = STARTF_USESHOWWINDOW;
@@ -345,11 +345,11 @@ void CMMProcess::LaunchAsExplorerFromSystem(CString strFile, CString strCmdLine)
 			break;
 		}
 
-		//¹Ø±Õ½ø³Ì¾ä±ú
+		//å…³é—­è¿›ç¨‹å¥æŸ„
 		CloseHandle(pi.hProcess);
 		CloseHandle(pi.hThread);
 
-		//¹Ø±Õ·ÃÎÊÁîÅÆ
+		//å…³é—­è®¿é—®ä»¤ç‰Œ
 		CloseHandle(hToken);
 		CloseHandle(hTokenDup);
 
@@ -373,7 +373,7 @@ void CMMProcess::LaunchAsExplorerFromAdmin(CString strFile, CString strCmdLine)
 
 		SECURITY_ATTRIBUTES SecurityAttr = {};
 		if (false == DuplicateTokenEx(hToken,
-			MAXIMUM_ALLOWED,//Ê¹ÓÃÔÊĞíËùÓĞÈ¨ÏŞ£¬·ñÔò»á±¨error£º5µÄ´íÎó
+			MAXIMUM_ALLOWED,//ä½¿ç”¨å…è®¸æ‰€æœ‰æƒé™ï¼Œå¦åˆ™ä¼šæŠ¥errorï¼š5çš„é”™è¯¯
 			&SecurityAttr,
 			SECURITY_IMPERSONATION_LEVEL::SecurityIdentification,
 			TOKEN_TYPE::TokenPrimary,

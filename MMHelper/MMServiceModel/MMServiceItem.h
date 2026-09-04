@@ -8,6 +8,8 @@
 
 typedef std::unordered_map<uint32_t, FuncTimer> MapTimerFunc;
 
+class CMMThreadPool;
+
 class MMHELPER_API CMMServiceItem
 {
 	struct tagData;

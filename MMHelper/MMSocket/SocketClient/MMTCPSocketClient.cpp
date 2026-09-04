@@ -74,7 +74,7 @@ LPVOID CMMTCPSocketClient::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 
 bool CMMTCPSocketClient::Init()
 {
-	if (false == CMMAsyncObject::Init()) return false;
+	if (false == __super::Init()) return false;
 
 	//key
 	m_pData->Init();
@@ -87,7 +87,7 @@ bool CMMTCPSocketClient::Init()
 
 bool CMMTCPSocketClient::UnInit()
 {
-	if (false == CMMAsyncObject::UnInit()) return false;
+	if (false == __super::UnInit()) return false;
 
 	CloseSocket(SocketShut_Normal);
 
@@ -169,9 +169,9 @@ void CMMTCPSocketClient::Connect(DWORD dwServerIP, WORD wPort)
 	try
 	{
 		//verify
-		if (INVALID_SOCKET != m_hSocket) throw _T("Á¬½Ó SOCKET ¾ä±úÒÑ¾­´æÔÚ£¡");
-		if (SocketStatus_Idle != m_SocketStatus) throw _T("Á¬½Ó×´Ì¬²»ÊÇµÈ´ıÁ¬½Ó×´Ì¬£¡");
-		if (INADDR_NONE == dwServerIP) throw _T("Ä¿±ê·şÎñÆ÷µØÖ·¸ñÊ½²»ÕıÈ·£¬Çë¼ì²éºóÔÙ´Î³¢ÊÔ£¡");
+		if (INVALID_SOCKET != m_hSocket) throw _T("è¿æ¥ SOCKET å¥æŸ„å·²ç»å­˜åœ¨ï¼");
+		if (SocketStatus_Idle != m_SocketStatus) throw _T("è¿æ¥çŠ¶æ€ä¸æ˜¯ç­‰å¾…è¿æ¥çŠ¶æ€ï¼");
+		if (INADDR_NONE == dwServerIP) throw _T("ç›®æ ‡æœåŠ¡å™¨åœ°å€æ ¼å¼ä¸æ­£ç¡®ï¼Œè¯·æ£€æŸ¥åå†æ¬¡å°è¯•ï¼");
 
 		//info
 		m_vecBufferSend.clear();
@@ -183,8 +183,8 @@ void CMMTCPSocketClient::Connect(DWORD dwServerIP, WORD wPort)
 		m_dwRecvPacketCount = 0;
 
 		m_hSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-		if (INVALID_SOCKET == m_hSocket) throw _T("SOCKET ´´½¨Ê§°Ü£¡");
-		if (NULL == m_hWndAsync) throw _T("SOCKET ÄÚ²¿´°¿Ú´´½¨Ê§°Ü£¡");
+		if (INVALID_SOCKET == m_hSocket) throw _T("SOCKET åˆ›å»ºå¤±è´¥ï¼");
+		if (NULL == m_hWndAsync) throw _T("SOCKET å†…éƒ¨çª—å£åˆ›å»ºå¤±è´¥ï¼");
 
 		//address
 		m_wSocketID = m_hSocket;
@@ -198,7 +198,7 @@ void CMMTCPSocketClient::Connect(DWORD dwServerIP, WORD wPort)
 		WSASetLastError(0);
 
 		int nResCode = WSAAsyncSelect(m_hSocket, m_hWndAsync, WM_SOCKET_EVENT, FD_READ | FD_CONNECT | FD_CLOSE);
-		if (SOCKET_ERROR == nResCode) throw _T("°ó¶¨ÄÚ²¿´°¿Ú´íÎó£¡");
+		if (SOCKET_ERROR == nResCode) throw _T("ç»‘å®šå†…éƒ¨çª—å£é”™è¯¯ï¼");
 
 		nResCode = connect(m_hSocket, (SOCKADDR *)&SocketAddr, sizeof(SocketAddr));
 		if (SOCKET_ERROR == nResCode)
@@ -207,7 +207,7 @@ void CMMTCPSocketClient::Connect(DWORD dwServerIP, WORD wPort)
 			if (nErrorCode != WSAEWOULDBLOCK)
 			{
 				static TCHAR szBuffer[MAX_PATH] = {};
-				_sntprintf(szBuffer, MMCountString(szBuffer), _T("Á¬½Ó·¢Éú´íÎó£¬´íÎó´úÂë [ %d ]£¡"), nErrorCode);
+				_sntprintf(szBuffer, MMCountString(szBuffer), _T("è¿æ¥å‘ç”Ÿé”™è¯¯ï¼Œé”™è¯¯ä»£ç  [ %d ]ï¼"), nErrorCode);
 				throw szBuffer;
 			}
 		}
@@ -222,7 +222,7 @@ void CMMTCPSocketClient::Connect(DWORD dwServerIP, WORD wPort)
 	}
 	catch (...)
 	{
-		AddNotifyTask(SocketConnect_Exception, _T("Á¬½Ó²úÉúÎ´ÖªÒì³£´íÎó£¡"));
+		AddNotifyTask(SocketConnect_Exception, _T("è¿æ¥äº§ç”ŸæœªçŸ¥å¼‚å¸¸é”™è¯¯ï¼"));
 		CloseSocket(SocketShut_Inside);
 	}
 
@@ -237,7 +237,7 @@ void CMMTCPSocketClient::Connect(const LPCTSTR lpszServerIP, WORD wPort)
 	assert(NULL != lpszServerIP);
 	if (MMInvalidString(lpszServerIP) || (0 == wPort))
 	{
-		AddNotifyTask(SocketConnect_Fail, _T("µØÖ·¶Ë¿Ú²»ºÏ·¨£¡"));
+		AddNotifyTask(SocketConnect_Fail, _T("åœ°å€ç«¯å£ä¸åˆæ³•ï¼"));
 
 		return;
 	}
@@ -393,31 +393,31 @@ CMMString CMMTCPSocketClient::TransConnectErrorCode(int nErrorCode)
 	{
 		case 0:
 		{
-			return _T("Á¬½Ó³É¹¦");
+			return _T("è¿æ¥æˆåŠŸ");
 		}
 		case WSAEADDRNOTAVAIL:
 		{
-			return _T("Ä¿±ê·şÎñÆ÷µØÖ·¸ñÊ½²»ÕıÈ·£¬Çë¼ì²éºóÔÙ´Î³¢ÊÔ£¡");
+			return _T("ç›®æ ‡æœåŠ¡å™¨åœ°å€æ ¼å¼ä¸æ­£ç¡®ï¼Œè¯·æ£€æŸ¥åå†æ¬¡å°è¯•ï¼");
 		}
 		case WSAECONNREFUSED:
 		{
-			return _T("Ä¿±ê·şÎñÆ÷·±Ã¦»òÕßÃ»ÓĞÆô¶¯£¡");
+			return _T("ç›®æ ‡æœåŠ¡å™¨ç¹å¿™æˆ–è€…æ²¡æœ‰å¯åŠ¨ï¼");
 		}
 		case WSAETIMEDOUT:
 		{
-			return _T("Á¬½Ó³¬Ê±£¬¿ÉÄÜÊÇÄ¿±ê·şÎñÆ÷²»´æÔÚ»òÕß·şÎñÆ÷µØÖ·¸ñÊ½²»ÕıÈ·£¡");
+			return _T("è¿æ¥è¶…æ—¶ï¼Œå¯èƒ½æ˜¯ç›®æ ‡æœåŠ¡å™¨ä¸å­˜åœ¨æˆ–è€…æœåŠ¡å™¨åœ°å€æ ¼å¼ä¸æ­£ç¡®ï¼");
 		}
 		case WSAEHOSTUNREACH:
 		{
-			return _T("ÍøÂçÁ¬½ÓÊ§°Ü£¬Çë¼ì²éÊÇ·ñÒÑ¾­³É¹¦²¦ºÅºÍÁ¬½Ó Internet £¡");
+			return _T("ç½‘ç»œè¿æ¥å¤±è´¥ï¼Œè¯·æ£€æŸ¥æ˜¯å¦å·²ç»æˆåŠŸæ‹¨å·å’Œè¿æ¥ Internet ï¼");
 		}
 		default:
 		{
-			return CMMStrHelp::Format(_T("Á¬½Ó´íÎóºÅ£º%d£¬ÏêÏ¸´íÎóĞÅÏ¢Çë²Î¿¼²Ù×÷°ïÖúÊÖ²á£¡"), nErrorCode);
+			return CMMStrHelp::Format(_T("è¿æ¥é”™è¯¯å·ï¼š%dï¼Œè¯¦ç»†é”™è¯¯ä¿¡æ¯è¯·å‚è€ƒæ“ä½œå¸®åŠ©æ‰‹å†Œï¼"), nErrorCode);
 		}
 	}
 
-	return _T("Î´Öª´íÎó£¡");
+	return _T("æœªçŸ¥é”™è¯¯ï¼");
 }
 
 void CMMTCPSocketClient::AddNotifyTask(enSocketConnectCode ConnectCode, LPCTSTR lpszDescribe)
@@ -622,7 +622,7 @@ LRESULT CMMTCPSocketClient::OnSubSocketEventRead(WPARAM wParam, LPARAM lParam)
 		std::vector<BYTE> vecBuffer;
 		vecBuffer.resize(SOCKET_TCP_BUFFER);
 		int nResCode = recv(m_hSocket, (char *)vecBuffer.data(), vecBuffer.size(), 0);
-		if (SOCKET_ERROR == nResCode) throw _T("ÍøÂçÁ¬½Ó¹Ø±Õ£¬¶ÁÈ¡Êı¾İÊ§°Ü");
+		if (SOCKET_ERROR == nResCode) throw _T("ç½‘ç»œè¿æ¥å…³é—­ï¼Œè¯»å–æ•°æ®å¤±è´¥");
 
 		m_vecBufferRecv.insert(m_vecBufferRecv.end(), vecBuffer.begin(), vecBuffer.begin() + nResCode);
 		m_dwRecvTickCount = GetTickCount();
@@ -634,7 +634,7 @@ LRESULT CMMTCPSocketClient::OnSubSocketEventRead(WPARAM wParam, LPARAM lParam)
 		{
 			tagTCPHead TCPHead = *(tagTCPHead*)m_vecBufferRecv.data();
 			if (m_vecBufferRecv.size() < TCPHead.wPacketSize) break;
-			if (TCPHead.wPacketSize < sizeof(tagTCPHead)) throw _T("Êı¾İ°üwPacketSize´óĞ¡´íÎó£¡");
+			if (TCPHead.wPacketSize < sizeof(tagTCPHead)) throw _T("æ•°æ®åŒ…wPacketSizeå¤§å°é”™è¯¯ï¼");
 
 			auto DataBegin = m_vecBufferRecv.data() + sizeof(tagTCPHead);
 			int nDataSize = TCPHead.wPacketSize - sizeof(tagTCPHead);
@@ -660,9 +660,9 @@ LRESULT CMMTCPSocketClient::OnSubSocketEventRead(WPARAM wParam, LPARAM lParam)
 			//{
 			//	switch (pHead->wSubCmd)
 			//	{
-			//		case SUB_KN_DETECT_SOCKET:	//ÍøÂç¼ì²â
+			//		case SUB_KN_DETECT_SOCKET:	//ç½‘ç»œæ£€æµ‹
 			//		{
-			//			//·¢ËÍÊı¾İ
+			//			//å‘é€æ•°æ®
 			//			SendData(MDM_KN_COMMAND, SUB_KN_DETECT_SOCKET, pDataBuffer, wDataSize);
 			//			
 			//			break;

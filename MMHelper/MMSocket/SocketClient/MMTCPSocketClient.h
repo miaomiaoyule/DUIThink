@@ -13,6 +13,7 @@ class MMHELPER_API CMMTCPSocketClient
 	: public CMMAsyncObject
 	, public IMMTCPSocketClient
 {
+	MMDeclare_Super(CMMAsyncObject)
 	struct tagData;
 
 public:

@@ -242,7 +242,7 @@ void CMMShellExecute::OnSubOpenPos(PtrMsgMMShellExecuteOpenPos pRecvData)
 
 	if (SUCCEEDED(SHGetDesktopFolder(&pDesktopFolder)))
 	{
-		// IShellFolder::ParseDisplayNameÒª´«Èë¿í×Ö½Ú
+		// IShellFolder::ParseDisplayNameè¦ä¼ å…¥å®½å­—èŠ‚
 		LPWSTR lpWStr = NULL;
 #ifdef _UNICODE
 		_tcscpy(wfilePath, pRecvData->strFile);
@@ -261,10 +261,10 @@ void CMMShellExecute::OnSubOpenPos(PtrMsgMMShellExecuteOpenPos pRecvData)
 
 		cpidl = pidl;
 
-		// SHOpenFolderAndSelectItemsÊÇ·Ç¹«¿ªµÄAPIº¯Êý£¬ÐèÒª´Óshell32.dll»ñÈ¡
-		// ¸Ãº¯ÊýÖ»ÓÐXP¼°ÒÔÉÏµÄÏµÍ³²ÅÖ§³Ö£¬Win2000ºÍ98ÊÇ²»Ö§³ÖµÄ£¬¿¼ÂÇµ½Win2000
-		// ºÍ98ÒÑ¾­»ù±¾²»ÓÃÁË£¬ËùÒÔ¾Í²»¿¼ÂÇÁË£¬Èç¹ûºóÃæÒªÖ§³ÖÉÏÊöÀÏµÄÏµÍ³£¬ÔòÒª
-				// Ìí¼Ó¶îÍâµÄ´¦Àí´úÂë
+		// SHOpenFolderAndSelectItemsæ˜¯éžå…¬å¼€çš„APIå‡½æ•°ï¼Œéœ€è¦ä»Žshell32.dllèŽ·å–
+		// è¯¥å‡½æ•°åªæœ‰XPåŠä»¥ä¸Šçš„ç³»ç»Ÿæ‰æ”¯æŒï¼ŒWin2000å’Œ98æ˜¯ä¸æ”¯æŒçš„ï¼Œè€ƒè™‘åˆ°Win2000
+		// å’Œ98å·²ç»åŸºæœ¬ä¸ç”¨äº†ï¼Œæ‰€ä»¥å°±ä¸è€ƒè™‘äº†ï¼Œå¦‚æžœåŽé¢è¦æ”¯æŒä¸Šè¿°è€çš„ç³»ç»Ÿï¼Œåˆ™è¦
+		// æ·»åŠ é¢å¤–çš„å¤„ç†ä»£ç 
 		HMODULE hShell32DLL = ::LoadLibrary(_T("shell32.dll"));
 		assert(hShell32DLL != NULL);
 		if (hShell32DLL != NULL)
@@ -274,7 +274,7 @@ void CMMShellExecute::OnSubOpenPos(PtrMsgMMShellExecuteOpenPos pRecvData)
 			assert(pFun != NULL);
 			if (pFun != NULL)
 			{
-				hr = pFun(cpidl, 0, NULL, 0); // µÚ¶þ¸ö²ÎÊýcidlÖÃÎª0£¬±íÊ¾ÊÇÑ¡ÖÐÎÄ¼þ
+				hr = pFun(cpidl, 0, NULL, 0); // ç¬¬äºŒä¸ªå‚æ•°cidlç½®ä¸º0ï¼Œè¡¨ç¤ºæ˜¯é€‰ä¸­æ–‡ä»¶
 				if (FAILED(hr))
 				{
 					::FreeLibrary(hShell32DLL);
@@ -291,7 +291,7 @@ void CMMShellExecute::OnSubOpenPos(PtrMsgMMShellExecuteOpenPos pRecvData)
 			return;
 		}
 
-		// ÊÍ·ÅpDesktopFolder
+		// é‡Šæ”¾pDesktopFolder
 		pDesktopFolder->Release();
 	}
 	else

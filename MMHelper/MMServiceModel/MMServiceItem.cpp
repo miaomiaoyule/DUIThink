@@ -116,7 +116,7 @@ bool CMMServiceItem::Execute(PtrMMServiceMsg pMessage)
 		{
 			std::lock_guard<std::recursive_mutex> DataLock(m_TimerLock);
 
-			auto &pTimeMsg = std::dynamic_pointer_cast<M_ServiceItem_Timer>(pMessage);
+			auto pTimeMsg = std::dynamic_pointer_cast<M_ServiceItem_Timer>(pMessage);
 			auto pFuncIt = m_mapTimeFunc.find(pTimeMsg->uTimerID);
 			if (pFuncIt != m_mapTimeFunc.end())
 			{
@@ -126,7 +126,7 @@ bool CMMServiceItem::Execute(PtrMMServiceMsg pMessage)
 		}
 		else if (typeid(*pMessage) == typeid(M_ServiceItem_Task))
 		{
-			auto &pTaskMsg = std::dynamic_pointer_cast<M_ServiceItem_Task>(pMessage);
+			auto pTaskMsg = std::dynamic_pointer_cast<M_ServiceItem_Task>(pMessage);
 			if (pTaskMsg && pTaskMsg->pFunc)
 			{
 				(pTaskMsg->pFunc)();

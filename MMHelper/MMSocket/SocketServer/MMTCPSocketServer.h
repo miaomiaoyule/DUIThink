@@ -31,15 +31,15 @@ enum WS_FrameType
 };
 
 //////////////////////////////////////////////////////////////////////////
-//WebsocketÊı¾İ°üÊı¾İÍ·ĞÅÏ¢
+//Websocketæ•°æ®åŒ…æ•°æ®å¤´ä¿¡æ¯
 struct WebSocketStreamHeader
 {
-	unsigned int						header_size;						//Êı¾İ°üÍ·´óĞ¡
-	int									mask_offset;						//ÑÚÂëÆ«ÒÆ
-	unsigned int						payload_size;						//Êı¾İ´óĞ¡
-	bool								fin;								//Ö¡±ê¼Ç
-	bool								masked;								//ÑÚÂë
-	unsigned char						opcode;								//²Ù×÷Âë
+	unsigned int						header_size;						//æ•°æ®åŒ…å¤´å¤§å°
+	int									mask_offset;						//æ©ç åç§»
+	unsigned int						payload_size;						//æ•°æ®å¤§å°
+	bool								fin;								//å¸§æ ‡è®°
+	bool								masked;								//æ©ç 
+	unsigned char						opcode;								//æ“ä½œç 
 	unsigned char						res[3];
 };
 
@@ -47,6 +47,8 @@ struct WebSocketStreamHeader
 class MMHELPER_API CMMSocketReadWrite
 	: public CMMServiceItem
 {
+	MMDeclare_Super(CMMServiceItem)
+
 public:
 	CMMSocketReadWrite(CMMTCPSocketServer *pTCPNetworkEngine, CMMThreadPool *pOwnerPool);
 	virtual ~CMMSocketReadWrite(void);
@@ -75,6 +77,8 @@ typedef std::vector<CMMSocketReadWrite*> VecSocketReadWrite;
 class MMHELPER_API CMMSocketAccept
 	: public CMMServiceItem
 {
+	MMDeclare_Super(CMMServiceItem)
+
 public:
 	CMMSocketAccept(CMMTCPSocketServer *pTCPNetworkEngine, CMMThreadPool *pOwnerPool);
 	virtual ~CMMSocketAccept(void);
@@ -102,6 +106,8 @@ protected:
 class MMHELPER_API CMMSocketNotify
 	: public CMMServiceItem
 {
+	MMDeclare_Super(CMMServiceItem)
+
 public:
 	CMMSocketNotify(CMMTCPSocketServer *pTCPNetworkEngine, CMMThreadPool *pOwnerPool);
 	virtual ~CMMSocketNotify(void);
@@ -133,6 +139,7 @@ class MMHELPER_API CMMTCPSocketServer
 	: public IMMTCPSocketServer
 	, public CMMServiceItem
 {
+	MMDeclare_Super(CMMServiceItem)
 	friend class CMMSocketAccept;
 
 public:

@@ -21,7 +21,7 @@ public:
 	int GetHeight() const;
 	uint32_t GetID() const;
 
-	//²Ã¼ô
+	//è£å‰ª
 	CMMRect RectClip(const CMMRect& rcModal, const CMMRect& rect);
 	bool Empty() const;
 	void Clear();
@@ -40,7 +40,7 @@ public:
 	void Offset(CMMSize sz);
 	void Offset(int cx, int cy);
 
-	//ÔËËã·û
+	//è¿ç®—ç¬¦
 	bool operator == (const CMMRect &rect) const;
 	bool operator != (const CMMRect &rect) const;
 };

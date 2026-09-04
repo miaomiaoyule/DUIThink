@@ -4,11 +4,11 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
-#define SOCKET_TCP_BUFFER				(16384)								//ÍøÂç»º³å
+#define SOCKET_TCP_BUFFER				(16384)								//ç½‘ç»œç¼“å†²
 
-#define MaskClient_PC					(0x01)								//PC¶Ë
-#define MaskClient_Mobile				(0x02)								//ÊÖ»ú¶Ë
-#define MaskClient_All					(0xff)								//ËùÓĞ¶Ë
+#define MaskClient_PC					(0x01)								//PCç«¯
+#define MaskClient_Mobile				(0x02)								//æ‰‹æœºç«¯
+#define MaskClient_All					(0xff)								//æ‰€æœ‰ç«¯
 
 #define MDM_CmdInner_Start				(1)
 #define MDM_CmdInner_Finish				(10)
@@ -17,29 +17,29 @@
 //shut reason
 enum enSocketShutReason
 {
-	SocketShut_Inside,					//ÄÚ²¿Ô­Òò
-	SocketShut_Normal,					//Õı³£¹Ø±Õ
-	SocketShut_Remote,					//Ô¶³Ì¹Ø±Õ
-	SocketShut_TimeOut,					//ÍøÂç³¬Ê±
-	SocketShut_Exception,				//Òì³£¹Ø±Õ
+	SocketShut_Inside,					//å†…éƒ¨åŸå› 
+	SocketShut_Normal,					//æ­£å¸¸å…³é—­
+	SocketShut_Remote,					//è¿œç¨‹å…³é—­
+	SocketShut_TimeOut,					//ç½‘ç»œè¶…æ—¶
+	SocketShut_Exception,				//å¼‚å¸¸å…³é—­
 };
 
 //socket status
 enum enSocketStatus
 {
-	SocketStatus_Idle,					 //¿ÕÏĞ×´Ì¬
-	SocketStatus_Wait,					 //µÈ´ı×´Ì¬
-	SocketStatus_Connect				 //Á¬½Ó×´Ì¬
+	SocketStatus_Idle,					 //ç©ºé—²çŠ¶æ€
+	SocketStatus_Wait,					 //ç­‰å¾…çŠ¶æ€
+	SocketStatus_Connect				 //è¿æ¥çŠ¶æ€
 };
 
 //connect code
 enum enSocketConnectCode
 {
-	SocketConnect_Success,				//Á¬½Ó³É¹¦
-	SocketConnect_Fail,					//Á¬½ÓÊ§°Ü
-	SocketConnect_Exception,			//²ÎÊıÒì³£
-	SocketConnect_ProxyFail,			//Á¬½ÓÊ§°Ü
-	SocketConnect_ProxyUserInvalid,		//ÓÃ»§ÎŞĞ§									
+	SocketConnect_Success,				//è¿æ¥æˆåŠŸ
+	SocketConnect_Fail,					//è¿æ¥å¤±è´¥
+	SocketConnect_Exception,			//å‚æ•°å¼‚å¸¸
+	SocketConnect_ProxyFail,			//è¿æ¥å¤±è´¥
+	SocketConnect_ProxyUserInvalid,		//ç”¨æˆ·æ— æ•ˆ									
 };
 
 //////////////////////////////////////////////////////////////////////////

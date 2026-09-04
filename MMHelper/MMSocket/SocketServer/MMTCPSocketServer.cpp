@@ -5,10 +5,10 @@
 
 //////////////////////////////////////////////////////////////////////////
 #define TIME_DETECT_ID					(1989)
-#define TIME_DETECT_ELAPSE				(20000)								//¼à²âÊ±¼ä
+#define TIME_DETECT_ELAPSE				(20000)								//ç›‘æµ‹æ—¶é—´
 
-#define TIME_BREAK_READY				(9000L)								//ÖĞ¶ÏÊ±¼ä
-#define TIME_BREAK_CONNECT				(4000L)								//ÖĞ¶ÏÊ±¼ä
+#define TIME_BREAK_READY				(9000L)								//ä¸­æ–­æ—¶é—´
+#define TIME_BREAK_CONNECT				(4000L)								//ä¸­æ–­æ—¶é—´
 
 //////////////////////////////////////////////////////////////////////////
 CMMSocketReadWrite::CMMSocketReadWrite(CMMTCPSocketServer *pTCPNetworkEngine, CMMThreadPool *pOwnerPool)
@@ -66,27 +66,27 @@ void CMMSocketReadWrite::OnSubInit(shared_ptr<M_MMSocketReadWrite_Init> pRecvDat
 	{
 		if (IsStop()) break;
 
-		//Ğ§Ñé²ÎÊı
+		//æ•ˆéªŒå‚æ•°
 		assert(m_hCompletionPort);
 
-		//±äÁ¿¶¨Òå
+		//å˜é‡å®šä¹‰
 		DWORD dwThancferred = 0;
 		OVERLAPPED *pOverLapped = NULL;
 		COverLapped *pSocketLapped = NULL;
 		CMMSocketClientItem *pClientItem = NULL;
 
-		//µÈ´ıÍê³É¶Ë¿Ú
+		//ç­‰å¾…å®Œæˆç«¯å£
 		BOOL bSuccess = GetQueuedCompletionStatus(m_hCompletionPort, &dwThancferred, (PULONG_PTR)&pClientItem, &pOverLapped, INFINITE);
 		if ((FALSE == bSuccess) && (ERROR_NETNAME_DELETED != GetLastError())) return;
 		if ((NULL == pClientItem) && (NULL == pOverLapped)) return;
 
-		//´¦Àí²Ù×÷
+		//å¤„ç†æ“ä½œ
 		assert(pOverLapped != NULL);
 		assert(pClientItem != NULL);
 		pSocketLapped = CONTAINING_RECORD(pOverLapped, COverLapped, m_OverLapped);
 		switch (pSocketLapped->GetOperationType())
 		{
-			case OperationType_Recv:	//SOCKET Êı¾İ¶ÁÈ¡
+			case OperationType_Recv:	//SOCKET æ•°æ®è¯»å–
 			{
 				COverLappedRecv *pOverLappedRecv = (COverLappedRecv*)pSocketLapped;
 
@@ -98,7 +98,7 @@ void CMMSocketReadWrite::OnSubInit(shared_ptr<M_MMSocketReadWrite_Init> pRecvDat
 		
 				break;
 			}
-			case OperationType_Send:	//SOCKET Êı¾İ·¢ËÍ
+			case OperationType_Send:	//SOCKET æ•°æ®å‘é€
 			{
 				COverLappedSend *pOverLappedSend = (COverLappedSend*)pSocketLapped;
 				
@@ -174,14 +174,14 @@ void CMMSocketAccept::OnSubInit(shared_ptr<M_MMSocketAccept_Init> pRecvData)
 	{
 		if (IsStop()) break;
 
-		//ÉèÖÃ±äÁ¿
+		//è®¾ç½®å˜é‡
 		SOCKADDR_IN	SocketAddr;
 		SOCKET hConnectSocket = INVALID_SOCKET;
 		int nBufferSize = sizeof(SocketAddr);
 
 		try
 		{
-			//¼àÌıÁ¬½Ó
+			//ç›‘å¬è¿æ¥
 			hConnectSocket = WSAAccept(m_hSocketListen, (SOCKADDR *)&SocketAddr, &nBufferSize, NULL, NULL);
 			if (INVALID_SOCKET == hConnectSocket) return;
 
@@ -354,13 +354,13 @@ bool CMMTCPSocketServer::StartService(WORD wServicePort, WORD wLinkCountLimit)
 
 	if (m_bService)
 	{
-		m_strLastError = _T("ÍøÂçÒıÇæÖØ¸´Æô¶¯£¬Æô¶¯²Ù×÷ºöÂÔ");
+		m_strLastError = _T("ç½‘ç»œå¼•æ“é‡å¤å¯åŠ¨ï¼Œå¯åŠ¨æ“ä½œå¿½ç•¥");
 		return true;
 	}
 	if (0 == wServicePort)
 	{
 		wServicePort = 3000;
-		m_strLastError = _T("ÍøÂçÒıÇæ¼àÌı¶Ë¿ÚÎŞĞ§");
+		m_strLastError = _T("ç½‘ç»œå¼•æ“ç›‘å¬ç«¯å£æ— æ•ˆ");
 		return false;
 	}
 
@@ -374,29 +374,29 @@ bool CMMTCPSocketServer::StartService(WORD wServicePort, WORD wLinkCountLimit)
 		m_wListenPort = wServicePort;
 		m_wLinkCountLimit = wLinkCountLimit;
 
-		//»ñÈ¡ÏµÍ³ĞÅÏ¢
+		//è·å–ç³»ç»Ÿä¿¡æ¯
 		SYSTEM_INFO SystemInfo;
 		GetSystemInfo(&SystemInfo);
 		DWORD dwThreadCount = SystemInfo.dwNumberOfProcessors;
 
-		//½¨Á¢Íê³É¶Ë¿Ú
+		//å»ºç«‹å®Œæˆç«¯å£
 		m_hCompletionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, SystemInfo.dwNumberOfProcessors);
-		if (NULL == m_hCompletionPort) throw _T("ÍøÂçÒıÇæÍê³É¶Ë¿Ú´´½¨Ê§°Ü");
+		if (NULL == m_hCompletionPort) throw _T("ç½‘ç»œå¼•æ“å®Œæˆç«¯å£åˆ›å»ºå¤±è´¥");
 
-		//½¨Á¢¼àÌıSOCKET
+		//å»ºç«‹ç›‘å¬SOCKET
 		struct sockaddr_in SocketAddr;
 		memset(&SocketAddr, 0, sizeof(SocketAddr));
 		SocketAddr.sin_addr.s_addr = INADDR_ANY;
 		SocketAddr.sin_family = AF_INET;
 		SocketAddr.sin_port = htons(m_wListenPort);
 		m_hSocketServer = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
-		if (INVALID_SOCKET == m_hSocketServer) throw _T("ÍøÂçÒıÇæ¼àÌı SOCKET ´´½¨Ê§°Ü");
+		if (INVALID_SOCKET == m_hSocketServer) throw _T("ç½‘ç»œå¼•æ“ç›‘å¬ SOCKET åˆ›å»ºå¤±è´¥");
 		
 		nErrorCode = ::bind(m_hSocketServer, (SOCKADDR*)&SocketAddr, sizeof(SocketAddr));
-		if (SOCKET_ERROR == nErrorCode) throw _T("ÍøÂçÒıÇæ¼àÌı¶Ë¿Ú±»Õ¼ÓÃ£¬¶Ë¿Ú°ó¶¨Ê§°Ü");
+		if (SOCKET_ERROR == nErrorCode) throw _T("ç½‘ç»œå¼•æ“ç›‘å¬ç«¯å£è¢«å ç”¨ï¼Œç«¯å£ç»‘å®šå¤±è´¥");
 		
 		nErrorCode = listen(m_hSocketServer, SOMAXCONN);
-		if (SOCKET_ERROR == nErrorCode) throw _T("ÍøÂçÒıÇæ¼àÌı¶Ë¿Ú±»Õ¼ÓÃ£¬¶Ë¿Ú¼àÌıÊ§°Ü");
+		if (SOCKET_ERROR == nErrorCode) throw _T("ç½‘ç»œå¼•æ“ç›‘å¬ç«¯å£è¢«å ç”¨ï¼Œç«¯å£ç›‘å¬å¤±è´¥");
 
 		//service init
 		Init();
@@ -438,7 +438,7 @@ bool CMMTCPSocketServer::StartService(WORD wServicePort, WORD wLinkCountLimit)
 		//start thread
 		m_ThreadPool.Run(dwThreadCount * 4);
 
-		//ÉèÖÃ±äÁ¿
+		//è®¾ç½®å˜é‡
 		m_bService = true;
 	}
 	catch (LPCTSTR pszError)
@@ -682,7 +682,7 @@ void CMMTCPSocketServer::OnSubAccept(shared_ptr<M_MMTCPNetworkEngine_Accept> pRe
 		std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
 
 		pClientItem = new CMMSocketClientItem(pRecvData->hSocket, pRecvData->uClientAddr, &m_ThreadPool, this, m_bEncrypt);
-		if (NULL == pClientItem) throw _T("ÉêÇëÁ¬½Ó¶ÔÏóÊ§°Ü");
+		if (NULL == pClientItem) throw _T("ç”³è¯·è¿æ¥å¯¹è±¡å¤±è´¥");
 
 		m_vecActiveSocketItem.push_back(pClientItem);
 	}

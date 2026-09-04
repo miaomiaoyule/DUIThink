@@ -288,7 +288,7 @@ void CMMSocketClientItem::PerformRecvData()
 
 	if (INVALID_SOCKET == m_hSocket) return;
 
-	//½ÓÊÕÊı¾İ
+	//æ¥æ”¶æ•°æ®
 	DWORD dwThancferred = 0, dwFlags = 0;
 	int nResCode = WSARecv(m_hSocket, &m_OverLappedRecv.m_WSABuffer, 1, &dwThancferred, &dwFlags, &m_OverLappedRecv.m_OverLapped, NULL);
 	/*if (0 == nResCode)
@@ -393,10 +393,10 @@ void CMMSocketClientItem::PerformRecvCompleted(COverLappedRecv *pOverLappedRecv,
 	//adjust
 	vecBuffer.resize(nResCode);
 
-	//websocketÇëÇó
+	//websocketè¯·æ±‚
 	if (PerformWSAnswer(vecBuffer)) return;
 
-	//websocketÍ·
+	//websocketå¤´
 	if (m_bWebsocketClient)
 	{
 		std::vector<BYTE> vecData;
@@ -421,7 +421,7 @@ void CMMSocketClientItem::PerformRecvCompleted(COverLappedRecv *pOverLappedRecv,
 		{
 			tagTCPHead TCPHead = *(tagTCPHead*)m_vecBufferRecv.data();
 			if (m_vecBufferRecv.size() < TCPHead.wPacketSize) break;
-			if (TCPHead.wPacketSize < sizeof(tagTCPHead)) throw _T("Êı¾İ°üwPacketSize´óĞ¡´íÎó£¡");
+			if (TCPHead.wPacketSize < sizeof(tagTCPHead)) throw _T("æ•°æ®åŒ…wPacketSizeå¤§å°é”™è¯¯ï¼");
 
 			auto DataBegin = m_vecBufferRecv.data() + sizeof(tagTCPHead);
 			int nDataSize = TCPHead.wPacketSize - sizeof(tagTCPHead);
@@ -457,7 +457,7 @@ void CMMSocketClientItem::PerformRecvCompleted(COverLappedRecv *pOverLappedRecv,
 					}
 					default:
 					{
-						throw _T("·Ç·¨ÃüÁîÂë");
+						throw _T("éæ³•å‘½ä»¤ç ");
 					}
 				}
 
@@ -505,7 +505,7 @@ bool CMMSocketClientItem::PerformParseWSFrame(std::vector<BYTE> vecSrc, std::vec
 	{
 		if (vecSrc.size() <= 0) return false;
 
-		//½âÎö°üÍ·
+		//è§£æåŒ…å¤´
 		WebSocketStreamHeader WSHeader = {};
 
 		const unsigned char *buf = vecSrc.data();
@@ -516,20 +516,20 @@ bool CMMSocketClientItem::PerformParseWSFrame(std::vector<BYTE> vecSrc, std::vec
 		WSHeader.opcode = buf[0] & 0x0F;
 		if (WSHeader.opcode == WS_FrameType::WS_CONTINUATION_FRAME)
 		{
-			//Á¬ĞøÖ¡  
+			//è¿ç»­å¸§  
 			return false;
 		}
 		else if (WSHeader.opcode == WS_FrameType::WS_TEXT_FRAME)
 		{
-			//ÎÄ±¾Ö¡  
+			//æ–‡æœ¬å¸§  
 		}
 		else if (WSHeader.opcode == WS_FrameType::WS_BINARY_FRAME)
 		{
-			//¶ş½øÖÆÖ¡
+			//äºŒè¿›åˆ¶å¸§
 		}
 		else if (WSHeader.opcode == WS_FrameType::WS_CLOSING_FRAME)
 		{
-			//Á¬½Ó¹Ø±ÕÏûÏ¢  
+			//è¿æ¥å…³é—­æ¶ˆæ¯  
 			return false;
 		}
 		else if (WSHeader.opcode == WS_FrameType::WS_PING_FRAME)
@@ -544,7 +544,7 @@ bool CMMSocketClientItem::PerformParseWSFrame(std::vector<BYTE> vecSrc, std::vec
 		}
 		else
 		{
-			//·Ç·¨Ö¡  
+			//éæ³•å¸§  
 			return false;
 		}
 
@@ -574,7 +574,7 @@ bool CMMSocketClientItem::PerformParseWSFrame(std::vector<BYTE> vecSrc, std::vec
 		}
 		else
 		{
-			//Couldnt decode stream size ·Ç·¨´óĞ¡Êı¾İ°ü  
+			//Couldnt decode stream size éæ³•å¤§å°æ•°æ®åŒ…  
 			return false;
 		}
 
@@ -582,7 +582,7 @@ bool CMMSocketClientItem::PerformParseWSFrame(std::vector<BYTE> vecSrc, std::vec
 		return false;
 		} */
 
-		//½âÎöÊı¾İ
+		//è§£ææ•°æ®
 		const unsigned char *final_buf = vecSrc.data();
 		if (vecSrc.size() < WSHeader.header_size + 1)
 		{
@@ -598,7 +598,7 @@ bool CMMSocketClientItem::PerformParseWSFrame(std::vector<BYTE> vecSrc, std::vec
 			vecBuffer[i] = (vecBuffer[i] ^ masks[i % 4]);
 		}
 
-		//Èç¹ûÊÇÎÄ±¾°ü£¬ÔÚÊı¾İ×îºó¼ÓÒ»¸ö½áÊø×Ö·û¡°\0¡±
+		//å¦‚æœæ˜¯æ–‡æœ¬åŒ…ï¼Œåœ¨æ•°æ®æœ€ååŠ ä¸€ä¸ªç»“æŸå­—ç¬¦â€œ\0â€
 		if (WSHeader.opcode == WS_FrameType::WS_TEXT_FRAME)
 			vecBuffer.push_back('\0');
 
@@ -610,27 +610,27 @@ bool CMMSocketClientItem::PerformParseWSFrame(std::vector<BYTE> vecSrc, std::vec
 	}
 }
 
-//websocket´ò°ü
+//websocketæ‰“åŒ…
 bool CMMSocketClientItem::PerformPackWSFrame(std::vector<BYTE> vecSrc, std::vector<BYTE> &vecBuffer)
 {
 	try
 	{
 		if (vecSrc.size() > 32767)
 		{
-			// Ôİ²»Ö§³ÖÕâÃ´³¤µÄÊı¾İ  
+			// æš‚ä¸æ”¯æŒè¿™ä¹ˆé•¿çš„æ•°æ®  
 			return false;
 		}
 
 		uint8_t payloadFieldExtraBytes = (vecSrc.size() <= 0x7d) ? 0 : 2;
-		// header: 2×Ö½Ú, maskÎ»ÉèÖÃÎª0(²»¼ÓÃÜ), ÔòºóÃæµÄmasking keyÎŞĞëÌîĞ´, Ê¡ÂÔ4×Ö½Ú  
+		// header: 2å­—èŠ‚, maskä½è®¾ç½®ä¸º0(ä¸åŠ å¯†), åˆ™åé¢çš„masking keyæ— é¡»å¡«å†™, çœç•¥4å­—èŠ‚  
 		uint8_t frameHeaderSize = 2 + payloadFieldExtraBytes;
 		vector<uint8_t> vecFrameHeader;
 		vecFrameHeader.resize(frameHeaderSize);
 
-		// finÎ»Îª1, À©Õ¹Î»Îª0, ²Ù×÷Î»ÎªframeType  
+		// finä½ä¸º1, æ‰©å±•ä½ä¸º0, æ“ä½œä½ä¸ºframeType  
 		vecFrameHeader[0] = static_cast<uint8_t>(0x80 | WS_BINARY_FRAME);
 
-		// Ìî³äÊı¾İ³¤¶È
+		// å¡«å……æ•°æ®é•¿åº¦
 		if (vecSrc.size() <= 0x7d)
 		{
 			vecFrameHeader[1] = static_cast<uint8_t>(vecSrc.size());
@@ -642,7 +642,7 @@ bool CMMSocketClientItem::PerformPackWSFrame(std::vector<BYTE> vecSrc, std::vect
 			memcpy(&vecFrameHeader[2], &len, payloadFieldExtraBytes);
 		}
 
-		// Ìî³äÊı¾İ  
+		// å¡«å……æ•°æ®  
 		vecBuffer.assign(vecFrameHeader.begin(), vecFrameHeader.end());
 		vecBuffer.insert(vecBuffer.end(), vecSrc.begin(), vecSrc.end());
 
@@ -654,7 +654,7 @@ bool CMMSocketClientItem::PerformPackWSFrame(std::vector<BYTE> vecSrc, std::vect
 	}
 }
 
-//websocket»Ø¸´
+//websocketå›å¤
 bool CMMSocketClientItem::PerformWSAnswer(std::vector<BYTE> vecWSHead)
 {
 	try
@@ -663,21 +663,21 @@ bool CMMSocketClientItem::PerformWSAnswer(std::vector<BYTE> vecWSHead)
 
 		string strRequest = (char*)vecWSHead.data();
 
-		//ÊÇ·ñwebsocketÇëÇó
+		//æ˜¯å¦websocketè¯·æ±‚
 		size_t i = strRequest.find("GET");
 		if (i == std::string::npos) return false;
 
-		//×é×°»Ø¸´
+		//ç»„è£…å›å¤
 		string strResult;
 
-		//µÃµ½¿Í»§¶ËÇëÇóĞÅÏ¢µÄkey
+		//å¾—åˆ°å®¢æˆ·ç«¯è¯·æ±‚ä¿¡æ¯çš„key
 		std::string tempKey = strRequest;
 		i = tempKey.find("Sec-WebSocket-Key");
 		if (i == std::string::npos) return false;
 
 		tempKey = tempKey.substr(i + 19, 24);
 
-		//Æ´½ÓĞ­Òé·µ»Ø¸ø¿Í»§¶Ë
+		//æ‹¼æ¥åè®®è¿”å›ç»™å®¢æˆ·ç«¯
 		strResult = "HTTP/1.1 101 Switching Protocols\r\n";
 		strResult += "Connection: upgrade\r\n";
 		strResult += "Sec-WebSocket-Accept: ";
@@ -756,27 +756,27 @@ void CMMSocketClientItem::DecryptBuffer(std::vector<BYTE> &vecBuffer)
 
 void CMMSocketClientItem::EncryptBufferWS(std::vector<BYTE> &vecBuffer)
 {
-	////Ğ§Ñé²ÎÊı
+	////æ•ˆéªŒå‚æ•°
 	//ASSERT(wDataSize >= sizeof(TCP_Head));
 	//ASSERT(wDataSize <= (SOCKET_TCP_BUFFER));
 	//ASSERT(wBufferSize >= (wDataSize + 2 * sizeof(DWORD)));
 
-	////Ğ§ÑéÂëÓë×Ö½ÚÓ³Éä
+	////æ•ˆéªŒç ä¸å­—èŠ‚æ˜ å°„
 	//for (WORD i = sizeof(TCP_Info); i < wDataSize; i++)
 	//{
 	//	pcbDataBuffer[i] = g_SendByteMap[pcbDataBuffer[i]];
 	//}
 
-	////ÌîĞ´ĞÅÏ¢Í·
+	////å¡«å†™ä¿¡æ¯å¤´
 	//TCP_Head * pHead = (TCP_Head *)pcbDataBuffer;
 	//pHead->TCPInfo.cbCheckCode = 0;
 	//pHead->TCPInfo.wPacketSize = wDataSize;
 	//pHead->TCPInfo.cbDataKind = SOCKET_VER;
 
-	////ÉèÖÃ±äÁ¿
+	////è®¾ç½®å˜é‡
 	//m_dwSendPacketCount++;
 
-	////´ò°üwebsocket
+	////æ‰“åŒ…websocket
 	//BYTE cbDataBuffer[SOCKET_TCP_BUFFER] = {};
 	//WSEncodeFrame(pcbDataBuffer, wDataSize, cbDataBuffer, sizeof(cbDataBuffer), (DWORD&)wDataSize);
 	//CopyMemory(pcbDataBuffer, cbDataBuffer, wDataSize);
@@ -786,11 +786,11 @@ void CMMSocketClientItem::EncryptBufferWS(std::vector<BYTE> &vecBuffer)
 
 void CMMSocketClientItem::DecryptBufferWS(std::vector<BYTE> &vecBuffer)
 {
-	////Ğ§Ñé²ÎÊı
+	////æ•ˆéªŒå‚æ•°
 	//ASSERT(wDataSize >= sizeof(TCP_Head));
 	//ASSERT(((TCP_Head *)pcbDataBuffer)->TCPInfo.wPacketSize == wDataSize);
 
-	////Ğ§ÑéÂëÓë×Ö½ÚÓ³Éä
+	////æ•ˆéªŒç ä¸å­—èŠ‚æ˜ å°„
 	//TCP_Head * pHead = (TCP_Head *)pcbDataBuffer;
 
 	//BYTE cbCheckCode = pHead->TCPInfo.cbCheckCode;
