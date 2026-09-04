@@ -418,8 +418,8 @@ bool CMMFile::ParseFileName(LPCTSTR lpszFileName, CMMString &strName, CMMString 
 	if (NULL == lpszFileName) return false;
 
 	CMMString strFile = lpszFileName;
-	strFile.Trim(_T('\\'));
-	strFile.Trim(_T('/'));
+	strFile.TrimRight(_T('\\'));
+	strFile.TrimRight(_T('/'));
 	int nPos = strFile.rfind(_T('\\'));
 	nPos = max(strFile.rfind(_T('/')), nPos);
 
@@ -444,12 +444,17 @@ bool CMMFile::ParseFilePathName(LPCTSTR lpszFileFull, CMMString &strPath, CMMStr
 
 	if (NULL == lpszFileFull) return false;
 
+	// Only strip trailing separators — trimming leading '/' breaks Unix absolute paths.
 	CMMString strFile = lpszFileFull;
-	strFile.Trim(_T('\\'));
-	strFile.Trim(_T('/'));
+	strFile.TrimRight(_T('\\'));
+	strFile.TrimRight(_T('/'));
+#if defined(DuiPlatform_SDL) && !defined(_WIN32)
+	strFile.Replace(_T('\\'), _T('/'));
+	int nPos = (int)strFile.rfind(_T('/'));
+#else
 	strFile.Replace(_T('/'), _T('\\'));
-	int nPos = strFile.rfind(_T('\\'));
-	nPos = max(strFile.rfind(_T('/')), nPos);
+	int nPos = (int)strFile.rfind(_T('\\'));
+#endif
 
 	//no path
 	if (-1 == nPos)
@@ -549,12 +554,21 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 {
 	//path
 	CMMString strFile = lpszFileFull;
-	if (strFile.length() < 2 || _T(':') != strFile[1])
+	if ((strFile.empty() || strFile[0] != _T('/'))
+		&& (strFile.length() < 2 || strFile[1] != _T(':')))
 	{
+#if defined(DuiPlatform_SDL) && !defined(_WIN32)
+		strFile = CMMService::GetWorkDirectory() + _T('/') + strFile;
+#else
 		strFile = CMMService::GetWorkDirectory() + _T('\\') + strFile;
+#endif
 	}
 
 #if defined DuiPlatform_SDL
+#if !defined(_WIN32)
+	strFile.Replace(_T('\\'), _T('/'));
+#endif
+
 	size_t nFileSize = 0;
 	void *pData = SDL_LoadFile(CT2CA(strFile).c_str(), &nFileSize);
 	if (NULL == pData) return false;

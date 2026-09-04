@@ -143,8 +143,8 @@ protected:
 	//static
 public:
 	/*
-	* result: 0/×ó±ß.1/ÉÏ±ß.2/ÓÒ±ß.3/µ×²¿
-	* bTrayAutoHide-ÊÇ·ñ×Ô¶¯Òş²Ø
+	* result: 0/å·¦è¾¹.1/ä¸Šè¾¹.2/å³è¾¹.3/åº•éƒ¨
+	* bTrayAutoHide-æ˜¯å¦è‡ªåŠ¨éšè—
 	*/
 	static int GetTaskBarInfo(RECT &rcTaskBar, BOOL &bTrayAutoHide);
 
@@ -155,27 +155,27 @@ public:
 	static int GetTaskbarDockType(HMONITOR hMonitor);
 
 	/*
-	* ±éÀú»ñÈ¡ÏµÍ³ÏÔÊ¾Æ÷
+	* éå†è·å–ç³»ç»Ÿæ˜¾ç¤ºå™¨
 	*/
 	bool GetComputerMonitor(tagMMFindMonitor &ComputerMonitor);
 
 	/*
-	* »ñÈ¡µ±Ç°ÆÁÄ»µÄ¸öÊı
+	* è·å–å½“å‰å±å¹•çš„ä¸ªæ•°
 	*/
 	static int GetMultScreenNumber();
 
 	/*
-	 *¸ù¾İµã»ñÈ¡ËùÔÚÆÁÄ»
+	 *æ ¹æ®ç‚¹è·å–æ‰€åœ¨å±å¹•
 	 */
 	static MONITORINFOEX GetMonitorFromPoint(const POINT &pt);
 
 	/*
-	* »ñÈ¡Ö÷ÆÁ
+	* è·å–ä¸»å±
 	*/
 	static MONITORINFOEX GetPrimaryMonitor();
 
 	/*
-	* ÏÔÊ¾Æ÷Ïà¶ÔÇøÓò×ª»»ÏÔÊ¾Æ÷¾ø¶ÔÇøÓò
+	* æ˜¾ç¤ºå™¨ç›¸å¯¹åŒºåŸŸè½¬æ¢æ˜¾ç¤ºå™¨ç»å¯¹åŒºåŸŸ
 	*/
 	static bool MonitorRelToMonitorAbs(IN CMMRectF rcRelOfMonitor,
 		IN CMMRectF rcRelOfWork,
@@ -185,7 +185,7 @@ public:
 		IN OUT CMMRectF &rcMonitorLast);
 
 	/*
-	* ÏÔÊ¾Æ÷¾ø¶ÔÇøÓò×ª»»ÏÔÊ¾Æ÷Ïà¶ÔÇøÓò
+	* æ˜¾ç¤ºå™¨ç»å¯¹åŒºåŸŸè½¬æ¢æ˜¾ç¤ºå™¨ç›¸å¯¹åŒºåŸŸ
 	*/
 	static bool MonitorAbsToMonitorRel(IN CMMRectF rcAbsOfMonitor,
 		IN OUT CMMString &strMonitorName,
@@ -195,22 +195,22 @@ public:
 		IN OUT CMMRectF &rcMonitorLast);
 
 	/*
-	* ÏÔÊ¾Æ÷¾ø¶ÔÇøÓò×ª»»ÆÁÄ»¾ø¶ÔÇøÓò
+	* æ˜¾ç¤ºå™¨ç»å¯¹åŒºåŸŸè½¬æ¢å±å¹•ç»å¯¹åŒºåŸŸ
 	*/
 	static CMMRectF MonitorAbsToScreenAbs(CMMRectF rcAbsolute);
 
 	/*
-	* ÆÁÄ»¾ø¶ÔÇøÓò×ª»»ÏÔÊ¾Æ÷¾ø¶ÔÇøÓò
+	* å±å¹•ç»å¯¹åŒºåŸŸè½¬æ¢æ˜¾ç¤ºå™¨ç»å¯¹åŒºåŸŸ
 	*/
 	static CMMRectF ScreenAbsToMonitorAbs(CMMRectF rcAbsolute);
 
 	/*
-	* »ñÈ¡µçÄÔÆÁÄ»ĞÅÏ¢
+	* è·å–ç”µè„‘å±å¹•ä¿¡æ¯
 	*/
 	static void GetScreenInfo(OUT CMMRectF &rcScreenWork, OUT CMMRectF &rcScreenDisplay, OUT CMMRectF &rcPrimary, OUT std::vector<MONITORINFOEX> &vecMonitor);
 
 	/*
-	* µ÷Õû·Ç¿É¼ûÏÔÊ¾Æ÷¾ø¶ÔÇøÓòÎª¿É¼û
+	* è°ƒæ•´éå¯è§æ˜¾ç¤ºå™¨ç»å¯¹åŒºåŸŸä¸ºå¯è§
 	*/
 	static CMMRectF PerformAdjustPosition(IN CMMRectF rcAbsOfMonitor);
 };

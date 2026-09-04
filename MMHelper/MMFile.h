@@ -35,14 +35,14 @@ class MMHELPER_API CMMFile
 public:
 	//************************************
 	// Description:	combin folder + filename
-	// Parameter: 	LPCTSTR lpszPath Àı£ºC:\Text or C:\Text\
-	// Parameter: 	LPCTSTR lpszFileName Àı£ºText.txt
+	// Parameter: 	LPCTSTR lpszPath ä¾‹ï¼šC:\Text or C:\Text\
+	// Parameter: 	LPCTSTR lpszFileName ä¾‹ï¼šText.txt
 	//************************************
 	static CMMString CombinFile(LPCTSTR lpszPath, LPCTSTR lpszFileName);
 
 	//************************************
 	// Description:	parse filetype from file or ext
-	// Parameter: 	LPCTSTR lpszFile Àı£ºC:\Text.txt or Text.txt or txt or C:\Text
+	// Parameter: 	LPCTSTR lpszFile ä¾‹ï¼šC:\Text.txt or Text.txt or txt or C:\Text
 	//************************************
 	static enMMFileType ParseFileType(LPCTSTR lpszFile);
 	static bool IsWebpFile(LPCTSTR lpszFile);
@@ -53,18 +53,18 @@ public:
 	static bool IsSvgFile(const std::vector<BYTE> &vecData);
 
 	//************************************
-	// Description:	´ÓÒ»¸öÍêÕûÂ·¾¶×Ö·û´®½âÎö³öÎÄ¼şÃû¡¢À©Õ¹Ãû
-	// Parameter: 	LPCTSTR lpszFileName Àı£ºC:\Text.txt »ò Text.txt
-	// Parameter: 	CMMString & strName Àı£ºText
-	// Parameter: 	CMMString & strExt Àı£ºtxt
+	// Description:	ä»ä¸€ä¸ªå®Œæ•´è·¯å¾„å­—ç¬¦ä¸²è§£æå‡ºæ–‡ä»¶åã€æ‰©å±•å
+	// Parameter: 	LPCTSTR lpszFileName ä¾‹ï¼šC:\Text.txt æˆ– Text.txt
+	// Parameter: 	CMMString & strName ä¾‹ï¼šText
+	// Parameter: 	CMMString & strExt ä¾‹ï¼štxt
 	//************************************
 	static bool ParseFileName(LPCTSTR lpszFileName, CMMString &strName, CMMString &strExt);
 
 	//************************************
-	// Description:	´ÓÒ»¸öÍêÕûÂ·¾¶×Ö·û´®½âÎö³öÂ·¾¶¡¢ÎÄ¼şÃû
-	// Parameter: 	LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
-	// Parameter: 	CMMString & strPath Àı£ºC:\
-	// Parameter: 	CMMString & strName Àı£ºText.txt
+	// Description:	ä»ä¸€ä¸ªå®Œæ•´è·¯å¾„å­—ç¬¦ä¸²è§£æå‡ºè·¯å¾„ã€æ–‡ä»¶å
+	// Parameter: 	LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
+	// Parameter: 	CMMString & strPath ä¾‹ï¼šC:\
+	// Parameter: 	CMMString & strName ä¾‹ï¼šText.txt
 	//************************************
 	static bool ParseFilePathName(LPCTSTR lpszFileFull, CMMString &strPath, CMMString &strName);
 
@@ -76,65 +76,65 @@ public:
 
 	//************************************
 	// Description:	
-	// Parameter: 	const char * pStr ¸ù¾İÎÄ¼şÄÚÈİÅĞ¶ÏÎÄµµ¸ñÊ½£¬³¤¶ÈÓ¦¸Ã >= 2£¬·ñÔò·µ»Ø[FileEncode_Null]
+	// Parameter: 	const char * pStr æ ¹æ®æ–‡ä»¶å†…å®¹åˆ¤æ–­æ–‡æ¡£æ ¼å¼ï¼Œé•¿åº¦åº”è¯¥ >= 2ï¼Œå¦åˆ™è¿”å›[FileEncode_Null]
 	//************************************
 	static enMMFileEncode GetFileEncode(const char *pStr);
 
 	//************************************
-	// Description:	¶ÁÈ¡ÎÄ¼şÊı¾İ
-	// Parameter: 	IN LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
+	// Description:	è¯»å–æ–‡ä»¶æ•°æ®
+	// Parameter: 	IN LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
 	// Parameter: 	OUT std::vector<BYTE> vecData
-	// Parameter: 	DWORD dwSizeLimit : ÏŞÖÆÈ¡ÎÄ¼şµÄÇ°dwSizeLimit¸ö×Ö½Ú
+	// Parameter: 	DWORD dwSizeLimit : é™åˆ¶å–æ–‡ä»¶çš„å‰dwSizeLimitä¸ªå­—èŠ‚
 	//************************************
 	static bool GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData, DWORD dwSizeLimit = -1);
 
 	//************************************
-	// Description:	¶ÁÈ¡ÎÄ¼şÊı¾İ
-	// Parameter: 	LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
+	// Description:	è¯»å–æ–‡ä»¶æ•°æ®
+	// Parameter: 	LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
 	// Parameter: 	CMMString &strData
 	//************************************
 	static bool GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData);
 
 #ifndef DuiPlatform_SDL
 	//************************************
-	// Description:	½âÎöÎÄ¼şµÄPCID
-	// Parameter: 	LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
+	// Description:	è§£ææ–‡ä»¶çš„PCID
+	// Parameter: 	LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
 	//************************************
 	static PCIDLIST_ABSOLUTE GetPCIDLFromPath(LPCTSTR lpszFileFull);
 
 	//************************************
-	// Description:	¶ÁÈ¡ÎÄ¼ştip
-	// Parameter: 	LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
+	// Description:	è¯»å–æ–‡ä»¶tip
+	// Parameter: 	LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
 	//************************************
 	static CMMString GetFileTip(IN LPCTSTR lpszFileFull);
 
 	//************************************
 	// Description:	return local file modifytime
-	// Parameter: 	LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
+	// Parameter: 	LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
 	//************************************
 	static SYSTEMTIME GetFileModifyTime(IN LPCTSTR lpszFileFull);
 
 	//************************************
 	// Description:	return local file createtime
-	// Parameter: 	LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
+	// Parameter: 	LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
 	//************************************
 	static SYSTEMTIME GetFileCreateTime(IN LPCTSTR lpszFileFull);
 
 	//************************************
 	// Description:	return local file last access time
-	// Parameter: 	LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
+	// Parameter: 	LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
 	//************************************
 	static SYSTEMTIME GetFileLastAccessTime(IN LPCTSTR lpszFileFull);
 
 	//************************************
 	// Description:	return file size
-	// Parameter: 	LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
+	// Parameter: 	LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
 	//************************************
 	static uint64_t GetFileSize(IN LPCTSTR lpszFileFull);
 
 	//************************************
 	// Description:	return file version
-	// Parameter: 	LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
+	// Parameter: 	LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
 	//************************************
 	static bool GetFileVersion(IN LPCTSTR lpszFileFull, OUT DWORD &dwVersionInfo);
 	static CMMString GetFileVersion(IN LPCTSTR lpszFileFull);
@@ -142,85 +142,85 @@ public:
 
 	//************************************
 	// Description:	get folder of dir
-	// Parameter: 	LPCTSTR lpszDirFull Àı£ºC:\windows
+	// Parameter: 	LPCTSTR lpszDirFull ä¾‹ï¼šC:\windows
 	//************************************
 	static std::vector<CMMString> GetFolderOfDir(IN LPCTSTR lpszDirFull);
 
 	//************************************
 	// Description:	get file(uninclude folder) of dir
-	// Parameter: 	LPCTSTR lpszDirFull Àı£ºC:\windows
+	// Parameter: 	LPCTSTR lpszDirFull ä¾‹ï¼šC:\windows
 	//************************************
 	static std::vector<CMMString> GetFileOfDir(IN LPCTSTR lpszDirFull);
 
 	//************************************
 	// Description:	get all files of dir
-	// Parameter: 	LPCTSTR lpszDirFull Àı£ºC:\windows
+	// Parameter: 	LPCTSTR lpszDirFull ä¾‹ï¼šC:\windows
 	//************************************
 	static std::vector<CMMString> GetFileAndFolderOfDir(IN LPCTSTR lpszDirFull);
 
 	//************************************
 	// Description:	get size of dir
-	// Parameter: 	LPCTSTR lpszDirFull Àı£ºC:\windows
+	// Parameter: 	LPCTSTR lpszDirFull ä¾‹ï¼šC:\windows
 	//************************************
 	static uint64_t GetFolderSize(IN LPCTSTR lpszDirFull);
 
 	//************************************
 	// Description:	write string to file
-	// Parameter: 	LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
+	// Parameter: 	LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
 	// Parameter: 	CMMString &strData 
 	//************************************
 	static bool WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool bClearOld = false);
 	
 	//************************************
 	// Description:	write byte to file
-	// Parameter: 	LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
+	// Parameter: 	LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
 	// Parameter: 	std::vector<BYTE> &vecData 
 	//************************************
 	static bool WriteFileData(IN LPCTSTR lpszFileFull, IN std::vector<BYTE> &vecData, bool bClearOld = false);
 	
 	//************************************
 	// Description:	write byte to file
-	// Parameter: 	LPCTSTR lpszFileFull Àı£ºC:\Text.txt 
+	// Parameter: 	LPCTSTR lpszFileFull ä¾‹ï¼šC:\Text.txt 
 	// Parameter: 	std::vector<BYTE> &vecData 
 	//************************************
 	static bool WriteFileData(IN LPCTSTR lpszFileFull, IN std::vector<BYTE> &vecData, int nOffsetOfFirst = 0);
 
 	//************************************
-	// Description:	µİ¹éÇå³ıÂ·¾¶ÏÂµÄº¬ÓĞÌØ¶¨Ãû×ÖµÄÎÄ¼ş
-	// Parameter: 	CMMString strPath Àı£ºC:\Program Files (x86)
-	// Parameter: 	CMMString strHasName Àı£ºqq
+	// Description:	é€’å½’æ¸…é™¤è·¯å¾„ä¸‹çš„å«æœ‰ç‰¹å®šåå­—çš„æ–‡ä»¶
+	// Parameter: 	CMMString strPath ä¾‹ï¼šC:\Program Files (x86)
+	// Parameter: 	CMMString strHasName ä¾‹ï¼šqq
 	//************************************
 	static bool RemoveFileByHasName(CMMString strPath, CMMString strHasName);
 
 	//************************************
-	// Description:	Çå¿ÕÂ·¾¶ÏÂµÄÎÄ¼ş
-	// Parameter: 	CMMString strPath Àı£ºC:\Program Files (x86)
+	// Description:	æ¸…ç©ºè·¯å¾„ä¸‹çš„æ–‡ä»¶
+	// Parameter: 	CMMString strPath ä¾‹ï¼šC:\Program Files (x86)
 	//************************************
 	static bool ClearFilesOfFolder(CMMString strPath);
 
 	//************************************
-	// Description:	É¾³ıÎÄ¼ş¼Ğ
-	// Parameter: 	CMMString strPath Àı£ºC:\Program Files (x86)
+	// Description:	åˆ é™¤æ–‡ä»¶å¤¹
+	// Parameter: 	CMMString strPath ä¾‹ï¼šC:\Program Files (x86)
 	//************************************
 	static bool DeleteFolder(CMMString strPath);
 
 	//************************************
 	// Description:	open folder and select file 
-	// Parameter: 	CMMString strFileFull Àı£ºC:\user\desktop\test.txt
+	// Parameter: 	CMMString strFileFull ä¾‹ï¼šC:\user\desktop\test.txt
 	//************************************
 	static bool OpenFolderAndSelectFile(CMMString strFileFull);
 
 	//************************************
 	// Description:	copy or move file or folder to dest 
-	// Parameter: 	CMMString strSrc Àı£ºC:\user\desktop\test.txt C:\user\desktop\test
-	// Parameter: 	CMMString strDest Àı£ºD:\user\desktop\test.txt D:\user\desktop\test
+	// Parameter: 	CMMString strSrc ä¾‹ï¼šC:\user\desktop\test.txt C:\user\desktop\test
+	// Parameter: 	CMMString strDest ä¾‹ï¼šD:\user\desktop\test.txt D:\user\desktop\test
 	//************************************
 	static bool OperatorFileOrFolder(CMMString strSrc, CMMString strDest, int nOperator = FO_COPY, bool bUI = false, bool bMultiFile = false, bool bSameDir = false);
 
 	//************************************
 	// Description:	get user save filename 
 	// Parameter: 	HWND hWndParent
-	// Parameter: 	std::unordered_map<CMMString, CMMString> mapFilter Àı£º	L"png", L"*.png"
+	// Parameter: 	std::unordered_map<CMMString, CMMString> mapFilter ä¾‹ï¼š	L"png", L"*.png"
 	//																		L"all", L"*.jpg;*.jpeg;*.bmp;*.png;*.mp4"
 	//************************************
 	static bool OperatorSaveToFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT CMMString &strFileSave);
@@ -228,7 +228,7 @@ public:
 	//************************************
 	// Description:	select file as filter ext 
 	// Parameter: 	HWND hWndParent
-	// Parameter: 	std::unordered_map<CMMString, CMMString> mapFilter Àı£º	L"png", L"*.png"
+	// Parameter: 	std::unordered_map<CMMString, CMMString> mapFilter ä¾‹ï¼š	L"png", L"*.png"
 	//																		L"all", L"*.jpg;*.jpeg;*.bmp;*.png;*.mp4"
 	//************************************
 	static bool OperatorSelectFile(HWND hWndParent, std::unordered_map<CMMString, CMMString> mapFilter, OUT std::vector<CMMString> &vecFileSelect);

@@ -2,8 +2,8 @@
 #include "MMEncrypt.h"
 
 //////////////////////////////////////////////////////////////////////////////////
-//密钥长度
-#define ENCRYPT_KEY_LEN				8									//密钥长度
+//瀵嗛挜闀垮害
+#define ENCRYPT_KEY_LEN				8									//瀵嗛挜闀垮害
 
 //////////////////////////////////////////////////////////////////////////
 inline WORD SeedRandMap(WORD wSeed)
@@ -21,74 +21,79 @@ CMMEncrypt::~CMMEncrypt()
 {
 }
 
-//生成密文
+//鐢熸垚瀵嗘枃
 CMMString CMMEncrypt::XorEncrypt(CMMString strSrc)
 {
-	//变量定义
+	//鍙橀噺瀹氫箟
 	WCHAR szEncrypData[MAX_ENCRYPT_LEN + 1] = L"";
 
-	//生成密钥
+	//鐢熸垚瀵嗛挜
 	WORD wRandKey[ENCRYPT_KEY_LEN];
 	wRandKey[0] = lstrlen(strSrc);
 	for (WORD i = 1; i < MMCountArray(wRandKey); i++) wRandKey[i] = rand() % 0xFFFF;
 
-	//步骤准备
+	//姝ラ鍑嗗
 	WORD wTempCode = 0;
 	WORD wTimes = ((wRandKey[0] + ENCRYPT_KEY_LEN - 1) / ENCRYPT_KEY_LEN)*ENCRYPT_KEY_LEN;
 
-	//生成密文
+	//鐢熸垚瀵嗘枃
 	for (WORD i = 0; i < wTimes; i++)
 	{
 		if (i < wRandKey[0]) wTempCode = strSrc[i] ^ wRandKey[i%ENCRYPT_KEY_LEN];
 		else wTempCode = wRandKey[i%ENCRYPT_KEY_LEN] ^ (WORD)(rand() % 0xFFFF);
+		// MSVC: swprintf(buf, fmt, ...); POSIX/C99: swprintf(buf, n, fmt, ...)
+#ifdef _MSC_VER
 		swprintf(szEncrypData + i * 8, L"%04X%04X", wRandKey[i%ENCRYPT_KEY_LEN], wTempCode);
+#else
+		swprintf(szEncrypData + i * 8, 9, L"%04X%04X", wRandKey[i%ENCRYPT_KEY_LEN], wTempCode);
+#endif
 	}
 
 	return szEncrypData;
 }
 
-//解开密文
+//瑙ｅ紑瀵嗘枃
 CMMString CMMEncrypt::XorDecrypt(CMMString strSrc)
 {
-	//变量定义
+	//鍙橀噺瀹氫箟
 	WCHAR szSrcData[MAX_SOURCE_LEN] = L"";
 
-	//效验长度
+	//鏁堥獙闀垮害
 	WORD wEncrypPassLen = lstrlen(strSrc);
 	if (wEncrypPassLen < ENCRYPT_KEY_LEN * 8) return _T("");
 
-	//提取长度
+	//鎻愬彇闀垮害
 	WCHAR szTempBuffer[5] = L"";
 	szTempBuffer[MMCountArray(szTempBuffer) - 1] = 0;
 	CopyMemory(szTempBuffer, (LPCWSTR)strSrc, sizeof(WCHAR) * 4);
 
-	//获取长度
+	//鑾峰彇闀垮害
 	WCHAR * pEnd = NULL;
 	WORD wSoureLength = (WORD)wcstol(szTempBuffer, &pEnd, 16);
 
-	//长度效验
+	//闀垮害鏁堥獙
 	assert(wEncrypPassLen == (((wSoureLength + ENCRYPT_KEY_LEN - 1) / ENCRYPT_KEY_LEN)*ENCRYPT_KEY_LEN * 8));
 	if (wEncrypPassLen != (((wSoureLength + ENCRYPT_KEY_LEN - 1) / ENCRYPT_KEY_LEN)*ENCRYPT_KEY_LEN * 8)) return _T("");
 
-	//解开密码
+	//瑙ｅ紑瀵嗙爜
 	for (int i = 0; i < wSoureLength; i++)
 	{
-		//获取密钥
+		//鑾峰彇瀵嗛挜
 		WCHAR szKeyBuffer[5];
 		szKeyBuffer[MMCountArray(szKeyBuffer) - 1] = 0;
 		szTempBuffer[MMCountArray(szTempBuffer) - 1] = 0;
 		CopyMemory(szKeyBuffer, (LPCWSTR)strSrc + i * 8, sizeof(WCHAR) * 4);
 		CopyMemory(szTempBuffer, (LPCWSTR)strSrc + i * 8 + 4, sizeof(WCHAR) * 4);
 
-		//提取密钥
+		//鎻愬彇瀵嗛挜
 		WCHAR wKey = (WCHAR)wcstol(szKeyBuffer, &pEnd, 16);
 		WCHAR wEncrypt = (WCHAR)wcstol(szTempBuffer, &pEnd, 16);
 
-		//生成原文
+		//鐢熸垚鍘熸枃
 		szSrcData[i] = (WCHAR)((WCHAR)wKey ^ (WCHAR)wEncrypt);
 	}
 
-	//终止字符
+	//缁堟瀛楃
 	szSrcData[wSoureLength] = 0;
 
 	return szSrcData;
@@ -98,7 +103,7 @@ void CMMEncrypt::MapEncrypt(CMMString &strSrc)
 {
 	if (strSrc.empty()) return;
 
-	//变量定义
+	//鍙橀噺瀹氫箟
 	BYTE * pDataSrc = (BYTE *)strSrc.c_str();
 
 	for (UINT i = 0; i < strSrc.length() * sizeof(TCHAR); i++)
@@ -123,10 +128,10 @@ void CMMEncrypt::MapDecrypt(CMMString &strSrc)
 {
 	if (strSrc.empty()) return;
 
-	//变量定义
+	//鍙橀噺瀹氫箟
 	BYTE * pDataSrc = (BYTE *)strSrc.c_str();
 
-	//解密数据
+	//瑙ｅ瘑鏁版嵁
 	for (UINT i = 0; i < strSrc.length() * sizeof(TCHAR); i++)
 	{
 		pDataSrc[i] = g_cbDecryptMap[pDataSrc[i]];

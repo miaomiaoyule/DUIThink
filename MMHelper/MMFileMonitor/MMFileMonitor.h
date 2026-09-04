@@ -10,6 +10,8 @@
 //////////////////////////////////////////////////////////////////////////
 class CMMFileMonitor : public CMMAsyncObject
 {
+	MMDeclare_Super(CMMAsyncObject)
+
 private:
 	CMMFileMonitor();
 	virtual ~CMMFileMonitor();

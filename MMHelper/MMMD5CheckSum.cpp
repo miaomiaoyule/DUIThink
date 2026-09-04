@@ -2,21 +2,21 @@
 #include "MMMD5CheckSum.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-//¹¹Ôìº¯Êı
+//æ„é€ å‡½æ•°
 CMMMD5Checksum::CMMMD5Checksum()
 {
-	//³õÊ¼³ÉÔ±
+	//åˆå§‹æˆå‘˜
 	memset(m_lpszBuffer, 0, 64);
 	m_nCount[0] = m_nCount[1] = 0;
 
-	//³õÊ¼±äÁ¿
+	//åˆå§‹å˜é‡
 	m_lMD5[0] = MD5_INIT_STATE_0;
 	m_lMD5[1] = MD5_INIT_STATE_1;
 	m_lMD5[2] = MD5_INIT_STATE_2;
 	m_lMD5[3] = MD5_INIT_STATE_3;
 }
 
-//Îö¹¹º¯Êı
+//ææ„å‡½æ•°
 CMMMD5Checksum::~CMMMD5Checksum()
 {
 }
@@ -25,13 +25,13 @@ CMMString CMMMD5Checksum::GetMD5(BYTE *pBuf, UINT nLength)
 {
 	if (NULL == pBuf) return _T("");
 
-	//±äÁ¿¶¨Òå
+	//å˜é‡å®šä¹‰
 	CMMMD5Checksum MD5Checksum;
 
-	//¼ÆËãĞ£ÑéºÍ
+	//è®¡ç®—æ ¡éªŒå’Œ
 	MD5Checksum.Update(pBuf, nLength);
 
-	//Íê³ÉĞ£Ñé
+	//å®Œæˆæ ¡éªŒ
 	return MD5Checksum.Final();
 }
 
@@ -43,13 +43,13 @@ CMMString CMMMD5Checksum::GetMD5(FILE *pFile)
 	{
 		fseek(pFile, 0, SEEK_SET);
 
-		//±äÁ¿¶¨Òå
+		//å˜é‡å®šä¹‰
 		CMMMD5Checksum MD5Checksum;
 		int nLength = 0;
 		const int nBufferSize = 1024;
 		BYTE Buffer[nBufferSize];
 
-		//Ğ£ÑéÎÄ¼ş
+		//æ ¡éªŒæ–‡ä»¶
 		while ((nLength = fread(Buffer, 1, nBufferSize, pFile)) > 0)
 		{
 			MD5Checksum.Update(Buffer, nLength);
@@ -58,7 +58,7 @@ CMMString CMMMD5Checksum::GetMD5(FILE *pFile)
 		fclose(pFile);
 		pFile = NULL;
 
-		//Íê³ÉĞ£Ñé
+		//å®Œæˆæ ¡éªŒ
 		return MD5Checksum.Final();
 	}
 	catch (...)
@@ -84,30 +84,30 @@ CMMString CMMMD5Checksum::GetMD5(const CMMString &strFilePath)
 		return _T("");
 	}
 
-	//·µ»ØĞ£ÑéºÍ
+	//è¿”å›æ ¡éªŒå’Œ
 	return GetMD5(pFile);
 }
 
 CMMString CMMMD5Checksum::Final()
 {
-	//±äÁ¿¶¨Òå
+	//å˜é‡å®šä¹‰
 	BYTE Bits[8];
 	DWordToByte(Bits, m_nCount, 8);
 
-	//±äÁ¿¶¨Òå
+	//å˜é‡å®šä¹‰
 	UINT nIndex = (UINT)((m_nCount[0] >> 3) & 0x3f);
 	UINT nPadLen = (nIndex < 56) ? (56 - nIndex) : (120 - nIndex);
 	Update(PADDING, nPadLen);
 
-	//¸üĞÂÊı¾İ
+	//æ›´æ–°æ•°æ®
 	Update(Bits, 8);
 
-	//±äÁ¿¶¨Òå
+	//å˜é‡å®šä¹‰
 	const int nMD5Size = 16;
 	unsigned char lpszMD5[nMD5Size];
 	DWordToByte(lpszMD5, m_lMD5, nMD5Size);
 
-	//×ª»»ÀàĞÍ
+	//è½¬æ¢ç±»å‹
 	CMMString strMD5;
 	for (int i = 0; i < nMD5Size; i++)
 	{
@@ -129,27 +129,27 @@ CMMString CMMMD5Checksum::Final()
 		strMD5 += Str;
 	}
 
-	//½á¹ûĞ£Ñé
+	//ç»“æœæ ¡éªŒ
 	assert(strMD5.length() == 32);
 	return strMD5;
 }
 
-//×ª»»Êı¾İ
+//è½¬æ¢æ•°æ®
 VOID CMMMD5Checksum::Transform(BYTE Block[64])
 {
-	//±äÁ¿¶¨Òå
+	//å˜é‡å®šä¹‰
 	ULONG a = m_lMD5[0];
 	ULONG b = m_lMD5[1];
 	ULONG c = m_lMD5[2];
 	ULONG d = m_lMD5[3];
 
-	//±äÁ¿¶¨Òå
+	//å˜é‡å®šä¹‰
 	ULONG X[16];
 
-	//Êı¾İ×ª»»
+	//æ•°æ®è½¬æ¢
 	ByteToDWord(X, Block, 64);
 
-	//1ÂÖ×ª»»
+	//1è½®è½¬æ¢
 	FF(a, b, c, d, X[0], MD5_S11, MD5_T01);
 	FF(d, a, b, c, X[1], MD5_S12, MD5_T02);
 	FF(c, d, a, b, X[2], MD5_S13, MD5_T03);
@@ -167,7 +167,7 @@ VOID CMMMD5Checksum::Transform(BYTE Block[64])
 	FF(c, d, a, b, X[14], MD5_S13, MD5_T15);
 	FF(b, c, d, a, X[15], MD5_S14, MD5_T16);
 
-	//2ÂÖ×ª»»
+	//2è½®è½¬æ¢
 	GG(a, b, c, d, X[1], MD5_S21, MD5_T17);
 	GG(d, a, b, c, X[6], MD5_S22, MD5_T18);
 	GG(c, d, a, b, X[11], MD5_S23, MD5_T19);
@@ -185,7 +185,7 @@ VOID CMMMD5Checksum::Transform(BYTE Block[64])
 	GG(c, d, a, b, X[7], MD5_S23, MD5_T31);
 	GG(b, c, d, a, X[12], MD5_S24, MD5_T32);
 
-	//3ÂÖ×ª»»
+	//3è½®è½¬æ¢
 	HH(a, b, c, d, X[5], MD5_S31, MD5_T33);
 	HH(d, a, b, c, X[8], MD5_S32, MD5_T34);
 	HH(c, d, a, b, X[11], MD5_S33, MD5_T35);
@@ -203,7 +203,7 @@ VOID CMMMD5Checksum::Transform(BYTE Block[64])
 	HH(c, d, a, b, X[15], MD5_S33, MD5_T47);
 	HH(b, c, d, a, X[2], MD5_S34, MD5_T48);
 
-	//4ÂÖ×ª»»
+	//4è½®è½¬æ¢
 	II(a, b, c, d, X[0], MD5_S41, MD5_T49);
 	II(d, a, b, c, X[7], MD5_S42, MD5_T50);
 	II(c, d, a, b, X[14], MD5_S43, MD5_T51);
@@ -221,7 +221,7 @@ VOID CMMMD5Checksum::Transform(BYTE Block[64])
 	II(c, d, a, b, X[2], MD5_S43, MD5_T63);
 	II(b, c, d, a, X[9], MD5_S44, MD5_T64);
 
-	//ÉèÖÃĞ£ÑéºÍ
+	//è®¾ç½®æ ¡éªŒå’Œ
 	m_lMD5[0] += a;
 	m_lMD5[1] += b;
 	m_lMD5[2] += c;
@@ -230,22 +230,22 @@ VOID CMMMD5Checksum::Transform(BYTE Block[64])
 	return;
 }
 
-//¸üĞÂÊı¾İ
+//æ›´æ–°æ•°æ®
 VOID CMMMD5Checksum::Update(BYTE *Input, ULONG nInputLen)
 {
-	//±äÁ¿¶¨Òå
+	//å˜é‡å®šä¹‰
 	UINT nIndex = (UINT)((m_nCount[0] >> 3) & 0x3F);
 
-	//¸üĞÂÎ»Êı
+	//æ›´æ–°ä½æ•°
 	if ((m_nCount[0] += nInputLen << 3) < (nInputLen << 3))
 	{
 		m_nCount[1]++;
 	}
 
-	//ÉèÖÃ±äÁ¿
+	//è®¾ç½®å˜é‡
 	m_nCount[1] += (nInputLen >> 29);
 
-	//ÖØ¸´×ª»»
+	//é‡å¤è½¬æ¢
 	UINT i = 0;
 	UINT nPartLen = 64 - nIndex;
 	if (nInputLen >= nPartLen)
@@ -263,23 +263,23 @@ VOID CMMMD5Checksum::Update(BYTE *Input, ULONG nInputLen)
 		i = 0;
 	}
 
-	//¿½±´»º³å
+	//æ‹·è´ç¼“å†²
 	memcpy(&m_lpszBuffer[nIndex], &Input[i], nInputLen - i);
 }
 
-//ÀàĞÍ×ª»»
+//ç±»å‹è½¬æ¢
 VOID CMMMD5Checksum::ByteToDWord(DWORD *Output, BYTE *Input, UINT nLength)
 {
-	//²ÎÊıĞ£Ñé
+	//å‚æ•°æ ¡éªŒ
 	assert(nLength % 4 == 0);
 	assert(NULL != Output);
 	assert(NULL != Input);
 
-	//±äÁ¿¶¨Òå
+	//å˜é‡å®šä¹‰
 	UINT nOutIndex = 0;
 	UINT nLoopIndex = 0;
 
-	//×ª»»¿½±´
+	//è½¬æ¢æ‹·è´
 	for (; nLoopIndex < nLength; nOutIndex++, nLoopIndex += 4)
 	{
 		Output[nOutIndex] = (ULONG)Input[nLoopIndex] |
@@ -291,15 +291,15 @@ VOID CMMMD5Checksum::ByteToDWord(DWORD *Output, BYTE *Input, UINT nLength)
 	return;
 }
 
-//ÀàĞÍ×ª»»
+//ç±»å‹è½¬æ¢
 VOID CMMMD5Checksum::DWordToByte(BYTE *Output, DWORD *Input, UINT nLength)
 {
-	//Ğ£Ñé±äÁ¿
+	//æ ¡éªŒå˜é‡
 	assert(nLength % 4 == 0);
 	assert(NULL != Output);
 	assert(NULL != Input);
 
-	//×ª»»¿½±´
+	//è½¬æ¢æ‹·è´
 	UINT nInIndex = 0;
 	UINT nLoopIndex = 0;
 	for (; nLoopIndex < nLength; nInIndex++, nLoopIndex += 4)
@@ -316,10 +316,10 @@ VOID CMMMD5Checksum::DWordToByte(BYTE *Output, DWORD *Input, UINT nLength)
 //
 DWORD CMMMD5Checksum::RotateLeft(DWORD x, int n)
 {
-	//²ÎÊıĞ£Ñé
+	//å‚æ•°æ ¡éªŒ
 	assert(sizeof(x) == 4);
 
-	//·µ»Ø½á¹û
+	//è¿”å›ç»“æœ
 	return (x << n) | (x >> (32 - n));
 }
 

@@ -5,13 +5,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-//³õÊ¼³£Á¿
+//åˆå§‹å¸¸é‡
 #define MD5_INIT_STATE_0	0x67452301
 #define MD5_INIT_STATE_1	0xefcdab89
 #define MD5_INIT_STATE_2	0x98badcfe
 #define MD5_INIT_STATE_3	0x10325476
 
-//×ª»»³£Á¿
+//è½¬æ¢å¸¸é‡
 #define MD5_S11		7
 #define MD5_S12		12
 #define MD5_S13		17
@@ -29,7 +29,7 @@
 #define MD5_S43		15
 #define MD5_S44		21
 
-//1ÂÖ×ª»»³£Á¿
+//1è½®è½¬æ¢å¸¸é‡
 #define MD5_T01		0xd76aa478 
 #define MD5_T02		0xe8c7b756 
 #define MD5_T03		0x242070db 
@@ -47,7 +47,7 @@
 #define MD5_T15		0xa679438e 
 #define MD5_T16		0x49b40821 
 
-//2ÂÖ×ª»»³£Á¿
+//2è½®è½¬æ¢å¸¸é‡
 #define MD5_T17		0xf61e2562 
 #define MD5_T18		0xc040b340 
 #define MD5_T19		0x265e5a51 
@@ -65,7 +65,7 @@
 #define MD5_T31		0x676f02d9 
 #define MD5_T32		0x8d2a4c8a 
 
-//3ÂÖ×ª»»³£Á¿
+//3è½®è½¬æ¢å¸¸é‡
 #define MD5_T33		0xfffa3942 
 #define MD5_T34		0x8771f681 
 #define MD5_T35		0x6d9d6122 
@@ -83,7 +83,7 @@
 #define MD5_T47		0x1fa27cf8 
 #define MD5_T48		0xc4ac5665 
 
-//4ÂÖ×ª»»³£Á¿
+//4è½®è½¬æ¢å¸¸é‡
 #define MD5_T49		0xf4292244 
 #define MD5_T50		0x432aff97 
 #define MD5_T51		0xab9423a7 
@@ -102,7 +102,7 @@
 #define MD5_T64		0xeb86d391 
 
 
-//Ìî³äÊı¾İ
+//å¡«å……æ•°æ®
 static unsigned char PADDING[64] = 
 {
   0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -112,38 +112,38 @@ static unsigned char PADDING[64] =
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-//MD5Ğ£Ñé
+//MD5æ ¡éªŒ
 class MMHELPER_API CMMMD5Checksum
 {
-	//´æ´¢±äÁ¿
+	//å­˜å‚¨å˜é‡
 private:
-	BYTE								m_lpszBuffer[64];             //ÊäÈë»º³å
-	ULONG								m_nCount[2];                  //Î»Êı¼ÆÊı
-	ULONG								m_lMD5[4];                    //MD5Ğ£ÑéºÍ
+	BYTE								m_lpszBuffer[64];             //è¾“å…¥ç¼“å†²
+	ULONG								m_nCount[2];                  //ä½æ•°è®¡æ•°
+	ULONG								m_lMD5[4];                    //MD5æ ¡éªŒå’Œ
 
-	//º¯Êı¶¨Òå
+	//å‡½æ•°å®šä¹‰
 protected:
 	CMMMD5Checksum();
 	virtual ~CMMMD5Checksum();
 
-	//¾²Ì¬º¯Êı
+	//é™æ€å‡½æ•°
 public:
 	static CMMString GetMD5(BYTE *pBuf, UINT nLength);
 	static CMMString GetMD5(FILE *pFile);
 	static CMMString GetMD5(const CMMString &strFilePath);
 
-	//¸¨Öúº¯Êı
+	//è¾…åŠ©å‡½æ•°
 protected:
 	CMMString Final();
 
-	//¸¨Öúº¯Êı
+	//è¾…åŠ©å‡½æ•°
 protected:
 	VOID Transform(BYTE Block[64]);
 	VOID Update(BYTE *Input, ULONG nInputLen);
 	VOID DWordToByte(BYTE *Output, DWORD *Input, UINT nLength);
 	VOID ByteToDWord(DWORD *Output, BYTE *Input, UINT nLength);
 
-	//ÄÚÁªº¯Êı
+	//å†…è”å‡½æ•°
 protected:
 	inline DWORD RotateLeft(DWORD x, int n);
 	inline VOID FF(DWORD &A, DWORD B, DWORD C, DWORD D, DWORD X, DWORD S, DWORD T);

@@ -4,7 +4,7 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
-//code by 城南花已开 2020-1-25 QQ:284168136
+//code by 鍩庡崡鑺卞凡寮� 2020-1-25 QQ:284168136
 //////////////////////////////////////////////////////////////////////////
 #define MagnetType_None					(0x00)
 #define MagnetType_Left					(0x01)
@@ -20,6 +20,8 @@ class MMHELPER_API CMMMagnetBox
 public:
 	struct tagMagnetBox : public CMMRect
 	{
+		MMDeclare_Super(CMMRect)
+
 		int							nIndex = -1;
 		int							MagnetType = MagnetType_None;
 

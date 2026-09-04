@@ -4,7 +4,7 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
-//¼ÓÃÜÓ³Éä
+//åŠ å¯†æ˜ å°„
 const BYTE g_cbEncryptMap[256] =
 {
 	0x70,0x2F,0x40,0x5F,0x44,0x8E,0x6E,0x45,0x7E,0xAB,0x2C,0x1F,0xB4,0xAC,0x9D,0x91,
@@ -25,7 +25,7 @@ const BYTE g_cbEncryptMap[256] =
 	0x90,0xCA,0xE2,0x58,0xC1,0x18,0x52,0xFE,0xDF,0x68,0x98,0x54,0xEC,0x60,0x43,0x0F
 };
 
-//½âÃÜÓ³Éä
+//è§£å¯†æ˜ å°„
 const BYTE g_cbDecryptMap[256] =
 {
 	0x51,0xA1,0x9E,0xB0,0x1E,0x83,0x1C,0x2D,0xE9,0x77,0x3D,0x13,0x93,0x10,0x45,0xFF,
@@ -48,26 +48,26 @@ const BYTE g_cbDecryptMap[256] =
 
 //////////////////////////////////////////////////////////////////////////////////
 
-//ºê¶¨Òå
-#define XOR_TIMES					8									//¼ÓÃÜ±¶Êı
-#define MAX_SOURCE_LEN				64									//×î´ó³¤¶È
-#define MAX_ENCRYPT_LEN				(MAX_SOURCE_LEN*XOR_TIMES)			//×î´ó³¤¶È
+//å®å®šä¹‰
+#define XOR_TIMES					8									//åŠ å¯†å€æ•°
+#define MAX_SOURCE_LEN				64									//æœ€å¤§é•¿åº¦
+#define MAX_ENCRYPT_LEN				(MAX_SOURCE_LEN*XOR_TIMES)			//æœ€å¤§é•¿åº¦
 
 //////////////////////////////////////////////////////////////////////////////////
 
-//¼ÓÃÜ×é¼ş
+//åŠ å¯†ç»„ä»¶
 class MMHELPER_API CMMEncrypt
 {
 public:
 	CMMEncrypt();
 	virtual ~CMMEncrypt();
 
-	//¼ÓÃÜº¯Êı
+	//åŠ å¯†å‡½æ•°
 public:
 	static CMMString XorEncrypt(CMMString strSrc);
 	static CMMString XorDecrypt(CMMString strSrc);
 
-	//¼ÓÃÜº¯Êı
+	//åŠ å¯†å‡½æ•°
 public:
 	static void MapEncrypt(CMMString &strSrc);
 	static void MapEncrypt(std::vector<BYTE> &vecData);
