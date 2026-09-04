@@ -1088,7 +1088,6 @@ MMHELPER_API bool IsIconic(HWND hWnd);
 MMHELPER_API bool IsZoomed(HWND hWnd);
 MMHELPER_API void InvalidateRect(HWND hWnd, LPCRECT lpRect, bool bErase);
 MMHELPER_API BOOL GetUpdateRect(HWND hWnd, LPRECT lpRect, BOOL bErase);
-MMHELPER_API void EndPaintInvalidate(HWND hWnd);
 MMHELPER_API BOOL ScreenToClient(HWND hWnd, LPPOINT lpPoint);
 MMHELPER_API BOOL ClientToScreen(HWND hWnd, LPPOINT lpPoint);
 MMHELPER_API void GetCursorPos(LPPOINT lpPoint);
