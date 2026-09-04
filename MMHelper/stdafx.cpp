@@ -25,6 +25,16 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...)
 
 namespace
 {
+	CMMStringA MMEnsureSdlPath(LPCTSTR lpszPath)
+	{
+		CMMString strPath = lpszPath ? lpszPath : _T("");
+#if !defined(_WIN32)
+		strPath.Replace(_T('\\'), _T('/'));
+#endif
+
+		return CT2CA(strPath);
+	}
+
 	std::unordered_map<SDL_Window *, CMMRect> g_mapWndUpdate;
 	std::unordered_map<SDL_WindowID, IMMWndSDL *> g_mapSdlWnd;
 	std::mutex g_csSdlWnd;
@@ -37,7 +47,7 @@ bool IsWindow(HWND hWnd)
 
 bool PathFileExists(LPCTSTR lpszFile)
 {
-	if (SDL_GetPathInfo(CT2CA(lpszFile), NULL)) return true;
+	if (SDL_GetPathInfo(MMEnsureSdlPath(lpszFile).c_str(), NULL)) return true;
 
 	return false;
 }
@@ -45,7 +55,7 @@ bool PathFileExists(LPCTSTR lpszFile)
 bool PathIsDirectory(LPCTSTR lpszFile)
 {
 	SDL_PathInfo info;
-	if (SDL_GetPathInfo(CT2CA(lpszFile), &info) && info.type == SDL_PATHTYPE_DIRECTORY) 
+	if (SDL_GetPathInfo(MMEnsureSdlPath(lpszFile).c_str(), &info) && info.type == SDL_PATHTYPE_DIRECTORY) 
 	{
 		return true;
 	}
@@ -68,7 +78,7 @@ LPTSTR PathAddBackslash(LPTSTR lpszPath)
 
 bool DeleteFile(LPCTSTR lpszFile)
 {
-	if (false == SDL_RemovePath(CT2CA(lpszFile)))
+	if (false == SDL_RemovePath(MMEnsureSdlPath(lpszFile).c_str()))
 	{
 		SDL_Log("delete failed: %s", SDL_GetError());
 		return false;
@@ -79,7 +89,7 @@ bool DeleteFile(LPCTSTR lpszFile)
 
 BOOL MoveFile(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName)
 {
-	if (false == SDL_RenamePath(CT2CA(lpExistingFileName), CT2CA(lpNewFileName))) 
+	if (false == SDL_RenamePath(MMEnsureSdlPath(lpExistingFileName).c_str(), MMEnsureSdlPath(lpNewFileName).c_str())) 
 	{
 		SDL_Log("move failed: %s", SDL_GetError());
 		return false;
@@ -132,7 +142,9 @@ void InvalidateRect(HWND hWnd, LPCRECT lpRect, bool bErase)
 	
 	UnionRect(&rcInvalidate, &rcInvalidate, &rcUpdate);
 	g_mapWndUpdate[hWnd] = rcInvalidate;
-	
+
+	if (false == IsRectEmpty(&rcUpdate)) return;
+
 	//paint message
 	SDL_Event e = {};
 	e.type = SDL_EVENT_WINDOW_EXPOSED;
@@ -482,14 +494,17 @@ void MoveWindow(HWND hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint)
 
 int MessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType)
 {
-	if (false == IsWindow(hWnd)) return 0;
+	const std::string strCaption = (NULL == lpCaption) ? std::string() : MMStringToUtf8(lpCaption);
+	const std::string strText = (NULL == lpText) ? std::string() : MMStringToUtf8(lpText);
+	fprintf(stderr, "[MessageBox] %s%s%s\n", strCaption.c_str(), strCaption.empty() ? "" : ": ", strText.c_str());
+	fflush(stderr);
 
-	// SDL does not have a built-in message box, so we can use SDL_ShowSimpleMessageBox
 	SDL_MessageBoxFlags flags = 0;
 	if (uType & MB_ICONERROR) flags |= SDL_MESSAGEBOX_ERROR;
 	else if (uType & MB_ICONWARNING) flags |= SDL_MESSAGEBOX_WARNING;
 	else if (uType & MB_ICONINFORMATION) flags |= SDL_MESSAGEBOX_INFORMATION;
-	return SDL_ShowSimpleMessageBox(flags, MMStringToUtf8(lpCaption).c_str(), MMStringToUtf8(lpText).c_str(), (SDL_Window *)hWnd);
+	SDL_Window *pWnd = IsWindow(hWnd) ? (SDL_Window *)hWnd : NULL;
+	return SDL_ShowSimpleMessageBox(flags, strCaption.c_str(), strText.c_str(), pWnd);
 }
 
 void SetForegroundWindow(HWND hWnd)
@@ -557,6 +572,72 @@ void UpdateWindow(HWND hWnd)
 	InvalidateRect(hWnd, NULL, false);
 
 	return;
+}
+
+static IMMWndSDL *MMSdlFindWnd(HWND hWnd)
+{
+	if (false == IsWindow(hWnd)) return NULL;
+
+	const SDL_WindowID uWndID = SDL_GetWindowID((SDL_Window *)hWnd);
+	std::lock_guard<std::mutex> lock(g_csSdlWnd);
+	auto it = g_mapSdlWnd.find(uWndID);
+	return (it != g_mapSdlWnd.end()) ? it->second : NULL;
+}
+
+LRESULT SendMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
+	IMMWndSDL *pWnd = MMSdlFindWnd(hWnd);
+	if (NULL == pWnd) return 0;
+
+	tagMMSdlAsyncMsg *pAsyncMsg = new (std::nothrow) tagMMSdlAsyncMsg();
+	if (NULL == pAsyncMsg) return 0;
+
+	pAsyncMsg->pWnd = pWnd;
+	pAsyncMsg->uMsg = Msg;
+	pAsyncMsg->wParam = wParam;
+	pAsyncMsg->lParam = lParam;
+
+	SDL_Event e = {};
+	e.type = MMSdlGetAsyncEventType();
+	e.user.timestamp = SDL_GetTicksNS();
+	e.user.windowID = SDL_GetWindowID((SDL_Window *)hWnd);
+	e.user.code = 0;
+	e.user.data1 = pAsyncMsg;
+	e.user.data2 = nullptr;
+
+	// Synchronous dispatch: handlers free pAsyncMsg.
+	pWnd->OnWndMessage(e);
+	return 0;
+}
+
+BOOL PostMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
+	IMMWndSDL *pWnd = MMSdlFindWnd(hWnd);
+	if (NULL == pWnd) return FALSE;
+
+	tagMMSdlAsyncMsg *pAsyncMsg = new (std::nothrow) tagMMSdlAsyncMsg();
+	if (NULL == pAsyncMsg) return FALSE;
+
+	pAsyncMsg->pWnd = pWnd;
+	pAsyncMsg->uMsg = Msg;
+	pAsyncMsg->wParam = wParam;
+	pAsyncMsg->lParam = lParam;
+
+	SDL_Event e = {};
+	e.type = MMSdlGetAsyncEventType();
+	e.user.timestamp = SDL_GetTicksNS();
+	e.user.windowID = SDL_GetWindowID((SDL_Window *)hWnd);
+	e.user.code = 0;
+	e.user.data1 = pAsyncMsg;
+	e.user.data2 = nullptr;
+
+	if (SDL_PeepEvents(&e, 1, SDL_ADDEVENT, 0, 0) != 1)
+	{
+		MMSafeDelete(pAsyncMsg);
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 Uint32 MMSdlGetAsyncEventType()
