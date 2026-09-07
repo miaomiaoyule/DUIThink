@@ -7,7 +7,8 @@
 typedef std::vector<CDUIControlBase*> VecDuiControlBase;
 typedef std::deque<CDUIControlBase*> DequeDuiControlBase;
 typedef std::vector<CDUIRadioBoxCtrl*> VecDuiRadioBoxCtrl;
-typedef std::unordered_map<CMMString, VecDuiRadioBoxCtrl> MapDuiRadioBoxGroup;
+// Use std::map: CMMString + unordered_map hash/lookup has been unreliable across CRT/libstdc++.
+typedef std::map<CMMString, VecDuiRadioBoxCtrl> MapDuiRadioBoxGroup;
 
 //////////////////////////////////////////////////////////////////////////
 //custom message
@@ -211,55 +212,59 @@ struct Dui_MsgMap
 };
 
 #define DuiDeclare_Message_Map()                                         \
-private:                                                                  \
-	static const Dui_MsgMapEntry _messageEntries[];                      \
 protected:                                                                \
-	static const Dui_MsgMap messageMap;                                   \
 	static const Dui_MsgMap * PASCAL _GetBaseMessageMap();                 \
+	static const Dui_MsgMap * PASCAL GetThisDuiMessageMap();               \
 	virtual const Dui_MsgMap * GetDuiMessageMap() const;                      \
 
 #define DuiBaseBegin_Message_Map(theClass)                              \
 	const Dui_MsgMap * PASCAL theClass::_GetBaseMessageMap()               \
 { return NULL; }                                                  \
 	const Dui_MsgMap * theClass::GetDuiMessageMap() const                     \
-{ return &theClass::messageMap; }                                 \
-	DUITHINK_COMDAT const Dui_MsgMap theClass::messageMap =                  \
-{  &theClass::_GetBaseMessageMap, &theClass::_messageEntries[0] };\
-	DUITHINK_COMDAT const Dui_MsgMapEntry theClass::_messageEntries[] =     \
+{ return GetThisDuiMessageMap(); }                                 \
+	const Dui_MsgMap * PASCAL theClass::GetThisDuiMessageMap()               \
+	{                                                                     \
+		typedef theClass ThisClass;                                       \
+		static const Dui_MsgMapEntry _messageEntries[] =                  \
 {  
 
 #define DuiBegin_Message_Map(theClass, baseClass)                        \
 	const Dui_MsgMap * PASCAL theClass::_GetBaseMessageMap()               \
-{ return &baseClass::messageMap; }                                \
+{ return baseClass::GetThisDuiMessageMap(); }                       \
 	const Dui_MsgMap * theClass::GetDuiMessageMap() const                     \
-{ return &theClass::messageMap; }                                 \
-	DUITHINK_COMDAT const Dui_MsgMap theClass::messageMap =                  \
-{ &theClass::_GetBaseMessageMap, &theClass::_messageEntries[0] }; \
-	DUITHINK_COMDAT const Dui_MsgMapEntry theClass::_messageEntries[] =     \
+{ return GetThisDuiMessageMap(); }                                 \
+	const Dui_MsgMap * PASCAL theClass::GetThisDuiMessageMap()               \
+	{                                                                     \
+		typedef theClass ThisClass;                                       \
+		static const Dui_MsgMapEntry _messageEntries[] =                  \
 {                                                                     \
 
 #define DuiEnd_Message_Map()                                             \
 { DuiNotify_Invalid, 0, DuiSign_end, (Dui_PMsg)0 }                           \
-};   
-                                                               
+};                                                                   \
+	static const Dui_MsgMap messageMap =                              \
+	{ &ThisClass::_GetBaseMessageMap, &_messageEntries[0] };          \
+		return &messageMap;                                               \
+	}
+
 //////////////////////////////////////////////////////////////////////////
 #define Dui_On_Notify(NotifyCode, memberFxn)                                \
-{ NotifyCode, 0, DuiSign_v_n, (Dui_PMsg)&memberFxn},                  \
+{ NotifyCode, 0, DuiSign_v_n, (Dui_PMsg)(&ThisClass::memberFxn)},                  \
 
 #define Dui_On_Notify_Ctrl(NotifyCode, CtrlID, memberFxn)                 \
-{ NotifyCode, CtrlID, DuiSign_v_n, (Dui_PMsg)&memberFxn },                \
+{ NotifyCode, CtrlID, DuiSign_v_n, (Dui_PMsg)(&ThisClass::memberFxn) },                \
 
 #define Dui_On_Click_Ctrl(CtrlID, memberFxn)                           \
-{ DuiNotify_Click, CtrlID, DuiSign_v_n, (Dui_PMsg)&memberFxn },      \
+{ DuiNotify_Click, CtrlID, DuiSign_v_n, (Dui_PMsg)(&ThisClass::memberFxn) },      \
 
 #define Dui_On_SelectChanged_Ctrl(CtrlID, memberFxn)                   \
-{ DuiNotify_SelectChanged, CtrlID, DuiSign_v_n,(Dui_PMsg)&memberFxn }, \
+{ DuiNotify_SelectChanged, CtrlID, DuiSign_v_n,(Dui_PMsg)(&ThisClass::memberFxn) }, \
 
 #define Dui_On_KillFocus_Ctrl(CtrlID, memberFxn)                       \
-{ DuiNotify_KillFocus, CtrlID, DuiSign_v_n, (Dui_PMsg)&memberFxn },     \
+{ DuiNotify_KillFocus, CtrlID, DuiSign_v_n, (Dui_PMsg)(&ThisClass::memberFxn) },     \
 
 #define Dui_On_Timer()                                                    \
-{ DuiNotify_Timer, 0, DuiSign_v_n, (Dui_PMsg)&OnDuiTimer },          \
+{ DuiNotify_Timer, 0, DuiSign_v_n, (Dui_PMsg)(&ThisClass::OnDuiTimer) },          \
 
 //////////////////////////////////////////////////////////////////////////
 

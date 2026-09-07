@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "DUIStruct.h"
 
-uint32_t hash<tagDuiImageSection>::operator()(const tagDuiImageSection &ImageSection) const
+uint32_t std::hash<tagDuiImageSection>::operator()(const tagDuiImageSection &ImageSection) const
 {
 	CMMString strInfo;
 	for (auto &strImageRes : ImageSection.vecImageResSwitch)

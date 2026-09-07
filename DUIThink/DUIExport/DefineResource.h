@@ -88,16 +88,19 @@ static LPCTSTR g_szPublicColor[] =
 	Name_Colorff616163,
 };
 
+// lfFaceName is TCHAR[]: UTF-16 on Windows UNICODE, UTF-32 wchar_t on Linux/Android.
+// \uXXXX is a Unicode code point inside the wide literal (same as L"å¾®è½¯é›…é»‘"),
+// NOT a UTF-8 byte string. Source file stays ASCII so GBK/UTF-8 editors all compile.
 static LOGFONT g_PublicFont[] =
 {
-	{ 8, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 8, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 12, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 12, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 14, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 14, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 16, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 16, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") }
+	{ 8, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("\u5fae\u8f6f\u96c5\u9ed1") },
+	{ 8, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("\u5fae\u8f6f\u96c5\u9ed1") },
+	{ 12, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("\u5fae\u8f6f\u96c5\u9ed1") },
+	{ 12, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("\u5fae\u8f6f\u96c5\u9ed1") },
+	{ 14, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("\u5fae\u8f6f\u96c5\u9ed1") },
+	{ 14, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("\u5fae\u8f6f\u96c5\u9ed1") },
+	{ 16, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("\u5fae\u8f6f\u96c5\u9ed1") },
+	{ 16, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("\u5fae\u8f6f\u96c5\u9ed1") }
 };
 
 static std::unordered_map<CMMString, CMMString> g_mapPublicImage = 

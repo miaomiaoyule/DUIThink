@@ -38,25 +38,28 @@ struct tagDuiTextStyle
 	}
 };
 
-template<> struct hash<tagDuiTextStyle>
+namespace std
 {
-	inline uint32_t operator()(const tagDuiTextStyle &TextStyle) const
+	template<> struct hash<tagDuiTextStyle>
 	{
-		CMMString strInfo;
-		for (auto &strFontRes : TextStyle.vecFontResSwitch)
+		inline uint32_t operator()(const tagDuiTextStyle &TextStyle) const
 		{
-			strInfo += strFontRes;
-		}
-		for (auto &strColorRes : TextStyle.vecColorResSwitch)
-		{
-			strInfo += strColorRes;
-		}
+			CMMString strInfo;
+			for (auto &strFontRes : TextStyle.vecFontResSwitch)
+			{
+				strInfo += strFontRes;
+			}
+			for (auto &strColorRes : TextStyle.vecColorResSwitch)
+			{
+				strInfo += strColorRes;
+			}
 
-		strInfo += CMMStrHelp::Format(_T("-%d"), (int)TextStyle.dwTextStyle);
+			strInfo += CMMStrHelp::Format(_T("-%d"), (int)TextStyle.dwTextStyle);
 
-		return CMMHash::GetHash(strInfo);
-	}
-};
+			return CMMHash::GetHash(strInfo);
+		}
+	};
+}
 
 inline uint32_t tagDuiTextStyle::GetID() const
 {
@@ -82,16 +85,19 @@ struct tagDuiShadowText
 	}
 };
 
-template<> struct hash<tagDuiShadowText>
+namespace std
 {
-	inline uint32_t operator()(const tagDuiShadowText &ShadowText) const
+	template<> struct hash<tagDuiShadowText>
 	{
-		CMMString strInfo;
-		strInfo += CMMStrHelp::Format(_T("%u-%s-%u-%u"), (DWORD)ShadowText.hFont, ShadowText.strText.c_str(), ShadowText.dwTextColor, ShadowText.dwTextStyle);
+		inline uint32_t operator()(const tagDuiShadowText &ShadowText) const
+		{
+			CMMString strInfo;
+			strInfo += CMMStrHelp::Format(_T("%u-%s-%u-%u"), (DWORD)ShadowText.hFont, ShadowText.strText.c_str(), ShadowText.dwTextColor, ShadowText.dwTextStyle);
 
-		return CMMHash::GetHash(strInfo);
-	}
-};
+			return CMMHash::GetHash(strInfo);
+		}
+	};
+}
 
 typedef std::unordered_map<tagDuiShadowText, Gdiplus::Bitmap*> MapShadowText;
 
@@ -181,30 +187,33 @@ struct tagDuiRichText
 	}
 };
 
-template<> struct hash<tagDuiRichText>
+namespace std
 {
-	inline uint32_t operator()(const tagDuiRichText &RichText) const
+	template<> struct hash<tagDuiRichText>
 	{
-		CMMString strInfo;
-		for (auto &RichTextItem : RichText.vecRichTextItem)
+		inline uint32_t operator()(const tagDuiRichText &RichText) const
 		{
-			for (auto &strFontRes : RichTextItem.vecFontResSwitch)
+			CMMString strInfo;
+			for (auto &RichTextItem : RichText.vecRichTextItem)
 			{
-				strInfo += strFontRes;
-			}
-			for (auto &strColorRes : RichTextItem.vecColorResSwitch)
-			{
-				strInfo += strColorRes;
+				for (auto &strFontRes : RichTextItem.vecFontResSwitch)
+				{
+					strInfo += strFontRes;
+				}
+				for (auto &strColorRes : RichTextItem.vecColorResSwitch)
+				{
+					strInfo += strColorRes;
+				}
+
+				strInfo += CMMStrHelp::Format(_T("-%d-%s-%s"), (int)RichTextItem.ItemType, (LPCTSTR)RichTextItem.strText, (LPCTSTR)RichTextItem.strImageResName);
 			}
 
-			strInfo += CMMStrHelp::Format(_T("-%d-%s-%s"), (int)RichTextItem.ItemType, (LPCTSTR)RichTextItem.strText, (LPCTSTR)RichTextItem.strImageResName);
+			strInfo += CMMStrHelp::Format(_T("-%d-%d"), (int)RichText.dwTextStyle, RichText.nLineLimit);
+
+			return CMMHash::GetHash(strInfo);
 		}
-
-		strInfo += CMMStrHelp::Format(_T("-%d-%d"), (int)RichText.dwTextStyle, RichText.nLineLimit);
-
-		return CMMHash::GetHash(strInfo);
-	}
-};
+	};
+}
 
 inline uint32_t tagDuiRichText::GetID() const
 {
@@ -238,6 +247,7 @@ struct tagDuiImageInfo
 	int									nWidth = 0;
 	int									nHeight = 0;
 	bool								bAlpha = false;
+	UINT								dwColorKeyApplied = 0;
 
 	//gif
 	Gdiplus::Bitmap *					pImageAnimate = NULL;
@@ -308,10 +318,13 @@ struct tagDuiImageSection
 	}
 };
 
-template<> struct hash<tagDuiImageSection>
+namespace std
 {
-	uint32_t operator()(const tagDuiImageSection &ImageSection) const;
-};
+	template<> struct hash<tagDuiImageSection>
+	{
+		uint32_t operator()(const tagDuiImageSection &ImageSection) const;
+	};
+}
 
 inline uint32_t tagDuiImageSection::GetID() const
 {
@@ -342,20 +355,23 @@ struct tagDuiCombox
 	uint32_t GetID();
 };
 
-template<> struct hash<tagDuiCombox>
+namespace std
 {
-	inline uint32_t operator()(const tagDuiCombox &AttriCombox) const
+	template<> struct hash<tagDuiCombox>
 	{
-		CMMString strInfo;
-		for (auto &Item : AttriCombox.vecItem)
+		inline uint32_t operator()(const tagDuiCombox &AttriCombox) const
 		{
-			strInfo += CMMStrHelp::Format(_T("%d"), Item.nItem);
-			strInfo += Item.strDescribe;
-		}
+			CMMString strInfo;
+			for (auto &Item : AttriCombox.vecItem)
+			{
+				strInfo += CMMStrHelp::Format(_T("%d"), Item.nItem);
+				strInfo += Item.strDescribe;
+			}
 
-		return CMMHash::GetHash(strInfo);
-	}
-};
+			return CMMHash::GetHash(strInfo);
+		}
+	};
+}
 
 inline uint32_t tagDuiCombox::GetID()
 {
@@ -395,20 +411,23 @@ struct tagDuiPosition
 	uint32_t GetID() const;
 };
 
-template<> struct hash<tagDuiPosition>
+namespace std
 {
-	inline uint32_t operator()(const tagDuiPosition &Position) const
+	template<> struct hash<tagDuiPosition>
 	{
-		CMMString strInfo;
-		strInfo += CMMStrHelp::Format(_T("%d"), Position.bFloat);
-		strInfo += CMMStrHelp::Format(_T("-%d-%d-%d-%d"), Position.HorizPosition.HorizAlignType, Position.HorizPosition.nLeftAlignValue,
-			Position.HorizPosition.nRightAlignValue, Position.HorizPosition.nFixedWidth);
-		strInfo += CMMStrHelp::Format(_T("-%d-%d-%d-%d"), Position.VertPosition.VertAlignType, Position.VertPosition.nTopAlignValue,
-			Position.VertPosition.nBottomAlignValue, Position.VertPosition.nFixedHeight);
+		inline uint32_t operator()(const tagDuiPosition &Position) const
+		{
+			CMMString strInfo;
+			strInfo += CMMStrHelp::Format(_T("%d"), Position.bFloat);
+			strInfo += CMMStrHelp::Format(_T("-%d-%d-%d-%d"), Position.HorizPosition.HorizAlignType, Position.HorizPosition.nLeftAlignValue,
+				Position.HorizPosition.nRightAlignValue, Position.HorizPosition.nFixedWidth);
+			strInfo += CMMStrHelp::Format(_T("-%d-%d-%d-%d"), Position.VertPosition.VertAlignType, Position.VertPosition.nTopAlignValue,
+				Position.VertPosition.nBottomAlignValue, Position.VertPosition.nFixedHeight);
 
-		return CMMHash::GetHash(strInfo);
-	}
-};
+			return CMMHash::GetHash(strInfo);
+		}
+	};
+}
 
 inline uint32_t tagDuiPosition::GetID() const
 {
