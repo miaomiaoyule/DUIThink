@@ -113,7 +113,7 @@ bool CDUIWnd::SetTimer(CDUIPropertyObject *pPropObj, UINT uTimerID, UINT uElapse
 
 	TimerInfo.uWinTimer = (UINT)uSdlTimer;
 #else
-	m_uTimerID = (++m_uTimerID) % 0xF0; //0xf1-0xfeÌØÊâÓÃÍ¾
+	m_uTimerID = (++m_uTimerID) % 0xF0; //0xf1-0xfeç‰¹æ®Šç”¨é€”
 	if (false == ::SetTimer(m_hWnd, m_uTimerID, uElapse, NULL)) return false;
 
 	TimerInfo.uWinTimer = m_uTimerID;
@@ -509,7 +509,7 @@ LRESULT CDUIWnd::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	m_bRefreshToolTipNeeded = true;
 	m_vecMouseEnterCtrl.clear();
 
-	//ÌáÊ¾´°Ìå
+	//æç¤ºçª—ä½“
 	if (m_hWndTooltip)
 	{
 #if defined(DuiPlatform_SDL)

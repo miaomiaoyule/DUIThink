@@ -11,6 +11,8 @@ class DUITHINK_API CDUIWndSDL
 	: public CDUIWndBase
 	, public IMMWndSDL
 {
+	MMDeclare_Super(CDUIWndBase)
+
 public:
 	CDUIWndSDL(LPCTSTR lpszDuiName = NULL, HWND hWndParent = NULL);
 	virtual ~CDUIWndSDL();

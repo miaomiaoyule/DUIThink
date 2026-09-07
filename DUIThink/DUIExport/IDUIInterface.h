@@ -51,6 +51,7 @@ typedef std::vector<IDuiControlCallBack*> VecIDuiControlCallBack;
 static const GUID IID_IDuiResourceCallBack = { 0x8E679207,0x6CDB,0x49E2,0x9C,0x4E,0xC5,0x85,0x38,0xDC,0x3D,0xA6 };
 interface DUITHINK_API IDuiResourceCallBack : public IDuiInterface
 {
+	MMDeclare_Super(IDuiInterface)
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
 	virtual void OnResourceAdd(CDUIResourceBase *pResourceObj) = NULL;
 	virtual void OnResourceRemove(CDUIResourceBase *pResourceObj) = NULL;
@@ -65,6 +66,7 @@ typedef std::vector<IDuiResourceCallBack*> VecIDuiResourceCallBack;
 static const GUID IID_IDuiControlListen = { 0x816B4030,0xB07E,0x48B3,0x8E,0x6B,0xA2,0x1D,0x3A,0x64,0x38,0xFC };
 interface DUITHINK_API IDuiControlListen : public IDuiInterface
 {
+	MMDeclare_Super(IDuiInterface)
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
 	virtual void OnChildAdd(CDUIContainerCtrl *pParent, CDUIControlBase *pChild) {}
 	virtual void OnChildRemove(CDUIContainerCtrl *pParent, CDUIControlBase *pChild) {}
@@ -80,6 +82,7 @@ typedef std::vector<IDuiControlListen*> VecIDuiControlListen;
 static const GUID IID_IDuiWndNotify = { 0xC78CF794,0x6ABD,0x4688,0x92,0x1C,0xC9,0xD7,0xEF,0x23,0x6C,0x2D };
 interface DUITHINK_API IDuiWndNotify : public IDuiInterface
 {
+	MMDeclare_Super(IDuiInterface)
 	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer);
 	virtual void OnDuiWndCreate(CDUIWndBase *pWnd) = NULL;
 	virtual void OnDuiWndDestroy(CDUIWndBase *pWnd) = NULL;

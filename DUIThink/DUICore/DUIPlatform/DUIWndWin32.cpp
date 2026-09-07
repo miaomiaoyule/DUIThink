@@ -16,7 +16,8 @@ CDUIWndWin32::CDUIWndWin32(LPCTSTR lpszDuiName, HWND hWndParent)
 }
 
 CDUIWndWin32::~CDUIWndWin32()
-{	ReleasePaintScene();
+{
+	ReleasePaintScene();
 
 	//release dc
 	if (IsWindow(m_hWnd))
@@ -344,9 +345,9 @@ void CDUIWndWin32::OnWinDrop(IDataObject *pIDataObject, POINTL pt, DWORD *pdwEff
 
 LPVOID CDUIWndWin32::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
-	QUERYINTERFACE(CDUIWndBase, Guid, dwQueryVer);
+	QUERYINTERFACE(CDUIWndWin32, Guid, dwQueryVer);
 
-	return CDUIPropertyObject::QueryInterface(Guid, dwQueryVer);
+	return __super::QueryInterface(Guid, dwQueryVer);
 }
 
 CMMString CDUIWndWin32::GetDescribe() const
@@ -354,12 +355,18 @@ CMMString CDUIWndWin32::GetDescribe() const
 	return Dui_WindowBase;
 }
 
-UINT CDUIWndWin32::MapKeyState(){	UINT uState = 0;	if (::GetKeyState(VK_CONTROL) < 0) uState |= MK_CONTROL;
+UINT CDUIWndWin32::MapKeyState()
+{
+	UINT uState = 0;
+	if (::GetKeyState(VK_CONTROL) < 0) uState |= MK_CONTROL;
 	if (::GetKeyState(VK_RBUTTON) < 0) uState |= MK_RBUTTON;
 	if (::GetKeyState(VK_LBUTTON) < 0) uState |= MK_LBUTTON;
 	if (::GetKeyState(VK_MBUTTON) < 0) uState |= MK_MBUTTON;
 	if (::GetKeyState(VK_SHIFT) < 0) uState |= MK_SHIFT;
-	if (::GetKeyState(VK_MENU) < 0) uState |= MK_ALT;	return uState;}
+	if (::GetKeyState(VK_MENU) < 0) uState |= MK_ALT;
+
+	return uState;
+}
 
 HWND CDUIWndWin32::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx, int cy)
 {
@@ -1239,14 +1246,25 @@ void CDUIWndWin32::UpdateImeCompositionPos()
 	}
 
 	return;
-}void CDUIWndWin32::EnsurePaintScene(){	if (m_hMemDcBackground || NULL == m_hDCPaint) return;	CDUIRect rcClient = GetClientRect();
+}
+
+void CDUIWndWin32::EnsurePaintScene()
+{
+	if (m_hMemDcBackground || NULL == m_hDCPaint) return;
+
+	CDUIRect rcClient = GetClientRect();
 	m_hMemDcBackground = ::CreateCompatibleDC(m_hDCPaint);
 	m_hBmpBackground = CDUIRenderEngine::CreateARGB32Bitmap(m_hDCPaint, rcClient.GetWidth(), rcClient.GetHeight(), &m_pBmpBackgroundBits);
 
 	if (m_hMemDcBackground && m_hBmpBackground && m_pBmpBackgroundBits)
 	{
 		m_hBmpBackgroundOld = (HBITMAP)SelectObject(m_hMemDcBackground, m_hBmpBackground);
-	}	return;}void CDUIWndWin32::ReleasePaintScene()
+	}
+
+	return;
+}
+
+void CDUIWndWin32::ReleasePaintScene()
 {
 	if (m_hMemDcBackground)
 	{
@@ -1259,7 +1277,9 @@ void CDUIWndWin32::UpdateImeCompositionPos()
 	m_hBmpBackgroundOld = NULL;
 
 	return;
-}bool CDUIWndWin32::RegisterSuperclass()
+}
+
+bool CDUIWndWin32::RegisterSuperclass()
 {
 	// Get the class information from an existing
 	// window so we can subclass it later on...
@@ -1371,7 +1391,9 @@ LRESULT CALLBACK CDUIWndWin32::__ControlProc(HWND hWnd, UINT uMsg, WPARAM wParam
 	{
 		return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
-}void CDUIWndWin32::ForegroundWindow(HWND hWnd)
+}
+
+void CDUIWndWin32::ForegroundWindow(HWND hWnd)
 {
 	HWND hWndForground = GetForegroundWindow();
 	DWORD dwThreadIDForground = ::GetWindowThreadProcessId(hWndForground, NULL);

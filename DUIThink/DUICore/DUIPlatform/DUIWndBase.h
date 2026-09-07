@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿#pragma once
+
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIWndBase INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIWndBase = { 0xaa660f7a, 0xd3b, 0x43c9, 0xb2, 0x8d, 0xb1, 0xe8, 0xbb, 0x83, 0x4, 0x94 };
@@ -12,6 +13,7 @@ class DUITHINK_API CDUIWndBase
 	friend class CDUIThinkEditCtrl;
 	friend class CDUIRichEditCtrl;
 
+	MMDeclare_Super(CDUIPropertyObject)
 	MMDeclare_ClassName(CDUIWndBase)
 	DuiDeclare_Message_Map()
 
@@ -22,7 +24,8 @@ public:
 
 public:
 	CDUIWndBase(LPCTSTR lpszDuiName = NULL, HWND hWndParent = NULL);
-	virtual ~CDUIWndBase();
+	virtual ~CDUIWndBase();
+
 	//attribute
 protected:
 	CDUIAttributeGroup							m_AttributeGroupWndInfo;
@@ -111,7 +114,8 @@ protected:
 	DequeDuiControlBase							m_queDelayDelete;
 	VecDuiControlBase							m_vecFoundControls;
 	MapDuiControlBase							m_mapControl;
-	MapDuiRadioBoxGroup							m_mapRadioBoxGroup;
+	MapDuiRadioBoxGroup							m_mapRadioBoxGroup;
+
 	//override
 protected:
 	bool RegisterControlListen(IDuiControlListen *pIDuiControlListen) override;
@@ -373,5 +377,5 @@ private:
 	static CDUIControlBase * CALLBACK __FindControlFromID(CDUIControlBase *pThis, LPVOID pData);
 	static CDUIControlBase * CALLBACK __FindControlsFromClass(CDUIControlBase *pThis, LPVOID pData);
 	static CDUIControlBase * CALLBACK __FindControlsFromUpdate(CDUIControlBase *pThis, LPVOID pData);
-};
-
+};
+

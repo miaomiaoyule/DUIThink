@@ -21,7 +21,10 @@ CDUIWndBase::CDUIWndBase(LPCTSTR lpszDuiName, HWND hWndParent)
 }
 
 CDUIWndBase::~CDUIWndBase()
-{	CDUIAnimationWnd::UnInit();	OnDuiDelayDelete();
+{
+	CDUIAnimationWnd::UnInit();
+
+	OnDuiDelayDelete();
 	ReleaseRootCtrl();
 	OnFinalMessage();
 
@@ -473,12 +476,14 @@ VecDuiRadioBoxCtrl CDUIWndBase::GetRadioBoxGroup(LPCTSTR lpszGroup)
 
 bool CDUIWndBase::RemoveRadioBoxFromGroup(CDUIRadioBoxCtrl *pControl)
 {
+	if (NULL == pControl) return false;
+
 	auto FindIt = m_mapRadioBoxGroup.find(pControl->GetGroupName());
 	if (FindIt == m_mapRadioBoxGroup.end()) return false;
 
 	auto &vecRadioBox = FindIt->second;
 
-	for (int i = 0; i < vecRadioBox.size(); i++)
+	for (int i = 0; i < (int)vecRadioBox.size(); i++)
 	{
 		if (vecRadioBox[i] == pControl)
 		{
@@ -1667,7 +1672,7 @@ LRESULT CDUIWndBase::OnTimer(WPARAM wParam, LPARAM lParam)
 			}
 			else
 			{
-				__super::OnAnimationElapse(TimerInfo.nLocalID);
+				CDUIAnimationWnd::OnAnimationElapse(TimerInfo.nLocalID);
 			}
 
 			break;

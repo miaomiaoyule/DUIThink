@@ -21,6 +21,11 @@ class DUITHINK_API CDUIWnd
 	friend class CDUIContainerCtrl;
 	friend class CDlgLogon;
 
+#if defined DuiPlatform_SDL
+	MMDeclare_Super(CDUIWndSDL)
+#else
+	MMDeclare_Super(CDUIWndWin32)
+#endif
 	MMDeclare_ClassName(CDUIWnd)
 	DuiDeclare_Message_Map()
 
