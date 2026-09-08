@@ -16,26 +16,6 @@ IDuiWndNotify *							g_pIDuiWndNotify = NULL;
 
 //////////////////////////////////////////////////////////////////////////
 #ifdef DuiPlatform_SDL
-bool SendMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-	if (false == IsWindow(hWnd)) return false;
-
-	CDUIWnd *pWnd = CDUIGlobal::GetInstance()->GetWndByHandle(hWnd);
-	if (NULL == pWnd) return false;
-
-	return 0 != pWnd->SendMessage(Msg, wParam, lParam);
-}
-
-bool PostMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-	if (false == IsWindow(hWnd)) return false;
-
-	CDUIWnd *pWnd = CDUIGlobal::GetInstance()->GetWndByHandle(hWnd);
-	if (NULL == pWnd) return false;
-
-	return 0 != pWnd->PostMessage(Msg, wParam, lParam);
-}
-
 HWND FindWindow(LPCTSTR lpszClassName, LPCTSTR lpszTitle)
 {
 	// Match registered DUI windows (class = GetClass(), title = SDL window title).

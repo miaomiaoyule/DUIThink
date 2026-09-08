@@ -80,8 +80,8 @@ CMMString CDUIImageBase::GetImageFile()
 
 CMMString CDUIImageBase::GetImageFileName()
 {
-	CMMString strName;
-	CMMFile::ParseFilePathName(m_strImageFile, CMMString(), strName);
+	CMMString strPath, strName;
+	CMMFile::ParseFilePathName(m_strImageFile, strPath, strName);
 
 	return strName;
 }
@@ -241,8 +241,8 @@ void CDUIImageBase::ConstructResource(int nScale)
 	m_mapDpiImageInfo.erase(nScale);
 
 	//type
-	CMMString strExt;
-	CMMFile::ParseFileName(m_strImageFile, CMMString(), strExt);
+	CMMString strName, strExt;
+	CMMFile::ParseFileName(m_strImageFile, strName, strExt);
 	enDuiImageType ImageType = DuiImageType_Normal;
 	if (false == strExt.empty())
 	{
@@ -332,7 +332,7 @@ void CDUIImageBase::ConstructResource(int nScale)
 		return;
 	}
 
-	//svg
+	//svg — SDL keeps this off; CMMSvg/resvg stays Windows-only until that backend is enabled.
 	if (DuiImageType_Svg == ImageType)
 	{
 #ifndef DuiPlatform_SDL
@@ -359,6 +359,12 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 {
 	if (vecData.size() <= 0) return false;
 
+#if defined(DuiPlatform_SDL)
+	// Portable Gdiplus has no GIF decoder (Bitmap::FromStream is a NULL stub).
+	(void)nScale;
+	return false;
+#else
+
 	//create
 	tagDuiImageInfo ImageInfo = {};
 	ImageInfo.ImageType = DuiImageType_Gif;
@@ -368,6 +374,8 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 	if (NULL == ImageInfo.pImageAnimate) return false;
 
 	UINT nCount = ImageInfo.pImageAnimate->GetFrameDimensionsCount();
+	if (nCount <= 0) return false;
+
 	std::vector<GUID> vecDimensionID;
 	vecDimensionID.resize(nCount);
 
@@ -375,16 +383,20 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 	ImageInfo.nFrameCount = ImageInfo.pImageAnimate->GetFrameCount(vecDimensionID.data());
 
 	int nSize = ImageInfo.pImageAnimate->GetPropertyItemSize(PropertyTagFrameDelay);
-	std::vector<BYTE> vecPropertyItem(nSize);
-	Gdiplus::PropertyItem *pPropertyItem = reinterpret_cast<Gdiplus::PropertyItem*>(vecPropertyItem.data());
-	if (Gdiplus::Ok == ImageInfo.pImageAnimate->GetPropertyItem(PropertyTagFrameDelay, nSize, pPropertyItem))
+	if (nSize > 0)
 	{
-		long *pDelays = (long*)pPropertyItem->value;
-		ImageInfo.vecFrameElapse.resize(ImageInfo.nFrameCount);
-		for (int n = 0; n < ImageInfo.nFrameCount; n++)
+		std::vector<BYTE> vecPropertyItem(nSize);
+		Gdiplus::PropertyItem *pPropertyItem = reinterpret_cast<Gdiplus::PropertyItem*>(vecPropertyItem.data());
+		if (Gdiplus::Ok == ImageInfo.pImageAnimate->GetPropertyItem(PropertyTagFrameDelay, nSize, pPropertyItem)
+			&& pPropertyItem->value)
 		{
-			long lDelay = pDelays[n] * 10; 
-			ImageInfo.vecFrameElapse[n] = lDelay;
+			long *pDelays = (long*)pPropertyItem->value;
+			ImageInfo.vecFrameElapse.resize(ImageInfo.nFrameCount);
+			for (int n = 0; n < ImageInfo.nFrameCount; n++)
+			{
+				long lDelay = pDelays[n] * 10; 
+				ImageInfo.vecFrameElapse[n] = lDelay;
+			}
 		}
 	}
 
@@ -393,6 +405,8 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 	GUID pageGuid = Gdiplus::FrameDimensionTime;
 	ImageInfo.pImageAnimate->SelectActiveFrame(&pageGuid, 0);
 	ImageInfo.hBitmap = CDUIRenderEngine::GetHBITMAP(ImageInfo.pImageAnimate);
+	if (NULL == ImageInfo.hBitmap) return false;
+
 	GetObject(ImageInfo.hBitmap, sizeof(BmpInfo), &BmpInfo);
 	ImageInfo.pBits = (LPBYTE)BmpInfo.bmBits;
 	ImageInfo.nWidth = ImageInfo.pImageAnimate->GetWidth();
@@ -401,6 +415,7 @@ bool CDUIImageBase::ConstructAnimate(std::vector<BYTE> &vecData, int nScale)
 	m_mapDpiImageInfo[nScale] = ImageInfo;
 
 	return true;
+#endif
 }
 
 bool CDUIImageBase::ConstructWebp(std::vector<BYTE> &vecData, int nScale)
@@ -461,7 +476,7 @@ bool CDUIImageBase::ConstructWebp(std::vector<BYTE> &vecData, int nScale)
 				}
 				else if (a == 0)
 				{
-					*(DWORD*)pDst = 0;
+					*(ARGB*)pDst = 0;
 				}
 				else
 				{
@@ -518,7 +533,7 @@ bool CDUIImageBase::ConstructNormal(std::vector<BYTE> &vecData, int nScale)
 
 bool CDUIImageBase::ConstructBitmap(LPBYTE pPixel, int nWidth, int nHeight, int nScale)
 {
-	if (NULL == pPixel)
+	if (NULL == pPixel || nWidth <= 0 || nHeight <= 0)
 	{
 		assert(false);
 		return false;
@@ -552,7 +567,7 @@ bool CDUIImageBase::ConstructBitmap(LPBYTE pPixel, int nWidth, int nHeight, int 
 		}
 		else if (a == 0)
 		{
-			*(DWORD*)pDst = 0;
+			*(ARGB*)pDst = 0;
 			bAlphaChannel = true;
 		}
 		else

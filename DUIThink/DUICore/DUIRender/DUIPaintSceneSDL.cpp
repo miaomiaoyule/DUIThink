@@ -74,7 +74,7 @@ bool CDUIPaintSceneSDL::CreateGpu(int nWidth, int nHeight)
 		return false;
 	}
 
-	SDL_SetTextureBlendMode(m_pTexture, SDL_BLENDMODE_BLEND);
+	SDL_SetTextureBlendMode(m_pTexture, SDL_BLENDMODE_NONE);
 	SDL_SetTextureScaleMode(m_pTexture, SDL_SCALEMODE_LINEAR);
 	return true;
 }

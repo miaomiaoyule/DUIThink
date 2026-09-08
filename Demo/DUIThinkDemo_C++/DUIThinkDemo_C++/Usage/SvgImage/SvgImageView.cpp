@@ -144,7 +144,8 @@ void CSvgImageView::ConstructSvgImageBk()
 	if (NULL == m_pStaticSvgImageCtrl) return;
 
 	CMMString strExt;
-	CMMFile::ParseFileName(m_strSvgImageFile, CMMString(), strExt);
+	CMMString strName;
+	CMMFile::ParseFileName(m_strSvgImageFile, strName, strExt);
 	strExt.MakeLower();
 	if (_T("svg") == strExt)
 	{

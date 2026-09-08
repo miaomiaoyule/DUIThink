@@ -10,6 +10,7 @@ static const GUID IID_CDUIColorBase = { 0x371BBE94,0xAB17,0x4F2E,0x91,0x94,0x64,
 class DUITHINK_API CDUIColorBase 
 	: public CDUIResourceBase
 {
+	MMDeclare_Super(CDUIResourceBase)
 	DuiDeclare_CreateResource(CDUIColorBase)
 	MMDeclare_ClassName(CDUIColorBase)
 
@@ -18,7 +19,7 @@ public:
 	CDUIColorBase(LPCTSTR lpszResName, DWORD dwColor);
 	virtual ~CDUIColorBase(void);
 
-	//组件变量
+	//缁勪欢鍙橀噺
 protected:
 	DWORD								m_dwColor = 0x00000000;
 

@@ -45,9 +45,7 @@
 	#include "DUICore/DUIRender/DUIGdiplusPortable.h"
 	using namespace Gdiplus;
 
-	DUITHINK_API inline bool SendMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-	DUITHINK_API inline bool PostMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-	DUITHINK_API inline HWND FindWindow(LPCTSTR lpszClassName, LPCTSTR lpszTitle);
+	DUITHINK_API HWND FindWindow(LPCTSTR lpszClassName, LPCTSTR lpszTitle);
 #else
 	#define GDIPVER 0x0110
 	#include <comdef.h>

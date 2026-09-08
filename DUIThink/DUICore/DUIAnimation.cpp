@@ -169,7 +169,7 @@ bool CDUIAnimation::RemoveAnimationData(int nAnimationID)
 //////////////////////////////////////////////////////////////////////////
 DuiBegin_Message_Map(CDUIAnimationDrag, CDUINotifyPump)
 	Dui_On_Notify(DuiNotify_WinDragEnter, OnDuiWinDragEnter)
-	Dui_On_Notify(DuiNotify_WinDragLeave , OnDuiWinDragLeave)
+	Dui_On_Notify(DuiNotify_WinDragLeave, OnDuiWinDragLeave)
 	Dui_On_Notify(DuiNotify_WinDragOver, OnDuiWinDragOver)
 	Dui_On_Notify(DuiNotify_WinDrop, OnDuiWinDrop)
 	Dui_On_Notify(DuiNotify_WinDragFinish, OnDuiWinDragFinish)
@@ -412,7 +412,8 @@ void CDUIAnimationDrag::OnDuiWinDragEnter(const DuiNotify &Notify)
 		|| m_pDragingCtrl) return;
 
 	CDUIWndBase *pWndManager = m_pBindContainerCtrl->GetWndOwner();
-	if (false == ::PtInRect(&m_pBindContainerCtrl->GetAbsoluteRect(), pWndManager->GetMousePosLast())) return;
+	CDUIRect rcBindCtrl = m_pBindContainerCtrl->GetAbsoluteRect();
+	if (false == ::PtInRect(&rcBindCtrl, pWndManager->GetMousePosLast())) return;
 
 	//first visible
 	CDUIControlBase *pChildFirst = NULL;
@@ -480,7 +481,8 @@ void CDUIAnimationDrag::OnDuiWinDragOver(const DuiNotify &Notify)
 		|| NULL == m_pDragingCtrl
 		|| Notify.pNotifyCtrl != m_pBindContainerCtrl) return;
 
-	if (false == ::PtInRect(&m_pBindContainerCtrl->GetAbsoluteRect(), m_pBindContainerCtrl->GetWndOwner()->GetMousePosLast())) return;
+	CDUIRect rcBindCtrl = m_pBindContainerCtrl->GetAbsoluteRect();
+	if (false == ::PtInRect(&rcBindCtrl, m_pBindContainerCtrl->GetWndOwner()->GetMousePosLast())) return;
 
 	OnDragMoving(m_pDragingCtrl);
 

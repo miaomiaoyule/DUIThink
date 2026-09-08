@@ -12,7 +12,7 @@ class IDuiCanvas;
 namespace Gdiplus
 {
 	typedef float REAL;
-	typedef DWORD ARGB;
+	typedef UINT ARGB;
 	typedef ULONG PROPID;
 	typedef INT PixelFormat;
 
@@ -49,7 +49,8 @@ namespace Gdiplus
 		UINT Width;
 		UINT Height;
 		INT Stride;
-		PixelFormat PixelFormat;
+		// Use INT (not PixelFormat) so the member name can match GDI+ without GCC clash.
+		INT PixelFormat;
 		VOID *Scan0;
 		UINT_PTR Reserved;
 		BitmapData() : Width(0), Height(0), Stride(0), PixelFormat(0), Scan0(NULL), Reserved(0) {}
@@ -195,7 +196,12 @@ namespace Gdiplus
 		GraphicsPath() {}
 		void Reset() { m_pts.clear(); m_closed = false; }
 		void AddLine(INT x1, INT y1, INT x2, INT y2);
-		void AddLine(REAL x1, REAL y1, REAL x2, REAL y2) { AddLine((INT)x1, (INT)y1, (INT)x2, (INT)y2); }
+		// Unify int/long/REAL mixes on LP64 (LONG is long; mixed ranks vs INT/REAL overloads are ambiguous).
+		template <typename X1, typename Y1, typename X2, typename Y2>
+		void AddLine(X1 x1, Y1 y1, X2 x2, Y2 y2)
+		{
+			AddLine(static_cast<INT>(x1), static_cast<INT>(y1), static_cast<INT>(x2), static_cast<INT>(y2));
+		}
 		void AddArc(INT x, INT y, INT w, INT h, REAL startAngle, REAL sweepAngle);
 		void AddEllipse(INT x, INT y, INT w, INT h);
 		void AddBezier(REAL x1, REAL y1, REAL x2, REAL y2, REAL x3, REAL y3, REAL x4, REAL y4);

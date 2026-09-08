@@ -8,7 +8,7 @@ typedef std::unordered_map<CMMString, CDUIControlBase*> MapDuiModelStore;
 typedef std::map<UINT, CMMString> MapDuiControlID;
 typedef std::map<uint32_t, uint32_t> MapValueIDSwitch;
 
-//Êä³ö
+//è¾“å‡º
 LPCTSTR DUITHINK_API DUI__TraceMsg(UINT uMsg);
 
 //////////////////////////////////////////////////////////////////////////
@@ -121,6 +121,7 @@ private:
 
 	//info
 	std::recursive_mutex				m_DataLock;
+	bool								m_bInited = false;
 	bool								m_bProjectExist = false;
 	CMMThreadPool						m_ThreadPool;
 	CMMDpi								m_DpiInfo;

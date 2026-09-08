@@ -21,6 +21,7 @@ class DUITHINK_API CDUIPropertyObject : public IDuiInterface
 	friend class CDUIAttributeObject;
 	friend class CPropertiesView;
 
+	MMDeclare_Super(IDuiInterface)
 	MMDeclare_ClassName(CDUIPropertyObject)
 
 public:

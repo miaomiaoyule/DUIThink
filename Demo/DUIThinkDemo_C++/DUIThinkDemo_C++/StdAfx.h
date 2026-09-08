@@ -4,12 +4,16 @@
 
 #pragma once
 
+#ifndef DuiPlatform_SDL
 #define WIN32_LEAN_AND_MEAN             // 从 Windows 头文件中排除极少使用的内容
+#endif
 
 // C 运行时头文件
 #include <stdlib.h>
-#include <malloc.h>
 #include <memory.h>
+#if defined(_WIN32)
+#include <malloc.h>
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 #include "../../../DUIThink/DUIThinkHead.h"
@@ -18,6 +22,7 @@
 #include <CommDlg.h>
 #endif
 
+#if defined(_MSC_VER)
 #ifdef _WIN64
 #ifdef _DEBUG
 #pragma comment(lib, "../../../lib/MMHelper.201764D.lib")
@@ -33,6 +38,7 @@
 #else
 #pragma comment(lib, "../../../lib/MMHelper.2017.lib")
 #pragma comment(lib, "../../../lib/DUIThink.2017.lib")
+#endif
 #endif
 #endif
 

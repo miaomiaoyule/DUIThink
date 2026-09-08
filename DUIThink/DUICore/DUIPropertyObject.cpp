@@ -373,7 +373,7 @@ VecDuiRichTextItem CDUIGlobal::ParseVecRichTextItem(LPCSTR lpszValue)
 			const tinyxml2::XMLAttribute *pNodeAttribute = pNodeXml->FirstAttribute();
 			if (NULL == pNodeAttribute) break;
 
-			//参数节点
+			//鍙傛暟鑺傜偣
 			tagDuiRichTextItem RichTextItem;
 			do
 			{
@@ -385,7 +385,7 @@ VecDuiRichTextItem CDUIGlobal::ParseVecRichTextItem(LPCSTR lpszValue)
 				}
 				if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriRichTextItemColorRes))
 				{
-					RichTextItem.vecColorResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), (";"));
+					RichTextItem.vecColorResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), (";"), CP_UTF8);
 					
 					continue;
 				}

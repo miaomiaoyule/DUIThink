@@ -22,14 +22,14 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	CMMStringA strImageRes;
 	strImageRes = strImageRes + Dui_Resource_ImageRes + (".xml");
 	tinyxml2::XMLElement *pXmlImageRes = xmlDoc.NewElement(Dui_Resource_ImageRes);
-	pXmlImageRes->SetAttribute(Dui_Resource_Key_ImageResFile, strImageRes);
+	pXmlImageRes->SetAttribute(Dui_Resource_Key_ImageResFile, (LPCSTR)strImageRes);
 	xmlDoc.LinkEndChild(pXmlImageRes);
 
 	//font res file
 	CMMStringA strFontRes;
 	strFontRes = strFontRes + Dui_Resource_FontRes + (".xml");
 	tinyxml2::XMLElement *pXmlFontRes = xmlDoc.NewElement(Dui_Resource_FontRes);
-	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResFile, strFontRes);
+	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResFile, (LPCSTR)strFontRes);
 	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResDefault, (LPCSTR)CT2CA(strFontResDefault, CP_UTF8));
 	xmlDoc.LinkEndChild(pXmlFontRes);
 
@@ -37,21 +37,21 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	CMMStringA strColorRes;
 	strColorRes = strColorRes + Dui_Resource_ColorRes + (".xml");
 	tinyxml2::XMLElement *pXmlColorRes = xmlDoc.NewElement(Dui_Resource_ColorRes);
-	pXmlColorRes->SetAttribute(Dui_Resource_Key_ColorResFile, strColorRes);
+	pXmlColorRes->SetAttribute(Dui_Resource_Key_ColorResFile, (LPCSTR)strColorRes);
 	xmlDoc.LinkEndChild(pXmlColorRes);
 
 	//attribute file
 	CMMStringA strAttribute;
 	strAttribute = strAttribute + Dui_Resource_Attribute + (".xml");
 	tinyxml2::XMLElement *pXmlAttribute = xmlDoc.NewElement(Dui_Resource_Attribute);
-	pXmlAttribute->SetAttribute(Dui_Resource_Key_AttributeFile, strAttribute);
+	pXmlAttribute->SetAttribute(Dui_Resource_Key_AttributeFile, (LPCSTR)strAttribute);
 	xmlDoc.LinkEndChild(pXmlAttribute);
 
 	//ctrl id file
 	CMMStringA strCtrlID;
 	strCtrlID = strCtrlID + Dui_Resource_CtrlID + (".h");
 	tinyxml2::XMLElement *pXmlCtrlID = xmlDoc.NewElement(Dui_Resource_CtrlID);
-	pXmlCtrlID->SetAttribute(Dui_Resource_Key_CtrlIDFile, strCtrlID);
+	pXmlCtrlID->SetAttribute(Dui_Resource_Key_CtrlIDFile, (LPCSTR)strCtrlID);
 	xmlDoc.LinkEndChild(pXmlCtrlID);
 
 	//dui node
@@ -88,23 +88,23 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	VecDuiResourceBase vecResource;
 	vecResource.clear();
 	for (auto &ResImageItem : mapResImage) vecResource.push_back(ResImageItem.second);
-	CMMString strImageResFile = szPath + strImageRes;
+	CMMString strImageResFile = szPath + CA2CT(strImageRes);
 	SaveResource(strImageResFile.c_str(), vecResource);
 
 	//font res
 	vecResource.clear();
 	for (auto &ResFontItem : mapResFont) vecResource.push_back(ResFontItem.second);
-	CMMString strFontResFile = szPath + strFontRes;
+	CMMString strFontResFile = szPath + CA2CT(strFontRes);
 	SaveResource(strFontResFile.c_str(), vecResource);
 
 	//color res
 	vecResource.clear();
 	for (auto &ResColorItem : mapResColor) vecResource.push_back(ResColorItem.second);
-	CMMString strColorResFile = szPath + strColorRes;
+	CMMString strColorResFile = szPath + CA2CT(strColorRes);
 	SaveResource(strColorResFile.c_str(), vecResource);
 
 	//attribute
-	CMMString strAttributeFile = szPath + strAttribute;
+	CMMString strAttributeFile = szPath + CA2CT(strAttribute);
 	SaveAttribute(strAttributeFile.c_str());
 
 	return true;
@@ -116,8 +116,9 @@ bool CDUIXmlPack::LoadProject(LPCTSTR lpszProject)
 	strFile = lpszProject;
 
 	//parse path name
-	CMMFile::ParseFilePathName(strFile, strProjPath, CMMString());
-	CMMFile::ParseFileName(strFile, strProjName, CMMString());
+	CMMString strUnused;
+	CMMFile::ParseFilePathName(strFile, strProjPath, strUnused);
+	CMMFile::ParseFileName(strFile, strProjName, strUnused);
 
 	vector<BYTE> vecData;
 	tinyxml2::XMLDocument xmlDoc;
@@ -491,7 +492,11 @@ bool CDUIXmlPack::LoadCtrlID(LPCTSTR lpszFile)
 
 		TCHAR szCtrlID[MAX_PATH] = {};
 		UINT uCtrlID = 0;
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+		int nScan = swscanf(strData.c_str() + nPosFrom, _T("\n#define %[^\(](%u)"), szCtrlID, &uCtrlID);
+#else
 		int nScan = swscanf_s(strData.c_str() + nPosFrom, _T("\n#define %[^\(](%u)"), szCtrlID, MAX_PATH, &uCtrlID);
+#endif
 		if (nScan <= 0) break;
 
 		CMMString strCtrlID = szCtrlID;

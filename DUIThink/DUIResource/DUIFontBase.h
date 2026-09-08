@@ -12,6 +12,7 @@ class DUITHINK_API CDUIFontBase
 {
 	friend class CDUIGlobal;
 
+	MMDeclare_Super(CDUIResourceBase)
 	DuiDeclare_CreateResource(CDUIFontBase)
 	MMDeclare_ClassName(CDUIFontBase)
 
@@ -20,7 +21,7 @@ public:
 	CDUIFontBase(LPCTSTR lpszResName, LPCTSTR lpszFontName, int nSize, LONG lWeight, bool bItalic, bool bUnderline, bool bStrikeOut);
 	virtual ~CDUIFontBase(void);
 
-	//组件变量
+	//缁勪欢鍙橀噺
 protected:
 	CMMString							m_strFontName;
 	std::unordered_map<int, HFONT>		m_mapDpiFont;

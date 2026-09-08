@@ -30,7 +30,7 @@ LRESULT CDUIGlobal::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool 
 	{
 	}
 
-	return __super::HandleMessage(uMsg, wParam, lParam, bHandled);
+	return CMMAsyncObject::HandleMessage(uMsg, wParam, lParam, bHandled);
 }
 
 void CDUIGlobal::OnMessage(PtrMMServiceMsg pMessage)
@@ -47,7 +47,7 @@ CDUIGlobal * CDUIGlobal::GetInstance()
 
 bool CDUIGlobal::Init(HINSTANCE hInstance)
 {
-	if (m_hInstance) return true;
+	if (m_bInited) return true;
 
 	UnInit();
 
@@ -72,6 +72,7 @@ bool CDUIGlobal::Init(HINSTANCE hInstance)
 	CMMServiceItem::Init();
 
 	m_hInstance = hInstance;
+	m_bInited = true;
 	m_ThreadPool.Run(2);
 
 	//public res
@@ -88,7 +89,7 @@ bool CDUIGlobal::Init(HINSTANCE hInstance)
 //uninit
 bool CDUIGlobal::UnInit()
 {
-	if (NULL == m_hInstance) return true;
+	if (false == m_bInited) return true;
 	if (false == CMMAsyncObject::UnInit()) return false;
 	if (false == CMMServiceItem::UnInit()) return false;
 
@@ -98,6 +99,7 @@ bool CDUIGlobal::UnInit()
 	//instance res
 	m_DuiFileResType = DuiFileResType_File;
 	m_nIndexSwitchRes = 0;
+	m_bInited = false;
 	m_hInstance = NULL;
 	m_hInstanceResource = NULL;
 	m_vecZipData.clear();
@@ -156,10 +158,19 @@ bool CDUIGlobal::LoadProjectFromFile(LPCTSTR lpszProjFile)
 	CMMString strProjFileFull = lpszProjFile;
 
 	//relative path
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+	if (strProjFileFull.empty() || _T('/') != strProjFileFull[0])
+	{
+		strProjFileFull = CMMService::GetWorkDirectory() + _T('/') + strProjFileFull;
+	}
+
+	strProjFileFull.Replace(_T('\\'), _T('/'));
+#else
 	if (-1 == strProjFileFull.find(_T(':')))
 	{
 		strProjFileFull = CMMService::GetWorkDirectory() + _T('\\') + strProjFileFull;
 	}
+#endif
 
 	//load
 	if (false == CDUIXmlPack::LoadProject(strProjFileFull)) return false;
@@ -218,10 +229,19 @@ bool CDUIGlobal::LoadProjectFromZip(LPCTSTR lpszZipFile, LPCTSTR lpszPassword, L
 	CMMString strZipFileFull = lpszZipFile;
 
 	//relative path
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+	if (strZipFileFull.empty() || _T('/') != strZipFileFull[0])
+	{
+		strZipFileFull = CMMService::GetWorkDirectory() + _T('/') + strZipFileFull;
+	}
+
+	strZipFileFull.Replace(_T('\\'), _T('/'));
+#else
 	if (-1 == strZipFileFull.find(_T(':')))
 	{
 		strZipFileFull = CMMService::GetWorkDirectory() + _T('\\') + strZipFileFull;
 	}
+#endif
 
 	//fileinfo
 	vector<BYTE> vecData;
@@ -619,7 +639,14 @@ bool CDUIGlobal::RemoveFontResource(const CMMString &strName)
 		m_strFontResDefault.clear();
 
 		CDUIFontBase *pFontBase = GetFontResource(0);
-		pFontBase ? m_strFontResDefault = pFontBase->GetResourceName() : m_strFontResDefault.clear();
+		if (pFontBase)
+		{
+			m_strFontResDefault = pFontBase->GetResourceName();
+		}
+		else
+		{
+			m_strFontResDefault.clear();
+		}
 	}
 
 	return true;
@@ -1566,10 +1593,25 @@ bool CDUIGlobal::AddResource(CDUIResourceBase *pResourceObj)
 
 bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
 {
+	bool bFullPath = true;
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+	if (strFile.empty() || _T('/') != strFile[0])
+	{
+		bFullPath = false;
+	}
+
+	strFile.Replace(_T('\\'), _T('/'));
+#else
+	if (-1 == strFile.find(_T(':')))
+	{
+		bFullPath = false;
+	}
+#endif
+
 	do
 	{
 		//full path
-		if (strFile.length() >= 2 && strFile[1] == _T(':')) break;
+		if (bFullPath) break;
 
 		//zip
 		if (DuiFileResType_Zip == GetDuiFileResType()
@@ -1602,7 +1644,7 @@ bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
 	if (DuiFileResType_File == GetDuiFileResType() || vecData.empty())
 	{
 		//full path
-		if (strFile.length() < 2 || strFile[1] != _T(':'))
+		if (false == bFullPath)
 		{
 			strFile = GetProjectPath() + strFile;
 		}
@@ -1954,7 +1996,7 @@ LPCTSTR CDUIGlobal::GetAttriName(uint32_t uValueID)
 	auto FindIt = m_mapAttriNameValue.find(uValueID);
 	if (FindIt == m_mapAttriNameValue.end()) return _T("");
 
-	return FindIt->second;
+	return FindIt->second.c_str();
 }
 
 uint32_t CDUIGlobal::SetAttriName(LPCTSTR lpszName)
@@ -2210,8 +2252,11 @@ LPCTSTR CDUIGlobal::GetAttriText(uint32_t uValueID)
 	if (uValueID <= 0) return _T("");
 
 	auto FindIt = m_mapAttriTextValue.find(uValueID);
+	if (FindIt == m_mapAttriTextValue.end()) return _T("");
 
-	return FindIt == m_mapAttriTextValue.end() ? _T("") : FindIt->second;
+	// Do NOT use ternary with CMMString here: GCC may materialize a temporary
+	// CMMString and return its dangling c_str() → garbled CJK text on Linux.
+	return FindIt->second.c_str();
 }
 
 uint32_t CDUIGlobal::SetAttriText(LPCTSTR lpszText)
@@ -2370,7 +2415,7 @@ bool CDUIGlobal::SetAttriTextStyle(tinyxml2::XMLElement *pNode)
 			}
 			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriTextStyleColorRes))
 			{
-				TextStyle.vecColorResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), ";");
+				TextStyle.vecColorResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), ";", CP_UTF8);
 
 				continue;
 			}
@@ -2487,7 +2532,7 @@ bool CDUIGlobal::SetAttriColorResSwitch(tinyxml2::XMLElement *pNode)
 			}
 			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriColorRes))
 			{
-				vecColorRes = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), ";");
+				vecColorRes = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), ";", CP_UTF8);
 
 				continue;
 			}
@@ -2588,7 +2633,11 @@ bool CDUIGlobal::SetAttriCombox(tinyxml2::XMLElement *pNode)
 			{
 				int nItem = 0;
 				char szDescrib[MAX_PATH] = {};
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+				sscanf(pNodeAttribute->Value(), StrComboxItem, &nItem, szDescrib);
+#else
 				_snscanf_s(pNodeAttribute->Value(), -1, StrComboxItem, &nItem, szDescrib, MAX_PATH);
+#endif
 
 				AttriCombox.vecItem.push_back({ nItem, szDescrib });
 
@@ -2644,7 +2693,7 @@ bool CDUIGlobal::SaveAttriCombox(tinyxml2::XMLElement *pNode)
 			CMMString strValue;
 			strValue.Format((LPCTSTR)CA2CT(StrComboxItem), Item.nItem, Item.strDescribe.GetBuffer());
 
-			pValue->SetAttribute(CT2CA(strKey), CT2CA(strValue));
+			pValue->SetAttribute((LPCSTR)CT2CA(strKey), (LPCSTR)CT2CA(strValue));
 		}
 
 		pNode->LinkEndChild(pValue);
@@ -2692,9 +2741,15 @@ bool CDUIGlobal::SetAttriPosition(tinyxml2::XMLElement *pNode)
 			}
 			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriPosition))
 			{
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+				sscanf(pNodeAttribute->Value(), StrPosition, &Position.bFloat,
+					&Position.HorizPosition.HorizAlignType, &Position.HorizPosition.nLeftAlignValue, &Position.HorizPosition.nRightAlignValue, &Position.HorizPosition.nFixedWidth,
+					&Position.VertPosition.VertAlignType, &Position.VertPosition.nTopAlignValue, &Position.VertPosition.nBottomAlignValue, &Position.VertPosition.nFixedHeight);
+#else
 				_snscanf_s(pNodeAttribute->Value(), -1, StrPosition, &Position.bFloat,
 					&Position.HorizPosition.HorizAlignType, &Position.HorizPosition.nLeftAlignValue, &Position.HorizPosition.nRightAlignValue, &Position.HorizPosition.nFixedWidth,
 					&Position.VertPosition.VertAlignType, &Position.VertPosition.nTopAlignValue, &Position.VertPosition.nBottomAlignValue, &Position.VertPosition.nFixedHeight);
+#endif
 
 				continue;
 			}
@@ -3358,9 +3413,9 @@ void CDUIGlobal::ReleaseFontResource()
 {
 	for (auto ResourceIt = m_mapResourceFont.begin(); ResourceIt != m_mapResourceFont.end();)
 	{
-		if (ResourceIt->second 
-			&& ResourceIt->second->IsDesign() 
-			&& m_hInstance)
+		if (ResourceIt->second
+			&& ResourceIt->second->IsDesign()
+			&& m_bInited)
 		{
 			++ResourceIt;
 
@@ -3381,9 +3436,9 @@ void CDUIGlobal::ReleaseImageResource()
 {
 	for (auto ResourceIt = m_mapResourceImage.begin(); ResourceIt != m_mapResourceImage.end();)
 	{
-		if (ResourceIt->second 
+		if (ResourceIt->second
 			&& ResourceIt->second->IsDesign()
-			&& m_hInstance)
+			&& m_bInited)
 		{
 			++ResourceIt;
 
@@ -3404,9 +3459,9 @@ void CDUIGlobal::ReleaseColorResource()
 {
 	for (auto ResourceIt = m_mapResourceColor.begin(); ResourceIt != m_mapResourceColor.end();)
 	{
-		if (ResourceIt->second 
+		if (ResourceIt->second
 			&& ResourceIt->second->IsDesign()
-			&& m_hInstance)
+			&& m_bInited)
 		{
 			++ResourceIt;
 

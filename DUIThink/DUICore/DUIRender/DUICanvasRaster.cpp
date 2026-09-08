@@ -7,8 +7,11 @@
 #define STBTT_STATIC
 #include "../../DUIUtils/stb_truetype.h"
 
-#include <cmath>
-#include <fstream>
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__APPLE__) && !defined(__ANDROID__)
+#include <dirent.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -116,6 +119,8 @@ struct tagDuiSharedFont
 	std::vector<unsigned char> vecFile;
 	stbtt_fontinfo Info = {};
 	bool bReady = false;
+	bool bHasCjk = false;
+	char szPath[512] = {};
 };
 
 static tagDuiSharedFont & DuiSharedFont()
@@ -124,8 +129,41 @@ static tagDuiSharedFont & DuiSharedFont()
 	return s_Font;
 }
 
-static bool DuiLoadFontFile(const char *lpszPath, tagDuiSharedFont &Font)
+static bool DuiFontHasCjk(const stbtt_fontinfo &Info)
 {
+	// U+4E00 ideograph — present in practically every CJK face.
+	return stbtt_FindGlyphIndex(&Info, 0x4E00) != 0;
+}
+
+static bool DuiInitFontFromBuffer(tagDuiSharedFont &Font, bool bRequireCjk)
+{
+	for (int nFace = 0; nFace < 32; ++nFace)
+	{
+		const int nOffset = stbtt_GetFontOffsetForIndex(Font.vecFile.data(), nFace);
+		if (nOffset < 0) break;
+
+		stbtt_fontinfo Info = {};
+		if (0 == stbtt_InitFont(&Info, Font.vecFile.data(), nOffset)) continue;
+
+		const bool bCjk = DuiFontHasCjk(Info);
+		if (bRequireCjk && false == bCjk) continue;
+
+		Font.Info = Info;
+		Font.bHasCjk = bCjk;
+		Font.bReady = true;
+		return true;
+	}
+
+	Font.vecFile.clear();
+	Font.bReady = false;
+	Font.bHasCjk = false;
+	return false;
+}
+
+static bool DuiLoadFontFile(const char *lpszPath, tagDuiSharedFont &Font, bool bRequireCjk)
+{
+	if (NULL == lpszPath || 0 == lpszPath[0]) return false;
+
 	std::ifstream ifs(lpszPath, std::ios::binary);
 	if (false == ifs.is_open()) return false;
 
@@ -134,25 +172,135 @@ static bool DuiLoadFontFile(const char *lpszPath, tagDuiSharedFont &Font)
 	if (nSize <= 0) return false;
 	ifs.seekg(0, std::ios::beg);
 
-	Font.vecFile.resize((size_t)nSize);
-	ifs.read((char *)Font.vecFile.data(), nSize);
+	std::vector<unsigned char> vecFile((size_t)nSize);
+	ifs.read((char *)vecFile.data(), nSize);
 	if ((std::streamoff)ifs.gcount() != nSize) return false;
 
-	const int nOffset = stbtt_GetFontOffsetForIndex(Font.vecFile.data(), 0);
-	if (0 == stbtt_InitFont(&Font.Info, Font.vecFile.data(), nOffset < 0 ? 0 : nOffset))
+	// stbtt_fontinfo holds pointers into vecFile — must Init after the final buffer is in place.
+	// Never copy/assign Info from another tagDuiSharedFont (dangling pointers → abort).
+	Font.bReady = false;
+	Font.bHasCjk = false;
+	Font.Info = {};
+	Font.vecFile.swap(vecFile);
+	if (false == DuiInitFontFromBuffer(Font, bRequireCjk))
 	{
 		Font.vecFile.clear();
+		Font.Info = {};
 		return false;
 	}
 
-	Font.bReady = true;
+	std::snprintf(Font.szPath, sizeof(Font.szPath), "%s", lpszPath);
 	return true;
 }
+
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__APPLE__) && !defined(__ANDROID__)
+static bool DuiPathLooksLikeFont(const char *lpszName)
+{
+	if (NULL == lpszName) return false;
+	const size_t nLen = strlen(lpszName);
+	if (nLen < 5) return false;
+	const char *ext = lpszName + nLen - 4;
+	if (0 == strcasecmp(ext, ".ttf") || 0 == strcasecmp(ext, ".otf") || 0 == strcasecmp(ext, ".ttc")) return true;
+	if (nLen >= 5 && 0 == strcasecmp(lpszName + nLen - 5, ".otc")) return true;
+	return false;
+}
+
+static bool DuiPathLooksLikeCjkFont(const char *lpszName)
+{
+	if (NULL == lpszName) return false;
+	static const char *s_pszKeys[] = {
+		"wqy", "noto", "cjk", "sourcehan", "droid", "uming", "ukai",
+		"microhei", "zenhei", "arphic", "firefly", "wenquanyi", "sc-r", "sc-",
+		NULL
+	};
+	for (int i = 0; s_pszKeys[i]; ++i)
+	{
+		if (strcasestr(lpszName, s_pszKeys[i])) return true;
+	}
+	return false;
+}
+
+static bool DuiScanFontDir(const char *lpszDir, tagDuiSharedFont &Font, bool bRequireCjk, int nDepth)
+{
+	if (NULL == lpszDir || nDepth > 3) return false;
+
+	DIR *pDir = opendir(lpszDir);
+	if (NULL == pDir) return false;
+
+	std::vector<std::string> vecCjk;
+	std::vector<std::string> vecOther;
+	struct dirent *pEnt = NULL;
+	while ((pEnt = readdir(pDir)) != NULL)
+	{
+		if (0 == strcmp(pEnt->d_name, ".") || 0 == strcmp(pEnt->d_name, "..")) continue;
+
+		char szPath[1024];
+		std::snprintf(szPath, sizeof(szPath), "%s/%s", lpszDir, pEnt->d_name);
+
+		struct stat st = {};
+		if (stat(szPath, &st) != 0) continue;
+		if (S_ISDIR(st.st_mode))
+		{
+			if (DuiScanFontDir(szPath, Font, bRequireCjk, nDepth + 1))
+			{
+				closedir(pDir);
+				return true;
+			}
+			continue;
+		}
+		if (false == S_ISREG(st.st_mode)) continue;
+		if (false == DuiPathLooksLikeFont(pEnt->d_name)) continue;
+
+		if (DuiPathLooksLikeCjkFont(pEnt->d_name) || DuiPathLooksLikeCjkFont(szPath))
+			vecCjk.push_back(szPath);
+		else
+			vecOther.push_back(szPath);
+	}
+	closedir(pDir);
+
+	for (size_t i = 0; i < vecCjk.size(); ++i)
+	{
+		if (DuiLoadFontFile(vecCjk[i].c_str(), Font, bRequireCjk)) return true;
+	}
+	if (false == bRequireCjk)
+	{
+		for (size_t i = 0; i < vecOther.size(); ++i)
+		{
+			if (DuiLoadFontFile(vecOther[i].c_str(), Font, false)) return true;
+		}
+	}
+	return false;
+}
+#endif
 
 static bool DuiEnsureSharedFont()
 {
 	tagDuiSharedFont &Font = DuiSharedFont();
 	if (Font.bReady) return true;
+
+	if (const char *pszEnv = std::getenv("DUI_FONT_FILE"))
+	{
+		if (DuiLoadFontFile(pszEnv, Font, false)) return true;
+	}
+
+#if !defined(_WIN32) && !defined(_WIN64)
+	{
+		char szExe[1024] = {};
+		ssize_t nRead = readlink("/proc/self/exe", szExe, sizeof(szExe) - 1);
+		if (nRead > 0)
+		{
+			szExe[nRead] = 0;
+			char *pszSlash = strrchr(szExe, '/');
+			if (pszSlash) *pszSlash = 0;
+			char szLocalFont[1200];
+			std::snprintf(szLocalFont, sizeof(szLocalFont), "%s/wqy-microhei.ttc", szExe);
+			if (DuiLoadFontFile(szLocalFont, Font, true)) return true;
+			std::snprintf(szLocalFont, sizeof(szLocalFont), "%s/fonts/wqy-microhei.ttc", szExe);
+			if (DuiLoadFontFile(szLocalFont, Font, true)) return true;
+		}
+		if (DuiLoadFontFile("wqy-microhei.ttc", Font, true)) return true;
+	}
+#endif
 
 	static const char *s_pszFonts[] =
 	{
@@ -175,24 +323,83 @@ static bool DuiEnsureSharedFont()
 		"/system/fonts/NotoSansCJK-Regular.otf",
 		"/system/fonts/Roboto-Regular.ttf",
 #else
+		"/mnt/c/Windows/Fonts/msyh.ttc",
+		"/mnt/c/Windows/Fonts/msyh.ttf",
+		"/mnt/c/Windows/Fonts/simhei.ttf",
+		"/mnt/c/Windows/Fonts/simsun.ttc",
+		"/mnt/c/Windows/Fonts/NotoSansSC-VF.ttf",
 		"/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
 		"/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+		"/usr/share/fonts/opentype/noto/NotoSansCJKsc-Regular.otf",
+		"/usr/share/fonts/truetype/noto/NotoSansCJKsc-Regular.otf",
+		"/usr/share/fonts/opentype/noto/NotoSansSC-Regular.otf",
+		"/usr/share/fonts/truetype/noto/NotoSansSC-Regular.otf",
 		"/usr/share/fonts/truetype/wqy/wqy-microhei.ttc",
 		"/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+		"/usr/share/fonts/truetype/arphic/uming.ttc",
+		"/usr/share/fonts/truetype/arphic/ukai.ttc",
+		"/usr/share/fonts/opentype/source-han-sans/SourceHanSansSC-Regular.otf",
 		"/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf",
-		"/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-		"/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
-		"/usr/share/fonts/truetype/freefont/FreeSans.ttf",
+		"/usr/local/share/fonts/wqy-microhei.ttc",
+		"/usr/local/share/fonts/NotoSansCJK-Regular.ttc",
 #endif
 		NULL
 	};
 
 	for (int n = 0; s_pszFonts[n]; ++n)
 	{
-		if (DuiLoadFontFile(s_pszFonts[n], Font)) return true;
+		if (DuiLoadFontFile(s_pszFonts[n], Font, true)) return true;
 	}
 
-	return false;
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__APPLE__) && !defined(__ANDROID__)
+	static const char *s_pszDirs[] = {
+		"/usr/share/fonts",
+		"/usr/local/share/fonts",
+		"/usr/share/fonts/truetype",
+		"/usr/share/fonts/opentype",
+		NULL
+	};
+	for (int n = 0; s_pszDirs[n]; ++n)
+	{
+		if (DuiScanFontDir(s_pszDirs[n], Font, true, 0)) return true;
+	}
+
+	const char *pszHome = std::getenv("HOME");
+	if (pszHome && pszHome[0])
+	{
+		char szLocal[1024];
+		std::snprintf(szLocal, sizeof(szLocal), "%s/.local/share/fonts", pszHome);
+		if (DuiScanFontDir(szLocal, Font, true, 0)) return true;
+		std::snprintf(szLocal, sizeof(szLocal), "%s/.fonts", pszHome);
+		if (DuiScanFontDir(szLocal, Font, true, 0)) return true;
+	}
+#endif
+
+	static const char *s_pszFallback[] =
+	{
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__APPLE__) && !defined(__ANDROID__)
+		"/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+		"/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+		"/usr/share/fonts/truetype/freefont/FreeSans.ttf",
+		"/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf",
+#endif
+		NULL
+	};
+	for (int n = 0; s_pszFallback[n]; ++n)
+	{
+		if (DuiLoadFontFile(s_pszFallback[n], Font, false)) return true;
+	}
+
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__APPLE__) && !defined(__ANDROID__)
+	DuiScanFontDir("/usr/share/fonts", Font, false, 0);
+#endif
+
+	if (false == Font.bReady)
+	{
+		fprintf(stderr, "[DUIThink] no usable font found. Install fonts-wqy-microhei "
+			"or set DUI_FONT_FILE=/path/to/cjk.ttf\n");
+	}
+	return Font.bReady;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -387,7 +594,7 @@ void CDUICanvasRaster::Restore()
 
 bool CDUICanvasRaster::ClipPixel(int x, int y)
 {
-	if (m_ClipRegion.rcRegion.Empty()) return false;
+	if (m_ClipRegion.rcRegion.Empty()) return true;
 
 	if (false == m_ClipRegion.rcRegion.PtInRect(CMMPoint(x, y)))
 	{

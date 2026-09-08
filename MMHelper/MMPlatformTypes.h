@@ -70,7 +70,7 @@ typedef unsigned long long __uint64;
 typedef unsigned char BYTE;
 typedef unsigned char UCHAR;
 typedef unsigned short WORD;
-typedef unsigned long DWORD;
+typedef unsigned int DWORD;
 typedef unsigned int UINT;
 typedef unsigned long ULONG;
 typedef unsigned long long ULONGLONG;

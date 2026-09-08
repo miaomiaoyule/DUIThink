@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////
 CDUIFactory::CDUIFactory()
 {
-	//øÿº˛
+	//Êéß‰ª∂
 	DUIInner_RegisterCreateControl(CDUIControlBase);
 	DUIInner_RegisterCreateControl(CDUIContainerCtrl);
 	DUIInner_RegisterCreateControl(CDUIButtonCtrl);
@@ -45,12 +45,12 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateControl(CDUIWebBrowserCtrl);
 #endif
 
-	//◊ ‘¥
+	//ËµÑÊ∫ê
 	DUIInner_RegisterCreateResource(CDUIFontBase);
 	DUIInner_RegisterCreateResource(CDUIImageBase);
 	DUIInner_RegisterCreateResource(CDUIColorBase);
 
-	// Ù–‘
+	//Â±ûÊÄß
 	DUIInner_RegisterCreateAttribute(CDUIAttributeGroup);
 	DUIInner_RegisterCreateAttribute(CDUIAttributePosition);
 	DUIInner_RegisterCreateAttribute(CDUIAttriImageSection);
