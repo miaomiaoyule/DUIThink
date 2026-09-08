@@ -1232,7 +1232,7 @@ bool CDUIContainerCtrl::DoPaint(HDC hDC, bool bGenerateBmp)
 	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
 	{
 		CDUIControlBase *pChild = GetChildAt(nIndex);
-		if (false == pChild || false == pChild->IsVisible()) continue;
+		if (NULL == pChild || false == pChild->IsVisible()) continue;
 
 		pChild->OnDraw(hDC, m_rcPaint, bGenerateBmp);
 	}

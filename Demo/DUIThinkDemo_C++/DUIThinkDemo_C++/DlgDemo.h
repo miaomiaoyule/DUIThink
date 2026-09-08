@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 class CDlgDemo : public CDUIWnd
 {
+	MMDeclare_Super(CDUIWnd)
 	DuiDeclare_Message_Map()
 
 public:

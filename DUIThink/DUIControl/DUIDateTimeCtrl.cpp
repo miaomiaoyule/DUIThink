@@ -268,32 +268,32 @@ tagDuiTextStyle CDUIDateTimeCtrl::GetTextStyleActive()
 
 void CDUIDateTimeCtrl::SetTextStyle(const tagDuiTextStyle &TextStyle)
 {
-	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->SetTextStyle(TextStyle) : NULL;
+	if (m_pEditDateTimeCtrl) m_pEditDateTimeCtrl->SetTextStyle(TextStyle);
 }
 
 void CDUIDateTimeCtrl::SetTextStyleNormal(const tagDuiTextStyle &TextStyle)
 {
-	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->SetTextStyleNormal(TextStyle) : NULL;
+	if (m_pEditDateTimeCtrl) m_pEditDateTimeCtrl->SetTextStyleNormal(TextStyle);
 }
 
 void CDUIDateTimeCtrl::SetTextStyleHot(const tagDuiTextStyle &TextStyle)
 {
-	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->SetTextStyleHot(TextStyle) : NULL;
+	if (m_pEditDateTimeCtrl) m_pEditDateTimeCtrl->SetTextStyleHot(TextStyle);
 }
 
 void CDUIDateTimeCtrl::SetTextStylePushed(const tagDuiTextStyle &TextStyle)
 {
-	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->SetTextStylePushed(TextStyle) : NULL;
+	if (m_pEditDateTimeCtrl) m_pEditDateTimeCtrl->SetTextStylePushed(TextStyle);
 }
 
 void CDUIDateTimeCtrl::SetTextStyleFocus(const tagDuiTextStyle &TextStyle)
 {
-	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->SetTextStyleFocus(TextStyle) : NULL;
+	if (m_pEditDateTimeCtrl) m_pEditDateTimeCtrl->SetTextStyleFocus(TextStyle);
 }
 
 void CDUIDateTimeCtrl::SetTextStyleDisabled(const tagDuiTextStyle &TextStyle)
 {
-	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->SetTextStyleDisabled(TextStyle) : NULL;
+	if (m_pEditDateTimeCtrl) m_pEditDateTimeCtrl->SetTextStyleDisabled(TextStyle);
 }
 
 tagDuiImageSection CDUIDateTimeCtrl::GetBtnImageSectionNormal()
@@ -323,27 +323,27 @@ tagDuiImageSection CDUIDateTimeCtrl::GetBtnImageSectionDisabled()
 
 void CDUIDateTimeCtrl::SetBtnImageSectionNormal(const tagDuiImageSection &ImageSection)
 {
-	return m_pBtnDateTimeCtrl ? m_pBtnDateTimeCtrl->SetImageSectionNormal(ImageSection) : NULL;
+	if (m_pBtnDateTimeCtrl) m_pBtnDateTimeCtrl->SetImageSectionNormal(ImageSection);
 }
 
 void CDUIDateTimeCtrl::SetBtnImageSectionHot(const tagDuiImageSection &ImageSection)
 {
-	return m_pBtnDateTimeCtrl ? m_pBtnDateTimeCtrl->SetImageSectionHot(ImageSection) : NULL;
+	if (m_pBtnDateTimeCtrl) m_pBtnDateTimeCtrl->SetImageSectionHot(ImageSection);
 }
 
 void CDUIDateTimeCtrl::SetBtnImageSectionPushed(const tagDuiImageSection &ImageSection)
 {
-	return m_pBtnDateTimeCtrl ? m_pBtnDateTimeCtrl->SetImageSectionPushed(ImageSection) : NULL;
+	if (m_pBtnDateTimeCtrl) m_pBtnDateTimeCtrl->SetImageSectionPushed(ImageSection);
 }
 
 void CDUIDateTimeCtrl::SetBtnImageSectionFocus(const tagDuiImageSection &ImageSection)
 {
-	return m_pBtnDateTimeCtrl ? m_pBtnDateTimeCtrl->SetImageSectionFocus(ImageSection) : NULL;
+	if (m_pBtnDateTimeCtrl) m_pBtnDateTimeCtrl->SetImageSectionFocus(ImageSection);
 }
 
 void CDUIDateTimeCtrl::SetBtnImageSectionDisabled(const tagDuiImageSection &ImageSection)
 {
-	return m_pBtnDateTimeCtrl ? m_pBtnDateTimeCtrl->SetImageSectionDisabled(ImageSection) : NULL;
+	if (m_pBtnDateTimeCtrl) m_pBtnDateTimeCtrl->SetImageSectionDisabled(ImageSection);
 }
 
 void CDUIDateTimeCtrl::OnDuiWndManagerAttach()

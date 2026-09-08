@@ -8,6 +8,7 @@
 //////////////////////////////////////////////////////////////////////////
 class CDUIComboxWnd : public CDUIWnd
 {
+	MMDeclare_Super(CDUIWnd)
 	MMDeclare_ClassName()
 	DuiDeclare_Message_Map()
 
@@ -245,9 +246,9 @@ void CDUIComboxWnd::OnDuiItemMouseEnter(const DuiNotify &Notify)
 	m_nItemToWave = nIndex;
 	int nIndexPre = m_pComboxView->FindNextIndex(m_nItemToWave, false);
 	int nIndexNext = m_pComboxView->FindNextIndex(m_nItemToWave, true);
-	-1 != m_nItemToWave ? m_vecItemToWave.push_back(m_nItemToWave) : 0;
-	-1 != nIndexPre ? m_vecItemToWave.push_back(nIndexPre) : 0;
-	-1 != nIndexNext ? m_vecItemToWave.push_back(nIndexNext) : 0;
+	if (-1 != m_nItemToWave) m_vecItemToWave.push_back(m_nItemToWave);
+	if (-1 != nIndexPre) m_vecItemToWave.push_back(nIndexPre);
+	if (-1 != nIndexNext) m_vecItemToWave.push_back(nIndexNext);
 	m_vecItemToNormal.erase(std::remove(m_vecItemToNormal.begin(), m_vecItemToNormal.end(), m_nItemToWave), m_vecItemToNormal.end());
 	m_vecItemToNormal.erase(std::remove(m_vecItemToNormal.begin(), m_vecItemToNormal.end(), nIndexPre), m_vecItemToNormal.end());
 	m_vecItemToNormal.erase(std::remove(m_vecItemToNormal.begin(), m_vecItemToNormal.end(), nIndexNext), m_vecItemToNormal.end());
@@ -778,7 +779,12 @@ bool CDUIComboxCtrl::RemoveAt(int nIndex)
 
 void CDUIComboxCtrl::RemoveAll()
 {
-	return m_pShowListView ? m_pShowListView->RemoveAll() : NULL;
+	if (m_pShowListView)
+	{
+ 		m_pShowListView->RemoveAll();
+	}
+	
+	return;
 }
 
 bool CDUIComboxCtrl::Active()

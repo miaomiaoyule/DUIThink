@@ -29,7 +29,7 @@ CDUISize CDUIButtonCtrl::MeasureString(LPCTSTR lpszText)
 {
 	if (m_AttributeTextStyleNormal.IsEmpty()) return __super::MeasureString(lpszText);
 
-	return m_AttributeTextStyleNormal.MeasureString(MMInvalidString(lpszText) ? GetText() : lpszText);
+	return m_AttributeTextStyleNormal.MeasureString(MMInvalidString(lpszText) ? (LPCTSTR)GetText() : lpszText);
 }
 
 HFONT CDUIButtonCtrl::GetFontNormal()

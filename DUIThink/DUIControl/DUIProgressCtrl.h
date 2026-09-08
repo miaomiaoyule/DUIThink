@@ -10,6 +10,7 @@ static const GUID IID_CDUIProgressCtrl = { 0x67F028D8,0xA87F,0x40F8,0xB6,0x86,0x
 class DUITHINK_API CDUIProgressCtrl
 	: public CDUIStaticCtrl
 {
+	MMDeclare_Super(CDUIStaticCtrl)
 	DuiDeclare_CreateControl(CDUIProgressCtrl)
 	MMDeclare_ClassName(CDUIProgressCtrl)
 
@@ -47,9 +48,9 @@ protected:
 
 	//variant
 protected:
-	CDUIRect							m_rcCurSlip;								//当前滑条
-	CDUIRect							m_rcGroove;									//滑槽
-	CDUIRect							m_rcSlip;									//滑条
+	CDUIRect							m_rcCurSlip;								//褰撳墠婊戞潯
+	CDUIRect							m_rcGroove;									//婊戞Ы
+	CDUIRect							m_rcSlip;									//婊戞潯
 
 	//override
 protected:

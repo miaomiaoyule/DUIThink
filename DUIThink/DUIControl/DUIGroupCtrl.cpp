@@ -65,7 +65,7 @@ void CDUIGroupCtrl::RefreshView()
 
 CDUISize CDUIGroupCtrl::MeasureString(LPCTSTR lpszText)
 {
-	return m_AttributeTextStyle.MeasureString(MMInvalidString(lpszText) ? GetText() : lpszText);
+	return m_AttributeTextStyle.MeasureString(MMInvalidString(lpszText) ? (LPCTSTR)GetText() : lpszText);
 }
 
 CMMString CDUIGroupCtrl::GetText()

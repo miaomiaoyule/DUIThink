@@ -5,6 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 class CDUIEditWnd : public CDUIWnd
 {
+	MMDeclare_Super(CDUIWnd)
 	MMDeclare_ClassName()
 
 public:
@@ -122,8 +123,8 @@ bool CDUIEditWnd::Init()
 
 	//text
 	HFONT hFont = pAttribute ? pAttribute->GetFont() : NULL;
-	hFont ? SetWindowFont(m_hWnd, hFont, TRUE) : NULL;
-	m_pOwner->IsPasswordMode() ? Edit_SetPasswordChar(m_hWnd, m_pOwner->GetPasswordChar()) : NULL;
+	if (hFont) SetWindowFont(m_hWnd, hFont, TRUE);
+	if (m_pOwner->IsPasswordMode()) Edit_SetPasswordChar(m_hWnd, m_pOwner->GetPasswordChar());
 	Edit_LimitText(m_hWnd, m_pOwner->GetMaxChar());
 	Edit_SetText(m_hWnd, m_pOwner->GetText());
 	Edit_SetModify(m_hWnd, FALSE);

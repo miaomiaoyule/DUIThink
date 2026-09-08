@@ -10,6 +10,7 @@ static const GUID IID_CDUISliderCtrl = { 0x7E46B557,0x965E,0x4C3F,0xAD,0xEA,0x11
 class DUITHINK_API CDUISliderCtrl
 	: public CDUIProgressCtrl
 {
+	MMDeclare_Super(CDUISliderCtrl)
 	DuiDeclare_CreateControl(CDUISliderCtrl)
 	MMDeclare_ClassName(CDUISliderCtrl)
 
@@ -99,20 +100,20 @@ protected:
 
 	//help
 protected:
-	//内部布局
+	//鍐呴儴甯冨眬
 	virtual void CalcSubPos();
 
-	//滑块位置
+	//婊戝潡浣嶇疆
 	virtual void CalcThumbPos();
 	virtual void CalcThumbPosHoriz();
 	virtual void CalcThumbPosVert();
 
-	//坐标计算
+	//鍧愭爣璁＄畻
 	virtual void CalcCurValueFromPt(const CDUIPoint &pt);
 	virtual void CalcCurValueFromPtHoriz(const CDUIPoint &pt);
 	virtual void CalcCurValueFromPtVert(const CDUIPoint &pt);
 
-	//滑块坐标
+	//婊戝潡鍧愭爣
 	virtual void CalcThumbPosOnMouseDown(const CDUIPoint &pt);
 };
 

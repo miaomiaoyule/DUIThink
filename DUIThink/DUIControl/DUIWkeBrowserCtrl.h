@@ -68,8 +68,8 @@ private:
 	CMMString							m_strUrlCur;
 
 private:
-	void *								m_pListenObj = NULL;					//监听对象
-	IDUIWkeCallback *					m_pWkeCallback = NULL;					//回调接口
+	void *								m_pListenObj = NULL;					//鐩戝惉瀵硅薄
+	IDUIWkeCallback *					m_pWkeCallback = NULL;					//鍥炶皟鎺ュ彛
 
 	//override
 protected:

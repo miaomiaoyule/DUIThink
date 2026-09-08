@@ -227,7 +227,7 @@ CDUISize CDUIStaticCtrl::MeasureString(LPCTSTR lpszText)
 		return  m_AttributeRichText.MeasureString();
 	}
 
-	return m_AttributeTextStyle.MeasureString(MMInvalidString(lpszText) ? GetText() : lpszText);
+	return m_AttributeTextStyle.MeasureString(MMInvalidString(lpszText) ? (LPCTSTR)GetText() : lpszText);
 }
 
 CMMString CDUIStaticCtrl::GetText()

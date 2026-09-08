@@ -13,6 +13,7 @@ class DUITHINK_API CDUIListItemCtrl
 {
 	friend class CDUIListViewCtrl;
 
+	MMDeclare_Super(CDUIHorizontalLayoutCtrl)
 	DuiDeclare_CreateControl(CDUIListItemCtrl)
 	MMDeclare_ClassName(CDUIListItemCtrl)
 
@@ -42,7 +43,7 @@ protected:
 	void OnSize(CDUIControlBase *pControl) override;
 
 	//diable method, because first child is checkicon, second child is edit.
-	//traverse user custom child use GetChildCountUser()°¢GetChildAtUser()°¢RemoveAtUser().
+	//traverse user custom child use GetChildCountUser()„ÄÅGetChildAtUser()„ÄÅRemoveAtUser().
 protected:
 	int GetChildCount() const override;
 	CDUIControlBase * GetChildAt(int nIndex) const override;

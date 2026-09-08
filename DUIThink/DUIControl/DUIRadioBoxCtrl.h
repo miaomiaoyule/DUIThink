@@ -16,6 +16,7 @@ class DUITHINK_API CDUIRadioBoxCtrl
 	friend class CDUIWnd;
 	friend class CDUIWndBase;
 
+	MMDeclare_Super(CDUICheckBoxCtrl)
 	DuiDeclare_CreateControl(CDUIRadioBoxCtrl)
 	MMDeclare_ClassName(CDUIRadioBoxCtrl)
 
@@ -61,6 +62,7 @@ public:
 	//property
 protected:
 	void InitProperty() override;
+	void InitNormalSkin() override;
 
 	//message
 protected:

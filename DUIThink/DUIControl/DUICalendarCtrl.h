@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 class DUITHINK_API CDUICalendarWnd : public CDUIWnd
 {
+	MMDeclare_Super(CDUIWnd)
 	MMDeclare_ClassName()
 	DuiDeclare_Message_Map()
 
@@ -51,6 +52,7 @@ class DUITHINK_API CDUICalendarCtrl
 	, public CDUINotifyPump
 	, public IDuiControlCallBack
 {
+	MMDeclare_Super(CDUIVerticalLayoutCtrl)
 	DuiDeclare_CreateControl(CDUICalendarCtrl)
 	MMDeclare_ClassName(CDUICalendarCtrl)
 	DuiDeclare_Message_Map()

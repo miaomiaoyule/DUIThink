@@ -4,6 +4,7 @@
 class CDlgChatTip
 	: public CDUIWnd
 {
+	MMDeclare_Super(CDUIWnd)
 	MMDeclare_ClassName(CDlgChatTip)
 	DuiDeclare_Message_Map()
 

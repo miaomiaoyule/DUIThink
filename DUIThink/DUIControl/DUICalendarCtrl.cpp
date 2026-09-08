@@ -204,13 +204,13 @@ CDUICalendarCtrl::CDUICalendarCtrl(void)
 	m_AttributeWeekStyle.SetCombox(AttriCombox);
 	m_AttributeWeekStyle.SelectItem(CalendarWeek_FirstMonday);
 
-	m_AttributeTextWeekDay[0] = CDUIAttributeText(_T("ÐÇÆÚÒ»"));
-	m_AttributeTextWeekDay[1] = CDUIAttributeText(_T("ÐÇÆÚ¶þ"));
-	m_AttributeTextWeekDay[2] = CDUIAttributeText(_T("ÐÇÆÚÈý"));
-	m_AttributeTextWeekDay[3] = CDUIAttributeText(_T("ÐÇÆÚËÄ"));
-	m_AttributeTextWeekDay[4] = CDUIAttributeText(_T("ÐÇÆÚÎå"));
-	m_AttributeTextWeekDay[5] = CDUIAttributeText(_T("ÐÇÆÚÁù"));
-	m_AttributeTextWeekDay[6] = CDUIAttributeText(_T("ÐÇÆÚÌì"));
+	m_AttributeTextWeekDay[0].SetValue(_T("æ˜ŸæœŸä¸€"));
+	m_AttributeTextWeekDay[1].SetValue(_T("æ˜ŸæœŸäºŒ"));
+	m_AttributeTextWeekDay[2].SetValue(_T("æ˜ŸæœŸä¸‰"));
+	m_AttributeTextWeekDay[3].SetValue(_T("æ˜ŸæœŸå››"));
+	m_AttributeTextWeekDay[4].SetValue(_T("æ˜ŸæœŸäº”"));
+	m_AttributeTextWeekDay[5].SetValue(_T("æ˜ŸæœŸå…­"));
+	m_AttributeTextWeekDay[6].SetValue(_T("æ˜ŸæœŸå¤©"));
 
 	return;
 }
@@ -1222,9 +1222,9 @@ void CDUICalendarCtrl::ConstructHeader(int nYear, int nMonth)
 {
 	if (NULL == m_pBtnYearCtrl || NULL == m_pBtnMonthCtrl) return;
 
-	m_pBtnYearCtrl->SetText(CMMStrHelp::Format(_T("%dÄê"), nYear));
+	m_pBtnYearCtrl->SetText(CMMStrHelp::Format(_T("%då¹´"), nYear));
 	m_pBtnYearCtrl->SetTag(ConstructDate(nYear, nMonth, 1));
-	m_pBtnMonthCtrl->SetText(CMMStrHelp::Format(_T("%dÔÂ"), nMonth));
+	m_pBtnMonthCtrl->SetText(CMMStrHelp::Format(_T("%dæœˆ"), nMonth));
 	m_pBtnMonthCtrl->SetTag(ConstructDate(nYear, nMonth, 1));
 
 	return;
@@ -1245,7 +1245,7 @@ void CDUICalendarCtrl::ConstructDay(CDUIListItemCtrl *pDay, int nYear, int nMont
 	bCurMonth ? pAttributeTextStyle = &m_AttributeTextStyleCurMonthDay : pAttributeTextStyle;
 	bCurDay ? pAttributeTextStyle = &m_AttributeTextStyleToday : pAttributeTextStyle;
 
-	bCurDay ? pDay->SetBkColor(m_AttributeColorTodayBk.GetColorResSwitch()) : NULL;
+	if (bCurDay) pDay->SetBkColor(m_AttributeColorTodayBk.GetColorResSwitch());
 	pDay->SetTextStyle(pAttributeTextStyle->GetTextStyle());
 	pDay->SetText(CMMStrHelp::Format(_T("%d"), nDay));
 	pDay->SetTag(ConstructDate(nYear, nMonth, nDay));

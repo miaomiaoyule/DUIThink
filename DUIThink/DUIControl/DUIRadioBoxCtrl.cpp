@@ -158,6 +158,49 @@ void CDUIRadioBoxCtrl::InitProperty()
 	return;
 }
 
+void CDUIRadioBoxCtrl::InitNormalSkin()
+{
+	auto pImageBaseRadioBox = CDUIGlobal::GetInstance()->GetImageResource(Name_ImageRadioBox);
+	if (NULL == pImageBaseRadioBox) return;
+
+	tagDuiImageSection ImageSection;
+	ImageSection.ImageSourceType = ImageSource_Part;
+	ImageSection.vecImageResSwitch.push_back(pImageBaseRadioBox->GetResourceName());
+	ImageSection.HorizImageAlign = HorizImageAlign_Left;
+	ImageSection.VertImageAlign = VertImageAlign_Center;
+	ImageSection.cbPartAll = 8;
+	ImageSection.cbPartSel = 1;
+	SetImageSectionNormal(ImageSection);
+
+	ImageSection.cbPartSel = 2;
+	SetImageSectionHot(ImageSection);
+
+	ImageSection.cbPartSel = 3;
+	SetImageSectionPushed(ImageSection);
+
+	ImageSection.cbPartSel = 4;
+	SetImageSectionDisabled(ImageSection);
+
+	ImageSection.cbPartSel = 5;
+	SetImageSectionSelNormal(ImageSection);
+
+	ImageSection.cbPartSel = 6;
+	SetImageSectionSelHot(ImageSection);
+
+	ImageSection.cbPartSel = 7;
+	SetImageSectionSelPushed(ImageSection);
+
+	ImageSection.cbPartSel = 8;
+	SetImageSectionSelDisabled(ImageSection);
+
+	tagDuiTextStyle TextStyle;
+	TextStyle.dwTextStyle |= DT_VCENTER;
+	SetTextPadding({ pImageBaseRadioBox->GetWidth(GetScale()) / 4, 0, 0, 0 });
+	CDUIStaticCtrl::SetTextStyle(TextStyle);
+
+	return;
+}
+
 bool CDUIRadioBoxCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	bool bClick = (m_cbControlStatus & ControlStatus_Pushed);
@@ -208,7 +251,7 @@ void CDUIRadioBoxCtrl::PerformActiveBindTabPage()
 
 	long lBindTabCtrlIndex = GetBindTabCtrlIndex();
 
-	//Èç¹ûÃ»ÓÐ°ó¶¨ÏÂ±êÔòÒÔ×éÄÚÏÂ±ê
+	//å¦‚æžœæ²¡æœ‰ç»‘å®šä¸‹æ ‡åˆ™ä»¥ç»„å†…ä¸‹æ ‡
 	if (lBindTabCtrlIndex < 0)
 	{
 		auto vecRadioBox = GetWndOwner()->GetRadioBoxGroup(GetGroupName());
@@ -227,7 +270,7 @@ void CDUIRadioBoxCtrl::PerformActiveBindTabPage()
 
 	if (lBindTabCtrlIndex < 0) return;
 
-	//¼¤»îTabÒ³
+	//æ¿€æ´»Tabé¡µ
 	pBindTabCtrl->Select(lBindTabCtrlIndex);
 
 	return;

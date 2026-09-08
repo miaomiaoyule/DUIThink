@@ -708,8 +708,8 @@ void CDUIMenuItemCtrl::InitProperty()
 	__super::InitProperty();
 
 	DuiCreateGroupAttribute(m_AttributeMenuGroup, _T("Menu"));
-	DuiCreateAttribute(m_AttributeLineMenu, _T("LineMenu"), _T("ÏßĞÍ²Ëµ¥"), m_AttributeMenuGroup);
-	DuiCreateAttribute(m_AttributeLineColor, _T("LineColor"), _T("ÏßÑÕÉ«"), m_AttributeMenuGroup);
+	DuiCreateAttribute(m_AttributeLineMenu, _T("LineMenu"), _T("çº¿å‹èœå•"), m_AttributeMenuGroup);
+	DuiCreateAttribute(m_AttributeLineColor, _T("LineColor"), _T("çº¿é¢œè‰²"), m_AttributeMenuGroup);
 	DuiCreateAttribute(m_AttributeGroupID, _T("GroupID"), _T("Group ID"), m_AttributeMenuGroup);
 	DuiCreateAttribute(m_AttributeIconChecked, _T("IconChecked"), _T("IconChecked"), m_AttributeMenuGroup);
 	DuiCreateAttribute(m_AttributeIconCheckedLeftPadding, _T("IconCheckedLPadding"), _T("IconCheckedLPadding"), m_AttributeMenuGroup);

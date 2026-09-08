@@ -257,6 +257,7 @@ void CDUICheckBoxCtrl::InitProperty()
 void CDUICheckBoxCtrl::InitNormalSkin()
 {
 	auto pImageBaseCheckBoxUnSelect = CDUIGlobal::GetInstance()->GetImageResource(Name_ImageCheckBox);
+	if (NULL == pImageBaseCheckBoxUnSelect) return;
 
 	tagDuiImageSection ImageSection;
 	ImageSection.ImageSourceType = ImageSource_Part;
@@ -288,7 +289,7 @@ void CDUICheckBoxCtrl::InitNormalSkin()
 	ImageSection.cbPartSel = 8;
 	SetImageSectionSelDisabled(ImageSection);
 
-	CMMString strText = _T("∏¥—°øÚ");
+	CMMString strText = _T("Â§çÈÄâÊ°Ü");
 	tagDuiTextStyle TextStyle;
 	TextStyle.dwTextStyle |= DT_VCENTER;
 	SetText(strText);

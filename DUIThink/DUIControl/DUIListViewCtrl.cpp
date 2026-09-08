@@ -1302,7 +1302,7 @@ bool CDUIListViewCtrl::SetChildIndex(CDUIControlBase *pControl, int nIndex)
 	if (nOrginIndex == nIndex) return true;
 	if (false == __super::SetChildIndex(pItem, nIndex)) return false;
 
-	//Ë¢ÐÂIndex
+	//åˆ·æ–°Index
 	int iMinIndex = min(nOrginIndex, nIndex);
 	int iMaxIndex = max(nOrginIndex, nIndex);
 	for (int i = iMinIndex; i < iMaxIndex + 1; ++i)

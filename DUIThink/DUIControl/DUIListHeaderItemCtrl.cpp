@@ -254,10 +254,10 @@ void CDUIListHeaderItemCtrl::InitProperty()
 	__super::InitProperty();
 
 	DuiCreateGroupAttribute(m_AttributeGroupSep, _T("Separation"));
-	DuiCreateAttribute(m_AttributeSepColor, _T("SepColor"), _T("·Ö¸ôÌõÑÕÉ«"), m_AttributeGroupSep);
+	DuiCreateAttribute(m_AttributeSepColor, _T("SepColor"), _T("åˆ†éš”æ¡é¢œè‰²"), m_AttributeGroupSep);
 	DuiCreateAttribute(m_AttributeSepWidth, _T("SepWidth"), _T("separator width"), m_AttributeGroupSep);
-	DuiCreateAttribute(m_AttributeSepScale, _T("SepScale"), _T("·Ö¸ôÌõ±ÈÀý"), m_AttributeGroupSep);
-	DuiCreateAttribute(m_AttributeSepImage, _T("SepImage"), _T("·Ö¸ôÌõ±³¾°Í¼Æ¬"), m_AttributeGroupSep);
+	DuiCreateAttribute(m_AttributeSepScale, _T("SepScale"), _T("åˆ†éš”æ¡æ¯”ä¾‹"), m_AttributeGroupSep);
+	DuiCreateAttribute(m_AttributeSepImage, _T("SepImage"), _T("åˆ†éš”æ¡èƒŒæ™¯å›¾ç‰‡"), m_AttributeGroupSep);
 
 	DuiCreateGroupAttribute(m_AttributeGroupStatus, _T("Status"));
 	DuiCreateAttribute(m_AttributeColorNormal, _T("ColorNormal"), _T("item normal back color"), m_AttributeGroupStatus);
@@ -286,7 +286,7 @@ void CDUIListHeaderItemCtrl::InitComplete()
 	return;
 }
 
-//»æÖÆ
+//ç»˜åˆ¶
 void CDUIListHeaderItemCtrl::PaintStatusColor(HDC hDC)
 {
 	__super::PaintStatusColor(hDC);
@@ -310,7 +310,7 @@ void CDUIListHeaderItemCtrl::PaintStatusColor(HDC hDC)
 		pAttribute = &m_AttributeColorNormal;
 	}
 
-	//äÖÈ¾
+	//æ¸²æŸ“
 	if (pAttribute)
 	{
 		pAttribute->FillRect(hDC, m_rcAbsolute);
@@ -345,7 +345,7 @@ void CDUIListHeaderItemCtrl::PaintStatusImage(HDC hDC)
 		pAttribute = &m_AttributeImageNormal;
 	}
 
-	//äÖÈ¾
+	//æ¸²æŸ“
 	if (pAttribute)
 	{
 		pAttribute->Draw(hDC, m_rcAbsolute, m_rcPaint);
@@ -437,7 +437,7 @@ bool CDUIListHeaderItemCtrl::OnDuiSetCursor(const CDUIPoint &pt, const DuiMessag
 
 bool CDUIListHeaderItemCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	//×´Ì¬
+	//çŠ¶æ€
 	if (0 == (m_nSepStatus & ControlStatus_Pushed))
 	{
 		__super::OnDuiMouseMove(pt, Msg);
@@ -454,7 +454,7 @@ bool CDUIListHeaderItemCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessag
 		return true;
 	}
 
-	//ÍÏ×§
+	//æ‹–æ‹½
 	if (GetSepWidth() > 0)
 	{
 		CDUIRect rcTemp = GetAbsoluteRect();

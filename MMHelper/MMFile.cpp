@@ -554,19 +554,18 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 {
 	//path
 	CMMString strFile = lpszFileFull;
-	if ((strFile.empty() || strFile[0] != _T('/'))
-		&& (strFile.length() < 2 || strFile[1] != _T(':')))
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+	if (strFile.empty() || strFile[0] != _T('/'))
 	{
-#if defined(DuiPlatform_SDL) && !defined(_WIN32)
 		strFile = CMMService::GetWorkDirectory() + _T('/') + strFile;
-#else
-		strFile = CMMService::GetWorkDirectory() + _T('\\') + strFile;
-#endif
 	}
-
-#if defined DuiPlatform_SDL
-#if !defined(_WIN32)
+	
 	strFile.Replace(_T('\\'), _T('/'));
+#else
+	if (strFile.length() < 2 || strFile[1] != _T(':'))
+	{
+		strFile = CMMService::GetWorkDirectory() + _T('\\') + strFile;
+	}
 #endif
 
 	size_t nFileSize = 0;

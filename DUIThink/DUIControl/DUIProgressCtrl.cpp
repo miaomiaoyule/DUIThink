@@ -78,10 +78,10 @@ CMMString CDUIProgressCtrl::GetDescribe() const
 
 void CDUIProgressCtrl::RefreshView()
 {
-	//»¬²Û»¬Ìõ
+	//æ»‘æ§½æ»‘æ¡
 	CalcSubRect();
 
-	//»¬ÌõÎ»ÖÃ
+	//æ»‘æ¡ä½ç½®
 	CalcSubPos();
 
 	__super::RefreshView();
@@ -105,7 +105,7 @@ void CDUIProgressCtrl::SetMaxValue(int nMaxValue)
 		SetCurValue(nMaxValue);
 	}
 
-	//¼ÆËã»¬ÌõÎ»ÖÃ
+	//è®¡ç®—æ»‘æ¡ä½ç½®
 	CalcSubPos();
 
 	Invalidate();
@@ -127,7 +127,7 @@ void CDUIProgressCtrl::SetCurValue(int nCurValue)
 
 	m_AttributeCurValue.SetValue(nCurValue);
 
-	//¼ÆËã»¬ÌõÎ»ÖÃ
+	//è®¡ç®—æ»‘æ¡ä½ç½®
 	CalcSubPos();
 
 	//notify
@@ -581,13 +581,13 @@ void CDUIProgressCtrl::CalcGrooveAndSlipRect()
 	CDUIRect rcGrooveInset = m_AttributeGrooveInsetToBorder.GetValue();
 	CDUIRect rcSlipInset = m_AttributeSlipInsetToGroove.GetValue();
 
-	//»¬²Û
+	//æ»‘æ§½
 	m_rcGroove = m_rcAbsolute;
 	m_rcGroove.Deflate(rcGrooveInset.left, rcGrooveInset.top, rcGrooveInset.right, rcGrooveInset.bottom);
 	m_rcGroove.CheckRect();
 	m_rcGroove = m_rcGroove.RectClip(m_rcAbsolute, m_rcGroove);
 
-	//»¬Ìõ
+	//æ»‘æ¡
 	m_rcSlip = m_rcGroove;
 	m_rcSlip.Deflate(rcSlipInset.left, rcSlipInset.top, rcSlipInset.right, rcSlipInset.bottom);
 	m_rcSlip.CheckRect();
@@ -598,7 +598,7 @@ void CDUIProgressCtrl::CalcGrooveAndSlipRect()
 
 void CDUIProgressCtrl::CalcSlipPos()
 {
-	//Çø·ÖË®Æ½ÀàĞÍ»¹ÊÇ´¹Ö±ÀàĞÍ
+	//åŒºåˆ†æ°´å¹³ç±»å‹è¿˜æ˜¯å‚ç›´ç±»å‹
 	if (ProgressType_Horiz == GetProgressType())
 		CalcHorizSlipPos();
 	else if (ProgressType_Vert == GetProgressType())
@@ -609,24 +609,24 @@ void CDUIProgressCtrl::CalcSlipPos()
 
 void CDUIProgressCtrl::CalcHorizSlipPos()
 {
-	//Æ«ÒÆµ¥Î»³õÊ¼»¯
+	//åç§»å•ä½åˆå§‹åŒ–
 	double lfValue = GetValueScale();
 	int nCurPos = m_rcSlip.GetWidth() * lfValue;
 
 	CDUIRect rcCurSlip(m_rcSlip.left, m_rcSlip.top, m_rcSlip.right, m_rcSlip.bottom);
 
-	//ÕıÏò
+	//æ­£å‘
 	if (ProgressMove_Positive == GetProgressMoveType())
 	{
 		rcCurSlip.right = rcCurSlip.left + nCurPos;
 	}
-	//·´Ïò
+	//åå‘
 	else if (ProgressMove_Reverse == GetProgressMoveType())
 	{
 		rcCurSlip.left = rcCurSlip.right - nCurPos;
 	}
 
-	//·µ»Ø
+	//è¿”å›
 	m_rcCurSlip = rcCurSlip;
 
 	return;
@@ -634,24 +634,24 @@ void CDUIProgressCtrl::CalcHorizSlipPos()
 
 void CDUIProgressCtrl::CalcVertSlipPos()
 {
-	//Æ«ÒÆµ¥Î»³õÊ¼»¯
+	//åç§»å•ä½åˆå§‹åŒ–
 	double lfValue = GetValueScale();
 	int nCurPos = m_rcSlip.GetHeight() * lfValue;
 
 	CDUIRect rcCurSlip(m_rcSlip.left, m_rcSlip.top, m_rcSlip.right, m_rcSlip.bottom);
 
-	//ÕıÏò
+	//æ­£å‘
 	if (ProgressMove_Positive == GetProgressMoveType())
 	{
 		rcCurSlip.top = rcCurSlip.bottom - nCurPos;
 	}
-	//·´Ïò
+	//åå‘
 	else if (ProgressMove_Reverse == GetProgressMoveType())
 	{
 		rcCurSlip.bottom = rcCurSlip.top + nCurPos;
 	}
 
-	//·µ»Ø
+	//è¿”å›
 	m_rcCurSlip = rcCurSlip;
 
 	return;

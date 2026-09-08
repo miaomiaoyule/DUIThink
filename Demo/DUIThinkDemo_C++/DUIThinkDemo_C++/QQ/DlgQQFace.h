@@ -8,6 +8,7 @@ class CDlgQQFace
 	: public CDUIWnd
 	, public IDuiControlCallBack
 {
+	MMDeclare_Super(CDUIWnd)
 	MMDeclare_ClassName()
 	DuiDeclare_Message_Map()
 

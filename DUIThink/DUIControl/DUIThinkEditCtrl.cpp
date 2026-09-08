@@ -308,13 +308,14 @@ CDUISize CDUIThinkEditCtrl::MeasureString(LPCTSTR lpszText)
 
 	tagDuiTextStyle TextStyle = GetTextStyleNormal();
 	CDUIRect rcMeasure;
+	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
 	if (false == MMInvalidString(lpszText))
 	{
-		PerformMeasureString(lpszText, TextStyle, MapLineVecDuiRichTextDraw(), rcMeasure);
+		PerformMeasureString(lpszText, TextStyle, mapLineVecRichTextDraw, rcMeasure);
 	}
 	else
 	{
-		PerformMeasureString(m_vecRichTextItem, TextStyle, MapLineVecDuiRichTextDraw(), rcMeasure);
+		PerformMeasureString(m_vecRichTextItem, TextStyle, mapLineVecRichTextDraw, rcMeasure);
 	}
 
 	return { rcMeasure.GetWidth(), rcMeasure.GetHeight() };
@@ -346,7 +347,8 @@ CDUISize CDUIThinkEditCtrl::MeasureString(VecDuiRichTextBase vecRichTextBase)
 	//measure
 	tagDuiTextStyle TextStyle = GetTextStyleNormal();
 	CDUIRect rcMeasure;
-	PerformMeasureString(vecRichTextItem, TextStyle, MapLineVecDuiRichTextDraw(), rcMeasure);
+	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
+	PerformMeasureString(vecRichTextItem, TextStyle, mapLineVecRichTextDraw, rcMeasure);
 
 	return { rcMeasure.GetWidth(), rcMeasure.GetHeight() };
 }
@@ -651,7 +653,8 @@ CDUIRect CDUIThinkEditCtrl::GetCaretPos()
 	//pre measure
 	tagDuiTextStyle TextStyle = GetTextStyleActive();
 	CDUIRect rcMeasure;
-	PerformMeasureString(_T("°¡"), TextStyle, MapLineVecDuiRichTextDraw(), rcMeasure);
+	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
+	PerformMeasureString(_T("å•Š"), TextStyle, mapLineVecRichTextDraw, rcMeasure);
 
 	//none
 	if (m_nCaretRow < 0 || m_nCaretRow >= m_mapLineVecRichTextDraw.size())
@@ -972,6 +975,7 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName
 	//measure
 	tagDuiTextStyle TextStyle = GetTextStyleActive();
 	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
+	CDUIRect rcMeasure;
 	if (MMInvalidString(lpszText))
 	{
 		VecDuiRichTextItem vecRichTextItem;
@@ -979,11 +983,11 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName
 		RichTextItem.ItemType = RichTextItem_Image;
 		RichTextItem.strImageResName = lpszImageResName;
 		vecRichTextItem.push_back(RichTextItem);
-		PerformMeasureString(vecRichTextItem, TextStyle, mapLineVecRichTextDraw, CDUIRect());
+		PerformMeasureString(vecRichTextItem, TextStyle, mapLineVecRichTextDraw, rcMeasure);
 	}
 	else
 	{
-		PerformMeasureString(lpszText, TextStyle, mapLineVecRichTextDraw, CDUIRect());
+		PerformMeasureString(lpszText, TextStyle, mapLineVecRichTextDraw, rcMeasure);
 	}
 
 	//history
@@ -1603,14 +1607,14 @@ LRESULT CDUIThinkEditCtrl::OnDuiChar(const DuiMessage &Msg)
 	TCHAR ch = (TCHAR)Msg.wParam;
 	if (ch >= 0xD800 && ch <= 0xDBFF)
 	{
-		// ÊÕµ½¸ß½×´úÀíÏî£¨EmojiÇ°°ë¶Î£©£¬ÔÝ´æ²¢µÈ´ýÏÂÒ»´Î WM_CHAR
+		// æ”¶åˆ°é«˜é˜¶ä»£ç†é¡¹ï¼ˆEmojiå‰åŠæ®µï¼‰ï¼Œæš‚å­˜å¹¶ç­‰å¾…ä¸‹ä¸€æ¬¡ WM_CHAR
 		m_chEmojiWait = ch;
 
 		return 0;
 	}
 	if (ch >= 0xDC00 && ch <= 0xDFFF)
 	{
-		// ÊÕµ½µÍ½×´úÀíÏî£¨Emojiºó°ë¶Î£©£¬½øÐÐ×éºÏ
+		// æ”¶åˆ°ä½Žé˜¶ä»£ç†é¡¹ï¼ˆEmojiåŽåŠæ®µï¼‰ï¼Œè¿›è¡Œç»„åˆ
 		if (m_chEmojiWait != 0)
 		{
 			strReplace += m_chEmojiWait;
@@ -1618,13 +1622,13 @@ LRESULT CDUIThinkEditCtrl::OnDuiChar(const DuiMessage &Msg)
 		}
 		else
 		{
-			// ³öÏÖÁËÃ»ÓÐ¸ß½×ÏîµÄ¹ÂÁ¢µÍ½×Ïî£¨ÊôÓÚÒì³£±àÂë£©£¬Ö±½Ó¶ªÆú
+			// å‡ºçŽ°äº†æ²¡æœ‰é«˜é˜¶é¡¹çš„å­¤ç«‹ä½Žé˜¶é¡¹ï¼ˆå±žäºŽå¼‚å¸¸ç¼–ç ï¼‰ï¼Œç›´æŽ¥ä¸¢å¼ƒ
 			return 0; 
 		}
 	}
 	else
 	{
-		// Õý³£BMPÃæ°åÄÚµÄ×Ö·û(°üÀ¨²¿·Ö1¸ö wchar_t µÄÀÏÊ½·ûºÅ)
+		// æ­£å¸¸BMPé¢æ¿å†…çš„å­—ç¬¦(åŒ…æ‹¬éƒ¨åˆ†1ä¸ª wchar_t çš„è€å¼ç¬¦å·)
 		strReplace = ch;
 	}
 
@@ -1671,15 +1675,15 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	};
 
 	//menu
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_UNDO, _T("³·Ïú(&U)")));
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_REDO, _T("ÖØ×ö(&R)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_UNDO, _T("æ’¤é”€(&U)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_REDO, _T("é‡åš(&R)")));
 	pMenuRoot->InsertMenuItem(GenerateItem(0, _T("")));
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_CUT, _T("¼ôÇÐ(&X)")));
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_COPY, _T("¸´ÖÆ(&C)")));
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_PASTE, _T("Õ³Ìù(&V)")));
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_CLEAR, _T("Çå¿Õ(&L)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_CUT, _T("å‰ªåˆ‡(&X)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_COPY, _T("å¤åˆ¶(&C)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_PASTE, _T("ç²˜è´´(&V)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_CLEAR, _T("æ¸…ç©º(&L)")));
 	pMenuRoot->InsertMenuItem(GenerateItem(0, _T("")));
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_SELECTALL, _T("È«Ñ¡(&A)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_SELECTALL, _T("å…¨é€‰(&A)")));
 
 	//enable
 	CDUIMenuItemCtrl *pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_UNDO);
