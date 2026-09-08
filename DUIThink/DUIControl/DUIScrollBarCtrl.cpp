@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "DUIScrollBarCtrl.h"
 
 DuiImplement_CreateControl(CDUIScrollBarCtrl)
@@ -401,7 +401,7 @@ void CDUIScrollBarCtrl::InitComplete()
 {
 	__super::InitComplete();
 
-	//Ö¸¶¨Ë®Æ½ÎªÕıÏò£¬´¹Ö±Îª¸ºÏò
+	//æŒ‡å®šæ°´å¹³ä¸ºæ­£å‘ï¼Œå‚ç›´ä¸ºè´Ÿå‘
 	if (ProgressType_Horiz == GetProgressType())
 	{
 		__super::SetProgressMoveType(ProgressMove_Positive);
@@ -528,7 +528,7 @@ bool CDUIScrollBarCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &
 
 		SetCurValue(max(GetCurValue() - GetScrollSpeed(), 0));
 
-		//¶¨Ê±»¬¶¯
+		//å®šæ—¶æ»‘åŠ¨
 		m_ptOnUpDownBtn = pt;
 		if (m_pWndOwner)
 		{
@@ -547,7 +547,7 @@ bool CDUIScrollBarCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &
 
 		SetCurValue(min(GetCurValue() + GetScrollSpeed(), GetMaxValue()));
 
-		//¶¨Ê±»¬¶¯
+		//å®šæ—¶æ»‘åŠ¨
 		m_ptOnUpDownBtn = pt;
 		if (m_pWndOwner)
 		{
@@ -564,7 +564,7 @@ bool CDUIScrollBarCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &
 
 bool CDUIScrollBarCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	//¹ö¶¯¶¨Ê±
+	//æ»šåŠ¨å®šæ—¶
 	if (m_pWndOwner)
 	{
 		m_pWndOwner->KillTimer(this, Dui_TimerScrollAuto_ID);
@@ -578,7 +578,7 @@ bool CDUIScrollBarCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Ms
 
 bool CDUIScrollBarCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Msg)
 {
-	//°´down btn
+	//æŒ‰down btn
 	if (m_nUpBtnStatus & ControlStatus_Pushed)
 	{
 		return true;
@@ -592,7 +592,7 @@ bool CDUIScrollBarCtrl::OnDuiMouseMove(const CDUIPoint &pt, const DuiMessage &Ms
 		return __super::OnDuiMouseMove(pt, Msg);
 	}
 
-	//°´Å¥¡¢»¬¿é
+	//æŒ‰é’®ã€æ»‘å—
 	m_nUpBtnStatus &= ~ControlStatus_Hot;
 	m_nDownBtnStatus &= ~ControlStatus_Hot;
 	m_cbControlStatus &= ~ControlStatus_Hot;
@@ -705,7 +705,7 @@ void CDUIScrollBarCtrl::CalcSubRect()
 
 void CDUIScrollBarCtrl::CalcUpDownBtnRect()
 {
-	//Çø·ÖË®Æ½ÀàĞÍ»¹ÊÇ´¹Ö±ÀàĞÍ
+	//åŒºåˆ†æ°´å¹³ç±»å‹è¿˜æ˜¯å‚ç›´ç±»å‹
 	if (ProgressType_Horiz == GetProgressType())
 		CalcUpDownBtnRectHoriz();
 	else if (ProgressType_Vert == GetProgressType())
@@ -716,12 +716,12 @@ void CDUIScrollBarCtrl::CalcUpDownBtnRect()
 
 void CDUIScrollBarCtrl::CalcUpDownBtnRectHoriz()
 {
-	//Æ«ÒÆµ¥Î»³õÊ¼»¯
+	//åç§»å•ä½åˆå§‹åŒ–
 	int nUpDownBtnInsetTop = m_AttributeUpDownBtnHorizInsetTop.GetValue();
 	int nUpDownBtnInsetBottom = m_AttributeUpDownBtnHorizInsetBottom.GetValue();
 	int nUpDownBtnFixedWidth = m_AttributeUpDownBtnHorizFixedWidth.GetValue();
 
-	//ÉÏdown btnÎ»ÖÃ
+	//ä¸Šdown btnä½ç½®
 	m_rcUpBtn.left = m_rcAbsolute.left;
 	m_rcUpBtn.top = m_rcAbsolute.top + nUpDownBtnInsetTop;
 	m_rcUpBtn.right = m_rcUpBtn.left + nUpDownBtnFixedWidth;
@@ -732,7 +732,7 @@ void CDUIScrollBarCtrl::CalcUpDownBtnRectHoriz()
 	m_rcDownBtn.right = m_rcAbsolute.right;
 	m_rcDownBtn.left = m_rcDownBtn.right - nUpDownBtnFixedWidth;
 
-	//¼ì²â
+	//æ£€æµ‹
 	m_rcUpBtn.CheckRect();
 	m_rcDownBtn.CheckRect();
 
@@ -744,12 +744,12 @@ void CDUIScrollBarCtrl::CalcUpDownBtnRectHoriz()
 
 void CDUIScrollBarCtrl::CalcUpDownBtnRectVert()
 {
-	//Æ«ÒÆµ¥Î»³õÊ¼»¯
+	//åç§»å•ä½åˆå§‹åŒ–
 	int nUpDownBtnInsetLeft = m_AttributeUpDownBtnVertInsetLeft.GetValue();
 	int nUpDownBtnInsetRight = m_AttributeUpDownBtnVertInsetRight.GetValue();
 	int nUpDownBtnFixedHeight = m_AttributeUpDownBtnVertFixedHeight.GetValue();
 
-	//ÉÏdown btnÎ»ÖÃ
+	//ä¸Šdown btnä½ç½®
 	m_rcUpBtn.left = m_rcAbsolute.left + nUpDownBtnInsetLeft;
 	m_rcUpBtn.top = m_rcAbsolute.top;
 	m_rcUpBtn.right = m_rcAbsolute.right - nUpDownBtnInsetRight;
@@ -760,7 +760,7 @@ void CDUIScrollBarCtrl::CalcUpDownBtnRectVert()
 	m_rcDownBtn.bottom = m_rcAbsolute.bottom;
 	m_rcDownBtn.top = m_rcDownBtn.bottom - nUpDownBtnFixedHeight;
 
-	//¼ì²â
+	//æ£€æµ‹
 	m_rcUpBtn.CheckRect();
 	m_rcDownBtn.CheckRect();
 
@@ -780,21 +780,21 @@ void CDUIScrollBarCtrl::CalcGrooveAndSlipRect()
 	CDUIRect rcGrooveInset = m_AttributeGrooveInsetToBorder.GetValue();
 	CDUIRect rcSlipInset = m_AttributeSlipInsetToGroove.GetValue();
 
-	//È¥µôÉÏdown btnµÄÇøÓò
-	//Çø·ÖË®Æ½ÀàĞÍ»¹ÊÇ´¹Ö±ÀàĞÍ
+	//å»æ‰ä¸Šdown btnçš„åŒºåŸŸ
+	//åŒºåˆ†æ°´å¹³ç±»å‹è¿˜æ˜¯å‚ç›´ç±»å‹
 	CDUIRect rcTemp;
 	if (ProgressType_Horiz == GetProgressType())
 		rcTemp = CDUIRect(m_rcAbsolute.left + m_rcUpBtn.GetWidth(), m_rcAbsolute.top, m_rcAbsolute.right - m_rcDownBtn.GetWidth(), m_rcAbsolute.bottom);
 	else if (ProgressType_Vert == GetProgressType())
 		rcTemp = CDUIRect(m_rcAbsolute.left, m_rcAbsolute.top + m_rcUpBtn.GetHeight(), m_rcAbsolute.right, m_rcAbsolute.bottom - m_rcDownBtn.GetHeight());
 
-	//»¬²Û
+	//æ»‘æ§½
 	m_rcGroove = rcTemp;
 	m_rcGroove.Deflate(rcGrooveInset.left, rcGrooveInset.top, rcGrooveInset.right, rcGrooveInset.bottom);
 	m_rcGroove.CheckRect();
 	m_rcGroove = m_rcGroove.RectClip(rcTemp, m_rcGroove);
 
-	//»¬Ìõ
+	//æ»‘æ¡
 	m_rcSlip = m_rcGroove;
 	m_rcSlip.Deflate(rcSlipInset.left, rcSlipInset.top, rcSlipInset.right, rcSlipInset.bottom);
 	m_rcSlip.CheckRect();
@@ -807,10 +807,10 @@ void CDUIScrollBarCtrl::CalcScrollBarThumbSize()
 {
 	if (NULL == m_pOwnerCtrl) return;
 
-	//Ë®Æ½ÀàĞÍ
+	//æ°´å¹³ç±»å‹
 	if (ProgressType_Horiz == GetProgressType())
 	{
-		//ÏûÊ§
+		//æ¶ˆå¤±
 		if (GetMaxValue() <= 0)
 		{
 			SetThumbSize(CDUISize(GetSlipRect().GetWidth(), 0));
@@ -820,19 +820,19 @@ void CDUIScrollBarCtrl::CalcScrollBarThumbSize()
 			return;
 		}
 
-		//³öÏÖ
+		//å‡ºç°
 		if (m_pOwnerCtrl->IsUseHorizScrollBar())
 		{
 			SetVisible(true);
 
 			int nScrollSlipWidth = GetSlipRect().GetWidth();
 
-			//Ğ¡ÓÚ»¬ÌõÒ»°ë
+			//å°äºæ»‘æ¡ä¸€åŠ
 			if (GetMaxValue() <= nScrollSlipWidth / 2)
 			{
 				SetThumbSize(CDUISize(nScrollSlipWidth - GetMaxValue(), 0));
 			}
-			//´óÓÚ»¬ÌõÒ»°ë£¬¸ù¾İÇ÷ÊÆËõĞ¡»¬¿é´óĞ¡
+			//å¤§äºæ»‘æ¡ä¸€åŠï¼Œæ ¹æ®è¶‹åŠ¿ç¼©å°æ»‘å—å¤§å°
 			else
 			{
 				int nValue = nScrollSlipWidth / 2, nThumbWidth = 0;
@@ -847,10 +847,10 @@ void CDUIScrollBarCtrl::CalcScrollBarThumbSize()
 		return;
 	}
 
-	//´¹Ö±ÀàĞÍ
+	//å‚ç›´ç±»å‹
 	if (ProgressType_Vert == GetProgressType())
 	{
-		//ÏûÊ§
+		//æ¶ˆå¤±
 		if (GetMaxValue() <= 0)
 		{
 			SetThumbSize(CDUISize(0, GetSlipRect().GetHeight()));
@@ -860,19 +860,19 @@ void CDUIScrollBarCtrl::CalcScrollBarThumbSize()
 			return;
 		}
 
-		//³öÏÖ
+		//å‡ºç°
 		if (m_pOwnerCtrl->IsUseVertScrollBar())
 		{
 			SetVisible(true);
 
 			int nScrollSlipHeight = GetSlipRect().GetHeight();
 
-			//Ğ¡ÓÚ»¬ÌõÒ»°ë
+			//å°äºæ»‘æ¡ä¸€åŠ
 			if (GetMaxValue() <= nScrollSlipHeight / 2)
 			{
 				SetThumbSize(CDUISize(0, nScrollSlipHeight - GetMaxValue()));
 			}
-			//´óÓÚ»¬ÌõÒ»°ë£¬¸ù¾İÇ÷ÊÆËõĞ¡»¬¿é´óĞ¡
+			//å¤§äºæ»‘æ¡ä¸€åŠï¼Œæ ¹æ®è¶‹åŠ¿ç¼©å°æ»‘å—å¤§å°
 			else
 			{
 				int nValue = nScrollSlipHeight / 2, nThumbHeight = 0;
@@ -892,7 +892,7 @@ void CDUIScrollBarCtrl::OnTimerScrollUpDownBtn(CDUIPoint ptCurMouse)
 {
 	int nCurValue = GetCurValue();
 
-	//Ë®Æ½ÀàĞÍ
+	//æ°´å¹³ç±»å‹
 	if (ProgressType_Horiz == GetProgressType())
 	{
 		//up btn
@@ -920,7 +920,7 @@ void CDUIScrollBarCtrl::OnTimerScrollUpDownBtn(CDUIPoint ptCurMouse)
 		return;
 	}
 
-	//´¹Ö±ÀàĞÍ
+	//å‚ç›´ç±»å‹
 	if (ProgressType_Vert == GetProgressType())
 	{
 		//up btn

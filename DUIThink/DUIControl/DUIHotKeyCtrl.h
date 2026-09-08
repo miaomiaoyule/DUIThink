@@ -17,6 +17,7 @@ class DUITHINK_API CDUIHotKeyCtrl
 {
 	friend class CDUIHotKeyWnd;
 
+	MMDeclare_Super(CDUIButtonCtrl)
 	DuiDeclare_CreateControl(CDUIHotKeyCtrl)
 	MMDeclare_ClassName(CDUIHotKeyCtrl)
 

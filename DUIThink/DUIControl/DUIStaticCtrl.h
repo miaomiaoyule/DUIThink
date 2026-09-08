@@ -12,6 +12,7 @@ class DUITHINK_API CDUIStaticCtrl
 {
 	friend class CDUIListViewCtrl;
 
+	MMDeclare_Super(CDUIControlBase)
 	DuiDeclare_CreateControl(CDUIStaticCtrl)
 	MMDeclare_ClassName(CDUIStaticCtrl)
 

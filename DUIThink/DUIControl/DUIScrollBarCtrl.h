@@ -15,6 +15,7 @@ class DUITHINK_API CDUIScrollBarCtrl
 {
 	friend class CDUIContainerCtrl;
 
+	MMDeclare_Super(CDUISliderCtrl)
 	DuiDeclare_CreateControl(CDUIScrollBarCtrl)
 	MMDeclare_ClassName(CDUIScrollBarCtrl)
 

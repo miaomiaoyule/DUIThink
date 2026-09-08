@@ -13,6 +13,7 @@ class DUITHINK_API CDUIThinkEditCtrl
 {
 	friend class CDUIComboxCtrl;
 
+	MMDeclare_Super(CDUIButtonCtrl)
 	DuiDeclare_CreateControl(CDUIThinkEditCtrl)
 	MMDeclare_ClassName(CDUIThinkEditCtrl)
 

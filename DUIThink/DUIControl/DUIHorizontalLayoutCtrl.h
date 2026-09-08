@@ -10,6 +10,7 @@ static const GUID IID_CDUIHorizontalLayoutCtrl = { 0xC8636BBC,0x7A02,0x4774,0xA4
 class DUITHINK_API CDUIHorizontalLayoutCtrl
 	: public CDUIContainerCtrl
 {
+	MMDeclare_Super(CDUIContainerCtrl)
 	DuiDeclare_CreateControl(CDUIHorizontalLayoutCtrl)
 	MMDeclare_ClassName(CDUIHorizontalLayoutCtrl)
 

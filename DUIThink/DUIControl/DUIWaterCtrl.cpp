@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "DUIWaterCtrl.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -110,22 +110,22 @@ void CDUIWaterCtrl::PaintWater(HDC hDC)
 		{
 			for (int j = 0; j < m_pRippleBmp->Ripple.szBmpBuffer.cx; j++)
 			{
-				//¼ÆËãÆ«ÒÆÁ¿
+				//è®¡ç®—åç§»é‡
 				xoff = m_pRippleBmp->Ripple.vecBufferRipple1[k - 1] - m_pRippleBmp->Ripple.vecBufferRipple1[k + 1];
 				yoff = m_pRippleBmp->Ripple.vecBufferRipple1[k - m_pRippleBmp->Ripple.szBmpBuffer.cx] - m_pRippleBmp->Ripple.vecBufferRipple1[k + m_pRippleBmp->Ripple.szBmpBuffer.cx];
 
-				//ÅĞ¶Ï×ø±êÊÇ·ñÔÚ´°¿Ú·¶Î§ÄÚ
+				//åˆ¤æ–­åæ ‡æ˜¯å¦åœ¨çª—å£èŒƒå›´å†…
 				if ((i + yoff) < 0) { k++; continue; }
 				if ((i + yoff) >= m_pRippleBmp->Ripple.szBmpBuffer.cy) { k++; continue; }
 				if ((j + xoff) < 0) { k++; continue; }
 				if ((j + xoff) >= m_pRippleBmp->Ripple.szBmpBuffer.cx) { k++; continue; }
 
-				//¼ÆËã³öÆ«ÒÆÏóËØºÍÔ­Ê¼ÏóËØµÄÄÚ´æµØÖ·Æ«ÒÆÁ¿
+				//è®¡ç®—å‡ºåç§»è±¡ç´ å’ŒåŸå§‹è±¡ç´ çš„å†…å­˜åœ°å€åç§»é‡
 				int pos1, pos2;
 				pos1 = m_pRippleBmp->Ripple.szBmpBuffer.cx * (i + yoff) + (j + xoff);
 				pos2 = m_pRippleBmp->Ripple.szBmpBuffer.cx * i + j;
 
-				//¸´ÖÆÏóËØ
+				//å¤åˆ¶è±¡ç´ 
 				m_pRippleBmp->vecBmpDest[pos2] = m_pRippleBmp->vecBmpSwap[pos1];
 
 				k++;
@@ -188,7 +188,7 @@ void CDUIWaterCtrl::RippleSpread()
 
 	for (int i = Ripple.szBmpBuffer.cx; i < Ripple.szBmpBuffer.cx * Ripple.szBmpBuffer.cy - Ripple.szBmpBuffer.cx; i++)
 	{
-		//²¨ÄÜÀ©É¢
+		//æ³¢èƒ½æ‰©æ•£
 		if (i % Ripple.szBmpBuffer.cx == 0 || (i + 1) % Ripple.szBmpBuffer.cx == 0)
 		{
 			continue;
@@ -202,7 +202,7 @@ void CDUIWaterCtrl::RippleSpread()
 				Ripple.vecBufferRipple1[i + Ripple.szBmpBuffer.cx]) >> 1) - Ripple.vecBufferRipple2[i];
 		}
 
-		//²¨ÄÜË¥¼õ
+		//æ³¢èƒ½è¡°å‡
 		int8_t nRippleSubtract = Ripple.vecBufferRipple2[i] >> 5;
 		0 == nRippleSubtract ? nRippleSubtract = Ripple.vecBufferRipple2[i] >> 4 : nRippleSubtract;
 		0 == nRippleSubtract ? nRippleSubtract = Ripple.vecBufferRipple2[i] >> 3 : nRippleSubtract;
@@ -214,7 +214,7 @@ void CDUIWaterCtrl::RippleSpread()
 		false == Ripple.bHaveRipple ? Ripple.bHaveRipple = 0 != Ripple.vecBufferRipple2[i] : Ripple.bHaveRipple;
 	}
 
-	//½»»»²¨ÄÜÊı¾İ»º³åÇø
+	//äº¤æ¢æ³¢èƒ½æ•°æ®ç¼“å†²åŒº
 	Ripple.vecBufferRipple1.swap(Ripple.vecBufferRipple2);
 
 	//noise point verify
@@ -240,7 +240,7 @@ void CDUIWaterCtrl::DropStone(int nX, int nY)
 {
 	if (NULL == m_pRippleBmp || m_pRippleBmp->Ripple.vecBufferRipple1.empty()) return;
 
-	//ÅĞ¶Ï×ø±êÊÇ·ñÔÚÆÁÄ»·¶Î§ÄÚ
+	//åˆ¤æ–­åæ ‡æ˜¯å¦åœ¨å±å¹•èŒƒå›´å†…
 	if ((nX + Water_StoneSize) > m_pRippleBmp->Ripple.szBmpBuffer.cx
 		|| (nY + Water_StoneSize) > m_pRippleBmp->Ripple.szBmpBuffer.cy
 		|| (nX - Water_StoneSize) < 0

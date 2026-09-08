@@ -10,6 +10,7 @@ static const GUID IID_CDUIIPAddressCtrl = { 0x2AFC97C0,0xE6FC,0x4AB1,0x9A,0x64,0
 class DUITHINK_API CDUIIPAddressCtrl
 	: public CDUIHorizontalLayoutCtrl
 {
+	MMDeclare_Super(CDUIHorizontalLayoutCtrl)
 	DuiDeclare_CreateControl(CDUIIPAddressCtrl)
 	MMDeclare_ClassName(CDUIIPAddressCtrl)
 

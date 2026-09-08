@@ -29,6 +29,7 @@ class DUITHINK_API CDUIControlBase
 	friend class CDUILayoutView;
 	friend class CNotifyView;
 
+	MMDeclare_Super(CDUIPropertyObject)
 	DuiDeclare_CreateControl(CDUIControlBase)
 	MMDeclare_ClassName(CDUIControlBase)
 

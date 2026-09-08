@@ -14,6 +14,7 @@ class DUITHINK_API CDUISpinCtrl
 	: public CDUIHorizontalLayoutCtrl
 	, public IDuiControlCallBack
 {
+	MMDeclare_Super(CDUIHorizontalLayoutCtrl)
 	DuiDeclare_CreateControl(CDUISpinCtrl)
 	MMDeclare_ClassName(CDUISpinCtrl)
 

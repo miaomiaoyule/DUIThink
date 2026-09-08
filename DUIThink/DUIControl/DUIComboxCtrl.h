@@ -13,6 +13,7 @@ static const GUID IID_CDUIComboxCtrl = { 0xA82E0774,0xAC2A,0x493E,0x81,0x23,0x51
 class DUITHINK_API CDUIComboxCtrl
 	: public CDUICheckBoxCtrl
 {
+	MMDeclare_Super(CDUICheckBoxCtrl)
 	DuiDeclare_CreateControl(CDUIComboxCtrl)
 	MMDeclare_ClassName(CDUIComboxCtrl)
 

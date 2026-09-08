@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "DUIRichEditCtrl.h"
 
 #ifndef DuiPlatform_SDL
@@ -882,7 +882,7 @@ LRESULT CDUIRichEditCtrl::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, L
 
 	if (uMsg == WM_IME_COMPOSITION)
 	{
-		//½â¾öÎ¢ÈíÊäÈë·¨Î»ÖÃÒì³£µÄÎÊÌâ
+		//è§£å†³å¾®è½¯è¾“å…¥æ³•ä½ç½®å¼‚å¸¸çš„é—®é¢˜
 		m_pWndOwner->UpdateImeCompositionPos();
 
 		return 0;
@@ -2431,17 +2431,17 @@ LRESULT CDUIRichEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 
 	//menu
 	HMENU hPopMenu = CreatePopupMenu();
-	AppendMenu(hPopMenu, 0, ID_RICH_UNDO, _T("³·Ïú(&U)"));
-	AppendMenu(hPopMenu, 0, ID_RICH_REDO, _T("ÖØ×ö(&R)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_UNDO, _T("æ’¤é”€(&U)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_REDO, _T("é‡åš(&R)"));
 	AppendMenu(hPopMenu, MF_SEPARATOR, 0, _T(""));
-	AppendMenu(hPopMenu, 0, ID_RICH_CUT, _T("¼ôÇĞ(&X)"));
-	AppendMenu(hPopMenu, 0, ID_RICH_COPY, _T("¸´ÖÆ(&C)"));
-	AppendMenu(hPopMenu, 0, ID_RICH_PASTE, _T("Õ³Ìû(&V)"));
-	AppendMenu(hPopMenu, 0, ID_RICH_CLEAR, _T("Çå¿Õ(&L)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_CUT, _T("å‰ªåˆ‡(&X)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_COPY, _T("å¤åˆ¶(&C)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_PASTE, _T("ç²˜å¸–(&V)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_CLEAR, _T("æ¸…ç©º(&L)"));
 	AppendMenu(hPopMenu, MF_SEPARATOR, 0, _T(""));
-	AppendMenu(hPopMenu, 0, ID_RICH_SELECTALL, _T("È«Ñ¡(&A)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_SELECTALL, _T("å…¨é€‰(&A)"));
 
-	//³õÊ¼»¯²Ëµ¥Ïî
+	//åˆå§‹åŒ–èœå•é¡¹
 	UINT uUndo = (CanUndo() ? 0 : MF_GRAYED);
 	::EnableMenuItem(hPopMenu, ID_RICH_UNDO, MF_BYCOMMAND | uUndo);
 	UINT uRedo = (CanRedo() ? 0 : MF_GRAYED);

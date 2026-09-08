@@ -15,6 +15,7 @@ class DUITHINK_API CDUIListViewCtrl
 	friend class CDUICalendarCtrl;
 	friend class CDUIComboxCtrl;
 
+	MMDeclare_Super(CDUIVerticalLayoutCtrl)
 	DuiDeclare_CreateControl(CDUIListViewCtrl)
 	MMDeclare_ClassName(CDUIListViewCtrl)
 

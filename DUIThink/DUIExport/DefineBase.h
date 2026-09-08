@@ -29,12 +29,16 @@ class CDUIControlBase;
 class CDUICheckBoxCtrl;
 class CDUIContainerCtrl;
 class CDUITabLayoutCtrl;
+class CDUIListHeaderItemCtrl;
+class CDUIListHeaderCtrl;
+class CDUIListViewCtrl;
 class CDUITreeNodeCtrl;
 class CDUITreeViewCtrl;
 class CDUIWkeBrowserCtrl;
 class CDUIComboxCtrl;
 class CDUIScrollBarCtrl;
 class CDUILayoutView;
+class CDUICalendarCtrl;
 
 //////////////////////////////////////////////////////////////////////////
 #define DUI_WNDSTYLE_CONTAINER			(0)

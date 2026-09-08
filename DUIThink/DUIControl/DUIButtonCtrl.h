@@ -10,6 +10,7 @@ static const GUID IID_CDUIButtonCtrl = { 0xBC562FB6,0x4F45,0x4DA9,0xAA,0xCD,0x1C
 class DUITHINK_API CDUIButtonCtrl
 	: public CDUIStaticCtrl
 {
+	MMDeclare_Super(CDUIStaticCtrl)
 	DuiDeclare_CreateControl(CDUIButtonCtrl)
 	MMDeclare_ClassName(CDUIButtonCtrl)
 

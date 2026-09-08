@@ -20,6 +20,7 @@ class DUITHINK_API CDUIRichEditCtrl
 {
 	friend class CDUITextHost;
 
+	MMDeclare_Super(CDUIContainerCtrl)
 	DuiDeclare_CreateControl(CDUIRichEditCtrl)
 	MMDeclare_ClassName(CDUIContainerCtrl)
 

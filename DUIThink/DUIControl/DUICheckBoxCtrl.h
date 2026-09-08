@@ -10,6 +10,7 @@ static const GUID IID_CDUICheckBoxCtrl = { 0x9E913B03,0x3F46,0x497E,0x89,0xB6,0x
 class DUITHINK_API CDUICheckBoxCtrl
 	: public CDUIButtonCtrl
 {
+	MMDeclare_Super(CDUIButtonCtrl)
 	DuiDeclare_CreateControl(CDUICheckBoxCtrl)
 	MMDeclare_ClassName(CDUICheckBoxCtrl)
 

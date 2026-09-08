@@ -16,6 +16,7 @@ class DUITHINK_API CDUIEditCtrl
 {
 	friend class CDUIEditWnd;
 
+	MMDeclare_Super(CDUIButtonCtrl)
 	DuiDeclare_CreateControl(CDUIEditCtrl)
 	MMDeclare_ClassName(CDUIEditCtrl)
 

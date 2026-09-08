@@ -27,6 +27,7 @@ class DUITHINK_API CDUIContainerCtrl
 	friend class CDUILayoutView;
 	friend class CDUITreeNodeCtrl;
 
+	MMDeclare_Super(CDUIControlBase)
 	DuiDeclare_CreateControl(CDUIContainerCtrl)
 	MMDeclare_ClassName(CDUIContainerCtrl)
 

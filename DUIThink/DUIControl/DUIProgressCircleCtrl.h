@@ -10,6 +10,7 @@ static const GUID IID_CDUIProgressCircleCtrl = { 0x5A0F773C,0x40CB,0x46DC,0xB9,0
 class DUITHINK_API CDUIProgressCircleCtrl
 	: public CDUIProgressCtrl
 {
+	MMDeclare_Super(CDUIProgressCtrl)
 	DuiDeclare_CreateControl(CDUIProgressCircleCtrl)
 	MMDeclare_ClassName(CDUIProgressCircleCtrl)
 

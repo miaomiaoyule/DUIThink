@@ -862,7 +862,12 @@ bool CDUITreeNodeCtrl::RemoveChildNodeAt(int nIndex)
 
 void CDUITreeNodeCtrl::RemoveChildNodeAll()
 {
-	return m_pTreeViewCtrl ? m_pTreeViewCtrl->RemoveAll() : NULL;
+	if (m_pTreeViewCtrl)
+	{
+		m_pTreeViewCtrl->RemoveAll();
+	}
+
+	return;
 }
 
 CDUITreeViewCtrl * CDUITreeNodeCtrl::GetOwnerView()
