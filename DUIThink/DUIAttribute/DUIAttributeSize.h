@@ -11,6 +11,7 @@ class DUITHINK_API CDUIAttributeSize
 	: public CDUIAttributeObject
 	, public SIZE
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttributeSize)
 	MMDeclare_ClassName(CDUIAttributeSize)
 

@@ -10,6 +10,7 @@ static const GUID IID_CDUIAttributeTabSelect = { 0xB2B6A230,0xD8C7,0x4DA2,0x89,0
 class DUITHINK_API CDUIAttributeTabSelect 
 	: public CDUIAttributeCombox
 {
+	MMDeclare_Super(CDUIAttributeCombox)
 	DuiDeclare_CreateAttribute(CDUIAttributeTabSelect)
 	MMDeclare_ClassName(CDUIAttributeTabSelect)
 

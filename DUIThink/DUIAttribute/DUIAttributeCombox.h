@@ -14,6 +14,7 @@ static const GUID IID_CDUIAttributeCombox = { 0xDA1F9EC1,0x02EF,0x4F42,0x83,0x12
 class DUITHINK_API CDUIAttributeCombox
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttributeCombox)
 	MMDeclare_ClassName(CDUIAttributeCombox)
 

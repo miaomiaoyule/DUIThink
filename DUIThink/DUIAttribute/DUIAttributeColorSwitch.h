@@ -14,6 +14,7 @@ static const GUID IID_CDUIAttributeColorSwitch = { 0x7C5B1872,0x6A2A,0x40EC,0x8C
 class DUITHINK_API CDUIAttributeColorSwitch
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttributeColorSwitch)
 	MMDeclare_ClassName(CDUIAttributeColorSwitch)
 

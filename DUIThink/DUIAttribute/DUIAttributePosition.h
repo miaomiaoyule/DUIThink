@@ -16,6 +16,7 @@ class DUITHINK_API CDUIAttributePosition
 {
 	friend class CMFCPropertyGridPositionProperty;
 
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttributePosition)
 	MMDeclare_ClassName(CDUIAttributePosition)
 

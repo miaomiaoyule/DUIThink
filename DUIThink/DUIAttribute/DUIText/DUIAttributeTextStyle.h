@@ -14,6 +14,7 @@ static const GUID IID_CDUIAttributeTextStyle = { 0x21E859BB,0x67D5,0x4A96,0x96,0
 class DUITHINK_API CDUIAttributeTextStyle
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	friend class CDUIThinkEditCtrl;
 	friend class CPropertyTextStyle;
 

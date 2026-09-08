@@ -48,6 +48,7 @@ static const GUID IID_CDUIWkeBrowserCtrl = { 0x209FAAD5,0x84F4,0x4774,0xB9,0x49,
 class DUITHINK_API CDUIWkeBrowserCtrl
 	: public CDUIControlBase
 {
+	MMDeclare_Super(CDUIControlBase)
 	DuiDeclare_CreateControl(CDUIWkeBrowserCtrl)
 	MMDeclare_ClassName(CDUIWkeBrowserCtrl)
 

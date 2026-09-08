@@ -14,6 +14,7 @@ static const GUID IID_CDUIAttriImageSection = { 0xE656788D,0x3217,0x4F91,0xA7,0x
 class DUITHINK_API CDUIAttriImageSection
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttriImageSection)
 	MMDeclare_ClassName(CDUIAttriImageSection)
 

@@ -333,17 +333,17 @@ void CDUIContainerCtrl::SetRangeInset(CDUIRect rcInset)
 
 bool CDUIContainerCtrl::SetTimer(UINT uTimerID, UINT nElapse)
 {
-	return CDUIControlBase::SetTimer(uTimerID, nElapse);
+	return __super::SetTimer(uTimerID, nElapse);
 }
 
 bool CDUIContainerCtrl::KillTimer(UINT uTimerID)
 {
-	return CDUIControlBase::KillTimer(uTimerID);
+	return __super::KillTimer(uTimerID);
 }
 
 bool CDUIContainerCtrl::KillTimer()
 {
-	return CDUIControlBase::KillTimer();
+	return __super::KillTimer();
 }
 
 bool CDUIContainerCtrl::IsAnimateDrag()

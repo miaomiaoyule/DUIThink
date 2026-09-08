@@ -27,6 +27,7 @@ class DUITHINK_API CDUIAttributeObject
 	friend class CDUIControlBase;
 	friend class CPropertyTextStyle;
 
+	MMDeclare_Super(IDuiInterface)
 	DuiDeclare_CreateAttribute(CDUIAttributeObject)
 	MMDeclare_ClassName(CDUIAttributeObject)
 

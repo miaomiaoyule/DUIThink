@@ -74,7 +74,7 @@ LPVOID CDUIWndBase::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 {
 	QUERYINTERFACE(CDUIWndBase, Guid, dwQueryVer);
 
-	return CDUIPropertyObject::QueryInterface(Guid, dwQueryVer);
+	return __super::QueryInterface(Guid, dwQueryVer);
 }
 
 CMMString CDUIWndBase::GetDescribe() const

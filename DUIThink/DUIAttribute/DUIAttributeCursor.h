@@ -10,6 +10,7 @@ static const GUID IID_CDUIAttributeCursor = { 0x9B55FFA1,0xE9F2,0x4FCA,0xA3,0x52
 class DUITHINK_API CDUIAttributeCursor 
 	: public CDUIAttributeCombox
 {
+	MMDeclare_Super(CDUIAttributeCombox)
 	DuiDeclare_CreateAttribute(CDUIAttributeCursor)
 	MMDeclare_ClassName(CDUIAttributeCursor)
 

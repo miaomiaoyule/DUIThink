@@ -10,6 +10,7 @@ static const GUID IID_CDUIAttributeColor = { 0x1FB46B68,0x66AA,0x44B5,0x89,0xBE,
 class DUITHINK_API CDUIAttributeColor 
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttributeColor)
 	MMDeclare_ClassName(CDUIAttributeColor)
 

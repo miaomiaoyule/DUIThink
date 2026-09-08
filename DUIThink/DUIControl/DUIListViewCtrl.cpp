@@ -2141,17 +2141,17 @@ LRESULT CDUIListViewCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 			break;
 	}
 
-	return CDUIContainerCtrl::OnDuiKeyDown(Msg);
+	return __super::OnDuiKeyDown(Msg);
 }
 
 LRESULT CDUIListViewCtrl::OnDuiKeyUp(const DuiMessage &Msg)
 {
-	return CDUIContainerCtrl::OnDuiKeyUp(Msg);
+	return __super::OnDuiKeyUp(Msg);
 }
 
 LRESULT	CDUIListViewCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 {
-	return CDUIContainerCtrl::OnDuiContextMenu(Msg);
+	return __super::OnDuiContextMenu(Msg);
 }
 
 void CDUIListViewCtrl::OnItemVisible(CDUIListItemCtrl *pItem)

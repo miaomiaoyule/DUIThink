@@ -9,8 +9,9 @@
 static const GUID IID_CDUIRotateMenuItemCtrl = { 0xB413C6A8,0x0F06,0x4FF8,0x9C,0x8B,0xFF,0x5E,0xE5,0x7A,0xD0,0xAD };
 class DUITHINK_API CDUIRotateMenuItemCtrl : public CDUIMenuItemCtrl
 {
+	MMDeclare_Super(CDUIMenuItemCtrl)
 	DuiDeclare_CreateControl(CDUIRotateMenuItemCtrl)
-		MMDeclare_ClassName(CDUIRotateMenuItemCtrl)
+	MMDeclare_ClassName(CDUIRotateMenuItemCtrl)
 
 public:
 	CDUIRotateMenuItemCtrl(void);
@@ -35,6 +36,7 @@ class DUITHINK_API CDUIRotateMenuCtrl
 	: public CDUIMenuCtrl
 	, public CDUINotifyPump
 {
+	MMDeclare_Super(CDUIMenuCtrl)
 	DuiDeclare_CreateControl(CDUIRotateMenuCtrl)
 	MMDeclare_ClassName(CDUIRotateMenuCtrl)
 	DuiDeclare_Message_Map()

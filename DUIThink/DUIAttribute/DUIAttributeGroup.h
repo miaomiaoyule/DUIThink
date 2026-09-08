@@ -10,6 +10,7 @@ static const GUID IID_CDUIAttributeGroup = { 0xF1942C49,0xF9EE,0x4C7E,0xA2,0xBD,
 class DUITHINK_API CDUIAttributeGroup 
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	friend class CDUIGlobal;
 	friend class CDUIPropertyObject;
 	friend class CDUIRotateMenuCtrl;
