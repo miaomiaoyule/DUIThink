@@ -56,12 +56,13 @@ void CDUIAttriImageSection::Draw(HBITMAP hBitmap, Gdiplus::Bitmap *pBitmap, cons
 	CDUIRect rcSource = GetSource(ImageSection);
 
 	//dest
+	CDUIRect rcIntersect;
 	CDUIRect rcDest = GetDest(rcSource, rcItem);
 	rcDest.Offset(rcItem.left, rcItem.top);
-	if (false == IntersectRect(&CDUIRect(), &rcDest, &rcItem)) return;
+	if (false == IntersectRect(&rcIntersect, &rcDest, &rcItem)) return;
 
 	//corner
-	CDUIRect rcCorner = bScale ? DuiDpiScaleAttri(ImageSection.rcCorner) : ImageSection.rcCorner;
+	CDUIRect rcCorner = bScale ? CDUIRect(DuiDpiScaleAttri(ImageSection.rcCorner)) : ImageSection.rcCorner;
 
 	//mask
 	if (ImageSection.dwMask > 0x00ffffff || bDisablePallete || 255 != ImageSection.cbAlpha)

@@ -2280,7 +2280,8 @@ CDUIControlBase * CALLBACK CDUIWndBase::__FindControlFromCount(CDUIControlBase* 
 CDUIControlBase * CALLBACK CDUIWndBase::__FindControlFromPoint(CDUIControlBase *pThis, LPVOID pData)
 {
 	LPPOINT pPoint = static_cast<LPPOINT>(pData);
-	return ::PtInRect(&pThis->GetAbsoluteRect(), *pPoint) ? pThis : NULL;
+	CDUIRect rcCtrl = pThis->GetAbsoluteRect();
+	return ::PtInRect(&rcCtrl, *pPoint) ? pThis : NULL;
 }
 
 CDUIControlBase * CALLBACK CDUIWndBase::__FindControlFromShortcut(CDUIControlBase *pThis, LPVOID pData)
@@ -2296,7 +2297,8 @@ CDUIControlBase * CALLBACK CDUIWndBase::__FindControlFromShortcut(CDUIControlBas
 CDUIControlBase * CALLBACK CDUIWndBase::__FindControlFromDrop(CDUIControlBase *pThis, LPVOID pData)
 {
 	LPPOINT pPoint = static_cast<LPPOINT>(pData);
-	return ::PtInRect(&pThis->GetAbsoluteRect(), *pPoint) && pThis->IsWinDropEnabled() ? pThis : nullptr;
+	CDUIRect rcCtrl = pThis->GetAbsoluteRect();
+	return ::PtInRect(&rcCtrl, *pPoint) && pThis->IsWinDropEnabled() ? pThis : nullptr;
 }
 
 CDUIControlBase * CALLBACK CDUIWndBase::__FindControlFromID(CDUIControlBase *pThis, LPVOID pData)

@@ -92,7 +92,7 @@ namespace std
 		inline uint32_t operator()(const tagDuiShadowText &ShadowText) const
 		{
 			CMMString strInfo;
-			strInfo += CMMStrHelp::Format(_T("%u-%s-%u-%u"), (DWORD)ShadowText.hFont, ShadowText.strText.c_str(), ShadowText.dwTextColor, ShadowText.dwTextStyle);
+			strInfo += CMMStrHelp::Format(_T("%llu-%s-%u-%u"), (unsigned long long)(UINT_PTR)ShadowText.hFont, ShadowText.strText.c_str(), ShadowText.dwTextColor, ShadowText.dwTextStyle);
 
 			return CMMHash::GetHash(strInfo);
 		}

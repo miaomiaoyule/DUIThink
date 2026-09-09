@@ -136,7 +136,7 @@ void CDUITreeViewCtrl::OnNotify(CDUIControlBase *pControl, const DuiNotify &Noti
 		return;
 	}
 
-	return __super::OnNotify(pControl, Notify);
+	return IDuiControlCallBack::OnNotify(pControl, Notify);
 }
 
 void CDUITreeViewCtrl::OnClickNode(CDUITreeNodeCtrl *pTreeNode)

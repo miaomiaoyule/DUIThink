@@ -180,6 +180,8 @@ protected:
 class DUITHINK_API CDUIAnimationWnd
 	: public CDUIAnimation
 {
+	MMDeclare_Super(CDUIAnimation)
+	
 public:
 	CDUIAnimationWnd();
 	virtual ~CDUIAnimationWnd();
