@@ -449,12 +449,9 @@ CMMInterfaceHelper<IMMModelInterface> InterfaceVariant
 #define Implement_MMInterfaceHelper(IMMModelInterface, InterfaceVariant) \
 InterfaceVariant(IID_##IMMModelInterface, VER_##IMMModelInterface)
 
-// 2-arg: temporary CMMInterfaceHelper<T>(iid, ver, src)
-// 3-arg: named CMMInterfaceHelper<T> varname(iid, ver, src)
-// MSVC traditional preprocessor does not split __VA_ARGS__ for N-arg dispatch.
 #if defined(_MSC_VER) && !defined(__clang__)
-#define MMInterfaceHelper(IMMModelInterface, InterfaceSrc, ...) \
-	CMMInterfaceHelper<IMMModelInterface> __VA_ARGS__ (IID_##IMMModelInterface, VER_##IMMModelInterface, InterfaceSrc)
+#define MMInterfaceHelper(IMMModelInterface, InterfaceSrc, InterfaceVariant) \
+CMMInterfaceHelper<IMMModelInterface> InterfaceVariant(IID_##IMMModelInterface, VER_##IMMModelInterface, InterfaceSrc)
 #else
 #define MMInterfaceHelperConvert(IMMModelInterface, InterfaceSrc) \
 CMMInterfaceHelper<IMMModelInterface>(IID_##IMMModelInterface, VER_##IMMModelInterface, InterfaceSrc)
