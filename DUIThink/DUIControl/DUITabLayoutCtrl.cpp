@@ -98,17 +98,17 @@ CMMString CDUITabLayoutCtrl::GetDescribe() const
 
 bool CDUITabLayoutCtrl::SetTimer(UINT uTimerID, UINT nElapse)
 {
-	return __super::SetTimer(uTimerID, nElapse);
+	return CDUIContainerCtrl::SetTimer(uTimerID, nElapse);
 }
 
 bool CDUITabLayoutCtrl::KillTimer(UINT uTimerID)
 {
-	return __super::KillTimer(uTimerID);
+	return CDUIContainerCtrl::KillTimer(uTimerID);
 }
 
 bool CDUITabLayoutCtrl::KillTimer()
 {
-	return __super::KillTimer();
+	return CDUIContainerCtrl::KillTimer();
 }
 
 void CDUITabLayoutCtrl::RefreshView()

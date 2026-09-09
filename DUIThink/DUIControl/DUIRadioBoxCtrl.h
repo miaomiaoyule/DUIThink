@@ -78,9 +78,6 @@ protected:
 	virtual void PerformUnSelOther(bool bNotify);
 };
 
-typedef std::vector<CDUIRadioBoxCtrl*> VecDuiRadioBoxCtrl;
-typedef std::unordered_map<CMMString, VecDuiRadioBoxCtrl> MapDuiRadioBoxGroup;
-
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()
 #endif

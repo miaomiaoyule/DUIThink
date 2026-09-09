@@ -7,8 +7,7 @@
 typedef std::vector<CDUIControlBase*> VecDuiControlBase;
 typedef std::deque<CDUIControlBase*> DequeDuiControlBase;
 typedef std::vector<CDUIRadioBoxCtrl*> VecDuiRadioBoxCtrl;
-// Use std::map: CMMString + unordered_map hash/lookup has been unreliable across CRT/libstdc++.
-typedef std::map<CMMString, VecDuiRadioBoxCtrl> MapDuiRadioBoxGroup;
+typedef std::unordered_map<CMMString, VecDuiRadioBoxCtrl> MapDuiRadioBoxGroup;
 
 //////////////////////////////////////////////////////////////////////////
 //custom message
