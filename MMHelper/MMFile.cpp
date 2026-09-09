@@ -553,7 +553,7 @@ enMMFileEncode CMMFile::GetFileEncode(const char *pStr)
 bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData, DWORD dwSizeLimit)
 {
 	//path
-#if defined(DuiPlatform_SDL) && !defined(WIN32)
+#if defined(DuiPlatform_SDL)
 	CMMString strFile = lpszFileFull;
 	if (strFile.empty() || strFile[0] != _T('/'))
 	{
