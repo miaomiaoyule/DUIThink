@@ -33,7 +33,7 @@ protected:
 public:
 	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
 	CMMString GetDescribe() const override;
-	UINT MapKeyState() override;
+	UINT MapWndKeyState() override;
 
 	//create
 	HWND Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwExStyle, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int cx = CW_USEDEFAULT, int cy = CW_USEDEFAULT) override;

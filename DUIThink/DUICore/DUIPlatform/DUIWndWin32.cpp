@@ -355,7 +355,7 @@ CMMString CDUIWndWin32::GetDescribe() const
 	return Dui_WindowBase;
 }
 
-UINT CDUIWndWin32::MapKeyState()
+UINT CDUIWndWin32::MapWndKeyState()
 {
 	UINT uState = 0;
 	if (::GetKeyState(VK_CONTROL) < 0) uState |= MK_CONTROL;
@@ -1206,7 +1206,7 @@ LRESULT CDUIWndWin32::OnImeComPosition(WPARAM wParam, LPARAM lParam)
 		DuiMsg.lParam = lParam;
 		DuiMsg.pMsgCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : m_pFocusCtrl;
 		DuiMsg.ptMouse = pt;
-		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.wKeyState = MapWndKeyState();
 		DuiMsg.dwTimestamp = ::GetTickCount();
 		LRESULT lRes = DuiMsg.pMsgCtrl->OnDuiImeComPosition(DuiMsg);
 

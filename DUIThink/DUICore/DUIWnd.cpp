@@ -547,7 +547,7 @@ LRESULT CDUIWnd::OnSetCursor(WPARAM wParam, LPARAM lParam)
 		DuiMessage DuiMsg = {};
 		DuiMsg.wParam = wParam;
 		DuiMsg.lParam = lParam;
-		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.wKeyState = MapWndKeyState();
 		DuiMsg.dwTimestamp = ::GetTickCount();
 		DuiMsg.ptMouse = pt;
 		pControl->OnDuiSetCursor(pt, DuiMsg);
@@ -618,8 +618,8 @@ void CDUIWnd::DispatchModelKeyboardEvent(CDUIControlBase *pCtrl, KeyboardEventPt
 UINT CDUIWnd::MapKeyState()
 {
 #if defined(DuiPlatform_SDL)
-	return CDUIWndSDL().MapKeyState();
+	return CDUIWndSDL().MapWndKeyState();
 #else
-	return CDUIWndWin32().MapKeyState();
+	return CDUIWndWin32().MapWndKeyState();
 #endif
 }

@@ -90,6 +90,7 @@ class CDUICalendarCtrl;
 #define DuiDpiScaleWnd(x)				(static_cast<typename std::decay<decltype(x)>::type>(GetDpiObj().Scale(x)))
 #define DuiDpiScaleBackWnd(x)			(static_cast<typename std::decay<decltype(x)>::type>(GetDpiObj().ScaleBack(x)))
 #define DuiDpiScaleVerifyWnd(xTarget, xScaleBack) (static_cast<typename std::decay<decltype(xScaleBack)>::type>(GetDpiObj().ScaleVerify(xTarget, xScaleBack)))
+#define DuiDpiScaleAttri(x)				(m_pOwner ? static_cast<typename std::decay<decltype(x)>::type>(m_pOwner->GetDpiObj().Scale(x)) : (x))
 
 /////////////////////////////////////////////////////////////////////////////////////
 #define DUIBGR(b,g,r)					((DWORD)((((DWORD)(BYTE)(b))<<16) | (((WORD)((BYTE)(g))<<8) | (BYTE)(r))))

@@ -49,7 +49,7 @@ HDC CDUIWndSDL::GetWndDC()
 	return m_hDCPaint;
 }
 
-UINT CDUIWndSDL::MapKeyState()
+UINT CDUIWndSDL::MapWndKeyState()
 {
 	UINT uState = 0;
 	SDL_Keymod mod = SDL_GetModState();
@@ -960,7 +960,7 @@ void CDUIWndSDL::OnSdlWindowEvent(const SDL_Event &e)
 
 void CDUIWndSDL::OnSdlMouseEvent(const SDL_Event &e)
 {
-	const UINT uKeyState = MapKeyState();
+	const UINT uKeyState = MapWndKeyState();
 	int x = 0;
 	int y = 0;
 

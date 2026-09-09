@@ -133,7 +133,7 @@ public:
 	virtual operator HWND() const;
 	virtual CMMString GetDuiName() const;
 	virtual UINT GetClassStyle() const;
-	virtual UINT MapKeyState();
+	virtual UINT MapWndKeyState();
 
 	//create
 	virtual LPCTSTR GetSuperClassName() const;

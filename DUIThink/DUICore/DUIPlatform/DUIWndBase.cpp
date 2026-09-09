@@ -121,7 +121,7 @@ UINT CDUIWndBase::GetClassStyle() const
 	return CS_DBLCLKS;
 }
 
-UINT CDUIWndBase::MapKeyState()
+UINT CDUIWndBase::MapWndKeyState()
 {
 	return 0;
 }
@@ -965,7 +965,7 @@ void CDUIWndBase::SendNotify(DuiNotify &Notify)
 
 	Notify.uCtrlID = Notify.pNotifyCtrl->GetCtrlID();
 	Notify.ptMouse = m_ptMousePosLast;
-	Notify.wKeyState = MapKeyState();
+	Notify.wKeyState = MapWndKeyState();
 	Notify.dwTimestamp = ::GetTickCount();
 
 	int nCount = Notify.pNotifyCtrl->GetControlCallBackCount();
@@ -1008,7 +1008,7 @@ void CDUIWndBase::PostNotify(DuiNotify &Notify)
 	if (NULL == Notify.pNotifyCtrl || this != Notify.pNotifyCtrl->GetWndOwner()) return;
 
 	Notify.ptMouse = m_ptMousePosLast;
-	Notify.wKeyState = MapKeyState();
+	Notify.wKeyState = MapWndKeyState();
 	Notify.dwTimestamp = ::GetTickCount();
 	m_vecAsynNotify.push_back(Notify);
 
@@ -1745,7 +1745,7 @@ LRESULT CDUIWndBase::OnKeyDown(WPARAM wParam, LPARAM lParam)
 		DuiMsg.pMsgCtrl = m_pEventCtrl;
 		DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
 		DuiMsg.ptMouse = m_ptMousePosLast;
-		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.wKeyState = MapWndKeyState();
 		DuiMsg.dwTimestamp = ::GetTickCount();
 
 		if (DuiMsg.pMsgCtrl->IsEnabled())
@@ -1775,7 +1775,7 @@ LRESULT CDUIWndBase::OnKeyUp(WPARAM wParam, LPARAM lParam)
 		DuiMsg.pMsgCtrl = m_pEventCtrl;
 		DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
 		DuiMsg.ptMouse = m_ptMousePosLast;
-		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.wKeyState = MapWndKeyState();
 		DuiMsg.dwTimestamp = ::GetTickCount();
 
 		if (DuiMsg.pMsgCtrl->IsEnabled())
@@ -1805,7 +1805,7 @@ LRESULT CDUIWndBase::OnChar(WPARAM wParam, LPARAM lParam)
 		DuiMsg.pMsgCtrl = m_pEventCtrl;
 		DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
 		DuiMsg.ptMouse = m_ptMousePosLast;
-		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.wKeyState = MapWndKeyState();
 		DuiMsg.dwTimestamp = ::GetTickCount();
 
 		if (DuiMsg.pMsgCtrl->IsEnabled())
@@ -1835,7 +1835,7 @@ LRESULT CDUIWndBase::OnSysKeyDown(WPARAM wParam, LPARAM lParam)
 		DuiMsg.pMsgCtrl = m_pEventCtrl;
 		DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
 		DuiMsg.ptMouse = m_ptMousePosLast;
-		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.wKeyState = MapWndKeyState();
 		DuiMsg.dwTimestamp = ::GetTickCount();
 
 		if (DuiMsg.pMsgCtrl->IsEnabled())
@@ -1865,7 +1865,7 @@ LRESULT CDUIWndBase::OnSysKeyUp(WPARAM wParam, LPARAM lParam)
 		DuiMsg.pMsgCtrl = m_pEventCtrl;
 		DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
 		DuiMsg.ptMouse = m_ptMousePosLast;
-		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.wKeyState = MapWndKeyState();
 		DuiMsg.dwTimestamp = ::GetTickCount();
 
 		if (DuiMsg.pMsgCtrl->IsEnabled())
@@ -1901,7 +1901,7 @@ LRESULT CDUIWndBase::OnSysChar(WPARAM wParam, LPARAM lParam)
 		DuiMsg.pMsgCtrl = m_pEventCtrl;
 		DuiMsg.chKey = (TCHAR)DuiMsg.wParam;
 		DuiMsg.ptMouse = m_ptMousePosLast;
-		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.wKeyState = MapWndKeyState();
 		DuiMsg.dwTimestamp = ::GetTickCount();
 
 		if (DuiMsg.pMsgCtrl->IsEnabled())
@@ -2016,7 +2016,7 @@ LRESULT CDUIWndBase::OnCommand(WPARAM wParam, LPARAM lParam)
 		DuiMsg.lParam = lParam;
 		DuiMsg.pMsgCtrl = m_pEventCtrl;
 		DuiMsg.ptMouse = pt;
-		DuiMsg.wKeyState = MapKeyState();
+		DuiMsg.wKeyState = MapWndKeyState();
 		DuiMsg.dwTimestamp = ::GetTickCount();
 
 		DuiMsg.pMsgCtrl->OnDuiCommand(DuiMsg);
