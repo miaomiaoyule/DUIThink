@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "MMWinTCPing.h"
 
 #ifndef DuiPlatform_SDL
@@ -10,7 +10,6 @@ CMMWinTCPing::CMMWinTCPing()
 	//WSAStartup(MAKEWORD(2, 2), &WSAData);
 	if (WSAStartup(MAKEWORD(1, 1), &WSAData) != 0)
 	{
-		/*如果初始化不成功则报错，GetLastError()返回发生的错误信息*/
 		printf("WSAStartup() failed: %d\n", GetLastError());
 		
 		return;

@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "MMMD5CheckSum.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,13 +138,13 @@ CMMString CMMMD5Checksum::Final()
 VOID CMMMD5Checksum::Transform(BYTE Block[64])
 {
 	//变量定义
-	ULONG a = m_lMD5[0];
-	ULONG b = m_lMD5[1];
-	ULONG c = m_lMD5[2];
-	ULONG d = m_lMD5[3];
+	DWORD a = m_lMD5[0];
+	DWORD b = m_lMD5[1];
+	DWORD c = m_lMD5[2];
+	DWORD d = m_lMD5[3];
 
 	//变量定义
-	ULONG X[16];
+	DWORD X[16];
 
 	//数据转换
 	ByteToDWord(X, Block, 64);
@@ -231,7 +231,7 @@ VOID CMMMD5Checksum::Transform(BYTE Block[64])
 }
 
 //更新数据
-VOID CMMMD5Checksum::Update(BYTE *Input, ULONG nInputLen)
+VOID CMMMD5Checksum::Update(BYTE *Input, DWORD nInputLen)
 {
 	//变量定义
 	UINT nIndex = (UINT)((m_nCount[0] >> 3) & 0x3F);

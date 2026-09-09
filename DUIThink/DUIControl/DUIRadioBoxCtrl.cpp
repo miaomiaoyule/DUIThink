@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "DUIRadioBoxCtrl.h"
 
 DuiImplement_CreateControl(CDUIRadioBoxCtrl)

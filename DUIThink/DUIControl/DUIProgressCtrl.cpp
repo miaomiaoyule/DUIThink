@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "DUIProgressCtrl.h"
 
 DuiImplement_CreateControl(CDUIProgressCtrl)

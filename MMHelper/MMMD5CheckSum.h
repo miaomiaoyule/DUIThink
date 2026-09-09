@@ -118,8 +118,8 @@ class MMHELPER_API CMMMD5Checksum
 	//存储变量
 private:
 	BYTE								m_lpszBuffer[64];             //输入缓冲
-	ULONG								m_nCount[2];                  //位数计数
-	ULONG								m_lMD5[4];                    //MD5校验和
+	DWORD								m_nCount[2];                  //位数计数
+	DWORD								m_lMD5[4];                    //MD5校验和
 
 	//函数定义
 protected:
@@ -139,7 +139,7 @@ protected:
 	//辅助函数
 protected:
 	VOID Transform(BYTE Block[64]);
-	VOID Update(BYTE *Input, ULONG nInputLen);
+	VOID Update(BYTE *Input, DWORD nInputLen);
 	VOID DWordToByte(BYTE *Output, DWORD *Input, UINT nLength);
 	VOID ByteToDWord(DWORD *Output, BYTE *Input, UINT nLength);
 

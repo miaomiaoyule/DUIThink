@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "DUICalendarCtrl.h"
 
 #define CALENDAR_OFFSET_LRBTN			(15)

@@ -449,13 +449,20 @@ CMMInterfaceHelper<IMMModelInterface> InterfaceVariant
 #define Implement_MMInterfaceHelper(IMMModelInterface, InterfaceVariant) \
 InterfaceVariant(IID_##IMMModelInterface, VER_##IMMModelInterface)
 
-// MSVC allows omitting the trailing InterfaceVariant arg; GCC needs an overload.
+// 2-arg: temporary CMMInterfaceHelper<T>(iid, ver, src)
+// 3-arg: named CMMInterfaceHelper<T> varname(iid, ver, src)
+// MSVC traditional preprocessor does not split __VA_ARGS__ for N-arg dispatch.
+#if defined(_MSC_VER) && !defined(__clang__)
+#define MMInterfaceHelper(IMMModelInterface, InterfaceSrc, ...) \
+	CMMInterfaceHelper<IMMModelInterface> __VA_ARGS__ (IID_##IMMModelInterface, VER_##IMMModelInterface, InterfaceSrc)
+#else
 #define MMInterfaceHelperConvert(IMMModelInterface, InterfaceSrc) \
 CMMInterfaceHelper<IMMModelInterface>(IID_##IMMModelInterface, VER_##IMMModelInterface, InterfaceSrc)
 #define MMInterfaceHelperVariant(IMMModelInterface, InterfaceSrc, InterfaceVariant) \
-CMMInterfaceHelper<IMMModelInterface>InterfaceVariant(IID_##IMMModelInterface, VER_##IMMModelInterface, InterfaceSrc)
+CMMInterfaceHelper<IMMModelInterface> InterfaceVariant(IID_##IMMModelInterface, VER_##IMMModelInterface, InterfaceSrc)
 #define MMInterfaceHelper_GET(_1, _2, _3, NAME, ...) NAME
 #define MMInterfaceHelper(...) MMInterfaceHelper_GET(__VA_ARGS__, MMInterfaceHelperVariant, MMInterfaceHelperConvert)(__VA_ARGS__)
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 

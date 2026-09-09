@@ -553,21 +553,14 @@ enMMFileEncode CMMFile::GetFileEncode(const char *pStr)
 bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData, DWORD dwSizeLimit)
 {
 	//path
-	CMMString strFile = lpszFileFull;
 #if defined(DuiPlatform_SDL) && !defined(WIN32)
+	CMMString strFile = lpszFileFull;
 	if (strFile.empty() || strFile[0] != _T('/'))
 	{
 		strFile = CMMService::GetWorkDirectory() + _T('/') + strFile;
 	}
-	
-	strFile.Replace(_T('\\'), _T('/'));
-#else
-	if (strFile.length() < 2 || strFile[1] != _T(':'))
-	{
-		strFile = CMMService::GetWorkDirectory() + _T('\\') + strFile;
-	}
-#endif
 
+	strFile.Replace(_T('\\'), _T('/'));
 	size_t nFileSize = 0;
 	void *pData = SDL_LoadFile(CT2CA(strFile).c_str(), &nFileSize);
 	if (NULL == pData) return false;
@@ -611,6 +604,11 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 
 	return true;	*/
 #else
+	CMMString strFile = lpszFileFull;
+	if (strFile.length() < 2 || strFile[1] != _T(':'))
+	{
+		strFile = CMMService::GetWorkDirectory() + _T('\\') + strFile;
+	}
 	{
 		HANDLE hFile = CreateFile(strFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (INVALID_HANDLE_VALUE == hFile) return false;

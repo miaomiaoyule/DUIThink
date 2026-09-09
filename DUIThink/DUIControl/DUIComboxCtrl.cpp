@@ -799,7 +799,7 @@ bool CDUIComboxCtrl::Active()
 
 		if (NULL == m_pShowListView)
 		{
-			MessageBox(m_pWndOwner->GetWndHandle(), _T("Please Select Bind UI of ComboxView£¬It Must Be ListviewCtrl"), NULL, NULL);
+			MessageBox(m_pWndOwner->GetWndHandle(), _T("Please Select Bind UI of ComboxViewï¼ŒIt Must Be ListviewCtrl"), NULL, NULL);
 
 			return false;
 		}
