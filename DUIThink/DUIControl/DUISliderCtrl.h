@@ -10,7 +10,7 @@ static const GUID IID_CDUISliderCtrl = { 0x7E46B557,0x965E,0x4C3F,0xAD,0xEA,0x11
 class DUITHINK_API CDUISliderCtrl
 	: public CDUIProgressCtrl
 {
-	MMDeclare_Super(CDUISliderCtrl)
+	MMDeclare_Super(CDUIProgressCtrl)
 	DuiDeclare_CreateControl(CDUISliderCtrl)
 	MMDeclare_ClassName(CDUISliderCtrl)
 
