@@ -247,7 +247,6 @@ struct tagDuiImageInfo
 	int									nWidth = 0;
 	int									nHeight = 0;
 	bool								bAlpha = false;
-	UINT								dwColorKeyApplied = 0;
 
 	//gif
 	Gdiplus::Bitmap *					pImageAnimate = NULL;
