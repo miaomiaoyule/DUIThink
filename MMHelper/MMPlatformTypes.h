@@ -205,9 +205,10 @@ typedef void VOID;
 #define PASCAL
 #endif
 
-// MSVC __super = immediate base. GCC/Clang have no equivalent; map it to Super.
-// Declare Super once next to the base list (MMDeclare_Super). Changing inheritance
-// only updates that typedef, not every __super:: call site.
+// MSVC __super looks up the name in all direct bases (including MI).
+// GCC/Clang have no portable equivalent: map __super -> Super and declare
+// the DUI parent once (MMDeclare_Super). Clang can use real __super with
+// -fms-extensions only if this #define is removed.
 #if !defined(_MSC_VER)
 #ifndef __super
 #define __super Super
