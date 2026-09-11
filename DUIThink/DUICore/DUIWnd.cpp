@@ -199,6 +199,7 @@ bool CDUIWnd::RemoveAllTimer()
 	}
 
 	m_vecTimers.clear();
+	m_TimerStore = {};
 
 	return true;
 }

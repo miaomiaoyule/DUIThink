@@ -449,6 +449,46 @@ bool CDUIWndBase::RemoveAllTimer()
 	return false;
 }
 
+bool CDUIWndBase::AsyncTask(std::function<void()> pFunc)
+{
+	if (false == (bool)pFunc) return false;
+
+	std::function<void()> *pTask = new (std::nothrow) std::function<void()>(std::move(pFunc));
+	if (NULL == pTask) return false;
+
+	if (0 == PostMessage(WM_DUIASYNC, (WPARAM)pTask, 0))
+	{
+		delete pTask;
+		return false;
+	}
+
+	return true;
+}
+
+UINT_PTR CDUIWndBase::TimerTask(unsigned int ms, bool bRepeat, std::function<void()> pFunc)
+{
+	if (false == (bool)pFunc || 0 == ms) return 0;
+
+	const UINT uTimerID = m_TimerStore.uNextID++;
+	if (false == SetTimer(this, uTimerID, ms))
+	{
+		return 0;
+	}
+
+	DuiTimerStore::Item &Item = m_TimerStore.mapTimer[uTimerID];
+	Item.pFunc = std::move(pFunc);
+	Item.bRepeat = bRepeat;
+
+	return uTimerID;
+}
+
+bool CDUIWndBase::StopTimer(UINT_PTR timerId)
+{
+	m_TimerStore.mapTimer.erase(timerId);
+
+	return KillTimer(this, (UINT)timerId);
+}
+
 bool CDUIWndBase::AddRadioBoxToGroup(CDUIRadioBoxCtrl *pControl)
 {
 	if (pControl == NULL) return false;
@@ -1158,6 +1198,24 @@ LRESULT CDUIWndBase::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			return 0;
 		}
+		case WM_DUIASYNC:
+		{
+			std::function<void()> *pFunc = reinterpret_cast<std::function<void()>*>(wParam);
+			if (pFunc)
+			{
+				try
+				{
+					(*pFunc)();
+				}
+				catch (...)
+				{
+				}
+
+				delete pFunc;
+			}
+
+			return 0;
+		}
 		case WM_CREATE:
 		{
 			return OnCreate(wParam, lParam);
@@ -1672,7 +1730,30 @@ LRESULT CDUIWndBase::OnTimer(WPARAM wParam, LPARAM lParam)
 			}
 			else
 			{
-				CDUIAnimationWnd::OnAnimationElapse(TimerInfo.nLocalID);
+				auto it = m_TimerStore.mapTimer.find(TimerInfo.nLocalID);
+				if (it != m_TimerStore.mapTimer.end())
+				{
+					std::function<void()> pFunc = it->second.pFunc;
+					const bool bRepeat = it->second.bRepeat;
+					if (false == bRepeat)
+					{
+						StopTimer(TimerInfo.nLocalID);
+					}
+					if (pFunc)
+					{
+						try
+						{
+							pFunc();
+						}
+						catch (...)
+						{
+						}
+					}
+				}
+				else
+				{
+					CDUIAnimationWnd::OnAnimationElapse(TimerInfo.nLocalID);
+				}
 			}
 
 			break;

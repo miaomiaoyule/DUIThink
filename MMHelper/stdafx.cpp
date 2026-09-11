@@ -25,6 +25,10 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...)
 
 namespace
 {
+	std::unordered_map<SDL_Window *, CMMRect> g_mapWndUpdate;
+	std::unordered_map<SDL_WindowID, IMMWndSDL *> g_mapSdlWnd;
+	std::mutex g_csSdlWnd;
+	
 	CMMStringA MMEnsureSdlPath(LPCTSTR lpszPath)
 	{
 		CMMString strPath = lpszPath ? lpszPath : _T("");
@@ -35,9 +39,28 @@ namespace
 		return CT2CA(strPath);
 	}
 
-	std::unordered_map<SDL_Window *, CMMRect> g_mapWndUpdate;
-	std::unordered_map<SDL_WindowID, IMMWndSDL *> g_mapSdlWnd;
-	std::mutex g_csSdlWnd;
+	void MMSdlGetWindowScreenPos(SDL_Window *pWindow, int *px, int *py)
+	{
+		int x = 0;
+		int y = 0;
+		if (pWindow)
+		{
+			SDL_GetWindowPosition(pWindow, &x, &y);
+			if (MMSdlIsPopupWindow(pWindow))
+			{
+				int ox = 0;
+				int oy = 0;
+				MMSdlGetWindowScreenPos(SDL_GetWindowParent(pWindow), &ox, &oy);
+				x += ox;
+				y += oy;
+			}
+		}
+	
+		if (px) *px = x;
+		if (py) *py = y;
+	}
+	
+	return;
 }
 
 bool IsWindow(HWND hWnd)
@@ -193,9 +216,9 @@ BOOL ScreenToClient(HWND hWnd, LPPOINT lpPoint)
 {
 	if (false == IsWindow(hWnd) || NULL == lpPoint) return 0;
 
-	SDL_Window *pWindow = (SDL_Window *)hWnd;
-	int x, y;
-	SDL_GetWindowPosition(pWindow, &x, &y);
+	int x = 0;
+	int y = 0;
+	MMSdlGetWindowScreenPos((SDL_Window *)hWnd, &x, &y);
 	lpPoint->x -= x;
 	lpPoint->y -= y;
 
@@ -206,9 +229,9 @@ BOOL ClientToScreen(HWND hWnd, LPPOINT lpPoint)
 {
 	if (false == IsWindow(hWnd) || NULL == lpPoint) return 0;
 
-	SDL_Window *pWindow = (SDL_Window *)hWnd;
-	int x, y;
-	SDL_GetWindowPosition(pWindow, &x, &y);
+	int x = 0;
+	int y = 0;
+	MMSdlGetWindowScreenPos((SDL_Window *)hWnd, &x, &y);
 	lpPoint->x += x;
 	lpPoint->y += y;
 
@@ -317,8 +340,11 @@ void GetWindowRect(HWND hWnd, LPRECT lpRect)
 	if (false == IsWindow(hWnd) || NULL == lpRect) return;
 
 	SDL_Window *pWindow = (SDL_Window *)hWnd;
-	int x, y, w, h;
-	SDL_GetWindowPosition(pWindow, &x, &y);
+	int x = 0;
+	int y = 0;
+	int w = 0;
+	int h = 0;
+	MMSdlGetWindowScreenPos(pWindow, &x, &y);
 	SDL_GetWindowSize(pWindow, &w, &h);
 	lpRect->left = x;
 	lpRect->top = y;
@@ -347,21 +373,26 @@ void GetMonitorInfo(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo)
 {
 	if (NULL == hMonitor || NULL == lpMonitorInfo) return;
 
-	SDL_DisplayID displayID = (SDL_DisplayID)hMonitor;
-	SDL_Rect rect;
-	if (SDL_GetDisplayBounds(displayID, &rect) != 0) return;
+	SDL_DisplayID displayID = (SDL_DisplayID)(uintptr_t)hMonitor;
+	SDL_Rect rect = {};
+	if (false == SDL_GetDisplayBounds(displayID, &rect)) return;
+	
 	lpMonitorInfo->rcMonitor.left = rect.x;
 	lpMonitorInfo->rcMonitor.top = rect.y;
 	lpMonitorInfo->rcMonitor.right = rect.x + rect.w;
 	lpMonitorInfo->rcMonitor.bottom = rect.y + rect.h;
 
-	SDL_Rect workRect;
-	if (SDL_GetDisplayUsableBounds(displayID, &workRect) != 0) return;
+	SDL_Rect workRect = rect;
+	if (false == SDL_GetDisplayUsableBounds(displayID, &workRect))
+	{
+		workRect = rect;
+	}
+	
 	lpMonitorInfo->rcWork.left = workRect.x;
 	lpMonitorInfo->rcWork.top = workRect.y;
 	lpMonitorInfo->rcWork.right = workRect.x + workRect.w;
 	lpMonitorInfo->rcWork.bottom = workRect.y + workRect.h;
-	lpMonitorInfo->dwFlags = 0; // SDL does not provide monitor flags
+	lpMonitorInfo->dwFlags = 0;
 
 	return;
 }
@@ -470,9 +501,22 @@ short GetKeyState(int vKey)
 
 void SetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags)
 {
+	(void)hWndInsertAfter;
 	if (0 == (uFlags & SWP_NOMOVE))
 	{
-		SDL_SetWindowPosition(hWnd, X, Y);
+		int x = X;
+		int y = Y;
+		SDL_Window *pWindow = (SDL_Window *)hWnd;
+		if (MMSdlIsPopupWindow(pWindow))
+		{
+			int ox = 0;
+			int oy = 0;
+			MMSdlGetWindowScreenPos(SDL_GetWindowParent(pWindow), &ox, &oy);
+			x -= ox;
+			y -= oy;
+		}
+	
+		SDL_SetWindowPosition(pWindow, x, y);
 	}
 	if (0 == (uFlags & SWP_NOSIZE))
 	{
@@ -484,10 +528,8 @@ void SetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy,
 
 void MoveWindow(HWND hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint)
 {
-	if (false == IsWindow(hWnd)) return;
-
-	SDL_SetWindowPosition(hWnd, X, Y);
-	SDL_SetWindowSize(hWnd, nWidth, nHeight);
+	(void)bRepaint;
+	SetWindowPos(hWnd, NULL, X, Y, nWidth, nHeight, SWP_NOZORDER);
 
 	return;
 }
@@ -559,9 +601,24 @@ void ShowWindow(HWND hWnd, int nCmdShow)
 
 HMONITOR MonitorFromWindow(HWND hWnd, DWORD dwFlags)
 {
-	if (false == IsWindow(hWnd)) return NULL;
+	SDL_DisplayID displayID = 0;
+	if (IsWindow(hWnd))
+	{
+		displayID = SDL_GetDisplayForWindow((SDL_Window *)hWnd);
+	}
+	if (0 == displayID && MONITOR_DEFAULTTONULL != dwFlags)
+	{
+		int nCount = 0;
+		SDL_DisplayID *pIDs = SDL_GetDisplays(&nCount);
+		if (pIDs && nCount > 0)
+		{
+			displayID = pIDs[0];
+		}
+	
+		SDL_free(pIDs);
+	}
 
-	return SDL_GetDisplayForWindow((SDL_Window *)hWnd);
+	return (HMONITOR)(uintptr_t)displayID;
 }
 
 void UpdateWindow(HWND hWnd)
@@ -640,15 +697,11 @@ BOOL PostMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	return TRUE;
 }
 
-Uint32 MMSdlGetAsyncEventType()
+bool MMSdlIsPopupWindow(SDL_Window *pWindow)
 {
-	static Uint32 s_uAsyncEvent = 0;
-	if (0 == s_uAsyncEvent)
-	{
-		s_uAsyncEvent = SDL_RegisterEvents(1);
-	}
-
-	return s_uAsyncEvent;
+	if (NULL == pWindow) return false;
+	const SDL_WindowFlags uFlags = SDL_GetWindowFlags(pWindow);
+	return (uFlags & (SDL_WINDOW_POPUP_MENU | SDL_WINDOW_TOOLTIP)) != 0;
 }
 
 void MMSdlRegisterWnd(SDL_WindowID uWndID, IMMWndSDL *pWnd)
@@ -665,6 +718,17 @@ void MMSdlUnregisterWnd(SDL_WindowID uWndID)
 
 	std::lock_guard<std::mutex> lock(g_csSdlWnd);
 	g_mapSdlWnd.erase(uWndID);
+}
+
+Uint32 MMSdlGetAsyncEventType()
+{
+	static Uint32 s_uAsyncEvent = 0;
+	if (0 == s_uAsyncEvent)
+	{
+		s_uAsyncEvent = SDL_RegisterEvents(1);
+	}
+
+	return s_uAsyncEvent;
 }
 
 void MMSdlDispatchEvent(SDL_Event &e)
@@ -692,6 +756,44 @@ void MMSdlDispatchEvent(SDL_Event &e)
 	{
 		pWnd->OnWndMessage(e);
 	}
+}
+
+bool MMSdlEventToMsg(const SDL_Event &e, MSG &Msg)
+{
+	Msg = {};
+
+	switch (e.type)
+	{
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
+		case SDL_EVENT_MOUSE_BUTTON_UP:
+		{
+			Msg.hwnd = (HWND)SDL_GetWindowFromID(e.button.windowID);
+			if (SDL_BUTTON_LEFT == e.button.button)
+			{
+				Msg.message = (SDL_EVENT_MOUSE_BUTTON_DOWN == e.type) ? WM_LBUTTONDOWN : WM_LBUTTONUP;
+			}
+			else if (SDL_BUTTON_RIGHT == e.button.button)
+			{
+				Msg.message = (SDL_EVENT_MOUSE_BUTTON_DOWN == e.type) ? WM_RBUTTONDOWN : WM_RBUTTONUP;
+			}
+			else if (SDL_BUTTON_MIDDLE == e.button.button)
+			{
+				Msg.message = (SDL_EVENT_MOUSE_BUTTON_DOWN == e.type) ? WM_MBUTTONDOWN : WM_MBUTTONUP;
+			}
+			else
+			{
+				return false;
+			}
+			Msg.lParam = MAKELPARAM((int)e.button.x, (int)e.button.y);
+			return true;
+		}
+		default:
+		{
+			break;
+		}
+	}
+
+	return false;
 }
 
 #endif

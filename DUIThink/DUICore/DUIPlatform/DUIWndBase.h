@@ -111,6 +111,7 @@ protected:
 	VecIDuiNotify								m_vecINotify;
 	VecDuiNotify								m_vecAsynNotify;
 	VecDuiTimerInfo								m_vecTimers;
+	DuiTimerStore								m_TimerStore;
 	DequeDuiControlBase							m_queDelayDelete;
 	VecDuiControlBase							m_vecFoundControls;
 	MapDuiControlBase							m_mapControl;
@@ -186,6 +187,9 @@ public:
 	virtual bool KillTimer(CDUIPropertyObject *pPropObj, UINT uTimerID);
 	virtual bool KillTimer(CDUIPropertyObject *pPropObj);
 	virtual bool RemoveAllTimer();
+	virtual bool AsyncTask(std::function<void()> pFunc);
+	virtual UINT_PTR TimerTask(unsigned int ms, bool bRepeat, std::function<void()> pFunc);
+	virtual bool StopTimer(UINT_PTR timerId);
 
 	//radio
 	virtual bool AddRadioBoxToGroup(CDUIRadioBoxCtrl *pControl);

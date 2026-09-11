@@ -3507,7 +3507,11 @@ void CDUIGlobal::MessageLoop()
 			continue;
 		}
 
-		MMSdlDispatchEvent(e);
+		MSG Msg = {};
+		if (false == MMSdlEventToMsg(e, Msg) || false == CDUIGlobal::GetInstance()->TranslateMessage(&Msg))
+		{
+			MMSdlDispatchEvent(e);
+		}
 
 		if (SDL_EVENT_QUIT == e.type)
 		{

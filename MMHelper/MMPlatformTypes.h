@@ -1308,21 +1308,25 @@ public:
 
 struct tagMMSdlAsyncMsg
 {
-	IMMWndSDL *						pWnd = NULL;
+	IMMWndSDL *							pWnd = NULL;
 	UINT								uMsg = 0;
 	WPARAM								wParam = 0;
 	LPARAM								lParam = 0;
 };
 
-// One shared user-event type for all PostMessage-style async posts.
-MMHELPER_API Uint32 MMSdlGetAsyncEventType();
-
 // Register / unregister for EXPOSED lookup by SDL_WindowID.
+MMHELPER_API bool MMSdlIsPopupWindow(SDL_Window *pWindow);
 MMHELPER_API void MMSdlRegisterWnd(SDL_WindowID uWndID, IMMWndSDL *pWnd);
 MMHELPER_API void MMSdlUnregisterWnd(SDL_WindowID uWndID);
 
+// One shared user-event type for all PostMessage-style async posts.
+MMHELPER_API Uint32 MMSdlGetAsyncEventType();
+
 // Single dispatch entry (like DispatchMessage): call after WaitEvent / PollEvent.
 MMHELPER_API void MMSdlDispatchEvent(SDL_Event &e);
+
+// Convert an SDL event to a Win32-shaped MSG for TranslateMessage.
+MMHELPER_API bool MMSdlEventToMsg(const SDL_Event &e, MSG &Msg);
 
 //////////////////////////////////////////////////////////////////////////
 #endif // __MM_PLATFORM_TYPES_H__

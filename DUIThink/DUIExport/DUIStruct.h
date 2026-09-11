@@ -509,6 +509,18 @@ typedef struct tagDuiTimerInfo
 	bool								bKilled = false;
 } DuiTimerInfo;
 
+typedef struct tagDuiTimerStore
+{
+	struct Item
+	{
+		std::function<void()>			pFunc = NULL;
+		bool							bRepeat = false;
+	};
+
+	UINT								uNextID = 0x80000000;
+	std::map<UINT_PTR, Item>			mapTimer;
+} DuiTimerStore;
+
 typedef struct tagDuiFindShortCut
 {
 	TCHAR								chChar = 0;

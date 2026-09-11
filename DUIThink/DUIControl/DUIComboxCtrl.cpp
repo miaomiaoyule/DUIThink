@@ -32,9 +32,13 @@ public:
 	void UnInit();
 	CMMString GetDuiName() const override;
 
+	//message
 protected:
-	void OnFinalMessage() override;
+	LRESULT OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) override;
 	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam) override;
+
+	//notify
+	void OnFinalMessage() override;
 	void OnDuiWndInited(const DuiNotify &Notify);
 	void OnDuiItemSelected(const DuiNotify &Notify);
 	void OnDuiItemMouseEnter(const DuiNotify &Notify);
@@ -168,6 +172,44 @@ CMMString CDUIComboxWnd::GetDuiName() const
 	return _T("");
 }
 
+LRESULT CDUIComboxWnd::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
+{
+#if defined(DuiPlatform_SDL)
+	if (IsWindow(GetWndHandle())
+		&& (WM_LBUTTONDOWN == uMsg || WM_RBUTTONDOWN == uMsg || WM_MBUTTONDOWN == uMsg))
+	{
+		float fX = 0.0f;
+		float fY = 0.0f;
+		SDL_GetGlobalMouseState(&fX, &fY);
+
+		CDUIRect rcDrop;
+		::GetWindowRect(GetWndHandle(), &rcDrop);
+
+		CDUIRect rcOwner = m_pOwner->GetAbsoluteRect();
+		CDUIRect rcWnd;
+		::GetWindowRect(m_pWndOwner->GetWndHandle(), &rcWnd);
+		rcOwner.Offset(rcWnd.left, rcWnd.top);
+		if (false == rcDrop.PtInRect(CDUIPoint((int)fX, (int)fY)) && false == rcOwner.PtInRect(CDUIPoint((int)fX, (int)fY)))
+		{
+			UnInit();
+		}
+	}
+#endif
+
+	return __super::OnPreWndMessage(hWnd, uMsg, wParam, lParam, bHandled);
+}
+
+LRESULT CDUIComboxWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
+{
+	LRESULT lRes = __super::OnKillFocus(wParam, lParam);
+
+#ifndef DuiPlatform_SDL
+	UnInit();
+#endif
+
+	return lRes;
+}
+
 void CDUIComboxWnd::OnFinalMessage()
 {
 	DetachRootCtrl();
@@ -175,15 +217,6 @@ void CDUIComboxWnd::OnFinalMessage()
 	__super::OnFinalMessage();
 
 	return;
-}
-
-LRESULT CDUIComboxWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
-{
-	LRESULT lRes = __super::OnKillFocus(wParam, lParam);
-
-	UnInit();
-
-	return lRes;
 }
 
 void CDUIComboxWnd::OnDuiWndInited(const DuiNotify &Notify)
@@ -922,7 +955,18 @@ bool CDUIComboxCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Msg
 {
 	if (false == __super::OnDuiLButtonDown(pt, Msg)) return false;
 
+#ifdef DuiPlatform_SDL
+	if (IsActive())
+	{
+		UnActive();
+	}
+	else
+	{
+		Active();
+	}
+#else
 	Active();
+#endif
 
 	return true;
 }

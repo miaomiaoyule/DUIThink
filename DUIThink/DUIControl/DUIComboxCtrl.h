@@ -96,7 +96,7 @@ public:
 	virtual bool RemoveAt(int nIndex);
 	virtual void RemoveAll();
 
-	virtual bool Active();
+	virtual bool Active() override;
 	virtual bool UnActive();
 	virtual bool IsActive() const;
 

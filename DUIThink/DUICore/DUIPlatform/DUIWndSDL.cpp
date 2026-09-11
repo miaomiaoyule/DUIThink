@@ -70,41 +70,75 @@ HWND CDUIWndSDL::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD 
 {
 	m_hWndParent = hWndParent;
 	m_ptCreate = { x, y };
-	(void)dwExStyle;
 
-	if (cx <= 0) cx = 800;
-	if (cy <= 0) cy = 600;
+	const bool bSdlPopup = (NULL != hWndParent)
+		&& (0 != (dwStyle & WS_POPUP))
+		&& (0 == (dwStyle & WS_CHILD))
+		&& (0 == (dwStyle & WS_CAPTION));
 
 	std::string strTitle = MMStringToUtf8(NULL == lpszName ? _T("") : lpszName);
-	SDL_PropertiesID props = SDL_CreateProperties();
-	SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, strTitle.c_str());
-	SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, cx);
-	SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, cy);
-	// Match Win32 OnCreate: strip WS_CAPTION — DUI draws its own chrome.
-	SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, true);
-	if (dwStyle & WS_THICKFRAME)
+
+	if (bSdlPopup)
 	{
-		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, true);
+		int nPopupCx = (cx > 0) ? cx : 32;
+		int nPopupCy = (cy > 0) ? cy : 32;
+		int ox = 0;
+		int oy = 0;
+		if (CW_USEDEFAULT != x && CW_USEDEFAULT != y)
+		{
+			RECT rcParent = {};
+			::GetWindowRect(hWndParent, &rcParent);
+			ox = x - rcParent.left;
+			oy = y - rcParent.top;
+		}
+
+		SDL_WindowFlags uPopupFlags = SDL_WINDOW_POPUP_MENU | SDL_WINDOW_HIDDEN;
+		if (dwStyle & WS_VISIBLE)
+		{
+			uPopupFlags &= ~SDL_WINDOW_HIDDEN;
+		}
+		if (dwExStyle & WS_EX_NOACTIVATE)
+		{
+			uPopupFlags |= SDL_WINDOW_NOT_FOCUSABLE;
+		}
+
+		m_hWnd = SDL_CreatePopupWindow((SDL_Window *)hWndParent, ox, oy, nPopupCx, nPopupCy, uPopupFlags);
 	}
-	if (0 == (dwStyle & WS_VISIBLE))
+	else
 	{
-		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN, true);
-	}
-	if (CW_USEDEFAULT != x && CW_USEDEFAULT != y)
-	{
-		SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, x);
-		SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, y);
-	}
-	if (hWndParent)
-	{
-		SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_PARENT_POINTER, hWndParent);
+		if (cx <= 0) cx = 800;
+		if (cy <= 0) cy = 600;
+
+		SDL_PropertiesID props = SDL_CreateProperties();
+		SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, strTitle.c_str());
+		SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, cx);
+		SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, cy);
+		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, true);
+		if (dwStyle & WS_THICKFRAME)
+		{
+			SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, true);
+		}
+		if (0 == (dwStyle & WS_VISIBLE))
+		{
+			SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN, true);
+		}
+		if (CW_USEDEFAULT != x && CW_USEDEFAULT != y)
+		{
+			SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, x);
+			SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, y);
+		}
+		if (hWndParent)
+		{
+			SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_PARENT_POINTER, hWndParent);
+		}
+
+		m_hWnd = SDL_CreateWindowWithProperties(props);
+		SDL_DestroyProperties(props);
 	}
 
-	m_hWnd = SDL_CreateWindowWithProperties(props);
-	SDL_DestroyProperties(props);
 	if (NULL == m_hWnd)
 	{
-		MMTRACE(_T("SDL_CreateWindowWithProperties failed: %s"), (LPCTSTR)CA2CT(SDL_GetError(), CP_ACP));
+		MMTRACE(_T("SDL create window failed: %s"), (LPCTSTR)CA2CT(SDL_GetError(), CP_ACP));
 		return NULL;
 	}
 
@@ -191,7 +225,11 @@ UINT CDUIWndSDL::DoModal()
 			break;
 		}
 
-		MMSdlDispatchEvent(e);
+		MSG Msg = {};
+		if (false == MMSdlEventToMsg(e, Msg) || false == CDUIGlobal::GetInstance()->TranslateMessage(&Msg))
+		{
+			MMSdlDispatchEvent(e);
+		}
 
 		if (SDL_EVENT_QUIT == e.type)
 		{
@@ -250,7 +288,11 @@ UINT CDUIWndSDL::DoBlock()
 			break;
 		}
 
-		MMSdlDispatchEvent(e);
+		MSG Msg = {};
+		if (false == MMSdlEventToMsg(e, Msg) || false == CDUIGlobal::GetInstance()->TranslateMessage(&Msg))
+		{
+			MMSdlDispatchEvent(e);
+		}
 
 		if (SDL_EVENT_QUIT == e.type)
 		{
@@ -330,7 +372,7 @@ void CDUIWndSDL::CenterWindow()
 	if (yTop < rcArea.y) yTop = rcArea.y;
 	else if (yTop + nDlgHeight > rcArea.y + rcArea.h) yTop = rcArea.y + rcArea.h - nDlgHeight;
 
-	SDL_SetWindowPosition(m_hWnd, xLeft, yTop);
+	::SetWindowPos(m_hWnd, NULL, xLeft, yTop, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 
 	return;
 }
@@ -522,9 +564,9 @@ void CDUIWndSDL::AdjustWndPos()
 	{
 		y = rcWork.y + rcWork.h - h;
 	}
-
-	SDL_SetWindowPosition(m_hWnd, x, y);
-
+	
+	::SetWindowPos(m_hWnd, NULL, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+	
 	return;
 }
 
@@ -896,14 +938,6 @@ void CDUIWndSDL::OnSdlWindowEvent(const SDL_Event &e)
 		}
 		case SDL_EVENT_WINDOW_MOVED:
 		{
-			// SetWindowPos / animation also fires MOVED. Only suppress EXPOSED during
-			// real title-bar drag (LMB down). Otherwise the flag sticks and paint never resumes.
-			const bool bDragMove = 0 != (SDL_GetGlobalMouseState(NULL, NULL) & SDL_BUTTON_LMASK);
-			if (bDragMove)
-			{
-				m_bWndMoving = true;
-			}
-
 			OnWndMessage(WM_MOVE, 0, MAKELPARAM(e.window.data1, e.window.data2));
 			break;
 		}
@@ -1107,45 +1141,54 @@ SDL_HitTestResult SDLCALL CDUIWndSDL::SDLEnableHitTest(SDL_Window *win, const SD
 	CDUIWndSDL *pWnd = static_cast<CDUIWndSDL *>(userdata);
 	if (!pWnd || !IsWindow(pWnd->m_hWnd)) return SDL_HITTEST_NORMAL;
 
-	// 将全局屏幕坐标转换为窗口客户区坐标（SDL 回调传入的是窗口相对坐标）
 	int x = pt->x;
 	int y = pt->y;
-
-	// 客户区相对于窗口左上角，构造 CDUIPoint/rect 使用现有逻辑
 	CDUIPoint cpt(x, y);
 	CDUIRect rcClient = pWnd->GetClientRect();
+	SDL_HitTestResult nHitTest = SDL_HITTEST_NORMAL;
 
-	// 参考原 OnNcHitTest 逻辑判断边缘与标题栏
 	if (false == IsZoomed(pWnd->m_hWnd) && rcClient.PtInRect(cpt))
 	{
 		RECT rcSizeBox = pWnd->GetResizeTrack();
 		if (y < rcClient.top + rcSizeBox.top)
 		{
-			if (x < rcClient.left + rcSizeBox.left) return SDL_HITTEST_RESIZE_TOPLEFT;
-			if (x > rcClient.right - rcSizeBox.right) return SDL_HITTEST_RESIZE_TOPRIGHT;
-			return SDL_HITTEST_RESIZE_TOP;
+			if (x < rcClient.left + rcSizeBox.left) nHitTest = SDL_HITTEST_RESIZE_TOPLEFT;
+			else if (x > rcClient.right - rcSizeBox.right) nHitTest = SDL_HITTEST_RESIZE_TOPRIGHT;
+			else nHitTest = SDL_HITTEST_RESIZE_TOP;
 		}
 		else if (y > rcClient.bottom - rcSizeBox.bottom)
 		{
-			if (x < rcClient.left + rcSizeBox.left) return SDL_HITTEST_RESIZE_BOTTOMLEFT;
-			if (x > rcClient.right - rcSizeBox.right) return SDL_HITTEST_RESIZE_BOTTOMRIGHT;
-			return SDL_HITTEST_RESIZE_BOTTOM;
+			if (x < rcClient.left + rcSizeBox.left) nHitTest = SDL_HITTEST_RESIZE_BOTTOMLEFT;
+			else if (x > rcClient.right - rcSizeBox.right) nHitTest = SDL_HITTEST_RESIZE_BOTTOMRIGHT;
+			else nHitTest = SDL_HITTEST_RESIZE_BOTTOM;
 		}
-
-		if (x < rcClient.left + rcSizeBox.left) return SDL_HITTEST_RESIZE_LEFT;
-		if (x > rcClient.right - rcSizeBox.right) return SDL_HITTEST_RESIZE_RIGHT;
+		else if (x < rcClient.left + rcSizeBox.left) nHitTest = SDL_HITTEST_RESIZE_LEFT;
+		else if (x > rcClient.right - rcSizeBox.right) nHitTest = SDL_HITTEST_RESIZE_RIGHT;
 	}
 
-	CDUIRect rcCaption(0, 0, rcClient.right, pWnd->GetCaptionHeight());
-	if (rcCaption.PtInRect(cpt))
+	if (SDL_HITTEST_NORMAL == nHitTest)
 	{
-		CDUIControlBase *pControl = pWnd->FindControl(cpt);
-		if (NULL == pControl
-			|| (NULL == MMInterfaceHelper(CDUIButtonCtrl, pControl) && NULL == MMInterfaceHelper(CDUIProgressCtrl, pControl)))
-			return SDL_HITTEST_DRAGGABLE;
+		CDUIRect rcCaption(0, 0, rcClient.right, pWnd->GetCaptionHeight());
+		if (rcCaption.PtInRect(cpt))
+		{
+			CDUIControlBase *pControl = pWnd->FindControl(cpt);
+			if (NULL == pControl
+				|| (NULL == MMInterfaceHelper(CDUIButtonCtrl, pControl) && NULL == MMInterfaceHelper(CDUIProgressCtrl, pControl)))
+			{
+				nHitTest = SDL_HITTEST_DRAGGABLE;
+			}
+		}
 	}
 
-	return SDL_HITTEST_NORMAL;
+	// Non-NORMAL + LMB: compositor is taking a title-bar drag or border resize.
+	// Do not infer this from WINDOW_MOVED — SetWindowPos also emits MOVED.
+	if (SDL_HITTEST_NORMAL != nHitTest
+		&& 0 != (SDL_GetGlobalMouseState(NULL, NULL) & SDL_BUTTON_LMASK))
+	{
+		pWnd->m_bWndMoving = true;
+	}
+
+	return nHitTest;
 }
 
 bool SDLCALL CDUIWndSDL::SDLEventWatch(void *userdata, SDL_Event *e)

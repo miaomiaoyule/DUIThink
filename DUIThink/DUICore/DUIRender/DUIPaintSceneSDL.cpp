@@ -64,6 +64,10 @@ bool CDUIPaintSceneSDL::CreateGpu(int nWidth, int nHeight)
 	m_pRenderer = SDL_CreateRenderer(m_hWnd, NULL);
 	if (NULL == m_pRenderer)
 	{
+		m_pRenderer = SDL_CreateRenderer(m_hWnd, SDL_SOFTWARE_RENDERER);
+	}
+	if (NULL == m_pRenderer)
+	{
 		return false;
 	}
 
