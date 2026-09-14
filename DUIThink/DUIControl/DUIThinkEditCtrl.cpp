@@ -1296,6 +1296,8 @@ bool CDUIThinkEditCtrl::OnDuiSetFocus()
 			|| (CDUIWnd::MapKeyState() & MK_RBUTTON);
 	}
 
+	m_pWndOwner->UpdateImeCompositionPos();
+
 	return true;
 }
 
@@ -1340,6 +1342,14 @@ bool CDUIThinkEditCtrl::OnDuiKillFocus()
 	{
 		m_pWndOwner->SendNotify(this, DuiNotify_Edited);
 	}
+
+	//stop edit
+#if defined DuiPlatform_SDL
+	if (SDL_TextInputActive(m_pWndOwner->GetWndHandle()))
+	{
+		SDL_StopTextInput(m_pWndOwner->GetWndHandle());
+	}
+#endif
 
 	return true;
 }
@@ -1848,30 +1858,6 @@ LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 LRESULT CDUIThinkEditCtrl::OnDuiTextEditing(const DuiMessage &Msg)
 {
 	if (NULL == m_pWndOwner || Msg.strText.empty()) return 0;
-
-#if defined DuiPlatform_SDL
-	bool bHaveEmoji = false;
-	std::vector<tagMMStringEmoji> vecText = CMMStrHelp::ParseStringForEmoji(Msg.strText);
-	for (auto &Item : vecText)
-	{
-		if (Item.bEmoji)
-		{
-			bHaveEmoji = true;
-
-			break;
-		}
-	}
-
-	if (bHaveEmoji)
-	{
-		SetReplaceSel(Msg.strText);
-
-		if (SDL_TextInputActive(GetWndHandle()))
-		{
-			SDL_StopTextInput(GetWndHandle());
-		}
-	}
-#endif
 
 	return 0;
 }

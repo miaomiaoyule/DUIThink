@@ -860,7 +860,7 @@ void CDUIWndSDL::UpdateImeCompositionPos()
 	if (NULL == hWnd) return;
 
 	// SDL3: TextInputActive / SetTextInputArea
-	if (!SDL_TextInputActive(hWnd))
+	if (false == SDL_TextInputActive(hWnd))
 	{
 		SDL_StartTextInput(hWnd);
 	}
@@ -1047,6 +1047,11 @@ void CDUIWndSDL::OnSdlMouseEvent(const SDL_Event &e)
 			else if (SDL_BUTTON_RIGHT == e.button.button)
 			{
 				OnWndMessage(WM_RBUTTONUP, uKeyState, MAKELPARAM(x, y));
+
+				// Win32 DefWindowProc synthesizes WM_CONTEXTMENU after RBUTTONUP (screen coords)
+				POINT ptScreen = { x, y };
+				ClientToScreen(m_hWnd, &ptScreen);
+				OnWndMessage(WM_CONTEXTMENU, (WPARAM)m_hWnd, MAKELPARAM(ptScreen.x, ptScreen.y));
 			}
 			else if (SDL_BUTTON_MIDDLE == e.button.button)
 			{
@@ -1083,6 +1088,15 @@ void CDUIWndSDL::OnSdlKeyEvent(const SDL_Event &e)
 	if (SDL_EVENT_KEY_DOWN == e.type)
 	{
 		OnWndMessage(bSys ? WM_SYSKEYDOWN : WM_KEYDOWN, uVK, 0);
+
+		const bool bApps = (SDLK_APPLICATION == e.key.key || SDLK_MENU == e.key.key);
+		const bool bShiftF10 = (SDLK_F10 == e.key.key && 0 != (e.key.mod & SDL_KMOD_SHIFT));
+		if (bApps || bShiftF10)
+		{
+			POINT ptScreen = {};
+			GetCursorPos(&ptScreen);
+			OnWndMessage(WM_CONTEXTMENU, (WPARAM)m_hWnd, MAKELPARAM(ptScreen.x, ptScreen.y));
+		}
 	}
 	else if (SDL_EVENT_KEY_UP == e.type)
 	{
