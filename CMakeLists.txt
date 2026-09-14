@@ -240,17 +240,19 @@ if(UNIX)
 	target_link_options(DUIThinkDemo_C++ PRIVATE -rdynamic)
 endif()
 
-# Portable relative path: resolved against SDL_GetBasePath() (exe directory).
-target_compile_definitions(DUIThinkDemo_C++ PRIVATE
-	"DUITHINK_DEMO_PROJ_FILE=\"DUIThinkDemo_C++.DuiProj/DUIThinkDemo_C++.DuiProj\""
-)
-
-# Keep DuiProj next to the binary for relative lookups.
+# Demo uses ../DUIThinkDemo_C++.DuiProj like Win32 (exe in Debug/, proj beside Debug/).
 if(UNIX)
+	set_target_properties(DUIThinkDemo_C++ PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
+	)
+	set_target_properties(DUIThink PROPERTIES
+		LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
+		RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
+	)
 	add_custom_command(TARGET DUIThinkDemo_C++ POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E create_symlink
 			"${DEMO_PROJ_DIR}"
-			"$<TARGET_FILE_DIR:DUIThinkDemo_C++>/DUIThinkDemo_C++.DuiProj"
-		COMMENT "Link Demo DuiProj next to DUIThinkDemo_C++"
+			"${CMAKE_BINARY_DIR}/DUIThinkDemo_C++.DuiProj"
+		COMMENT "Link Demo DuiProj as sibling of Debug/"
 	)
 endif()
