@@ -1664,7 +1664,30 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	CDUIMenuCtrl *pMenuRoot = new CDUIMenuCtrl();
 	if (NULL == pMenuRoot) return 0;
 
+	tagDuiTextStyle TextStyleNormal = false == m_AttributeTextStyleNormal.IsEmpty() ? m_AttributeTextStyleNormal.GetTextStyle() : m_AttributeTextStyle.GetTextStyle();
+	tagDuiTextStyle TextStyleHot = false == m_AttributeTextStyleHot.IsEmpty() ? m_AttributeTextStyleHot.GetTextStyle() : TextStyleNormal;
+	tagDuiTextStyle TextStyleDisable = TextStyleNormal;
+	TextStyleDisable.vecColorResSwitch = { Name_ColorGray };
+	TextStyleNormal.dwTextStyle = (DT_LEFT | DT_VCENTER);
+	TextStyleHot.dwTextStyle = (DT_LEFT | DT_VCENTER);
+	TextStyleDisable.dwTextStyle = (DT_LEFT | DT_VCENTER);
+
 	pMenuRoot->Init();
+	pMenuRoot->SetBkColor({ Name_ColorDefault });
+	//pMenuRoot->SetRoundCorner({ 5,5,5,5 });
+	pMenuRoot->SetRangeInset({ 5,5,5,5 });
+	pMenuRoot->SetItemTextStyleNormal(TextStyleNormal);
+	pMenuRoot->SetItemTextStyleHot(TextStyleHot);
+	pMenuRoot->SetItemTextStyleSelNormal(TextStyleNormal);
+	pMenuRoot->SetItemTextStyleSelHot(TextStyleNormal);
+	pMenuRoot->SetItemTextStyleDisabled(TextStyleDisable);
+	pMenuRoot->SetItemStatusColorResSwitchNormal({ Name_ColorDefault });
+	pMenuRoot->SetItemStatusColorResSwitchHot({ Name_ColorDefault });
+	pMenuRoot->SetItemStatusColorResSwitchSelNormal({ Name_ColorSelBk });
+	pMenuRoot->SwitchListViewType(enDuiListViewType::ListView_List);
+	pMenuRoot->SetUseListHeader(false);
+	pMenuRoot->SetItemTextPadding({ 10,0,0,0 });
+	pMenuRoot->SetSwitchListItemHeight(25);
 	g_pDuiMenuWndRoot->SetMenuView(pMenuRoot);
 
 	//create item
@@ -1685,15 +1708,15 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	};
 
 	//menu
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_UNDO, _T("撤销(&U)")));
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_REDO, _T("重做(&R)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_UNDO, _T("撤销(U)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_REDO, _T("重做(R)")));
 	pMenuRoot->InsertMenuItem(GenerateItem(0, _T("")));
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_CUT, _T("剪切(&X)")));
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_COPY, _T("复制(&C)")));
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_PASTE, _T("粘贴(&V)")));
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_CLEAR, _T("清空(&L)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_CUT, _T("剪切(X)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_COPY, _T("复制(C)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_PASTE, _T("粘贴(V)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_CLEAR, _T("清空(L)")));
 	pMenuRoot->InsertMenuItem(GenerateItem(0, _T("")));
-	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_SELECTALL, _T("全选(&A)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_SELECTALL, _T("全选(A)")));
 
 	//enable
 	CDUIMenuItemCtrl *pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_UNDO);
@@ -1709,6 +1732,16 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	if (pMenuItem) pMenuItem->SetEnabled(bHasSel && false == IsReadOnly());
 	pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_PASTE);
 	if (pMenuItem) pMenuItem->SetEnabled(false == IsReadOnly());
+
+	//size
+	CDUISize szWnd;
+	szWnd.cx = 120;
+	szWnd.cy = pMenuRoot->GetSwitchListItemHeight() * sqrt(pMenuRoot->GetChildCount()) + pMenuRoot->GetChildPaddingV() * sqrt(pMenuRoot->GetChildCount());
+	g_pDuiMenuWndRoot->SetGdiplusRenderText(true);
+	g_pDuiMenuWndRoot->SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
+	g_pDuiMenuWndRoot->SetWndInitSize(szWnd.cx, szWnd.cy);
+	g_pDuiMenuWndRoot->SetWndLayered(true);
+	g_pDuiMenuWndRoot->SetCaptionHeight(0);
 
 	//popup
 	CDUIPoint ptScreen = Msg.ptMouse;

@@ -1268,18 +1268,24 @@ bool SDLCALL CDUIWndSDL::SDLEventWatch(void *userdata, SDL_Event *e)
 		case SDL_EVENT_WINDOW_FOCUS_LOST:
 		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
 		case SDL_EVENT_WINDOW_DESTROYED:
+		{
 			self->OnSdlWindowEvent(*e);
 			break;
+		}
 		case SDL_EVENT_MOUSE_MOTION:
 		case SDL_EVENT_MOUSE_BUTTON_DOWN:
 		case SDL_EVENT_MOUSE_BUTTON_UP:
 		case SDL_EVENT_MOUSE_WHEEL:
+		{
 			self->OnSdlMouseEvent(*e);
 			break;
+		}
 		case SDL_EVENT_KEY_DOWN:
 		case SDL_EVENT_KEY_UP:
+		{
 			self->OnSdlKeyEvent(*e);
 			break;
+		}
 		case SDL_EVENT_TEXT_EDITING:
 		{
 			if (self->m_pFocusCtrl && e->edit.text)
@@ -1288,6 +1294,7 @@ bool SDLCALL CDUIWndSDL::SDLEventWatch(void *userdata, SDL_Event *e)
 				Msg.strText = CA2CT(e->edit.text, CP_UTF8);
 				self->m_pFocusCtrl->OnDuiTextEditing(Msg);
 			}
+
 			break;
 		}
 		case SDL_EVENT_TEXT_INPUT:
@@ -1298,6 +1305,7 @@ bool SDLCALL CDUIWndSDL::SDLEventWatch(void *userdata, SDL_Event *e)
 				Msg.strText = CA2CT(e->text.text, CP_UTF8);
 				self->m_pFocusCtrl->OnDuiTextInput(Msg);
 			}
+
 			break;
 		}
 		default:

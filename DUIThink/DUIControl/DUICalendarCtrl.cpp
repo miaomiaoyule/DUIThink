@@ -1568,15 +1568,13 @@ void CDUICalendarCtrl::PopupYearMonthWnd(bool bYear)
 	}
 
 	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptTrack);
-	g_DuiMenuCmd = {};
 	g_pDuiMenuWndRoot->SetMenuView(pPopupView);
-	g_pDuiMenuWndRoot->Init(m_pWndOwner->GetWndHandle(), ptTrack);
-	g_pDuiMenuWndRoot->DoBlock();
+	tagDuiMenuCmd MenuCmd = Menu.TrackPopupMenu(m_pWndOwner->GetWndHandle(), ptTrack);
 
 	//select
-	if (g_DuiMenuCmd.uMenuTag)
+	if (MenuCmd.uMenuTag)
 	{
-		SwitchYearMonth(ParseYear(g_DuiMenuCmd.uMenuTag), ParseMonth(g_DuiMenuCmd.uMenuTag));
+		SwitchYearMonth(ParseYear(MenuCmd.uMenuTag), ParseMonth(MenuCmd.uMenuTag));
 	}
 
 	//focus
