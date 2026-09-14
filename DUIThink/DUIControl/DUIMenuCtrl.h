@@ -32,7 +32,7 @@ protected:
 public:
 	void Init(HWND hWndParent);
 	void Init(HWND hWndParent, CDUIPoint ptTrack);
-	void UnInit();
+	void Close(UINT nRet = IDOK) override;
 	CDUIMenuCtrl * GetMenuView();
 	void SetMenuView(CDUIMenuCtrl *pMenuView);
 	CDUIMenuItemCtrl * GetOwner();

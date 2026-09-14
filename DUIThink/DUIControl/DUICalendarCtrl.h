@@ -24,7 +24,7 @@ protected:
 public:
 	void Init(HWND hWndParent);
 	void Init(HWND hWndParent, CDUIPoint ptTrack);
-	void UnInit();
+	void Close(UINT nRet = IDOK) override;
 
 	CDUICalendarCtrl * GetCalendarCtrl();
 

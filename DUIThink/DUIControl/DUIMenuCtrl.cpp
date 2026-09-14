@@ -30,7 +30,7 @@ CDUIMenuWnd::CDUIMenuWnd(CDUIMenuItemCtrl *pOwner, CMMString strDuiName)
 
 CDUIMenuWnd::~CDUIMenuWnd()
 {
-	UnInit();
+	Close();
 
 	m_pOwner = NULL;
 	m_pWndOwner = NULL;
@@ -75,7 +75,7 @@ void CDUIMenuWnd::Init(HWND hWndParent, CDUIPoint ptTrack)
 	return;
 }
 
-void CDUIMenuWnd::UnInit()
+void CDUIMenuWnd::Close(UINT nRet)
 {
 	//save
 #ifdef DUI_DESIGN
@@ -98,7 +98,7 @@ void CDUIMenuWnd::UnInit()
 		}
 	}
 
-	Close();
+	__super::Close(nRet);
 
 	//detach view
 	if (NULL == m_pShowMenuView)
@@ -165,7 +165,7 @@ LRESULT CDUIMenuWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 			hWndFocus = GetParent(hWndFocus);
 		}
 
-		g_pDuiMenuWndRoot->UnInit();
+		g_pDuiMenuWndRoot->Close();
 	}
 
 	return lRes;
@@ -661,7 +661,7 @@ bool CDUIMenuItemCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg
 
 		if (g_pDuiMenuWndRoot)
 		{
-			g_pDuiMenuWndRoot->UnInit();
+			g_pDuiMenuWndRoot->Close();
 		}
 	}
 
@@ -787,7 +787,7 @@ void CDUIMenuItemCtrl::UnActiveExpandMenu()
 {
 	if (NULL == m_pExpandMenuWnd || false == IsWindow(m_pExpandMenuWnd->GetWndHandle())) return;
 
-	m_pExpandMenuWnd->UnInit();
+	m_pExpandMenuWnd->Close();
 
 	return;
 }

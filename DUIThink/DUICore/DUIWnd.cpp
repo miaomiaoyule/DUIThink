@@ -291,6 +291,30 @@ void CDUIWnd::InitProperty()
 	return;
 }
 
+LRESULT CDUIWnd::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
+{
+#if defined(DuiPlatform_SDL)
+	if (IsWindow(GetWndHandle())
+		&& MMSdlIsPopupWindow(GetWndHandle())
+		&& (WM_LBUTTONDOWN == uMsg || WM_RBUTTONDOWN == uMsg || WM_MBUTTONDOWN == uMsg))
+	{
+		float fX = 0.0f;
+		float fY = 0.0f;
+		SDL_GetGlobalMouseState(&fX, &fY);
+
+		CDUIRect rcDrop;
+		::GetWindowRect(GetWndHandle(), &rcDrop);
+
+		if (false == rcDrop.PtInRect(CDUIPoint((int)fX, (int)fY)))
+		{
+			Close();
+		}
+	}
+#endif
+
+	return __super::OnPreWndMessage(hWnd, uMsg, wParam, lParam, bHandled);
+}
+
 LRESULT CDUIWnd::OnCreate(WPARAM wParam, LPARAM lParam)
 {
 	LRESULT lRes = OnOldWndProc(WM_CREATE, wParam, lParam);

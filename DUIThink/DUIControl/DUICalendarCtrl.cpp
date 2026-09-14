@@ -26,7 +26,7 @@ CDUICalendarWnd::CDUICalendarWnd(CMMString strDuiName)
 
 CDUICalendarWnd::~CDUICalendarWnd()
 {
-	UnInit();
+	Close();
 
 	MMSafeDelete(m_pShowCalendarView);
 
@@ -60,7 +60,7 @@ void CDUICalendarWnd::Init(HWND hWndParent, CDUIPoint ptTrack)
 	return;
 }
 
-void CDUICalendarWnd::UnInit()
+void CDUICalendarWnd::Close(UINT nRet)
 {
 	//save
 #ifdef DUI_DESIGN
@@ -70,7 +70,7 @@ void CDUICalendarWnd::UnInit()
 	}
 #endif
 
-	Close();
+	__super::Close(nRet);
 
 	DetachRootCtrl();
 
@@ -115,7 +115,7 @@ LRESULT CDUICalendarWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 			hWndFocus = GetParent(hWndFocus);
 		}
 
-		g_pDuiCalendarWnd->UnInit();
+		g_pDuiCalendarWnd->Close();
 	}
 
 	return 0;
@@ -935,7 +935,7 @@ void CDUICalendarCtrl::OnDuiItemClick(const DuiNotify &Notify)
 
 	if (g_pDuiCalendarWnd)
 	{
-		g_pDuiCalendarWnd->UnInit();
+		g_pDuiCalendarWnd->Close();
 	}
 
 	return;
@@ -1483,10 +1483,10 @@ void CDUICalendarCtrl::SwitchYearMonth(int nYear, int nMonth)
 
 void CDUICalendarCtrl::PopupYearMonthWnd(bool bYear)
 {
-	CDUIMenuWnd PopupWnd;
-	MMSafeDelete(g_pDuiMenuWndRoot);
-	g_pDuiMenuWndRoot = &PopupWnd;
-	g_DuiMenuCmd = {};
+	//menu
+	CDUIMenu Menu;
+	Menu.LoadMenu(_T(""));
+	if (NULL == g_pDuiMenuWndRoot) return;
 
 	SYSTEMTIME SysTime = {};
 	GetLocalTime(&SysTime);
@@ -1548,21 +1548,30 @@ void CDUICalendarCtrl::PopupYearMonthWnd(bool bYear)
 	CDUISize szWnd;
 	szWnd.cx = szItem.cx * sqrt(pPopupView->GetChildCount()) + pPopupView->GetChildPaddingH() * sqrt(pPopupView->GetChildCount());
 	szWnd.cy = szItem.cy * sqrt(pPopupView->GetChildCount()) + pPopupView->GetChildPaddingV() * sqrt(pPopupView->GetChildCount());
-	PopupWnd.SetGdiplusRenderText(true);
-	PopupWnd.SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
-	PopupWnd.SetWndInitSize(szWnd.cx, szWnd.cy);
-	PopupWnd.SetWndLayered(true);
-	PopupWnd.SetCaptionHeight(0);
+	g_pDuiMenuWndRoot->SetGdiplusRenderText(true);
+	g_pDuiMenuWndRoot->SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
+	g_pDuiMenuWndRoot->SetWndInitSize(szWnd.cx, szWnd.cy);
+	g_pDuiMenuWndRoot->SetWndLayered(true);
+	g_pDuiMenuWndRoot->SetCaptionHeight(0);
 
 	//pos
-	CDUIButtonCtrl *pBtnClickCtrl = bYear ? m_pBtnYearCtrl : m_pBtnMonthCtrl;
-	CDUIPoint ptTrack(pBtnClickCtrl->GetAbsoluteRect().left, pBtnClickCtrl->GetAbsoluteRect().top);
-	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptTrack);
-	ptTrack.Offset(-szWnd.cx, pBtnClickCtrl->GetHeight() / 2 - szWnd.cy / 2);
+	CDUIPoint ptTrack;
+	if (bYear)
+	{
+		ptTrack = CDUIPoint(m_pBtnYearCtrl->GetAbsoluteRect().left, m_pBtnYearCtrl->GetAbsoluteRect().top);
+		ptTrack.Offset(-szWnd.cx, m_pBtnYearCtrl->GetHeight() / 2 - szWnd.cy / 2);	
+	}
+	else
+	{
+		ptTrack = CDUIPoint(m_pBtnMonthCtrl->GetAbsoluteRect().right, m_pBtnMonthCtrl->GetAbsoluteRect().top);
+		ptTrack.Offset(0, m_pBtnMonthCtrl->GetHeight() / 2 - szWnd.cy / 2);
+	}
 
-	PopupWnd.SetMenuView(pPopupView);
-	PopupWnd.Init(m_pWndOwner->GetWndHandle(), ptTrack);
-	PopupWnd.DoBlock();
+	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptTrack);
+	g_DuiMenuCmd = {};
+	g_pDuiMenuWndRoot->SetMenuView(pPopupView);
+	g_pDuiMenuWndRoot->Init(m_pWndOwner->GetWndHandle(), ptTrack);
+	g_pDuiMenuWndRoot->DoBlock();
 
 	//select
 	if (g_DuiMenuCmd.uMenuTag)
@@ -1572,8 +1581,6 @@ void CDUICalendarCtrl::PopupYearMonthWnd(bool bYear)
 
 	//focus
 	SetFocus();
-
-	g_pDuiMenuWndRoot = NULL;
 
 	return;
 }

@@ -50,6 +50,7 @@ protected:
 
 	//message
 protected:
+	LRESULT OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) override;
 	LRESULT OnCreate(WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnMouseLeave(WPARAM wParam, LPARAM lParam) override;

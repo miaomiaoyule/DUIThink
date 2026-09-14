@@ -29,12 +29,11 @@ protected:
 
 public:
 	void Init(CDUIListViewCtrl *pComboxView);
-	void UnInit();
+	void Close(UINT nRet = IDOK) override;
 	CMMString GetDuiName() const override;
 
 	//message
 protected:
-	LRESULT OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) override;
 	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam) override;
 
 	//notify
@@ -65,7 +64,7 @@ CDUIComboxWnd::CDUIComboxWnd(CDUIComboxCtrl *pOwner)
 
 CDUIComboxWnd::~CDUIComboxWnd()
 {
-	UnInit();
+	Close();
 
 	m_pOwner = NULL;
 	m_pWndOwner = NULL;
@@ -139,9 +138,9 @@ void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 	return;
 }
 
-void CDUIComboxWnd::UnInit()
+void CDUIComboxWnd::Close(UINT nRet)
 {
-	Close();
+	__super::Close(nRet);
 
 	if (m_pOwner)
 	{
@@ -172,39 +171,12 @@ CMMString CDUIComboxWnd::GetDuiName() const
 	return _T("");
 }
 
-LRESULT CDUIComboxWnd::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled)
-{
-#if defined(DuiPlatform_SDL)
-	if (IsWindow(GetWndHandle())
-		&& (WM_LBUTTONDOWN == uMsg || WM_RBUTTONDOWN == uMsg || WM_MBUTTONDOWN == uMsg))
-	{
-		float fX = 0.0f;
-		float fY = 0.0f;
-		SDL_GetGlobalMouseState(&fX, &fY);
-
-		CDUIRect rcDrop;
-		::GetWindowRect(GetWndHandle(), &rcDrop);
-
-		CDUIRect rcOwner = m_pOwner->GetAbsoluteRect();
-		CDUIRect rcWnd;
-		::GetWindowRect(m_pWndOwner->GetWndHandle(), &rcWnd);
-		rcOwner.Offset(rcWnd.left, rcWnd.top);
-		if (false == rcDrop.PtInRect(CDUIPoint((int)fX, (int)fY)) && false == rcOwner.PtInRect(CDUIPoint((int)fX, (int)fY)))
-		{
-			UnInit();
-		}
-	}
-#endif
-
-	return __super::OnPreWndMessage(hWnd, uMsg, wParam, lParam, bHandled);
-}
-
 LRESULT CDUIComboxWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 {
 	LRESULT lRes = __super::OnKillFocus(wParam, lParam);
 
 #ifndef DuiPlatform_SDL
-	UnInit();
+	Close();
 #endif
 
 	return lRes;
@@ -243,7 +215,7 @@ void CDUIComboxWnd::OnDuiItemSelected(const DuiNotify &Notify)
 	//need support empty text, example DTDesigner radiobox bind empty tabctrl
 	m_pOwner->SetText(pItem->GetText());
 
-	UnInit();
+	Close();
 
 	return;
 }
@@ -855,7 +827,7 @@ bool CDUIComboxCtrl::UnActive()
 {
 	if (NULL == m_pComboxWindow || false == IsWindow(m_pComboxWindow->GetWndHandle())) return false;
 
-	m_pComboxWindow->UnInit();
+	m_pComboxWindow->Close();
 
 	return true;
 }

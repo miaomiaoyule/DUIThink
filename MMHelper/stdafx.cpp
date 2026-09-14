@@ -59,8 +59,6 @@ namespace
 		if (px) *px = x;
 		if (py) *py = y;
 	}
-	
-	return;
 }
 
 bool IsWindow(HWND hWnd)
