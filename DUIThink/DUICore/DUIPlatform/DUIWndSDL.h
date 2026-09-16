@@ -9,7 +9,6 @@ class IDuiPaintScene;
 static const GUID IID_CDUIWndSDL = { 0xfb0000bc, 0xedd4, 0x4b04, 0x85, 0x42, 0xed, 0x2d, 0xe3, 0xb3, 0x42, 0x8 };
 class DUITHINK_API CDUIWndSDL 
 	: public CDUIWndBase
-	, public IMMWndSDL
 {
 	MMDeclare_Super(CDUIWndBase)
 
@@ -36,6 +35,7 @@ public:
 	void ShowWindow(bool bShow = true, bool bTakeFocus = true) override;
 	UINT DoModal() override;
 	UINT DoBlock() override;
+	void Close(UINT nRet = IDOK) override;
 	void CenterWindow() override;
 	void SetIcon(UINT nRes) override;
 	LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0L) override;
@@ -60,8 +60,8 @@ public:
 	void AdjustWndPos() override;
 	bool IsMaximized() override;
 	bool IsMinimized() override;
-	CDUIRect GetClientRect() const override;
-	CDUIRect GetWindowRect() override;
+	CMMRect GetClientRect() override;
+	CMMRect GetWindowRect() override;
 
 	//refresh
 	void Invalidate() override;

@@ -11,9 +11,9 @@ class CDUIMenuItemCtrl;
 
 //////////////////////////////////////////////////////////////////////////
 class DUITHINK_API CDUIMenuWnd
-	: public CDUIWnd
+	: public CDUIPopupWnd
 {
-	MMDeclare_Super(CDUIWnd)
+	MMDeclare_Super(CDUIPopupWnd)
 	MMDeclare_ClassName()
 	DuiDeclare_Message_Map()
 

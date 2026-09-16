@@ -16,7 +16,7 @@ DuiBegin_Message_Map(CDUICalendarWnd, CDUINotifyPump)
 DuiEnd_Message_Map()
 
 CDUICalendarWnd::CDUICalendarWnd(CMMString strDuiName)
-	: CDUIWnd(strDuiName)
+	: CDUIPopupWnd(strDuiName)
 {
 	CDUIControlBase *pRootCtrl = CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), this);
 	m_pShowCalendarView = MMInterfaceHelper(CDUICalendarCtrl, pRootCtrl);
@@ -112,7 +112,7 @@ LRESULT CDUICalendarWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 		{
 			if (hWndFocus == g_pDuiCalendarWnd->GetWndHandle()) return 0;
 
-			hWndFocus = GetParent(hWndFocus);
+			hWndFocus = ::GetParent(hWndFocus);
 		}
 
 		g_pDuiCalendarWnd->Close();

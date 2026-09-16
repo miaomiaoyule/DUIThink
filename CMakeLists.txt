@@ -10,6 +10,9 @@ option(DUITHINK_PLATFORM_SDL "Build with SDL3 windowing backend" ON)
 # ---------------------------------------------------------------------------
 # SDL3
 # ---------------------------------------------------------------------------
+if(ANDROID)
+	find_package(SDL3 REQUIRED CONFIG)
+endif()
 find_package(SDL3 QUIET)
 if(NOT SDL3_FOUND)
 	# allow vendored / manual SDK
@@ -37,7 +40,7 @@ add_compile_definitions(UNICODE _UNICODE)
 if(DUITHINK_PLATFORM_SDL)
 	add_compile_definitions(DuiPlatform_SDL)
 endif()
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND NOT ANDROID)
 	add_compile_definitions(_LINUX)
 endif()
 if(APPLE)
@@ -52,6 +55,9 @@ endif()
 # thousands of bogus errors. Convert remaining GBK files via tools/gbk_to_utf8.py.
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 	add_compile_options(-finput-charset=UTF-8 -fexec-charset=UTF-8)
+endif()
+if(ANDROID)
+	add_compile_options(-Wno-c++11-narrowing)
 endif()
 if(MSVC)
 	add_compile_options(/utf-8)
@@ -98,15 +104,28 @@ set(WEBP_DSP_DEC_SRCS
 	${WEBP_ROOT}/src/dsp/rescaler.c
 	${WEBP_ROOT}/src/dsp/upsampling.c
 	${WEBP_ROOT}/src/dsp/yuv.c
-	# x86_64 always defines __SSE2__; portable C calls these Init*SSE2 hooks
-	${WEBP_ROOT}/src/dsp/alpha_processing_sse2.c
-	${WEBP_ROOT}/src/dsp/dec_sse2.c
-	${WEBP_ROOT}/src/dsp/filters_sse2.c
-	${WEBP_ROOT}/src/dsp/lossless_sse2.c
-	${WEBP_ROOT}/src/dsp/rescaler_sse2.c
-	${WEBP_ROOT}/src/dsp/upsampling_sse2.c
-	${WEBP_ROOT}/src/dsp/yuv_sse2.c
 )
+if(ANDROID)
+	list(APPEND WEBP_DSP_DEC_SRCS
+		${WEBP_ROOT}/src/dsp/alpha_processing_neon.c
+		${WEBP_ROOT}/src/dsp/dec_neon.c
+		${WEBP_ROOT}/src/dsp/filters_neon.c
+		${WEBP_ROOT}/src/dsp/lossless_neon.c
+		${WEBP_ROOT}/src/dsp/rescaler_neon.c
+		${WEBP_ROOT}/src/dsp/upsampling_neon.c
+		${WEBP_ROOT}/src/dsp/yuv_neon.c
+	)
+else()
+	list(APPEND WEBP_DSP_DEC_SRCS
+		${WEBP_ROOT}/src/dsp/alpha_processing_sse2.c
+		${WEBP_ROOT}/src/dsp/dec_sse2.c
+		${WEBP_ROOT}/src/dsp/filters_sse2.c
+		${WEBP_ROOT}/src/dsp/lossless_sse2.c
+		${WEBP_ROOT}/src/dsp/rescaler_sse2.c
+		${WEBP_ROOT}/src/dsp/upsampling_sse2.c
+		${WEBP_ROOT}/src/dsp/yuv_sse2.c
+	)
+endif()
 set(WEBP_UTILS_DEC_SRCS
 	${WEBP_ROOT}/src/utils/bit_reader_utils.c
 	${WEBP_ROOT}/src/utils/color_cache_utils.c
@@ -126,7 +145,7 @@ add_library(webpdecoder STATIC
 )
 target_include_directories(webpdecoder PUBLIC ${WEBP_ROOT} ${WEBP_ROOT}/src)
 target_compile_definitions(webpdecoder PRIVATE WEBP_USE_THREAD=1)
-if(UNIX)
+if(UNIX AND NOT ANDROID)
 	target_link_libraries(webpdecoder PUBLIC pthread)
 endif()
 
@@ -149,7 +168,7 @@ target_compile_definitions(MMHelper PUBLIC MMHELPLIB)
 if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
 	target_link_libraries(MMHelper PUBLIC SDL3::SDL3)
 endif()
-if(UNIX)
+if(UNIX AND NOT ANDROID)
 	target_link_libraries(MMHelper PUBLIC pthread dl)
 endif()
 
@@ -168,10 +187,16 @@ if(DUITHINK_PLATFORM_SDL)
 	list(FILTER SRC_DUITHINK EXCLUDE REGEX ".*/DUIWkeBrowserCtrl\\.cpp$")
 else()
 	list(FILTER SRC_DUITHINK EXCLUDE REGEX ".*/DUIWndSDL\\.cpp$")
+	list(FILTER SRC_DUITHINK EXCLUDE REGEX ".*/DUIWndVirtual\\.cpp$")
 endif()
 
-add_library(DUIThink SHARED ${SRC_DUITHINK})
-target_compile_definitions(DUIThink PRIVATE DUITHINKSDK MMHELPLIB)
+if(ANDROID)
+	add_library(DUIThink STATIC ${SRC_DUITHINK})
+	target_compile_definitions(DUIThink PUBLIC DUITHINKLIB MMHELPLIB)
+else()
+	add_library(DUIThink SHARED ${SRC_DUITHINK})
+	target_compile_definitions(DUIThink PRIVATE DUITHINKSDK MMHELPLIB)
+endif()
 target_link_libraries(DUIThink PUBLIC MMHelper tinyxml2)
 if(TARGET webpdemux)
 	target_link_libraries(DUIThink PUBLIC webpdemux)
@@ -183,10 +208,12 @@ endif()
 # ---------------------------------------------------------------------------
 # smoke test entry
 # ---------------------------------------------------------------------------
-add_executable(DuiLinuxTest linux_main.cpp)
-target_link_libraries(DuiLinuxTest PRIVATE DUIThink)
-if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
-	target_link_libraries(DuiLinuxTest PRIVATE SDL3::SDL3)
+if(NOT ANDROID)
+	add_executable(DuiLinuxTest linux_main.cpp)
+	target_link_libraries(DuiLinuxTest PRIVATE DUIThink)
+	if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
+		target_link_libraries(DuiLinuxTest PRIVATE SDL3::SDL3)
+	endif()
 endif()
 
 # ---------------------------------------------------------------------------
@@ -219,40 +246,46 @@ set(DEMO_SRCS
 	${DEMO_ROOT}/Usage/SwitchSkin/SwitchSkinView.cpp
 )
 
-add_executable(DUIThinkDemo_C++ ${DEMO_SRCS})
-target_include_directories(DUIThinkDemo_C++ PRIVATE
-	${DEMO_ROOT}
-	"${CMAKE_SOURCE_DIR}/Demo/DUIThinkDemo_C++"
-)
-target_link_libraries(DUIThinkDemo_C++ PRIVATE DUIThink)
-if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
-	target_link_libraries(DUIThinkDemo_C++ PRIVATE SDL3::SDL3)
-endif()
-if(UNIX)
-	# Always load libDUIThink.so from the executable directory (the VM pack),
-	# never from the WSL build tree path baked in by CMake.
-	set_target_properties(DUIThinkDemo_C++ PROPERTIES
-		BUILD_RPATH "$ORIGIN"
-		INSTALL_RPATH "$ORIGIN"
-		BUILD_WITH_INSTALL_RPATH TRUE
+if(ANDROID)
+	add_library(main SHARED ${DEMO_SRCS})
+	target_include_directories(main PRIVATE
+		${DEMO_ROOT}
+		"${CMAKE_SOURCE_DIR}/Demo/DUIThinkDemo_C++"
 	)
-	target_link_libraries(DUIThinkDemo_C++ PRIVATE dl)
-	target_link_options(DUIThinkDemo_C++ PRIVATE -rdynamic)
-endif()
-
-# Demo uses ../DUIThinkDemo_C++.DuiProj like Win32 (exe in Debug/, proj beside Debug/).
-if(UNIX)
-	set_target_properties(DUIThinkDemo_C++ PROPERTIES
-		RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
+	target_link_libraries(main PRIVATE DUIThink android log)
+	if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
+		target_link_libraries(main PRIVATE SDL3::SDL3)
+	endif()
+else()
+	add_executable(DUIThinkDemo_C++ ${DEMO_SRCS})
+	target_include_directories(DUIThinkDemo_C++ PRIVATE
+		${DEMO_ROOT}
+		"${CMAKE_SOURCE_DIR}/Demo/DUIThinkDemo_C++"
 	)
-	set_target_properties(DUIThink PROPERTIES
-		LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
-		RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
-	)
-	add_custom_command(TARGET DUIThinkDemo_C++ POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E create_symlink
-			"${DEMO_PROJ_DIR}"
-			"${CMAKE_BINARY_DIR}/DUIThinkDemo_C++.DuiProj"
-		COMMENT "Link Demo DuiProj as sibling of Debug/"
-	)
+	target_link_libraries(DUIThinkDemo_C++ PRIVATE DUIThink)
+	if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
+		target_link_libraries(DUIThinkDemo_C++ PRIVATE SDL3::SDL3)
+	endif()
+	if(UNIX)
+		set_target_properties(DUIThinkDemo_C++ PROPERTIES
+			BUILD_RPATH "$ORIGIN"
+			INSTALL_RPATH "$ORIGIN"
+			BUILD_WITH_INSTALL_RPATH TRUE
+		)
+		target_link_libraries(DUIThinkDemo_C++ PRIVATE dl)
+		target_link_options(DUIThinkDemo_C++ PRIVATE -rdynamic)
+		set_target_properties(DUIThinkDemo_C++ PROPERTIES
+			RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
+		)
+		set_target_properties(DUIThink PROPERTIES
+			LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
+			RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
+		)
+		add_custom_command(TARGET DUIThinkDemo_C++ POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E create_symlink
+				"${DEMO_PROJ_DIR}"
+				"${CMAKE_BINARY_DIR}/DUIThinkDemo_C++.DuiProj"
+			COMMENT "Link Demo DuiProj as sibling of Debug/"
+		)
+	endif()
 endif()

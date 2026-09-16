@@ -838,6 +838,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUICore\DUIPropertyObject.h" />
     <ClInclude Include="DUICore\DUIRender.h" />
     <ClInclude Include="DUICore\DUIPlatform\DUIWndBase.h" />
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndVirtual.h" />
     <ClInclude Include="DUICore\DUIPlatform\DUIWndSDL.h" />
     <ClInclude Include="DUICore\DUIPlatform\DUIWndWin32.h" />
     <ClInclude Include="DUICore\DUIRender\DUICanvasRaster.h" />
@@ -941,6 +942,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUICore\DUIRender\DUIGdiPortable.cpp" />
     <ClCompile Include="DUICore\DUIRender\DUIPaintSceneSDL.cpp" />
     <ClCompile Include="DUICore\DUIPlatform\DUIWndBase.cpp" />
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndVirtual.cpp" />
     <ClCompile Include="DUICore\DUIPlatform\DUIWndSDL.cpp" />
     <ClCompile Include="DUICore\DUIPlatform\DUIWndWin32.cpp" />
     <ClCompile Include="DUICore\DUIWnd.cpp" />

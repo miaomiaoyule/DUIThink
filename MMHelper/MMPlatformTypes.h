@@ -1297,18 +1297,10 @@ BOOL GlobalUnlock(HGLOBAL hMem);
 HRESULT CreateStreamOnHGlobal(HGLOBAL hGlobal, BOOL fDeleteOnRelease, IStream **ppstm);
 
 //////////////////////////////////////////////////////////////////////////
-class MMHELPER_API IMMWndSDL
-{
-public:
-	virtual ~IMMWndSDL() {}
-
-	// Called by MMSdlDispatchEvent for queued async / EXPOSED events.
-	virtual void OnWndMessage(SDL_Event &e) = 0;
-};
-
+class IMMWndInterface;
 struct tagMMSdlAsyncMsg
 {
-	IMMWndSDL *							pWnd = NULL;
+	IMMWndInterface *					pWnd = NULL;
 	UINT								uMsg = 0;
 	WPARAM								wParam = 0;
 	LPARAM								lParam = 0;
@@ -1316,8 +1308,6 @@ struct tagMMSdlAsyncMsg
 
 // Register / unregister for EXPOSED lookup by SDL_WindowID.
 MMHELPER_API bool MMSdlIsPopupWindow(SDL_Window *pWindow);
-MMHELPER_API void MMSdlRegisterWnd(SDL_WindowID uWndID, IMMWndSDL *pWnd);
-MMHELPER_API void MMSdlUnregisterWnd(SDL_WindowID uWndID);
 
 // One shared user-event type for all PostMessage-style async posts.
 MMHELPER_API Uint32 MMSdlGetAsyncEventType();

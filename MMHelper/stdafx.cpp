@@ -5,29 +5,56 @@
 #include "stdafx.h"
 
 //////////////////////////////////////////////////////////////////////////
+namespace
+{
+	std::unordered_map<HWND, IMMWndInterface *> g_mapWnd;
+}
+
 void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...)
 {
 #ifdef _DEBUG
 	CMMString strMsg;
 	va_list Args;
-
+	
 	va_start(Args, pstrFormat);
 	strMsg.Format(pstrFormat, Args);
 	va_end(Args);
-
+	
 	strMsg += _T("\n");
 	OutputDebugString(strMsg.GetBuffer(0));
-
 #endif
 }
 
-#if defined(DuiPlatform_SDL)
+void MMRegisterWnd(HWND hWnd, IMMWndInterface *pWnd)
+{
+	if (0 == hWnd || NULL == pWnd) return;
 
+	g_mapWnd[hWnd] = pWnd;
+
+	return;
+}
+
+void MMUnregisterWnd(HWND hWnd)
+{
+	if (0 == hWnd) return;
+
+	g_mapWnd.erase(hWnd);
+
+	return;
+}
+
+IMMWndInterface * MMFindWnd(HWND hWnd)
+{
+	if (NULL == hWnd) return NULL;
+
+	auto it = g_mapWnd.find(hWnd);
+	return (it != g_mapWnd.end()) ? it->second : NULL;
+}
+
+#if defined(DuiPlatform_SDL)
 namespace
 {
-	std::unordered_map<SDL_Window *, CMMRect> g_mapWndUpdate;
-	std::unordered_map<SDL_WindowID, IMMWndSDL *> g_mapSdlWnd;
-	std::mutex g_csSdlWnd;
+	std::unordered_map<HWND, CMMRect> g_mapWndUpdate;
 	
 	CMMStringA MMEnsureSdlPath(LPCTSTR lpszPath)
 	{
@@ -63,7 +90,9 @@ namespace
 
 bool IsWindow(HWND hWnd)
 {
-	return (NULL != hWnd && SDL_GetWindowFromID(SDL_GetWindowID((SDL_Window *)hWnd)) == (SDL_Window *)hWnd);
+	if (NULL == hWnd) return false;
+	if (MMFindWnd(hWnd)) return true;
+	return SDL_GetWindowFromID(SDL_GetWindowID((SDL_Window *)hWnd)) == (SDL_Window *)hWnd;
 }
 
 bool PathFileExists(LPCTSTR lpszFile)
@@ -121,22 +150,32 @@ BOOL MoveFile(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName)
 
 bool IsWindowVisible(HWND hWnd)
 {
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (pWnd && pWnd->IsVirtualWnd()) return pWnd->IsWindowVisible();
 	return IsWindow(hWnd) && 0 == (SDL_GetWindowFlags((SDL_Window *)hWnd) & SDL_WINDOW_HIDDEN);
 }
 
 bool IsIconic(HWND hWnd)
 {
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (pWnd && pWnd->IsVirtualWnd()) return false;
 	return IsWindow(hWnd) && 0 != (SDL_GetWindowFlags((SDL_Window *)hWnd) & SDL_WINDOW_MINIMIZED);
 }
 
 bool IsZoomed(HWND hWnd)
 {
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (pWnd && pWnd->IsVirtualWnd()) return false;
 	return IsWindow(hWnd) && 0 != (SDL_GetWindowFlags((SDL_Window *)hWnd) & SDL_WINDOW_MAXIMIZED);
 }
 
 void InvalidateRect(HWND hWnd, LPCRECT lpRect, bool bErase)
 {
 	if (false == IsWindow(hWnd)) return;
+
+	//virtual
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (pWnd && pWnd->IsVirtualWnd()) return pWnd->Invalidate();
 
 	//cur update
 	CMMRect rcUpdate;
@@ -214,6 +253,15 @@ BOOL ScreenToClient(HWND hWnd, LPPOINT lpPoint)
 {
 	if (false == IsWindow(hWnd) || NULL == lpPoint) return 0;
 
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (pWnd && pWnd->IsVirtualWnd())
+	{
+		CMMRect rcWnd = pWnd->GetWindowRect();
+		lpPoint->x -= rcWnd.left;
+		lpPoint->y -= rcWnd.top;
+		return 1;
+	}
+
 	int x = 0;
 	int y = 0;
 	MMSdlGetWindowScreenPos((SDL_Window *)hWnd, &x, &y);
@@ -226,6 +274,15 @@ BOOL ScreenToClient(HWND hWnd, LPPOINT lpPoint)
 BOOL ClientToScreen(HWND hWnd, LPPOINT lpPoint)
 {
 	if (false == IsWindow(hWnd) || NULL == lpPoint) return 0;
+
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (pWnd && pWnd->IsVirtualWnd())
+	{
+		CMMRect rcWnd = pWnd->GetWindowRect();
+		lpPoint->x += rcWnd.left;
+		lpPoint->y += rcWnd.top;
+		return 1;
+	}
 
 	int x = 0;
 	int y = 0;
@@ -325,6 +382,10 @@ void GetCaretPos(LPPOINT lpPoint)
 HWND GetParent(HWND hWnd)
 {
 	if (false == IsWindow(hWnd)) return NULL;
+
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (pWnd && pWnd->IsVirtualWnd()) return pWnd->GetParent();
+	
 	return SDL_GetWindowParent((SDL_Window *)hWnd);
 }
 
@@ -336,6 +397,13 @@ HWND GetFocus()
 void GetWindowRect(HWND hWnd, LPRECT lpRect)
 {
 	if (false == IsWindow(hWnd) || NULL == lpRect) return;
+
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (pWnd && pWnd->IsVirtualWnd())
+	{
+		*lpRect = pWnd->GetWindowRect();
+		return;
+	}
 
 	SDL_Window *pWindow = (SDL_Window *)hWnd;
 	int x = 0;
@@ -355,6 +423,13 @@ void GetWindowRect(HWND hWnd, LPRECT lpRect)
 void GetClientRect(HWND hWnd, LPRECT lpRect)
 {
 	if (false == IsWindow(hWnd) || NULL == lpRect) return;
+
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (pWnd && pWnd->IsVirtualWnd())
+	{
+		*lpRect = pWnd->GetClientRect();
+		return;
+	}
 
 	int nWidth = 0;
 	int nHeight = 0;
@@ -500,6 +575,17 @@ short GetKeyState(int vKey)
 void SetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags)
 {
 	(void)hWndInsertAfter;
+
+	//virtual
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (pWnd && pWnd->IsVirtualWnd())
+	{
+		pWnd->SetWindowPos(hWndInsertAfter, X, Y, cx, cy, uFlags);
+
+		return;
+	}
+
+	//move
 	if (0 == (uFlags & SWP_NOMOVE))
 	{
 		int x = X;
@@ -571,6 +657,14 @@ void ShowWindow(HWND hWnd, int nCmdShow)
 {
 	if (false == IsWindow(hWnd)) return;
 
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (pWnd && pWnd->IsVirtualWnd())
+	{
+		pWnd->ShowWindow(nCmdShow);
+
+		return;
+	}
+
 	switch (nCmdShow)
 	{
 		case SW_HIDE:
@@ -599,6 +693,14 @@ void ShowWindow(HWND hWnd, int nCmdShow)
 
 HMONITOR MonitorFromWindow(HWND hWnd, DWORD dwFlags)
 {
+	//virtual
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (pWnd && pWnd->IsVirtualWnd())
+	{
+		return MonitorFromWindow(pWnd->GetParent(), dwFlags);
+	}
+
+	//monitor
 	SDL_DisplayID displayID = 0;
 	if (IsWindow(hWnd))
 	{
@@ -629,19 +731,9 @@ void UpdateWindow(HWND hWnd)
 	return;
 }
 
-static IMMWndSDL *MMSdlFindWnd(HWND hWnd)
-{
-	if (false == IsWindow(hWnd)) return NULL;
-
-	const SDL_WindowID uWndID = SDL_GetWindowID((SDL_Window *)hWnd);
-	std::lock_guard<std::mutex> lock(g_csSdlWnd);
-	auto it = g_mapSdlWnd.find(uWndID);
-	return (it != g_mapSdlWnd.end()) ? it->second : NULL;
-}
-
 LRESULT SendMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
-	IMMWndSDL *pWnd = MMSdlFindWnd(hWnd);
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
 	if (NULL == pWnd) return 0;
 
 	tagMMSdlAsyncMsg *pAsyncMsg = new (std::nothrow) tagMMSdlAsyncMsg();
@@ -655,7 +747,7 @@ LRESULT SendMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	SDL_Event e = {};
 	e.type = MMSdlGetAsyncEventType();
 	e.user.timestamp = SDL_GetTicksNS();
-	e.user.windowID = SDL_GetWindowID((SDL_Window *)hWnd);
+	e.user.windowID = pWnd->GetWndID();
 	e.user.code = 0;
 	e.user.data1 = pAsyncMsg;
 	e.user.data2 = nullptr;
@@ -667,8 +759,8 @@ LRESULT SendMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 
 BOOL PostMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
-	IMMWndSDL *pWnd = MMSdlFindWnd(hWnd);
-	if (NULL == pWnd) return FALSE;
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
+	if (NULL == pWnd) return false;
 
 	tagMMSdlAsyncMsg *pAsyncMsg = new (std::nothrow) tagMMSdlAsyncMsg();
 	if (NULL == pAsyncMsg) return FALSE;
@@ -681,7 +773,7 @@ BOOL PostMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	SDL_Event e = {};
 	e.type = MMSdlGetAsyncEventType();
 	e.user.timestamp = SDL_GetTicksNS();
-	e.user.windowID = SDL_GetWindowID((SDL_Window *)hWnd);
+	e.user.windowID = pWnd->GetWndID();
 	e.user.code = 0;
 	e.user.data1 = pAsyncMsg;
 	e.user.data2 = nullptr;
@@ -702,22 +794,6 @@ bool MMSdlIsPopupWindow(SDL_Window *pWindow)
 	return (uFlags & (SDL_WINDOW_POPUP_MENU | SDL_WINDOW_TOOLTIP)) != 0;
 }
 
-void MMSdlRegisterWnd(SDL_WindowID uWndID, IMMWndSDL *pWnd)
-{
-	if (0 == uWndID || NULL == pWnd) return;
-
-	std::lock_guard<std::mutex> lock(g_csSdlWnd);
-	g_mapSdlWnd[uWndID] = pWnd;
-}
-
-void MMSdlUnregisterWnd(SDL_WindowID uWndID)
-{
-	if (0 == uWndID) return;
-
-	std::lock_guard<std::mutex> lock(g_csSdlWnd);
-	g_mapSdlWnd.erase(uWndID);
-}
-
 Uint32 MMSdlGetAsyncEventType()
 {
 	static Uint32 s_uAsyncEvent = 0;
@@ -731,16 +807,9 @@ Uint32 MMSdlGetAsyncEventType()
 
 void MMSdlDispatchEvent(SDL_Event &e)
 {
-	IMMWndSDL *pWnd = NULL;
+	HWND hWnd = (HWND)SDL_GetWindowFromID(e.window.windowID);
+	IMMWndInterface *pWnd = MMFindWnd(hWnd);
 
-	{
-		std::lock_guard<std::mutex> lock(g_csSdlWnd);
-		auto it = g_mapSdlWnd.find(e.window.windowID);
-		if (it != g_mapSdlWnd.end())
-		{
-			pWnd = it->second;
-		}
-	}
 	if (NULL == pWnd && e.type == MMSdlGetAsyncEventType())
 	{
 		tagMMSdlAsyncMsg *pAsyncMsg = static_cast<tagMMSdlAsyncMsg *>(e.user.data1);
@@ -749,11 +818,12 @@ void MMSdlDispatchEvent(SDL_Event &e)
 			pWnd = pAsyncMsg->pWnd;
 		}
 	}
-
 	if (pWnd)
 	{
 		pWnd->OnWndMessage(e);
 	}
+
+	return;
 }
 
 bool MMSdlEventToMsg(const SDL_Event &e, MSG &Msg)

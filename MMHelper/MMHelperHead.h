@@ -52,7 +52,7 @@
 #define _NODISCARD_PERF
 #endif /* _HAS_NODISCARD */
 
-//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -80,7 +80,7 @@
 #include <codecvt>
 using namespace std;
 
-//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 // SDL / Win32 switch: set <DuiPlatformSDL>true|false</DuiPlatformSDL> in MMHelper/DuiPlatformSDL.props
 // (injects DuiPlatform_SDL and gates SDL3_exports.def). Do not #define here.
 #if defined(DuiPlatform_SDL)
@@ -119,8 +119,33 @@ using namespace std;
 #endif
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////
-void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
+//////////////////////////////////////////////////////////////////////////
+class CMMRect;
+class MMHELPER_API IMMWndInterface
+{
+public:
+	virtual ~IMMWndInterface() {}
+	virtual UINT GetWndID() = 0;
+	virtual HDC GetWndDC() = 0;
+	virtual bool IsVirtualWnd() = 0;
+	virtual bool IsWindowVisible() = 0;
+	virtual void SetWindowPos(HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags) = 0;
+	virtual void ShowWindow(int nCmdShow) = 0;
+	virtual void Invalidate() = 0;
+	virtual HWND GetParent() = 0;
+	virtual CMMRect GetWindowRect() = 0;
+	virtual CMMRect GetClientRect() = 0;
+
+#ifdef DuiPlatform_SDL
+	// Called by MMSdlDispatchEvent for queued async / EXPOSED events.
+	virtual void OnWndMessage(SDL_Event &e) = 0;
+#endif
+};
+
+MMHELPER_API void MMTrace(LPCTSTR pstrFormat, ...);
+MMHELPER_API void MMRegisterWnd(HWND hWnd, IMMWndInterface *pWnd);
+MMHELPER_API void MMUnregisterWnd(HWND hWnd);
+MMHELPER_API IMMWndInterface * MMFindWnd(HWND hWnd);
 
 //////////////////////////////////////////////////////////////////////////
 #define MMSvgEnable
@@ -162,8 +187,11 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #endif // _WIN32
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 #include "MMDefine.h"
+#include "MMUtils/MMPoint.h"
+#include "MMUtils/MMSize.h"
+#include "MMUtils/MMRect.h"
 #include "MMString.h"
 #include "MMHash.h"
 #include "MMModule.h"
@@ -183,9 +211,6 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMDisplayer.h"
 #include "MMTrayIcon.h"
 #include "MMEncrypt.h"
-#include "MMUtils/MMPoint.h"
-#include "MMUtils/MMSize.h"
-#include "MMUtils/MMRect.h"
 #include "MMMagnetBox.h"
 #include "MMServiceModel/MMServiceMsg.h"
 #include "MMServiceModel/MMServiceItem.h"
@@ -206,6 +231,6 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMSocket/SocketServer/Define.h"
 #include "MMSocket/SocketServer/MMSocketClientItem.h"
 #include "MMSocket/SocketServer/MMTCPSocketServer.h"
-//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 #endif

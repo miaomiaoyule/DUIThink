@@ -67,6 +67,10 @@ public:
 	static UINT MapKeyState();
 };
 
+#if !defined(__ANDROID__)
+typedef CDUIWnd CDUIPopupWnd;
+#endif
+
 //////////////////////////////////////////////////////////////////////////
 
 #endif

@@ -8,6 +8,7 @@ class DUITHINK_API CDUIWndBase
 	, public CDUIAnimationWnd
 	, public CDUINotifyPump
 	, public IDuiPreMessage
+	, public IMMWndInterface
 {
 	friend class CDUIContainerCtrl;
 	friend class CDUIThinkEditCtrl;
@@ -129,9 +130,6 @@ public:
 	CMMString GetDescribe() const override;
 	bool IsDesigned();
 	void SetDesigned(bool bDesigned);
-	virtual HWND GetWndHandle() const;
-	virtual HDC GetWndDC() override;
-	virtual operator HWND() const;
 	virtual CMMString GetDuiName() const;
 	virtual UINT GetClassStyle() const;
 	virtual UINT MapWndKeyState();
@@ -143,6 +141,7 @@ public:
 	virtual HWND SubWindow(HWND hWnd);
 	virtual void UnSubWindow();
 	virtual void ShowWindow(bool bShow = true, bool bTakeFocus = true);
+	virtual void ShowWindow(int nCmdShow) override;
 	virtual UINT DoModal();
 	virtual UINT DoBlock();
 	virtual void Close(UINT nRet = IDOK);
@@ -206,19 +205,26 @@ public:
 
 	//refresh
 	virtual void RefreshLayout();
-	virtual void Invalidate();
+	virtual void Invalidate() override;
 	virtual bool IsRefreshViewNeeded() const;
 	virtual void NeedRefreshView();
 	virtual POINT GetMousePosLast() const;
 	virtual POINT GetMousePosDown() const;
 
 	//window
+	virtual operator HWND() const;
+	virtual HWND GetWndHandle();
+	virtual HWND GetParent() override;
+	virtual UINT GetWndID() override;
+	virtual HDC GetWndDC() override;
 	virtual void ResizeWnd(int cx = -1, int cy = -1);
 	virtual void AdjustWndPos();
 	virtual bool IsMaximized();
 	virtual bool IsMinimized();
-	virtual CDUIRect GetClientRect() const;
-	virtual CDUIRect GetWindowRect();
+	virtual bool IsVirtualWnd() override;
+	virtual bool IsWindowVisible() override;
+	virtual CMMRect GetWindowRect() override;
+	virtual CMMRect GetClientRect() override;
 	virtual SIZE GetWndInitSize();
 	virtual void SetWndInitSize(int cx, int cy);
 	virtual SIZE GetWndMinSize();
@@ -236,6 +242,7 @@ public:
 	virtual bool SetScale(int nScale);
 	virtual HBITMAP GetBackgroundBmp();
 	virtual LPBYTE GetBackgroundBits();
+	virtual void SetWindowPos(HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags) override;
 
 	//caret
 	virtual bool CreateCaret(HBITMAP hBmp, int nWidth, int nHeight);

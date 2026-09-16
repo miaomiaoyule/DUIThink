@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////
 MMImplement_ClassName(CDUIMenuWnd)
 
-DuiBegin_Message_Map(CDUIMenuWnd, CDUIWnd)
+DuiBegin_Message_Map(CDUIMenuWnd, CDUIPopupWnd)
 	Dui_On_Notify(DuiNotify_WndInited, OnDuiWndInited)
 DuiEnd_Message_Map()
 
@@ -19,7 +19,7 @@ CDUIMenuWnd::CDUIMenuWnd()
 }
 
 CDUIMenuWnd::CDUIMenuWnd(CDUIMenuItemCtrl *pOwner, CMMString strDuiName)
-	: CDUIWnd(strDuiName)
+	: CDUIPopupWnd(strDuiName)
 	, m_pOwner(pOwner)
 {
 	CDUIControlBase *pRootCtrl = CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), this);
@@ -162,7 +162,7 @@ LRESULT CDUIMenuWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 		{
 			if (hWndFocus == g_pDuiMenuWndRoot->GetWndHandle()) return lRes;
 
-			hWndFocus = GetParent(hWndFocus);
+			hWndFocus = ::GetParent(hWndFocus);
 		}
 
 		g_pDuiMenuWndRoot->Close();
@@ -230,7 +230,7 @@ LRESULT CDUIMenuWnd::OnWMDuiResizeMenu(WPARAM wParam, LPARAM lParam)
 	if (rcWnd.GetWidth() != szRange.cx
 		|| rcWnd.GetHeight() != szRange.cy)
 	{
-		SetWindowPos(GetWndHandle(), NULL, 0, 0, szRange.cx, szRange.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+		::SetWindowPos(GetWndHandle(), NULL, 0, 0, szRange.cx, szRange.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
 	}
 
 	//wnd pos
@@ -269,7 +269,7 @@ void CDUIMenuWnd::ResizeMenu()
 	if (-1 == m_ptTrack.x && -1 == m_ptTrack.y)
 	{
 		CDUIRect rcWndParent;
-		::GetWindowRect(GetParent(m_hWnd), &rcWndParent);
+		::GetWindowRect(::GetParent(m_hWnd), &rcWndParent);
 
 		if (rcWndParent.Empty()) rcWndParent = rcWork;
 		m_ptTrack.x = rcWndParent.left + rcWndParent.GetWidth() / 2 - rcWnd.GetWidth() / 2;
@@ -280,7 +280,7 @@ void CDUIMenuWnd::ResizeMenu()
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(-rcWnd.GetWidth(), 0);
 	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight());
 
-	SetWindowPos(m_hWnd, HWND_TOPMOST, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOACTIVATE);
+	::SetWindowPos(m_hWnd, HWND_TOPMOST, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOACTIVATE);
 
 #ifdef DUI_DESIGN
 	HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONULL);
@@ -316,7 +316,7 @@ void CDUIMenuWnd::ResizeSubMenu()
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(-(rcWndOwner.GetWidth() + rcWnd.GetWidth()), 0);
 	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight());
 	
-	SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
+	::SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
 #ifdef DUI_DESIGN
 	HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONULL);

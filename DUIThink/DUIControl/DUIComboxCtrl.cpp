@@ -6,9 +6,9 @@
 
 #define COUNT_WAVEOFFSET				(20)
 //////////////////////////////////////////////////////////////////////////
-class CDUIComboxWnd : public CDUIWnd
+class CDUIComboxWnd : public CDUIPopupWnd
 {
-	MMDeclare_Super(CDUIWnd)
+	MMDeclare_Super(CDUIPopupWnd)
 	MMDeclare_ClassName()
 	DuiDeclare_Message_Map()
 
@@ -49,7 +49,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 MMImplement_ClassName(CDUIComboxWnd)
 
-DuiBegin_Message_Map(CDUIComboxWnd, CDUIWnd)
+DuiBegin_Message_Map(CDUIComboxWnd, CDUIPopupWnd)
 	Dui_On_Notify(DuiNotify_WndInited, OnDuiWndInited)
 	Dui_On_Notify(DuiNotify_ItemSelected, OnDuiItemSelected)
 	Dui_On_Notify(DuiNotify_ItemMouseEnter, OnDuiItemMouseEnter)
@@ -127,7 +127,7 @@ void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 		rcCombox.Offset(0, rcOwner.bottom + rcWnd.top - rcCombox.top);
 	}
 
-	SetWindowPos(m_hWnd, NULL, rcCombox.left, rcCombox.top, rcCombox.GetWidth(), rcCombox.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
+	::SetWindowPos(m_hWnd, NULL, rcCombox.left, rcCombox.top, rcCombox.GetWidth(), rcCombox.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
 	// HACK: Don't deselect the parent's caption
 	HWND hWndParent = m_hWnd;

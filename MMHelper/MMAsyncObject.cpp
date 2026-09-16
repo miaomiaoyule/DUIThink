@@ -41,6 +41,11 @@ bool CMMAsyncObject::Init()
 
 	//window
 #if defined(DuiPlatform_SDL)
+#if defined(__ANDROID__)
+	m_hWndAsync = (HWND)static_cast<IMMWndInterface *>(this);
+	m_uWndID = 0;
+	MMRegisterWnd(m_hWndAsync, this);
+#else
 	m_hWndAsync = SDL_CreateWindow("CMMAsyncObject", 64, 64, SDL_WINDOW_HIDDEN);
 	if (m_hWndAsync == nullptr)
 	{
@@ -50,7 +55,8 @@ bool CMMAsyncObject::Init()
 	}
 
 	m_uWndID = SDL_GetWindowID(m_hWndAsync);
-	MMSdlRegisterWnd(m_uWndID, this);
+	MMRegisterWnd(m_hWndAsync, this);
+#endif
 #else
 	CMMString strClassName = GetClass() + CMMService::ProductGUID();
 
@@ -76,6 +82,7 @@ bool CMMAsyncObject::Init()
 	}
 
 	m_uWndID = (UINT)m_hWndAsync;
+	MMRegisterWnd(m_hWndAsync, this);
 #endif
 
 	return true;
@@ -102,8 +109,11 @@ bool CMMAsyncObject::UnInit()
 			}
 		}
 
-		MMSdlUnregisterWnd(m_uWndID);
-		SDL_DestroyWindow(m_hWndAsync);
+		MMUnregisterWnd(m_hWndAsync);
+		if (0 != m_uWndID)
+		{
+			SDL_DestroyWindow(m_hWndAsync);
+		}
 
 		m_hWndAsync = NULL;
 #else
@@ -115,6 +125,7 @@ bool CMMAsyncObject::UnInit()
 		::SetWindowLongPtr(m_hWndAsync, GWLP_USERDATA, NULL);
 		PostMessage(WM_CLOSE, NULL, NULL);
 
+		MMUnregisterWnd(m_hWndAsync);
 		m_hWndAsync = NULL;
 #endif	
 	}

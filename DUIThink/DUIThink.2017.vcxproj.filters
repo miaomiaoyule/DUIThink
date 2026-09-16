@@ -342,6 +342,9 @@
     <ClInclude Include="DUICore\DUIPlatform\DUIWndBase.h">
       <Filter>DUICore\DUIPlatform</Filter>
     </ClInclude>
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndVirtual.h">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClInclude>
     <ClInclude Include="DUICore\DUIPlatform\DUIWndSDL.h">
       <Filter>DUICore\DUIPlatform</Filter>
     </ClInclude>
@@ -606,6 +609,9 @@
       <Filter>DUIExport</Filter>
     </ClCompile>
     <ClCompile Include="DUICore\DUIPlatform\DUIWndBase.cpp">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndVirtual.cpp">
       <Filter>DUICore\DUIPlatform</Filter>
     </ClCompile>
     <ClCompile Include="DUICore\DUIPlatform\DUIWndSDL.cpp">

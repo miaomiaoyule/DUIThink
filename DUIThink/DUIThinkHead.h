@@ -68,6 +68,7 @@
 #include "../ThirdDepend/webp/src/webp/mux.h"
 using namespace tinyxml2;
 
+#ifdef _MSC_VER
 #if _MSC_VER < 1900
 #ifdef _DEBUG
 	#if defined _DLL
@@ -201,6 +202,7 @@ using namespace tinyxml2;
 	#endif
 #endif
 #endif
+#endif // _MSC_VER
 
 //////////////////////////////////////////////////////////////////////////
 #include "Define/DefineBase.h"
@@ -264,6 +266,7 @@ using namespace tinyxml2;
 #include "DUICore/DUIPlatform/DUIWndSDL.h"
 #include "DUICore/DUIPlatform/DUIWndWin32.h"
 #include "DUICore/DUIWnd.h"
+#include "DUICore/DUIPlatform/DUIWndVirtual.h"
 
 #include "DUIControl/DUIControlBase.h"
 #include "DUIControl/DUIStaticCtrl.h"

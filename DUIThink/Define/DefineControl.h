@@ -23,6 +23,7 @@
 #define Dui_WindowBase								(_T("WindowBase"))
 #define Dui_WindowWin32								(_T("WindowWin32"))
 #define Dui_WindowSDL								(_T("WindowSDL"))
+#define Dui_WindowVirtual							(_T("WindowVirtual"))
 
 #define Dui_Ctrl_Base								(_T("BaseCtrl"))
 #define Dui_Ctrl_Static								(_T("StaticCtrl"))

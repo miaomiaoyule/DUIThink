@@ -22,7 +22,7 @@ CDUIWndSDL::~CDUIWndSDL()
 	if (IsWindow(m_hWnd))
 	{
 		SDL_SetWindowHitTest(m_hWnd, NULL, NULL);
-		MMSdlUnregisterWnd(m_uWndID);
+		MMUnregisterWnd(m_hWnd);
 		SDL_DestroyWindow(m_hWnd);
 		m_hWnd = NULL;
 		m_uWndID = 0;
@@ -114,6 +114,10 @@ HWND CDUIWndSDL::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD 
 		SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, cx);
 		SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, cy);
 		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, true);
+#if defined(__ANDROID__)
+		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, true);
+		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_HIGH_PIXEL_DENSITY_BOOLEAN, true);
+#endif
 		if (dwStyle & WS_THICKFRAME)
 		{
 			SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, true);
@@ -143,7 +147,7 @@ HWND CDUIWndSDL::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD 
 	}
 
 	m_uWndID = SDL_GetWindowID(m_hWnd);
-	MMSdlRegisterWnd(m_uWndID, this);
+	MMRegisterWnd(m_hWnd, this);
 	SDL_SetWindowHitTest(m_hWnd, &SDLEnableHitTest, this);
 
 	OnWndMessage(WM_CREATE, 0, 0);
@@ -156,7 +160,7 @@ HWND CDUIWndSDL::SubWindow(HWND hWnd)
 	m_hWnd = hWnd;
 	m_uWndID = SDL_GetWindowID(hWnd);
 	m_bSubWindow = true;
-	MMSdlRegisterWnd(m_uWndID, this);
+	MMRegisterWnd(m_hWnd, this);
 	SDL_SetWindowHitTest(m_hWnd, &SDLEnableHitTest, this);
 	return m_hWnd;
 }
@@ -166,7 +170,7 @@ void CDUIWndSDL::UnSubWindow()
 	if (!::IsWindow(m_hWnd)) return;
 	if (!m_bSubWindow) return;
 	SDL_SetWindowHitTest(m_hWnd, NULL, NULL);
-	MMSdlUnregisterWnd(m_uWndID);
+	MMUnregisterWnd(m_hWnd);
 	m_hWnd = nullptr;
 	m_uWndID = 0;
 	m_bSubWindow = false;
@@ -216,7 +220,7 @@ UINT CDUIWndSDL::DoModal()
 
 	//message
 	SDL_Event e = {};
-	while (IsWindowVisible(m_hWnd))
+	while (::IsWindowVisible(m_hWnd))
 	{
 		if (false == SDL_WaitEvent(&e))
 		{
@@ -279,7 +283,7 @@ UINT CDUIWndSDL::DoBlock()
 
 	//message
 	SDL_Event e = {};
-	while (IsWindowVisible(m_hWnd))
+	while (::IsWindowVisible(m_hWnd))
 	{
 		if (false == SDL_WaitEvent(&e))
 		{
@@ -320,6 +324,11 @@ UINT CDUIWndSDL::DoBlock()
 	}
 
 	return nRet;
+}
+
+void CDUIWndSDL::Close(UINT nRet)
+{
+	__super::Close(nRet);
 }
 
 void CDUIWndSDL::CenterWindow()
@@ -572,17 +581,21 @@ void CDUIWndSDL::AdjustWndPos()
 
 bool CDUIWndSDL::IsMaximized()
 {
+	if (NULL == m_hWnd) return false;
+	
 	SDL_WindowFlags uFlags = SDL_GetWindowFlags(m_hWnd);
 	return (uFlags & SDL_WINDOW_MAXIMIZED) == SDL_WINDOW_MAXIMIZED;
 }
 
 bool CDUIWndSDL::IsMinimized()
 {
+	if (NULL == m_hWnd) return false;
+	
 	SDL_WindowFlags uFlags = SDL_GetWindowFlags(m_hWnd);
 	return (uFlags & SDL_WINDOW_MINIMIZED) == SDL_WINDOW_MINIMIZED;
 }
 
-CDUIRect CDUIWndSDL::GetClientRect() const
+CMMRect CDUIWndSDL::GetClientRect()
 {
 	CDUIRect rcClient;
 	::GetClientRect(m_hWnd, &rcClient);
@@ -590,7 +603,7 @@ CDUIRect CDUIWndSDL::GetClientRect() const
 	return rcClient;
 }
 
-CDUIRect CDUIWndSDL::GetWindowRect()
+CMMRect CDUIWndSDL::GetWindowRect()
 {
 	CDUIRect rcWnd;
 	::GetWindowRect(m_hWnd, &rcWnd);
@@ -684,7 +697,7 @@ LRESULT CDUIWndSDL::OnClose(WPARAM wParam, LPARAM lParam)
 		ReleasePaintScene();
 		SDL_HideWindow(m_hWnd);
 		SDL_SetWindowHitTest(m_hWnd, NULL, NULL);
-		MMSdlUnregisterWnd(m_uWndID);
+		MMUnregisterWnd(m_hWnd);
 		SDL_DestroyWindow(m_hWnd);
 		m_hWnd = NULL;
 		m_uWndID = 0;

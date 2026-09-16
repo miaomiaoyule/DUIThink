@@ -9,7 +9,7 @@ class CMMAsyncObject;
 //////////////////////////////////////////////////////////////////////////
 class MMHELPER_API CMMAsyncObject
 #if defined(DuiPlatform_SDL)
-	: public IMMWndSDL
+	: public IMMWndInterface
 #endif
 {
 	MMDeclare_ClassName(CMMAsyncObject)
@@ -40,6 +40,19 @@ protected:
 	// Map timer id -> TimerInfo
 	std::map<UINT_PTR, TimerInfo>		m_TimerTasks;
 	std::atomic<UINT_PTR>				m_NextTimerId{ 1 };
+
+	//override
+public:
+	UINT GetWndID() override { return m_uWndID; };
+	HDC GetWndDC() override { return NULL; }
+	bool IsVirtualWnd() override { return 0 == m_uWndID && m_hWndAsync; }
+	bool IsWindowVisible() { return false; }
+	void SetWindowPos(HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags) {}
+	void ShowWindow(int nCmdShow) {}
+	void Invalidate() {}
+	HWND GetParent() { return NULL; }
+	CMMRect GetWindowRect() { return {}; }
+	CMMRect GetClientRect() { return {}; }
 
 public:
 	//you should call init and uninit on uithread

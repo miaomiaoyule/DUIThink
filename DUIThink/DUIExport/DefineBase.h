@@ -19,6 +19,7 @@ class CDUIAttributeColor;
 class CDUIAttributeTextStyle;
 class CDUIWndBase;
 class CDUIWnd;
+class CDUIWndVirtual;
 class CDUIWndSDL;
 class CDUIResourceBase;
 class CDUIImageBase;

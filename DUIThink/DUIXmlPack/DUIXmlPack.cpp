@@ -123,18 +123,20 @@ bool CDUIXmlPack::LoadProject(LPCTSTR lpszProject)
 	vector<BYTE> vecData;
 	tinyxml2::XMLDocument xmlDoc;
 	if (false == CDUIGlobal::GetInstance()->ExtractResourceData(vecData, strFile)
-		|| (/*vecData = CMMEncrypt::MapDecrypt(vecData, Key_ResourceEncrypt), */vecData.empty())
+		|| vecData.empty()
 		|| XML_SUCCESS != xmlDoc.Parse((const char*)vecData.data(), vecData.size()))
 	{
 		CMMString strError = xmlDoc.ErrorStr();
+		if (strError.empty())
+		{
+			strError = _T("read file failed");
+		}
 
 		CMMString strWarning;
 		strWarning.Format(_T("加载Dui工程(%s)XML文件失败, cause[%s]"), strFile.c_str(), strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 		return false;
 	}
-
-	CMMString strData = CA2CT(std::string((LPCSTR)vecData.data(), vecData.size()).c_str(), CP_UTF8);
 
 	//保存路径
 	CDUIGlobal::GetInstance()->SetProjectPath(strProjPath);

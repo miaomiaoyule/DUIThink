@@ -5,9 +5,9 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUICalendarWnd : public CDUIWnd
+class DUITHINK_API CDUICalendarWnd : public CDUIPopupWnd
 {
-	MMDeclare_Super(CDUIWnd)
+	MMDeclare_Super(CDUIPopupWnd)
 	MMDeclare_ClassName()
 	DuiDeclare_Message_Map()
 

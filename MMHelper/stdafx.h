@@ -12,8 +12,29 @@
 
 //////////////////////////////////////////////////////////////////////////
 // TODO:  在此处引用程序需要的其他头文件
+#if defined(__ANDROID__)
+#include <time.h>
+struct timeb
+{
+	time_t time;
+	unsigned short millitm;
+	short timezone;
+	short dstflag;
+};
+inline void ftime(struct timeb *tb)
+{
+	if (!tb) return;
+	struct timespec ts = {};
+	clock_gettime(CLOCK_REALTIME, &ts);
+	tb->time = ts.tv_sec;
+	tb->millitm = (unsigned short)(ts.tv_nsec / 1000000);
+	tb->timezone = 0;
+	tb->dstflag = 0;
+}
+#else
 #include <sys/timeb.h>
 #include <time.h>
+#endif
 
 #include "MMHelperHead.h"
 
