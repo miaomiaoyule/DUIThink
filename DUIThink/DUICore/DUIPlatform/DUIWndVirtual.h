@@ -31,7 +31,6 @@ public:
 	bool IsCaptured() override;
 
 	CDUIContainerCtrl * DetachRootCtrl() override;
-	bool AttachRootCtrl(CDUIContainerCtrl *pControl) override;
 
 	HDC GetWndDC() override;
 	void ResizeWnd(int cx = -1, int cy = -1) override;

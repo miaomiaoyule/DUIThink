@@ -41,6 +41,7 @@ HWND CDUIWndVirtual::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DW
 	OnWndMessage(WM_CREATE, 0, 0);
 
 	//pos
+	AdjustWndSize();
 	if (CW_USEDEFAULT != x && CW_USEDEFAULT != y)
 	{
 		UINT uFlags = SWP_NOZORDER | SWP_NOACTIVATE;
@@ -54,6 +55,12 @@ HWND CDUIWndVirtual::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DW
 
 	//show
 	ShowWindow(dwStyle & WS_VISIBLE, false);
+
+	//refesh
+	RefreshLayout();
+
+	//attach
+	AttachHost();
 
 	return m_hWnd;
 }
@@ -153,15 +160,6 @@ CDUIContainerCtrl * CDUIWndVirtual::DetachRootCtrl()
 	return __super::DetachRootCtrl();
 }
 
-bool CDUIWndVirtual::AttachRootCtrl(CDUIContainerCtrl *pControl)
-{
-	if (false == __super::AttachRootCtrl(pControl)) return false;
-
-	AttachHost();
-
-	return true;
-}
-
 HDC CDUIWndVirtual::GetWndDC()
 {
 	IMMWndInterface *pWndParent = MMFindWnd(m_hWndParent);
@@ -258,10 +256,10 @@ void CDUIWndVirtual::SetWindowPos(HWND hWndInsertAfter, int X, int Y, int cx, in
 
 void CDUIWndVirtual::RefreshLayout()
 {
-	if (m_pRootCtrl)
-	{
-		m_pRootCtrl->RefreshView();
-	}
+	CDUIWndBase *pWndHost = GetHostWnd();
+	if (NULL == pWndHost) return __super::RefreshLayout();
+
+	pWndHost->RefreshLayout();
 
 	return;
 }
@@ -345,13 +343,15 @@ void CDUIWndVirtual::AttachHost()
 	//attach
 	m_pRootCtrl->SetFloat(true);
 	pHostRootCtrl->InsertChild(m_pRootCtrl);
-	
+	pWndHost->AddINotify(this);
+
 	return;
 }
 
 void CDUIWndVirtual::DetachHost()
 {
-	if (NULL == m_pRootCtrl)
+	CDUIWndBase *pWndHost = GetHostWnd();
+	if (NULL == m_pRootCtrl || NULL == pWndHost)
 	{
 		return;
 	}
@@ -361,6 +361,8 @@ void CDUIWndVirtual::DetachHost()
 	{
 		pParent->DetachChild(m_pRootCtrl);
 	}
+
+	pWndHost->RemoveINotify(this);
 
 	return;
 }
