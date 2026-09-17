@@ -240,7 +240,18 @@ void CDUIWndVirtual::SetWindowPos(HWND hWndInsertAfter, int X, int Y, int cx, in
 		return;
 	}
 
-	m_pRootCtrl->SetAbsoluteRect({ X, Y, X + cx, Y + cy });
+	CDUIRect rcCtrl = m_pRootCtrl->GetAbsoluteRect();
+	if (0 == (uFlags & SWP_NOMOVE))
+	{
+		rcCtrl.Offset(X - rcCtrl.left, Y - rcCtrl.top);
+	}
+	if (0 == (uFlags & SWP_NOSIZE))
+	{
+		rcCtrl.right = rcCtrl.left + cx;
+		rcCtrl.bottom = rcCtrl.top + cy;
+	}
+
+	m_pRootCtrl->SetAbsoluteRect(rcCtrl);
 	
 	return;
 }
@@ -257,10 +268,10 @@ void CDUIWndVirtual::RefreshLayout()
 
 void CDUIWndVirtual::Invalidate()
 {
-	if (m_pRootCtrl)
-	{
-		m_pRootCtrl->Invalidate();
-	}
+	CDUIWndBase *pWndHost = GetHostWnd();
+	if (NULL == pWndHost) return;
+
+	pWndHost->Invalidate();
 
 	return;
 }
