@@ -790,6 +790,10 @@ BOOL PostMessage(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 bool MMSdlIsPopupWindow(SDL_Window *pWindow)
 {
 	if (NULL == pWindow) return false;
+
+	IMMWndInterface *pWnd = MMFindWnd(pWindow);
+	if (pWnd && pWnd->IsVirtualWnd()) return true;
+
 	const SDL_WindowFlags uFlags = SDL_GetWindowFlags(pWindow);
 	return (uFlags & (SDL_WINDOW_POPUP_MENU | SDL_WINDOW_TOOLTIP)) != 0;
 }
