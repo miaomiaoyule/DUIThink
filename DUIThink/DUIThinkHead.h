@@ -265,7 +265,7 @@ using namespace tinyxml2;
 #include "DUICore/DUIPlatform/DUIWndBase.h"
 #include "DUICore/DUIPlatform/DUIWndSDL.h"
 #include "DUICore/DUIPlatform/DUIWndWin32.h"
-#include "DUICore/DUIWnd.h"
+#include "DUICore/DUIPlatform/DUIWnd.h"
 #include "DUICore/DUIPlatform/DUIWndVirtual.h"
 
 #include "DUIControl/DUIControlBase.h"

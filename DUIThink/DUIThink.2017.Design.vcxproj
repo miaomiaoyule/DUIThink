@@ -305,7 +305,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUICore\DUIRender\DUIGdiPortable.h" />
     <ClInclude Include="DUICore\DUIRender\DUIPaintSceneSDL.h" />
     <ClInclude Include="DUICore\DUIRender\IDuiCanvas.h" />
-    <ClInclude Include="DUICore\DUIWnd.h" />
+    <ClInclude Include="DUICore\DUIPlatform\DUIWnd.h" />
     <ClInclude Include="DUIExport\DefineAnimation.h" />
     <ClInclude Include="DUIExport\DefineAttribute.h" />
     <ClInclude Include="DUIExport\DefineBase.h" />
@@ -405,7 +405,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUICore\DUIRender\DUIGdiPortable.cpp" />
     <ClCompile Include="DUICore\DUIRender\DUIGdiplusPortable.cpp" />
     <ClCompile Include="DUICore\DUIRender\DUIPaintSceneSDL.cpp" />
-    <ClCompile Include="DUICore\DUIWnd.cpp" />
+    <ClCompile Include="DUICore\DUIPlatform\DUIWnd.cpp" />
     <ClCompile Include="DUIExport\DUIStruct.cpp" />
     <ClCompile Include="DUIExport\IDUIInterface.cpp" />
     <ClCompile Include="DUIManager\DUIFactory.cpp" />

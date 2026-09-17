@@ -1050,7 +1050,7 @@ void CDUIAnimationWnd::StartAnimationWnd(bool bShow/* = true*/)
 			m_rcWndAnimation.top -= m_szRotateRadius.cy;
 			m_rcWndAnimation.bottom += m_szRotateRadius.cy;
 			m_hBitmapAni = CDUIRenderEngine::CreateARGB32Bitmap(m_hMemDCSrc, m_rcWndAnimation.GetWidth(), m_rcWndAnimation.GetHeight(), &m_pBmpAniBits);
-			SetWindowPos(GetWndHandle(), NULL, m_rcWndAnimation.left, m_rcWndAnimation.top, m_rcWndAnimation.GetWidth(), m_rcWndAnimation.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
+			::SetWindowPos(GetWndHandle(), NULL, m_rcWndAnimation.left, m_rcWndAnimation.top, m_rcWndAnimation.GetWidth(), m_rcWndAnimation.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
 			break;
 		}
 		case AnimateWnd_3DRotateTopBottom:
@@ -1060,7 +1060,7 @@ void CDUIAnimationWnd::StartAnimationWnd(bool bShow/* = true*/)
 			m_rcWndAnimation.left -= m_szRotateRadius.cx;
 			m_rcWndAnimation.right += m_szRotateRadius.cx;
 			m_hBitmapAni = CDUIRenderEngine::CreateARGB32Bitmap(m_hMemDCSrc, m_rcWndAnimation.GetWidth(), m_rcWndAnimation.GetHeight(), &m_pBmpAniBits);
-			SetWindowPos(GetWndHandle(), NULL, m_rcWndAnimation.left, m_rcWndAnimation.top, m_rcWndAnimation.GetWidth(), m_rcWndAnimation.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
+			::SetWindowPos(GetWndHandle(), NULL, m_rcWndAnimation.left, m_rcWndAnimation.top, m_rcWndAnimation.GetWidth(), m_rcWndAnimation.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
 			break;
 		}
 		case AnimateWnd_3DRotateReplaseLR:
@@ -1142,7 +1142,7 @@ void CDUIAnimationWnd::StopAnimationWnd()
 	}
 
 	SetWndLayered(m_bWndLayered);
-	SetWindowPos(GetWndHandle(), NULL, m_rcWndSrc.left, m_rcWndSrc.top, m_rcWndSrc.GetWidth(), m_rcWndSrc.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
+	::SetWindowPos(GetWndHandle(), NULL, m_rcWndSrc.left, m_rcWndSrc.top, m_rcWndSrc.GetWidth(), m_rcWndSrc.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
 	pWndManager->Invalidate();
 
 	//notify

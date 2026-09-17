@@ -219,8 +219,8 @@
     <ClInclude Include="DUIControl\DUIRotateMenuCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>
-    <ClInclude Include="DUICore\DUIWnd.h">
-      <Filter>DUICore</Filter>
+    <ClInclude Include="DUICore\DUIPlatform\DUIWnd.h">
+      <Filter>DUICore\DUIPlatform</Filter>
     </ClInclude>
     <ClInclude Include="DUIExport\DefineResource.h">
       <Filter>DUIExport</Filter>
@@ -494,8 +494,8 @@
     <ClCompile Include="DUIControl\DUIRotateMenuCtrl.cpp">
       <Filter>DUIControl</Filter>
     </ClCompile>
-    <ClCompile Include="DUICore\DUIWnd.cpp">
-      <Filter>DUICore</Filter>
+    <ClCompile Include="DUICore\DUIPlatform\DUIWnd.cpp">
+      <Filter>DUICore\DUIPlatform</Filter>
     </ClCompile>
     <ClCompile Include="DUIControl\DUIAnimateCtrl.cpp">
       <Filter>DUIControl</Filter>
