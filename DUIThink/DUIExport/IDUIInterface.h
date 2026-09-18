@@ -1,4 +1,4 @@
-#ifndef __IDUIEXPORTINTERFACE_H__
+﻿#ifndef __IDUIEXPORTINTERFACE_H__
 #define __IDUIEXPORTINTERFACE_H__
 
 #pragma once

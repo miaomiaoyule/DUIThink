@@ -116,7 +116,7 @@ bool CDUIEditWnd::Init()
 	}
 	if (m_pOwner->IsDesktopEdit())
 	{
-		SetWindowPos(m_hWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+		::SetWindowPos(m_hWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 	}
 
 	AdjustWndSize(true);
@@ -178,7 +178,7 @@ void CDUIEditWnd::AdjustWndSize(bool bCreate)
 		rcPos.Offset(rcWnd.left, rcWnd.top);
 	}
 
-	SetWindowPos(m_hWnd, NULL, rcPos.left, rcPos.top, rcPos.GetWidth(), rcPos.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
+	::SetWindowPos(m_hWnd, NULL, rcPos.left, rcPos.top, rcPos.GetWidth(), rcPos.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
 	//caret pos
 	if (false == bCreate)

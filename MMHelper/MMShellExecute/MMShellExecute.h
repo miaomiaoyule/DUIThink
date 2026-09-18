@@ -1,4 +1,4 @@
-#ifndef __MM_SHELLEXECUTE_H__
+﻿#ifndef __MM_SHELLEXECUTE_H__
 #define __MM_SHELLEXECUTE_H__
 
 #ifndef DuiPlatform_SDL

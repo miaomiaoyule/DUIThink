@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "MMShellExecute.h"
 
 #ifndef DuiPlatform_SDL

@@ -88,23 +88,23 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	VecDuiResourceBase vecResource;
 	vecResource.clear();
 	for (auto &ResImageItem : mapResImage) vecResource.push_back(ResImageItem.second);
-	CMMString strImageResFile = szPath + CA2CT(strImageRes);
+	CMMString strImageResFile = CMMString(szPath) + CA2CT(strImageRes);
 	SaveResource(strImageResFile.c_str(), vecResource);
 
 	//font res
 	vecResource.clear();
 	for (auto &ResFontItem : mapResFont) vecResource.push_back(ResFontItem.second);
-	CMMString strFontResFile = szPath + CA2CT(strFontRes);
+	CMMString strFontResFile = CMMString(szPath) + CA2CT(strFontRes);
 	SaveResource(strFontResFile.c_str(), vecResource);
 
 	//color res
 	vecResource.clear();
 	for (auto &ResColorItem : mapResColor) vecResource.push_back(ResColorItem.second);
-	CMMString strColorResFile = szPath + CA2CT(strColorRes);
+	CMMString strColorResFile = CMMString(szPath) + CA2CT(strColorRes);
 	SaveResource(strColorResFile.c_str(), vecResource);
 
 	//attribute
-	CMMString strAttributeFile = szPath + CA2CT(strAttribute);
+	CMMString strAttributeFile = CMMString(szPath) + CA2CT(strAttribute);
 	SaveAttribute(strAttributeFile.c_str());
 
 	return true;

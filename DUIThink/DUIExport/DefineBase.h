@@ -1,4 +1,4 @@
-#ifndef __DUIEXPORTDEFINEBASE_H__
+﻿#ifndef __DUIEXPORTDEFINEBASE_H__
 #define __DUIEXPORTDEFINEBASE_H__
 
 #pragma once

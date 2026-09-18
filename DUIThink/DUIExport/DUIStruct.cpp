@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "DUIStruct.h"
 
 uint32_t std::hash<tagDuiImageSection>::operator()(const tagDuiImageSection &ImageSection) const

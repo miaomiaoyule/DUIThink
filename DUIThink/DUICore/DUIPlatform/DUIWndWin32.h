@@ -9,8 +9,6 @@ class DUITHINK_API CDUIWndWin32
 	: public CDUIWndBase
 	, public CMMDragDrop
 {
-	MMDeclare_Super(CDUIWndBase)
-
 public:
 	CDUIWndWin32(LPCTSTR lpszDuiName = NULL, HWND hWndParent = NULL);
 	virtual ~CDUIWndWin32();
@@ -66,8 +64,8 @@ public:
 	void AdjustWndPos() override;
 	bool IsMaximized() override;
 	bool IsMinimized() override;
-	CDUIRect GetClientRect() const override;
-	CDUIRect GetWindowRect() override;
+	CMMRect GetClientRect() override;
+	CMMRect GetWindowRect() override;
 
 	//refresh
 	void Invalidate() override;

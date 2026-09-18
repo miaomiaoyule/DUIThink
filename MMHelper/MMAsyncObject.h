@@ -8,9 +8,7 @@ class CMMAsyncObject;
 
 //////////////////////////////////////////////////////////////////////////
 class MMHELPER_API CMMAsyncObject
-#if defined(DuiPlatform_SDL)
 	: public IMMWndInterface
-#endif
 {
 	MMDeclare_ClassName(CMMAsyncObject)
 

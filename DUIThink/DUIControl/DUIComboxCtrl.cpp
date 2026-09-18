@@ -326,7 +326,8 @@ void CDUIComboxWnd::OnNotify(const DuiNotify &Notify)
 
 	if (m_pOwner
 		&& m_pWndOwner
-		&& (Notify.pNotifyCtrl == m_pComboxView || m_pComboxView->VerifyChild(Notify.pNotifyCtrl)))
+		&& (Notify.pNotifyCtrl == m_pComboxView || m_pComboxView->VerifyChild(Notify.pNotifyCtrl))
+		&& Notify.pNotifyCtrl->GetWndOwner() != m_pWndOwner)
 	{
 		DuiNotify NotifyOwner = Notify;
 		NotifyOwner.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_Combox;

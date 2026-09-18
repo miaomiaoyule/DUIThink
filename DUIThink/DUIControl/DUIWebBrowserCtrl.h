@@ -17,7 +17,6 @@ typedef std::function<CComVariant(const std::vector<CComVariant>&)> JSCallbackFu
 static const GUID IID_CDUIWebBrowserCtrl={0xF3395628,0x2460,0x40E8,0xBB,0xEA,0xE5,0xCE,0x40,0x56,0xD3,0x83};
 class DUITHINK_API CDUIWebBrowserCtrl
 	: public CDUIControlBase
-	, public CMMAsyncObject
 	, public IDispatch
 {
 	MMDeclare_Super(CDUIControlBase)

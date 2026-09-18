@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "MMTCPSocketClient.h"
 
 #ifndef DuiPlatform_SDL
@@ -74,7 +74,7 @@ LPVOID CMMTCPSocketClient::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 
 bool CMMTCPSocketClient::Init()
 {
-	if (false == __super::Init()) return false;
+	if (false == CMMAsyncObject::Init()) return false;
 
 	//key
 	m_pData->Init();
@@ -87,7 +87,7 @@ bool CMMTCPSocketClient::Init()
 
 bool CMMTCPSocketClient::UnInit()
 {
-	if (false == __super::UnInit()) return false;
+	if (false == CMMAsyncObject::UnInit()) return false;
 
 	CloseSocket(SocketShut_Normal);
 

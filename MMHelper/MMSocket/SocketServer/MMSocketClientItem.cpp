@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "MMSocketClientItem.h"
 #include "WebSocket/SHA1.h"
 

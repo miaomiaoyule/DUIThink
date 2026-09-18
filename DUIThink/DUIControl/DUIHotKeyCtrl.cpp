@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "DUIHotKeyCtrl.h"
 #ifndef DuiPlatform_SDL
 
@@ -142,7 +142,7 @@ void CDUIHotKeyWnd::AdjustWndSize(bool bCreate)
 		rcPos.Offset(rcWnd.left, rcWnd.top);
 	}
 
-	SetWindowPos(m_hWnd, NULL, rcPos.left, rcPos.top, rcPos.GetWidth(), rcPos.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
+	::SetWindowPos(m_hWnd, NULL, rcPos.left, rcPos.top, rcPos.GetWidth(), rcPos.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
 	CDUIRect rcClient;
 	::GetClientRect(m_hWnd, &rcClient);

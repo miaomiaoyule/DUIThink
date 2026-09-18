@@ -704,7 +704,7 @@ bool CDUIWndWin32::IsMinimized()
 	return ::IsIconic(m_hWnd);
 }
 
-CDUIRect CDUIWndWin32::GetClientRect() const
+CMMRect CDUIWndWin32::GetClientRect()
 {
 	RECT rcClient = {};
 	::GetClientRect(m_hWnd, &rcClient);
@@ -712,7 +712,7 @@ CDUIRect CDUIWndWin32::GetClientRect() const
 	return rcClient;
 }
 
-CDUIRect CDUIWndWin32::GetWindowRect()
+CMMRect CDUIWndWin32::GetWindowRect()
 {
 	CDUIRect rcWnd;
 	::GetWindowRect(m_hWnd, &rcWnd);
@@ -1102,7 +1102,7 @@ LRESULT CDUIWndWin32::OnKillFocus(WPARAM wParam, LPARAM lParam)
 	{
 		HWND hWndFocus = GetFocus();
 		if (m_hWnd == hWndFocus
-			|| (m_hWnd == GetParent(hWndFocus) && (GetWindowLong(hWndFocus, GWL_STYLE) & WS_CHILD))
+			|| (m_hWnd == ::GetParent(hWndFocus) && (GetWindowLong(hWndFocus, GWL_STYLE) & WS_CHILD))
 			|| (m_hWnd == ::GetWindowOwner(hWndFocus) && (GetWindowLong(hWndFocus, GWL_STYLE) & WS_CHILD)))
 		{
 			break;

@@ -68,8 +68,6 @@ CDUIWebBrowserCtrl::CDUIWebBrowserCtrl(void)
 	// 2. 初始化 ATL 控件宿主类支持
 	AtlAxWinInit();
 
-	CMMAsyncObject::Init();
-
 	return;
 }
 
@@ -77,8 +75,6 @@ CDUIWebBrowserCtrl::~CDUIWebBrowserCtrl(void)
 {
 	UnInstallIEHook(m_hWndIEServer);
 	UnInstallIEHook(m_hWndIEUtility);
-
-	CMMAsyncObject::UnInit();
 
 	Close();
 
@@ -602,21 +598,27 @@ void CDUIWebBrowserCtrl::OnDuiWndManagerAttach()
 
 	NavigateHomePage();
 
-	m_uRefreshTimerID = TimerTask(50, true, [=]() 
+	if (m_pWndOwner)
 	{
-		Invalidate();
-	});
+		m_uRefreshTimerID = m_pWndOwner->TimerTask(50, true, [=]()
+		{
+			Invalidate();
+		});
+	}
 
 	return;
 }
 
 void CDUIWebBrowserCtrl::OnDuiWndManagerDetach()
 {
+	if (m_pWndOwner)
+	{
+		m_pWndOwner->StopTimer(m_uRefreshTimerID);
+	}
+
 	__super::OnDuiWndManagerDetach();
 
 	Close();
-
-	StopTimer(m_uRefreshTimerID);
 
 	return;
 }
@@ -816,7 +818,7 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 			CDUIPoint ptMouseInCtrl(ptInMain.x - rcCtrl.left, ptInMain.y - rcCtrl.top);
 
 			CDUIRect rcWnd;
-			GetWindowRect(pCtrl->GetIEServerWnd(), &rcWnd);
+			::GetWindowRect(pCtrl->GetIEServerWnd(), &rcWnd);
 			ptMouseInCtrl.x += rcWnd.left;
 			ptMouseInCtrl.y += rcWnd.top;
 
