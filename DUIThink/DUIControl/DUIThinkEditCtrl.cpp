@@ -1702,6 +1702,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 		if (MMInvalidString(lpszText))
 		{
 			pMenuItem->SetLineMenu(true);
+			pMenuItem->SetBkColor({ Name_ColorGray });
 		}
 
 		return pMenuItem;
@@ -1734,12 +1735,12 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	if (pMenuItem) pMenuItem->SetEnabled(false == IsReadOnly());
 
 	//size
-	CDUISize szWnd;
-	szWnd.cx = 120;
-	szWnd.cy = pMenuRoot->GetSwitchListItemHeight() * sqrt(pMenuRoot->GetChildCount()) + pMenuRoot->GetChildPaddingV() * sqrt(pMenuRoot->GetChildCount());
+	pMenuRoot->RefreshView();
+	CDUISize szTotalRange = pMenuRoot->GetTotalRange();
+	szTotalRange.cy += pMenuRoot->GetRangeInset().top + pMenuRoot->GetRangeInset().bottom;
 	g_pDuiMenuWndRoot->SetGdiplusRenderText(true);
 	g_pDuiMenuWndRoot->SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
-	g_pDuiMenuWndRoot->SetWndInitSize(szWnd.cx, szWnd.cy);
+	g_pDuiMenuWndRoot->SetWndInitSize(120, szTotalRange.cy);
 	g_pDuiMenuWndRoot->SetWndLayered(true);
 	g_pDuiMenuWndRoot->SetCaptionHeight(0);
 

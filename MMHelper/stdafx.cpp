@@ -814,6 +814,24 @@ void MMSdlDispatchEvent(SDL_Event &e)
 	HWND hWnd = (HWND)SDL_GetWindowFromID(e.window.windowID);
 	IMMWndInterface *pWnd = MMFindWnd(hWnd);
 
+	if (NULL == pWnd && e.type == MMSdlGetAsyncEventType())
+	{
+		tagMMSdlAsyncMsg *pAsyncMsg = static_cast<tagMMSdlAsyncMsg *>(e.user.data1);
+		if (pAsyncMsg)
+		{
+			pWnd = pAsyncMsg->pWnd;
+		}
+
+		//verify window handle
+		auto FindIt = find_if(g_mapWnd.begin(), g_mapWnd.end(), [=](const auto &pair) 
+		{
+			return pair.second == pWnd;
+		});
+		if (FindIt == g_mapWnd.end())
+		{
+			pWnd = NULL;
+		}
+	}
 	if (pWnd)
 	{
 		pWnd->OnWndMessage(e);

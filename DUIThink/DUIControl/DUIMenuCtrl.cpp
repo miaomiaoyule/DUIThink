@@ -2,7 +2,7 @@
 #include "DUIMenuCtrl.h"
 
 //////////////////////////////////////////////////////////////////////////
-#define Default_LineMenu_Height			(6)
+#define Default_LineMenu_Height			(1)
 #define	Default_LineMenu_Color			(0xffbcbfc4)	
 #define Size_MenuNormal					(150)
 
