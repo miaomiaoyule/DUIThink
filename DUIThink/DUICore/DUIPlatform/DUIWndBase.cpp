@@ -1516,6 +1516,7 @@ LRESULT CDUIWndBase::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 	DuiMsg.ptMouse = pt;
 
 	m_ptMousePosLast = pt;
+	m_dwMouseDownTick = 0;
 
 	m_pCaptureCtrl = m_pCaptureCtrl ? m_pCaptureCtrl : FindSubControlByPoint(m_pRootCtrl, pt);
 	if (m_pCaptureCtrl)

@@ -745,17 +745,16 @@ LRESULT CDUIWndSDL::OnSysCommand(WPARAM wParam, LPARAM lParam)
 
 LRESULT CDUIWndSDL::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 {
+	bool bContextMenu = m_dwMouseDownTick && (::GetTickCount() - m_dwMouseDownTick) >= 1000;
 	LRESULT lRes = __super::OnLButtonUp(wParam, lParam);
 
 #if defined(__ANDROID__)
-	if (m_dwMouseDownTick && (::GetTickCount() - m_dwMouseDownTick) >= 500)
+	if (bContextMenu)
 	{
 		CDUIPoint ptScreen(lParam);
 		::ClientToScreen(m_hWnd, &ptScreen);
 		OnWndMessage(WM_CONTEXTMENU, (WPARAM)m_hWnd, MAKELPARAM(ptScreen.x, ptScreen.y));
 	}
-
-	m_dwMouseDownTick = 0;
 #endif
 
 	return lRes;
