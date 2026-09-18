@@ -83,6 +83,7 @@ protected:
 	UINT										m_uTimerID = 0x1000;
 	POINT										m_ptMousePosLast;
 	POINT										m_ptMousePosDown;
+	DWORD										m_dwMouseDownTick = 0;
 	bool										m_bMouseTracking = false;
 	bool										m_bRefreshToolTipNeeded = false;
 	bool										m_bRefreshViewNeeded = false;

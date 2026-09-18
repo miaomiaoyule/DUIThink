@@ -1484,6 +1484,7 @@ LRESULT CDUIWndBase::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 
 	m_ptMousePosLast = pt;
 	m_ptMousePosDown = pt;
+	m_dwMouseDownTick = ::GetTickCount();
 
 	//find
 	m_pCaptureCtrl = FindSubControlByPoint(m_pRootCtrl, pt);

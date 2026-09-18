@@ -743,6 +743,24 @@ LRESULT CDUIWndSDL::OnSysCommand(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
+LRESULT CDUIWndSDL::OnLButtonUp(WPARAM wParam, LPARAM lParam)
+{
+	LRESULT lRes = __super::OnLButtonUp(wParam, lParam);
+
+#if defined(__ANDROID__)
+	if (m_dwMouseDownTick && (::GetTickCount() - m_dwMouseDownTick) >= 500)
+	{
+		CDUIPoint ptScreen(lParam);
+		::ClientToScreen(m_hWnd, &ptScreen);
+		OnWndMessage(WM_CONTEXTMENU, (WPARAM)m_hWnd, MAKELPARAM(ptScreen.x, ptScreen.y));
+	}
+
+	m_dwMouseDownTick = 0;
+#endif
+
+	return lRes;
+}
+
 LRESULT CDUIWndSDL::OnKillFocus(WPARAM wParam, LPARAM lParam)
 {
 	do

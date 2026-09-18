@@ -77,6 +77,7 @@ protected:
 	LRESULT OnOldWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnClose(WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam) override;
+	LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnPaint(CDUIRect rcPaint) override;
 
