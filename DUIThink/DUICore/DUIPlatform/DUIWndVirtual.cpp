@@ -257,7 +257,7 @@ void CDUIWndVirtual::SetWindowPos(HWND hWndInsertAfter, int X, int Y, int cx, in
 void CDUIWndVirtual::RefreshLayout()
 {
 	CDUIWndBase *pWndHost = GetHostWnd();
-	if (NULL == pWndHost) return __super::RefreshLayout();
+	if (NULL == pWndHost || NULL == m_pRootCtrl || NULL == m_pRootCtrl->GetParent()) return __super::RefreshLayout();
 
 	pWndHost->RefreshLayout();
 
