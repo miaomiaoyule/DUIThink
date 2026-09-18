@@ -520,8 +520,6 @@ void CDUIControlBase::MovePosition(SIZE szOffset)
 
 bool CDUIControlBase::SetAbsoluteRect(CDUIRect rcAbsolute)
 {
-	if (rcAbsolute == GetAbsoluteRect()) return false;
-
 	m_AttributePosition.SetPositionFromAbsolute(rcAbsolute);
 
 	NeedParentRefreshView();

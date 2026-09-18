@@ -127,7 +127,7 @@ void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 		rcCombox.Offset(0, rcOwner.bottom + rcWnd.top - rcCombox.top);
 	}
 
-	::SetWindowPos(m_hWnd, NULL, rcCombox.left, rcCombox.top, rcCombox.GetWidth(), rcCombox.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
+	SetWindowPos(NULL, rcCombox.left, rcCombox.top, rcCombox.GetWidth(), rcCombox.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
 	// HACK: Don't deselect the parent's caption
 	HWND hWndParent = m_hWnd;

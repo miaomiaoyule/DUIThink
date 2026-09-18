@@ -552,10 +552,25 @@ enMMFileEncode CMMFile::GetFileEncode(const char *pStr)
 
 bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData, DWORD dwSizeLimit)
 {
+	bool bFullPath = true;
+	CMMString strFile = lpszFileFull;
+#if defined(DuiPlatform_SDL) && !defined(_WIN32)
+	if (strFile.empty() || _T('/') != strFile[0])
+	{
+		bFullPath = false;
+	}
+
+	strFile.Replace(_T('\\'), _T('/'));
+#else
+	if (-1 == strFile.find(_T(':')))
+	{
+		bFullPath = false;
+	}
+#endif
+
 	//path
 #if defined(DuiPlatform_SDL)
-	CMMString strFile = lpszFileFull;
-	if (strFile.empty() || strFile[0] != _T('/'))
+	if (false == bFullPath)
 	{
 		strFile = CMMService::GetWorkDirectory() + _T('/') + strFile;
 	}
@@ -604,8 +619,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 
 	return true;	*/
 #else
-	CMMString strFile = lpszFileFull;
-	if (strFile.length() < 2 || strFile[1] != _T(':'))
+	if (false == bFullPath)
 	{
 		strFile = CMMService::GetWorkDirectory() + _T('\\') + strFile;
 	}

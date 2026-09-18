@@ -21,7 +21,6 @@ public:
 	HWND Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD dwExStyle, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int cx = CW_USEDEFAULT, int cy = CW_USEDEFAULT) override;
 	void ShowWindow(bool bShow = true, bool bTakeFocus = true) override;
 	void ShowWindow(int nCmdShow) override;
-	void Close(UINT nRet = IDOK) override;
 	void CenterWindow() override;
 	void SetIcon(UINT nRes) override;
 	LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0L) override;

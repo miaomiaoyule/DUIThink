@@ -98,16 +98,6 @@ void CDUIWndVirtual::ShowWindow(int nCmdShow)
 	return;
 }
 
-void CDUIWndVirtual::Close(UINT nRet)
-{
-	if (IsWindow(m_hWnd))
-	{
-		SendMessage(WM_CLOSE, (WPARAM)nRet, 0);
-	}
-
-	return;
-}
-
 void CDUIWndVirtual::CenterWindow()
 {
 	return;
@@ -242,7 +232,8 @@ bool CDUIWndVirtual::IsMinimized()
 
 void CDUIWndVirtual::SetWindowPos(HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags)
 {
-	if (NULL == m_pRootCtrl || NULL == m_hWnd)
+	CDUIWndBase *pWndHost = GetHostWnd();
+	if (NULL == m_pRootCtrl || NULL == m_hWnd || NULL == pWndHost)
 	{
 		return;
 	}
@@ -250,6 +241,12 @@ void CDUIWndVirtual::SetWindowPos(HWND hWndInsertAfter, int X, int Y, int cx, in
 	CDUIRect rcCtrl = m_pRootCtrl->GetAbsoluteRect();
 	if (0 == (uFlags & SWP_NOMOVE))
 	{
+		//offset parent 
+		CDUIRect rcWndHost;
+		::GetWindowRect(pWndHost->GetWndHandle(), &rcWndHost);
+
+		X -= rcWndHost.left;
+		Y -= rcWndHost.top;
 		rcCtrl.Offset(X - rcCtrl.left, Y - rcCtrl.top);
 	}
 	if (0 == (uFlags & SWP_NOSIZE))
