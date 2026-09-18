@@ -1491,7 +1491,7 @@ void CDUICalendarCtrl::PopupYearMonthWnd(bool bYear)
 	SYSTEMTIME SysTime = {};
 	GetLocalTime(&SysTime);
 
-	CDUISize szItem = bYear ? m_AttributeTextStyleYearNormal.MeasureString(_T("9999")) : m_AttributeTextStyleMonthNormal.MeasureString(_T("9999"));
+	CDUISize szItem = bYear ? m_AttributeTextStyleYearNormal.MeasureString(_T("9999")) : m_AttributeTextStyleMonthNormal.MeasureString(_T("99"));
 	szItem.cx += 1;
 	tagDuiTextStyle TextStyleNormal = bYear ? m_AttributeTextStyleYearNormal.GetTextStyle() : m_AttributeTextStyleMonthNormal.GetTextStyle();
 	tagDuiTextStyle TextStyleHot = bYear ? m_AttributeTextStyleYearHot.GetTextStyle() : m_AttributeTextStyleMonthHot.GetTextStyle();
@@ -1510,7 +1510,7 @@ void CDUICalendarCtrl::PopupYearMonthWnd(bool bYear)
 	pPopupView->SetItemStatusColorResSwitchHot(bYear ? m_AttributeColorYearHot.GetColorResSwitch() : m_AttributeColorMonthHot.GetColorResSwitch());
 	pPopupView->SetItemStatusColorResSwitchSelNormal({ Name_ColorSelBk });
 	pPopupView->SetSwitchTileItemSize(szItem);
-	pPopupView->SetChildPadding(bYear ? 5 : 0, 5);
+	pPopupView->SetChildPadding(5, 5);
 	pPopupView->SwitchListViewType(enDuiListViewType::ListView_TileH);
 	pPopupView->SetUseListHeader(false);
 	if (bYear)
@@ -1546,8 +1546,11 @@ void CDUICalendarCtrl::PopupYearMonthWnd(bool bYear)
 
 	//size
 	CDUISize szWnd;
-	szWnd.cx = szItem.cx * sqrt(pPopupView->GetChildCount()) + pPopupView->GetChildPaddingH() * sqrt(pPopupView->GetChildCount());
-	szWnd.cy = szItem.cy * sqrt(pPopupView->GetChildCount()) + pPopupView->GetChildPaddingV() * sqrt(pPopupView->GetChildCount());
+	const int nCount = max(1, pPopupView->GetChildCount());
+	const int nColumn = (int)ceil(sqrt((double)nCount));
+	const int nRow = (int)ceil(nCount / (double)nColumn);
+	szWnd.cx = (szItem.cx + pPopupView->GetChildPaddingH()) * nColumn;
+	szWnd.cy = (szItem.cy + pPopupView->GetChildPaddingV()) * nRow;
 	g_pDuiMenuWndRoot->SetGdiplusRenderText(true);
 	g_pDuiMenuWndRoot->SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
 	g_pDuiMenuWndRoot->SetWndInitSize(szWnd.cx, szWnd.cy);
