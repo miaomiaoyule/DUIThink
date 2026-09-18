@@ -814,14 +814,6 @@ void MMSdlDispatchEvent(SDL_Event &e)
 	HWND hWnd = (HWND)SDL_GetWindowFromID(e.window.windowID);
 	IMMWndInterface *pWnd = MMFindWnd(hWnd);
 
-	if (NULL == pWnd && e.type == MMSdlGetAsyncEventType())
-	{
-		tagMMSdlAsyncMsg *pAsyncMsg = static_cast<tagMMSdlAsyncMsg *>(e.user.data1);
-		if (pAsyncMsg)
-		{
-			pWnd = pAsyncMsg->pWnd;
-		}
-	}
 	if (pWnd)
 	{
 		pWnd->OnWndMessage(e);

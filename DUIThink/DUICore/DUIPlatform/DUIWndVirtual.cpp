@@ -10,9 +10,6 @@ CDUIWndVirtual::CDUIWndVirtual(LPCTSTR lpszDuiName, HWND hWndParent)
 CDUIWndVirtual::~CDUIWndVirtual()
 {
 	DetachHost();
-	MMUnregisterWnd(m_hWnd);
-	m_hWnd = NULL;
-	m_uWndID = 0;
 
 	return;
 }
@@ -96,6 +93,13 @@ void CDUIWndVirtual::ShowWindow(int nCmdShow)
 	}
 
 	return;
+}
+
+void CDUIWndVirtual::Close(UINT nRet)
+{
+	DetachHost();
+
+	return __super::Close(nRet);
 }
 
 void CDUIWndVirtual::CenterWindow()
@@ -283,15 +287,9 @@ void CDUIWndVirtual::Invalidate()
 
 LRESULT CDUIWndVirtual::OnClose(WPARAM wParam, LPARAM lParam)
 {
-	m_uCtrlIDClose = (UINT)wParam;
 	DetachHost();
-	MMUnregisterWnd(m_hWnd);
-	m_hWnd = NULL;
-	m_uWndID = 0;
 
-	OnFinalMessage();
-
-	return 0;
+	return __super::OnClose(wParam, lParam);
 }
 
 LRESULT CDUIWndVirtual::OnPaint(CDUIRect rcPaint)
