@@ -153,6 +153,15 @@ bool CDUIWndVirtual::IsCaptured()
 	return false;
 }
 
+bool CDUIWndVirtual::AttachRootCtrl(CDUIContainerCtrl *pControl)
+{
+	if (false == __super::AttachRootCtrl(pControl)) return false;
+
+	AttachHost();
+
+	return true;
+}
+
 CDUIContainerCtrl * CDUIWndVirtual::DetachRootCtrl()
 {
 	DetachHost();
@@ -256,8 +265,9 @@ void CDUIWndVirtual::SetWindowPos(HWND hWndInsertAfter, int X, int Y, int cx, in
 
 void CDUIWndVirtual::RefreshLayout()
 {
+	//first layout for menu WM_RESIZEMENU
 	CDUIWndBase *pWndHost = GetHostWnd();
-	if (NULL == pWndHost || NULL == m_pRootCtrl || NULL == m_pRootCtrl->GetParent()) return __super::RefreshLayout();
+	if (NULL == pWndHost || m_bFirstLayout) return __super::RefreshLayout();
 
 	pWndHost->RefreshLayout();
 
@@ -320,6 +330,11 @@ CDUIWndBase * CDUIWndVirtual::GetHostWnd() const
 	}
 
 	return NULL;
+}
+
+bool CDUIWndVirtual::IsAttachHost()
+{
+	return m_pRootCtrl && m_pRootCtrl->GetParent();
 }
 
 void CDUIWndVirtual::AttachHost()

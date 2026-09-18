@@ -30,6 +30,7 @@ public:
 	void SetFocusControl(CDUIControlBase *pFocusCtrl) override;
 	bool IsCaptured() override;
 
+	bool AttachRootCtrl(CDUIContainerCtrl *pControl) override;
 	CDUIContainerCtrl * DetachRootCtrl() override;
 
 	HDC GetWndDC() override;
@@ -54,6 +55,7 @@ protected:
 	//help
 protected:
 	CDUIWndBase * GetHostWnd() const;
+	bool IsAttachHost();
 	void AttachHost();
 	void DetachHost();
 };
