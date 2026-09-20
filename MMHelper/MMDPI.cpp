@@ -35,7 +35,7 @@ int CMMDpi::GetDpiOfMonitor(HMONITOR hMonitor)
 
 int CMMDpi::GetDpiOfMonitorNearestToPoint(POINT pt)
 {
-	const SDL_Point sdlPt = { pt.x, pt.y };
+	const SDL_Point sdlPt = { (int)pt.x, (int)pt.y };
 	const SDL_DisplayID id = SDL_GetDisplayForPoint(&sdlPt);
 	if (0 == id) return GetDpiOfMainMonitor();
 	return GetDpiOfMonitor((HMONITOR)(uintptr_t)id);
