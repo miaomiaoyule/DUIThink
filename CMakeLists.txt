@@ -7,6 +7,14 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 option(DUITHINK_PLATFORM_SDL "Build with SDL3 windowing backend" ON)
 
+# macOS (run on a Mac): brew install sdl3
+#   cmake -S . -B build-macos -DDUITHINK_PLATFORM_SDL=ON
+#   cmake --build build-macos
+if(APPLE)
+	list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew" "/usr/local")
+	set(CMAKE_MACOSX_RPATH ON)
+endif()
+
 # ---------------------------------------------------------------------------
 # SDL3
 # ---------------------------------------------------------------------------
@@ -145,7 +153,7 @@ add_library(webpdecoder STATIC
 )
 target_include_directories(webpdecoder PUBLIC ${WEBP_ROOT} ${WEBP_ROOT}/src)
 target_compile_definitions(webpdecoder PRIVATE WEBP_USE_THREAD=1)
-if(UNIX AND NOT ANDROID)
+if(UNIX AND NOT APPLE AND NOT ANDROID)
 	target_link_libraries(webpdecoder PUBLIC pthread)
 endif()
 
@@ -168,7 +176,25 @@ target_compile_definitions(MMHelper PUBLIC MMHELPLIB)
 if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
 	target_link_libraries(MMHelper PUBLIC SDL3::SDL3)
 endif()
-if(UNIX AND NOT ANDROID)
+if(APPLE)
+	target_link_libraries(MMHelper PUBLIC
+		"-framework Cocoa"
+		"-framework IOKit"
+		"-framework CoreFoundation"
+		"-framework CoreVideo"
+		"-framework CoreAudio"
+		"-framework AudioToolbox"
+		"-framework AVFoundation"
+		"-framework ForceFeedback"
+		"-framework Carbon"
+		"-framework GameController"
+		"-framework Metal"
+		"-framework QuartzCore"
+		"-weak_framework CoreHaptics"
+		"-weak_framework CoreMedia"
+		"-weak_framework UniformTypeIdentifiers"
+	)
+elseif(UNIX AND NOT ANDROID)
 	target_link_libraries(MMHelper PUBLIC pthread dl)
 endif()
 
@@ -266,7 +292,40 @@ else()
 	if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
 		target_link_libraries(DUIThinkDemo_C++ PRIVATE SDL3::SDL3)
 	endif()
-	if(UNIX)
+	if(APPLE)
+		set_target_properties(DUIThinkDemo_C++ PROPERTIES
+			BUILD_RPATH "@loader_path"
+			INSTALL_RPATH "@loader_path"
+			BUILD_WITH_INSTALL_RPATH TRUE
+			RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
+		)
+		set_target_properties(DUIThink PROPERTIES
+			MACOSX_RPATH TRUE
+			BUILD_RPATH "@loader_path"
+			INSTALL_RPATH "@loader_path"
+			INSTALL_NAME_DIR "@rpath"
+			BUILD_WITH_INSTALL_RPATH TRUE
+			LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
+			RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
+		)
+		add_custom_command(TARGET DUIThinkDemo_C++ POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E create_symlink
+				"${DEMO_PROJ_DIR}"
+				"${CMAKE_BINARY_DIR}/DUIThinkDemo_C++.DuiProj"
+			COMMENT "Link Demo DuiProj as sibling of Debug/"
+		)
+		if(TARGET SDL3::SDL3)
+			get_target_property(_duithink_sdl3_type SDL3::SDL3 TYPE)
+			if(_duithink_sdl3_type MATCHES "SHARED_LIBRARY|UNKNOWN_LIBRARY|MODULE_LIBRARY")
+				add_custom_command(TARGET DUIThinkDemo_C++ POST_BUILD
+					COMMAND ${CMAKE_COMMAND} -E copy_if_different
+						"$<TARGET_FILE:SDL3::SDL3>"
+						"$<TARGET_FILE_DIR:DUIThinkDemo_C++>"
+					COMMENT "Copy SDL3.dylib next to Demo"
+				)
+			endif()
+		endif()
+	elseif(UNIX)
 		set_target_properties(DUIThinkDemo_C++ PROPERTIES
 			BUILD_RPATH "$ORIGIN"
 			INSTALL_RPATH "$ORIGIN"

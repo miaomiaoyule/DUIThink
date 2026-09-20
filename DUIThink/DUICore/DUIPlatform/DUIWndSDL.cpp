@@ -117,6 +117,8 @@ HWND CDUIWndSDL::Create(HWND hWndParent, LPCTSTR lpszName, DWORD dwStyle, DWORD 
 #if defined(__ANDROID__)
 		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, true);
 		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_HIGH_PIXEL_DENSITY_BOOLEAN, true);
+#elif defined(__APPLE__)
+		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_HIGH_PIXEL_DENSITY_BOOLEAN, true);
 #endif
 		if (dwStyle & WS_THICKFRAME)
 		{

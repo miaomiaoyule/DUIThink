@@ -285,17 +285,13 @@ static bool DuiEnsureSharedFont()
 
 #if !defined(_WIN32) && !defined(_WIN64)
 	{
-		char szExe[1024] = {};
-		ssize_t nRead = readlink("/proc/self/exe", szExe, sizeof(szExe) - 1);
-		if (nRead > 0)
+		const char *pszBase = SDL_GetBasePath();
+		if (pszBase && pszBase[0])
 		{
-			szExe[nRead] = 0;
-			char *pszSlash = strrchr(szExe, '/');
-			if (pszSlash) *pszSlash = 0;
 			char szLocalFont[1200];
-			std::snprintf(szLocalFont, sizeof(szLocalFont), "%s/wqy-microhei.ttc", szExe);
+			std::snprintf(szLocalFont, sizeof(szLocalFont), "%swqy-microhei.ttc", pszBase);
 			if (DuiLoadFontFile(szLocalFont, Font, true)) return true;
-			std::snprintf(szLocalFont, sizeof(szLocalFont), "%s/fonts/wqy-microhei.ttc", szExe);
+			std::snprintf(szLocalFont, sizeof(szLocalFont), "%sfonts/wqy-microhei.ttc", pszBase);
 			if (DuiLoadFontFile(szLocalFont, Font, true)) return true;
 		}
 		if (DuiLoadFontFile("wqy-microhei.ttc", Font, true)) return true;
