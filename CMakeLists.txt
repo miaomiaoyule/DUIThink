@@ -232,9 +232,9 @@ if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
 endif()
 
 # ---------------------------------------------------------------------------
-# smoke test entry
+# smoke test entry (optional; not required for Demo)
 # ---------------------------------------------------------------------------
-if(NOT ANDROID)
+if(NOT ANDROID AND EXISTS "${CMAKE_SOURCE_DIR}/linux_main.cpp")
 	add_executable(DuiLinuxTest linux_main.cpp)
 	target_link_libraries(DuiLinuxTest PRIVATE DUIThink)
 	if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
