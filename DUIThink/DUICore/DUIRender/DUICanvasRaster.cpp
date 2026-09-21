@@ -13,8 +13,7 @@
 #include <unistd.h>
 #endif
 #if defined(__APPLE__)
-#include <CoreText/CoreText.h>
-#include <CoreFoundation/CoreFoundation.h>
+#include "DUIMacFont.h"
 #endif
 
 #ifndef M_PI
@@ -282,42 +281,9 @@ static bool DuiScanFontDir(const char *lpszDir, tagDuiSharedFont &Font, bool bRe
 #if defined(__APPLE__)
 static bool DuiLoadFontFromCoreText(tagDuiSharedFont &Font)
 {
-	// 微软雅黑 does not exist on macOS. Resolve a real CJK face through Core Text
-	// (PingFang.ttc path/format changes across macOS versions; stb cannot always
-	// parse the file at the hardcoded location even when it exists).
-	static const char *s_pszNames[] = {
-		"PingFang SC",
-		"PingFangSC-Regular",
-		"Hiragino Sans GB",
-		"Heiti SC",
-		"Songti SC",
-		"STHeiti",
-		"Arial Unicode MS",
-		NULL
-	};
-	for (int n = 0; s_pszNames[n]; ++n)
-	{
-		CFStringRef cfName = CFStringCreateWithCString(kCFAllocatorDefault, s_pszNames[n], kCFStringEncodingUTF8);
-		if (NULL == cfName) continue;
-		CTFontRef ctFont = CTFontCreateWithName(cfName, 32.0, NULL);
-		CFRelease(cfName);
-		if (NULL == ctFont) continue;
-
-		CTFontDescriptorRef desc = CTFontCopyFontDescriptor(ctFont);
-		CFRelease(ctFont);
-		if (NULL == desc) continue;
-
-		CFURLRef url = (CFURLRef)CTFontDescriptorCopyAttribute(desc, kCTFontURLAttribute);
-		CFRelease(desc);
-		if (NULL == url) continue;
-
-		char szPath[1024] = {};
-		const bool bOk = CFURLGetFileSystemRepresentation(url, true, (UInt8 *)szPath, sizeof(szPath));
-		CFRelease(url);
-		if (false == bOk || 0 == szPath[0]) continue;
-		if (DuiLoadFontFile(szPath, Font, true)) return true;
-	}
-	return false;
+	char szPath[1024] = {};
+	if (0 == DuiMacFindCjkFontPath(szPath, sizeof(szPath))) return false;
+	return DuiLoadFontFile(szPath, Font, true);
 }
 #endif
 

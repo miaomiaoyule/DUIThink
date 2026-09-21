@@ -351,6 +351,9 @@
     <ClInclude Include="DUICore\DUIRender\DUICanvasRaster.h">
       <Filter>DUICore\DUIRender</Filter>
     </ClInclude>
+    <ClInclude Include="DUICore\DUIRender\DUIMacFont.h">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClInclude>
     <ClInclude Include="DUICore\DUIRender\DUIGdiplusPortable.h">
       <Filter>DUICore\DUIRender</Filter>
     </ClInclude>
@@ -621,6 +624,9 @@
       <Filter>DUICore\DUIPlatform</Filter>
     </ClCompile>
     <ClCompile Include="DUICore\DUIRender\DUICanvasRaster.cpp">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIRender\DUIMacFont.cpp">
       <Filter>DUICore\DUIRender</Filter>
     </ClCompile>
     <ClCompile Include="DUICore\DUIRender\DUIGdiPortable.cpp">
