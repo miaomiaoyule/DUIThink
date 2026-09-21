@@ -257,7 +257,7 @@ using namespace tinyxml2;
 #include "DUICore/DUIPropertyObject.h"
 #include "DUICore/DUIRender/IDuiCanvas.h"
 #include "DUICore/DUIRender/DUICanvasRaster.h"
-#include "DUICore/DUIRender/DUIGdiPortable.h";
+#include "DUICore/DUIRender/DUIGdiPortable.h"
 #include "DUICore/DUIRender/DUIPaintSceneSDL.h"
 #include "DUICore/DUIRender.h"
 #include "DUICore/DUINotifyPump.h"

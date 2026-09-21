@@ -12,7 +12,6 @@
 #define DuiModifyAttriDescribe(Attri, Describe)
 #endif
 
-#define DuiModifyAttriName(Attri, Name) { Attri.SetAttributeName(Name); }
 #define DuiGetAttriGroupIndex(Attri) (CDUIGlobal::GetAttributeGroupIndex(&Attri))
 #define DuiSetAttriGroupIndex(Attri, nIndex) (CDUIGlobal::SetAttributeGroupIndex(&Attri, nIndex))
 
