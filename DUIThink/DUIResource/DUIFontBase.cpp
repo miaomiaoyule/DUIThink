@@ -254,7 +254,7 @@ bool CDUIFontBase::SaveAttribute(tinyxml2::XMLElement* pNode)
 
 	pNode->SetAttribute(Dui_Resource_Key_FontName, (LPSTR)CT2CA(m_strFontName, CP_UTF8));
 	pNode->SetAttribute(Dui_Resource_Key_FontSize, m_nSize);
-	pNode->SetAttribute(Dui_Resource_Key_FontBold, m_lWeight);
+	pNode->SetAttribute(Dui_Resource_Key_FontBold, (int)m_lWeight);
 	pNode->SetAttribute(Dui_Resource_Key_FontItalic, (int)m_bItalic);
 	pNode->SetAttribute(Dui_Resource_Key_FontUnderLine, (int)m_bUnderline);
 	pNode->SetAttribute(Dui_Resource_Key_FontStrikeOut, (int)m_bStrikeOut);
