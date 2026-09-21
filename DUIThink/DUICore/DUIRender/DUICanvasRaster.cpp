@@ -7,10 +7,14 @@
 #define STBTT_STATIC
 #include "../../DUIUtils/stb_truetype.h"
 
-#if !defined(_WIN32) && !defined(_WIN64) && !defined(__APPLE__) && !defined(__ANDROID__)
+#if !defined(_WIN32) && !defined(_WIN64)
 #include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#endif
+#if defined(__APPLE__)
+#include <CoreText/CoreText.h>
+#include <CoreFoundation/CoreFoundation.h>
 #endif
 
 #ifndef M_PI
@@ -193,7 +197,7 @@ static bool DuiLoadFontFile(const char *lpszPath, tagDuiSharedFont &Font, bool b
 	return true;
 }
 
-#if !defined(_WIN32) && !defined(_WIN64) && !defined(__APPLE__) && !defined(__ANDROID__)
+#if !defined(_WIN32) && !defined(_WIN64)
 static bool DuiPathLooksLikeFont(const char *lpszName)
 {
 	if (NULL == lpszName) return false;
@@ -211,6 +215,8 @@ static bool DuiPathLooksLikeCjkFont(const char *lpszName)
 	static const char *s_pszKeys[] = {
 		"wqy", "noto", "cjk", "sourcehan", "droid", "uming", "ukai",
 		"microhei", "zenhei", "arphic", "firefly", "wenquanyi", "sc-r", "sc-",
+		"pingfang", "heiti", "hiragino", "songti", "kaiti", "stheiti", "sthei",
+		"arial unicode", "arialuni",
 		NULL
 	};
 	for (int i = 0; s_pszKeys[i]; ++i)
@@ -273,6 +279,48 @@ static bool DuiScanFontDir(const char *lpszDir, tagDuiSharedFont &Font, bool bRe
 }
 #endif
 
+#if defined(__APPLE__)
+static bool DuiLoadFontFromCoreText(tagDuiSharedFont &Font)
+{
+	// 微软雅黑 does not exist on macOS. Resolve a real CJK face through Core Text
+	// (PingFang.ttc path/format changes across macOS versions; stb cannot always
+	// parse the file at the hardcoded location even when it exists).
+	static const char *s_pszNames[] = {
+		"PingFang SC",
+		"PingFangSC-Regular",
+		"Hiragino Sans GB",
+		"Heiti SC",
+		"Songti SC",
+		"STHeiti",
+		"Arial Unicode MS",
+		NULL
+	};
+	for (int n = 0; s_pszNames[n]; ++n)
+	{
+		CFStringRef cfName = CFStringCreateWithCString(kCFAllocatorDefault, s_pszNames[n], kCFStringEncodingUTF8);
+		if (NULL == cfName) continue;
+		CTFontRef ctFont = CTFontCreateWithName(cfName, 32.0, NULL);
+		CFRelease(cfName);
+		if (NULL == ctFont) continue;
+
+		CTFontDescriptorRef desc = CTFontCopyFontDescriptor(ctFont);
+		CFRelease(ctFont);
+		if (NULL == desc) continue;
+
+		CFURLRef url = (CFURLRef)CTFontDescriptorCopyAttribute(desc, kCTFontURLAttribute);
+		CFRelease(desc);
+		if (NULL == url) continue;
+
+		char szPath[1024] = {};
+		const bool bOk = CFURLGetFileSystemRepresentation(url, true, (UInt8 *)szPath, sizeof(szPath));
+		CFRelease(url);
+		if (false == bOk || 0 == szPath[0]) continue;
+		if (DuiLoadFontFile(szPath, Font, true)) return true;
+	}
+	return false;
+}
+#endif
+
 static bool DuiEnsureSharedFont()
 {
 	tagDuiSharedFont &Font = DuiSharedFont();
@@ -308,8 +356,12 @@ static bool DuiEnsureSharedFont()
 		"C:\\Windows\\Fonts\\arial.ttf",
 #elif defined(__APPLE__)
 		"/System/Library/Fonts/PingFang.ttc",
-		"/System/Library/Fonts/STHeiti Light.ttc",
+		"/System/Library/Fonts/Supplemental/PingFang.ttc",
 		"/System/Library/Fonts/Hiragino Sans GB.ttc",
+		"/System/Library/Fonts/Supplemental/Hiragino Sans GB.ttc",
+		"/System/Library/Fonts/STHeiti Light.ttc",
+		"/System/Library/Fonts/Supplemental/STHeiti Light.ttc",
+		"/System/Library/Fonts/Supplemental/Songti.ttc",
 		"/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
 		"/Library/Fonts/Arial Unicode.ttf",
 #elif defined(__ANDROID__)
@@ -342,17 +394,30 @@ static bool DuiEnsureSharedFont()
 		NULL
 	};
 
+#if defined(__APPLE__)
+	if (DuiLoadFontFromCoreText(Font)) return true;
+#endif
+
 	for (int n = 0; s_pszFonts[n]; ++n)
 	{
 		if (DuiLoadFontFile(s_pszFonts[n], Font, true)) return true;
 	}
 
-#if !defined(_WIN32) && !defined(_WIN64) && !defined(__APPLE__) && !defined(__ANDROID__)
+#if !defined(_WIN32) && !defined(_WIN64)
 	static const char *s_pszDirs[] = {
+#if defined(__APPLE__)
+		"/System/Library/Fonts",
+		"/System/Library/Fonts/Supplemental",
+		"/Library/Fonts",
+#elif defined(__ANDROID__)
+		"/system/fonts",
+		"/system/font",
+#else
 		"/usr/share/fonts",
 		"/usr/local/share/fonts",
 		"/usr/share/fonts/truetype",
 		"/usr/share/fonts/opentype",
+#endif
 		NULL
 	};
 	for (int n = 0; s_pszDirs[n]; ++n)
@@ -364,16 +429,24 @@ static bool DuiEnsureSharedFont()
 	if (pszHome && pszHome[0])
 	{
 		char szLocal[1024];
+#if defined(__APPLE__)
+		std::snprintf(szLocal, sizeof(szLocal), "%s/Library/Fonts", pszHome);
+		if (DuiScanFontDir(szLocal, Font, true, 0)) return true;
+#elif !defined(__ANDROID__)
 		std::snprintf(szLocal, sizeof(szLocal), "%s/.local/share/fonts", pszHome);
 		if (DuiScanFontDir(szLocal, Font, true, 0)) return true;
 		std::snprintf(szLocal, sizeof(szLocal), "%s/.fonts", pszHome);
 		if (DuiScanFontDir(szLocal, Font, true, 0)) return true;
+#endif
 	}
 #endif
 
 	static const char *s_pszFallback[] =
 	{
-#if !defined(_WIN32) && !defined(_WIN64) && !defined(__APPLE__) && !defined(__ANDROID__)
+#if defined(__APPLE__)
+		"/System/Library/Fonts/Supplemental/Arial.ttf",
+		"/Library/Fonts/Arial.ttf",
+#elif !defined(_WIN32) && !defined(_WIN64) && !defined(__ANDROID__)
 		"/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
 		"/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
 		"/usr/share/fonts/truetype/freefont/FreeSans.ttf",
@@ -386,8 +459,15 @@ static bool DuiEnsureSharedFont()
 		if (DuiLoadFontFile(s_pszFallback[n], Font, false)) return true;
 	}
 
-#if !defined(_WIN32) && !defined(_WIN64) && !defined(__APPLE__) && !defined(__ANDROID__)
+#if !defined(_WIN32) && !defined(_WIN64)
+#if defined(__APPLE__)
+	DuiScanFontDir("/System/Library/Fonts", Font, false, 0);
+	DuiScanFontDir("/Library/Fonts", Font, false, 0);
+#elif defined(__ANDROID__)
+	DuiScanFontDir("/system/fonts", Font, false, 0);
+#else
 	DuiScanFontDir("/usr/share/fonts", Font, false, 0);
+#endif
 #endif
 
 	if (false == Font.bReady)
@@ -514,6 +594,7 @@ SIZE CDUIFontRaster::MeasureText(LPCTSTR lpszText, int nMaxWidth, DWORD dwTextSt
 	}
 
 	sz.cx = max(sz.cx, nLineW);
+	if (m_bItalic) sz.cx += max(1, m_nPixelSize / 6);
 	sz.cy = nLines * m_nLineHeight;
 	(void)nLastAdvance;
 	return sz;
@@ -1040,11 +1121,19 @@ void CDUICanvasRaster::DrawText(IDuiFont *pFont, RECT &rc, LPCTSTR lpszText, DWO
 			stbtt_MakeCodepointBitmap(pInfo, vecGlyph.data(), gw, gh, gw, fScale, fScale, (int)cp);
 			const int nDestX = nPenX + x0;
 			const int nDestY = nPenY + y0;
+			const float fItalic = pRaster->IsItalic() ? 0.25f : 0.0f;
+			const int nBoldExtra = (pRaster->GetWeight() >= 600) ? 1 : 0;
 			for (int gy = 0; gy < gh; ++gy)
 			{
+				const int nShear = (int)((gh - 1 - gy) * fItalic);
 				for (int gx = 0; gx < gw; ++gx)
 				{
-					BlendPixel(nDestX + gx, nDestY + gy, dwColor, vecGlyph[gy * gw + gx]);
+					const BYTE cb = vecGlyph[gy * gw + gx];
+					BlendPixel(nDestX + gx + nShear, nDestY + gy, dwColor, cb);
+					if (nBoldExtra > 0)
+					{
+						BlendPixel(nDestX + gx + nShear + nBoldExtra, nDestY + gy, dwColor, cb);
+					}
 				}
 			}
 		}
@@ -1052,6 +1141,8 @@ void CDUICanvasRaster::DrawText(IDuiFont *pFont, RECT &rc, LPCTSTR lpszText, DWO
 	};
 
 	LPCTSTR p = lpszText;
+	const int nLineStartX = x;
+	int nLineMaxX = x;
 	while (unsigned cp = DuiNextCodepoint(p))
 	{
 		if (L'\n' == cp)
@@ -1061,6 +1152,24 @@ void CDUICanvasRaster::DrawText(IDuiFont *pFont, RECT &rc, LPCTSTR lpszText, DWO
 			continue;
 		}
 		DrawGlyph(cp);
+		nLineMaxX = max(nLineMaxX, nPenX);
+	}
+
+	if (pRaster->GetUnderline() || pRaster->GetStrikeOut())
+	{
+		const int nLineY = pRaster->GetUnderline() ? (y + nAscent + 1) : 0;
+		const int nStrikeY = pRaster->GetStrikeOut() ? (y + nAscent / 2) : 0;
+		const int nEndX = max(nLineMaxX, nLineStartX + 1);
+		if (pRaster->GetUnderline())
+		{
+			RECT rcU = { nLineStartX, nLineY, nEndX, nLineY + max(1, pRaster->GetPixelSize() / 12) };
+			FillRect(rcU, dwColor, 0);
+		}
+		if (pRaster->GetStrikeOut())
+		{
+			RECT rcS = { nLineStartX, nStrikeY, nEndX, nStrikeY + max(1, pRaster->GetPixelSize() / 12) };
+			FillRect(rcS, dwColor, 0);
+		}
 	}
 
 	(void)nMaxW;

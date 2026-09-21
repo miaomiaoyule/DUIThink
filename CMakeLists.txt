@@ -227,6 +227,9 @@ endif()
 if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
 	target_link_libraries(DUIThink PUBLIC SDL3::SDL3)
 endif()
+if(APPLE)
+	target_link_libraries(DUIThink PUBLIC "-framework CoreText" "-framework CoreFoundation")
+endif()
 
 # ---------------------------------------------------------------------------
 # smoke test entry (optional; not required for Demo)

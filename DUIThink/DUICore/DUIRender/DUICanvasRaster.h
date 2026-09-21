@@ -42,6 +42,8 @@ public:
 	SIZE MeasureText(LPCTSTR lpszText, int nMaxWidth, DWORD dwTextStyle) const override;
 
 	float GetScale() const;
+	bool IsItalic() const { return m_bItalic; }
+	LONG GetWeight() const { return m_lWeight; }
 	int GetUnderline() const { return m_bUnderline ? 1 : 0; }
 	int GetStrikeOut() const { return m_bStrikeOut ? 1 : 0; }
 	const void * GetFontInfo() const;

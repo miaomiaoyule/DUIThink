@@ -1,4 +1,4 @@
-#ifndef __DUICONTROLBASECTRL_H__
+﻿#ifndef __DUICONTROLBASECTRL_H__
 #define __DUICONTROLBASECTRL_H__
 
 #pragma once
