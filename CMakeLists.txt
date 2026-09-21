@@ -113,27 +113,24 @@ set(WEBP_DSP_DEC_SRCS
 	${WEBP_ROOT}/src/dsp/upsampling.c
 	${WEBP_ROOT}/src/dsp/yuv.c
 )
-if(ANDROID)
-	list(APPEND WEBP_DSP_DEC_SRCS
-		${WEBP_ROOT}/src/dsp/alpha_processing_neon.c
-		${WEBP_ROOT}/src/dsp/dec_neon.c
-		${WEBP_ROOT}/src/dsp/filters_neon.c
-		${WEBP_ROOT}/src/dsp/lossless_neon.c
-		${WEBP_ROOT}/src/dsp/rescaler_neon.c
-		${WEBP_ROOT}/src/dsp/upsampling_neon.c
-		${WEBP_ROOT}/src/dsp/yuv_neon.c
-	)
-else()
-	list(APPEND WEBP_DSP_DEC_SRCS
-		${WEBP_ROOT}/src/dsp/alpha_processing_sse2.c
-		${WEBP_ROOT}/src/dsp/dec_sse2.c
-		${WEBP_ROOT}/src/dsp/filters_sse2.c
-		${WEBP_ROOT}/src/dsp/lossless_sse2.c
-		${WEBP_ROOT}/src/dsp/rescaler_sse2.c
-		${WEBP_ROOT}/src/dsp/upsampling_sse2.c
-		${WEBP_ROOT}/src/dsp/yuv_sse2.c
-	)
-endif()
+# Include both SIMD families. Unused files compile as WEBP_DSP_INIT_STUB
+# (Apple Silicon / Android ARM need NEON; x86_64 needs SSE2).
+list(APPEND WEBP_DSP_DEC_SRCS
+	${WEBP_ROOT}/src/dsp/alpha_processing_neon.c
+	${WEBP_ROOT}/src/dsp/dec_neon.c
+	${WEBP_ROOT}/src/dsp/filters_neon.c
+	${WEBP_ROOT}/src/dsp/lossless_neon.c
+	${WEBP_ROOT}/src/dsp/rescaler_neon.c
+	${WEBP_ROOT}/src/dsp/upsampling_neon.c
+	${WEBP_ROOT}/src/dsp/yuv_neon.c
+	${WEBP_ROOT}/src/dsp/alpha_processing_sse2.c
+	${WEBP_ROOT}/src/dsp/dec_sse2.c
+	${WEBP_ROOT}/src/dsp/filters_sse2.c
+	${WEBP_ROOT}/src/dsp/lossless_sse2.c
+	${WEBP_ROOT}/src/dsp/rescaler_sse2.c
+	${WEBP_ROOT}/src/dsp/upsampling_sse2.c
+	${WEBP_ROOT}/src/dsp/yuv_sse2.c
+)
 set(WEBP_UTILS_DEC_SRCS
 	${WEBP_ROOT}/src/utils/bit_reader_utils.c
 	${WEBP_ROOT}/src/utils/color_cache_utils.c
