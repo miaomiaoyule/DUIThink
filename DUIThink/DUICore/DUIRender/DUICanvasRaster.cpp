@@ -138,7 +138,19 @@ static bool DuiFontHasCjk(const stbtt_fontinfo &Info)
 	return stbtt_FindGlyphIndex(&Info, 0x4E00) != 0;
 }
 
-static bool DuiInitFontFromBuffer(tagDuiSharedFont &Font, bool bRequireCjk)
+static bool DuiFontCanDrawCjk(const stbtt_fontinfo &Info)
+{
+	// 界 is a dense glyph; cmap-only / CFF2 faces often have U+4E00 in cmap
+	// but produce empty bitmaps. Require a real raster box.
+	if (0 == stbtt_FindGlyphIndex(&Info, 0x754C)) return false;
+	const float fScale = stbtt_ScaleForPixelHeight(&Info, 18.0f);
+	if (fScale <= 0.0f) return false;
+	int x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+	stbtt_GetCodepointBitmapBox(&Info, 0x754C, fScale, fScale, &x0, &y0, &x1, &y1);
+	return (x1 - x0) >= 8 && (y1 - y0) >= 8;
+}
+
+static bool DuiPickFontFace(tagDuiSharedFont &Font, bool bRequireCjk, bool bPreferGlyf)
 {
 	for (int nFace = 0; nFace < 32; ++nFace)
 	{
@@ -147,15 +159,24 @@ static bool DuiInitFontFromBuffer(tagDuiSharedFont &Font, bool bRequireCjk)
 
 		stbtt_fontinfo Info = {};
 		if (0 == stbtt_InitFont(&Info, Font.vecFile.data(), nOffset)) continue;
+		if (bPreferGlyf && 0 == Info.glyf) continue;
 
 		const bool bCjk = DuiFontHasCjk(Info);
 		if (bRequireCjk && false == bCjk) continue;
+		if (bRequireCjk && false == DuiFontCanDrawCjk(Info)) continue;
 
 		Font.Info = Info;
 		Font.bHasCjk = bCjk;
 		Font.bReady = true;
 		return true;
 	}
+	return false;
+}
+
+static bool DuiInitFontFromBuffer(tagDuiSharedFont &Font, bool bRequireCjk)
+{
+	if (DuiPickFontFace(Font, bRequireCjk, true)) return true;
+	if (DuiPickFontFace(Font, bRequireCjk, false)) return true;
 
 	Font.vecFile.clear();
 	Font.bReady = false;
@@ -282,8 +303,13 @@ static bool DuiScanFontDir(const char *lpszDir, tagDuiSharedFont &Font, bool bRe
 static bool DuiLoadFontFromCoreText(tagDuiSharedFont &Font)
 {
 	char szPath[1024] = {};
-	if (0 == DuiMacFindCjkFontPath(szPath, sizeof(szPath))) return false;
-	return DuiLoadFontFile(szPath, Font, true);
+	for (int nWhich = 0; nWhich < 16; ++nWhich)
+	{
+		if (0 == DuiMacFindCjkFontPath(szPath, sizeof(szPath), nWhich)) break;
+		if (DuiLoadFontFile(szPath, Font, true)) return true;
+	}
+
+	return false;
 }
 #endif
 
@@ -321,15 +347,15 @@ static bool DuiEnsureSharedFont()
 		"C:\\Windows\\Fonts\\arialuni.ttf",
 		"C:\\Windows\\Fonts\\arial.ttf",
 #elif defined(__APPLE__)
-		"/System/Library/Fonts/PingFang.ttc",
-		"/System/Library/Fonts/Supplemental/PingFang.ttc",
-		"/System/Library/Fonts/Hiragino Sans GB.ttc",
-		"/System/Library/Fonts/Supplemental/Hiragino Sans GB.ttc",
 		"/System/Library/Fonts/STHeiti Light.ttc",
 		"/System/Library/Fonts/Supplemental/STHeiti Light.ttc",
 		"/System/Library/Fonts/Supplemental/Songti.ttc",
 		"/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
 		"/Library/Fonts/Arial Unicode.ttf",
+		"/System/Library/Fonts/Hiragino Sans GB.ttc",
+		"/System/Library/Fonts/Supplemental/Hiragino Sans GB.ttc",
+		"/System/Library/Fonts/PingFang.ttc",
+		"/System/Library/Fonts/Supplemental/PingFang.ttc",
 #elif defined(__ANDROID__)
 		"/system/fonts/NotoSansCJK-Regular.ttc",
 		"/system/fonts/NotoSansSC-Regular.otf",
@@ -360,14 +386,14 @@ static bool DuiEnsureSharedFont()
 		NULL
 	};
 
-#if defined(__APPLE__)
-	if (DuiLoadFontFromCoreText(Font)) return true;
-#endif
-
 	for (int n = 0; s_pszFonts[n]; ++n)
 	{
 		if (DuiLoadFontFile(s_pszFonts[n], Font, true)) return true;
 	}
+
+#if defined(__APPLE__)
+	if (DuiLoadFontFromCoreText(Font)) return true;
+#endif
 
 #if !defined(_WIN32) && !defined(_WIN64)
 	static const char *s_pszDirs[] = {
@@ -494,11 +520,14 @@ bool CDUIFontRaster::Init(LPCTSTR, int nPixelSize, LONG lWeight, bool bItalic, b
 	if (Font.bReady)
 	{
 		m_fScale = stbtt_ScaleForPixelHeight(&Font.Info, (float)m_nPixelSize);
-		int nAscent = 0, nDescent = 0, nLineGap = 0;
-		stbtt_GetFontVMetrics(&Font.Info, &nAscent, &nDescent, &nLineGap);
+		int nAscent = 0, nDescent = 0;
+		stbtt_GetFontVMetrics(&Font.Info, &nAscent, &nDescent, NULL);
 		m_nAscent = (int)floorf(nAscent * m_fScale + 0.5f);
-		m_nLineHeight = (int)floorf((nAscent - nDescent + nLineGap) * m_fScale + 0.5f);
-		m_nLineHeight = max(m_nPixelSize, m_nLineHeight);
+		// Win32 lfHeight=-N is an em box of ~N px. CFF faces (Hiragino) add a large
+		// lineGap so tmHeight becomes N*1.5 and text is clipped in designer layouts.
+		m_nLineHeight = m_nPixelSize;
+		if (m_nAscent < 1) m_nAscent = max(1, (m_nPixelSize * 4) / 5);
+		if (m_nAscent > m_nLineHeight - 1) m_nAscent = max(1, m_nLineHeight - 1);
 	}
 	else
 	{
@@ -595,6 +624,7 @@ bool CDUICanvasRaster::Resize(int nWidth, int nHeight)
 
 	m_ClipRegion = {};
 	m_ClipRegion.rcRegion = { 0, 0, m_nWidth, m_nHeight };
+	m_nClipStack = 0;
 	return true;
 }
 
@@ -627,12 +657,14 @@ void CDUICanvasRaster::SelectClipRgn(HRGN hRgn)
 
 void CDUICanvasRaster::Save()
 {
-	return;
+	if (m_nClipStack >= (int)(sizeof(m_ClipStack) / sizeof(m_ClipStack[0]))) return;
+	m_ClipStack[m_nClipStack++] = m_ClipRegion;
 }
 
 void CDUICanvasRaster::Restore()
 {
-	return;
+	if (m_nClipStack <= 0) return;
+	m_ClipRegion = m_ClipStack[--m_nClipStack];
 }
 
 bool CDUICanvasRaster::ClipPixel(int x, int y)
@@ -1048,6 +1080,11 @@ void CDUICanvasRaster::DrawText(IDuiFont *pFont, RECT &rc, LPCTSTR lpszText, DWO
 	else if (dwStyle & DT_RIGHT) x = rc.right - sz.cx;
 	if (dwStyle & DT_VCENTER) y = rc.top + max(0, ((int)(rc.bottom - rc.top) - sz.cy) / 2);
 	else if (dwStyle & DT_BOTTOM) y = rc.bottom - sz.cy;
+	if (0 == (dwStyle & DT_NOCLIP))
+	{
+		if (x < rc.left) x = rc.left;
+		if (y < rc.top) y = rc.top;
+	}
 
 	const stbtt_fontinfo *pInfo = (const stbtt_fontinfo *)pRaster->GetFontInfo();
 	const float fScale = pRaster->GetScale();

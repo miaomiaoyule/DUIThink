@@ -5,10 +5,9 @@
 extern "C" {
 #endif
 
-// Resolve a CJK font file via Core Text. Returns 1 and writes a filesystem
-// path on success. Isolated from DUI headers: CoreText/MacTypes collide with
-// Gdiplus::Point/Rect and the project's `interface` macro.
-int DuiMacFindCjkFontPath(char *szPath, unsigned nSize);
+// Resolve CJK font files via Core Text. nWhich is 0-based among unique
+// filesystem URLs (cached after the first call). Returns 1 on success.
+int DuiMacFindCjkFontPath(char *szPath, unsigned nSize, int nWhich);
 
 #ifdef __cplusplus
 }

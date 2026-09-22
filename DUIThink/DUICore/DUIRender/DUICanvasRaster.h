@@ -72,6 +72,8 @@ protected:
 	std::vector<BYTE> m_vecBits;
 	LPBYTE m_pExternalBits = NULL; // non-owning; set by SelectBitmap
 	DuiGdiRegion m_ClipRegion;
+	DuiGdiRegion m_ClipStack[32];
+	int m_nClipStack = 0;
 
 public:
 	CDUICanvasRaster(int nWidth, int nHeight);
