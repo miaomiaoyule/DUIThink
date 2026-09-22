@@ -61,14 +61,15 @@ public:
 	static void AdjustImage(HBITMAP hBitmap, ARGB dwColorSrc, ARGB dwColorDest);
 	static HBITMAP CreateARGB32Bitmap(HDC hDC, int cx, int cy, BYTE** pBits, bool bPositive = true);
 	static HBITMAP GenerateBitmap(CDUIControlBase *pControl, const CDUIRect &rcItem, ARGB dwFilterColor = 0);
-	static Bitmap * GenerateBitmap(Bitmap *pBmp, const CDUISize &szGenerate);
 	static Bitmap * GenerateBitmap(const std::vector<BYTE> &vecFileData);
 	static Bitmap * GenerateEllipseBitmap(Bitmap *pBmp, const CDUISize &szGenerate);
+	static Bitmap * GenerateThumbnail(Bitmap *pBmp, const CDUISize &szGenerate);
 	static HBITMAP CopyBitmap(HDC hDC, const CDUIRect &rcItem, ARGB dwFilterColor = 0);
 	static HBITMAP CopyBitmap(HBITMAP hBitmap, ARGB dwFilterColor = 0, bool bDisablePallete = false, float fAlpha = 1.0);
 	static Bitmap * GetAlphaBitmap(HBITMAP hBitmap, bool bPreMultiplyArgb = true);
 	static HBITMAP GetHBITMAP(Bitmap *pBmp, bool bKeepAlpha = true);
 	static bool SaveImage(HBITMAP hBitmap, CMMString strFile);
+	static bool SaveImage(Bitmap *pBmp, CMMString strFile);
 
 	//alpha help
 	static void ClearPixel(LPBYTE pBits, int nWidthBitmap, CDUIRect rcClear);

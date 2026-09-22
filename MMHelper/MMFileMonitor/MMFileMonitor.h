@@ -8,7 +8,7 @@
 #include "Define.h"
 
 //////////////////////////////////////////////////////////////////////////
-class CMMFileMonitor : public CMMAsyncObject
+class MMHELPER_API CMMFileMonitor : public CMMAsyncObject
 {
 	MMDeclare_Super(CMMAsyncObject)
 

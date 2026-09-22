@@ -109,6 +109,7 @@ public:
 	//override
 	LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) override;
 	CMMString GetDescribe() const override;
+	CDUIMenuItemCtrl * Clone(bool bIncludeChild = true, bool bRefreshCtrlID = true) override;
 	bool DoPaint(HDC hDC, bool bGenerateBmp = false) override;
 	void RefreshView() override;
 
@@ -241,6 +242,7 @@ protected:
 public:
 	virtual void LoadMenu(LPCTSTR lpszMenu);
 	virtual void DestroyMenu();
+	virtual CDUIMenuWnd * GetRootWnd();
 	virtual CDUIMenuCtrl * GetRootMenu();
 	virtual tagDuiMenuCmd TrackPopupMenu(HWND hWndParent, CDUIPoint pt = {});
 };

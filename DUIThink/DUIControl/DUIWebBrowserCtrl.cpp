@@ -5,6 +5,8 @@
 
 #include <atlbase.h>
 #include <atlhost.h>
+#include <wininet.h>
+#pragma comment(lib, "wininet.lib")
 
 #if defined(_WINDLL) || defined(_USRDLL)
 	class CDUIThinkWebModule : public ATL::CAtlDllModuleT<CDUIThinkWebModule> {};
@@ -25,6 +27,74 @@
 CDUIThinkWebModule _DuiWebModule;
 static CMMString g_strPropOldProc = _T("CDUIWebBrowserCtrl_OldProc");
 static CMMString g_strPropCtrl = _T("CDUIWebBrowserCtrl_ControlPtr");
+
+// IE/WinInet 会话与连接是进程级共享的；反复创建销毁后若不重置，微信取码接口容易排队/复用脏会话
+static void DuiWebBrowserResetWinInetSession()
+{
+	::InternetSetOption(NULL, INTERNET_OPTION_END_BROWSER_SESSION, NULL, 0);
+
+	DWORD dwMaxConn = 8;
+	::InternetSetOption(NULL, INTERNET_OPTION_MAX_CONNS_PER_SERVER, &dwMaxConn, sizeof(dwMaxConn));
+	::InternetSetOption(NULL, INTERNET_OPTION_MAX_CONNS_PER_1_0_SERVER, &dwMaxConn, sizeof(dwMaxConn));
+
+	return;
+}
+
+static CMMString DuiWebBrowserAppendCacheBuster(LPCTSTR lpszUrl)
+{
+	CMMString strUrl = lpszUrl;
+	if (strUrl.empty() || 0 == _tcsicmp(strUrl.c_str(), _T("about:blank")))
+		return strUrl;
+
+	TCHAR szTick[32] = { 0 };
+	_stprintf_s(szTick, _T("%lu"), ::GetTickCount());
+
+	if (strUrl.find(_T('?')) != CMMString::npos)
+		strUrl += _T("&_dui_ts=");
+	else
+		strUrl += _T("?_dui_ts=");
+	strUrl += szTick;
+
+	return strUrl;
+}
+
+// 卸载页面并等待 Document 完成，释放 XHR/轮询与 WinInet 连接，避免同进程反复创建后取码变慢
+static void DuiWebBrowserNavigateBlank(IWebBrowser2* pWebBrowser)
+{
+	if (NULL == pWebBrowser) return;
+
+	pWebBrowser->Stop();
+
+	CComVariant vFlags((long)(navNoHistory | navNoReadFromCache | navNoWriteToCache));
+	CComVariant vEmpty;
+	pWebBrowser->Navigate(CComBSTR(L"about:blank"), &vFlags, &vEmpty, &vEmpty, &vEmpty);
+
+	const DWORD dwTimeout = 500;
+	const DWORD dwStart = ::GetTickCount();
+	while (::GetTickCount() - dwStart < dwTimeout)
+	{
+		READYSTATE state = READYSTATE_UNINITIALIZED;
+		if (SUCCEEDED(pWebBrowser->get_ReadyState(&state)) && state >= READYSTATE_COMPLETE)
+			break;
+
+		MSG msg = {};
+		while (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			if (WM_QUIT == msg.message)
+			{
+				::PostQuitMessage((int)msg.wParam);
+				return;
+			}
+
+			::TranslateMessage(&msg);
+			::DispatchMessage(&msg);
+		}
+
+		::Sleep(10);
+	}
+
+	return;
+}
 
 // --------------------------------------------------------------------------
 // [兼容性修复] 设置 IE 控件使用 IE11 内核模式
@@ -68,14 +138,14 @@ CDUIWebBrowserCtrl::CDUIWebBrowserCtrl(void)
 	// 2. 初始化 ATL 控件宿主类支持
 	AtlAxWinInit();
 
+	// 3. 提高 WinInet 每主机连接数，减轻扫码轮询残留连接导致的后续排队
+	DuiWebBrowserResetWinInetSession();
+
 	return;
 }
 
 CDUIWebBrowserCtrl::~CDUIWebBrowserCtrl(void)
 {
-	UnInstallIEHook(m_hWndIEServer);
-	UnInstallIEHook(m_hWndIEUtility);
-
 	Close();
 
 	return;
@@ -229,17 +299,44 @@ void CDUIWebBrowserCtrl::RefreshView()
 
 void CDUIWebBrowserCtrl::Close()
 {
-	if (m_pWebBrowser)
+	if (m_uRefreshTimerID)
 	{
+		StopTimer(m_uRefreshTimerID);
+		m_uRefreshTimerID = 0;
+	}
+
+	UnInstallIEHook(m_hWndIEServer);
+	UnInstallIEHook(m_hWndIEUtility);
+	m_hWndIEServer = NULL;
+	m_hWndIEUtility = NULL;
+
+	if (m_hWndIEOwner && ::IsWindow(m_hWndIEOwner))
+	{
+		CAxWindow wndIE(m_hWndIEOwner);
+		wndIE.SetExternalDispatch(NULL);
+
+		if (m_pWebBrowser)
+		{
+			// 先卸页面，切断微信扫码轮询等网络请求，再销毁 ActiveX
+			DuiWebBrowserNavigateBlank(m_pWebBrowser);
+			m_pWebBrowser->Release();
+			m_pWebBrowser = NULL;
+		}
+
+		::DestroyWindow(m_hWndIEOwner);
+	}
+	else if (m_pWebBrowser)
+	{
+		DuiWebBrowserNavigateBlank(m_pWebBrowser);
 		m_pWebBrowser->Release();
 		m_pWebBrowser = NULL;
 	}
 
-	if (m_hWndIEOwner && ::IsWindow(m_hWndIEOwner))
-	{
-		::DestroyWindow(m_hWndIEOwner);
-		m_hWndIEOwner = NULL;
-	}
+	m_hWndIEOwner = NULL;
+	m_strUrlCur.clear();
+
+	// 销毁后结束进程级浏览器会话，清掉 Cookie/会话缓存，避免第三次取码复用脏状态
+	DuiWebBrowserResetWinInetSession();
 
 	return;
 }
@@ -268,11 +365,16 @@ void CDUIWebBrowserCtrl::Navigate(LPCTSTR lpszUrl)
 {
 	if (NULL == m_pWebBrowser) return;
 
-	CComBSTR bstrUrl(lpszUrl);
-	CComVariant vEmpty;
-	m_pWebBrowser->Navigate(bstrUrl, &vEmpty, &vEmpty, &vEmpty, &vEmpty);
+	// 每次导航前重置 WinInet 会话，避免同进程反复打开微信登录页时会话/连接残留
+	DuiWebBrowserResetWinInetSession();
 
-	m_strUrlCur = lpszUrl;
+	CMMString strUrl = DuiWebBrowserAppendCacheBuster(lpszUrl);
+	CComBSTR bstrUrl(strUrl.c_str());
+	CComVariant vFlags((long)(navNoHistory | navNoReadFromCache | navNoWriteToCache));
+	CComVariant vEmpty;
+	HRESULT hRes = m_pWebBrowser->Navigate(bstrUrl, &vFlags, &vEmpty, &vEmpty, &vEmpty);
+
+	m_strUrlCur = strUrl;
 
 	return;
 }
@@ -673,6 +775,9 @@ void CDUIWebBrowserCtrl::PaintBkImage(HDC hDC)
 	{
 		::SendMessage(m_hWndIEServer, WM_PRINT, (WPARAM)MemDC.GetMemHDC(), PRF_CHILDREN | PRF_CLIENT | PRF_ERASEBKGND | PRF_OWNED);
 	}
+
+	CDUIRect rcBmp(0, 0, rcCtrl.GetWidth(), rcCtrl.GetHeight());
+	CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcBmp.GetWidth(), rcBmp);
 
 	return; 
 }

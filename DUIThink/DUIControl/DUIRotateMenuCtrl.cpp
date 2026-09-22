@@ -234,7 +234,7 @@ SIZE CDUIRotateMenuCtrl::GetScrollRange() const
 	return { m_nAngleScrollRange, 0 };
 }
 
-void CDUIRotateMenuCtrl::SetScrollPos(SIZE szPos, bool bMsg/* = true*/)
+void CDUIRotateMenuCtrl::SetScrollPos(SIZE szPos)
 {
 	ScrollChilds(szPos);
 

@@ -1,4 +1,4 @@
-ï»¿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "DUIGlobal.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -127,14 +127,7 @@ bool CDUIGlobal::UnInit()
 		FreeLibrary(hDllModule);
 	}
 	
-	//shadow text
-	for (auto ShadowText : m_mapShadowText)
-	{
-		MMSafeDelete(ShadowText.second);
-	}
-
 	m_vecModuleExtendDll.clear();
-	m_mapShadowText.clear();
 
 	//platform
 #if defined(DuiPlatform_SDL)
@@ -468,7 +461,7 @@ void CDUIGlobal::LoadWnd(const CMMString &strName, CDUIWnd *pWnd)
 	});
 	if (FindIt == m_vecDui.end())
 	{
-		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]ä¸å­˜åœ¨\n"), strName.c_str()));
+		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]²»´æÔÚ\n"), strName.c_str()));
 
 		return;
 	}
@@ -497,7 +490,7 @@ CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWnd *pWnd)
 	});
 	if (FindIt == m_vecDui.end())
 	{
-		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]ä¸å­˜åœ¨\n"), strName.c_str()));
+		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]²»´æÔÚ\n"), strName.c_str()));
 
 		return NULL;
 	}
@@ -551,39 +544,6 @@ CDUIControlBase * CDUIGlobal::ParseDui(LPCTSTR lpszXml)
 	if (NULL == lpszXml) return NULL;
 
 	return CDUIXmlPack::ParseDui(lpszXml);
-}
-
-Gdiplus::Bitmap * CDUIGlobal::GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle)
-{
-	//find
-	tagDuiShadowText ShadowText;
-	ShadowText.hFont = hFont;
-	ShadowText.strText = lpszText;
-	ShadowText.dwTextColor = dwTextColor;
-	ShadowText.dwTextStyle = dwTextStyle;
-	Gdiplus::Bitmap *pBmpText = m_mapShadowText[ShadowText];
-	if (pBmpText) return pBmpText;
-
-#if defined DuiPlatform_SDL
-	return NULL;
-#else
-	//generate
-	HDC hDCScreen = CreateDC(L"DISPLAY", NULL, NULL, NULL);
-	if (NULL == hDCScreen) return NULL;
-
-	CDUIRect rcDraw(0, 0, rcItem.GetWidth(), rcItem.GetHeight());
-	CDUIMemDC MemDC(hDCScreen, rcDraw, false);
-	HFONT hFontOld = (HFONT)::SelectObject(MemDC, hFont);
-	::DrawShadowText(MemDC, lpszText, -1, &rcDraw, dwTextStyle | DT_NOPREFIX, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)), RGB(0, 0, 0), 2, 2);
-	CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcDraw.GetWidth(), rcDraw);
-	::SelectObject(MemDC, hFontOld);
-	MMSafeDeleteDC(hDCScreen);
-
-	pBmpText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
-	m_mapShadowText[ShadowText] = pBmpText;
-
-	return pBmpText;
-#endif
 }
 
 int CDUIGlobal::GetFontResourceCount()
@@ -1474,7 +1434,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 	if (false == bRes)
 	{
 		assert(false);
-		CMMString strWarning = CMMStrHelp::Format(_T("Failed of Load [%s]ï¼ŒPlease Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
+		CMMString strWarning = CMMStrHelp::Format(_T("Failed of Load [%s]£¬Please Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
 		MessageBox(NULL, strWarning, NULL, NULL);
 
 		return;
@@ -1510,7 +1470,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 				{
 					assert(false);
 					CMMString strWarning;
-					strWarning.Format(_T("Failed load extenddllã€%sã€‘, Make sure it in the running directory"), strDllName.c_str());
+					strWarning.Format(_T("Failed load extenddll¡¾%s¡¿, Make sure it in the running directory"), strDllName.c_str());
 					MessageBox(NULL, strWarning, NULL, NULL);
 
 					continue;
@@ -1847,7 +1807,7 @@ bool CDUIGlobal::RenameDui(const CMMString &strNameOld, const CMMString &strName
 
 	if (false == MoveFile(strFileOld, strFileNew))
 	{
-		MessageBox(NULL, _T("Error Because Same Filenameã€‚"), _T("æç¤º"), MB_ICONINFORMATION);
+		MessageBox(NULL, _T("Error Because Same Filename¡£"), _T("ÌáÊ¾"), MB_ICONINFORMATION);
 		return false;
 	}
 
@@ -2255,7 +2215,7 @@ LPCTSTR CDUIGlobal::GetAttriText(uint32_t uValueID)
 	if (FindIt == m_mapAttriTextValue.end()) return _T("");
 
 	// Do NOT use ternary with CMMString here: GCC may materialize a temporary
-	// CMMString and return its dangling c_str() â†’ garbled CJK text on Linux.
+	// CMMString and return its dangling c_str() ¡ú garbled CJK text on Linux.
 	return FindIt->second.c_str();
 }
 

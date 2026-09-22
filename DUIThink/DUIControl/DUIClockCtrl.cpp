@@ -24,6 +24,25 @@ bool CDUIClockCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 {
 	if (__super::OnAttributeChange(pAttributeObj)) return true;
 
+	if (pAttributeObj == &m_AttributeImageClockHour)
+	{
+		MMSafeDelete(m_pBmpClockHourPointer);
+
+		return true;
+	}
+	if (pAttributeObj == &m_AttributeImageClockMinute)
+	{
+		MMSafeDelete(m_pBmpClockMinutePointer);
+
+		return true;
+	}
+	if (pAttributeObj == &m_AttributeImageClockSecond)
+	{
+		MMSafeDelete(m_pBmpClockSecondPointer);
+
+		return true;
+	}
+
 	return false;
 }
 
@@ -175,8 +194,9 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 	ptCenter.y = m_rcAbsolute.top + GetHeight() / 2;
 
 	//hour
-	if (NULL == m_pBmpClockHourPointer)
+	if (NULL == m_pBmpClockHourPointer || m_pBmpClockHourPointer->GetWidth() > GetWidth() || m_pBmpClockHourPointer->GetHeight() > GetHeight())
 	{
+		MMSafeDelete(m_pBmpClockHourPointer);
 		tagDuiImageSection ImageSection = m_AttributeImageClockHour.GetImageSection();
 		CDUIImageBase *pImageBase = m_AttributeImageClockHour.GetCurImageBase();
 		if (pImageBase)
@@ -190,7 +210,9 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 					rcSource = ImageSection.mapSourceCustomScale[GetScale()];
 				}
 
-				m_pBmpClockHourPointer = pBitmap->Clone(rcSource.left, rcSource.top, rcSource.GetWidth(), rcSource.GetHeight(), PixelFormat32bppARGB);
+				Gdiplus::Bitmap *pBmp = pBitmap->Clone(rcSource.left, rcSource.top, rcSource.GetWidth(), rcSource.GetHeight(), PixelFormat32bppARGB);
+				m_pBmpClockHourPointer = CDUIRenderEngine::GenerateThumbnail(pBmp, { GetWidth(), GetHeight() });
+				MMSafeDelete(pBmp);
 			}
 		}
 	}
@@ -210,8 +232,9 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 	}
 
 	//minute
-	if (NULL == m_pBmpClockMinutePointer)
+	if (NULL == m_pBmpClockMinutePointer || m_pBmpClockMinutePointer->GetWidth() > GetWidth() || m_pBmpClockMinutePointer->GetHeight() > GetHeight())
 	{
+		MMSafeDelete(m_pBmpClockMinutePointer);
 		tagDuiImageSection ImageSection = m_AttributeImageClockMinute.GetImageSection();
 		CDUIImageBase *pImageBase = m_AttributeImageClockMinute.GetCurImageBase();
 		if (pImageBase)
@@ -225,7 +248,9 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 					rcSource = ImageSection.mapSourceCustomScale[GetScale()];
 				}
 
-				m_pBmpClockMinutePointer = pBitmap->Clone(rcSource.left, rcSource.top, rcSource.GetWidth(), rcSource.GetHeight(), PixelFormat32bppARGB);
+				Gdiplus::Bitmap *pBmp = pBitmap->Clone(rcSource.left, rcSource.top, rcSource.GetWidth(), rcSource.GetHeight(), PixelFormat32bppARGB);
+				m_pBmpClockMinutePointer = CDUIRenderEngine::GenerateThumbnail(pBmp, { GetWidth(), GetHeight() });
+				MMSafeDelete(pBmp);
 			}
 		}
 	}
@@ -245,8 +270,9 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 	}
 
 	//second
-	if (NULL == m_pBmpClockSecondPointer)
+	if (NULL == m_pBmpClockSecondPointer || m_pBmpClockSecondPointer->GetWidth() > GetWidth() || m_pBmpClockSecondPointer->GetHeight() > GetHeight())
 	{
+		MMSafeDelete(m_pBmpClockSecondPointer);
 		tagDuiImageSection ImageSection = m_AttributeImageClockSecond.GetImageSection();
 		CDUIImageBase *pImageBase = m_AttributeImageClockSecond.GetCurImageBase();
 		if (pImageBase)
@@ -260,7 +286,9 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 					rcSource = ImageSection.mapSourceCustomScale[GetScale()];
 				}
 
-				m_pBmpClockSecondPointer = pBitmap->Clone(rcSource.left, rcSource.top, rcSource.GetWidth(), rcSource.GetHeight(), PixelFormat32bppARGB);
+				Gdiplus::Bitmap *pBmp = pBitmap->Clone(rcSource.left, rcSource.top, rcSource.GetWidth(), rcSource.GetHeight(), PixelFormat32bppARGB);
+				m_pBmpClockSecondPointer = CDUIRenderEngine::GenerateThumbnail(pBmp, { GetWidth(), GetHeight() });
+				MMSafeDelete(pBmp);
 			}
 		}
 	}
@@ -280,8 +308,9 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 	}
 
 	//center dot
-	if (NULL == m_pBmpClockCenterDot)
+	if (NULL == m_pBmpClockCenterDot || m_pBmpClockCenterDot->GetWidth() > GetWidth() || m_pBmpClockCenterDot->GetHeight() > GetHeight())
 	{
+		MMSafeDelete(m_pBmpClockCenterDot);
 		tagDuiImageSection ImageSection = m_AttributeImageClockCenterDot.GetImageSection();
 		CDUIImageBase *pImageBase = m_AttributeImageClockCenterDot.GetCurImageBase();
 		if (pImageBase)
@@ -295,7 +324,9 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 					rcSource = ImageSection.mapSourceCustomScale[GetScale()];
 				}
 
-				m_pBmpClockCenterDot = pBitmap->Clone(rcSource.left, rcSource.top, rcSource.GetWidth(), rcSource.GetHeight(), PixelFormat32bppARGB);
+				Gdiplus::Bitmap *pBmp = pBitmap->Clone(rcSource.left, rcSource.top, rcSource.GetWidth(), rcSource.GetHeight(), PixelFormat32bppARGB);
+				m_pBmpClockCenterDot = CDUIRenderEngine::GenerateThumbnail(pBmp, { GetWidth(), GetHeight() });
+				MMSafeDelete(pBmp);
 			}
 		}
 	}

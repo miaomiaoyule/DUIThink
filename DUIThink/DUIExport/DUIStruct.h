@@ -1,4 +1,4 @@
-﻿#ifndef __DUITHINKSTRUCT_H__
+#ifndef __DUITHINKSTRUCT_H__
 #define __DUITHINKSTRUCT_H__
 
 #pragma once
@@ -67,39 +67,6 @@ inline uint32_t tagDuiTextStyle::GetID() const
 }
 
 typedef std::vector<tagDuiTextStyle> VecDuiTextStyle;
-
-//////////////////////////////////////////////////////////////////////////
-struct tagDuiShadowText
-{
-	HFONT								hFont = NULL;
-	CMMString							strText;
-	DWORD								dwTextColor = 0;
-	DWORD								dwTextStyle = 0;
-
-	bool operator == (const tagDuiShadowText &Right) const
-	{
-		return hFont == Right.hFont
-			&& strText == Right.strText
-			&& dwTextColor == Right.dwTextColor
-			&& dwTextStyle == Right.dwTextStyle;
-	}
-};
-
-namespace std
-{
-	template<> struct hash<tagDuiShadowText>
-	{
-		inline uint32_t operator()(const tagDuiShadowText &ShadowText) const
-		{
-			CMMString strInfo;
-			strInfo += CMMStrHelp::Format(_T("%llu-%s-%u-%u"), (unsigned long long)(UINT_PTR)ShadowText.hFont, ShadowText.strText.c_str(), ShadowText.dwTextColor, ShadowText.dwTextStyle);
-
-			return CMMHash::GetHash(strInfo);
-		}
-	};
-}
-
-typedef std::unordered_map<tagDuiShadowText, Gdiplus::Bitmap*> MapShadowText;
 
 //////////////////////////////////////////////////////////////////////////
 struct tagDuiRichTextBase

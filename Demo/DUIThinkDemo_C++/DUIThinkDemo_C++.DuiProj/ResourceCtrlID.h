@@ -357,3 +357,7 @@
 #define IDC_ScrollBarCtrl_101105 				(101105)
 #define IDC_ListHeaderCtrl_101106 				(101106)
 #define IDC_RadioBoxHomePage 				(101107)
+#define IDC_RadioBoxControlView 				(101108)
+#define IDC_RadioBoxStaticView 				(101109)
+#define IDC_WebBrowserCtrl_101110 				(101110)
+#define IDC_RadioBoxHomePage 				(101107)

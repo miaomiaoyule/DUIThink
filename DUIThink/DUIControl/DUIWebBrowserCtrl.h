@@ -1,4 +1,4 @@
-#ifndef __DUIWEBBROWSERCTRL_H__
+﻿#ifndef __DUIWEBBROWSERCTRL_H__
 #define __DUIWEBBROWSERCTRL_H__
 
 #ifndef DuiPlatform_SDL

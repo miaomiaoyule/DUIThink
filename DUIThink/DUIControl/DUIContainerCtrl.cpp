@@ -602,21 +602,17 @@ SIZE CDUIContainerCtrl::GetScrollRange() const
 	return sz;
 }
 
-void CDUIContainerCtrl::SetScrollPos(SIZE szPos, bool bMsg)
+void CDUIContainerCtrl::SetScrollPos(SIZE szPos)
 {
 	int cx = 0;
 	int cy = 0;
-	if (m_pHorizScrollBarCtrl && m_pHorizScrollBarCtrl->IsVisible())
+	if (m_pHorizScrollBarCtrl)
 	{
 		m_pHorizScrollBarCtrl->SetCurValue(szPos.cx);
 	}
-	if (m_pVertScrollBarCtrl && m_pVertScrollBarCtrl->IsVisible())
+	if (m_pVertScrollBarCtrl)
 	{
 		m_pVertScrollBarCtrl->SetCurValue(szPos.cy);
-	}
-	if (m_pWndOwner)
-	{
-		m_pWndOwner->SendNotify(this, DuiNotify_Scroll);
 	}
 
 	return;
@@ -1128,7 +1124,7 @@ void CDUIContainerCtrl::RemoveAll()
 	}
 
 	m_vecChilds.clear();
-
+	SetScrollPos({});
 	NeedRefreshView();
 
 	return;
@@ -1489,6 +1485,10 @@ void CDUIContainerCtrl::ScrollChilds(CDUISize szScroll)
 		CDUIRect rcModal = pChild->GetModalParentRect();
 		rcModal.Offset(CDUISize(-szScroll.cx, -szScroll.cy));
 		pChild->OnDuiSize(rcModal);
+	}
+	if (m_pWndOwner)
+	{
+		m_pWndOwner->SendNotify(this, DuiNotify_Scroll);
 	}
 
 	Invalidate();

@@ -264,9 +264,21 @@ VecDuiRichTextItem CDUIStaticCtrl::GetRichTextItem()
 
 bool CDUIStaticCtrl::SetRichTextItem(const VecDuiRichTextItem &vecRichTextItem)
 {
-	if (vecRichTextItem == GetRichTextItem()) return true;
+	tagDuiRichText RichText = GetRichText();
+	RichText.vecRichTextItem = vecRichTextItem;
+	return SetRichText(RichText);
+}
 
-	m_AttributeRichText.SetRichTextItem(vecRichTextItem);
+tagDuiRichText CDUIStaticCtrl::GetRichText()
+{
+	return m_AttributeRichText.GetRichText();
+}
+
+bool CDUIStaticCtrl::SetRichText(const tagDuiRichText &RichText)
+{
+	if (RichText == GetRichText()) return true;
+
+	m_AttributeRichText.SetRichText(RichText);
 
 	if (m_pWndOwner)
 	{

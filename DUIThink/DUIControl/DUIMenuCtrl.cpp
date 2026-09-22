@@ -314,7 +314,7 @@ void CDUIMenuWnd::ResizeSubMenu()
 
 	rcWnd.Offset(rcWndOwner.right - rcWnd.left, ptOwner.y - rcWnd.top);
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(-(rcWndOwner.GetWidth() + rcWnd.GetWidth()), 0);
-	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight());
+	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight() + rcOwner.GetHeight());
 	
 	::SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
@@ -396,6 +396,18 @@ LPVOID CDUIMenuItemCtrl::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 CMMString CDUIMenuItemCtrl::GetDescribe() const
 {
 	return Dui_Ctrl_MenuItem;
+}
+
+CDUIMenuItemCtrl * CDUIMenuItemCtrl::Clone(bool bIncludeChild, bool bRefreshCtrlID)
+{
+	MMInterfaceHelper(CDUIMenuItemCtrl, __super::Clone(bIncludeChild, bRefreshCtrlID), pMenuItemClone);
+	if (NULL == pMenuItemClone) return NULL;
+
+	//first clear menuname, because hasexpandmenu touch attributechange so delete menufile
+	pMenuItemClone->m_AttributeExpandViewDuiName.SetValue(_T(""));
+	pMenuItemClone->m_AttributeHasExpandMenu.SetValue(false);
+
+	return pMenuItemClone;
 }
 
 bool CDUIMenuItemCtrl::DoPaint(HDC hDC, bool bGenerateBmp)
@@ -1047,11 +1059,9 @@ void CDUIMenuCtrl::InitComplete()
 	DuiInitAttriVisible(m_AttributeChildPaddingH, false);
 	DuiInitAttriVisible(m_AttributeAutoCalcChildPaddingH, false);
 	DuiInitAttriVisible(m_AttributeUseListHeader, false);
-	DuiInitAttriVisible(m_AttributeListViewType, false);
 	DuiInitAttriVisible(m_AttributeMultiSel, false);
 	DuiInitAttriVisible(m_AttributeScrollSelect, false);
 	DuiInitAttriVisible(m_AttributeItemModel, false);
-	DuiInitAttriVisible(m_AttributeGroupTileType, false);
 	DuiInitAttriVisible(m_AttributeGroupLine, false);
 	DuiInitAttriVisible(m_AttributeColorItemStatusSelNormal, false);
 	DuiInitAttriVisible(m_AttributeColorItemStatusSelHot, false);
@@ -1115,6 +1125,11 @@ void CDUIMenu::DestroyMenu()
 	MMSafeDelete(g_pDuiMenuWndRoot);
 
 	return;
+}
+
+CDUIMenuWnd * CDUIMenu::GetRootWnd()
+{
+	return g_pDuiMenuWndRoot;
 }
 
 CDUIMenuCtrl * CDUIMenu::GetRootMenu()

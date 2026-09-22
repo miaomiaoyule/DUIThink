@@ -23,7 +23,9 @@ CMMAsyncObject::CMMAsyncObject()
 
 CMMAsyncObject::~CMMAsyncObject()
 {
+	UnInit();
 
+	return;
 }
 
 bool CMMAsyncObject::Init()
