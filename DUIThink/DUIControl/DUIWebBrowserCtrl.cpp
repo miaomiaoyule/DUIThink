@@ -299,9 +299,9 @@ void CDUIWebBrowserCtrl::RefreshView()
 
 void CDUIWebBrowserCtrl::Close()
 {
-	if (m_uRefreshTimerID)
+	if (m_pWndOwner && m_uRefreshTimerID)
 	{
-		StopTimer(m_uRefreshTimerID);
+		m_pWndOwner->StopTimer(m_uRefreshTimerID);
 		m_uRefreshTimerID = 0;
 	}
 
