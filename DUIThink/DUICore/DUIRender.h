@@ -32,44 +32,44 @@ public:
 	static void DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcRound = {}, enDuiRoundType RoundType = Round_Normal);
 	static void DrawImage(HDC hDC, Gdiplus::Bitmap *pBmp, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
 		bool bCornerHole = false, bool bTiledX = false, bool bTiledY = false, const CDUIRect &rcRound = {}, enDuiRoundType RoundType = Round_Normal);
-	static void DrawLine(HDC hDC, const CDUIRect &rcItem, int nLineSize, ARGB dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
-	static void DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, ARGB dwPenColor, CDUISize szBreakTop = {}, enDuiLineStyle LineStyle = LineStyle_Solid);
-	static void DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nLineSize, ARGB dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
-	static void DrawRound(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, ARGB dwPenColor);
-	static void DrawRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, ARGB dwPenColor, CDUISize szBreakTop = {});
-	static void DrawParallelogram(HDC hDC, const CDUIRect &rcItem, int nLineSize, ARGB dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
-	static void DrawRhomb(HDC hDC, const CDUIRect &rcItem, int nLineSize, ARGB dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
-	static void DrawEllipse(HDC hDC, const CDUIRect &rcItem, int nLineSize, ARGB dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
-	static void DrawArc(HDC hDC, const CDUIRect &rcItem, int nLineSize, ARGB dwPenColor, float fStartAngle, float fSweepAngle, enDuiLineStyle LineStyle = LineStyle_Solid);
-	static void FillRect(HDC hDC, const CDUIRect &rcItem, ARGB dwColor, ARGB dwColorGradient = 0);
-	static void FillRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, ARGB dwColor, ARGB dwColorGradient = 0);
-	static void FillParallelogram(HDC hDC, const CDUIRect &rcItem, ARGB dwColor, ARGB dwColorGradient = 0);
-	static void FillRhomb(HDC hDC, const CDUIRect &rcItem, ARGB dwColor, ARGB dwColorGradient = 0);
-	static void FillEllipse(HDC hDC, const CDUIRect &rcItem, ARGB dwColor, ARGB dwColorGradient = 0);
+	static void DrawLine(HDC hDC, const CDUIRect &rcItem, int nLineSize, Gdiplus::ARGB dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
+	static void DrawRect(HDC hDC, const CDUIRect &rcItem, int nLineSize, Gdiplus::ARGB dwPenColor, CDUISize szBreakTop = {}, enDuiLineStyle LineStyle = LineStyle_Solid);
+	static void DrawPath(HDC hDC, const std::vector<CDUIPoint> &vecPtList, int nLineSize, Gdiplus::ARGB dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
+	static void DrawRound(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, Gdiplus::ARGB dwPenColor);
+	static void DrawRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, Gdiplus::ARGB dwPenColor, CDUISize szBreakTop = {});
+	static void DrawParallelogram(HDC hDC, const CDUIRect &rcItem, int nLineSize, Gdiplus::ARGB dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
+	static void DrawRhomb(HDC hDC, const CDUIRect &rcItem, int nLineSize, Gdiplus::ARGB dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
+	static void DrawEllipse(HDC hDC, const CDUIRect &rcItem, int nLineSize, Gdiplus::ARGB dwPenColor, enDuiLineStyle LineStyle = LineStyle_Solid);
+	static void DrawArc(HDC hDC, const CDUIRect &rcItem, int nLineSize, Gdiplus::ARGB dwPenColor, float fStartAngle, float fSweepAngle, enDuiLineStyle LineStyle = LineStyle_Solid);
+	static void FillRect(HDC hDC, const CDUIRect &rcItem, Gdiplus::ARGB dwColor, Gdiplus::ARGB dwColorGradient = 0);
+	static void FillRoundRect(HDC hDC, const CDUIRect &rcItem, const CDUIRect &rcRound, int nLineSize, Gdiplus::ARGB dwColor, Gdiplus::ARGB dwColorGradient = 0);
+	static void FillParallelogram(HDC hDC, const CDUIRect &rcItem, Gdiplus::ARGB dwColor, Gdiplus::ARGB dwColorGradient = 0);
+	static void FillRhomb(HDC hDC, const CDUIRect &rcItem, Gdiplus::ARGB dwColor, Gdiplus::ARGB dwColorGradient = 0);
+	static void FillEllipse(HDC hDC, const CDUIRect &rcItem, Gdiplus::ARGB dwColor, Gdiplus::ARGB dwColorGradient = 0);
 
 	//draw text
-	static void DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR lpszText, ARGB dwTextColor, UINT dwTextStyle, bool bGdiplusRender = false, Gdiplus::TextRenderingHint RenderType = TextRenderingHintSystemDefault, bool bCeilFloat = true, bool bShadow = false);
-	static void DrawRichText(HDC hDC, CDUIRect &rcItem, const tagDuiRichText &RichText, bool bGdiplusRender = false, Gdiplus::TextRenderingHint RenderType = TextRenderingHintSystemDefault, int nLineSpace = 0, bool bShadow = false);
-	static void DrawRichText(HDC hDC, CDUIRect &rcItem, const MapLineVecDuiRichTextDraw &mapLineVecRichTextDraw, UINT dwTextStyle, bool bGdiplusRender = false, Gdiplus::TextRenderingHint RenderType = TextRenderingHintSystemDefault, bool bShadow = false);
+	static void DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR lpszText, Gdiplus::ARGB dwTextColor, UINT dwTextStyle, bool bGdiplusRender = false, Gdiplus::TextRenderingHint RenderType = Gdiplus::TextRenderingHintSystemDefault, bool bCeilFloat = true, bool bShadow = false);
+	static void DrawRichText(HDC hDC, CDUIRect &rcItem, const tagDuiRichText &RichText, bool bGdiplusRender = false, Gdiplus::TextRenderingHint RenderType = Gdiplus::TextRenderingHintSystemDefault, int nLineSpace = 0, bool bShadow = false);
+	static void DrawRichText(HDC hDC, CDUIRect &rcItem, const MapLineVecDuiRichTextDraw &mapLineVecRichTextDraw, UINT dwTextStyle, bool bGdiplusRender = false, Gdiplus::TextRenderingHint RenderType = Gdiplus::TextRenderingHintSystemDefault, bool bShadow = false);
 	static SIZE GetTextSize(HDC hDC, HFONT hFont, LPCTSTR lpszText, UINT dwTextStyle);
 	
 	//help
-	static void RGBToHSL(IN ARGB dwColor, OUT float *pH, OUT float *pS, OUT float *pL);
-	static ARGB HSLToRGB(float H, float S, float L);
-	static ARGB AdjustColor(ARGB dwColor, short H, short S, short L);
+	static void RGBToHSL(IN Gdiplus::ARGB dwColor, OUT float *pH, OUT float *pS, OUT float *pL);
+	static Gdiplus::ARGB HSLToRGB(float H, float S, float L);
+	static Gdiplus::ARGB AdjustColor(Gdiplus::ARGB dwColor, short H, short S, short L);
 	static void AdjustImage(CDUIImageBase *pImageBase, short H, short S, short L);
-	static void AdjustImage(HBITMAP hBitmap, ARGB dwColorSrc, ARGB dwColorDest);
+	static void AdjustImage(HBITMAP hBitmap, Gdiplus::ARGB dwColorSrc, Gdiplus::ARGB dwColorDest);
 	static HBITMAP CreateARGB32Bitmap(HDC hDC, int cx, int cy, BYTE** pBits, bool bPositive = true);
-	static HBITMAP GenerateBitmap(CDUIControlBase *pControl, const CDUIRect &rcItem, ARGB dwFilterColor = 0);
-	static Bitmap * GenerateBitmap(const std::vector<BYTE> &vecFileData);
-	static Bitmap * GenerateEllipseBitmap(Bitmap *pBmp, const CDUISize &szGenerate);
-	static Bitmap * GenerateThumbnail(Bitmap *pBmp, const CDUISize &szGenerate);
-	static HBITMAP CopyBitmap(HDC hDC, const CDUIRect &rcItem, ARGB dwFilterColor = 0);
-	static HBITMAP CopyBitmap(HBITMAP hBitmap, ARGB dwFilterColor = 0, bool bDisablePallete = false, float fAlpha = 1.0);
-	static Bitmap * GetAlphaBitmap(HBITMAP hBitmap, bool bPreMultiplyArgb = true);
-	static HBITMAP GetHBITMAP(Bitmap *pBmp, bool bKeepAlpha = true);
+	static HBITMAP GenerateBitmap(CDUIControlBase *pControl, const CDUIRect &rcItem, Gdiplus::ARGB dwFilterColor = 0);
+	static Gdiplus::Bitmap * GenerateBitmap(const std::vector<BYTE> &vecFileData);
+	static Gdiplus::Bitmap * GenerateEllipseBitmap(Gdiplus::Bitmap *pBmp, const CDUISize &szGenerate);
+	static Gdiplus::Bitmap * GenerateThumbnail(Gdiplus::Bitmap *pBmp, const CDUISize &szGenerate);
+	static HBITMAP CopyBitmap(HDC hDC, const CDUIRect &rcItem, Gdiplus::ARGB dwFilterColor = 0);
+	static HBITMAP CopyBitmap(HBITMAP hBitmap, Gdiplus::ARGB dwFilterColor = 0, bool bDisablePallete = false, float fAlpha = 1.0);
+	static Gdiplus::Bitmap * GetAlphaBitmap(HBITMAP hBitmap, bool bPreMultiplyArgb = true);
+	static HBITMAP GetHBITMAP(Gdiplus::Bitmap *pBmp, bool bKeepAlpha = true);
 	static bool SaveImage(HBITMAP hBitmap, CMMString strFile);
-	static bool SaveImage(Bitmap *pBmp, CMMString strFile);
+	static bool SaveImage(Gdiplus::Bitmap *pBmp, CMMString strFile);
 
 	//alpha help
 	static void ClearPixel(LPBYTE pBits, int nWidthBitmap, CDUIRect rcClear);

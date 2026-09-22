@@ -238,21 +238,21 @@ public:
 
 	//item property
 	virtual RECT GetItemTextPadding();
-	virtual ARGB GetItemTextColorNormal();
-	virtual ARGB GetItemTextColorHot();
-	virtual ARGB GetItemTextColorSelNormal();
-	virtual ARGB GetItemTextColorSelHot();
-	virtual ARGB GetItemTextColorDisabled();
+	virtual Gdiplus::ARGB GetItemTextColorNormal();
+	virtual Gdiplus::ARGB GetItemTextColorHot();
+	virtual Gdiplus::ARGB GetItemTextColorSelNormal();
+	virtual Gdiplus::ARGB GetItemTextColorSelHot();
+	virtual Gdiplus::ARGB GetItemTextColorDisabled();
 	virtual tagDuiTextStyle GetItemTextStyleNormal();
 	virtual tagDuiTextStyle GetItemTextStyleHot();
 	virtual tagDuiTextStyle GetItemTextStyleSelNormal();
 	virtual tagDuiTextStyle GetItemTextStyleSelHot();
 	virtual tagDuiTextStyle GetItemTextStyleDisabled();
-	virtual ARGB GetItemStatusColorNormal();
-	virtual ARGB GetItemStatusColorHot();
-	virtual ARGB GetItemStatusColorSelNormal();
-	virtual ARGB GetItemStatusColorSelHot();
-	virtual ARGB GetItemStatusColorDisabled();
+	virtual Gdiplus::ARGB GetItemStatusColorNormal();
+	virtual Gdiplus::ARGB GetItemStatusColorHot();
+	virtual Gdiplus::ARGB GetItemStatusColorSelNormal();
+	virtual Gdiplus::ARGB GetItemStatusColorSelHot();
+	virtual Gdiplus::ARGB GetItemStatusColorDisabled();
 	virtual vector<CMMString> GetItemStatusColorResSwitchNormal();
 	virtual vector<CMMString> GetItemStatusColorResSwitchHot();
 	virtual vector<CMMString> GetItemStatusColorResSwitchSelNormal();
@@ -282,7 +282,7 @@ public:
 	virtual void SetItemStatusImageSectionSelHot(const tagDuiImageSection &ImageSection);
 	virtual void SetItemStatusImageSectionDisabled(const tagDuiImageSection &ImageSection);
 
-	virtual ARGB GetLineColor();
+	virtual Gdiplus::ARGB GetLineColor();
 	virtual void SetLineColorResSwitch(const vector<CMMString> &vecResSwitch);
 	virtual bool IsShowRowLine();
 	virtual void SetShowRowLine(bool bShowLine = false);

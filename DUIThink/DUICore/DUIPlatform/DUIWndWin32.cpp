@@ -897,7 +897,7 @@ HBITMAP CDUIWndWin32::ProductBitmap(IN std::vector<CDUIControlBase*> vecCtrl, IN
 		CDUIRect rcPos = pCtrl->GetAbsoluteRect();
 		rcPos.Offset(-rcBitmap.left, -rcBitmap.top);
 
-		Bitmap *pBmp = CDUIRenderEngine::GetAlphaBitmap(hBitmap);
+		Gdiplus::Bitmap *pBmp = CDUIRenderEngine::GetAlphaBitmap(hBitmap);
 		CDUIRenderEngine::DrawImage(hPaintDC, pBmp, rcPos);
 		DeleteObject(hBitmap);
 		MMSafeDelete(pBmp);

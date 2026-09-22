@@ -5,7 +5,7 @@
 DuiImplement_CreateAttribute(CDUIAttributeColor)
 MMImplement_ClassName(CDUIAttributeColor)
 
-CDUIAttributeColor::CDUIAttributeColor(ARGB dwColor)
+CDUIAttributeColor::CDUIAttributeColor(Gdiplus::ARGB dwColor)
 	: m_dwColor(dwColor)
 {
 #ifdef DUI_DESIGN
@@ -36,7 +36,7 @@ CDUIAttributeColor & CDUIAttributeColor::operator = (CDUIAttributeObject &Right)
 	return *this;
 }
 
-bool CDUIAttributeColor::SetColor(ARGB dwColor)
+bool CDUIAttributeColor::SetColor(Gdiplus::ARGB dwColor)
 {
 	if (m_dwColor == dwColor) return true;
 
@@ -95,7 +95,7 @@ bool CDUIAttributeColor::SetColorValueB(BYTE cbB)
 	return true;
 }
 
-ARGB CDUIAttributeColor::GetColorValue()
+Gdiplus::ARGB CDUIAttributeColor::GetColorValue()
 {
 	return m_dwColor;
 }

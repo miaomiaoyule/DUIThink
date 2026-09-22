@@ -43,7 +43,6 @@
 
 #if defined(DuiPlatform_SDL)
 	#include "DUICore/DUIRender/DUIGdiplusPortable.h"
-	using namespace Gdiplus;
 
 	DUITHINK_API HWND FindWindow(LPCTSTR lpszClassName, LPCTSTR lpszTitle);
 #else
@@ -52,7 +51,6 @@
 	#include <gdiplus.h>
 	#include <ShlDisp.h>
 	#include <olectl.h>
-	using namespace Gdiplus;
 	
 	#pragma comment(lib, "Msimg32.lib")
 	#pragma comment(lib, "Gdiplus.lib")

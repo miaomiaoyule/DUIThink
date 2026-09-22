@@ -231,9 +231,9 @@ public:
 	virtual bool KillTimer();
 
 	//bk
-	virtual ARGB GetBkColor();
+	virtual Gdiplus::ARGB GetBkColor();
 	virtual void SetBkColor(const vector<CMMString> &vecResSwitch);
-	virtual ARGB GetGradientColor();
+	virtual Gdiplus::ARGB GetGradientColor();
 	virtual void SetGradientColor(const vector<CMMString> &vecResSwitch);
 	virtual tagDuiImageSection GetBkImageSection();
 	virtual void SetBkImageSection(const tagDuiImageSection &ImageSection);
@@ -252,9 +252,9 @@ public:
 	//border
 	virtual enDuiLineStyle GetBorderStyle();
 	virtual void SetBorderStyle(enDuiLineStyle LineStyle);
-	virtual ARGB GetBorderColor();
+	virtual Gdiplus::ARGB GetBorderColor();
 	virtual void SetBorderColor(const vector<CMMString> &vecResSwitch);
-	virtual ARGB GetFocusBorderColor();
+	virtual Gdiplus::ARGB GetFocusBorderColor();
 	virtual void SetFocusBorderColor(const vector<CMMString> &vecResSwitch);
 	virtual CDUIRect GetBorderLine();
 	virtual void SetBorderLine(RECT rcBorder);
@@ -266,10 +266,10 @@ public:
 	virtual void SetToolTip(LPCTSTR pstrText);
 	virtual int GetToolTipWidth(void);
 	virtual void SetToolTipWidth(int nWidth);
-	virtual ARGB GetToolTipBkColor();
-	virtual void SetToolTipBkColor(ARGB dwColor);
-	virtual ARGB GetToolTipTextColor();
-	virtual void SetToolTipTextColor(ARGB dwColor);
+	virtual Gdiplus::ARGB GetToolTipBkColor();
+	virtual void SetToolTipBkColor(Gdiplus::ARGB dwColor);
+	virtual Gdiplus::ARGB GetToolTipTextColor();
+	virtual void SetToolTipTextColor(Gdiplus::ARGB dwColor);
 
 	//userdata
 	virtual CMMString GetUserData();

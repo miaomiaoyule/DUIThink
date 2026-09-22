@@ -112,7 +112,7 @@ public:
 	virtual CMMString GetText();
 	virtual bool SetText(LPCTSTR lpszText);
 	virtual HFONT GetFont();
-	virtual ARGB GetTextColor();
+	virtual Gdiplus::ARGB GetTextColor();
 	virtual tagDuiTextStyle GetTextStyle();
 	virtual tagDuiTextStyle GetTextStyleActive();
 	virtual void SetTextStyle(const tagDuiTextStyle &TextStyle);

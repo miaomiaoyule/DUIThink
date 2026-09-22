@@ -15,11 +15,11 @@ class DUITHINK_API CDUIAttributeColor
 	MMDeclare_ClassName(CDUIAttributeColor)
 
 public:
-	CDUIAttributeColor(ARGB dwColor = DUIARGB(255, 253, 198, 104));
+	CDUIAttributeColor(Gdiplus::ARGB dwColor = DUIARGB(255, 253, 198, 104));
 	~CDUIAttributeColor(void);
 
 protected:
-	ARGB								m_dwColor = 0;
+	Gdiplus::ARGB						m_dwColor = 0;
 
 	//override
 public:
@@ -29,13 +29,13 @@ public:
 public:
 	CDUIAttributeColor & operator = (CDUIAttributeObject &Right) override;
 
-	virtual bool SetColor(ARGB dwColor);
+	virtual bool SetColor(Gdiplus::ARGB dwColor);
 	virtual bool SetColorValueA(BYTE cbA);
 	virtual bool SetColorValueR(BYTE cbR);
 	virtual bool SetColorValueG(BYTE cbG);
 	virtual bool SetColorValueB(BYTE cbB);
 
-	virtual ARGB GetColorValue();
+	virtual Gdiplus::ARGB GetColorValue();
 
 	//attribute
 protected:

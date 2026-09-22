@@ -12,7 +12,7 @@ class IDuiCanvas;
 namespace Gdiplus
 {
 	typedef float REAL;
-	typedef UINT ARGB;
+	typedef UINT Gdiplus::ARGB;
 	typedef ULONG PROPID;
 	typedef INT PixelFormat;
 
@@ -98,15 +98,15 @@ namespace Gdiplus
 	{
 	public:
 		Color() : m_argb(0) {}
-		Color(ARGB argb) : m_argb(argb) {}
-		Color(BYTE a, BYTE r, BYTE g, BYTE b) : m_argb(((ARGB)a << 24) | ((ARGB)r << 16) | ((ARGB)g << 8) | b) {}
-		ARGB GetValue() const { return m_argb; }
+		Color(Gdiplus::ARGB argb) : m_argb(argb) {}
+		Color(BYTE a, BYTE r, BYTE g, BYTE b) : m_argb(((Gdiplus::ARGB)a << 24) | ((Gdiplus::ARGB)r << 16) | ((Gdiplus::ARGB)g << 8) | b) {}
+		Gdiplus::ARGB GetValue() const { return m_argb; }
 		BYTE GetA() const { return (BYTE)((m_argb >> 24) & 0xff); }
 		BYTE GetR() const { return (BYTE)((m_argb >> 16) & 0xff); }
 		BYTE GetG() const { return (BYTE)((m_argb >> 8) & 0xff); }
 		BYTE GetB() const { return (BYTE)(m_argb & 0xff); }
 	private:
-		ARGB m_argb;
+		Gdiplus::ARGB m_argb;
 	};
 
 	class Matrix
@@ -141,7 +141,7 @@ namespace Gdiplus
 	{
 	public:
 		SolidBrush(const Color &c) : m_color(c) {}
-		SolidBrush(ARGB argb) : m_color(argb) {}
+		SolidBrush(Gdiplus::ARGB argb) : m_color(argb) {}
 		Brush * Clone() const override { return new SolidBrush(m_color); }
 		DWORD GetFillColor() const override { return m_color.GetValue(); }
 	private:

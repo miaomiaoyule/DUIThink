@@ -235,7 +235,7 @@ LRESULT CDUIHotKeyWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				HBITMAP hBmpBk = CDUIRenderEngine::GenerateBitmap(m_pWndOwner->GetRootCtrl(), rcWnd);
 				if (NULL == hBmpBk) break;
 
-				Bitmap *pBmp = CDUIRenderEngine::GetAlphaBitmap(hBmpBk);
+				Gdiplus::Bitmap *pBmp = CDUIRenderEngine::GetAlphaBitmap(hBmpBk);
 				if (NULL == pBmp) break;
 
 				CDUIRect rcClient = GetClientRect();

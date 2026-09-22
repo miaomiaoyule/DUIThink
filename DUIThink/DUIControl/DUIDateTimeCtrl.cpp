@@ -201,32 +201,32 @@ HFONT CDUIDateTimeCtrl::GetFontDisabled()
 	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->GetFontDisabled() : NULL;
 }
 
-ARGB CDUIDateTimeCtrl::GetTextColor()
+Gdiplus::ARGB CDUIDateTimeCtrl::GetTextColor()
 {
 	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->GetTextColor() : NULL;
 }
 
-ARGB CDUIDateTimeCtrl::GetTextColorNormal()
+Gdiplus::ARGB CDUIDateTimeCtrl::GetTextColorNormal()
 {
 	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->GetTextColorNormal() : NULL;
 }
 
-ARGB CDUIDateTimeCtrl::GetTextColorHot()
+Gdiplus::ARGB CDUIDateTimeCtrl::GetTextColorHot()
 {
 	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->GetTextColorHot() : NULL;
 }
 
-ARGB CDUIDateTimeCtrl::GetTextColorPushed()
+Gdiplus::ARGB CDUIDateTimeCtrl::GetTextColorPushed()
 {
 	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->GetTextColorPushed() : NULL;
 }
 
-ARGB CDUIDateTimeCtrl::GetTextColorFocus()
+Gdiplus::ARGB CDUIDateTimeCtrl::GetTextColorFocus()
 {
 	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->GetTextColorFocus() : NULL;
 }
 
-ARGB CDUIDateTimeCtrl::GetTextColorDisabled()
+Gdiplus::ARGB CDUIDateTimeCtrl::GetTextColorDisabled()
 {
 	return m_pEditDateTimeCtrl ? m_pEditDateTimeCtrl->GetTextColorDisabled() : NULL;
 }

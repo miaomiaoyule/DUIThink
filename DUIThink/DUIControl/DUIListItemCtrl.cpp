@@ -537,7 +537,7 @@ HFONT CDUIListItemCtrl::GetFont()
 	return m_AttributeTextStyle.GetFont();
 }
 
-ARGB CDUIListItemCtrl::GetTextColor()
+Gdiplus::ARGB CDUIListItemCtrl::GetTextColor()
 {
 	return m_AttributeTextStyle.GetTextColor();
 }

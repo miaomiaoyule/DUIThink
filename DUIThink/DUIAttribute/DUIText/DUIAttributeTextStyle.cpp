@@ -164,7 +164,7 @@ LPCTSTR CDUIAttributeTextStyle::GetColorResName()
 	return pColorBaseCur ? pColorBaseCur->GetResourceName() : _T("");
 }
 
-ARGB CDUIAttributeTextStyle::GetTextColor()
+Gdiplus::ARGB CDUIAttributeTextStyle::GetTextColor()
 {
 	CDUIColorBase *pColorBaseCur = GetColorBaseCur();
 

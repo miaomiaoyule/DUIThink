@@ -476,7 +476,7 @@ bool CDUIImageBase::ConstructWebp(std::vector<BYTE> &vecData, int nScale)
 				}
 				else if (a == 0)
 				{
-					*(ARGB*)pDst = 0;
+					*(Gdiplus::ARGB*)pDst = 0;
 				}
 				else
 				{
@@ -567,7 +567,7 @@ bool CDUIImageBase::ConstructBitmap(LPBYTE pPixel, int nWidth, int nHeight, int 
 		}
 		else if (a == 0)
 		{
-			*(ARGB*)pDst = 0;
+			*(Gdiplus::ARGB*)pDst = 0;
 			bAlphaChannel = true;
 		}
 		else

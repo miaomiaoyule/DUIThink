@@ -47,15 +47,15 @@ public:
 	virtual bool DrawRhomb(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid);
 	virtual bool DrawEllipse(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, enDuiLineStyle LineStyle = LineStyle_Solid);
 	virtual bool DrawArc(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, float fStartAngle, float fSweepAngle, enDuiLineStyle LineStyle = LineStyle_Solid);
-	virtual bool FillRect(HDC hDC, const CDUIRect &rcPaint, ARGB dwColorGradient = 0);
-	virtual bool FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, ARGB dwColorGradient = 0);
-	virtual bool FillParallelogram(HDC hDC, const CDUIRect &rcPaint, ARGB dwColorGradient = 0);
-	virtual bool FillRhomb(HDC hDC, const CDUIRect &rcPaint, ARGB dwColorGradient = 0);
-	virtual bool FillEllipse(HDC hDC, const CDUIRect &rcPaint, ARGB dwColorGradient = 0);
+	virtual bool FillRect(HDC hDC, const CDUIRect &rcPaint, Gdiplus::ARGB dwColorGradient = 0);
+	virtual bool FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, Gdiplus::ARGB dwColorGradient = 0);
+	virtual bool FillParallelogram(HDC hDC, const CDUIRect &rcPaint, Gdiplus::ARGB dwColorGradient = 0);
+	virtual bool FillRhomb(HDC hDC, const CDUIRect &rcPaint, Gdiplus::ARGB dwColorGradient = 0);
+	virtual bool FillEllipse(HDC hDC, const CDUIRect &rcPaint, Gdiplus::ARGB dwColorGradient = 0);
 
 	//color
 	virtual bool IsEmpty() override;
-	virtual ARGB GetColorValue();
+	virtual Gdiplus::ARGB GetColorValue();
 
 	virtual vector<CMMString> GetColorResSwitch();
 	virtual bool SetColorResSwitch(const vector<CMMString> &vecColorRes);

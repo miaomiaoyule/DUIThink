@@ -638,7 +638,7 @@ CDUIColorBase * CDUIGlobal::GetColorResource(int nIndex)
 	return NULL;
 }
 
-CDUIColorBase * CDUIGlobal::GetColorResource(ARGB dwColor)
+CDUIColorBase * CDUIGlobal::GetColorResource(Gdiplus::ARGB dwColor)
 {
 	for (auto Item : m_mapResourceColor)
 	{
@@ -2994,7 +2994,7 @@ bool CDUIGlobal::SetAttriImageSection(tinyxml2::XMLElement *pNode)
 			}
 			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriImageSecMask))
 			{
-				ImageSection.dwMask = (ARGB)strtoul(pNodeAttribute->Value(), NULL, 10);
+				ImageSection.dwMask = (Gdiplus::ARGB)strtoul(pNodeAttribute->Value(), NULL, 10);
 
 				continue;
 			}

@@ -50,7 +50,7 @@ public:
 	virtual bool IsShadowText() override;
 	virtual void SetShadowText(bool bShadow);
 	virtual HFONT GetFont();
-	virtual ARGB GetTextColor();
+	virtual Gdiplus::ARGB GetTextColor();
 	virtual tagDuiTextStyle GetTextStyle();
 	virtual void SetTextStyle(const tagDuiTextStyle &TextStyle);
 

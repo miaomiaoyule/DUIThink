@@ -64,7 +64,7 @@ HRESULT InitDefaultCharFormat(CDUIRichEditCtrl *pOwnerCtrl, CHARFORMAT2W *pCharF
 	::GetObject(hFont, sizeof(LOGFONT), &lf);
 
 	//color
-	ARGB dwColor = pOwnerCtrl->GetTextColorNormal();
+	Gdiplus::ARGB dwColor = pOwnerCtrl->GetTextColorNormal();
 	0 == dwColor ? dwColor = pOwnerCtrl->GetTextColor() : 0;
 
 	pCharFormat->cbSize = sizeof(CHARFORMAT2W);
@@ -1462,7 +1462,7 @@ HFONT CDUIRichEditCtrl::GetFont()
 	return m_AttributeTextStyleNormal.GetFont();
 }
 
-ARGB CDUIRichEditCtrl::GetTextColor()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColor()
 {
 	return m_AttributeTextStyleNormal.GetTextColor();
 }
@@ -1483,32 +1483,32 @@ void CDUIRichEditCtrl::SetTextPadding(RECT rcPadding)
 	return;
 }
 
-ARGB CDUIRichEditCtrl::GetTextColorNormal()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColorNormal()
 {
 	return m_AttributeTextStyleNormal.GetTextColor();
 }
 
-ARGB CDUIRichEditCtrl::GetTextColorHot()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColorHot()
 {
 	return m_AttributeTextStyleHot.GetTextColor();
 }
 
-ARGB CDUIRichEditCtrl::GetTextColorFocus()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColorFocus()
 {
 	return m_AttributeTextStyleFocus.GetTextColor();
 }
 
-ARGB CDUIRichEditCtrl::GetTextColorDisabled()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColorDisabled()
 {
 	return m_AttributeTextStyleDisabled.GetTextColor();
 }
 
-ARGB CDUIRichEditCtrl::GetTextColorTipNormal()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColorTipNormal()
 {
 	return m_AttributeTextStyleTipTextNormal.GetTextColor();
 }
 
-ARGB CDUIRichEditCtrl::GetTextColorTipHot()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColorTipHot()
 {
 	return m_AttributeTextStyleTipTextHot.GetTextColor();
 }

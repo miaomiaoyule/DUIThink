@@ -606,7 +606,7 @@ tagDuiTextStyle CDUIThinkEditCtrl::GetTextStyleTipTextNormal()
 	return m_AttributeTextStyleTipTextNormal.GetTextStyle();
 }
 
-ARGB CDUIThinkEditCtrl::GetTextColorTipTextNormal()
+Gdiplus::ARGB CDUIThinkEditCtrl::GetTextColorTipTextNormal()
 {
 	return m_AttributeTextStyleTipTextNormal.GetTextColor();
 }

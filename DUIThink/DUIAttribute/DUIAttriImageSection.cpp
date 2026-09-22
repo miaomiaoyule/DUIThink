@@ -429,14 +429,14 @@ void CDUIAttriImageSection::SetAlpha(BYTE cbAlpha)
 	return;
 }
 
-ARGB CDUIAttriImageSection::GetMask()
+Gdiplus::ARGB CDUIAttriImageSection::GetMask()
 {
 	tagDuiImageSection ImageSection = GetImageSection();
 
 	return ImageSection.dwMask;
 }
 
-void CDUIAttriImageSection::SetMask(ARGB dwMask)
+void CDUIAttriImageSection::SetMask(Gdiplus::ARGB dwMask)
 {
 	tagDuiImageSection ImageSection = GetImageSection();
 	ImageSection.dwMask = dwMask;

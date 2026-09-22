@@ -317,7 +317,7 @@ HFONT CDUIStaticCtrl::GetFont()
 	return m_AttributeTextStyle.GetFont();
 }
 
-ARGB CDUIStaticCtrl::GetTextColor()
+Gdiplus::ARGB CDUIStaticCtrl::GetTextColor()
 {
 	return m_AttributeTextStyle.GetTextColor();
 }

@@ -213,7 +213,7 @@ public:
 	int GetColorResourceCount();
 	CDUIColorBase * GetColorResource(const CMMString &strName);
 	CDUIColorBase * GetColorResource(int nIndex);
-	CDUIColorBase * GetColorResource(ARGB dwColor);
+	CDUIColorBase * GetColorResource(Gdiplus::ARGB dwColor);
 	MapDuiColorBase GetColorResourceAll();
 	bool RemoveColorResource(const CMMString &strName);
 

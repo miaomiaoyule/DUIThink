@@ -110,7 +110,7 @@ HFONT CDUIGroupCtrl::GetFont()
 	return m_AttributeTextStyle.GetFont();
 }
 
-ARGB CDUIGroupCtrl::GetTextColor()
+Gdiplus::ARGB CDUIGroupCtrl::GetTextColor()
 {
 	return m_AttributeTextStyle.GetTextColor();
 }

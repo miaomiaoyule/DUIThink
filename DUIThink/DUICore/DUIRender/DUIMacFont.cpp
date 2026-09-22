@@ -1,6 +1,4 @@
-#if !defined(__APPLE__)
 #include "StdAfx.h"
-#endif
 #include "DUIMacFont.h"
 
 #if defined(__APPLE__)

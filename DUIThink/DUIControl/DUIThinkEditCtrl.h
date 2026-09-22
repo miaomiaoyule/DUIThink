@@ -109,7 +109,7 @@ public:
 	virtual CMMString GetTipText();
 	virtual void SetTipText(LPCTSTR lpszTipText);
 	virtual tagDuiTextStyle GetTextStyleTipTextNormal();
-	virtual ARGB GetTextColorTipTextNormal();
+	virtual Gdiplus::ARGB GetTextColorTipTextNormal();
 	virtual void SetTextStyleTipTextNormal(const tagDuiTextStyle &TextStyle);
 
 	//edit

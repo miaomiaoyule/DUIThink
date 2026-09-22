@@ -165,7 +165,7 @@ bool CDUIAttributeColorSwitch::DrawArc(HDC hDC, const CDUIRect &rcPaint, int nBo
 	return true;
 }
 
-bool CDUIAttributeColorSwitch::FillRect(HDC hDC, const CDUIRect &rcPaint, ARGB dwColorGradient)
+bool CDUIAttributeColorSwitch::FillRect(HDC hDC, const CDUIRect &rcPaint, Gdiplus::ARGB dwColorGradient)
 {
 	DWORD dwColor = GetColorValue();
 	if (0 == dwColor) return false;
@@ -175,7 +175,7 @@ bool CDUIAttributeColorSwitch::FillRect(HDC hDC, const CDUIRect &rcPaint, ARGB d
 	return true;
 }
 
-bool CDUIAttributeColorSwitch::FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, ARGB dwColorGradient)
+bool CDUIAttributeColorSwitch::FillRoundRect(HDC hDC, const CDUIRect &rcPaint, int nBorderSize, const CDUIRect &rcRound, Gdiplus::ARGB dwColorGradient)
 {
 	DWORD dwColor = GetColorValue();
 	if (0 == dwColor) return false;
@@ -185,7 +185,7 @@ bool CDUIAttributeColorSwitch::FillRoundRect(HDC hDC, const CDUIRect &rcPaint, i
 	return true;
 }
 
-bool CDUIAttributeColorSwitch::FillParallelogram(HDC hDC, const CDUIRect &rcPaint, ARGB dwColorGradient)
+bool CDUIAttributeColorSwitch::FillParallelogram(HDC hDC, const CDUIRect &rcPaint, Gdiplus::ARGB dwColorGradient)
 {
 	DWORD dwColor = GetColorValue();
 	if (0 == dwColor) return false;
@@ -195,7 +195,7 @@ bool CDUIAttributeColorSwitch::FillParallelogram(HDC hDC, const CDUIRect &rcPain
 	return true;
 }
 
-bool CDUIAttributeColorSwitch::FillRhomb(HDC hDC, const CDUIRect &rcPaint, ARGB dwColorGradient)
+bool CDUIAttributeColorSwitch::FillRhomb(HDC hDC, const CDUIRect &rcPaint, Gdiplus::ARGB dwColorGradient)
 {
 	DWORD dwColor = GetColorValue();
 	if (0 == dwColor) return false;
@@ -205,7 +205,7 @@ bool CDUIAttributeColorSwitch::FillRhomb(HDC hDC, const CDUIRect &rcPaint, ARGB 
 	return true;
 }
 
-bool CDUIAttributeColorSwitch::FillEllipse(HDC hDC, const CDUIRect &rcPaint, ARGB dwColorGradient)
+bool CDUIAttributeColorSwitch::FillEllipse(HDC hDC, const CDUIRect &rcPaint, Gdiplus::ARGB dwColorGradient)
 {
 	DWORD dwColor = GetColorValue();
 	if (0 == dwColor) return false;
@@ -220,7 +220,7 @@ bool CDUIAttributeColorSwitch::IsEmpty()
 	return GetColorResSwitch().empty();
 }
 
-ARGB CDUIAttributeColorSwitch::GetColorValue()
+Gdiplus::ARGB CDUIAttributeColorSwitch::GetColorValue()
 {
 	CDUIColorBase *pColorBaseCur = GetColorBaseCur();
 

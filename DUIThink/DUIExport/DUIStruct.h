@@ -194,7 +194,7 @@ struct tagDuiRichTextDraw : public tagDuiRichTextItem
 
 	//text
 	CDUIFontBase *						pFontBase = NULL;
-	ARGB								dwColor = 0;
+	Gdiplus::ARGB						dwColor = 0;
 };
 
 typedef std::vector<tagDuiRichTextBase> VecDuiRichTextBase;
@@ -258,7 +258,7 @@ struct tagDuiImageSection
 	std::unordered_map<WORD, CDUIRect>	mapSourceCustomScale;
 
 	BYTE								cbAlpha = 255;
-	ARGB								dwMask = 0;
+	Gdiplus::ARGB						dwMask = 0;
 
 	//corner
 	CDUIRect							rcCorner;
@@ -444,8 +444,8 @@ struct tagDuiRipple
 struct tagDuiRippleBitmap
 {
 	tagDuiRipple						Ripple;
-	std::vector<ARGB>					vecBmpSwap;
-	std::vector<ARGB>					vecBmpDest;
+	std::vector<Gdiplus::ARGB>			vecBmpSwap;
+	std::vector<Gdiplus::ARGB>			vecBmpDest;
 	HBITMAP								hBitmapSwap = NULL;
 };
 

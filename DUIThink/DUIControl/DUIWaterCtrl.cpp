@@ -99,8 +99,8 @@ void CDUIWaterCtrl::PaintWater(HDC hDC)
 		//copy
 		for (int i = 0; i < m_pRippleBmp->Ripple.szBmpBuffer.cy; i++)
 		{
-			ARGB *pSrc = (ARGB*)BmpInfoSrc.bmBits + (GetAbsoluteRect().top + i) * BmpInfoSrc.bmWidth + GetAbsoluteRect().left;
-			memcpy(m_pRippleBmp->vecBmpSwap.data() + m_pRippleBmp->Ripple.szBmpBuffer.cx * i, pSrc, sizeof(ARGB) * m_pRippleBmp->Ripple.szBmpBuffer.cx);
+			Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)BmpInfoSrc.bmBits + (GetAbsoluteRect().top + i) * BmpInfoSrc.bmWidth + GetAbsoluteRect().left;
+			memcpy(m_pRippleBmp->vecBmpSwap.data() + m_pRippleBmp->Ripple.szBmpBuffer.cx * i, pSrc, sizeof(Gdiplus::ARGB) * m_pRippleBmp->Ripple.szBmpBuffer.cx);
 		}
 
 		//render
@@ -135,8 +135,8 @@ void CDUIWaterCtrl::PaintWater(HDC hDC)
 		//restore
 		for (int i = 0; i < m_pRippleBmp->Ripple.szBmpBuffer.cy; i++)
 		{
-			ARGB *pDest = (ARGB*)BmpInfoSrc.bmBits + (GetAbsoluteRect().top + i) * BmpInfoSrc.bmWidth + GetAbsoluteRect().left;
-			memcpy(pDest, m_pRippleBmp->vecBmpDest.data() + m_pRippleBmp->Ripple.szBmpBuffer.cx * i, sizeof(ARGB) * m_pRippleBmp->Ripple.szBmpBuffer.cx);
+			Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)BmpInfoSrc.bmBits + (GetAbsoluteRect().top + i) * BmpInfoSrc.bmWidth + GetAbsoluteRect().left;
+			memcpy(pDest, m_pRippleBmp->vecBmpDest.data() + m_pRippleBmp->Ripple.szBmpBuffer.cx * i, sizeof(Gdiplus::ARGB) * m_pRippleBmp->Ripple.szBmpBuffer.cx);
 		}
 	}
 

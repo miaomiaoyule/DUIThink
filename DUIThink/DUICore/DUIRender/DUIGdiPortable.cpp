@@ -304,7 +304,7 @@ int SetBkMode(HDC, int) { return TRANSPARENT; }
 int SetTextColor(HDC, DWORD color)
 {
 	DWORD old = t_textColor;
-	// COLORREF BGR -> ARGB
+	// COLORREF BGR -> Gdiplus::ARGB
 	t_textColor = DUIARGB(255, GetRValue(color), GetGValue(color), GetBValue(color));
 	return (int)old;
 }

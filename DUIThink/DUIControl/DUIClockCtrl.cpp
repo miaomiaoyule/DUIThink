@@ -221,9 +221,9 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 		Gdiplus::Matrix matrixH(1, 0, 0, 1, ptCenter.x, ptCenter.y);
 		Gdiplus::PointF pointsH[] =
 		{
-			PointF(0, 0),
-			PointF(m_pBmpClockHourPointer->GetWidth(), 0),
-			PointF(0, m_pBmpClockHourPointer->GetHeight())
+			Gdiplus::PointF(0, 0),
+			Gdiplus::PointF(m_pBmpClockHourPointer->GetWidth(), 0),
+			Gdiplus::PointF(0, m_pBmpClockHourPointer->GetHeight())
 		};
 		matrixH.Rotate(SystemTime.wHour * 30 + SystemTime.wMinute * 1.0 / 2.0);
 		matrixH.Translate(m_pBmpClockHourPointer->GetWidth() / -2.0f, m_pBmpClockHourPointer->GetHeight() / -2.0f);
@@ -259,9 +259,9 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 		Gdiplus::Matrix matrixM(1, 0, 0, 1, ptCenter.x, ptCenter.y);
 		Gdiplus::PointF pointsM[] =
 		{
-			PointF(0, 0),
-			PointF(m_pBmpClockMinutePointer->GetWidth(),0),
-			PointF(0, m_pBmpClockMinutePointer->GetHeight())
+			Gdiplus::PointF(0, 0),
+			Gdiplus::PointF(m_pBmpClockMinutePointer->GetWidth(),0),
+			Gdiplus::PointF(0, m_pBmpClockMinutePointer->GetHeight())
 		};
 		matrixM.Rotate(SystemTime.wMinute * 6);
 		matrixM.Translate(m_pBmpClockMinutePointer->GetWidth() / -2.0f, m_pBmpClockMinutePointer->GetHeight() / -2.0f);
@@ -297,9 +297,9 @@ void CDUIClockCtrl::PaintBkImage(HDC hDC)
 		Gdiplus::Matrix matrixS(1, 0, 0, 1, ptCenter.x, ptCenter.y);
 		Gdiplus::PointF pointsS[] =
 		{
-			PointF(0, 0),
-			PointF(m_pBmpClockSecondPointer->GetWidth(), 0),
-			PointF(0, m_pBmpClockSecondPointer->GetHeight())
+			Gdiplus::PointF(0, 0),
+			Gdiplus::PointF(m_pBmpClockSecondPointer->GetWidth(), 0),
+			Gdiplus::PointF(0, m_pBmpClockSecondPointer->GetHeight())
 		};
 		matrixS.Rotate(SystemTime.wSecond * 6);
 		matrixS.Translate(m_pBmpClockSecondPointer->GetWidth() / -2.0f, m_pBmpClockSecondPointer->GetHeight() / -2.0f);

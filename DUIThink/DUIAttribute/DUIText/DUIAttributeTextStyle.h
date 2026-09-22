@@ -53,7 +53,7 @@ public:
 	virtual void SetFontResSwitch(const vector<CMMString> &vecResSwitch);
 	virtual void SetFontResSwitch(const CMMString &strResSwitch);
 	virtual LPCTSTR GetColorResName();
-	virtual ARGB GetTextColor();
+	virtual Gdiplus::ARGB GetTextColor();
 	virtual vector<CMMString> GetColorResSwitch();
 	virtual void SetColorResSwitch(const vector<CMMString> &vecResSwitch);
 	virtual void SetColorResSwitch(const CMMString &strResSwitch);

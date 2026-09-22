@@ -51,11 +51,11 @@ public:
 	virtual HFONT GetFontPushed();
 	virtual HFONT GetFontFocus();
 	virtual HFONT GetFontDisabled();
-	virtual ARGB GetTextColorNormal();
-	virtual ARGB GetTextColorHot();
-	virtual ARGB GetTextColorPushed();
-	virtual ARGB GetTextColorFocus();
-	virtual ARGB GetTextColorDisabled();
+	virtual Gdiplus::ARGB GetTextColorNormal();
+	virtual Gdiplus::ARGB GetTextColorHot();
+	virtual Gdiplus::ARGB GetTextColorPushed();
+	virtual Gdiplus::ARGB GetTextColorFocus();
+	virtual Gdiplus::ARGB GetTextColorDisabled();
 	virtual tagDuiTextStyle GetTextStyle() override;
 	virtual tagDuiTextStyle GetTextStyleNormal();
 	virtual tagDuiTextStyle GetTextStyleHot();

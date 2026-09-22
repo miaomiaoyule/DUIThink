@@ -65,8 +65,8 @@ public:
 	virtual BYTE GetAlpha();
 	virtual void SetAlpha(BYTE cbAlpha);
 
-	virtual ARGB GetMask();
-	virtual void SetMask(ARGB dwMask);
+	virtual Gdiplus::ARGB GetMask();
+	virtual void SetMask(Gdiplus::ARGB dwMask);
 
 	virtual CDUIRect GetCorner();
 	virtual void SetCorner(const CDUIRect &rcCorner);

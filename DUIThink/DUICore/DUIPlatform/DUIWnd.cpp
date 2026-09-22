@@ -240,14 +240,14 @@ void CDUIWnd::InitProperty()
 		m_AttributeGdiplusRenderType.SetCombox(AttriCombox);
 		//m_AttributeGdiplusRenderType.SelectItem(TextRenderingHintSystemDefault);
 #else
-		AttriCombox.vecItem.push_back({ TextRenderingHintSystemDefault, _T("HintSystemDefault") });
-		AttriCombox.vecItem.push_back({ TextRenderingHintSingleBitPerPixelGridFit, _T("HintSingleBitPerPixelGridFit") });
-		AttriCombox.vecItem.push_back({ TextRenderingHintSingleBitPerPixel, _T("HintSingleBitPerPixel") });
-		AttriCombox.vecItem.push_back({ TextRenderingHintAntiAliasGridFit, _T("HintAntiAliasGridFit") });
-		AttriCombox.vecItem.push_back({ TextRenderingHintAntiAlias, _T("HintAntiAlias") });
-		AttriCombox.vecItem.push_back({ TextRenderingHintClearTypeGridFit, _T("HintClearTypeGridFit") });
+		AttriCombox.vecItem.push_back({ Gdiplus::TextRenderingHintSystemDefault, _T("HintSystemDefault") });
+		AttriCombox.vecItem.push_back({ Gdiplus::TextRenderingHintSingleBitPerPixelGridFit, _T("HintSingleBitPerPixelGridFit") });
+		AttriCombox.vecItem.push_back({ Gdiplus::TextRenderingHintSingleBitPerPixel, _T("HintSingleBitPerPixel") });
+		AttriCombox.vecItem.push_back({ Gdiplus::TextRenderingHintAntiAliasGridFit, _T("HintAntiAliasGridFit") });
+		AttriCombox.vecItem.push_back({ Gdiplus::TextRenderingHintAntiAlias, _T("HintAntiAlias") });
+		AttriCombox.vecItem.push_back({ Gdiplus::TextRenderingHintClearTypeGridFit, _T("HintClearTypeGridFit") });
 		m_AttributeGdiplusRenderType.SetCombox(AttriCombox);
-		m_AttributeGdiplusRenderType.SelectItem(TextRenderingHintSystemDefault);
+		m_AttributeGdiplusRenderType.SelectItem(Gdiplus::TextRenderingHintSystemDefault);
 #endif
 	}
 	if (false == m_AttributeAnimationType.IsModified())

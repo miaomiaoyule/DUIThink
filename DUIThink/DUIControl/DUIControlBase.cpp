@@ -841,7 +841,7 @@ bool CDUIControlBase::KillTimer()
 	return m_pWndOwner->KillTimer(this);
 }
 
-ARGB CDUIControlBase::GetBkColor()
+Gdiplus::ARGB CDUIControlBase::GetBkColor()
 {
 	return m_AttributeColorBk.GetColorValue();
 }
@@ -855,7 +855,7 @@ void CDUIControlBase::SetBkColor(const vector<CMMString> &vecResSwitch)
 	return;
 }
 
-ARGB CDUIControlBase::GetGradientColor()
+Gdiplus::ARGB CDUIControlBase::GetGradientColor()
 {
 	return m_AttributeColorGradient.GetColorValue();
 }
@@ -992,7 +992,7 @@ void CDUIControlBase::SetBorderStyle(enDuiLineStyle LineStyle)
 	return;
 }
 
-ARGB CDUIControlBase::GetBorderColor()
+Gdiplus::ARGB CDUIControlBase::GetBorderColor()
 {
 	return m_AttributeColorBorder.GetColorValue();
 }
@@ -1006,7 +1006,7 @@ void CDUIControlBase::SetBorderColor(const vector<CMMString> &vecResSwitch)
 	return;
 }
 
-ARGB CDUIControlBase::GetFocusBorderColor()
+Gdiplus::ARGB CDUIControlBase::GetFocusBorderColor()
 {
 	return m_AttributeColorBorderFocus.GetColorValue();
 }
@@ -1080,12 +1080,12 @@ void CDUIControlBase::SetToolTipWidth(int nWidth)
 	return;
 }
 
-ARGB CDUIControlBase::GetToolTipBkColor()
+Gdiplus::ARGB CDUIControlBase::GetToolTipBkColor()
 {
 	return m_AttributeToolTipBkColor.GetColorValue();
 }
 
-void CDUIControlBase::SetToolTipBkColor(ARGB dwColor)
+void CDUIControlBase::SetToolTipBkColor(Gdiplus::ARGB dwColor)
 {
 	if (dwColor == GetToolTipBkColor()) return;
 
@@ -1094,12 +1094,12 @@ void CDUIControlBase::SetToolTipBkColor(ARGB dwColor)
 	return;
 }
 
-ARGB CDUIControlBase::GetToolTipTextColor()
+Gdiplus::ARGB CDUIControlBase::GetToolTipTextColor()
 {
 	return m_AttributeToolTipTextColor.GetColorValue();
 }
 
-void CDUIControlBase::SetToolTipTextColor(ARGB dwColor)
+void CDUIControlBase::SetToolTipTextColor(Gdiplus::ARGB dwColor)
 {
 	if (dwColor == GetToolTipTextColor()) return;
 
