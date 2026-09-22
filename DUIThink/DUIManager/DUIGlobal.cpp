@@ -104,14 +104,7 @@ bool CDUIGlobal::UnInit()
 		FreeLibrary(hDllModule);
 	}
 	
-	//shadow text
-	for (auto ShadowText : m_mapShadowText)
-	{
-		MMSafeDelete(ShadowText.second);
-	}
-
 	m_vecModuleExtendDll.clear();
-	m_mapShadowText.clear();
 
 	return true;
 }
@@ -468,35 +461,6 @@ CDUIControlBase * CDUIGlobal::ParseDui(LPCTSTR lpszXml)
 	if (NULL == lpszXml) return NULL;
 
 	return CDUIXmlPack::ParseDui(lpszXml);
-}
-
-Gdiplus::Bitmap * CDUIGlobal::GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle)
-{
-	//find
-	tagDuiShadowText ShadowText;
-	ShadowText.hFont = hFont;
-	ShadowText.strText = lpszText;
-	ShadowText.dwTextColor = dwTextColor;
-	ShadowText.dwTextStyle = dwTextStyle;
-	Gdiplus::Bitmap *pBmpText = m_mapShadowText[ShadowText];
-	if (pBmpText) return pBmpText;
-
-	//generate
-	HDC hDCScreen = CreateDC(L"DISPLAY", NULL, NULL, NULL);
-	if (NULL == hDCScreen) return NULL;
-
-	CDUIRect rcDraw(0, 0, rcItem.GetWidth(), rcItem.GetHeight());
-	CDUIMemDC MemDC(hDCScreen, rcDraw, false);
-	HFONT hFontOld = (HFONT)::SelectObject(MemDC, hFont);
-	::DrawShadowText(MemDC, lpszText, -1, &rcDraw, dwTextStyle | DT_NOPREFIX, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)), RGB(0, 0, 0), 2, 2);
-	CDUIRenderEngine::RestorePixelAlpha(MemDC.GetMemBmpBits(), rcDraw.GetWidth(), rcDraw);
-	::SelectObject(MemDC, hFontOld);
-	MMSafeDeleteDC(hDCScreen);
-
-	pBmpText = CDUIRenderEngine::GetAlphaBitmap(MemDC.GetMemBitmap());
-	m_mapShadowText[ShadowText] = pBmpText;
-
-	return pBmpText;
 }
 
 int CDUIGlobal::GetFontResourceCount()

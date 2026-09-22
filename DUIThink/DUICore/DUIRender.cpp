@@ -1514,51 +1514,15 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (MMInvalidString(lpszText) || NULL == hFont) return;
 
-	//shadow
-	if (bShadow)
-	{
-		//#ifdef _DLL
-		do
-		{
-			if (dwTextStyle & DT_CALCRECT)
-			{
-				int nSaveDC = SaveDC(hDC);
-				::SetBkMode(hDC, TRANSPARENT);
-				::SetTextColor(hDC, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)));
-				HFONT hFontOld = (HFONT)::SelectObject(hDC, hFont);
-				::DrawShadowText(hDC, lpszText, -1, &rcItem, dwTextStyle | DT_NOPREFIX, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)), RGB(0, 0, 0), 2, 2);
-				::SelectObject(hDC, hFontOld);
-				RestoreDC(hDC, nSaveDC);
-
-				rcItem.right += 4;
-				rcItem.bottom += 4;
-				
-				break;
-			}
-
-			//find
-			Gdiplus::Bitmap *pBmpText = CDUIGlobal::GetInstance()->GetShadowTextBmp(rcItem, hFont, lpszText, dwTextColor, dwTextStyle);
-			if (pBmpText)
-			{
-				DrawImage(hDC, pBmpText, rcItem);
-
-				break;
-			}
-
-		} while (false);
-
-		return;
-		//#endif
-	}
-
-	//gdiplus
-	if (bGdiplusRender)
+	// 阴影需要正确 alpha，统一走 GDI+；无阴影时仍可按配置走 GDI
+	if (bGdiplusRender || bShadow)
 	{
 		Gdiplus::Graphics Gp(hDC);
 		Gdiplus::Font font(hDC, hFont);
 		Gdiplus::RectF rectF((Gdiplus::REAL)rcItem.left, (Gdiplus::REAL)rcItem.top, (Gdiplus::REAL)(rcItem.GetWidth()), (Gdiplus::REAL)(rcItem.GetHeight()));
-		Gdiplus::SolidBrush brush(Gdiplus::Color((Gdiplus::ARGB)dwTextColor));
-		Gp.SetTextRenderingHint(RenderType);
+
+		// 阴影字在透明底上不能用 ClearType，否则会出彩边/颗粒
+		Gp.SetTextRenderingHint(bShadow ? Gdiplus::TextRenderingHintAntiAliasGridFit : RenderType);
 		Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 		Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 		Gp.SetCompositingQuality(CompositingQuality::CompositingQualityHighQuality);
@@ -1646,10 +1610,37 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 				rcItem.right = rcItem.left + (long)round(bounds.Width);
 				rcItem.bottom = rcItem.top + (long)round(bounds.Height);
 			}
+			if (bShadow)
+			{
+				rcItem.right += 4;
+				rcItem.bottom += 4;
+			}
 		}
 		else
 		{
-			Gp.DrawString(lpszText, (int)-1, &font, rectF, &stringFormat, &brush);
+			BYTE cbTextA = DUIARGBGetA(dwTextColor);
+			if (0 == cbTextA) cbTextA = 255;
+
+			if (bShadow)
+			{
+				const int nShadowOffsetX = 2;
+				const int nShadowOffsetY = 2;
+				BYTE cbShadowA = (BYTE)((int)cbTextA * 115 / 255);
+				if (cbShadowA < 50) cbShadowA = 50;
+				if (cbShadowA > 160) cbShadowA = 160;
+
+				Gdiplus::RectF rectShadow(
+					(Gdiplus::REAL)(rcItem.left + nShadowOffsetX),
+					(Gdiplus::REAL)(rcItem.top + nShadowOffsetY),
+					(Gdiplus::REAL)rcItem.GetWidth(),
+					(Gdiplus::REAL)rcItem.GetHeight());
+				Gdiplus::SolidBrush brushShadow(Gdiplus::Color(cbShadowA, 0, 0, 0));
+				Gp.DrawString(lpszText, -1, &font, rectShadow, &stringFormat, &brushShadow);
+			}
+
+			Gdiplus::SolidBrush brush(Gdiplus::Color(cbTextA,
+				DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)));
+			Gp.DrawString(lpszText, -1, &font, rectF, &stringFormat, &brush);
 		}
 
 		return;

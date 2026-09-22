@@ -6,7 +6,7 @@
 #include "Define.h"
 
 //////////////////////////////////////////////////////////////////////////
-class CMMFileMonitor : public CMMAsyncObject
+class MMHELPER_API CMMFileMonitor : public CMMAsyncObject
 {
 private:
 	CMMFileMonitor();

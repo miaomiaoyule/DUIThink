@@ -93,7 +93,6 @@ private:
 	//manager
 	VecIDuiPreMessage					m_vecPreMessage;
 	MapDuiModelStore					m_mapModelStore;
-	MapShadowText						m_mapShadowText;
 	VecIDuiResourceCallBack				m_vecIResourceCallBack;
 
 	//attribute
@@ -185,9 +184,6 @@ public:
 	CDUIControlBase * LoadDui(const CMMString &strName, CDUIWnd *pWnd = NULL);
 	CDUIControlBase * ParseDui(tinyxml2::XMLElement *pNodeXml);
 	CDUIControlBase * ParseDui(LPCTSTR lpszXml);
-
-	//shadow text
-	Gdiplus::Bitmap * GetShadowTextBmp(CDUIRect rcItem, HFONT hFont, LPCTSTR lpszText, DWORD dwTextColor, DWORD dwTextStyle);
 
 	//resource
 public:
