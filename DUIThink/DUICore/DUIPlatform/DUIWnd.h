@@ -15,10 +15,12 @@ class DUITHINK_API CDUIWnd
 {
 	friend class CDUIGlobal;
 	friend class CDUIXmlPack;
+	friend class CDUIContainerCtrl;
+	friend class CDUIThinkEditCtrl;
+	friend class CDUIRichEditCtrl;
 	friend class CDesignerView;
 	friend class CControlView;
 	friend class CLayoutView;
-	friend class CDUIContainerCtrl;
 	friend class CDlgLogon;
 
 #if defined DuiPlatform_SDL

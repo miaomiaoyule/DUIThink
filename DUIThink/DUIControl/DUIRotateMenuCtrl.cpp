@@ -93,7 +93,7 @@ CMMString CDUIRotateMenuCtrl::GetDescribe() const
 	return Dui_Ctrl_RotateMenu;
 }
 
-bool CDUIRotateMenuCtrl::SetWndOwner(CDUIWndBase *pWndOwner)
+bool CDUIRotateMenuCtrl::SetWndOwner(CDUIWnd *pWndOwner)
 {
 	if (m_pWndOwner)
 	{

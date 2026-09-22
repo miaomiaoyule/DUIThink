@@ -54,7 +54,7 @@ public:
 	//basic
 	UINT InitCtrlID() override;
 	void RefreshCtrlID(bool bSelfSingle = false) override;
-	bool SetWndOwner(CDUIWndBase *pWndOwner) override;
+	bool SetWndOwner(CDUIWnd *pWndOwner) override;
 	void SetVisible(bool bVisible = true) override;
 	CMMString GetText() override;
 	bool SetText(LPCTSTR lpszText) override;

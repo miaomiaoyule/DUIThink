@@ -216,7 +216,7 @@ void CDUIListViewCtrl::RefreshCtrlID(bool bSelfSingle)
 	return;
 }
 
-bool CDUIListViewCtrl::SetWndOwner(CDUIWndBase *pWndOwner)
+bool CDUIListViewCtrl::SetWndOwner(CDUIWnd *pWndOwner)
 {
 	if (false == __super::SetWndOwner(pWndOwner)) return false;
 

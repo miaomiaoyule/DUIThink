@@ -218,7 +218,7 @@ void CDUIContainerCtrl::RefreshCtrlID(bool bSelfSingle)
 	return;
 }
 
-bool CDUIContainerCtrl::SetWndOwner(CDUIWndBase *pWndOwner)
+bool CDUIContainerCtrl::SetWndOwner(CDUIWnd *pWndOwner)
 {
 	if (false == __super::SetWndOwner(pWndOwner)) return false;
 

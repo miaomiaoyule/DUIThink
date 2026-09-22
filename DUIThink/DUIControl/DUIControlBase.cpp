@@ -252,7 +252,7 @@ HWND CDUIControlBase::GetWndHandle()
 	return m_pWndOwner ? m_pWndOwner->GetWndHandle() : NULL;
 }
 
-bool CDUIControlBase::SetWndOwner(CDUIWndBase *pWndOwner)
+bool CDUIControlBase::SetWndOwner(CDUIWnd *pWndOwner)
 {
 	if (m_pWndOwner == pWndOwner) return false;
 
@@ -268,7 +268,7 @@ bool CDUIControlBase::SetWndOwner(CDUIWndBase *pWndOwner)
 	return true;
 }
 
-CDUIWndBase * CDUIControlBase::GetWndOwner()
+CDUIWnd * CDUIControlBase::GetWndOwner()
 {
 	return m_pWndOwner;
 }

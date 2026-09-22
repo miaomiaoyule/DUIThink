@@ -328,7 +328,7 @@ bool CDUIWndBase::InitControls(CDUIControlBase *pControl)
 {
 	ASSERT(pControl);
 	if (NULL == pControl) return false;
-	pControl->SetWndOwner(this);
+	pControl->SetWndOwner(MMInterfaceHelper(CDUIWnd, this));
 	pControl->FindControl(__FindControlFromIDHash, this, DuiFind_All);
 
 	return true;

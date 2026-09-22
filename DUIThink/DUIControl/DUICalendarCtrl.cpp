@@ -299,7 +299,7 @@ CMMString CDUICalendarCtrl::GetDescribe() const
 	return Dui_Ctrl_Calendar;
 }
 
-bool CDUICalendarCtrl::SetWndOwner(CDUIWndBase *pWndOwner)
+bool CDUICalendarCtrl::SetWndOwner(CDUIWnd *pWndOwner)
 {
 	if (m_pWndOwner)
 	{
