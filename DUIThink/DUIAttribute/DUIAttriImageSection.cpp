@@ -540,6 +540,12 @@ CDUIRect CDUIAttriImageSection::GetDest(CDUIRect rcSource, CDUIRect rcItem)
 
 				break;
 			}
+			case HorizImageAlign_Tile:
+			{
+				rcDest.left += ImageSection.nHorizOffset;
+
+				break;
+			}
 			case HorizImageAlign_Left:
 			default:
 			{
@@ -563,6 +569,12 @@ CDUIRect CDUIAttriImageSection::GetDest(CDUIRect rcSource, CDUIRect rcItem)
 				rcDest.top += (rcDest.GetHeight() - rcSource.GetHeight()) / 2;
 				rcDest.top += ImageSection.nVertOffset;
 				rcDest.bottom = rcDest.top + rcSource.GetHeight();
+
+				break;
+			}
+			case VertImageAlign_Tile:
+			{
+				rcDest.top += ImageSection.nVertOffset;
 
 				break;
 			}
