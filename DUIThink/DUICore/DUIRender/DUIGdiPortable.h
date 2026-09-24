@@ -41,6 +41,7 @@ BOOL WINAPI AlphaBlend(HDC hdcDest, int xoriginDest, int yoriginDest, int wDest,
 int DrawShadowText(HDC hdc, LPCTSTR lpchText, int cchText, LPRECT lprc, UINT dwStyle,
 	DWORD crText, DWORD crShadow, int dx, int dy);
 BOOL GetTextExtentPoint32(HDC hdc, LPCTSTR lpString, int c, LPSIZE psizl);
+inline DWORD GetLastError() { return 0; }
 
 //////////////////////////////////////////////////////////////////////////
 #endif

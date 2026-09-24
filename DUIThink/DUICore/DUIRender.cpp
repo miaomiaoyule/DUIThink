@@ -2076,7 +2076,7 @@ Gdiplus::Bitmap * CDUIRenderEngine::GenerateThumbnail(Gdiplus::Bitmap *pBmp, con
 	const INT destH = static_cast<INT>(srcH * scale);
 	if (destW <= 0 || destH <= 0) return nullptr;
 
-	auto pBmpThumb = new Gdiplus::Bitmap(destW, destH, PixelFormat32bppPARGB);
+	auto pBmpThumb = new Gdiplus::Bitmap(destW, destH, Gdiplus::PixelFormat32bppPARGB);
 	if (pBmpThumb == nullptr || pBmpThumb->GetLastStatus() != Gdiplus::Ok)
 	{
 		delete pBmpThumb;
@@ -2237,7 +2237,7 @@ Gdiplus::Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPreMul
 	int nLinesize = bmp.bmWidth * 4;
 	int nHeight = bmp.bmHeight;
 
-	Gdiplus::PixelFormat PixelFormat = bPreMultiplyArgb ? PixelFormat32bppPARGB : PixelFormat32bppARGB;
+	Gdiplus::PixelFormat PixelFormat = bPreMultiplyArgb ? Gdiplus::PixelFormat32bppPARGB : Gdiplus::PixelFormat32bppARGB;
 	Gdiplus::Bitmap *pBitmap = new Gdiplus::Bitmap(bmp.bmWidth, bmp.bmHeight, PixelFormat);
 	if (NULL == pBitmap) return NULL;
 
@@ -2325,7 +2325,7 @@ HBITMAP CDUIRenderEngine::GetHBITMAP(Gdiplus::Bitmap *pBmp, bool bKeepAlpha)
 
 	Gdiplus::BitmapData bmpData;
 	Gdiplus::Rect rect(0, 0, width, height);
-	if (pBmp->LockBits(&rect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bmpData) != Gdiplus::Ok)
+	if (pBmp->LockBits(&rect, Gdiplus::ImageLockModeRead, Gdiplus::PixelFormat32bppARGB, &bmpData) != Gdiplus::Ok)
 	{
 		MMSafeDeleteObject(hBitmap);
 		return nullptr;

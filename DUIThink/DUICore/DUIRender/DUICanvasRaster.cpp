@@ -12,9 +12,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #endif
-#if defined(__APPLE__)
 #include "DUIMacFont.h"
-#endif
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -347,13 +345,15 @@ static bool DuiEnsureSharedFont()
 		"C:\\Windows\\Fonts\\arialuni.ttf",
 		"C:\\Windows\\Fonts\\arial.ttf",
 #elif defined(__APPLE__)
+		"/System/Library/Fonts/Hiragino Sans GB.ttc",
+		"/System/Library/Fonts/Supplemental/Hiragino Sans GB.ttc",
+		"/System/Library/Fonts/STHeiti Medium.ttc",
+		"/System/Library/Fonts/Supplemental/STHeiti Medium.ttc",
 		"/System/Library/Fonts/STHeiti Light.ttc",
 		"/System/Library/Fonts/Supplemental/STHeiti Light.ttc",
 		"/System/Library/Fonts/Supplemental/Songti.ttc",
 		"/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
 		"/Library/Fonts/Arial Unicode.ttf",
-		"/System/Library/Fonts/Hiragino Sans GB.ttc",
-		"/System/Library/Fonts/Supplemental/Hiragino Sans GB.ttc",
 		"/System/Library/Fonts/PingFang.ttc",
 		"/System/Library/Fonts/Supplemental/PingFang.ttc",
 #elif defined(__ANDROID__)
@@ -498,6 +498,8 @@ CDUIFontRaster::CDUIFontRaster()
 
 CDUIFontRaster::~CDUIFontRaster()
 {
+	DuiMacReleaseFont(m_pMacFont);
+	m_pMacFont = NULL;
 }
 
 CDUIFontRaster * CDUIFontRaster::Create(LPCTSTR lpszFace, int nPixelSize, LONG lWeight, bool bItalic, bool bUnderline, bool bStrikeOut)
@@ -507,13 +509,30 @@ CDUIFontRaster * CDUIFontRaster::Create(LPCTSTR lpszFace, int nPixelSize, LONG l
 	return pFont;
 }
 
-bool CDUIFontRaster::Init(LPCTSTR, int nPixelSize, LONG lWeight, bool bItalic, bool bUnderline, bool bStrikeOut)
+bool CDUIFontRaster::Init(LPCTSTR lpszFace, int nPixelSize, LONG lWeight, bool bItalic, bool bUnderline, bool bStrikeOut)
 {
 	m_nPixelSize = max(1, nPixelSize);
 	m_lWeight = lWeight;
 	m_bItalic = bItalic;
 	m_bUnderline = bUnderline;
 	m_bStrikeOut = bStrikeOut;
+
+#if defined(__APPLE__)
+#if defined(UNICODE) || defined(_UNICODE)
+	m_pMacFont = DuiMacCreateFontW(lpszFace, m_nPixelSize, (int)lWeight, bItalic ? 1 : 0);
+#else
+	m_pMacFont = DuiMacCreateFont(lpszFace, m_nPixelSize, (int)lWeight, bItalic ? 1 : 0);
+#endif
+	if (m_pMacFont)
+	{
+		m_nAscent = DuiMacFontAscent(m_pMacFont);
+		m_nLineHeight = m_nPixelSize;
+		if (m_nAscent < 1) m_nAscent = max(1, (m_nPixelSize * 4) / 5);
+		if (m_nAscent > m_nLineHeight - 1) m_nAscent = max(1, m_nLineHeight - 1);
+		m_fScale = 1.0f;
+		return true;
+	}
+#endif
 
 	DuiEnsureSharedFont();
 	tagDuiSharedFont &Font = DuiSharedFont();
@@ -539,6 +558,37 @@ bool CDUIFontRaster::Init(LPCTSTR, int nPixelSize, LONG lWeight, bool bItalic, b
 	return true;
 }
 
+int CDUIFontRaster::GetCharAdvance(unsigned cp) const
+{
+	if (m_pMacFont)
+	{
+		return DuiMacGetAdvance(m_pMacFont, cp);
+	}
+
+	const stbtt_fontinfo *pInfo = (const stbtt_fontinfo *)GetFontInfo();
+	if (NULL == pInfo) return max(1, m_nPixelSize / 2);
+
+	int nAdv = 0, nLsb = 0;
+	stbtt_GetCodepointHMetrics(pInfo, (int)cp, &nAdv, &nLsb);
+	return (int)floorf(nAdv * m_fScale + 0.5f);
+}
+
+bool CDUIFontRaster::GetCharBitmap(unsigned cp, int &x0, int &y0, int &w, int &h, const BYTE *&pBits) const
+{
+	x0 = y0 = w = h = 0;
+	pBits = NULL;
+	if (NULL == m_pMacFont) return false;
+
+	DuiMacGlyph g = {};
+	if (0 == DuiMacGetGlyph(m_pMacFont, cp, &g)) return false;
+	x0 = g.x0;
+	y0 = g.y0;
+	w = g.w;
+	h = g.h;
+	pBits = g.pBits;
+	return true;
+}
+
 int CDUIFontRaster::GetPixelSize() const { return m_nPixelSize; }
 int CDUIFontRaster::GetAscent() const { return m_nAscent; }
 int CDUIFontRaster::GetLineHeight() const { return m_nLineHeight; }
@@ -553,7 +603,8 @@ SIZE CDUIFontRaster::MeasureText(LPCTSTR lpszText, int nMaxWidth, DWORD dwTextSt
 	SIZE sz = {};
 	if (NULL == lpszText) return sz;
 
-	const stbtt_fontinfo *pInfo = (const stbtt_fontinfo *)GetFontInfo();
+	const bool bMac = HasMacFont();
+	const stbtt_fontinfo *pInfo = bMac ? NULL : (const stbtt_fontinfo *)GetFontInfo();
 	int nLineW = 0;
 	int nLines = 1;
 	LPCTSTR p = lpszText;
@@ -570,7 +621,11 @@ SIZE CDUIFontRaster::MeasureText(LPCTSTR lpszText, int nMaxWidth, DWORD dwTextSt
 		}
 
 		int nAdvance = m_nPixelSize / 2;
-		if (pInfo)
+		if (bMac)
+		{
+			nAdvance = GetCharAdvance(cp);
+		}
+		else if (pInfo)
 		{
 			int nAdv = 0, nLsb = 0;
 			stbtt_GetCodepointHMetrics(pInfo, (int)cp, &nAdv, &nLsb);
@@ -631,12 +686,20 @@ bool CDUICanvasRaster::Resize(int nWidth, int nHeight)
 bool CDUICanvasRaster::SelectBitmap(IDuiImage *pImage)
 {
 	if (NULL == pImage || NULL == pImage->GetBits()) return false;
-	m_pExternalBits = pImage->GetBits();
-	m_nWidth = max(1, pImage->GetWidth());
-	m_nHeight = max(1, pImage->GetHeight());
-	m_nPitch = pImage->GetPitch() > 0 ? pImage->GetPitch() : m_nWidth * 4;
+	return AttachBits(pImage->GetBits(), pImage->GetWidth(), pImage->GetHeight());
+}
+
+bool CDUICanvasRaster::AttachBits(LPBYTE pBits, int nWidth, int nHeight)
+{
+	if (NULL == pBits || nWidth <= 0 || nHeight <= 0) return false;
+	m_pExternalBits = pBits;
+	m_nWidth = nWidth;
+	m_nHeight = nHeight;
+	m_nPitch = m_nWidth * 4;
 	m_vecBits.clear();
-	
+	m_ClipRegion = {};
+	m_ClipRegion.rcRegion = { 0, 0, m_nWidth, m_nHeight };
+	m_nClipStack = 0;
 	return true;
 }
 
@@ -1096,17 +1159,38 @@ void CDUICanvasRaster::DrawText(IDuiFont *pFont, RECT &rc, LPCTSTR lpszText, DWO
 
 	auto DrawGlyph = [&](unsigned cp)
 	{
-		if (NULL == pInfo)
+		int x0 = 0, y0 = 0, gw = 0, gh = 0, nAdvance = max(4, pRaster->GetPixelSize() / 2);
+		const BYTE *pCover = NULL;
+		std::vector<BYTE> vecGlyph;
+
+		if (pRaster->HasMacFont())
 		{
-			RECT rcG = { nPenX, nPenY - nAscent, nPenX + max(4, pRaster->GetPixelSize() / 2), nPenY };
+			nAdvance = pRaster->GetCharAdvance(cp);
+			pRaster->GetCharBitmap(cp, x0, y0, gw, gh, pCover);
+		}
+		else if (NULL == pInfo)
+		{
+			RECT rcG = { nPenX, nPenY - nAscent, nPenX + nAdvance, nPenY };
 			FillRect(rcG, dwColor, 0);
-			nPenX += max(4, pRaster->GetPixelSize() / 2);
+			nPenX += nAdvance;
 			return;
 		}
-
-		int nAdv = 0, nLsb = 0;
-		stbtt_GetCodepointHMetrics(pInfo, (int)cp, &nAdv, &nLsb);
-		const int nAdvance = (int)floorf(nAdv * fScale + 0.5f);
+		else
+		{
+			int nAdv = 0, nLsb = 0;
+			stbtt_GetCodepointHMetrics(pInfo, (int)cp, &nAdv, &nLsb);
+			nAdvance = (int)floorf(nAdv * fScale + 0.5f);
+			int x1 = 0, y1 = 0;
+			stbtt_GetCodepointBitmapBox(pInfo, (int)cp, fScale, fScale, &x0, &y0, &x1, &y1);
+			gw = x1 - x0;
+			gh = y1 - y0;
+			if (gw > 0 && gh > 0)
+			{
+				vecGlyph.assign((size_t)gw * (size_t)gh, 0);
+				stbtt_MakeCodepointBitmap(pInfo, vecGlyph.data(), gw, gh, gw, fScale, fScale, (int)cp);
+				pCover = vecGlyph.data();
+			}
+		}
 
 		if (nWrapW > 0 && nPenX + nAdvance > rc.right && nPenX > x)
 		{
@@ -1114,24 +1198,18 @@ void CDUICanvasRaster::DrawText(IDuiFont *pFont, RECT &rc, LPCTSTR lpszText, DWO
 			nPenY += nLineH;
 		}
 
-		int x0 = 0, y0 = 0, x1 = 0, y1 = 0;
-		stbtt_GetCodepointBitmapBox(pInfo, (int)cp, fScale, fScale, &x0, &y0, &x1, &y1);
-		const int gw = x1 - x0;
-		const int gh = y1 - y0;
-		if (gw > 0 && gh > 0)
+		if (pCover && gw > 0 && gh > 0)
 		{
-			std::vector<BYTE> vecGlyph((size_t)gw * (size_t)gh);
-			stbtt_MakeCodepointBitmap(pInfo, vecGlyph.data(), gw, gh, gw, fScale, fScale, (int)cp);
 			const int nDestX = nPenX + x0;
 			const int nDestY = nPenY + y0;
-			const float fItalic = pRaster->IsItalic() ? 0.25f : 0.0f;
-			const int nBoldExtra = (pRaster->GetWeight() >= 600) ? 1 : 0;
+			const float fItalic = (pRaster->HasMacFont() || false == pRaster->IsItalic()) ? 0.0f : 0.25f;
+			const int nBoldExtra = (pRaster->HasMacFont() || pRaster->GetWeight() < 600) ? 0 : 1;
 			for (int gy = 0; gy < gh; ++gy)
 			{
 				const int nShear = (int)((gh - 1 - gy) * fItalic);
 				for (int gx = 0; gx < gw; ++gx)
 				{
-					const BYTE cb = vecGlyph[gy * gw + gx];
+					const BYTE cb = pCover[gy * gw + gx];
 					BlendPixel(nDestX + gx + nShear, nDestY + gy, dwColor, cb);
 					if (nBoldExtra > 0)
 					{

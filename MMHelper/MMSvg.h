@@ -1,4 +1,4 @@
-#ifdef MMSvgEnable
+ï»¿#ifdef MMSvgEnable
 #ifndef DuiPlatform_SDL
 #ifndef __MM_SVG_H__
 #define __MM_SVG_H__
@@ -23,25 +23,25 @@ public:
 public:
 	//************************************
 	// Description:	parse image argb from svg, vecPixel is RGBA8888
-	// Parameter: 	LPCTSTR lpszFile Àý£ºC:\Test.svg
+	// Parameter: 	LPCTSTR lpszFile ä¾‹ï¼šC:\Test.svg
 	//************************************
 	bool ParseImage(IN LPCTSTR lpszFile, IN int nScale, OUT std::vector<BYTE> &vecPixel, OUT int &nWidth, OUT int &nHeight);
 
 	//************************************
 	// Description:	parse image HBITMAP from svg
-	// Parameter: 	LPCTSTR lpszFile Àý£ºC:\Test.svg
+	// Parameter: 	LPCTSTR lpszFile ä¾‹ï¼šC:\Test.svg
 	//************************************
 	bool ParseImage(IN LPCTSTR lpszFile, IN int nScale, OUT HBITMAP &hBitmap, OUT int &nWidth, OUT int &nHeight, OUT LPBYTE *pBits);
 
 	//************************************
 	// Description:	parse image argb from svg, vecPixel is RGBA8888
-	// Parameter: 	std::vector<BYTE> vecData £ºsvg file data
+	// Parameter: 	std::vector<BYTE> vecData ï¼šsvg file data
 	//************************************
 	bool ParseImage(IN const std::vector<BYTE> &vecData, IN int nScale, OUT std::vector<BYTE> &vecPixel, OUT int &nWidth, OUT int &nHeight);
 
 	//************************************
 	// Description:	parse image HBITMAP from svg
-	// Parameter: 	std::vector<BYTE> vecData £ºsvg file data
+	// Parameter: 	std::vector<BYTE> vecData ï¼šsvg file data
 	//************************************
 	bool ParseImage(IN const std::vector<BYTE> &vecData, IN int nScale, OUT HBITMAP &hBitmap, OUT int &nWidth, OUT int &nHeight, OUT LPBYTE *pBits);
 };
