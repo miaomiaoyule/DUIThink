@@ -1,4 +1,4 @@
-#include "framework.h"
+ï»¿#include "framework.h"
 #include "DlgMain.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -563,23 +563,23 @@ void CDlgMain::PerformDrawArrow(HDC hDC, CDUIPoint ptFrom, CDUIPoint ptTarget)
 	Gdiplus::PointF start(ptFrom.x, ptFrom.y);
 	Gdiplus::PointF end(ptTarget.x, ptTarget.y);
 
-	// »æÖÆÖ÷Ïß
-	Pen pen(Color(255, 0, 0, 0), 2); // ºìÉ«¼ýÍ·£¬¿í¶ÈÎª5
+	// ç»˜åˆ¶ä¸»çº¿
+	Pen pen(Color(255, 0, 0, 0), 2); // çº¢è‰²ç®­å¤´ï¼Œå®½åº¦ä¸º5
 	Gp.DrawLine(&pen, start, end);
 
-	// ¼ÆËã¼ýÍ·µÄ·½Ïò
+	// è®¡ç®—ç®­å¤´çš„æ–¹å‘
 	float angle = atan2(end.Y - start.Y, end.X - start.X);
-	float arrowLength = 10.0f; // ¼ýÍ·µÄ³¤¶È
-	float arrowAngle = 30.0f; // ¼ýÍ·µÄ½Ç¶È
+	float arrowLength = 10.0f; // ç®­å¤´çš„é•¿åº¦
+	float arrowAngle = 30.0f; // ç®­å¤´çš„è§’åº¦
 
-	// ¼ÆËã¼ýÍ·µÄÁ½¸ö²¿·Ö
+	// è®¡ç®—ç®­å¤´çš„ä¸¤ä¸ªéƒ¨åˆ†
 	PointF arrowPoint1(end.X - arrowLength * cos(angle - arrowAngle * M_PI / 180),
 		end.Y - arrowLength * sin(angle - arrowAngle * M_PI / 180));
 
 	PointF arrowPoint2(end.X - arrowLength * cos(angle + arrowAngle * M_PI / 180),
 		end.Y - arrowLength * sin(angle + arrowAngle * M_PI / 180));
 
-	// »æÖÆ¼ýÍ·µÄÁ½¸ö²¿·Ö
+	// ç»˜åˆ¶ç®­å¤´çš„ä¸¤ä¸ªéƒ¨åˆ†
 	Gp.DrawLine(&pen, end, arrowPoint1);
 	Gp.DrawLine(&pen, end, arrowPoint2);
 
@@ -599,7 +599,7 @@ void CDlgMain::PerformExecuteModule(CDUIContainerCtrl *pContainerFromCtrl)
 	CDUIStaticCtrl *pStaticTextCtrl = MMDynamicPtr(CDUIStaticCtrl, vecFindCtrl.front());
 	if (NULL == pStaticTextCtrl) return;
 
-	MessageBox(m_hWnd, pStaticTextCtrl->GetText(), _T("Ö´ÐÐµ½"), NULL);
+	MessageBox(m_hWnd, pStaticTextCtrl->GetText(), _T("æ‰§è¡Œåˆ°"), NULL);
 
 	auto LinkData = m_mapLinkData[pContainerFromCtrl];
 	PerformExecuteModule(LinkData.LinkLeft.pLinkCtrl);

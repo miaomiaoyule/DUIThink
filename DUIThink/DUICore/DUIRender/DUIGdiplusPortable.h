@@ -12,7 +12,7 @@ class IDuiCanvas;
 namespace Gdiplus
 {
 	typedef float REAL;
-	typedef UINT Gdiplus::ARGB;
+	typedef UINT ARGB;
 	typedef ULONG PROPID;
 	typedef INT PixelFormat;
 
@@ -98,15 +98,15 @@ namespace Gdiplus
 	{
 	public:
 		Color() : m_argb(0) {}
-		Color(Gdiplus::ARGB argb) : m_argb(argb) {}
-		Color(BYTE a, BYTE r, BYTE g, BYTE b) : m_argb(((Gdiplus::ARGB)a << 24) | ((Gdiplus::ARGB)r << 16) | ((Gdiplus::ARGB)g << 8) | b) {}
-		Gdiplus::ARGB GetValue() const { return m_argb; }
+		Color(ARGB argb) : m_argb(argb) {}
+		Color(BYTE a, BYTE r, BYTE g, BYTE b) : m_argb(((ARGB)a << 24) | ((ARGB)r << 16) | ((ARGB)g << 8) | b) {}
+		ARGB GetValue() const { return m_argb; }
 		BYTE GetA() const { return (BYTE)((m_argb >> 24) & 0xff); }
 		BYTE GetR() const { return (BYTE)((m_argb >> 16) & 0xff); }
 		BYTE GetG() const { return (BYTE)((m_argb >> 8) & 0xff); }
 		BYTE GetB() const { return (BYTE)(m_argb & 0xff); }
 	private:
-		Gdiplus::ARGB m_argb;
+		ARGB m_argb;
 	};
 
 	class Matrix
@@ -141,7 +141,7 @@ namespace Gdiplus
 	{
 	public:
 		SolidBrush(const Color &c) : m_color(c) {}
-		SolidBrush(Gdiplus::ARGB argb) : m_color(argb) {}
+		SolidBrush(ARGB argb) : m_color(argb) {}
 		Brush * Clone() const override { return new SolidBrush(m_color); }
 		DWORD GetFillColor() const override { return m_color.GetValue(); }
 	private:
@@ -238,6 +238,8 @@ namespace Gdiplus
 		INT GetPixelFormat() const { return m_format; }
 		Status LockBits(const Rect *rect, UINT, PixelFormat, BitmapData *lockedBitmapData);
 		Status UnlockBits(BitmapData *) { return Ok; }
+		Status GetLastStatus() const { return (m_nWidth > 0 && m_nHeight > 0 && false == m_vecBits.empty()) ? Ok : OutOfMemory; }
+		Status GetHBITMAP(const Color &, HBITMAP *hbmReturn);
 
 		Bitmap * Clone(INT x, INT y, INT nWidth, INT nHeight, INT) const;
 		UINT GetFrameDimensionsCount() const { return 0; }
@@ -287,7 +289,8 @@ namespace Gdiplus
 	{
 	public:
 		Graphics(HDC hdc);
-		~Graphics() {}
+		Graphics(Bitmap *bmp);
+		~Graphics();
 
 		void SetSmoothingMode(SmoothingMode) {}
 		void SetInterpolationMode(InterpolationMode) {}
@@ -310,6 +313,7 @@ namespace Gdiplus
 
 	private:
 		IDuiCanvas *m_pCanvas;
+		bool m_bOwnCanvas;
 		DWORD PenColor(Pen *pen) const { return pen ? pen->GetColor().GetValue() : 0; }
 		int PenWidth(Pen *pen) const { return pen ? max(1, (int)(pen->GetWidth() + 0.5f)) : 1; }
 	};

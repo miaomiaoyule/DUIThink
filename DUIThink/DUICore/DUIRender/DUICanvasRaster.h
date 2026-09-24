@@ -47,6 +47,9 @@ public:
 	int GetUnderline() const { return m_bUnderline ? 1 : 0; }
 	int GetStrikeOut() const { return m_bStrikeOut ? 1 : 0; }
 	const void * GetFontInfo() const;
+	bool HasMacFont() const { return NULL != m_pMacFont; }
+	int GetCharAdvance(unsigned cp) const;
+	bool GetCharBitmap(unsigned cp, int &x0, int &y0, int &w, int &h, const BYTE *&pBits) const;
 
 protected:
 	CDUIFontRaster();
@@ -60,6 +63,7 @@ protected:
 	bool m_bItalic = false;
 	bool m_bUnderline = false;
 	bool m_bStrikeOut = false;
+	void *m_pMacFont = NULL;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -110,6 +114,7 @@ public:
 
 	// GDI SelectObject(HBITMAP): draw into the selected image buffer (CDUIMemDC path)
 	bool SelectBitmap(IDuiImage *pImage) override;
+	bool AttachBits(LPBYTE pBits, int nWidth, int nHeight);
 	RECT GetClipBoxRect() const override;
 	void SelectClipRgn(HRGN hRgn) override;
 

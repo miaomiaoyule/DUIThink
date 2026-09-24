@@ -47,6 +47,23 @@ void Bitmap::Reset(int nWidth, int nHeight)
 	m_vecBits.assign((size_t)m_nWidth * (size_t)m_nHeight * 4, 0);
 }
 
+Status Bitmap::GetHBITMAP(const Color &, HBITMAP *hbmReturn)
+{
+	if (NULL == hbmReturn) return InvalidParameter;
+	*hbmReturn = NULL;
+	if (m_nWidth <= 0 || m_nHeight <= 0 || m_vecBits.empty()) return GenericError;
+
+	CDUIImageRaster *pImage = new CDUIImageRaster(m_nWidth, m_nHeight, true);
+	if (NULL == pImage || NULL == pImage->GetBits())
+	{
+		delete pImage;
+		return OutOfMemory;
+	}
+	memcpy(pImage->GetBits(), m_vecBits.data(), m_vecBits.size());
+	*hbmReturn = (HBITMAP)pImage;
+	return Ok;
+}
+
 Bitmap * Bitmap::Clone(INT x, INT y, INT nWidth, INT nHeight, INT) const
 {
 	if (nWidth <= 0 || nHeight <= 0 || x < 0 || y < 0) return NULL;
@@ -139,8 +156,36 @@ Status GraphicsPath::GetBounds(RectF *bounds) const
 
 //////////////////////////////////////////////////////////////////////////
 Graphics::Graphics(HDC hdc)
+	: m_pCanvas(DuiCanvasFromHDC(hdc))
+	, m_bOwnCanvas(false)
 {
-	m_pCanvas = DuiCanvasFromHDC(hdc);
+}
+
+Graphics::Graphics(Bitmap *bmp)
+	: m_pCanvas(NULL)
+	, m_bOwnCanvas(false)
+{
+	if (NULL == bmp || NULL == bmp->GetBits()) return;
+	CDUICanvasRaster *pCanvas = new CDUICanvasRaster(1, 1);
+	if (pCanvas->AttachBits(bmp->GetBits(), (int)bmp->GetWidth(), (int)bmp->GetHeight()))
+	{
+		m_pCanvas = pCanvas;
+		m_bOwnCanvas = true;
+	}
+	else
+	{
+		delete pCanvas;
+	}
+}
+
+Graphics::~Graphics()
+{
+	if (m_bOwnCanvas)
+	{
+		delete m_pCanvas;
+		m_pCanvas = NULL;
+		m_bOwnCanvas = false;
+	}
 }
 
 Status Graphics::DrawLine(Pen *pen, INT x1, INT y1, INT x2, INT y2)

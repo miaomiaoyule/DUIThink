@@ -468,6 +468,18 @@ void CDUIComboxCtrl::RefreshCtrlID(bool bSelfSingle)
 	return;
 }
 
+bool CDUIComboxCtrl::SetWndOwner(CDUIWndBase *pWndOwner)
+{
+	if (false == __super::SetWndOwner(pWndOwner)) return false;
+
+	if (m_pEditCtrl)
+	{
+		m_pEditCtrl->SetWndOwner(m_pWndOwner);
+	}
+
+	return true;
+}
+
 void CDUIComboxCtrl::RefreshView()
 {
 	__super::RefreshView();
@@ -490,18 +502,6 @@ bool CDUIComboxCtrl::DoPaint(HDC hDC, bool bGenerateBmp)
 	if (m_pEditCtrl && m_pEditCtrl->IsVisible())
 	{
 		m_pEditCtrl->OnDraw(hDC, m_rcPaint, bGenerateBmp);
-	}
-
-	return true;
-}
-
-bool CDUIComboxCtrl::SetWndOwner(CDUIWnd *pWndOwner)
-{
-	if (false == __super::SetWndOwner(pWndOwner)) return false;
-
-	if (m_pEditCtrl)
-	{
-		m_pEditCtrl->SetWndOwner(m_pWndOwner);
 	}
 
 	return true;

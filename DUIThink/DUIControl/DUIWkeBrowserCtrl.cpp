@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "DUIWkeBrowserCtrl.h"
 
 #ifdef DUITHINKWKE
@@ -477,7 +477,7 @@ void CDUIWkeBrowserCtrl::InitComplete()
 	wkeSetUserAgent(m_pWkeWebView, "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2228.0 Safari/537.36");
 	//wkeSetName(m_pWkeWebView, CT2CA(GetCtrlID()));
 
-	//³õÊ¼»¯ºó»Øµ÷½Ó¿Ú
+	//åˆå§‹åŒ–åŽå›žè°ƒæŽ¥å£
 	wkeOnTitleChanged(m_pWkeWebView, OnWkeTitleChanged, this);
 	wkeOnURLChanged(m_pWkeWebView, OnWkeURLChanged, this);
 	wkeOnAlertBox(m_pWkeWebView, OnWkeAlertBox, this);
@@ -589,7 +589,7 @@ bool CDUIWkeBrowserCtrl::OnWkeNavigation(wkeWebView webView, void *param, wkeNav
 	}
 	else
 	{
-		//MessageBox(NULL, _T("°¥Ñ½£¬ÍøÒ³´ò¿ªÊ§°ÜÁË£¡"), NULL, MB_ICONERROR);
+		//MessageBox(NULL, _T("å“Žå‘€ï¼Œç½‘é¡µæ‰“å¼€å¤±è´¥äº†ï¼"), NULL, MB_ICONERROR);
 		return false;
 	}
 
@@ -632,7 +632,7 @@ void CDUIWkeBrowserCtrl::OnWkeLoadingFinish(wkeWebView webView, void *param, con
 	CDUIWkeBrowserCtrl *pWkeUI = (CDUIWkeBrowserCtrl*)param;
 	if (NULL == pWkeUI)	return;
 
-	//Ò³Ãæ¼ÓÔØÊ§°Ü
+	//é¡µé¢åŠ è½½å¤±è´¥
 	if (result == WKE_LOADING_FAILED)
 	{
 		pWkeUI->Navigate(pWkeUI->GetUrlError());

@@ -1006,7 +1006,25 @@ CMMString CMMService::GetWorkDirectory()
 {
 	const char *pszBase = SDL_GetBasePath();
 	if (NULL == pszBase) return CMMString();
-	return TrimTrailingSlash(Utf8ToMMString(pszBase));
+
+	CMMString strPath = TrimTrailingSlash(Utf8ToMMString(pszBase));
+#if defined(__APPLE__)
+	// SDL_GetBasePath() for a .app is Contents/Resources (not visible as a
+	// normal folder in Finder). Walk up to the directory that contains the
+	// .app so relative paths match Windows/Linux: exe in Debug/, DuiProj at ../
+	const CMMString strBundleRes(_T(".app/Contents/Resources"));
+	if (strPath.size() > strBundleRes.size()
+		&& 0 == strPath.compare(strPath.size() - strBundleRes.size(), strBundleRes.size(), strBundleRes))
+	{
+		strPath.resize(strPath.size() - strBundleRes.size());
+		const size_t nSlash = strPath.find_last_of(_T('/'));
+		if (CMMString::npos != nSlash)
+		{
+			strPath.resize(nSlash);
+		}
+	}
+#endif
+	return strPath;
 }
 
 CMMString CMMService::GetCurrentPath()
