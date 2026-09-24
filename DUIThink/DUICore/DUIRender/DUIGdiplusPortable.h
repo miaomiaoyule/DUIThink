@@ -78,6 +78,55 @@ namespace Gdiplus
 		PointF(REAL x, REAL y) : X(x), Y(y) {}
 	};
 
+	class SizeF
+	{
+	public:
+		SizeF()
+		{
+			Width = Height = 0.0f;
+		}
+
+		SizeF(IN const SizeF& size)
+		{
+			Width = size.Width;
+			Height = size.Height;
+		}
+
+		SizeF(IN REAL width,
+			IN REAL height)
+		{
+			Width = width;
+			Height = height;
+		}
+
+		SizeF operator+(IN const SizeF& sz) const
+		{
+			return SizeF(Width + sz.Width,
+				Height + sz.Height);
+		}
+
+		SizeF operator-(IN const SizeF& sz) const
+		{
+			return SizeF(Width - sz.Width,
+				Height - sz.Height);
+		}
+
+		BOOL Equals(IN const SizeF& sz) const
+		{
+			return (Width == sz.Width) && (Height == sz.Height);
+		}
+
+		BOOL Empty() const
+		{
+			return (Width == 0.0f && Height == 0.0f);
+		}
+
+	public:
+
+		REAL Width;
+		REAL Height;
+	};
+
 	class Rect
 	{
 	public:
