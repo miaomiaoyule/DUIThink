@@ -1745,6 +1745,18 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 		return;
 	}
 
+	{
+		int nSaveDC = SaveDC(hDC);
+		::SetBkMode(hDC, TRANSPARENT);
+		::SetTextColor(hDC, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)));
+		HFONT hFontOld = (HFONT)::SelectObject(hDC, hFont);
+		::DrawShadowText(hDC, lpszText, -1, &rcItem, dwTextStyle | DT_NOPREFIX, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)), RGB(0, 0, 0), 2, 2);
+
+		::SelectObject(hDC, hFontOld);
+		RestoreDC(hDC, nSaveDC);
+
+		return;
+	}
 	//gdi
 	int nSaveDC = SaveDC(hDC);
 	::SetBkMode(hDC, TRANSPARENT);
