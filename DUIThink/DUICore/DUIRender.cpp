@@ -410,6 +410,105 @@ static void ConstructTextureBrushMatrix(Gdiplus::TextureBrush &Brush, Gdiplus::G
 	return;
 }
 
+// 与 DrawShadowText / 桌面图标字一致：对字形覆盖率做一次高斯模糊（sigma ≈ 1.4）。
+// 笔画内部被核盖满，阴影更重；离开笔画后按距离衰减。偏移只决定投影方向。
+static const int c_nTextShadowRadius = 3;
+static const int c_nTextShadowOffsetX = 1;
+static const int c_nTextShadowOffsetY = 1;
+static void DuiBlurTextShadowAlpha(BYTE *pBits, int nWidth, int nHeight, int nStride, int nGain)
+{
+	// 归一化到 256 的可分离高斯核，半径 3
+	static const int c_nKernel[7] = { 7, 27, 57, 74, 57, 27, 7 };
+	static const int c_nDiv = 256;
+	if (NULL == pBits || nWidth <= 0 || nHeight <= 0 || nStride < nWidth * 4 || nGain <= 0) return;
+
+	std::vector<BYTE> vecAlpha((size_t)nWidth * (size_t)nHeight);
+	for (int y = 0; y < nHeight; ++y)
+	{
+		const BYTE *pRow = pBits + (size_t)y * nStride;
+		BYTE *pOut = vecAlpha.data() + (size_t)y * nWidth;
+		for (int x = 0; x < nWidth; ++x)
+		{
+			int nSum = 0;
+			for (int k = -c_nTextShadowRadius; k <= c_nTextShadowRadius; ++k)
+			{
+				int sx = x + k;
+				if (sx < 0) sx = 0;
+				else if (sx >= nWidth) sx = nWidth - 1;
+				nSum += pRow[sx * 4 + 3] * c_nKernel[k + c_nTextShadowRadius];
+			}
+			pOut[x] = (BYTE)((nSum + c_nDiv / 2) / c_nDiv);
+		}
+	}
+
+	for (int y = 0; y < nHeight; ++y)
+	{
+		BYTE *pRow = pBits + (size_t)y * nStride;
+		for (int x = 0; x < nWidth; ++x)
+		{
+			int nSum = 0;
+			for (int k = -c_nTextShadowRadius; k <= c_nTextShadowRadius; ++k)
+			{
+				int sy = y + k;
+				if (sy < 0) sy = 0;
+				else if (sy >= nHeight) sy = nHeight - 1;
+				nSum += vecAlpha[(size_t)sy * nWidth + x] * c_nKernel[k + c_nTextShadowRadius];
+			}
+			int nAlpha = (nSum + c_nDiv / 2) / c_nDiv;
+			nAlpha = nAlpha * nGain / 255;
+			if (nAlpha > 255) nAlpha = 255;
+			pRow[x * 4 + 0] = 0;
+			pRow[x * 4 + 1] = 0;
+			pRow[x * 4 + 2] = 0;
+			pRow[x * 4 + 3] = (BYTE)nAlpha;
+		}
+	}
+}
+
+static void DuiDrawBlurredTextShadow(Gdiplus::Graphics &Gp, Gdiplus::Font &font, const Gdiplus::RectF &rectF,
+	LPCTSTR lpszText, Gdiplus::StringFormat &stringFormat, BYTE cbTextA)
+{
+	const int nTextW = (int)ceil(rectF.Width);
+	const int nTextH = (int)ceil(rectF.Height);
+	if (nTextW <= 0 || nTextH <= 0 || nTextW > 2048 || nTextH > 2048) return;
+
+	const int nPad = c_nTextShadowRadius + 3;
+	const int nBmpW = nTextW + nPad * 2;
+	const int nBmpH = nTextH + nPad * 2;
+	Gdiplus::Bitmap bmpShadow(nBmpW, nBmpH, PixelFormat32bppPARGB);
+	if (Gdiplus::Ok != bmpShadow.GetLastStatus()) return;
+
+	{
+		Gdiplus::Graphics gShadow(&bmpShadow);
+		gShadow.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAliasGridFit);
+		gShadow.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+		gShadow.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+		gShadow.SetCompositingQuality(Gdiplus::CompositingQuality::CompositingQualityHighQuality);
+
+		Gdiplus::RectF rcText((Gdiplus::REAL)nPad, (Gdiplus::REAL)nPad, rectF.Width, rectF.Height);
+		Gdiplus::SolidBrush brushMask(Gdiplus::Color(255, 0, 0, 0));
+		gShadow.DrawString(lpszText, -1, &font, rcText, &stringFormat, &brushMask);
+	}
+
+	Gdiplus::BitmapData data = {};
+	Gdiplus::Rect rcLock(0, 0, nBmpW, nBmpH);
+	if (Gdiplus::Ok != bmpShadow.LockBits(&rcLock, Gdiplus::ImageLockModeRead | Gdiplus::ImageLockModeWrite, PixelFormat32bppPARGB, &data)
+		|| NULL == data.Scan0
+		|| data.Stride < nBmpW * 4)
+	{
+		if (NULL != data.Scan0) bmpShadow.UnlockBits(&data);
+		return;
+	}
+
+	// 模糊会摊薄细笔画的覆盖率，拉回笔画中心的浓度，边缘仍按高斯衰减
+	DuiBlurTextShadowAlpha((BYTE *)data.Scan0, nBmpW, nBmpH, data.Stride, (int)cbTextA * 5 / 2);
+	bmpShadow.UnlockBits(&data);
+
+	Gp.DrawImage(&bmpShadow,
+		Gdiplus::Rect((INT)rectF.X - nPad + c_nTextShadowOffsetX, (INT)rectF.Y - nPad + c_nTextShadowOffsetY, nBmpW, nBmpH),
+		0, 0, nBmpW, nBmpH, Gdiplus::UnitPixel);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CDUIRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const CDUIRect &rcItem, const CDUIRect &rcPaint, const CDUIRect &rcBmpPart, const CDUIRect &rcCorner,
 	BYTE cbAlpha, bool bAlpha, bool bCornerHole, bool bTiledX, bool bTiledY, const CDUIRect &rcRound, enDuiRoundType RoundType)
@@ -1624,8 +1723,8 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 			}
 			if (bShadow)
 			{
-				rcItem.right += 4;
-				rcItem.bottom += 4;
+				rcItem.right += c_nTextShadowRadius + c_nTextShadowOffsetX;
+				rcItem.bottom += c_nTextShadowRadius + c_nTextShadowOffsetY;
 			}
 		}
 		else
@@ -1635,19 +1734,7 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 
 			if (bShadow)
 			{
-				const int nShadowOffsetX = 2;
-				const int nShadowOffsetY = 2;
-				BYTE cbShadowA = (BYTE)((int)cbTextA * 115 / 255);
-				if (cbShadowA < 50) cbShadowA = 50;
-				if (cbShadowA > 160) cbShadowA = 160;
-
-				Gdiplus::RectF rectShadow(
-					(Gdiplus::REAL)(rcItem.left + nShadowOffsetX),
-					(Gdiplus::REAL)(rcItem.top + nShadowOffsetY),
-					(Gdiplus::REAL)rcItem.GetWidth(),
-					(Gdiplus::REAL)rcItem.GetHeight());
-				Gdiplus::SolidBrush brushShadow(Gdiplus::Color(cbShadowA, 0, 0, 0));
-				Gp.DrawString(lpszText, -1, &font, rectShadow, &stringFormat, &brushShadow);
+				DuiDrawBlurredTextShadow(Gp, font, rectF, lpszText, stringFormat, cbTextA);
 			}
 
 			Gdiplus::SolidBrush brush(Gdiplus::Color(cbTextA,
