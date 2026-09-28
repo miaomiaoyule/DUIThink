@@ -271,9 +271,23 @@ void CDUIFontBase::OnDpiChanged(int nScale)
 
 CMMString CDUIFontBase::FormatFontDescribe(CMMString strName, int nSize, LONG lWeight, bool bItalic, bool bUnderline, bool bStrikeOut)
 {
-	CMMString strResName;
-	strResName.Format(_T("%s-字号:%d-粗细:%d-%s-%s-%s"), strName.c_str(), nSize, (int)lWeight, bItalic ? _T("斜体") : _T("非斜体"),\
-		bUnderline ? _T("下划线") : _T("无下划线"), bStrikeOut ? _T("删除线") : _T("无删除线"));
+	// macOS/glibc swprintf returns -1 if the format string contains CJK.
+	CMMString strSize;
+	CMMString strWeight;
+	strSize.Format(_T("%d"), nSize);
+	strWeight.Format(_T("%d"), (int)lWeight);
+
+	CMMString strResName = strName;
+	strResName += _T("-字号:");
+	strResName += strSize;
+	strResName += _T("-粗细:");
+	strResName += strWeight;
+	strResName += _T("-");
+	strResName += bItalic ? _T("斜体") : _T("非斜体");
+	strResName += _T("-");
+	strResName += bUnderline ? _T("下划线") : _T("无下划线");
+	strResName += _T("-");
+	strResName += bStrikeOut ? _T("删除线") : _T("无删除线");
 
 	return strResName;
 }

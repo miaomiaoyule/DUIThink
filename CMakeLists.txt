@@ -228,7 +228,7 @@ if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
 	target_link_libraries(DUIThink PUBLIC SDL3::SDL3)
 endif()
 if(APPLE)
-	target_link_libraries(DUIThink PUBLIC "-framework CoreText" "-framework CoreFoundation")
+	target_link_libraries(DUIThink PUBLIC "-framework CoreText" "-framework CoreFoundation" "-framework CoreGraphics")
 endif()
 
 # ---------------------------------------------------------------------------
@@ -283,7 +283,13 @@ if(ANDROID)
 		target_link_libraries(main PRIVATE SDL3::SDL3)
 	endif()
 else()
-	add_executable(DUIThinkDemo_C++ ${DEMO_SRCS})
+	if(APPLE)
+		add_executable(DUIThinkDemo_C++ MACOSX_BUNDLE ${DEMO_SRCS})
+	elseif(WIN32)
+		add_executable(DUIThinkDemo_C++ WIN32 ${DEMO_SRCS})
+	else()
+		add_executable(DUIThinkDemo_C++ ${DEMO_SRCS})
+	endif()
 	target_include_directories(DUIThinkDemo_C++ PRIVATE
 		${DEMO_ROOT}
 		"${CMAKE_SOURCE_DIR}/Demo/DUIThinkDemo_C++"
@@ -294,8 +300,13 @@ else()
 	endif()
 	if(APPLE)
 		set_target_properties(DUIThinkDemo_C++ PROPERTIES
-			BUILD_RPATH "@loader_path"
-			INSTALL_RPATH "@loader_path"
+			MACOSX_BUNDLE TRUE
+			MACOSX_BUNDLE_BUNDLE_NAME "DUIThinkDemo"
+			MACOSX_BUNDLE_GUI_IDENTIFIER "com.duitthink.demo"
+			MACOSX_BUNDLE_BUNDLE_VERSION "1.0"
+			MACOSX_BUNDLE_SHORT_VERSION_STRING "1.0"
+			BUILD_RPATH "@executable_path"
+			INSTALL_RPATH "@executable_path"
 			BUILD_WITH_INSTALL_RPATH TRUE
 			RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
 		)
@@ -312,6 +323,9 @@ else()
 			COMMAND ${CMAKE_COMMAND} -E create_symlink
 				"${DEMO_PROJ_DIR}"
 				"${CMAKE_BINARY_DIR}/DUIThinkDemo_C++.DuiProj"
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different
+				"$<TARGET_FILE:DUIThink>"
+				"$<TARGET_FILE_DIR:DUIThinkDemo_C++>"
 			COMMENT "Link Demo DuiProj as sibling of Debug/"
 		)
 		if(TARGET SDL3::SDL3)
@@ -321,7 +335,7 @@ else()
 					COMMAND ${CMAKE_COMMAND} -E copy_if_different
 						"$<TARGET_FILE:SDL3::SDL3>"
 						"$<TARGET_FILE_DIR:DUIThinkDemo_C++>"
-					COMMENT "Copy SDL3.dylib next to Demo"
+					COMMENT "Copy SDL3.dylib into Demo.app"
 				)
 			endif()
 		endif()
