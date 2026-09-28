@@ -1,4 +1,4 @@
-#ifndef __DUIEXPORTDEFINECONTROL_H__
+﻿#ifndef __DUIEXPORTDEFINECONTROL_H__
 #define __DUIEXPORTDEFINECONTROL_H__
 
 #pragma once

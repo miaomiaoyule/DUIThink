@@ -29,7 +29,7 @@ CDUISize CDUIButtonCtrl::MeasureString(LPCTSTR lpszText)
 {
 	if (m_AttributeTextStyleNormal.IsEmpty()) return __super::MeasureString(lpszText);
 
-	return m_AttributeTextStyleNormal.MeasureString(MMInvalidString(lpszText) ? GetText() : lpszText);
+	return m_AttributeTextStyleNormal.MeasureString(MMInvalidString(lpszText) ? (LPCTSTR)GetText() : lpszText);
 }
 
 HFONT CDUIButtonCtrl::GetFontNormal()
@@ -57,27 +57,27 @@ HFONT CDUIButtonCtrl::GetFontDisabled()
 	return m_AttributeTextStyleDisabled.GetFont();
 }
 
-ARGB CDUIButtonCtrl::GetTextColorNormal()
+Gdiplus::ARGB CDUIButtonCtrl::GetTextColorNormal()
 {
 	return m_AttributeTextStyleNormal.GetTextColor();
 }
 
-ARGB CDUIButtonCtrl::GetTextColorHot()
+Gdiplus::ARGB CDUIButtonCtrl::GetTextColorHot()
 {
 	return m_AttributeTextStyleHot.GetTextColor();
 }
 
-ARGB CDUIButtonCtrl::GetTextColorPushed()
+Gdiplus::ARGB CDUIButtonCtrl::GetTextColorPushed()
 {
 	return m_AttributeTextStylePushed.GetTextColor();
 }
 
-ARGB CDUIButtonCtrl::GetTextColorFocus()
+Gdiplus::ARGB CDUIButtonCtrl::GetTextColorFocus()
 {
 	return m_AttributeTextStyleFocus.GetTextColor();
 }
 
-ARGB CDUIButtonCtrl::GetTextColorDisabled()
+Gdiplus::ARGB CDUIButtonCtrl::GetTextColorDisabled()
 {
 	return m_AttributeTextStyleDisabled.GetTextColor();
 }

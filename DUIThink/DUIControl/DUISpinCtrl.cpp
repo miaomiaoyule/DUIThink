@@ -177,7 +177,7 @@ void CDUISpinCtrl::OnNotify(CDUIControlBase *pControl, const DuiNotify &Notify)
 		return;
 	}
 
-	return __super::OnNotify(pControl, Notify);
+	return IDuiControlCallBack::OnNotify(pControl, Notify);
 }
 
 void CDUISpinCtrl::OnRelease(CDUIControlBase *pControl)
@@ -195,7 +195,7 @@ void CDUISpinCtrl::OnRelease(CDUIControlBase *pControl)
 		m_pBtnDownCtrl = NULL;
 	}
 
-	return __super::OnRelease(pControl);
+	return IDuiControlCallBack::OnRelease(pControl);
 }
 
 void CDUISpinCtrl::OnDuiClickBtnUp(const DuiNotify &Notify)

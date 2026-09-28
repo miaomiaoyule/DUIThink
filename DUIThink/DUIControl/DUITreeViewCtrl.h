@@ -13,6 +13,7 @@ class DUITHINK_API CDUITreeViewCtrl
 {
 	friend class CDUITreeNodeCtrl;
 
+	MMDeclare_Super(CDUIListViewCtrl)
 	DuiDeclare_CreateControl(CDUITreeViewCtrl)
 	MMDeclare_ClassName(CDUITreeViewCtrl)
 

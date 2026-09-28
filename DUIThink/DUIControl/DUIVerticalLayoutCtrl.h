@@ -10,6 +10,7 @@ static const GUID IID_CDUIVerticalLayoutCtrl = { 0x53C742CF,0x879E,0x47D3,0xAD,0
 class DUITHINK_API CDUIVerticalLayoutCtrl 
 	: public CDUIContainerCtrl
 {
+	MMDeclare_Super(CDUIContainerCtrl)
 	DuiDeclare_CreateControl(CDUIVerticalLayoutCtrl)
 	MMDeclare_ClassName(CDUIVerticalLayoutCtrl)
 

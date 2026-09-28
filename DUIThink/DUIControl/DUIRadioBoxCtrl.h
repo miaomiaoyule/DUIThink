@@ -14,7 +14,9 @@ class DUITHINK_API CDUIRadioBoxCtrl
 	: public CDUICheckBoxCtrl
 {
 	friend class CDUIWnd;
+	friend class CDUIWndBase;
 
+	MMDeclare_Super(CDUICheckBoxCtrl)
 	DuiDeclare_CreateControl(CDUIRadioBoxCtrl)
 	MMDeclare_ClassName(CDUIRadioBoxCtrl)
 
@@ -60,6 +62,7 @@ public:
 	//property
 protected:
 	void InitProperty() override;
+	void InitNormalSkin() override;
 
 	//message
 protected:
@@ -74,9 +77,6 @@ protected:
 	//unsel other
 	virtual void PerformUnSelOther(bool bNotify);
 };
-
-typedef std::vector<CDUIRadioBoxCtrl*> VecDuiRadioBoxCtrl;
-typedef std::unordered_map<CMMString, VecDuiRadioBoxCtrl> MapDuiRadioBoxGroup;
 
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()

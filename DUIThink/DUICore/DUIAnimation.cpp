@@ -169,7 +169,7 @@ bool CDUIAnimation::RemoveAnimationData(int nAnimationID)
 //////////////////////////////////////////////////////////////////////////
 DuiBegin_Message_Map(CDUIAnimationDrag, CDUINotifyPump)
 	Dui_On_Notify(DuiNotify_WinDragEnter, OnDuiWinDragEnter)
-	Dui_On_Notify(DuiNotify_WinDragLeave , OnDuiWinDragLeave)
+	Dui_On_Notify(DuiNotify_WinDragLeave, OnDuiWinDragLeave)
 	Dui_On_Notify(DuiNotify_WinDragOver, OnDuiWinDragOver)
 	Dui_On_Notify(DuiNotify_WinDrop, OnDuiWinDrop)
 	Dui_On_Notify(DuiNotify_WinDragFinish, OnDuiWinDragFinish)
@@ -234,7 +234,7 @@ void CDUIAnimationDrag::OnDragMoveBegin(CDUIControlBase *pDragCtrl)
 		ASSERT(false); return;
 	}
 
-	CDUIWnd *pWndManager = m_pBindContainerCtrl->GetWndOwner();
+	CDUIWndBase *pWndManager = m_pBindContainerCtrl->GetWndOwner();
 	if (NULL == pWndManager) return;
 	
 	//prepare
@@ -273,7 +273,7 @@ void CDUIAnimationDrag::OnDragMoving(CDUIControlBase *pDragCtrl)
 	if (NULL == m_pBindContainerCtrl || NULL == pDragCtrl || NULL == pDragCtrl->GetWndOwner()) return;
 	if (m_pDragingCtrl != pDragCtrl || pDragCtrl->GetParent() != m_pBindContainerCtrl) return;
 
-	CDUIWnd *pWndManager = m_pDragingCtrl->GetWndOwner();
+	CDUIWndBase *pWndManager = m_pDragingCtrl->GetWndOwner();
 	SIZE szOffset = {};
 	POINT ptMouse = pWndManager->GetMousePosLast();
 	CDUIRect rcDragCtrl = m_pDragingCtrl->GetAbsoluteRect();
@@ -335,7 +335,7 @@ void CDUIAnimationDrag::OnDragMoveEnd(CDUIControlBase *pDragCtrl)
 {
 	if (NULL == m_pBindContainerCtrl || NULL == m_pDragingCtrl || (m_pDragingCtrl != pDragCtrl && m_pBindContainerCtrl != pDragCtrl->GetParent())) return;
 	
-	CDUIWnd *pWndManager = m_pBindContainerCtrl->GetWndOwner();
+	CDUIWndBase *pWndManager = m_pBindContainerCtrl->GetWndOwner();
 	if (NULL == pWndManager) return;
 
 	StopAnimation(Dui_TimerAnimate_ID);
@@ -409,13 +409,11 @@ void CDUIAnimationDrag::OnDuiWinDragEnter(const DuiNotify &Notify)
 		|| NULL == m_pBindContainerCtrl->GetWndOwner()
 		|| Notify.pNotifyCtrl != m_pBindContainerCtrl
 		|| false == m_pBindContainerCtrl->IsAnimateDrag()
-		|| NULL == m_pBindContainerCtrl->GetWndOwner()->GetDropData()
 		|| m_pDragingCtrl) return;
 
-	CDUIWnd *pWndManager = m_pBindContainerCtrl->GetWndOwner();
-	const tagDuiDropData *pDropData = pWndManager->GetDropData();
-	if (pDropData->vecPIDL.size() <= 0) return;
-	if (false == ::PtInRect(&m_pBindContainerCtrl->GetAbsoluteRect(), pWndManager->GetMousePosLast())) return;
+	CDUIWndBase *pWndManager = m_pBindContainerCtrl->GetWndOwner();
+	CDUIRect rcBindCtrl = m_pBindContainerCtrl->GetAbsoluteRect();
+	if (false == ::PtInRect(&rcBindCtrl, pWndManager->GetMousePosLast())) return;
 
 	//first visible
 	CDUIControlBase *pChildFirst = NULL;
@@ -483,7 +481,8 @@ void CDUIAnimationDrag::OnDuiWinDragOver(const DuiNotify &Notify)
 		|| NULL == m_pDragingCtrl
 		|| Notify.pNotifyCtrl != m_pBindContainerCtrl) return;
 
-	if (false == ::PtInRect(&m_pBindContainerCtrl->GetAbsoluteRect(), m_pBindContainerCtrl->GetWndOwner()->GetMousePosLast())) return;
+	CDUIRect rcBindCtrl = m_pBindContainerCtrl->GetAbsoluteRect();
+	if (false == ::PtInRect(&rcBindCtrl, m_pBindContainerCtrl->GetWndOwner()->GetMousePosLast())) return;
 
 	OnDragMoving(m_pDragingCtrl);
 
@@ -809,7 +808,7 @@ void CDUIAnimationWnd::OnAnimationStart(int nAnimationID, bool bFirstLoop)
 void CDUIAnimationWnd::OnAnimationStep(int nAnimationID, int nTotalFrame, int nCurFrame)
 {
 	//clear
-	memset(m_pBmpAniBits, 0, m_rcWndAnimation.GetWidth() * m_rcWndAnimation.GetHeight() * sizeof(ARGB));
+	memset(m_pBmpAniBits, 0, m_rcWndAnimation.GetWidth() * m_rcWndAnimation.GetHeight() * sizeof(Gdiplus::ARGB));
 
 	switch (GetAnimateWndType())
 	{
@@ -1022,7 +1021,7 @@ void CDUIAnimationWnd::StartAnimationWnd(bool bShow/* = true*/)
 	CDUIContainerCtrl *pRootCtrl = GetRootCtrl();
 	if (NULL == pRootCtrl) return;
 
-	CDUIWnd *pWndManager = pRootCtrl->GetWndOwner();
+	CDUIWndBase *pWndManager = pRootCtrl->GetWndOwner();
 	if (NULL == pWndManager) return;
 
 	m_bShow = bShow;
@@ -1051,7 +1050,7 @@ void CDUIAnimationWnd::StartAnimationWnd(bool bShow/* = true*/)
 			m_rcWndAnimation.top -= m_szRotateRadius.cy;
 			m_rcWndAnimation.bottom += m_szRotateRadius.cy;
 			m_hBitmapAni = CDUIRenderEngine::CreateARGB32Bitmap(m_hMemDCSrc, m_rcWndAnimation.GetWidth(), m_rcWndAnimation.GetHeight(), &m_pBmpAniBits);
-			SetWindowPos(GetWndHandle(), NULL, m_rcWndAnimation.left, m_rcWndAnimation.top, m_rcWndAnimation.GetWidth(), m_rcWndAnimation.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
+			::SetWindowPos(GetWndHandle(), NULL, m_rcWndAnimation.left, m_rcWndAnimation.top, m_rcWndAnimation.GetWidth(), m_rcWndAnimation.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
 			break;
 		}
 		case AnimateWnd_3DRotateTopBottom:
@@ -1061,7 +1060,7 @@ void CDUIAnimationWnd::StartAnimationWnd(bool bShow/* = true*/)
 			m_rcWndAnimation.left -= m_szRotateRadius.cx;
 			m_rcWndAnimation.right += m_szRotateRadius.cx;
 			m_hBitmapAni = CDUIRenderEngine::CreateARGB32Bitmap(m_hMemDCSrc, m_rcWndAnimation.GetWidth(), m_rcWndAnimation.GetHeight(), &m_pBmpAniBits);
-			SetWindowPos(GetWndHandle(), NULL, m_rcWndAnimation.left, m_rcWndAnimation.top, m_rcWndAnimation.GetWidth(), m_rcWndAnimation.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
+			::SetWindowPos(GetWndHandle(), NULL, m_rcWndAnimation.left, m_rcWndAnimation.top, m_rcWndAnimation.GetWidth(), m_rcWndAnimation.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
 			break;
 		}
 		case AnimateWnd_3DRotateReplaseLR:
@@ -1117,7 +1116,7 @@ void CDUIAnimationWnd::StopAnimationWnd()
 	CDUIContainerCtrl *pRootCtrl = GetRootCtrl();
 	if (NULL == pRootCtrl) return;
 
-	CDUIWnd *pWndManager = pRootCtrl->GetWndOwner();
+	CDUIWndBase *pWndManager = pRootCtrl->GetWndOwner();
 	if (NULL == pWndManager) return;
 
 	m_bAnimating = false;
@@ -1143,7 +1142,7 @@ void CDUIAnimationWnd::StopAnimationWnd()
 	}
 
 	SetWndLayered(m_bWndLayered);
-	SetWindowPos(GetWndHandle(), NULL, m_rcWndSrc.left, m_rcWndSrc.top, m_rcWndSrc.GetWidth(), m_rcWndSrc.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
+	::SetWindowPos(GetWndHandle(), NULL, m_rcWndSrc.left, m_rcWndSrc.top, m_rcWndSrc.GetWidth(), m_rcWndSrc.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREDRAW);
 	pWndManager->Invalidate();
 
 	//notify
@@ -1202,9 +1201,9 @@ void CDUIAnimationWnd::OnAnimateWndLeft(int nAnimationID, int nTotalFrame, int n
 
 	for (int nTop = 0; nTop < m_rcWndAnimation.GetHeight(); nTop++)
 	{
-		ARGB *pSrc = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nWidthOffset;
-		ARGB *pDest = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
-		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth() - nWidthOffset) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nWidthOffset;
+		Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
+		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth() - nWidthOffset) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1221,9 +1220,9 @@ void CDUIAnimationWnd::OnAnimateWndLeftDiffuse(int nAnimationID, int nTotalFrame
 
 	for (int nTop = 0; nTop < m_rcWndAnimation.GetHeight(); nTop++)
 	{
-		ARGB *pSrc = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop;
-		ARGB *pDest = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
-		memcpy(pDest, pSrc, (nWidthOffset) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop;
+		Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
+		memcpy(pDest, pSrc, (nWidthOffset) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1240,9 +1239,9 @@ void CDUIAnimationWnd::OnAnimateWndRight(int nAnimationID, int nTotalFrame, int 
 
 	for (int nTop = 0; nTop < m_rcWndAnimation.GetHeight(); nTop++)
 	{
-		ARGB *pSrc = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop;
-		ARGB *pDest = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nWidthOffset;
-		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth() - nWidthOffset) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop;
+		Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nWidthOffset;
+		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth() - nWidthOffset) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1259,9 +1258,9 @@ void CDUIAnimationWnd::OnAnimateWndRightDiffuse(int nAnimationID, int nTotalFram
 
 	for (int nTop = 0; nTop < m_rcWndAnimation.GetHeight(); nTop++)
 	{
-		ARGB *pSrc = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nWidthOffset;
-		ARGB *pDest = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nWidthOffset;
-		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth() - nWidthOffset) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nWidthOffset;
+		Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nWidthOffset;
+		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth() - nWidthOffset) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1278,9 +1277,9 @@ void CDUIAnimationWnd::OnAnimateWndTop(int nAnimationID, int nTotalFrame, int nC
 
 	for (int nTop = nHeightOffset; nTop < m_rcWndAnimation.GetHeight(); nTop++)
 	{
-		ARGB *pSrc = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * (nTop - nHeightOffset);
-		ARGB *pDest = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
-		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth()) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * (nTop - nHeightOffset);
+		Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
+		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth()) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1297,9 +1296,9 @@ void CDUIAnimationWnd::OnAnimateWndTopDiffuse(int nAnimationID, int nTotalFrame,
 
 	for (int nTop = nHeightOffset; nTop < m_rcWndAnimation.GetHeight(); nTop++)
 	{
-		ARGB *pSrc = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop;
-		ARGB *pDest = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
-		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth()) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop;
+		Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
+		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth()) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1316,9 +1315,9 @@ void CDUIAnimationWnd::OnAnimateWndBottom(int nAnimationID, int nTotalFrame, int
 
 	for (int nTop = 0; nTop < nHeightOffset; nTop++)
 	{
-		ARGB *pSrc = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * (m_rcWndAnimation.GetHeight() - nHeightOffset + nTop);
-		ARGB *pDest = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
-		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth()) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * (m_rcWndAnimation.GetHeight() - nHeightOffset + nTop);
+		Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
+		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth()) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1335,9 +1334,9 @@ void CDUIAnimationWnd::OnAnimateWndBottomDiffuse(int nAnimationID, int nTotalFra
 
 	for (int nTop = 0; nTop < nHeightOffset; nTop++)
 	{
-		ARGB *pSrc = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop;
-		ARGB *pDest = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
-		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth()) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop;
+		Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
+		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth()) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1458,9 +1457,9 @@ void CDUIAnimationWnd::OnAnimateWndSizeDiffuse(int nAnimationID, int nTotalFrame
 	int nLeftStart = m_rcWndAnimation.GetWidth() / 2 - nWidthOffset / 2;
 	for (int nTop = nTopStart; nTop < nTopStart + nHeightOffset; nTop++)
 	{
-		ARGB *pSrc = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart;
-		ARGB *pDest = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart;
-		memcpy(pDest, pSrc, (nWidthOffset) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart;
+		Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart;
+		memcpy(pDest, pSrc, (nWidthOffset) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1478,9 +1477,9 @@ void CDUIAnimationWnd::OnAnimateWndCenterDiffuse(int nAnimationID, int nTotalFra
 	int nLeftStart = m_rcWndAnimation.GetWidth() / 2 - nWidthOffset / 2;
 	for (int nTop = 0; nTop < m_rcWndAnimation.GetHeight(); nTop++)
 	{
-		ARGB *pSrc = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart;
-		ARGB *pDest = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart;
-		memcpy(pDest, pSrc, (nWidthOffset) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart;
+		Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart;
+		memcpy(pDest, pSrc, (nWidthOffset) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1499,13 +1498,13 @@ void CDUIAnimationWnd::OnAnimateWndLeftRightDiffuse(int nAnimationID, int nTotal
 	int nLeftStart2 = m_rcWndAnimation.GetWidth() - nWidthOffset / 2;
 	for (int nTop = 0; nTop < m_rcWndAnimation.GetHeight(); nTop++)
 	{
-		ARGB *pSrc1 = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart1;
-		ARGB *pDest1 = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart1;
-		memcpy(pDest1, pSrc1, (nWidthOffset / 2) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc1 = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart1;
+		Gdiplus::ARGB *pDest1 = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart1;
+		memcpy(pDest1, pSrc1, (nWidthOffset / 2) * sizeof(Gdiplus::ARGB));
 
-		ARGB *pSrc2 = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart2;
-		ARGB *pDest2 = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart2;
-		memcpy(pDest2, pSrc2, (nWidthOffset / 2) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc2 = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart2;
+		Gdiplus::ARGB *pDest2 = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStart2;
+		memcpy(pDest2, pSrc2, (nWidthOffset / 2) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1592,13 +1591,13 @@ void CDUIAnimationWnd::OnAnimateWndLeftRightCombin(int nAnimationID, int nTotalF
 	int nLeftStartDest2 = m_rcWndAnimation.GetWidth() - nWidthOffset / 2;
 	for (int nTop = 0; nTop < m_rcWndAnimation.GetHeight(); nTop++)
 	{
-		ARGB *pSrc1 = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStartSrc1;
-		ARGB *pDest1 = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStartDest1;
-		memcpy(pDest1, pSrc1, (nWidthOffset / 2) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc1 = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStartSrc1;
+		Gdiplus::ARGB *pDest1 = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStartDest1;
+		memcpy(pDest1, pSrc1, (nWidthOffset / 2) * sizeof(Gdiplus::ARGB));
 
-		ARGB *pSrc2 = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStartSrc2;
-		ARGB *pDest2 = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStartDest2;
-		memcpy(pDest2, pSrc2, (nWidthOffset / 2) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc2 = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStartSrc2;
+		Gdiplus::ARGB *pDest2 = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop + nLeftStartDest2;
+		memcpy(pDest2, pSrc2, (nWidthOffset / 2) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1617,15 +1616,15 @@ void CDUIAnimationWnd::OnAnimateWndTopBottomDiffuse(int nAnimationID, int nTotal
 	int nTopStart2 = m_rcWndAnimation.GetHeight() - nHeightOffset / 2;
 	for (int nTop = nTopStart1; nTop < nTopStart1 + nHeightOffset / 2; nTop++)
 	{
-		ARGB *pSrc = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop;
-		ARGB *pDest = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
-		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth()) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop;
+		Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
+		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth()) * sizeof(Gdiplus::ARGB));
 	}
 	for (int nTop = nTopStart2; nTop < nTopStart2 + nHeightOffset / 2; nTop++)
 	{
-		ARGB *pSrc = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop;
-		ARGB *pDest = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
-		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth()) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTop;
+		Gdiplus::ARGB *pDest = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
+		memcpy(pDest, pSrc, (m_rcWndAnimation.GetWidth()) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1712,15 +1711,15 @@ void CDUIAnimationWnd::OnAnimateWndTopBottomCombin(int nAnimationID, int nTotalF
 	int nTopStartDest2 = m_rcWndAnimation.GetHeight() - nHeightOffset / 2;
 	for (int nTop = nTopStartDest1; nTop < nTopStartDest1 + nHeightOffset / 2; nTop++)
 	{
-		ARGB *pSrc1 = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTopStartSrc1++;
-		ARGB *pDest1 = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
-		memcpy(pDest1, pSrc1, (m_rcWndAnimation.GetWidth()) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc1 = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTopStartSrc1++;
+		Gdiplus::ARGB *pDest1 = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
+		memcpy(pDest1, pSrc1, (m_rcWndAnimation.GetWidth()) * sizeof(Gdiplus::ARGB));
 	}
 	for (int nTop = nTopStartDest2; nTop < nTopStartDest2 + nHeightOffset / 2; nTop++)
 	{
-		ARGB *pSrc1 = (ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTopStartSrc2++;
-		ARGB *pDest1 = (ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
-		memcpy(pDest1, pSrc1, (m_rcWndAnimation.GetWidth()) * sizeof(ARGB));
+		Gdiplus::ARGB *pSrc1 = (Gdiplus::ARGB*)m_BmpInfoSrc.bmBits + m_rcWndAnimation.GetWidth() * nTopStartSrc2++;
+		Gdiplus::ARGB *pDest1 = (Gdiplus::ARGB*)m_pBmpAniBits + m_rcWndAnimation.GetWidth() * nTop;
+		memcpy(pDest1, pSrc1, (m_rcWndAnimation.GetWidth()) * sizeof(Gdiplus::ARGB));
 	}
 
 	return;
@@ -1739,14 +1738,14 @@ void CDUIAnimationWnd::OnAnimateWnd3DRotateLeftRight(int nAnimationID, int nTota
 	false == m_bShow ? fAngle = 360.0f - fAngle : fAngle;
 
 	float fArcLeft = (fAngle + 180.0) / 180.0f * PI, fArcRight = fAngle / 180.0 * PI;
-	PointF pts[] = { PointF(), PointF(), PointF() };
+	Gdiplus::PointF pts[] = { Gdiplus::PointF(), Gdiplus::PointF(), Gdiplus::PointF() };
 	pts[0].X = cos(fArcLeft) * m_szRotateRadius.cx + ptCenter.x;
 	pts[0].Y = sin(fArcLeft) * m_szRotateRadius.cy + ptCenter.y;
 	pts[1].X = cos(fArcRight) * m_szRotateRadius.cx + ptCenter.x;
 	pts[1].Y = sin(fArcRight) * m_szRotateRadius.cy + ptCenter.y;
 	pts[2].X = pts[0].X;
 	pts[2].Y = pts[0].Y + m_rcWndSrc.GetHeight();
-	Graphics.DrawImage(m_pBitmapSrc, pts, sizeof(pts) / sizeof(PointF));
+	Graphics.DrawImage(m_pBitmapSrc, pts, sizeof(pts) / sizeof(Gdiplus::PointF));
 
 	return;
 }
@@ -1764,14 +1763,14 @@ void CDUIAnimationWnd::OnAnimateWnd3DRotateTopBottom(int nAnimationID, int nTota
 	false == m_bShow ? fAngle = 90.0f + fAngle : fAngle;
 
 	float fArcTop = (fAngle + 180.0) / 180.0f * PI, fArcBottom = fAngle / 180.0 * PI;
-	PointF pts[] = { PointF(), PointF(), PointF() };
+	Gdiplus::PointF pts[] = { Gdiplus::PointF(), Gdiplus::PointF(), Gdiplus::PointF() };
 	pts[0].X = cos(fArcTop) * m_szRotateRadius.cx + ptCenter.x;
 	pts[0].Y = sin(fArcTop) * m_szRotateRadius.cy + ptCenter.y;
 	pts[1].X = pts[0].X + m_rcWndSrc.GetWidth();
 	pts[1].Y = pts[0].Y; 
 	pts[2].X = cos(fArcBottom) * m_szRotateRadius.cx + ptCenter.x;
 	pts[2].Y = sin(fArcBottom) * m_szRotateRadius.cy + ptCenter.y;
-	Graphics.DrawImage(m_pBitmapSrc, pts, sizeof(pts) / sizeof(PointF));
+	Graphics.DrawImage(m_pBitmapSrc, pts, sizeof(pts) / sizeof(Gdiplus::PointF));
 
 	return;
 }
@@ -1809,14 +1808,14 @@ void CDUIAnimationWnd::OnAnimateWnd3DRoundLeft(int nAnimationID, int nTotalFrame
 	ptCenter.x += cos(fAngle / 180.0 * PI) * m_szRoundRadius.cx;
 	ptCenter.y += sin(fAngle / 180.0 * PI) * m_szRoundRadius.cy - nHeightCur / 2;
 
-	PointF pts[] = { PointF(), PointF(), PointF() };
+	Gdiplus::PointF pts[] = { Gdiplus::PointF(), Gdiplus::PointF(), Gdiplus::PointF() };
 	pts[0].X = cos(fArcRotateLeft) * m_szRotateRadius.cx + ptCenter.x;
 	pts[0].Y = sin(fArcRotateLeft) * m_szRotateRadius.cy + ptCenter.y;
 	pts[1].X = cos(fArcRotateRight) * m_szRotateRadius.cx + ptCenter.x;
 	pts[1].Y = sin(fArcRotateRight) * m_szRotateRadius.cy + ptCenter.y;
 	pts[2].X = pts[0].X;
 	pts[2].Y = pts[0].Y + nHeightCur;
-	Graphics.DrawImage(m_pBitmapSrc, pts, sizeof(pts) / sizeof(PointF));
+	Graphics.DrawImage(m_pBitmapSrc, pts, sizeof(pts) / sizeof(Gdiplus::PointF));
 
 	return;
 }
@@ -1854,14 +1853,14 @@ void CDUIAnimationWnd::OnAnimateWnd3DRoundRight(int nAnimationID, int nTotalFram
 	ptCenter.x += cos(fAngle / 180.0 * PI) * m_szRoundRadius.cx;
 	ptCenter.y += sin(fAngle / 180.0 * PI) * m_szRoundRadius.cy - nHeightCur / 2;
 
-	PointF pts[] = { PointF(), PointF(), PointF() };
+	Gdiplus::PointF pts[] = { Gdiplus::PointF(), Gdiplus::PointF(), Gdiplus::PointF() };
 	pts[0].X = cos(fArcRotateLeft) * m_szRotateRadius.cx + ptCenter.x;
 	pts[0].Y = sin(fArcRotateLeft) * m_szRotateRadius.cy + ptCenter.y;
 	pts[1].X = cos(fArcRotateRight) * m_szRotateRadius.cx + ptCenter.x;
 	pts[1].Y = sin(fArcRotateRight) * m_szRotateRadius.cy + ptCenter.y;
 	pts[2].X = pts[0].X;
 	pts[2].Y = pts[0].Y + nHeightCur;
-	Graphics.DrawImage(m_pBitmapSrc, pts, sizeof(pts) / sizeof(PointF));
+	Graphics.DrawImage(m_pBitmapSrc, pts, sizeof(pts) / sizeof(Gdiplus::PointF));
 
 	return;
 }
@@ -1899,14 +1898,14 @@ void CDUIAnimationWnd::OnAnimateWnd3DRoundTop(int nAnimationID, int nTotalFrame,
 	ptCenter.x += sin(fAngle / 180.0 * PI) * m_szRoundRadius.cx - nWidthCur / 2;
 	ptCenter.y += cos(fAngle / 180.0 * PI) * m_szRoundRadius.cy;
 
-	PointF pts[] = { PointF(), PointF(), PointF() };
+	Gdiplus::PointF pts[] = { Gdiplus::PointF(), Gdiplus::PointF(), Gdiplus::PointF() };
 	pts[0].X = sin(fArcRotateTop) * m_szRotateRadius.cx + ptCenter.x;
 	pts[0].Y = cos(fArcRotateTop) * m_szRotateRadius.cy + ptCenter.y;
 	pts[1].X = pts[0].X + nWidthCur;
 	pts[1].Y = pts[0].Y;
 	pts[2].X = sin(fArcRotateBottom) * m_szRotateRadius.cx + ptCenter.x;
 	pts[2].Y = cos(fArcRotateBottom) * m_szRotateRadius.cy + ptCenter.y;
-	Graphics.DrawImage(m_pBitmapSrc, pts, sizeof(pts) / sizeof(PointF));
+	Graphics.DrawImage(m_pBitmapSrc, pts, sizeof(pts) / sizeof(Gdiplus::PointF));
 
 	return;
 }
@@ -1944,14 +1943,14 @@ void CDUIAnimationWnd::OnAnimateWnd3DRoundBottom(int nAnimationID, int nTotalFra
 	ptCenter.x += sin(fAngle / 180.0 * PI) * m_szRoundRadius.cx - nWidthCur / 2;
 	ptCenter.y += cos(fAngle / 180.0 * PI) * m_szRoundRadius.cy;
 
-	PointF pts[] = { PointF(), PointF(), PointF() };
+	Gdiplus::PointF pts[] = { Gdiplus::PointF(), Gdiplus::PointF(), Gdiplus::PointF() };
 	pts[0].X = sin(fArcRotateTop) * m_szRotateRadius.cx + ptCenter.x;
 	pts[0].Y = cos(fArcRotateTop) * m_szRotateRadius.cy + ptCenter.y;
 	pts[1].X = pts[0].X + nWidthCur;
 	pts[1].Y = pts[0].Y;
 	pts[2].X = sin(fArcRotateBottom) * m_szRotateRadius.cx + ptCenter.x;
 	pts[2].Y = cos(fArcRotateBottom) * m_szRotateRadius.cy + ptCenter.y;
-	Graphics.DrawImage(m_pBitmapSrc, pts, sizeof(pts) / sizeof(PointF));
+	Graphics.DrawImage(m_pBitmapSrc, pts, sizeof(pts) / sizeof(Gdiplus::PointF));
 
 	return;
 }
@@ -1987,14 +1986,14 @@ void CDUIAnimationWnd::OnAnimateWnd3DRotateReplaseLR(int nAnimationID, int nTota
 	fAngle = nCurFrame == nTotalFrame ? 0 : fAngle;
 	float fArcLeft = (fAngle + 180.0) / 180.0f * PI, fArcRight = fAngle / 180.0 * PI;
 	Gdiplus::Bitmap *pBitmap = fAngle <= 90.0f ? m_pBitmapSrc : m_pBitmapReplase;
-	PointF pts[] = { PointF(), PointF(), PointF() };
+	Gdiplus::PointF pts[] = { Gdiplus::PointF(), Gdiplus::PointF(), Gdiplus::PointF() };
 	pts[0].X = cos(fArcLeft) * m_szRotateRadius.cx + ptCenter.x;
 	pts[0].Y = sin(fArcLeft) * m_szRotateRadius.cy + ptCenter.y;
 	pts[1].X = cos(fArcRight) * m_szRotateRadius.cx + ptCenter.x;
 	pts[1].Y = sin(fArcRight) * m_szRotateRadius.cy + ptCenter.y;
 	pts[2].X = pts[0].X;
 	pts[2].Y = pts[0].Y + nHeightCur;
-	Graphics.DrawImage(pBitmap, pts, sizeof(pts) / sizeof(PointF));
+	Graphics.DrawImage(pBitmap, pts, sizeof(pts) / sizeof(Gdiplus::PointF));
 
 	return;
 }
@@ -2030,14 +2029,14 @@ void CDUIAnimationWnd::OnAnimateWnd3DRotateReplaseTB(int nAnimationID, int nTota
 	fAngle = nCurFrame == nTotalFrame ? 0 : fAngle;
 	float fArcTop = (fAngle + 180.0) / 180.0f * PI, fArcBottom = fAngle / 180.0 * PI;
 	Gdiplus::Bitmap *pBitmap = fAngle <= 90.0f ? m_pBitmapSrc : m_pBitmapReplase;
-	PointF pts[] = { PointF(), PointF(), PointF() };
+	Gdiplus::PointF pts[] = { Gdiplus::PointF(), Gdiplus::PointF(), Gdiplus::PointF() };
 	pts[0].X = sin(fArcTop) * m_szRotateRadius.cx + ptCenter.x;
 	pts[0].Y = cos(fArcTop) * m_szRotateRadius.cy + ptCenter.y;
 	pts[1].X = pts[0].X + nWidthCur;
 	pts[1].Y = pts[0].Y;
 	pts[2].X = sin(fArcBottom) * m_szRotateRadius.cx + ptCenter.x;
 	pts[2].Y = cos(fArcBottom) * m_szRotateRadius.cy + ptCenter.y;
-	Graphics.DrawImage(pBitmap, pts, sizeof(pts) / sizeof(PointF));
+	Graphics.DrawImage(pBitmap, pts, sizeof(pts) / sizeof(Gdiplus::PointF));
 
 	return;
 }
@@ -2049,8 +2048,8 @@ void CDUIAnimationWnd::OnAnimateWnd3DRoundReplaseLR(int nAnimationID, int nTotal
 	Gdiplus::Graphics Graphics(m_hMemDCAni);
 
 	m_szRoundRadius.cx = m_rcWndSrc.GetWidth() / 4;
-	PointF PtLeft[] = { PointF(), PointF(), PointF() };
-	PointF PtRight[] = { PointF(), PointF(), PointF() };
+	Gdiplus::PointF PtLeft[] = { Gdiplus::PointF(), Gdiplus::PointF(), Gdiplus::PointF() };
+	Gdiplus::PointF PtRight[] = { Gdiplus::PointF(), Gdiplus::PointF(), Gdiplus::PointF() };
 
 	//left
 	{
@@ -2119,13 +2118,13 @@ void CDUIAnimationWnd::OnAnimateWnd3DRoundReplaseLR(int nAnimationID, int nTotal
 	//first next
 	if (nCurFrame <= nTotalFrame / 2)
 	{
-		Graphics.DrawImage(m_pBitmapReplase, PtLeft, sizeof(PtLeft) / sizeof(PointF));
-		Graphics.DrawImage(m_pBitmapSrc, PtRight, sizeof(PtRight) / sizeof(PointF));
+		Graphics.DrawImage(m_pBitmapReplase, PtLeft, sizeof(PtLeft) / sizeof(Gdiplus::PointF));
+		Graphics.DrawImage(m_pBitmapSrc, PtRight, sizeof(PtRight) / sizeof(Gdiplus::PointF));
 	}
 	else
 	{
-		Graphics.DrawImage(m_pBitmapSrc, PtRight, sizeof(PtRight) / sizeof(PointF));
-		Graphics.DrawImage(m_pBitmapReplase, PtLeft, sizeof(PtLeft) / sizeof(PointF));
+		Graphics.DrawImage(m_pBitmapSrc, PtRight, sizeof(PtRight) / sizeof(Gdiplus::PointF));
+		Graphics.DrawImage(m_pBitmapReplase, PtLeft, sizeof(PtLeft) / sizeof(Gdiplus::PointF));
 	}
 
 	return;
@@ -2138,8 +2137,8 @@ void CDUIAnimationWnd::OnAnimateWnd3DRoundReplaseTB(int nAnimationID, int nTotal
 	Gdiplus::Graphics Graphics(m_hMemDCAni);
 
 	m_szRoundRadius.cy = m_rcWndSrc.GetHeight() / 4;
-	PointF PtTop[] = { PointF(), PointF(), PointF() };
-	PointF PtBottom[] = { PointF(), PointF(), PointF() };
+	Gdiplus::PointF PtTop[] = { Gdiplus::PointF(), Gdiplus::PointF(), Gdiplus::PointF() };
+	Gdiplus::PointF PtBottom[] = { Gdiplus::PointF(), Gdiplus::PointF(), Gdiplus::PointF() };
 
 	//top
 	{
@@ -2208,13 +2207,13 @@ void CDUIAnimationWnd::OnAnimateWnd3DRoundReplaseTB(int nAnimationID, int nTotal
 	//first next
 	if (nCurFrame <= nTotalFrame / 2)
 	{
-		Graphics.DrawImage(m_pBitmapReplase, PtTop, sizeof(PtTop) / sizeof(PointF));
-		Graphics.DrawImage(m_pBitmapSrc, PtBottom, sizeof(PtBottom) / sizeof(PointF));
+		Graphics.DrawImage(m_pBitmapReplase, PtTop, sizeof(PtTop) / sizeof(Gdiplus::PointF));
+		Graphics.DrawImage(m_pBitmapSrc, PtBottom, sizeof(PtBottom) / sizeof(Gdiplus::PointF));
 	}
 	else
 	{
-		Graphics.DrawImage(m_pBitmapSrc, PtBottom, sizeof(PtBottom) / sizeof(PointF));
-		Graphics.DrawImage(m_pBitmapReplase, PtTop, sizeof(PtTop) / sizeof(PointF));
+		Graphics.DrawImage(m_pBitmapSrc, PtBottom, sizeof(PtBottom) / sizeof(Gdiplus::PointF));
+		Graphics.DrawImage(m_pBitmapReplase, PtTop, sizeof(PtTop) / sizeof(Gdiplus::PointF));
 	}
 
 	return;

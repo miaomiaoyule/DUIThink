@@ -1,4 +1,4 @@
-#ifndef __DUICONTROLBASECTRL_H__
+﻿#ifndef __DUICONTROLBASECTRL_H__
 #define __DUICONTROLBASECTRL_H__
 
 #pragma once
@@ -12,6 +12,10 @@ class DUITHINK_API CDUIControlBase
 {
 	friend class CDUIXmlPack;
 	friend class CDUIWnd;
+	friend class CDUIWndBase;
+	friend class CDUIWndSDL;
+	friend class CDUIWndVirtual;
+	friend class CDUIWndWin32;
 	friend class CDUIContainerCtrl;
 	friend class CDUIVerticalLayoutCtrl;
 	friend class CDUIHorizontalLayoutCtrl;
@@ -26,6 +30,7 @@ class DUITHINK_API CDUIControlBase
 	friend class CDUILayoutView;
 	friend class CNotifyView;
 
+	MMDeclare_Super(CDUIPropertyObject)
 	DuiDeclare_CreateControl(CDUIControlBase)
 	MMDeclare_ClassName(CDUIControlBase)
 
@@ -226,9 +231,9 @@ public:
 	virtual bool KillTimer();
 
 	//bk
-	virtual ARGB GetBkColor();
+	virtual Gdiplus::ARGB GetBkColor();
 	virtual void SetBkColor(const vector<CMMString> &vecResSwitch);
-	virtual ARGB GetGradientColor();
+	virtual Gdiplus::ARGB GetGradientColor();
 	virtual void SetGradientColor(const vector<CMMString> &vecResSwitch);
 	virtual tagDuiImageSection GetBkImageSection();
 	virtual void SetBkImageSection(const tagDuiImageSection &ImageSection);
@@ -247,9 +252,9 @@ public:
 	//border
 	virtual enDuiLineStyle GetBorderStyle();
 	virtual void SetBorderStyle(enDuiLineStyle LineStyle);
-	virtual ARGB GetBorderColor();
+	virtual Gdiplus::ARGB GetBorderColor();
 	virtual void SetBorderColor(const vector<CMMString> &vecResSwitch);
-	virtual ARGB GetFocusBorderColor();
+	virtual Gdiplus::ARGB GetFocusBorderColor();
 	virtual void SetFocusBorderColor(const vector<CMMString> &vecResSwitch);
 	virtual CDUIRect GetBorderLine();
 	virtual void SetBorderLine(RECT rcBorder);
@@ -261,10 +266,10 @@ public:
 	virtual void SetToolTip(LPCTSTR pstrText);
 	virtual int GetToolTipWidth(void);
 	virtual void SetToolTipWidth(int nWidth);
-	virtual ARGB GetToolTipBkColor();
-	virtual void SetToolTipBkColor(ARGB dwColor);
-	virtual ARGB GetToolTipTextColor();
-	virtual void SetToolTipTextColor(ARGB dwColor);
+	virtual Gdiplus::ARGB GetToolTipBkColor();
+	virtual void SetToolTipBkColor(Gdiplus::ARGB dwColor);
+	virtual Gdiplus::ARGB GetToolTipTextColor();
+	virtual void SetToolTipTextColor(Gdiplus::ARGB dwColor);
 
 	//userdata
 	virtual CMMString GetUserData();
@@ -325,6 +330,8 @@ protected:
 	virtual LRESULT OnDuiContextMenu(const DuiMessage &Msg);
 	virtual LRESULT OnDuiCommand(const DuiMessage &Msg);
 	virtual LRESULT OnDuiImeComPosition(const DuiMessage &Msg);
+	virtual LRESULT OnDuiTextEditing(const DuiMessage &Msg);
+	virtual LRESULT OnDuiTextInput(const DuiMessage &Msg);
 
 	virtual bool OnWinDragStart(const CDUIPoint &pt, const DuiMessage &Msg);
 	virtual bool OnWinDragEnter(const tagDuiDropData *pDropData, DWORD *pdwEffect);

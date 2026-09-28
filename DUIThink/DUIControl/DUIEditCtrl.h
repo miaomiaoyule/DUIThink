@@ -1,5 +1,6 @@
 #ifndef __DUIEDITCTRL_H__
 #define __DUIEDITCTRL_H__
+#ifndef DuiPlatform_SDL
 
 #pragma once
 #pragma pack(1)
@@ -15,6 +16,7 @@ class DUITHINK_API CDUIEditCtrl
 {
 	friend class CDUIEditWnd;
 
+	MMDeclare_Super(CDUIButtonCtrl)
 	DuiDeclare_CreateControl(CDUIEditCtrl)
 	MMDeclare_ClassName(CDUIEditCtrl)
 
@@ -82,7 +84,7 @@ public:
 	virtual CMMString GetTipText();
 	virtual void SetTipText(LPCTSTR lpszTipText);
 	virtual tagDuiTextStyle GetTextStyleTipTextNormal();
-	virtual ARGB GetTextColorTipTextNormal();
+	virtual Gdiplus::ARGB GetTextColorTipTextNormal();
 	virtual void SetTextStyleTipTextNormal(const tagDuiTextStyle &TextStyle);
 
 	//message
@@ -107,4 +109,5 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()
+#endif
 #endif

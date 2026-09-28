@@ -70,7 +70,7 @@ bool CDUIAttributeLong::SaveAttribute(tinyxml2::XMLElement* pNode)
 {
 	if (false == __super::SaveAttribute(pNode)) return false;
 
-	pNode->SetAttribute(Dui_Key_AttriNumberLong, m_lValue);
+	pNode->SetAttribute(Dui_Key_AttriNumberLong, (int)m_lValue);
 
 	return true;
 }

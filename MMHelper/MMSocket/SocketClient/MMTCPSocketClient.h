@@ -1,6 +1,8 @@
 #ifndef __MM_TCPSOCKETCLIENT_H__
 #define __MM_TCPSOCKETCLIENT_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 #include "Define.h"
@@ -100,5 +102,5 @@ private:
 };
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

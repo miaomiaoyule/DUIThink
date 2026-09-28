@@ -164,7 +164,7 @@ LPCTSTR CDUIAttributeTextStyle::GetColorResName()
 	return pColorBaseCur ? pColorBaseCur->GetResourceName() : _T("");
 }
 
-ARGB CDUIAttributeTextStyle::GetTextColor()
+Gdiplus::ARGB CDUIAttributeTextStyle::GetTextColor()
 {
 	CDUIColorBase *pColorBaseCur = GetColorBaseCur();
 
@@ -458,7 +458,7 @@ CDUISize CDUIAttributeTextStyle::MeasureString(LPCTSTR lpszText)
 	MMInterfaceHelper(CDUIControlBase, m_pOwner, pOwnerCtrl);
 	if (NULL == pOwnerCtrl) return {};
 
-	CDUIWnd *pWndManager = pOwnerCtrl->GetWndOwner();
+	CDUIWndBase *pWndManager = pOwnerCtrl->GetWndOwner();
 	if (NULL == pWndManager) return {};
 
 	tagDuiTextStyle TextStyle = GetTextStyle();

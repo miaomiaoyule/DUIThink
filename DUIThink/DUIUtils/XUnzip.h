@@ -98,16 +98,20 @@
 //#define _USE_32BIT_TIME_T	//+++1.2
 
 
+#if defined(DuiPlatform_SDL)
+// Win32 types come from MMPlatformTypes.h (via DUIThinkHead / StdAfx). Do not pull windows.h.
+#else
 #ifndef STRICT
 #define STRICT
 #endif
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <tchar.h>
+#endif
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <tchar.h>
 
 #pragma warning(disable : 4996)	// disable bogus deprecation warning
 

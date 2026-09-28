@@ -10,6 +10,7 @@ static const GUID IID_CDUIAttributeHotKey = { 0x10F8061D,0x177A,0x49E4,0xB2,0xA0
 class DUITHINK_API CDUIAttributeHotKey
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttributeHotKey)
 	MMDeclare_ClassName(CDUIAttributeHotKey)
 

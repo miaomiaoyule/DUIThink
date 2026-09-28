@@ -5,17 +5,13 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIPoint : public POINT
+class DUITHINK_API CDUIPoint : public CMMPoint
 {
 public:
 	CDUIPoint();
 	CDUIPoint(const POINT &src);
 	CDUIPoint(int x, int y);
 	CDUIPoint(LPARAM lParam);
-	void Offset(int xOffset, int yOffset);
-
-	bool operator == (const CDUIPoint &pt) const;
-	bool operator != (const CDUIPoint &pt) const;
 };
 
 //////////////////////////////////////////////////////////////////////////

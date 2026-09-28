@@ -14,6 +14,7 @@ static const GUID IID_CDUIAttriImageSection = { 0xE656788D,0x3217,0x4F91,0xA7,0x
 class DUITHINK_API CDUIAttriImageSection
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttriImageSection)
 	MMDeclare_ClassName(CDUIAttriImageSection)
 
@@ -64,8 +65,8 @@ public:
 	virtual BYTE GetAlpha();
 	virtual void SetAlpha(BYTE cbAlpha);
 
-	virtual ARGB GetMask();
-	virtual void SetMask(ARGB dwMask);
+	virtual Gdiplus::ARGB GetMask();
+	virtual void SetMask(Gdiplus::ARGB dwMask);
 
 	virtual CDUIRect GetCorner();
 	virtual void SetCorner(const CDUIRect &rcCorner);

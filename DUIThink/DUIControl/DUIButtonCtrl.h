@@ -10,6 +10,7 @@ static const GUID IID_CDUIButtonCtrl = { 0xBC562FB6,0x4F45,0x4DA9,0xAA,0xCD,0x1C
 class DUITHINK_API CDUIButtonCtrl
 	: public CDUIStaticCtrl
 {
+	MMDeclare_Super(CDUIStaticCtrl)
 	DuiDeclare_CreateControl(CDUIButtonCtrl)
 	MMDeclare_ClassName(CDUIButtonCtrl)
 
@@ -50,11 +51,11 @@ public:
 	virtual HFONT GetFontPushed();
 	virtual HFONT GetFontFocus();
 	virtual HFONT GetFontDisabled();
-	virtual ARGB GetTextColorNormal();
-	virtual ARGB GetTextColorHot();
-	virtual ARGB GetTextColorPushed();
-	virtual ARGB GetTextColorFocus();
-	virtual ARGB GetTextColorDisabled();
+	virtual Gdiplus::ARGB GetTextColorNormal();
+	virtual Gdiplus::ARGB GetTextColorHot();
+	virtual Gdiplus::ARGB GetTextColorPushed();
+	virtual Gdiplus::ARGB GetTextColorFocus();
+	virtual Gdiplus::ARGB GetTextColorDisabled();
 	virtual tagDuiTextStyle GetTextStyle() override;
 	virtual tagDuiTextStyle GetTextStyleNormal();
 	virtual tagDuiTextStyle GetTextStyleHot();

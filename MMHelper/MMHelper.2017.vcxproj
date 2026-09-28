@@ -72,6 +72,7 @@
     <RootNamespace>MMHelper</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
+  <Import Project="$(ProjectDir)DuiPlatformSDL.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -331,8 +332,10 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>/wd 4996 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>../ThirdDepend</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -356,6 +359,7 @@ if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigne
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -377,6 +381,7 @@ if exist "../Demo/DUIThinkDemo_C++/Debug" copy $(Configuration)\$(TargetFileName
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -398,6 +403,7 @@ copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Comman
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -416,6 +422,7 @@ copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Comman
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;MMHELPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../ThirdDepend</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -490,6 +497,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -515,6 +523,7 @@ if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigne
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -540,6 +549,7 @@ if exist "../Demo/DUIThinkDemo_C++/Release" copy $(Configuration)\$(TargetFileNa
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -566,6 +576,7 @@ copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Comman
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
+      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -687,6 +698,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClInclude Include="MMCommandLine.h" />
     <ClInclude Include="MMMD5CheckSum.h" />
     <ClInclude Include="MMModule.h" />
+    <ClInclude Include="MMPlatformTypes.h" />
     <ClInclude Include="MMProcess.h" />
     <ClInclude Include="MMReDirection.h" />
     <ClInclude Include="MMRegMonitor.h" />
@@ -710,7 +722,11 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClInclude Include="MMStrHelp.h" />
     <ClInclude Include="MMString.h" />
     <ClInclude Include="MMSvg.h" />
+    <ClInclude Include="MMTime.h" />
     <ClInclude Include="MMTrayIcon.h" />
+    <ClInclude Include="MMUtils\MMPoint.h" />
+    <ClInclude Include="MMUtils\MMRect.h" />
+    <ClInclude Include="MMUtils\MMSize.h" />
     <ClInclude Include="MMVersion.h" />
     <ClInclude Include="MMWinTCPing.h" />
     <ClInclude Include="stdafx.h" />
@@ -803,7 +819,11 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     <ClCompile Include="MMStrHelp.cpp" />
     <ClCompile Include="MMString.cpp" />
     <ClCompile Include="MMSvg.cpp" />
+    <ClCompile Include="MMTime.cpp" />
     <ClCompile Include="MMTrayIcon.cpp" />
+    <ClCompile Include="MMUtils\MMPoint.cpp" />
+    <ClCompile Include="MMUtils\MMRect.cpp" />
+    <ClCompile Include="MMUtils\MMSize.cpp" />
     <ClCompile Include="MMVersion.cpp" />
     <ClCompile Include="MMWinTCPing.cpp" />
     <ClCompile Include="stdafx.cpp">

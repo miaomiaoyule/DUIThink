@@ -6,10 +6,11 @@
 //////////////////////////////////////////////////////////////////////////
 class CDlgDemo : public CDUIWnd
 {
+	MMDeclare_Super(CDUIWnd)
 	DuiDeclare_Message_Map()
 
 public:
-	CDlgDemo(LPCTSTR lpszDuiName);
+	CDlgDemo();
 	~CDlgDemo();
 
 	//control
@@ -19,6 +20,7 @@ protected:
 	CDUIRadioBoxCtrl *					m_pRadioViewHomePageCtrl = NULL;
 	CDUIRadioBoxCtrl *					m_pRadioViewControlViewCtrl = NULL;
 	CDUIRadioBoxCtrl *					m_pRadioViewStaticViewCtrl = NULL;
+	CDUIRadioBoxCtrl *					m_pRadioBoxHomePageCtrl = NULL;
 
 	//control view
 	CStaticView							m_StaticView;
@@ -38,9 +40,11 @@ protected:
 
 	//variant
 protected:
+#ifndef DuiPlatform_SDL
 	//tray
 	CMMTrayIcon							m_TrayIcon;
 	bool								m_bShowTrayIcon = true;
+#endif
 
 	//dialog
 protected:

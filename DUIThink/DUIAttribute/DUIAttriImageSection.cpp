@@ -32,7 +32,7 @@ void CDUIAttriImageSection::Draw(HDC hDC, const CDUIRect &rcItem, const CDUIRect
 	if (NULL == pImageBaseCur || NULL == m_pOwner) return;
 
 	//info
-	CDUIWnd *pWnd = GetOwnerWnd();
+	CDUIWndBase *pWnd = GetOwnerWnd();
 	if (NULL == pWnd) return;
 
 	tagDuiImageSection ImageSection = GetImageSection();
@@ -46,7 +46,7 @@ void CDUIAttriImageSection::Draw(HBITMAP hBitmap, Gdiplus::Bitmap *pBitmap, cons
 {
 	if (NULL == hBitmap && NULL == pBitmap) return;
 
-	CDUIWnd *pWnd = GetOwnerWnd();
+	CDUIWndBase *pWnd = GetOwnerWnd();
 	if (NULL == pWnd) return;
 
 	HBITMAP hBmpPaint = hBitmap;
@@ -56,12 +56,13 @@ void CDUIAttriImageSection::Draw(HBITMAP hBitmap, Gdiplus::Bitmap *pBitmap, cons
 	CDUIRect rcSource = GetSource(ImageSection);
 
 	//dest
+	CDUIRect rcIntersect;
 	CDUIRect rcDest = GetDest(rcSource, rcItem);
 	rcDest.Offset(rcItem.left, rcItem.top);
-	if (false == IntersectRect(&CDUIRect(), &rcDest, &rcItem)) return;
+	if (false == IntersectRect(&rcIntersect, &rcDest, &rcItem)) return;
 
 	//corner
-	CDUIRect rcCorner = bScale ? DuiDpiScaleAttri(ImageSection.rcCorner) : ImageSection.rcCorner;
+	CDUIRect rcCorner = bScale ? CDUIRect(DuiDpiScaleAttri(ImageSection.rcCorner)) : ImageSection.rcCorner;
 
 	//mask
 	if (ImageSection.dwMask > 0x00ffffff || bDisablePallete || 255 != ImageSection.cbAlpha)
@@ -126,7 +127,7 @@ void CDUIAttriImageSection::DrawAnimate(HDC hDC, const CDUIRect &rcItem, const C
 	CDUIImageBase *pImageBaseCur = GetCurImageBase();
 	if (NULL == pImageBaseCur || NULL == pImageBaseCur->GetHandle(GetScale())) return;
 
-	CDUIWnd *pWnd = GetOwnerWnd();
+	CDUIWndBase *pWnd = GetOwnerWnd();
 	if (NULL == pWnd) return;
 
 	//dest
@@ -428,14 +429,14 @@ void CDUIAttriImageSection::SetAlpha(BYTE cbAlpha)
 	return;
 }
 
-ARGB CDUIAttriImageSection::GetMask()
+Gdiplus::ARGB CDUIAttriImageSection::GetMask()
 {
 	tagDuiImageSection ImageSection = GetImageSection();
 
 	return ImageSection.dwMask;
 }
 
-void CDUIAttriImageSection::SetMask(ARGB dwMask)
+void CDUIAttriImageSection::SetMask(Gdiplus::ARGB dwMask)
 {
 	tagDuiImageSection ImageSection = GetImageSection();
 	ImageSection.dwMask = dwMask;

@@ -1,5 +1,6 @@
 //you should not modify this
 #define IDC_HorizontalLayoutCtrl_0 				(100001)
+#define IDC_RadioBoxCtrl_100009 				(100009)
 #define IDC_RadioBoxCtrl_100010 				(100010)
 #define IDC_RadioBoxCtrl_100011 				(100011)
 #define IDC_RadioBoxCtrl_100012 				(100012)
@@ -359,3 +360,4 @@
 #define IDC_RadioBoxControlView 				(101108)
 #define IDC_RadioBoxStaticView 				(101109)
 #define IDC_WebBrowserCtrl_101110 				(101110)
+#define IDC_RadioBoxHomePage 				(101107)

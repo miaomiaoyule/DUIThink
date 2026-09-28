@@ -11,6 +11,7 @@ class DUITHINK_API CDUITabLayoutCtrl
 	: public CDUIContainerCtrl
 	, public CDUIAnimation
 {
+	MMDeclare_Super(CDUIContainerCtrl)
 	DuiDeclare_CreateControl(CDUITabLayoutCtrl)
 	MMDeclare_ClassName(CDUITabLayoutCtrl)
 

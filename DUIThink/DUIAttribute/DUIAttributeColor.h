@@ -10,15 +10,16 @@ static const GUID IID_CDUIAttributeColor = { 0x1FB46B68,0x66AA,0x44B5,0x89,0xBE,
 class DUITHINK_API CDUIAttributeColor 
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttributeColor)
 	MMDeclare_ClassName(CDUIAttributeColor)
 
 public:
-	CDUIAttributeColor(ARGB dwColor = DUIARGB(255, 253, 198, 104));
+	CDUIAttributeColor(Gdiplus::ARGB dwColor = DUIARGB(255, 253, 198, 104));
 	~CDUIAttributeColor(void);
 
 protected:
-	ARGB								m_dwColor = 0;
+	Gdiplus::ARGB						m_dwColor = 0;
 
 	//override
 public:
@@ -28,14 +29,13 @@ public:
 public:
 	CDUIAttributeColor & operator = (CDUIAttributeObject &Right) override;
 
-	virtual bool SetColor(ARGB dwColor);
+	virtual bool SetColor(Gdiplus::ARGB dwColor);
 	virtual bool SetColorValueA(BYTE cbA);
 	virtual bool SetColorValueR(BYTE cbR);
 	virtual bool SetColorValueG(BYTE cbG);
 	virtual bool SetColorValueB(BYTE cbB);
 
-	virtual ARGB GetColorValue();
-	virtual Color GetColorObject();
+	virtual Gdiplus::ARGB GetColorValue();
 
 	//attribute
 protected:

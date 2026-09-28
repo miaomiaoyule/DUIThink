@@ -1,23 +1,28 @@
-// header.h: ±ê×¼ÏµÍ³°üº¬ÎÄ¼şµÄ°üº¬ÎÄ¼ş£¬
-// »òÌØ¶¨ÓÚÏîÄ¿µÄ°üº¬ÎÄ¼ş
+ï»¿// header.h: æ ‡å‡†ç³»ç»ŸåŒ…å«æ–‡ä»¶çš„åŒ…å«æ–‡ä»¶ï¼Œ
+// æˆ–ç‰¹å®šäºé¡¹ç›®çš„åŒ…å«æ–‡ä»¶
 //
 
 #pragma once
 
-#include "targetver.h"
-#define WIN32_LEAN_AND_MEAN             // ´Ó Windows Í·ÎÄ¼şÖĞÅÅ³ı¼«ÉÙÊ¹ÓÃµÄÄÚÈİ
-// Windows Í·ÎÄ¼ş
-#include <windows.h>
-// C ÔËĞĞÊ±Í·ÎÄ¼ş
+#ifndef DuiPlatform_SDL
+#define WIN32_LEAN_AND_MEAN             // ä» Windows å¤´æ–‡ä»¶ä¸­æ’é™¤æå°‘ä½¿ç”¨çš„å†…å®¹
+#endif
+
+// C è¿è¡Œæ—¶å¤´æ–‡ä»¶
 #include <stdlib.h>
-#include <malloc.h>
 #include <memory.h>
-#include <tchar.h>
-#include <CommDlg.h>
+#if defined(_WIN32)
+#include <malloc.h>
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 #include "../../../DUIThink/DUIThinkHead.h"
 
+#ifndef DuiPlatform_SDL
+#include <CommDlg.h>
+#endif
+
+#if defined(_MSC_VER)
 #ifdef _WIN64
 #ifdef _DEBUG
 #pragma comment(lib, "../../../lib/MMHelper.201764D.lib")
@@ -33,6 +38,7 @@
 #else
 #pragma comment(lib, "../../../lib/MMHelper.2017.lib")
 #pragma comment(lib, "../../../lib/DUIThink.2017.lib")
+#endif
 #endif
 #endif
 

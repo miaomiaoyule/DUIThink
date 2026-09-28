@@ -12,6 +12,7 @@ class DUITHINK_API CDUIListHeaderItemCtrl
 {
 	friend class CDUIListHeaderCtrl;
 
+	MMDeclare_Super(CDUIContainerCtrl)
 	DuiDeclare_CreateControl(CDUIListHeaderItemCtrl)
 	MMDeclare_ClassName(CDUIListHeaderItemCtrl)
 
@@ -47,8 +48,8 @@ protected:
 protected:
 	CDUIListHeaderCtrl *				m_pOwner = NULL;
 	CDUIRect							m_rcThisLast;
-	CDUIRect							m_rcSep;							//·Ö¸ôÇøÓò
-	int									m_nSepStatus;						//·Ö¸ô×´Ì¬
+	CDUIRect							m_rcSep;							//åˆ†éš”åŒºåŸŸ
+	int									m_nSepStatus;						//åˆ†éš”çŠ¶æ€
 	CDUIPoint							m_ptLastMouse;
 
 	//override
@@ -87,7 +88,7 @@ public:
 	virtual CMMString GetText();
 	virtual bool SetText(LPCTSTR lpszText);
 	virtual HFONT GetFont();
-	virtual ARGB GetTextColor();
+	virtual Gdiplus::ARGB GetTextColor();
 	virtual tagDuiTextStyle GetTextStyle();
 	virtual tagDuiTextStyle GetTextStyleActive();
 	virtual void SetTextStyle(const tagDuiTextStyle &TextStyle);

@@ -2,15 +2,22 @@
 #define __MM_HELPER_H__
 
 //////////////////////////////////////////////////////////////////////////
-//导出定义
 #ifndef MMHELPER_API
 	#ifdef MMHELPLIB
 		#define MMHELPER_API
 	#else
-		#ifdef MMHELPER_DLL
-			#define MMHELPER_API _declspec(dllexport)
+		#if defined(_MSC_VER)
+			#ifdef MMHELPER_DLL
+				#define MMHELPER_API __declspec(dllexport)
+			#else
+				#define MMHELPER_API __declspec(dllimport)
+			#endif
 		#else
-			#define MMHELPER_API _declspec(dllimport)
+			#ifdef MMHELPER_DLL
+				#define MMHELPER_API __attribute__((visibility("default")))
+			#else
+				#define MMHELPER_API
+			#endif
 		#endif
 	#endif
 #endif
@@ -45,13 +52,23 @@
 #define _NODISCARD_PERF
 #endif /* _HAS_NODISCARD */
 
-//////////////////////////////////////////////////////////////////////////////////
-//包含文件
+//////////////////////////////////////////////////////////////////////////
 #include <stdio.h>
 #include <stdlib.h>
-#include <tchar.h>
 #include <assert.h>
+#include <stddef.h>
+#include <time.h>
+#include <math.h>
+#include <string.h>
+
+#include <cwctype>
+#include <cwchar>
 #include <vector>
+#include <set>
+#include <map>
+#include <unordered_map>
+#include <string>
+#include <algorithm>
 #include <atomic>
 #include <memory>
 #include <functional>
@@ -59,44 +76,84 @@
 #include <mutex>
 #include <iostream>
 #include <fstream>
-#include <algorithm>
-#include <map>
-#include <unordered_map>
 #include <thread>
-#include <windows.h>
-#include <Tlhelp32.h>  
-#include <ObjBase.h>
-#include <atltypes.h>
-#include <atlstr.h>
-#include <nb30.h>
-#include <CommCtrl.h>
-#include <inaddr.h>
-#include <winsock2.h>
-#include <iphlpapi.h>
-#include <ShTypes.h>
-#include <ShlObj.h>
-#include <Shlwapi.h>
-#include <ShellAPI.h>
-#include <winternl.h>
-#include <WtsApi32.h>
+#include <codecvt>
 using namespace std;
 
-#pragma comment(lib, "ws2_32.lib")
-#pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "wldap32.lib")
-#pragma comment(lib, "Bcrypt.lib")
-#pragma comment(lib, "Userenv.lib")
-#pragma comment(lib, "version.lib")
-#pragma comment(lib, "Wtsapi32.lib")
+//////////////////////////////////////////////////////////////////////////
+// SDL / Win32 switch: set <DuiPlatformSDL>true|false</DuiPlatformSDL> in MMHelper/DuiPlatformSDL.props
+// (injects DuiPlatform_SDL and gates SDL3_exports.def). Do not #define here.
+#if defined(DuiPlatform_SDL)
+	#include "MMPlatformTypes.h"
+#else
+	#include <tchar.h>
+	#include <malloc.h>
+	#include <windows.h>
+	#include <windowsx.h>
+	#include <Tlhelp32.h>  
+	#include <ObjBase.h>
+	#include <atltypes.h>
+	#include <atlstr.h>
+	#include <nb30.h>
+	#include <CommCtrl.h>
+	#include <inaddr.h>
+	#include <winsock2.h>
+	#include <iphlpapi.h>
+	#include <ShTypes.h>
+	#include <ShlObj.h>
+	#include <Shlwapi.h>
+	#include <ShellAPI.h>
+	#include <winternl.h>
+	#include <WtsApi32.h>
+	
+	#pragma comment(lib, "ws2_32.lib")
+	#pragma comment(lib, "winmm.lib")
+	#pragma comment(lib, "wldap32.lib")
+	#pragma comment(lib, "Bcrypt.lib")
+	#pragma comment(lib, "Userenv.lib")
+	#pragma comment(lib, "version.lib")
+	#pragma comment(lib, "Wtsapi32.lib")
 
-//////////////////////////////////////////////////////////////////////////////////
-void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
+#ifndef MMDeclare_Super
+#define MMDeclare_Super(BaseClass) using Super = BaseClass;
+#endif
+#endif
+
+//////////////////////////////////////////////////////////////////////////
+class CMMRect;
+class MMHELPER_API IMMWndInterface
+{
+public:
+	virtual ~IMMWndInterface() {}
+	virtual UINT GetWndID() = 0;
+	virtual HDC GetWndDC() = 0;
+	virtual bool IsVirtualWnd() = 0;
+	virtual bool IsWindowVisible() = 0;
+	virtual void SetWindowPos(HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags) = 0;
+	virtual void ShowWindow(int nCmdShow) = 0;
+	virtual void Invalidate() = 0;
+	virtual HWND GetParent() = 0;
+	virtual CMMRect GetWindowRect() = 0;
+	virtual CMMRect GetClientRect() = 0;
+
+#ifdef DuiPlatform_SDL
+	// Called by MMSdlDispatchEvent for queued async / EXPOSED events.
+	virtual void OnWndMessage(SDL_Event &e) = 0;
+#endif
+};
+
+MMHELPER_API void MMTrace(LPCTSTR pstrFormat, ...);
+MMHELPER_API void MMRegisterWnd(HWND hWnd, IMMWndInterface *pWnd);
+MMHELPER_API void MMUnregisterWnd(HWND hWnd);
+MMHELPER_API IMMWndInterface * MMFindWnd(HWND hWnd);
 
 //////////////////////////////////////////////////////////////////////////
 #define MMSvgEnable
 #ifdef MMSvgEnable
+#if defined(_WIN32) || defined(_WIN64)
 #include "../ThirdDepend/svg/Include/svg.h"
 
+#ifdef _MSC_VER
 #ifdef _DEBUG
 	#ifdef _DLL
 		#ifdef _WIN64
@@ -126,15 +183,20 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 		#endif
 	#endif
 #endif
+#endif // _MSC_VER
+#endif // _WIN32
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////
-//导出文件
+//////////////////////////////////////////////////////////////////////////
 #include "MMDefine.h"
-#include "MMHash.h"
+#include "MMUtils/MMPoint.h"
+#include "MMUtils/MMSize.h"
+#include "MMUtils/MMRect.h"
 #include "MMString.h"
+#include "MMHash.h"
 #include "MMModule.h"
 #include "MMFile.h"
+#include "MMTime.h"
 #include "MMStrHelp.h"
 #include "MMService.h"
 #include "MMCommandLine.h"
@@ -169,7 +231,6 @@ void MMHELPER_API MMTrace(LPCTSTR pstrFormat, ...);
 #include "MMSocket/SocketServer/Define.h"
 #include "MMSocket/SocketServer/MMSocketClientItem.h"
 #include "MMSocket/SocketServer/MMTCPSocketServer.h"
-
-//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 #endif

@@ -80,9 +80,6 @@
 #define StrComboxItem								("[%d]%s")
 #define StrPosition									("%d-%d-%d-%d-%d-%d-%d-%d-%d")
 
-//dpi
-#define DuiDpiScaleAttri(x)							(m_pOwner ? m_pOwner->GetDpiObj().Scale(x) : x)
-
 #define DuiAttriModifyValue(Value, Store, ID) \
 { \
 	do \

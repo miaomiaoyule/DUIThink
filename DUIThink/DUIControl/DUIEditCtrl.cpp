@@ -1,9 +1,11 @@
 #include "StdAfx.h"
 #include "DUIEditCtrl.h"
 
+#ifndef DuiPlatform_SDL
 //////////////////////////////////////////////////////////////////////////
 class CDUIEditWnd : public CDUIWnd
 {
+	MMDeclare_Super(CDUIWnd)
 	MMDeclare_ClassName()
 
 public:
@@ -12,7 +14,7 @@ public:
 
 protected:
 	CDUIEditCtrl *						m_pOwner = NULL;
-	CDUIWnd *							m_pWndOwner = NULL;
+	CDUIWndBase *						m_pWndOwner = NULL;
 	HBRUSH								m_hBkBrush = NULL;
 
 public:
@@ -114,15 +116,15 @@ bool CDUIEditWnd::Init()
 	}
 	if (m_pOwner->IsDesktopEdit())
 	{
-		SetWindowPos(m_hWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+		::SetWindowPos(m_hWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 	}
 
 	AdjustWndSize(true);
 
 	//text
 	HFONT hFont = pAttribute ? pAttribute->GetFont() : NULL;
-	hFont ? SetWindowFont(m_hWnd, hFont, TRUE) : NULL;
-	m_pOwner->IsPasswordMode() ? Edit_SetPasswordChar(m_hWnd, m_pOwner->GetPasswordChar()) : NULL;
+	if (hFont) SetWindowFont(m_hWnd, hFont, TRUE);
+	if (m_pOwner->IsPasswordMode()) Edit_SetPasswordChar(m_hWnd, m_pOwner->GetPasswordChar());
 	Edit_LimitText(m_hWnd, m_pOwner->GetMaxChar());
 	Edit_SetText(m_hWnd, m_pOwner->GetText());
 	Edit_SetModify(m_hWnd, FALSE);
@@ -176,7 +178,7 @@ void CDUIEditWnd::AdjustWndSize(bool bCreate)
 		rcPos.Offset(rcWnd.left, rcWnd.top);
 	}
 
-	SetWindowPos(m_hWnd, NULL, rcPos.left, rcPos.top, rcPos.GetWidth(), rcPos.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
+	::SetWindowPos(m_hWnd, NULL, rcPos.left, rcPos.top, rcPos.GetWidth(), rcPos.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
 	//caret pos
 	if (false == bCreate)
@@ -676,7 +678,7 @@ tagDuiTextStyle CDUIEditCtrl::GetTextStyleTipTextNormal()
 	return m_AttributeTextStyleTipTextNormal.GetTextStyle();
 }
 
-ARGB CDUIEditCtrl::GetTextColorTipTextNormal()
+Gdiplus::ARGB CDUIEditCtrl::GetTextColorTipTextNormal()
 {
 	return m_AttributeTextStyleTipTextNormal.GetTextColor();
 }
@@ -830,3 +832,5 @@ void CDUIEditCtrl::OnEditDestroy()
 
 	return;
 }
+
+#endif

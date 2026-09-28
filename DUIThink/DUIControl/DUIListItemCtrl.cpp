@@ -537,7 +537,7 @@ HFONT CDUIListItemCtrl::GetFont()
 	return m_AttributeTextStyle.GetFont();
 }
 
-ARGB CDUIListItemCtrl::GetTextColor()
+Gdiplus::ARGB CDUIListItemCtrl::GetTextColor()
 {
 	return m_AttributeTextStyle.GetTextColor();
 }
@@ -640,7 +640,7 @@ bool CDUIListItemCtrl::OnDuiLButtonDlk(const CDUIPoint &pt, const DuiMessage &Ms
 {
 	__super::OnDuiLButtonDlk(pt, Msg);
 
-	//if((GetKeyState(VK_CONTROL) & 0x8000)) CTRL¼ü
+	//if((GetKeyState(VK_CONTROL) & 0x8000)) CTRLé”®
 	Select();
 
 	SendNotify(DuiNotify_ItemDbClick, Msg.wParam, Msg.lParam);

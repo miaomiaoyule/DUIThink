@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "MMFile.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ struct FileTypeMap
 		FILEKIND(_T("wps"), FileType_Doc);
 		FILEKIND(_T("config"), FileType_Doc);
 
-		//Í¼Æ¬
+		//å›¾ç‰‡
 		FILEKIND(_T("bmp"), FileType_Image);
 		FILEKIND(_T("jpg"), FileType_Image);
 		FILEKIND(_T("jpeg"), FileType_Image);
@@ -190,7 +190,7 @@ struct FileTypeMap
 		FILEKIND("aifc", FileType_Movie);
 		FILEKIND("aiff", FileType_Movie);
 
-		// Ñ¹ËõÎÄ¼ş
+		// å‹ç¼©æ–‡ä»¶
 		FILEKIND(_T("001"), FileType_Zip);
 		FILEKIND(_T("7z"), FileType_Zip);
 		FILEKIND(_T("a"), FileType_Zip);
@@ -259,7 +259,7 @@ struct FileTypeMap
 		FILEKIND(_T("zip"), FileType_Zip);
 		FILEKIND(_T("zipx"), FileType_Zip);
 
-		//³ÌĞò
+		//ç¨‹åº
 		FILEKIND(_T("exe"), FileType_Exe);
 		FILEKIND(_T("msi"), FileType_Exe);
 
@@ -294,7 +294,15 @@ CMMString CMMFile::CombinFile(LPCTSTR lpszPath, LPCTSTR lpszFileName)
 enMMFileType CMMFile::ParseFileType(LPCTSTR lpszFile)
 {
 	if (MMInvalidString(lpszFile)) return FileType_None;
+#if defined DuiPlatform_SDL
+	SDL_PathInfo info;
+	if (SDL_GetPathInfo(CT2CA(lpszFile), &info) && info.type == SDL_PATHTYPE_DIRECTORY) 
+	{
+		return FileType_Dir;
+	}
+#else
 	if (::PathIsDirectory(lpszFile)) return FileType_Dir;
+#endif
 
 	CMMString strFile = lpszFile;
 
@@ -334,17 +342,17 @@ bool CMMFile::IsWebpFile(LPCTSTR lpszFile)
 
 bool CMMFile::IsWebpFile(const std::vector<BYTE> &vecData)
 {
-	// WebP ÎÄ¼şÍ·ÖÁÉÙĞèÒª 12 ¸ö×Ö½Ú
+	// WebP æ–‡ä»¶å¤´è‡³å°‘éœ€è¦ 12 ä¸ªå­—èŠ‚
 	if (vecData.size() < 12)
 	{
 		return false;
 	}
 
-	// ¼ì²éÇ° 4 ¸ö×Ö½ÚÊÇ·ñÎª 'RIFF'
+	// æ£€æŸ¥å‰ 4 ä¸ªå­—èŠ‚æ˜¯å¦ä¸º 'RIFF'
 	bool bIsRiff = (vecData[0] == 'R' && vecData[1] == 'I' && 
 		vecData[2] == 'F' && vecData[3] == 'F');
 
-	// ¼ì²éµÚ 8 µ½ 11 ×Ö½ÚÊÇ·ñÎª 'WEBP'
+	// æ£€æŸ¥ç¬¬ 8 åˆ° 11 å­—èŠ‚æ˜¯å¦ä¸º 'WEBP'
 	bool bIsWebp = (vecData[8] == 'W' && vecData[9] == 'E' && 
 		vecData[10] == 'B' && vecData[11] == 'P');
 
@@ -362,14 +370,14 @@ bool CMMFile::IsGifFile(LPCTSTR lpszFile)
 
 bool CMMFile::IsGifFile(const std::vector<BYTE> &vecData)
 {
-	// GIF ÎÄ¼şÍ·ÖÁÉÙÓĞ 6 ¸ö×Ö½Ú (Èç "GIF89a" »ò "GIF87a")
+	// GIF æ–‡ä»¶å¤´è‡³å°‘æœ‰ 6 ä¸ªå­—èŠ‚ (å¦‚ "GIF89a" æˆ– "GIF87a")
 	if (vecData.size() < 6) return false;
 
-	// Ç°Èı¸ö×Ö½Ú±ØĞëÊÇ 'G' 'I' 'F'
+	// å‰ä¸‰ä¸ªå­—èŠ‚å¿…é¡»æ˜¯ 'G' 'I' 'F'
 	if (vecData[0] != 'G' || vecData[1] != 'I' || vecData[2] != 'F')
 		return false;
 
-	// ºóÈı¸ö×Ö½ÚÍ¨³£ÊÇ°æ±¾ºÅ "87a" »ò "89a"
+	// åä¸‰ä¸ªå­—èŠ‚é€šå¸¸æ˜¯ç‰ˆæœ¬å· "87a" æˆ– "89a"
 	bool bIs87a = (vecData[3] == '8' && vecData[4] == '7' && vecData[5] == 'a');
 	bool bIs89a = (vecData[3] == '8' && vecData[4] == '9' && vecData[5] == 'a');
 
@@ -392,12 +400,12 @@ bool CMMFile::IsSvgFile(const std::vector<BYTE> &vecData)
 	size_t nCheckSize = min((size_t)512, vecData.size());
 	auto itEnd = vecData.begin() + nCheckSize;
 
-	// ²éÕÒ "<svg"
+	// æŸ¥æ‰¾ "<svg"
 	const char szSvgLower[] = "<svg";
 	auto itLower = std::search(vecData.begin(), itEnd, szSvgLower, szSvgLower + 4);
 	if (itLower != itEnd) return true;
 
-	// ²éÕÒ "<SVG"
+	// æŸ¥æ‰¾ "<SVG"
 	const char szSvgUpper[] = "<SVG";
 	auto itUpper = std::search(vecData.begin(), itEnd, szSvgUpper, szSvgUpper + 4);
 	if (itUpper != itEnd) return true;
@@ -410,8 +418,8 @@ bool CMMFile::ParseFileName(LPCTSTR lpszFileName, CMMString &strName, CMMString 
 	if (NULL == lpszFileName) return false;
 
 	CMMString strFile = lpszFileName;
-	strFile.Trim(_T('\\'));
-	strFile.Trim(_T('/'));
+	strFile.TrimRight(_T('\\'));
+	strFile.TrimRight(_T('/'));
 	int nPos = strFile.rfind(_T('\\'));
 	nPos = max(strFile.rfind(_T('/')), nPos);
 
@@ -436,12 +444,17 @@ bool CMMFile::ParseFilePathName(LPCTSTR lpszFileFull, CMMString &strPath, CMMStr
 
 	if (NULL == lpszFileFull) return false;
 
+	// Only strip trailing separators â€” trimming leading '/' breaks Unix absolute paths.
 	CMMString strFile = lpszFileFull;
-	strFile.Trim(_T('\\'));
-	strFile.Trim(_T('/'));
+	strFile.TrimRight(_T('\\'));
+	strFile.TrimRight(_T('/'));
+#if defined(DuiPlatform_SDL) && !defined(_WIN32)
+	strFile.Replace(_T('\\'), _T('/'));
+	int nPos = (int)strFile.rfind(_T('/'));
+#else
 	strFile.Replace(_T('/'), _T('\\'));
-	int nPos = strFile.rfind(_T('\\'));
-	nPos = max(strFile.rfind(_T('/')), nPos);
+	int nPos = (int)strFile.rfind(_T('\\'));
+#endif
 
 	//no path
 	if (-1 == nPos)
@@ -454,60 +467,6 @@ bool CMMFile::ParseFilePathName(LPCTSTR lpszFileFull, CMMString &strPath, CMMStr
 	strName = strFile.Right(strFile.length() - nPos - 1);
 
 	return true;
-}
-
-bool CMMFile::IsUTF8Encode(std::vector<BYTE> vecData)
-{
-	if (vecData.empty()) return false;
-
-	unsigned char byte;
-	int nIndex = 0;
-	int continuation_bytes = 0;
-
-	while (nIndex < vecData.size())
-	{
-		byte = vecData[nIndex++];
-
-		if (continuation_bytes == 0)
-		{
-			// Check leading byte
-			if (byte <= 0x7F)
-			{
-				// ASCII character, continue
-				continue;
-			}
-			else if (byte >= 0xC2 && byte <= 0xDF)
-			{
-				continuation_bytes = 1;
-			}
-			else if (byte >= 0xE0 && byte <= 0xEF)
-			{
-				continuation_bytes = 2;
-			}
-			else if (byte >= 0xF0 && byte <= 0xF4)
-			{
-				continuation_bytes = 3;
-			}
-			else
-			{
-				return false; // Not a valid UTF-8 leading byte
-			}
-		}
-		else
-		{
-			// Check continuation byte
-			if (byte >= 0x80 && byte <= 0xBF)
-			{
-				continuation_bytes--;
-			}
-			else
-			{
-				return false; // Not a valid UTF-8 continuation byte
-			}
-		}
-	}
-
-	return continuation_bytes == 0; // All continuation bytes must be matched
 }
 
 enMMFileEncode CMMFile::GetFileEncode(FILE *pFile)
@@ -524,14 +483,14 @@ enMMFileEncode CMMFile::GetFileEncode(FILE *pFile)
 	int nSizeRead = fread(vecData.data(), 1, nFileSize, pFile);
 	if (vecData.size() < 2)
 	{
-		return IsUTF8Encode(vecData) ? FileEncode_UTF8 : FileEncode_Ansi;
+		return CMMStrHelp::IsUTF8Encode(vecData) ? FileEncode_UTF8 : FileEncode_Ansi;
 	}
 
 	unsigned char ch = vecData[0];
 	int p = ch << 8;
 	p += vecData[1];
 
-	switch (p)//ÅĞ¶ÏÎÄ±¾Ç°Á½¸ö×Ö½Ú
+	switch (p)//åˆ¤æ–­æ–‡æœ¬å‰ä¸¤ä¸ªå­—èŠ‚
 	{
 		case 0xfffe:  //65534		
 		{
@@ -547,7 +506,7 @@ enMMFileEncode CMMFile::GetFileEncode(FILE *pFile)
 		}
 		default:
 		{
-			return IsUTF8Encode(vecData) ? FileEncode_UTF8 : FileEncode_Ansi;
+			return CMMStrHelp::IsUTF8Encode(vecData) ? FileEncode_UTF8 : FileEncode_Ansi;
 		}
 	}
 
@@ -560,7 +519,7 @@ enMMFileEncode CMMFile::GetFileEncode(const char *pStr)
 
 	if (strlen(pStr) < 2)
 	{
-		return IsUTF8Encode(std::vector<BYTE>(pStr, pStr + strlen(pStr))) ? FileEncode_UTF8 : FileEncode_Ansi;
+		return CMMStrHelp::IsUTF8Encode(std::vector<BYTE>(pStr, pStr + strlen(pStr))) ? FileEncode_UTF8 : FileEncode_Ansi;
 	}
 
 	unsigned char ch = pStr[0];
@@ -568,7 +527,7 @@ enMMFileEncode CMMFile::GetFileEncode(const char *pStr)
 	ch = pStr[1];
 	p += ch;
 
-	switch (p)//ÅĞ¶ÏÎÄ±¾Ç°Á½¸ö×Ö½Ú
+	switch (p)//åˆ¤æ–­æ–‡æœ¬å‰ä¸¤ä¸ªå­—èŠ‚
 	{
 		case 0xfffe:  //65534
 		{
@@ -584,28 +543,83 @@ enMMFileEncode CMMFile::GetFileEncode(const char *pStr)
 		}
 		default:
 		{
-			return IsUTF8Encode(std::vector<BYTE>(pStr, pStr + strlen(pStr))) ? FileEncode_UTF8 : FileEncode_Ansi;
+			return CMMStrHelp::IsUTF8Encode(std::vector<BYTE>(pStr, pStr + strlen(pStr))) ? FileEncode_UTF8 : FileEncode_Ansi;
 		}
 	}
 
 	return FileEncode_Ansi;
 }
 
-PCIDLIST_ABSOLUTE CMMFile::GetPCIDLFromPath(LPCTSTR lpszFileFull)
-{
-	PIDLIST_ABSOLUTE pCID = NULL;
-	HRESULT hRes = ::SHParseDisplayName(lpszFileFull, NULL, &pCID, NULL, NULL);
-
-	if (false == SUCCEEDED(hRes)) return NULL;
-
-	return pCID;
-}
-
 bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecData, DWORD dwSizeLimit)
 {
-	//path
+	bool bFullPath = true;
 	CMMString strFile = lpszFileFull;
-	if (strFile.length() < 2 || _T(':') != strFile[1])
+#if defined(DuiPlatform_SDL) && !defined(_WIN32)
+	if (strFile.empty() || _T('/') != strFile[0])
+	{
+		bFullPath = false;
+	}
+
+	strFile.Replace(_T('\\'), _T('/'));
+#else
+	if (-1 == strFile.find(_T(':')))
+	{
+		bFullPath = false;
+	}
+#endif
+
+	//path
+#if defined(DuiPlatform_SDL)
+	if (false == bFullPath)
+	{
+		strFile = CMMService::GetWorkDirectory() + _T('/') + strFile;
+	}
+
+	strFile.Replace(_T('\\'), _T('/'));
+	size_t nFileSize = 0;
+	void *pData = SDL_LoadFile(CT2CA(strFile).c_str(), &nFileSize);
+	if (NULL == pData) return false;
+
+	if (nFileSize > (size_t)dwSizeLimit)
+	{
+		nFileSize = (size_t)dwSizeLimit;
+	}
+	if (0 == nFileSize)
+	{
+		SDL_free(pData);
+		return false;
+	}
+
+	vecData.assign((BYTE *)pData, (BYTE *)pData + nFileSize);
+	SDL_free(pData);
+	return true;
+
+	/*FILE *pFile = fopen(CT2CA(strFile), "rb");
+	if (NULL == pFile) return false;
+
+	fseek(pFile, 0, SEEK_END);
+	int nFileSize = ftell(pFile);
+	if (nFileSize <= 0)
+	{
+		fclose(pFile);
+		return false;
+	}
+
+	vecData.resize(nFileSize);
+	fseek(pFile, 0, SEEK_SET);
+	int nSizeRead = fread(vecData.data(), 1, nFileSize, pFile);
+	if (nSizeRead != nFileSize)
+	{
+		assert(false);
+		fclose(pFile);
+		return false;
+	}
+
+	fclose(pFile);
+
+	return true;	*/
+#else
+	if (false == bFullPath)
 	{
 		strFile = CMMService::GetWorkDirectory() + _T('\\') + strFile;
 	}
@@ -629,31 +643,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT std::vector<BYTE> &vecDat
 
 		return true;
 	}
-
-	FILE *pFile = fopen(CT2CA(strFile), "rb");
-	if (NULL == pFile) return false;
-
-	fseek(pFile, 0, SEEK_END);
-	int nFileSize = ftell(pFile);
-	if (nFileSize <= 0)
-	{
-		fclose(pFile);
-		return false;
-	}
-
-	vecData.resize(nFileSize);
-	fseek(pFile, 0, SEEK_SET);
-	int nSizeRead = fread(vecData.data(), 1, nFileSize, pFile);
-	if (nSizeRead != nFileSize)
-	{
-		assert(false);
-		fclose(pFile);
-		return false;
-	}
-
-	fclose(pFile);
-
-	return true;
+#endif
 }
 
 bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
@@ -670,7 +660,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 		case FileEncode_Ansi:
 		{
 			strData = (LPCTSTR)CA2CT((LPCSTR)pByte);
-			
+
 			return true;
 		}
 		case FileEncode_Unicode:
@@ -679,7 +669,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 			{
 				pByte += 2;
 				strData = (LPCTSTR)pByte;
-				
+
 				return true;
 			}
 
@@ -697,9 +687,9 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 					pByte[(nSwap << 1) + 0] = pByte[(nSwap << 1) + 1];
 					pByte[(nSwap << 1) + 1] = nTemp;
 				}
-				
+
 				strData = (LPCTSTR)pByte;
-				
+
 				return true;
 			}
 
@@ -711,7 +701,7 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 			{
 				pByte += 3;
 				strData = (LPCTSTR)CA2CT((LPCSTR)pByte, CP_UTF8);
-				
+
 				return true;
 			}
 
@@ -720,12 +710,23 @@ bool CMMFile::GetFileData(IN LPCTSTR lpszFileFull, OUT CMMString &strData)
 		case FileEncode_UTF8:
 		{
 			strData = (LPCTSTR)CA2CT((LPCSTR)pByte, CP_UTF8);
-			
+
 			return true;
 		}
 	}
 
 	return false;
+}
+
+#ifndef DuiPlatform_SDL
+PCIDLIST_ABSOLUTE CMMFile::GetPCIDLFromPath(LPCTSTR lpszFileFull)
+{
+	PIDLIST_ABSOLUTE pCID = NULL;
+	HRESULT hRes = ::SHParseDisplayName(lpszFileFull, NULL, &pCID, NULL, NULL);
+
+	if (false == SUCCEEDED(hRes)) return NULL;
+
+	return pCID;
 }
 
 CMMString CMMFile::GetFileTip(IN LPCTSTR lpszFileFull)
@@ -828,26 +829,26 @@ uint64_t CMMFile::GetFileSize(IN LPCTSTR lpszFileFull)
 
 bool CMMFile::GetFileVersion(IN LPCTSTR lpszFileFull, OUT DWORD &dwVersionInfo)
 {
-	//ÉèÖÃ½á¹û
+	//è®¾ç½®ç»“æœ
 	dwVersionInfo = 0L;
 
-	//½ÓÊÕ»º³å
+	//æ¥æ”¶ç¼“å†²
 	BYTE cbInfoBuffer[1024];
 	ZeroMemory(cbInfoBuffer, sizeof(cbInfoBuffer));
 
-	//Ä£¿éĞÅÏ¢
+	//æ¨¡å—ä¿¡æ¯
 	DWORD dwFileHandle = NULL;
 	if (GetFileVersionInfo(lpszFileFull, dwFileHandle, sizeof(cbInfoBuffer), cbInfoBuffer) == FALSE) return false;
 
-	//»ñÈ¡ĞÅÏ¢
+	//è·å–ä¿¡æ¯
 	UINT uQuerySize = 0;
 	VS_FIXEDFILEINFO * pFixedFileInfo = NULL;
 	if (VerQueryValue(cbInfoBuffer, _T("\\"), (VOID * *)&pFixedFileInfo, &uQuerySize) == FALSE) return false;
 
-	//ÉèÖÃ½á¹û
+	//è®¾ç½®ç»“æœ
 	if ((pFixedFileInfo != NULL) && (uQuerySize == sizeof(VS_FIXEDFILEINFO)))
 	{
-		//ÉèÖÃ°æ±¾
+		//è®¾ç½®ç‰ˆæœ¬
 		WORD wVersion1 = HIWORD(pFixedFileInfo->dwFileVersionMS);
 		WORD wVersion2 = LOWORD(pFixedFileInfo->dwFileVersionMS);
 		WORD wVersion3 = HIWORD(pFixedFileInfo->dwFileVersionLS);
@@ -1020,19 +1021,19 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 	{
 		case FileEncode_UTF8_Bom:
 		{
-			std::string strDataA = CT2CA(strData, CP_UTF8);
+			CMMStringA strDataA = CT2CA(strData, CP_UTF8);
 
 			if (bClearOld)
 			{
-				std::string strSign;
-				strSign.resize(3);
-				strSign[0] = 0xEF;
-				strSign[1] = 0xBB;
-				strSign[2] = 0xBF;
-				strDataA.insert(0, strSign);
+				CMMStringA strSign;
+				strSign.reserve(3);
+				strSign.SetAt(0, 0xEF);
+				strSign.SetAt(1, 0xBB);
+				strSign.SetAt(2, 0xBF);
+				strDataA.Insert(0, strSign);
 			}
 
-			fwrite(strDataA.c_str(), strDataA.size(), 1, pFile);
+			fwrite(strDataA, strDataA.GetLength(), 1, pFile);
 			
 			break;
 		}
@@ -1059,18 +1060,18 @@ bool CMMFile::WriteFileData(IN LPCTSTR lpszFileFull, IN CMMString &strData, bool
 		}
 		case FileEncode_UTF8:
 		{
-			std::string strDataA = CT2CA(strData, CP_UTF8);
+			CMMStringA strDataA = CT2CA(strData, CP_UTF8);
 
-			fwrite(strDataA.c_str(), strDataA.size(), 1, pFile);
+			fwrite(strDataA, strDataA.GetLength(), 1, pFile);
 
 			break;
 		}
 		case FileEncode_Ansi:
 		default:
 		{
-			std::string strDataA = CT2CA(strData);
+			CMMStringA strDataA = CT2CA(strData);
 
-			fwrite(strDataA.c_str(), strDataA.size(), 1, pFile);
+			fwrite(strDataA, strDataA.GetLength(), 1, pFile);
 
 			break;
 		}
@@ -1198,7 +1199,7 @@ bool CMMFile::OpenFolderAndSelectFile(CMMString strFileFull)
 	HRESULT hRes = ::SHParseDisplayName(strFileFull, NULL, &pCID, NULL, NULL);
 	if (FAILED(hRes)) return false;
 
-	hRes = ::SHOpenFolderAndSelectItems(pCID, 0, NULL, 0); // µÚ¶ş¸ö²ÎÊıcidlÖÃÎª0£¬±íÊ¾ÊÇÑ¡ÖĞÎÄ¼ş
+	hRes = ::SHOpenFolderAndSelectItems(pCID, 0, NULL, 0); // ç¬¬äºŒä¸ªå‚æ•°cidlç½®ä¸º0ï¼Œè¡¨ç¤ºæ˜¯é€‰ä¸­æ–‡ä»¶
 
 	return SUCCEEDED(hRes);
 }
@@ -1210,23 +1211,23 @@ bool CMMFile::OperatorFileOrFolder(CMMString strSrc, CMMString strDest, int nOpe
 
 	SHFILEOPSTRUCT FileOp = {};
 	SecureZeroMemory((void*)&FileOp, sizeof(SHFILEOPSTRUCT));
-	//secureZeroMemoryºÍZeroMeroryµÄÇø±ğ
-	//¸ù¾İMSDNÉÏ£¬ZeryMeroryÔÚµ±»º³åÇøµÄ×Ö·û´®³¬³öÉúÃüÖÜÆÚµÄÊ±ºò£¬
-	//»á±»±àÒëÆ÷ÓÅ»¯£¬´Ó¶ø»º³åÇøµÄÄÚÈİ»á±»¶ñÒâÈí¼ş²¶×½µ½¡£
-	//ÒıÆğÈí¼ş°²È«ÎÊÌâ£¬ÌØ±ğÊÇ¶ÔÓÚÃÜÂëÕâĞ©±È½ÏÃô¸ĞµÄĞÅÏ¢¶øËµ¡£
-	//¶øSecureZeroMemoryÔò²»»áÒı·¢´ËÎÊÌâ£¬±£Ö¤»º³åÇøµÄÄÚÈİ»á±»ÕıÈ·µÄÇåÁã¡£
-	//Èç¹ûÉæ¼°µ½±È½ÏÃô¸ĞµÄÄÚÈİ£¬¾¡Á¿Ê¹ÓÃSecureZeroMemoryº¯Êı¡£
+	//secureZeroMemoryå’ŒZeroMeroryçš„åŒºåˆ«
+	//æ ¹æ®MSDNä¸Šï¼ŒZeryMeroryåœ¨å½“ç¼“å†²åŒºçš„å­—ç¬¦ä¸²è¶…å‡ºç”Ÿå‘½å‘¨æœŸçš„æ—¶å€™ï¼Œ
+	//ä¼šè¢«ç¼–è¯‘å™¨ä¼˜åŒ–ï¼Œä»è€Œç¼“å†²åŒºçš„å†…å®¹ä¼šè¢«æ¶æ„è½¯ä»¶æ•æ‰åˆ°ã€‚
+	//å¼•èµ·è½¯ä»¶å®‰å…¨é—®é¢˜ï¼Œç‰¹åˆ«æ˜¯å¯¹äºå¯†ç è¿™äº›æ¯”è¾ƒæ•æ„Ÿçš„ä¿¡æ¯è€Œè¯´ã€‚
+	//è€ŒSecureZeroMemoryåˆ™ä¸ä¼šå¼•å‘æ­¤é—®é¢˜ï¼Œä¿è¯ç¼“å†²åŒºçš„å†…å®¹ä¼šè¢«æ­£ç¡®çš„æ¸…é›¶ã€‚
+	//å¦‚æœæ¶‰åŠåˆ°æ¯”è¾ƒæ•æ„Ÿçš„å†…å®¹ï¼Œå°½é‡ä½¿ç”¨SecureZeroMemoryå‡½æ•°ã€‚
 
 	FileOp.fFlags = FOF_ALLOWUNDO;
 	FileOp.fFlags |= (bSameDir ? FOF_RENAMEONCOLLISION : 0);
 	FileOp.fFlags |= (bMultiFile ? FOF_MULTIDESTFILES : 0);
 	FileOp.fFlags |= (bUI ? 0 : (FOF_NOCONFIRMATION | FOF_NO_UI | FOF_NOCONFIRMMKDIR));
-	FileOp.hNameMappings = NULL;							//ÎÄ¼şÓ³Éä
-	FileOp.hwnd = NULL;										//ÏûÏ¢·¢ËÍµÄ´°¿Ú¾ä±ú£»
-	FileOp.lpszProgressTitle = NULL;						//ÎÄ¼ş²Ù×÷½ø¶È´°¿Ú±êÌâ 
-	FileOp.pFrom = strSrc;									//Ô´ÎÄ¼ş¼°Â·¾¶ 
-	FileOp.pTo = strDest;									//Ä¿±êÎÄ¼ş¼°Â·¾¶ 
-	FileOp.wFunc = nOperator;								//²Ù×÷ÀàĞÍ 
+	FileOp.hNameMappings = NULL;							//æ–‡ä»¶æ˜ å°„
+	FileOp.hwnd = NULL;										//æ¶ˆæ¯å‘é€çš„çª—å£å¥æŸ„ï¼›
+	FileOp.lpszProgressTitle = NULL;						//æ–‡ä»¶æ“ä½œè¿›åº¦çª—å£æ ‡é¢˜ 
+	FileOp.pFrom = strSrc;									//æºæ–‡ä»¶åŠè·¯å¾„ 
+	FileOp.pTo = strDest;									//ç›®æ ‡æ–‡ä»¶åŠè·¯å¾„ 
+	FileOp.wFunc = nOperator;								//æ“ä½œç±»å‹ 
 
 	int nRes = SHFileOperation(&FileOp);
 	return 0 == nRes;
@@ -1240,7 +1241,7 @@ bool CMMFile::OperatorSaveToFile(HWND hWndParent, std::unordered_map<CMMString, 
 
 	//filter
 	std::vector<COMDLG_FILTERSPEC> vecFilter;
-	vecFilter.push_back({ _T("ËùÓĞÎÄ¼ş"), _T("*.*") });
+	vecFilter.push_back({ _T("æ‰€æœ‰æ–‡ä»¶"), _T("*.*") });
 	for (auto &FilterItem : mapFilter)
 	{
 		vecFilter.push_back({ FilterItem.first, FilterItem.second });
@@ -1276,7 +1277,7 @@ bool CMMFile::OperatorSelectFile(HWND hWndParent, std::unordered_map<CMMString, 
 
 	//filter
 	std::vector<COMDLG_FILTERSPEC> vecFilter;
-	vecFilter.push_back({ _T("ËùÓĞÎÄ¼ş"), _T("*.*") });
+	vecFilter.push_back({ _T("æ‰€æœ‰æ–‡ä»¶"), _T("*.*") });
 	for (auto &FilterItem : mapFilter)
 	{
 		vecFilter.push_back({ FilterItem.first, FilterItem.second });
@@ -1348,3 +1349,4 @@ bool CMMFile::OperatorSelectFolder(HWND hWndParent, OUT CMMString &strFolderSele
 
 	return true;
 }
+#endif

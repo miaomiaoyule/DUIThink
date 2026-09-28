@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "DUIColorBase.h"
 
 DuiImplement_CreateResource(CDUIColorBase)
@@ -38,7 +38,7 @@ DWORD CDUIColorBase::GetColor()
 	return m_dwColor;
 }
 
-//ÑÕÉ«Ïà¹Ø
+//é¢œè‰²ç›¸å…³
 void CDUIColorBase::SetColor(DWORD dwColor)
 {
 	if (m_dwColor == dwColor) return;

@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 class CDUIGlobal;
 class CUICommandElement;
+class CDUIWndBase;
 
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIPropertyObject INTERFACE_VERSION(1,1)
@@ -20,6 +21,7 @@ class DUITHINK_API CDUIPropertyObject : public IDuiInterface
 	friend class CDUIAttributeObject;
 	friend class CPropertiesView;
 
+	MMDeclare_Super(IDuiInterface)
 	MMDeclare_ClassName(CDUIPropertyObject)
 
 public:
@@ -66,7 +68,7 @@ public:
 	virtual UINT InitCtrlID();
 	virtual int GetScale();
 	virtual const CMMDpi & GetDpiObj();
-	virtual CDUIWnd * GetWndOwner();
+	virtual CDUIWndBase * GetWndOwner();
 	virtual CDUIPropertyObject & operator = (const CDUIPropertyObject &PropObj);
 	virtual void CopyAttributesFrom(const CDUIPropertyObject &PropObj);
 

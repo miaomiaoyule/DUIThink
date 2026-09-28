@@ -1,5 +1,8 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "DUIRichEditCtrl.h"
+
+#ifndef DuiPlatform_SDL
+
 #include <textserv.h>
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,7 +64,7 @@ HRESULT InitDefaultCharFormat(CDUIRichEditCtrl *pOwnerCtrl, CHARFORMAT2W *pCharF
 	::GetObject(hFont, sizeof(LOGFONT), &lf);
 
 	//color
-	ARGB dwColor = pOwnerCtrl->GetTextColorNormal();
+	Gdiplus::ARGB dwColor = pOwnerCtrl->GetTextColorNormal();
 	0 == dwColor ? dwColor = pOwnerCtrl->GetTextColor() : 0;
 
 	pCharFormat->cbSize = sizeof(CHARFORMAT2W);
@@ -665,14 +668,14 @@ BOOL CDUITextHost::TxScreenToClient(LPPOINT lppt)
 {
 	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return false;
 
-	return ::ScreenToClient(m_pOwnerCtrl->GetWndOwner()->GetWndHandle(), lppt);
+	return ScreenToClient(m_pOwnerCtrl->GetWndOwner()->GetWndHandle(), lppt);
 }
 
 BOOL CDUITextHost::TxClientToScreen(LPPOINT lppt)
 {
 	if (NULL == m_pOwnerCtrl || NULL == m_pOwnerCtrl->GetWndOwner()) return false;
 
-	return ::ClientToScreen(m_pOwnerCtrl->GetWndOwner()->GetWndHandle(), lppt);
+	return ClientToScreen(m_pOwnerCtrl->GetWndOwner()->GetWndHandle(), lppt);
 }
 
 HRESULT CDUITextHost::TxActivate(LONG *plOldState)
@@ -879,22 +882,8 @@ LRESULT CDUIRichEditCtrl::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, L
 
 	if (uMsg == WM_IME_COMPOSITION)
 	{
-		//Ω‚æˆŒ¢»Ì ‰»Î∑®Œª÷√“Ï≥£µƒŒ Ã‚
-		HIMC hIMC = ImmGetContext(GetWndOwner()->GetWndHandle());
-		if (hIMC)
-		{
-			//Set composition window position near caret position
-			POINT point;
-			GetCaretPos(&point);
-
-			COMPOSITIONFORM Composition;
-			Composition.dwStyle = CFS_POINT;
-			Composition.ptCurrentPos.x = point.x;
-			Composition.ptCurrentPos.y = point.y;
-			ImmSetCompositionWindow(hIMC, &Composition);
-
-			ImmReleaseContext(GetWndOwner()->GetWndHandle(), hIMC);
-		}
+		//Ëß£ÂÜ≥ÂæÆËΩØËæìÂÖ•Ê≥ï‰ΩçÁΩÆÂºÇÂ∏∏ÁöÑÈóÆÈ¢ò
+		m_pWndOwner->UpdateImeCompositionPos();
 
 		return 0;
 	}
@@ -1473,7 +1462,7 @@ HFONT CDUIRichEditCtrl::GetFont()
 	return m_AttributeTextStyleNormal.GetFont();
 }
 
-ARGB CDUIRichEditCtrl::GetTextColor()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColor()
 {
 	return m_AttributeTextStyleNormal.GetTextColor();
 }
@@ -1494,32 +1483,32 @@ void CDUIRichEditCtrl::SetTextPadding(RECT rcPadding)
 	return;
 }
 
-ARGB CDUIRichEditCtrl::GetTextColorNormal()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColorNormal()
 {
 	return m_AttributeTextStyleNormal.GetTextColor();
 }
 
-ARGB CDUIRichEditCtrl::GetTextColorHot()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColorHot()
 {
 	return m_AttributeTextStyleHot.GetTextColor();
 }
 
-ARGB CDUIRichEditCtrl::GetTextColorFocus()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColorFocus()
 {
 	return m_AttributeTextStyleFocus.GetTextColor();
 }
 
-ARGB CDUIRichEditCtrl::GetTextColorDisabled()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColorDisabled()
 {
 	return m_AttributeTextStyleDisabled.GetTextColor();
 }
 
-ARGB CDUIRichEditCtrl::GetTextColorTipNormal()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColorTipNormal()
 {
 	return m_AttributeTextStyleTipTextNormal.GetTextColor();
 }
 
-ARGB CDUIRichEditCtrl::GetTextColorTipHot()
+Gdiplus::ARGB CDUIRichEditCtrl::GetTextColorTipHot()
 {
 	return m_AttributeTextStyleTipTextHot.GetTextColor();
 }
@@ -2442,17 +2431,17 @@ LRESULT CDUIRichEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 
 	//menu
 	HMENU hPopMenu = CreatePopupMenu();
-	AppendMenu(hPopMenu, 0, ID_RICH_UNDO, _T("≥∑œ˙(&U)"));
-	AppendMenu(hPopMenu, 0, ID_RICH_REDO, _T("÷ÿ◊ˆ(&R)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_UNDO, _T("Êí§ÈîÄ(&U)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_REDO, _T("ÈáçÂÅö(&R)"));
 	AppendMenu(hPopMenu, MF_SEPARATOR, 0, _T(""));
-	AppendMenu(hPopMenu, 0, ID_RICH_CUT, _T("ºÙ«–(&X)"));
-	AppendMenu(hPopMenu, 0, ID_RICH_COPY, _T("∏¥÷∆(&C)"));
-	AppendMenu(hPopMenu, 0, ID_RICH_PASTE, _T("’≥Ã˚(&V)"));
-	AppendMenu(hPopMenu, 0, ID_RICH_CLEAR, _T("«Âø’(&L)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_CUT, _T("Ââ™Âàá(&X)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_COPY, _T("Â§çÂà∂(&C)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_PASTE, _T("Á≤òÂ∏ñ(&V)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_CLEAR, _T("Ê∏ÖÁ©∫(&L)"));
 	AppendMenu(hPopMenu, MF_SEPARATOR, 0, _T(""));
-	AppendMenu(hPopMenu, 0, ID_RICH_SELECTALL, _T("»´—°(&A)"));
+	AppendMenu(hPopMenu, 0, ID_RICH_SELECTALL, _T("ÂÖ®ÈÄâ(&A)"));
 
-	//≥ı ºªØ≤Àµ•œÓ
+	//ÂàùÂßãÂåñËèúÂçïÈ°π
 	UINT uUndo = (CanUndo() ? 0 : MF_GRAYED);
 	::EnableMenuItem(hPopMenu, ID_RICH_UNDO, MF_BYCOMMAND | uUndo);
 	UINT uRedo = (CanRedo() ? 0 : MF_GRAYED);
@@ -2757,3 +2746,5 @@ void CDUIRichEditCtrl::ConstructTextStyle()
 
 	return;
 }
+
+#endif

@@ -10,6 +10,7 @@ static const GUID IID_CDUIAttributeULong = { 0x8555289D,0x0401,0x45EE,0xB3,0x22,
 class DUITHINK_API CDUIAttributeULong
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttributeULong)
 	MMDeclare_ClassName(CDUIAttributeULong)
 

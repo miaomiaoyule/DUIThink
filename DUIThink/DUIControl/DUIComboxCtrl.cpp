@@ -6,8 +6,9 @@
 
 #define COUNT_WAVEOFFSET				(20)
 //////////////////////////////////////////////////////////////////////////
-class CDUIComboxWnd : public CDUIWnd
+class CDUIComboxWnd : public CDUIPopupWnd
 {
+	MMDeclare_Super(CDUIPopupWnd)
 	MMDeclare_ClassName()
 	DuiDeclare_Message_Map()
 
@@ -28,12 +29,15 @@ protected:
 
 public:
 	void Init(CDUIListViewCtrl *pComboxView);
-	void UnInit();
+	void Close(UINT nRet = IDOK) override;
 	CMMString GetDuiName() const override;
 
+	//message
 protected:
-	void OnFinalMessage() override;
 	LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam) override;
+
+	//notify
+	void OnFinalMessage() override;
 	void OnDuiWndInited(const DuiNotify &Notify);
 	void OnDuiItemSelected(const DuiNotify &Notify);
 	void OnDuiItemMouseEnter(const DuiNotify &Notify);
@@ -45,7 +49,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 MMImplement_ClassName(CDUIComboxWnd)
 
-DuiBegin_Message_Map(CDUIComboxWnd, CDUIWnd)
+DuiBegin_Message_Map(CDUIComboxWnd, CDUIPopupWnd)
 	Dui_On_Notify(DuiNotify_WndInited, OnDuiWndInited)
 	Dui_On_Notify(DuiNotify_ItemSelected, OnDuiItemSelected)
 	Dui_On_Notify(DuiNotify_ItemMouseEnter, OnDuiItemMouseEnter)
@@ -60,7 +64,7 @@ CDUIComboxWnd::CDUIComboxWnd(CDUIComboxCtrl *pOwner)
 
 CDUIComboxWnd::~CDUIComboxWnd()
 {
-	UnInit();
+	Close();
 
 	m_pOwner = NULL;
 	m_pWndOwner = NULL;
@@ -123,7 +127,7 @@ void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 		rcCombox.Offset(0, rcOwner.bottom + rcWnd.top - rcCombox.top);
 	}
 
-	SetWindowPos(m_hWnd, NULL, rcCombox.left, rcCombox.top, rcCombox.GetWidth(), rcCombox.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
+	SetWindowPos(NULL, rcCombox.left, rcCombox.top, rcCombox.GetWidth(), rcCombox.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
 	// HACK: Don't deselect the parent's caption
 	HWND hWndParent = m_hWnd;
@@ -134,9 +138,9 @@ void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 	return;
 }
 
-void CDUIComboxWnd::UnInit()
+void CDUIComboxWnd::Close(UINT nRet)
 {
-	Close();
+	__super::Close(nRet);
 
 	if (m_pOwner)
 	{
@@ -167,6 +171,17 @@ CMMString CDUIComboxWnd::GetDuiName() const
 	return _T("");
 }
 
+LRESULT CDUIComboxWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
+{
+	LRESULT lRes = __super::OnKillFocus(wParam, lParam);
+
+#ifndef DuiPlatform_SDL
+	Close();
+#endif
+
+	return lRes;
+}
+
 void CDUIComboxWnd::OnFinalMessage()
 {
 	DetachRootCtrl();
@@ -174,15 +189,6 @@ void CDUIComboxWnd::OnFinalMessage()
 	__super::OnFinalMessage();
 
 	return;
-}
-
-LRESULT CDUIComboxWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
-{
-	LRESULT lRes = __super::OnKillFocus(wParam, lParam);
-
-	UnInit();
-
-	return lRes;
 }
 
 void CDUIComboxWnd::OnDuiWndInited(const DuiNotify &Notify)
@@ -209,7 +215,7 @@ void CDUIComboxWnd::OnDuiItemSelected(const DuiNotify &Notify)
 	//need support empty text, example DTDesigner radiobox bind empty tabctrl
 	m_pOwner->SetText(pItem->GetText());
 
-	UnInit();
+	Close();
 
 	return;
 }
@@ -245,9 +251,9 @@ void CDUIComboxWnd::OnDuiItemMouseEnter(const DuiNotify &Notify)
 	m_nItemToWave = nIndex;
 	int nIndexPre = m_pComboxView->FindNextIndex(m_nItemToWave, false);
 	int nIndexNext = m_pComboxView->FindNextIndex(m_nItemToWave, true);
-	-1 != m_nItemToWave ? m_vecItemToWave.push_back(m_nItemToWave) : 0;
-	-1 != nIndexPre ? m_vecItemToWave.push_back(nIndexPre) : 0;
-	-1 != nIndexNext ? m_vecItemToWave.push_back(nIndexNext) : 0;
+	if (-1 != m_nItemToWave) m_vecItemToWave.push_back(m_nItemToWave);
+	if (-1 != nIndexPre) m_vecItemToWave.push_back(nIndexPre);
+	if (-1 != nIndexNext) m_vecItemToWave.push_back(nIndexNext);
 	m_vecItemToNormal.erase(std::remove(m_vecItemToNormal.begin(), m_vecItemToNormal.end(), m_nItemToWave), m_vecItemToNormal.end());
 	m_vecItemToNormal.erase(std::remove(m_vecItemToNormal.begin(), m_vecItemToNormal.end(), nIndexPre), m_vecItemToNormal.end());
 	m_vecItemToNormal.erase(std::remove(m_vecItemToNormal.begin(), m_vecItemToNormal.end(), nIndexNext), m_vecItemToNormal.end());
@@ -320,7 +326,8 @@ void CDUIComboxWnd::OnNotify(const DuiNotify &Notify)
 
 	if (m_pOwner
 		&& m_pWndOwner
-		&& (Notify.pNotifyCtrl == m_pComboxView || m_pComboxView->VerifyChild(Notify.pNotifyCtrl)))
+		&& (Notify.pNotifyCtrl == m_pComboxView || m_pComboxView->VerifyChild(Notify.pNotifyCtrl))
+		&& Notify.pNotifyCtrl->GetWndOwner() != m_pWndOwner)
 	{
 		DuiNotify NotifyOwner = Notify;
 		NotifyOwner.DuiNotifyExtend.Type = tagDuiNotify::DuiNotifyExtend_Combox;
@@ -778,7 +785,12 @@ bool CDUIComboxCtrl::RemoveAt(int nIndex)
 
 void CDUIComboxCtrl::RemoveAll()
 {
-	return m_pShowListView ? m_pShowListView->RemoveAll() : NULL;
+	if (m_pShowListView)
+	{
+ 		m_pShowListView->RemoveAll();
+	}
+	
+	return;
 }
 
 bool CDUIComboxCtrl::Active()
@@ -793,7 +805,8 @@ bool CDUIComboxCtrl::Active()
 
 		if (NULL == m_pShowListView)
 		{
-			MessageBox(m_pWndOwner->GetWndHandle(), _T("Please Select Bind UI of ComboxView£¬It Must Be ListviewCtrl"), NULL, NULL);
+			MessageBox(m_pWndOwner->GetWndHandle(), _T("Please Select Bind UI of ComboxViewï¼ŒIt Must Be ListviewCtrl"), NULL, NULL);
+
 			return false;
 		}
 	}
@@ -815,7 +828,7 @@ bool CDUIComboxCtrl::UnActive()
 {
 	if (NULL == m_pComboxWindow || false == IsWindow(m_pComboxWindow->GetWndHandle())) return false;
 
-	m_pComboxWindow->UnInit();
+	m_pComboxWindow->Close();
 
 	return true;
 }
@@ -915,7 +928,18 @@ bool CDUIComboxCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessage &Msg
 {
 	if (false == __super::OnDuiLButtonDown(pt, Msg)) return false;
 
+#ifdef DuiPlatform_SDL
+	if (IsActive())
+	{
+		UnActive();
+	}
+	else
+	{
+		Active();
+	}
+#else
 	Active();
+#endif
 
 	return true;
 }

@@ -1,4 +1,4 @@
-#ifndef __DUIEXPORTDEFINERESOURCE_H__
+ï»¿#ifndef __DUIEXPORTDEFINERESOURCE_H__
 #define __DUIEXPORTDEFINERESOURCE_H__
 
 #pragma once
@@ -90,14 +90,14 @@ static LPCTSTR g_szPublicColor[] =
 
 static LOGFONT g_PublicFont[] =
 {
-	{ 8, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 8, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 12, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 12, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 14, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 14, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 16, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") },
-	{ 16, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("Î¢ÈíÑÅºÚ") }
+	{ 8, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("å¾®è½¯é›…é»‘") },
+	{ 8, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("å¾®è½¯é›…é»‘") },
+	{ 12, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("å¾®è½¯é›…é»‘") },
+	{ 12, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("å¾®è½¯é›…é»‘") },
+	{ 14, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("å¾®è½¯é›…é»‘") },
+	{ 14, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("å¾®è½¯é›…é»‘") },
+	{ 16, 0, 0, 0, FW_NORMAL, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("å¾®è½¯é›…é»‘") },
+	{ 16, 0, 0, 0, FW_BOLD, false, false, false, GB2312_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, _T("å¾®è½¯é›…é»‘") }
 };
 
 static std::unordered_map<CMMString, CMMString> g_mapPublicImage = 

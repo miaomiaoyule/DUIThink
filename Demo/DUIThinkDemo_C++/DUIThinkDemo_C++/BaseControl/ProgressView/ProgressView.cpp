@@ -65,21 +65,21 @@ void CProgressView::OnDuiTimer(const DuiNotify &Notify)
 	if (NULL == m_pProgressViewCtrl || m_pProgressViewCtrl != Notify.pNotifyCtrl) return;
 
 	//horiz
-	if (m_pHProgress1Ctrl)
+	if (m_pHProgress1Ctrl && m_pHProgress1Ctrl->GetMaxValue() > 0)
 	{
 		m_pHProgress1Ctrl->SetCurValue((m_pHProgress1Ctrl->GetCurValue() + 10) % m_pHProgress1Ctrl->GetMaxValue());
 	}
-	if (m_pHProgress2Ctrl)
+	if (m_pHProgress2Ctrl && m_pHProgress2Ctrl->GetMaxValue() > 0)
 	{
 		m_pHProgress2Ctrl->SetCurValue((m_pHProgress2Ctrl->GetCurValue() + 10) % m_pHProgress2Ctrl->GetMaxValue());
 	}
 
 	//vert
-	if (m_pVProgress1Ctrl)
+	if (m_pVProgress1Ctrl && m_pVProgress1Ctrl->GetMaxValue() > 0)
 	{
 		m_pVProgress1Ctrl->SetCurValue((m_pVProgress1Ctrl->GetCurValue() + 10) % m_pVProgress1Ctrl->GetMaxValue());
 	}
-	if (m_pVProgress2Ctrl)
+	if (m_pVProgress2Ctrl && m_pVProgress2Ctrl->GetMaxValue() > 0)
 	{
 		m_pVProgress2Ctrl->SetCurValue((m_pVProgress2Ctrl->GetCurValue() + 10) % m_pVProgress2Ctrl->GetMaxValue());
 	}

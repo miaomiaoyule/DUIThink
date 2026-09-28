@@ -1,6 +1,8 @@
 #ifndef __MM_VERSION_H__
 #define __MM_VERSION_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
@@ -22,7 +24,7 @@ public:
 	static bool IsWindows7OrGreater();
 	static bool IsWindows7SP1OrGreater();
 	static bool IsWindows8OrGreater();
-	static bool IsWindows8Point1OrGreater();				//8.1(6.3)���ϰ汾
+	static bool IsWindows8Point1OrGreater();				//8.1(6.3)以上版本
 	static bool IsWindowsThresholdOrGreater();
 	static bool IsWindows10OrGreater();
 	static bool IsWindows11OrGreater();
@@ -30,5 +32,5 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

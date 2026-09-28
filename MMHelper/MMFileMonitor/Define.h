@@ -1,6 +1,8 @@
 #ifndef __MM_DEFINEFILEMONITOR_H__
 #define __MM_DEFINEFILEMONITOR_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 interface IMMFileMonitorAttemperSink;
@@ -43,5 +45,5 @@ interface IMMFileMonitorAttemperSink
 typedef std::vector<IMMFileMonitorAttemperSink*> VecMMFileMonitorAttemperSink;
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

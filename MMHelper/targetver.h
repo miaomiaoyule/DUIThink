@@ -1,8 +1,9 @@
 #pragma once
 
-// ���� SDKDDKVer.h ��������õ���߰汾�� Windows ƽ̨��
-
-// ���ҪΪ��ǰ�� Windows ƽ̨����Ӧ�ó�������� WinSDKVer.h������
-// �� _WIN32_WINNT ������ΪҪ֧�ֵ�ƽ̨��Ȼ���ٰ��� SDKDDKVer.h��
-
+// Windows SDK version macros — Linux/macOS/SDL builds skip this.
+#if defined(_WIN32) || defined(_WIN64)
+// 包括 SDKDDKVer.h 将定义可用的最高版本的 Windows 平台。
+// 如果要为以前的 Windows 平台生成应用程序，请包括 WinSDKVer.h，并将
+// 将 _WIN32_WINNT 宏设置为要支持的平台，然后再包括 SDKDDKVer.h。
 #include <SDKDDKVer.h>
+#endif

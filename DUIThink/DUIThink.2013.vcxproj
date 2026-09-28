@@ -1010,7 +1010,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUICore\DUINotifyPump.h" />
     <ClInclude Include="DUICore\DUIPropertyObject.h" />
     <ClInclude Include="DUICore\DUIRender.h" />
-    <ClInclude Include="DUICore\DUIWnd.h" />
+    <ClInclude Include="DUICore\DUIPlatform\DUIWnd.h" />
     <ClInclude Include="DUIExport\DefineAnimation.h" />
     <ClInclude Include="DUIExport\DefineAttribute.h" />
     <ClInclude Include="DUIExport\DefineBase.h" />
@@ -1101,7 +1101,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUICore\DUINotifyPump.cpp" />
     <ClCompile Include="DUICore\DUIPropertyObject.cpp" />
     <ClCompile Include="DUICore\DUIRender.cpp" />
-    <ClCompile Include="DUICore\DUIWnd.cpp" />
+    <ClCompile Include="DUICore\DUIPlatform\DUIWnd.cpp" />
     <ClCompile Include="DUIExport\IDUIInterface.cpp" />
     <ClCompile Include="DUIManager\DUIFactory.cpp" />
     <ClCompile Include="DUIManager\DUIGlobal.cpp" />

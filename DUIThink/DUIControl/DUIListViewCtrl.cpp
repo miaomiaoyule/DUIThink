@@ -1302,7 +1302,7 @@ bool CDUIListViewCtrl::SetChildIndex(CDUIControlBase *pControl, int nIndex)
 	if (nOrginIndex == nIndex) return true;
 	if (false == __super::SetChildIndex(pItem, nIndex)) return false;
 
-	//Ë¢ÐÂIndex
+	//åˆ·æ–°Index
 	int iMinIndex = min(nOrginIndex, nIndex);
 	int iMaxIndex = max(nOrginIndex, nIndex);
 	for (int i = iMinIndex; i < iMaxIndex + 1; ++i)
@@ -1601,27 +1601,27 @@ RECT CDUIListViewCtrl::GetItemTextPadding()
 	return DuiDpiScaleCtrl(m_AttributeItemTextPadding.GetValue());
 }
 
-ARGB CDUIListViewCtrl::GetItemTextColorNormal()
+Gdiplus::ARGB CDUIListViewCtrl::GetItemTextColorNormal()
 {
 	return m_AttributeItemTextStyleNormal.GetTextColor();
 }
 
-ARGB CDUIListViewCtrl::GetItemTextColorHot()
+Gdiplus::ARGB CDUIListViewCtrl::GetItemTextColorHot()
 {
 	return m_AttributeItemTextStyleHot.GetTextColor();
 }
 
-ARGB CDUIListViewCtrl::GetItemTextColorSelNormal()
+Gdiplus::ARGB CDUIListViewCtrl::GetItemTextColorSelNormal()
 {
 	return m_AttributeItemTextStyleSelNormal.GetTextColor();
 }
 
-ARGB CDUIListViewCtrl::GetItemTextColorSelHot()
+Gdiplus::ARGB CDUIListViewCtrl::GetItemTextColorSelHot()
 {
 	return m_AttributeItemTextStyleSelHot.GetTextColor();
 }
 
-ARGB CDUIListViewCtrl::GetItemTextColorDisabled()
+Gdiplus::ARGB CDUIListViewCtrl::GetItemTextColorDisabled()
 {
 	return m_AttributeItemTextStyleDisabled.GetTextColor();
 }
@@ -1651,27 +1651,27 @@ tagDuiTextStyle CDUIListViewCtrl::GetItemTextStyleDisabled()
 	return m_AttributeItemTextStyleDisabled.GetTextStyle();
 }
 
-ARGB CDUIListViewCtrl::GetItemStatusColorNormal()
+Gdiplus::ARGB CDUIListViewCtrl::GetItemStatusColorNormal()
 {
 	return m_AttributeColorItemStatusNormal.GetColorValue();
 }
 
-ARGB CDUIListViewCtrl::GetItemStatusColorHot()
+Gdiplus::ARGB CDUIListViewCtrl::GetItemStatusColorHot()
 {
 	return m_AttributeColorItemStatusHot.GetColorValue();
 }
 
-ARGB CDUIListViewCtrl::GetItemStatusColorSelNormal()
+Gdiplus::ARGB CDUIListViewCtrl::GetItemStatusColorSelNormal()
 {
 	return m_AttributeColorItemStatusSelNormal.GetColorValue();
 }
 
-ARGB CDUIListViewCtrl::GetItemStatusColorSelHot()
+Gdiplus::ARGB CDUIListViewCtrl::GetItemStatusColorSelHot()
 {
 	return m_AttributeColorItemStatusSelHot.GetColorValue();
 }
 
-ARGB CDUIListViewCtrl::GetItemStatusColorDisabled()
+Gdiplus::ARGB CDUIListViewCtrl::GetItemStatusColorDisabled()
 {
 	return m_AttributeColorItemStatusDisabled.GetColorValue();
 }
@@ -1885,7 +1885,7 @@ void CDUIListViewCtrl::SetItemStatusImageSectionDisabled(const tagDuiImageSectio
 	return;
 }
 
-ARGB CDUIListViewCtrl::GetLineColor()
+Gdiplus::ARGB CDUIListViewCtrl::GetLineColor()
 {
 	return m_AttributeColorLine.GetColorValue();
 }
@@ -2141,17 +2141,17 @@ LRESULT CDUIListViewCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 			break;
 	}
 
-	return CDUIContainerCtrl::OnDuiKeyDown(Msg);
+	return __super::OnDuiKeyDown(Msg);
 }
 
 LRESULT CDUIListViewCtrl::OnDuiKeyUp(const DuiMessage &Msg)
 {
-	return CDUIContainerCtrl::OnDuiKeyUp(Msg);
+	return __super::OnDuiKeyUp(Msg);
 }
 
 LRESULT	CDUIListViewCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 {
-	return CDUIContainerCtrl::OnDuiContextMenu(Msg);
+	return __super::OnDuiContextMenu(Msg);
 }
 
 void CDUIListViewCtrl::OnItemVisible(CDUIListItemCtrl *pItem)

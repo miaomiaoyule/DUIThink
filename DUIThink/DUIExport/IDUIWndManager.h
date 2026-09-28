@@ -1,4 +1,4 @@
-#ifndef __IDUIWNDMANAGER_H__
+﻿#ifndef __IDUIWNDMANAGER_H__
 #define __IDUIWNDMANAGER_H__
 
 #pragma once

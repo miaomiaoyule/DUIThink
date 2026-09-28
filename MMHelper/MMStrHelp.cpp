@@ -22,11 +22,11 @@ std::string CMMStrHelp::FormatA(const char *lpszFmt, ...)
 
 std::wstring CMMStrHelp::FormatW(const wchar_t *lpszFmt, ...)
 {
-	CStringW strRes;
+	CMMString strRes;
 	va_list args;
 	va_start(args, lpszFmt);
 
-	strRes.FormatV(lpszFmt, args);
+	strRes.Format(lpszFmt, args);
 
 	va_end(args);
 
@@ -46,9 +46,65 @@ CMMString CMMStrHelp::Format(LPCTSTR lpszFmt, ...)
 	return strRes;
 }
 
+bool CMMStrHelp::IsUTF8Encode(std::vector<BYTE> vecData)
+{
+	if (vecData.empty()) return false;
+
+	unsigned char byte;
+	int nIndex = 0;
+	int continuation_bytes = 0;
+
+	while (nIndex < vecData.size())
+	{
+		byte = vecData[nIndex++];
+
+		if (continuation_bytes == 0)
+		{
+			// Check leading byte
+			if (byte <= 0x7F)
+			{
+				// ASCII character, continue
+				continue;
+			}
+			else if (byte >= 0xC2 && byte <= 0xDF)
+			{
+				continuation_bytes = 1;
+			}
+			else if (byte >= 0xE0 && byte <= 0xEF)
+			{
+				continuation_bytes = 2;
+			}
+			else if (byte >= 0xF0 && byte <= 0xF4)
+			{
+				continuation_bytes = 3;
+			}
+			else
+			{
+				return false; // Not a valid UTF-8 leading byte
+			}
+		}
+		else
+		{
+			// Check continuation byte
+			if (byte >= 0x80 && byte <= 0xBF)
+			{
+				continuation_bytes--;
+			}
+			else
+			{
+				return false; // Not a valid UTF-8 continuation byte
+			}
+		}
+	}
+
+	return continuation_bytes == 0; // All continuation bytes must be matched
+}
+
 CMMString CMMStrHelp::ConvertAuto(std::string strFrom)
 {
-	if (CMMFile::IsUTF8Encode(std::vector<BYTE>(strFrom.begin(), strFrom.end())))
+	if (strFrom.empty()) return {};
+
+	if (IsUTF8Encode(std::vector<BYTE>(strFrom.begin(), strFrom.end())))
 	{
 		return ((LPCTSTR)CA2CT(strFrom.c_str(), CP_UTF8));
 	}
@@ -94,7 +150,7 @@ std::vector<int> CMMStrHelp::ParseIntFromString(CMMString strString, CMMString s
 	{
 		CMMString strTemp = strString.Left(nIndex);
 
-		//È¥µô·ÇÊı×Ö×Ö·û
+		//å»æ‰éæ•°å­—å­—ç¬¦
 		CMMString strNum;
 		for (int nIndexTemp = 0; nIndexTemp < strTemp.length(); nIndexTemp++)
 		{
@@ -104,14 +160,14 @@ std::vector<int> CMMStrHelp::ParseIntFromString(CMMString strString, CMMString s
 			}
 		}
 
-		//»ñµÃID
+		//è·å¾—ID
 		vecInt.push_back(_ttoi(strNum));
 
-		//ÏÂ¸ö×Ö·û¶Î
+		//ä¸‹ä¸ªå­—ç¬¦æ®µ
 		strString = strString.Mid(nIndex + 1);
 		nIndex = strString.find(strSplit, 0);
 
-		//Ê£Óà×Ö·û
+		//å‰©ä½™å­—ç¬¦
 		if (-1 == nIndex && strString.length() > 0) nIndex = strString.length();
 	}
 
@@ -153,7 +209,7 @@ std::vector<CMMString> CMMStrHelp::ParseStrFromString(LPCSTR lpszString, LPCSTR 
 			}
 			default:
 			{
-				CStringA strSub(lpszString, lpszSub - lpszString);
+				CMMStringA strSub(lpszString, lpszSub - lpszString);
 				vecResult.push_back((LPCTSTR)CA2CT(strSub, nCodePage));
 
 				break;
@@ -192,7 +248,7 @@ std::vector<tagMMStringEmoji> CMMStrHelp::ParseStringForEmoji(const CMMString &s
 	int nLen = strString.length();
 	if (nLen == 0) return vecStringEmoji;
 
-	// Ô¤·ÖÅäÊÊµ±µÄ¿Õ¼ä£¬½µµÍÆµ·± push_back ´øÀ´µÄÄÚ´æÖØ·ÖÅä¿ªÏú
+	// é¢„åˆ†é…é€‚å½“çš„ç©ºé—´ï¼Œé™ä½é¢‘ç¹ push_back å¸¦æ¥çš„å†…å­˜é‡åˆ†é…å¼€é”€
 	vecStringEmoji.reserve(nLen);
 
 	for (int n = 0; n < nLen; )
@@ -201,7 +257,7 @@ std::vector<tagMMStringEmoji> CMMStrHelp::ParseStringForEmoji(const CMMString &s
 		bool bEmoji = false;
 		int step = 1;
 
-		// 1. ÅĞ¶ÏÊÇ·ñÊÇ¸ß½×´úÀíÏî£¨Õ¼2¸öwchar_tµÄEmoji¼°À©Õ¹×Ö·û£©
+		// 1. åˆ¤æ–­æ˜¯å¦æ˜¯é«˜é˜¶ä»£ç†é¡¹ï¼ˆå 2ä¸ªwchar_tçš„EmojiåŠæ‰©å±•å­—ç¬¦ï¼‰
 		if (c >= 0xD800 && c <= 0xDBFF && (n + 1 < nLen))
 		{
 			wchar_t cNext = strString[n + 1];
@@ -211,13 +267,13 @@ std::vector<tagMMStringEmoji> CMMStrHelp::ParseStringForEmoji(const CMMString &s
 				step = 2;
 			}
 		}
-		// 2. À¹½Ø²¿·Ö´æÔÚÓÚ BMP »ù´¡Æ½ÃæÄÚµÄÀÏÊ½·ûºÅ/Emoji (U+2600 ~ U+27BF µÈ)
+		// 2. æ‹¦æˆªéƒ¨åˆ†å­˜åœ¨äº BMP åŸºç¡€å¹³é¢å†…çš„è€å¼ç¬¦å·/Emoji (U+2600 ~ U+27BF ç­‰)
 		else if ((c >= 0x2600 && c <= 0x27BF) || (c >= 0x2300 && c <= 0x23FF) || c == 0x200D)
 		{
 			bEmoji = true;
 		}
 
-		// ×·¼Ó
+		// è¿½åŠ 
 		vecStringEmoji.push_back({ bEmoji, c });
 		if (step == 2)
 		{

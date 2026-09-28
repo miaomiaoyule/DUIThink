@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "DUISliderCtrl.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -27,7 +27,7 @@ CMMString CDUISliderCtrl::GetDescribe() const
 
 void CDUISliderCtrl::SetThumbSize(CDUISize szThumb)
 {
-	//Çø·ÖË®Æ½ÀàĞÍ»¹ÊÇ´¹Ö±ÀàĞÍ
+	//åŒºåˆ†æ°´å¹³ç±»å‹è¿˜æ˜¯å‚ç›´ç±»å‹
 	if (ProgressType_Horiz == GetProgressType())
 	{
 		if (Dui_Min_ThumbSize <= szThumb.cx && szThumb.cx <= m_rcSlip.GetWidth())
@@ -43,7 +43,7 @@ void CDUISliderCtrl::SetThumbSize(CDUISize szThumb)
 		}
 	}
 
-	//¼ÆËã»¬ÌõÎ»ÖÃ
+	//è®¡ç®—æ»‘æ¡ä½ç½®
 	CalcSubPos();
 
 	Invalidate();
@@ -260,7 +260,7 @@ void CDUISliderCtrl::PaintStatusColor(HDC hDC)
 {
 	__super::PaintStatusColor(hDC);
 
-	//»¬¿é
+	//æ»‘å—
 	CDUIAttributeColorSwitch *pAttribute = NULL;
 	if (m_cbControlStatus & ControlStatus_Pushed)
 	{
@@ -453,33 +453,33 @@ void CDUISliderCtrl::CalcThumbPos()
 
 void CDUISliderCtrl::CalcThumbPosHoriz()
 {
-	//Æ«ÒÆµ¥Î»³õÊ¼»¯
+	//åç§»å•ä½åˆå§‹åŒ–
 	int nThumbInsetTop = m_AttributeThumbHorizInsetTop.GetValue(), nThumbInsetBottom = m_AttributeThumbHorizInsetBottom.GetValue();
 	int nThumbFixedWidth = m_AttributeThumbHorizFixedWidth.GetValue();
 	nThumbFixedWidth = max(nThumbFixedWidth, Dui_Min_ThumbSize);
 
-	//Æ«ÒÆµ¥Î»¼ÆËã
+	//åç§»å•ä½è®¡ç®—
 	int nLenth = m_rcSlip.GetWidth() - nThumbFixedWidth;
 	nLenth = max(nLenth, 0);
 	double lfValue = GetValueScale();
 
-	//»¬¿éÎ»ÖÃ
+	//æ»‘å—ä½ç½®
 	CDUIRect rcCurThumb(m_rcSlip.left, m_rcAbsolute.top + nThumbInsetTop, m_rcSlip.right, m_rcAbsolute.bottom - nThumbInsetBottom);
 
-	//ÕıÏò
+	//æ­£å‘
 	if (ProgressMove_Positive == GetProgressMoveType())
 	{
 		rcCurThumb.left = rcCurThumb.left + nLenth * lfValue;
 		rcCurThumb.right = rcCurThumb.left + nThumbFixedWidth;
 	}
-	//·´Ïò
+	//åå‘
 	else if (ProgressMove_Reverse == GetProgressMoveType())
 	{
 		rcCurThumb.right = rcCurThumb.right - nLenth * lfValue;
 		rcCurThumb.left = rcCurThumb.right - nThumbFixedWidth;
 	}
 
-	//·µ»Ø
+	//è¿”å›
 	m_rcCurThumb = rcCurThumb.RectClip(m_rcAbsolute, rcCurThumb);
 
 	return;
@@ -487,33 +487,33 @@ void CDUISliderCtrl::CalcThumbPosHoriz()
 
 void CDUISliderCtrl::CalcThumbPosVert()
 {
-	//Æ«ÒÆµ¥Î»³õÊ¼»¯
+	//åç§»å•ä½åˆå§‹åŒ–
 	int nThumbInsetLeft = m_AttributeThumbVertInsetLeft.GetValue(), nThumbInsetRight = m_AttributeThumbVertInsetRight.GetValue();
 	int nThumbFixedHeight = m_AttributeThumbVertFixedHeight.GetValue();
 	nThumbFixedHeight = max(nThumbFixedHeight, Dui_Min_ThumbSize);
 
-	//Æ«ÒÆµ¥Î»¼ÆËã
+	//åç§»å•ä½è®¡ç®—
 	int nLenth = m_rcSlip.GetHeight() - nThumbFixedHeight;
 	nLenth = max(nLenth, 0);
 	double lfValue = GetValueScale();
 
-	//»¬¿éÎ»ÖÃ
+	//æ»‘å—ä½ç½®
 	CDUIRect rcCurThumb(m_rcAbsolute.left + nThumbInsetLeft, m_rcSlip.top, m_rcAbsolute.right - nThumbInsetRight, m_rcSlip.bottom);
 
-	//ÕıÏò
+	//æ­£å‘
 	if (ProgressMove_Positive == GetProgressMoveType())
 	{
 		rcCurThumb.bottom = rcCurThumb.bottom - nLenth * lfValue;
 		rcCurThumb.top = rcCurThumb.bottom - nThumbFixedHeight;
 	}
-	//·´Ïò
+	//åå‘
 	else if (ProgressMove_Reverse == GetProgressMoveType())
 	{
 		rcCurThumb.top = rcCurThumb.top + nLenth * lfValue;
 		rcCurThumb.bottom = rcCurThumb.top + nThumbFixedHeight;
 	}
 
-	//·µ»Ø
+	//è¿”å›
 	m_rcCurThumb = rcCurThumb.RectClip(m_rcAbsolute, rcCurThumb);
 
 	return;
@@ -539,21 +539,21 @@ void CDUISliderCtrl::CalcCurValueFromPtHoriz(const CDUIPoint &pt)
 	ptMouse.x = (ptMouse.x < m_rcSlip.left) ? m_rcSlip.left : ptMouse.x;
 	ptMouse.x = (ptMouse.x > m_rcSlip.right) ? m_rcSlip.right : ptMouse.x;
 
-	//Æ«ÒÆµ¥Î»³õÊ¼»¯
+	//åç§»å•ä½åˆå§‹åŒ–
 	int nMaxValue = GetMaxValue();
 	int nThumbFixedWidth = m_AttributeThumbHorizFixedWidth.GetValue();
 
-	//Æ«ÒÆµ¥Î»¼ÆËã
+	//åç§»å•ä½è®¡ç®—
 	int nLenth = m_rcSlip.GetWidth() - nThumbFixedWidth;
 	nLenth = max(nLenth, 1);
 
-	//ÕıÏò
+	//æ­£å‘
 	if (ProgressMove_Positive == GetProgressMoveType())
 	{
 		double lfValue = ((double)(ptMouse.x) - (double)(m_rcSlip.left)) / (double)nLenth;
 		SetCurValue(nMaxValue * lfValue);
 	}
-	//·´Ïò
+	//åå‘
 	else if (ProgressMove_Reverse == GetProgressMoveType())
 	{
 		double lfValue = ((double)(m_rcSlip.right) - (double)(ptMouse.x)) / (double)nLenth;
@@ -569,21 +569,21 @@ void CDUISliderCtrl::CalcCurValueFromPtVert(const CDUIPoint &pt)
 	ptMouse.y = (ptMouse.y < m_rcSlip.top) ? m_rcSlip.top : ptMouse.y;
 	ptMouse.y = (ptMouse.y > m_rcSlip.bottom) ? m_rcSlip.bottom : ptMouse.y;
 
-	//Æ«ÒÆµ¥Î»³õÊ¼»¯
+	//åç§»å•ä½åˆå§‹åŒ–
 	int nMaxValue = GetMaxValue();
 	int nThumbFixedHeight = m_AttributeThumbVertFixedHeight.GetValue();
 
-	//Æ«ÒÆµ¥Î»¼ÆËã
+	//åç§»å•ä½è®¡ç®—
 	int nLenth = m_rcSlip.GetHeight() - nThumbFixedHeight;
 	nLenth = max(nLenth, 1);
 
-	//ÕıÏò
+	//æ­£å‘
 	if (ProgressMove_Positive == GetProgressMoveType())
 	{
 		double lfValue = ((double)(m_rcSlip.bottom) - (double)(ptMouse.y)) / (double)nLenth;
 		SetCurValue(nMaxValue * lfValue);
 	}
-	//·´Ïò
+	//åå‘
 	else if (ProgressMove_Reverse == GetProgressMoveType())
 	{
 		double lfValue = ((double)(ptMouse.y) - (double)(m_rcSlip.top)) / (double)nLenth;
@@ -603,7 +603,7 @@ void CDUISliderCtrl::CalcThumbPosOnMouseDown(const CDUIPoint &pt)
 
 		CDUIPoint ptTemp;
 
-		//Çø·ÖÕıÏòÀàĞÍ»¹ÊÇ·´ÏòÀàĞÍ
+		//åŒºåˆ†æ­£å‘ç±»å‹è¿˜æ˜¯åå‘ç±»å‹
 		if (ProgressMove_Positive == GetProgressMoveType())
 		{
 			ptTemp = CDUIPoint(m_rcCurThumb.left, m_rcCurThumb.bottom);
@@ -617,11 +617,11 @@ void CDUISliderCtrl::CalcThumbPosOnMouseDown(const CDUIPoint &pt)
 			ptTemp.y += (pt.y - ptTemp.y) - nFixedHeight / 2;
 		}
 
-		//´ÓĞÂ¼ÆËãCurValue
+		//ä»æ–°è®¡ç®—CurValue
 		CalcCurValueFromPt(ptTemp);
 	}
 
-	//¼ÇÂ¼³õÊ¼»¬¿é×ø±ê
+	//è®°å½•åˆå§‹æ»‘å—åæ ‡
 	if (ProgressMove_Positive == GetProgressMoveType())
 	{
 		m_ptThumbLButtonDown.x = m_rcCurThumb.left;

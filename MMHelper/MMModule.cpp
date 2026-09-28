@@ -2,31 +2,31 @@
 #include "MMModule.h"
 
 //////////////////////////////////////////////////////////////////////////
-//产品版本
+//浜у搧鐗堟湰
 BYTE GetProductVer(DWORD dwVersion)
 {
 	return ((BYTE *)&dwVersion)[3];
 }
 
-//主要版本
+//涓昏鐗堟湰
 BYTE GetMainVer(DWORD dwVersion)
 {
 	return ((BYTE *)&dwVersion)[2];
 }
 
-//次要版本
+//娆¤鐗堟湰
 BYTE GetSubVer(DWORD dwVersion)
 {
 	return ((BYTE *)&dwVersion)[1];
 }
 
-//次要版本
+//娆¤鐗堟湰
 BYTE GetBuildVer(DWORD dwVersion)
 {
 	return ((BYTE *)&dwVersion)[0];
 }
 
-//版本比较
+//鐗堟湰姣旇緝
 bool InterfaceVersionCompare(DWORD dwQueryVer, DWORD dwInterfaceVer)
 {
 	if (GetSubVer(dwQueryVer) > GetSubVer(dwInterfaceVer)) return false;

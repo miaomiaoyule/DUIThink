@@ -13,6 +13,7 @@ class DUITHINK_API CDUIThinkEditCtrl
 {
 	friend class CDUIComboxCtrl;
 
+	MMDeclare_Super(CDUIButtonCtrl)
 	DuiDeclare_CreateControl(CDUIThinkEditCtrl)
 	MMDeclare_ClassName(CDUIThinkEditCtrl)
 
@@ -108,7 +109,7 @@ public:
 	virtual CMMString GetTipText();
 	virtual void SetTipText(LPCTSTR lpszTipText);
 	virtual tagDuiTextStyle GetTextStyleTipTextNormal();
-	virtual ARGB GetTextColorTipTextNormal();
+	virtual Gdiplus::ARGB GetTextColorTipTextNormal();
 	virtual void SetTextStyleTipTextNormal(const tagDuiTextStyle &TextStyle);
 
 	//edit
@@ -159,6 +160,8 @@ protected:
 	LRESULT OnDuiContextMenu(const DuiMessage &Msg) override;
 	LRESULT OnDuiCommand(const DuiMessage &Msg) override;
 	LRESULT OnDuiImeComPosition(const DuiMessage &Msg) override;
+	LRESULT OnDuiTextEditing(const DuiMessage &Msg) override;
+	LRESULT OnDuiTextInput(const DuiMessage &Msg) override;
 
 	//property 
 protected:

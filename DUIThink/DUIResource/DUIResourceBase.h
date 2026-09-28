@@ -22,6 +22,7 @@ class DUITHINK_API CDUIResourceBase
 	friend class CProjectView;
 	friend class CDUIPreview;
 
+	MMDeclare_Super(IDuiInterface)
 	DuiDeclare_CreateResource(CDUIResourceBase)
 	MMDeclare_ClassName(CDUIResourceBase)
 

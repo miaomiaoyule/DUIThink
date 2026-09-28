@@ -1,5 +1,9 @@
 #ifndef __DUIRICHEDITCTRL_H__
 #define __DUIRICHEDITCTRL_H__
+#ifndef DuiPlatform_SDL
+
+#include <richedit.h>
+#include <RichOle.h>
 
 #pragma once
 #pragma pack(1)
@@ -16,6 +20,7 @@ class DUITHINK_API CDUIRichEditCtrl
 {
 	friend class CDUITextHost;
 
+	MMDeclare_Super(CDUIContainerCtrl)
 	DuiDeclare_CreateControl(CDUIRichEditCtrl)
 	MMDeclare_ClassName(CDUIContainerCtrl)
 
@@ -120,16 +125,16 @@ public:
 	virtual CMMString GetText(long nStartChar, long nEndChar) const;
 	virtual bool SetText(LPCTSTR lpszText);
 	virtual HFONT GetFont();
-	virtual ARGB GetTextColor();
+	virtual Gdiplus::ARGB GetTextColor();
 	virtual RECT GetTextPadding();
 	virtual void SetTextPadding(RECT rcPadding);
 
-	virtual ARGB GetTextColorNormal();
-	virtual ARGB GetTextColorHot();
-	virtual ARGB GetTextColorFocus();
-	virtual ARGB GetTextColorDisabled();
-	virtual ARGB GetTextColorTipNormal();
-	virtual ARGB GetTextColorTipHot();
+	virtual Gdiplus::ARGB GetTextColorNormal();
+	virtual Gdiplus::ARGB GetTextColorHot();
+	virtual Gdiplus::ARGB GetTextColorFocus();
+	virtual Gdiplus::ARGB GetTextColorDisabled();
+	virtual Gdiplus::ARGB GetTextColorTipNormal();
+	virtual Gdiplus::ARGB GetTextColorTipHot();
 	virtual HFONT GetFontNormal();
 	virtual HFONT GetFontHot();
 	virtual HFONT GetFontFocus();
@@ -255,4 +260,6 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()
+
+#endif
 #endif

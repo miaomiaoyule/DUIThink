@@ -10,6 +10,7 @@ static const GUID IID_CDUIAttributeBool = { 0xF4C05510,0xB2C1,0x4FE9,0xA8,0x32,0
 class DUITHINK_API CDUIAttributeBool 
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttributeBool)
 	MMDeclare_ClassName(CDUIAttributeBool)
 

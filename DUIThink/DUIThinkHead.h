@@ -3,16 +3,29 @@
 		#define MMHELPLIB
 		#define DUITHINK_API
 	#else
-		#ifdef DUITHINKSDK
-			#define DUITHINK_API __declspec(dllexport)
+		#if defined(_MSC_VER)
+			#ifdef DUITHINKSDK
+				#define DUITHINK_API __declspec(dllexport)
+			#else
+				#define DUITHINK_API __declspec(dllimport)
+			#endif
 		#else
-			#define DUITHINK_API __declspec(dllimport)
+			#ifdef DUITHINKSDK
+				#define DUITHINK_API __attribute__((visibility("default")))
+			#else
+				#define DUITHINK_API
+			#endif
 		#endif
 	#endif
 #endif
 
+#if defined(_MSC_VER)
 #define DUITHINK_COMDAT __declspec(selectany)
+#else
+#define DUITHINK_COMDAT __attribute__((weak))
+#endif
 
+#if defined(_MSC_VER)
 #if defined _M_IX86
 #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #elif defined _M_IA64
@@ -22,53 +35,38 @@
 #else
 #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
+#endif
 
 //////////////////////////////////////////////////////////////////////////
-#define GDIPVER 0x0110
-
-#include <vector>
-#include <set>
-#include <map>
-#include <unordered_map>
-#include <string>
-#include <algorithm>
-
-#include <time.h>
-#include <math.h>
-#include <windows.h>
-#include <windowsx.h>
-#include <commctrl.h>
-#include <stddef.h>
-#include <richedit.h>
-#include <tchar.h>
-#include <assert.h>
-#include <crtdbg.h>
-#include <malloc.h>
-#include <comdef.h>
-#include <gdiplus.h>
-#include <assert.h>
-#include <atlstr.h>
-#include <RichOle.h>
-#include <ShlDisp.h>
-
-using namespace Gdiplus;
-using namespace std;
-
-#pragma comment(lib, "Msimg32.lib")
-#pragma comment(lib, "Gdiplus.lib")
-#pragma comment(lib, "comctl32.lib")
-#pragma comment(lib, "Imm32.lib")
-
-//////////////////////////////////////////////////////////////////////////
+// MMHelper first so SDL HWND / platform types are ready before GDI+
 #include "../MMHelper/MMHelperHead.h"
+
+#if defined(DuiPlatform_SDL)
+	#include "DUICore/DUIRender/DUIGdiplusPortable.h"
+
+	DUITHINK_API HWND FindWindow(LPCTSTR lpszClassName, LPCTSTR lpszTitle);
+#else
+	#define GDIPVER 0x0110
+	#include <comdef.h>
+	#include <gdiplus.h>
+	#include <ShlDisp.h>
+	#include <olectl.h>
+	
+	#pragma comment(lib, "Msimg32.lib")
+	#pragma comment(lib, "Gdiplus.lib")
+	#pragma comment(lib, "comctl32.lib")
+	#pragma comment(lib, "Imm32.lib")
+#endif
+
+//////////////////////////////////////////////////////////////////////////
 #include "../ThirdDepend/tinyxml2/tinyxml2.h"
 #include "../ThirdDepend/webp/src/webp/decode.h"
 #include "../ThirdDepend/webp/src/webp/demux.h"
 #include "../ThirdDepend/webp/src/webp/encode.h"
 #include "../ThirdDepend/webp/src/webp/mux.h"
-#include <olectl.h>
 using namespace tinyxml2;
 
+#ifdef _MSC_VER
 #if _MSC_VER < 1900
 #ifdef _DEBUG
 	#if defined _DLL
@@ -202,6 +200,7 @@ using namespace tinyxml2;
 	#endif
 #endif
 #endif
+#endif // _MSC_VER
 
 //////////////////////////////////////////////////////////////////////////
 #include "Define/DefineBase.h"
@@ -210,7 +209,6 @@ using namespace tinyxml2;
 #include "Define/DefineAttribute.h"
 #include "Define/DefineProp.h"
 #include "Define/DefineMessage.h"
-#include "Define/DefineWndManager.h"
 
 #include "DUIUtils/stb_image.h"
 #include "DUIUtils/XUnzip.h"
@@ -255,10 +253,18 @@ using namespace tinyxml2;
 #include "DUIAttribute/DUIAttributeHotKey.h"
 
 #include "DUICore/DUIPropertyObject.h"
+#include "DUICore/DUIRender/IDuiCanvas.h"
+#include "DUICore/DUIRender/DUICanvasRaster.h"
+#include "DUICore/DUIRender/DUIGdiPortable.h"
+#include "DUICore/DUIRender/DUIPaintSceneSDL.h"
 #include "DUICore/DUIRender.h"
 #include "DUICore/DUINotifyPump.h"
 #include "DUICore/DUIAnimation.h"
-#include "DUICore/DUIWnd.h"
+#include "DUICore/DUIPlatform/DUIWndBase.h"
+#include "DUICore/DUIPlatform/DUIWndSDL.h"
+#include "DUICore/DUIPlatform/DUIWndWin32.h"
+#include "DUICore/DUIPlatform/DUIWnd.h"
+#include "DUICore/DUIPlatform/DUIWndVirtual.h"
 
 #include "DUIControl/DUIControlBase.h"
 #include "DUIControl/DUIStaticCtrl.h"

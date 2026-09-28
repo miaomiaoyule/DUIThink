@@ -1,5 +1,5 @@
-// Written by ³ÇÄÏ»¨ÒÑ¿ª QQ:284168136 QQGroup:885314879
-// Copyright (c) ³ÇÄÏ»¨ÒÑ¿ª
+ï»¿// Written by åŸå—èŠ±å·²å¼€ QQ:284168136 QQGroup:885314879
+// Copyright (c) åŸå—èŠ±å·²å¼€
 //
 // This code may be used in compiled form in any way you desire. These
 // source files may be redistributed by any means PROVIDING it is 
@@ -19,21 +19,30 @@
 //////////////////////////////////////////////////////////////////////////////////
 //base interface
 #define VER_IMMUnknown INTERFACE_VERSION(1,1)
-static const GUID IID_IMMUnknown = { 0x5feec21e,0xdbf3,0x46f0,0x9f,0x57,0xd1,0xcd,0x71,0x1c,0x46,0xde };
-interface IMMUnknown
+static const GUID IID_IMMUnknown = { 0x5feec21e,0xdbf3,0x46f0,{ 0x9f,0x57,0xd1,0xcd,0x71,0x1c,0x46,0xde } };
+struct IMMUnknown
 {
 	virtual ~IMMUnknown() {}
-	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) = NULL;
+	virtual LPVOID QueryInterface(REFGUID Guid, DWORD dwQueryVer) = 0;
 };
 
+// portable dll export for module create entry
+#ifndef MM_MODULE_EXPORT
+	#if defined(_MSC_VER)
+		#define MM_MODULE_EXPORT extern "C" __declspec(dllexport)
+	#else
+		#define MM_MODULE_EXPORT extern "C" __attribute__((visibility("default")))
+	#endif
+#endif
+
 //////////////////////////////////////////////////////////////////////////////////
-//°æ±¾±È½Ï
+//ç‰ˆæœ¬æ¯”è¾ƒ
 
-//²úÆ·°æ±¾
-#define BULID_VER						3								//ÊÚÈ¨°æ±¾
-#define PRODUCT_VER						4								//²úÆ·°æ±¾
+//äº§å“ç‰ˆæœ¬
+#define BULID_VER						3								//æˆæƒç‰ˆæœ¬
+#define PRODUCT_VER						4								//äº§å“ç‰ˆæœ¬
 
-//½Ó¿Ú°æ±¾
+//æ¥å£ç‰ˆæœ¬
 #define INTERFACE_VERSION(cbMainVer,cbSubVer)							\
 		(DWORD)(														\
 		(((BYTE)(PRODUCT_VER))<<24)+									\
@@ -41,7 +50,7 @@ interface IMMUnknown
 		((BYTE)(cbSubVer)<<8))+											\
 		((BYTE)(BULID_VER))
 
-//Ä£¿é°æ±¾
+//æ¨¡å—ç‰ˆæœ¬
 #define PROCESS_VERSION(cbMainVer,cbSubVer,cbBuildVer)					\
 		(DWORD)(														\
 		(((BYTE)(PRODUCT_VER))<<24)+									\
@@ -49,7 +58,7 @@ interface IMMUnknown
 		((BYTE)(cbSubVer)<<8)+											\
 		(BYTE)(cbBuildVer))
 
-//²úÆ·°æ±¾
+//äº§å“ç‰ˆæœ¬
 inline BYTE MMHELPER_API GetProductVer(DWORD dwVersion);
 inline BYTE MMHELPER_API GetMainVer(DWORD dwVersion);
 inline BYTE MMHELPER_API GetSubVer(DWORD dwVersion);
@@ -57,26 +66,26 @@ inline BYTE MMHELPER_API GetBuildVer(DWORD dwVersion);
 bool MMHELPER_API InterfaceVersionCompare(DWORD dwQueryVer, DWORD dwInterfaceVer);
 
 //////////////////////////////////////////////////////////////////////////////////
-//²éÑ¯½Ó¿Ú
+//æŸ¥è¯¢æ¥å£
 #define QUERYINTERFACE(Interface,Guid,dwQueryVer)															\
 	if ((Guid==IID_##Interface)&&(InterfaceVersionCompare(dwQueryVer,VER_##Interface)))						\
 		return static_cast<Interface *>(this);											
 
-//²éÑ¯½Ó¿Ú
+//æŸ¥è¯¢æ¥å£
 #define QUERYINTERFACE_IMMUNKNOWN(BaseInterface,Guid,dwQueryVer)											\
 	if ((Guid==IID_IMMUnknown)&&(InterfaceVersionCompare(dwQueryVer,VER_IMMUnknown)))						\
 		return static_cast<IMMUnknown *>(static_cast<BaseInterface *>(this));			
 
 //////////////////////////////////////////////////////////////////////////////////
-//²éÑ¯½Ó¿Ú
+//æŸ¥è¯¢æ¥å£
 #define QUERY_ME_INTERFACE(Interface)																		\
 	((Interface *)QueryInterface(IID_##Interface,VER_##Interface))
 
-//²éÑ¯½Ó¿Ú
+//æŸ¥è¯¢æ¥å£
 #define QUERY_OBJECT_INTERFACE(Object,Interface)															\
 	((Interface *)Object.QueryInterface(IID_##Interface,VER_##Interface))
 
-//²éÑ¯½Ó¿Ú
+//æŸ¥è¯¢æ¥å£
 #define QUERY_OBJECT_PTR_INTERFACE(pObject,Interface)														\
 	((pObject==NULL)?NULL:((Interface *)pObject->QueryInterface(IID_##Interface,VER_##Interface)))
 
@@ -94,7 +103,7 @@ protected:
 
 	//config
 public:
-	REFGUID								m_Guid = {};
+	GUID								m_Guid = {};
 	const DWORD							m_dwVersion = 0;
 	HINSTANCE							m_hDllInstance = NULL;
 	std::string							m_strCreateProc;
@@ -140,35 +149,39 @@ bool CMMTempldateHelper<IMMModelInterface>::CreateInstance()
 		assert(false == m_strCreateProc.empty());
 		assert(false == m_strModuleDllName.empty());
 
-		m_hDllInstance = ::LoadLibrary(m_strModuleDllName);
+		m_hDllInstance = LoadLibrary(m_strModuleDllName.c_str());
 		if (NULL == m_hDllInstance)
 		{
 			m_hDllInstance = GetModuleHandle(NULL);
-			m_strDescribe.Format(_T("¡°%s¡±Ä£¿é¼ÓÔØÊ§°Ü£¬×ªµ±Ç°Ä£¿é"), m_strModuleDllName);
+			m_strDescribe.Format(_T("â€œ%sâ€æ¨¡å—åŠ è½½å¤±è´¥ï¼Œè½¬å½“å‰æ¨¡å—"), m_strModuleDllName.c_str());
 		}
 
-		MMModuleCreateProc *CreateProc = (MMModuleCreateProc*)GetProcAddress(m_hDllInstance, m_strCreateProc.c_str());
+		MMModuleCreateProc *CreateProc = NULL;
+		if (m_hDllInstance)
+		{
+			CreateProc = (MMModuleCreateProc*)GetProcAddress(m_hDllInstance, m_strCreateProc.c_str());
+		}
 		if (NULL == CreateProc)
 		{
-			m_strDescribe.Format(_T("ÕÒ²»µ½×é¼ş´´½¨º¯Êı¡°%s¡±"), (LPCTSTR)CA2CT(m_strCreateProc.c_str()));
+			m_strDescribe.Format(_T("æ‰¾ä¸åˆ°ç»„ä»¶åˆ›å»ºå‡½æ•°â€œ%sâ€"), (LPCTSTR)CA2CT(m_strCreateProc.c_str()));
 			return false;
 		}
 
 		m_pIModelInterface = (IMMModelInterface*)CreateProc(m_Guid, m_dwVersion);
 		if (NULL == m_pIModelInterface)
 		{
-			m_strDescribe.Format(_T("µ÷ÓÃº¯Êı¡°%s¡±Éú³É¶ÔÏóÊ§°Ü"), (LPCTSTR)CA2CT(m_strCreateProc.c_str()));
+			m_strDescribe.Format(_T("è°ƒç”¨å‡½æ•°â€œ%sâ€ç”Ÿæˆå¯¹è±¡å¤±è´¥"), (LPCTSTR)CA2CT(m_strCreateProc.c_str()));
 			return false;
 		}
 	}
 	catch (LPCTSTR lpszError)
 	{
-		m_strDescribe.Format(_T("ÓÉÓÚ¡°%s¡±£¬×é¼ş´´½¨Ê§°Ü"), lpszError);
+		m_strDescribe.Format(_T("ç”±äºâ€œ%sâ€ï¼Œç»„ä»¶åˆ›å»ºå¤±è´¥"), lpszError);
 		return false;
 	}
 	catch (...)
 	{
-		m_strDescribe.Format(_T("×é¼ş´´½¨º¯Êı¡°%s¡±²úÉúÎ´ÖªÒì³£´íÎó£¬×é¼ş´´½¨Ê§°Ü"), (LPCTSTR)CA2CT(m_strCreateProc.c_str()));
+		m_strDescribe.Format(_T("ç»„ä»¶åˆ›å»ºå‡½æ•°â€œ%sâ€äº§ç”ŸæœªçŸ¥å¼‚å¸¸é”™è¯¯ï¼Œç»„ä»¶åˆ›å»ºå¤±è´¥"), (LPCTSTR)CA2CT(m_strCreateProc.c_str()));
 		return false;
 	}
 
@@ -187,7 +200,7 @@ bool CMMTempldateHelper<IMMModelInterface>::CloseInstance()
 
 	if (m_hDllInstance != NULL)
 	{
-		::FreeLibrary(m_hDllInstance);
+		FreeLibrary(m_hDllInstance);
 		m_hDllInstance = NULL;
 	}
 
@@ -228,32 +241,32 @@ public:																										\
 };
 
 #define Implement_MMCreateModule(ObjectName)																	\
-extern "C" __declspec(dllexport) VOID * Create##ObjectName(REFGUID Guid, DWORD dwInterfaceVer)				\
+MM_MODULE_EXPORT VOID * Create##ObjectName(REFGUID Guid, DWORD dwInterfaceVer)								\
 {																											\
-	C##ObjectName * p##ObjectName=NULL;																	\
+	C##ObjectName * p##ObjectName=NULL;																		\
 	try																										\
 	{																										\
 		p##ObjectName = new C##ObjectName();																\
-		if (p##ObjectName == NULL) throw _T("´´½¨Ê§°Ü");													\
-		VOID * pObject = p##ObjectName->QueryInterface(Guid, dwInterfaceVer);									\
-		if (pObject == NULL) throw _T("½Ó¿Ú²éÑ¯Ê§°Ü");														\
+		if (p##ObjectName == NULL) throw _T("åˆ›å»ºå¤±è´¥");													\
+		VOID * pObject = p##ObjectName->QueryInterface(Guid, dwInterfaceVer);								\
+		if (pObject == NULL) throw _T("æ¥å£æŸ¥è¯¢å¤±è´¥");														\
 		return pObject;																						\
 	}																										\
 	catch (...) {}																							\
-	MMSafeDelete(p##ObjectName);																				\
+	MMSafeDelete(p##ObjectName);																			\
 	return NULL;																							\
 }
 
-#define Implement_MMStaticModule(ObjectName)																	\
-extern "C" __declspec(dllexport) VOID * Create##ObjectName(REFGUID Guid, DWORD dwInterfaceVer)		\
+#define Implement_MMStaticModule(ObjectName)																\
+MM_MODULE_EXPORT VOID * Create##ObjectName(REFGUID Guid, DWORD dwInterfaceVer)								\
 {																											\
-	C##ObjectName * p##ObjectName=NULL;																	\
+	C##ObjectName * p##ObjectName=NULL;																		\
 	try																										\
 	{																										\
-		p##ObjectName = C##ObjectName::GetInstance();																\
-		if (p##ObjectName == NULL) throw _T("´´½¨Ê§°Ü");													\
-		VOID * pObject = p##ObjectName->QueryInterface(Guid, dwInterfaceVer);									\
-		if (pObject == NULL) throw _T("½Ó¿Ú²éÑ¯Ê§°Ü");														\
+		p##ObjectName = C##ObjectName::GetInstance();														\
+		if (p##ObjectName == NULL) throw _T("åˆ›å»ºå¤±è´¥");													\
+		VOID * pObject = p##ObjectName->QueryInterface(Guid, dwInterfaceVer);								\
+		if (pObject == NULL) throw _T("æ¥å£æŸ¥è¯¢å¤±è´¥");														\
 		return pObject;																						\
 	}																										\
 	catch (...) {}																							\
@@ -338,6 +351,7 @@ IMMUnknown * CMMInterfaceHelper<IMMModelInterface>::Get()
 }
 
 //////////////////////////////////////////////////////////////////////////
+#if !defined(DuiPlatform_SDL)
 template <typename IDL>
 class CMMSafeIDL
 {
@@ -385,12 +399,16 @@ public:
 		{
 			m_pIDL = ILCloneFull(Right);
 		}
+
+		return *this;
 	}
 	CMMSafeIDL & operator = (CMMSafeIDL &Right)
 	{
 		this->operator = (Right.Get());
+		return *this;
 	}
 };
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 class CMMSafeModule
@@ -398,7 +416,7 @@ class CMMSafeModule
 public:
 	CMMSafeModule(CMMString strModuleFile)
 	{
-		m_hModule = LoadLibrary(strModuleFile);
+		m_hModule = LoadLibrary(strModuleFile.c_str());
 
 		return;
 	}
@@ -431,8 +449,17 @@ CMMInterfaceHelper<IMMModelInterface> InterfaceVariant
 #define Implement_MMInterfaceHelper(IMMModelInterface, InterfaceVariant) \
 InterfaceVariant(IID_##IMMModelInterface, VER_##IMMModelInterface)
 
+#if defined(_MSC_VER) && !defined(__clang__)
 #define MMInterfaceHelper(IMMModelInterface, InterfaceSrc, InterfaceVariant) \
-CMMInterfaceHelper<IMMModelInterface>InterfaceVariant(IID_##IMMModelInterface, VER_##IMMModelInterface, InterfaceSrc)
+CMMInterfaceHelper<IMMModelInterface> InterfaceVariant(IID_##IMMModelInterface, VER_##IMMModelInterface, InterfaceSrc)
+#else
+#define MMInterfaceHelperConvert(IMMModelInterface, InterfaceSrc) \
+CMMInterfaceHelper<IMMModelInterface>(IID_##IMMModelInterface, VER_##IMMModelInterface, InterfaceSrc)
+#define MMInterfaceHelperVariant(IMMModelInterface, InterfaceSrc, InterfaceVariant) \
+CMMInterfaceHelper<IMMModelInterface> InterfaceVariant(IID_##IMMModelInterface, VER_##IMMModelInterface, InterfaceSrc)
+#define MMInterfaceHelper_GET(_1, _2, _3, NAME, ...) NAME
+#define MMInterfaceHelper(...) MMInterfaceHelper_GET(__VA_ARGS__, MMInterfaceHelperVariant, MMInterfaceHelperConvert)(__VA_ARGS__)
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 

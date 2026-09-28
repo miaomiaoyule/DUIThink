@@ -1,6 +1,8 @@
 #ifndef __MM_DROPSOURCE_H__
 #define __MM_DROPSOURCE_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 #include "Define.h"
@@ -40,5 +42,5 @@ private:
 };
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

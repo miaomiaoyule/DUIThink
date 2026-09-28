@@ -19,6 +19,7 @@ class DUITHINK_API CDUIContainerCtrl
 	friend class CDUIControlBase;
 	friend class CDUIScrollBarCtrl;
 	friend class CDUIWnd;
+	friend class CDUIWndBase;
 	friend class CDUIListHeaderCtrl;
 	friend class CDUIListViewCtrl;
 	friend class CDTDesignerDoc;
@@ -26,6 +27,7 @@ class DUITHINK_API CDUIContainerCtrl
 	friend class CDUILayoutView;
 	friend class CDUITreeNodeCtrl;
 
+	MMDeclare_Super(CDUIControlBase)
 	DuiDeclare_CreateControl(CDUIContainerCtrl)
 	MMDeclare_ClassName(CDUIContainerCtrl)
 

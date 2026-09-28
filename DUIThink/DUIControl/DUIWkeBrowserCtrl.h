@@ -48,6 +48,7 @@ static const GUID IID_CDUIWkeBrowserCtrl = { 0x209FAAD5,0x84F4,0x4774,0xB9,0x49,
 class DUITHINK_API CDUIWkeBrowserCtrl
 	: public CDUIControlBase
 {
+	MMDeclare_Super(CDUIControlBase)
 	DuiDeclare_CreateControl(CDUIWkeBrowserCtrl)
 	MMDeclare_ClassName(CDUIWkeBrowserCtrl)
 
@@ -68,8 +69,8 @@ private:
 	CMMString							m_strUrlCur;
 
 private:
-	void *								m_pListenObj = NULL;					//监听对象
-	IDUIWkeCallback *					m_pWkeCallback = NULL;					//回调接口
+	void *								m_pListenObj = NULL;					//鐩戝惉瀵硅薄
+	IDUIWkeCallback *					m_pWkeCallback = NULL;					//鍥炶皟鎺ュ彛
 
 	//override
 protected:

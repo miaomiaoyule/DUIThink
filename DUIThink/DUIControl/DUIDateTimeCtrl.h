@@ -11,6 +11,7 @@ class DUITHINK_API CDUIDateTimeCtrl
 	: public CDUIHorizontalLayoutCtrl
 	, public IDuiControlCallBack
 {
+	MMDeclare_Super(CDUIHorizontalLayoutCtrl)
 	DuiDeclare_CreateControl(CDUIDateTimeCtrl)
 	MMDeclare_ClassName(CDUIDateTimeCtrl)
 
@@ -71,12 +72,12 @@ public:
 	virtual HFONT GetFontPushed();
 	virtual HFONT GetFontFocus();
 	virtual HFONT GetFontDisabled();
-	virtual ARGB GetTextColor();
-	virtual ARGB GetTextColorNormal();
-	virtual ARGB GetTextColorHot();
-	virtual ARGB GetTextColorPushed();
-	virtual ARGB GetTextColorFocus();
-	virtual ARGB GetTextColorDisabled();
+	virtual Gdiplus::ARGB GetTextColor();
+	virtual Gdiplus::ARGB GetTextColorNormal();
+	virtual Gdiplus::ARGB GetTextColorHot();
+	virtual Gdiplus::ARGB GetTextColorPushed();
+	virtual Gdiplus::ARGB GetTextColorFocus();
+	virtual Gdiplus::ARGB GetTextColorDisabled();
 	virtual tagDuiTextStyle GetTextStyle();
 	virtual tagDuiTextStyle GetTextStyleNormal();
 	virtual tagDuiTextStyle GetTextStyleHot();

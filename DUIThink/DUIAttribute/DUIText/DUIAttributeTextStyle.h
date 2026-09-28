@@ -14,6 +14,7 @@ static const GUID IID_CDUIAttributeTextStyle = { 0x21E859BB,0x67D5,0x4A96,0x96,0
 class DUITHINK_API CDUIAttributeTextStyle
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	friend class CDUIThinkEditCtrl;
 	friend class CPropertyTextStyle;
 
@@ -52,7 +53,7 @@ public:
 	virtual void SetFontResSwitch(const vector<CMMString> &vecResSwitch);
 	virtual void SetFontResSwitch(const CMMString &strResSwitch);
 	virtual LPCTSTR GetColorResName();
-	virtual ARGB GetTextColor();
+	virtual Gdiplus::ARGB GetTextColor();
 	virtual vector<CMMString> GetColorResSwitch();
 	virtual void SetColorResSwitch(const vector<CMMString> &vecResSwitch);
 	virtual void SetColorResSwitch(const CMMString &strResSwitch);

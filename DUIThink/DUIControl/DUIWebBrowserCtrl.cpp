@@ -1,5 +1,8 @@
 ﻿#include "StdAfx.h"
 #include "DUIWebBrowserCtrl.h"
+
+#ifndef DuiPlatform_SDL
+
 #include <atlbase.h>
 #include <atlhost.h>
 #include <wininet.h>
@@ -138,16 +141,12 @@ CDUIWebBrowserCtrl::CDUIWebBrowserCtrl(void)
 	// 3. 提高 WinInet 每主机连接数，减轻扫码轮询残留连接导致的后续排队
 	DuiWebBrowserResetWinInetSession();
 
-	CMMAsyncObject::Init();
-
 	return;
 }
 
 CDUIWebBrowserCtrl::~CDUIWebBrowserCtrl(void)
 {
 	Close();
-
-	CMMAsyncObject::UnInit();
 
 	return;
 }
@@ -300,9 +299,9 @@ void CDUIWebBrowserCtrl::RefreshView()
 
 void CDUIWebBrowserCtrl::Close()
 {
-	if (m_uRefreshTimerID)
+	if (m_pWndOwner && m_uRefreshTimerID)
 	{
-		StopTimer(m_uRefreshTimerID);
+		m_pWndOwner->StopTimer(m_uRefreshTimerID);
 		m_uRefreshTimerID = 0;
 	}
 
@@ -701,16 +700,24 @@ void CDUIWebBrowserCtrl::OnDuiWndManagerAttach()
 
 	NavigateHomePage();
 
-	m_uRefreshTimerID = TimerTask(50, true, [=]() 
+	if (m_pWndOwner)
 	{
-		Invalidate();
-	});
+		m_uRefreshTimerID = m_pWndOwner->TimerTask(50, true, [=]()
+		{
+			Invalidate();
+		});
+	}
 
 	return;
 }
 
 void CDUIWebBrowserCtrl::OnDuiWndManagerDetach()
 {
+	if (m_pWndOwner)
+	{
+		m_pWndOwner->StopTimer(m_uRefreshTimerID);
+	}
+
 	__super::OnDuiWndManagerDetach();
 
 	Close();
@@ -916,7 +923,7 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 			CDUIPoint ptMouseInCtrl(ptInMain.x - rcCtrl.left, ptInMain.y - rcCtrl.top);
 
 			CDUIRect rcWnd;
-			GetWindowRect(pCtrl->GetIEServerWnd(), &rcWnd);
+			::GetWindowRect(pCtrl->GetIEServerWnd(), &rcWnd);
 			ptMouseInCtrl.x += rcWnd.left;
 			ptMouseInCtrl.y += rcWnd.top;
 
@@ -983,4 +990,7 @@ LRESULT CDUIWebBrowserCtrl::DuiIEHookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 
 	return lRes;
 }
+
 //////////////////////////////////////////////////////////////////////////
+
+#endif

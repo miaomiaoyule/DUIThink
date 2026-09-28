@@ -12,7 +12,6 @@
 #define DuiModifyAttriDescribe(Attri, Describe)
 #endif
 
-#define DuiModifyAttriName(Attri, Name) { Attri.SetAttributeName(Name); }
 #define DuiGetAttriGroupIndex(Attri) (CDUIGlobal::GetAttributeGroupIndex(&Attri))
 #define DuiSetAttriGroupIndex(Attri, nIndex) (CDUIGlobal::SetAttributeGroupIndex(&Attri, nIndex))
 
@@ -20,6 +19,10 @@
 //describe
 #define Dui_Prop_Object								(_T("PropertyObj"))
 #define Dui_Window									(_T("Window"))
+#define Dui_WindowBase								(_T("WindowBase"))
+#define Dui_WindowWin32								(_T("WindowWin32"))
+#define Dui_WindowSDL								(_T("WindowSDL"))
+#define Dui_WindowVirtual							(_T("WindowVirtual"))
 
 #define Dui_Ctrl_Base								(_T("BaseCtrl"))
 #define Dui_Ctrl_Static								(_T("StaticCtrl"))

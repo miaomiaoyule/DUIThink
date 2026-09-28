@@ -50,7 +50,7 @@ void CDlgChatTip::OnInitDialog()
 	::GetWindowRect(m_hWnd, &rcWnd);
 
 	CDUIPoint ptWnd = { m_rcMonitor.left + m_rcMonitor.GetWidth() / 2 - rcWnd.GetWidth() / 2, m_rcMonitor.top - rcWnd.GetHeight() };
-	SetWindowPos(m_hWnd, NULL, ptWnd.x, ptWnd.y, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER);
+	::SetWindowPos(m_hWnd, NULL, ptWnd.x, ptWnd.y, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER);
 
 	//verify mouse
 	m_pListViewChatTipCtrl->SetTimer(Time_VerifyMousePos_ID, Time_VerifyMousePos_Elapse);

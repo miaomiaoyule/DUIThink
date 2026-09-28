@@ -4,13 +4,12 @@
 //////////////////////////////////////////////////////////////////////////
 CDUIFactory::CDUIFactory()
 {
-	//øÿº˛
+	//Êéß‰ª∂
 	DUIInner_RegisterCreateControl(CDUIControlBase);
 	DUIInner_RegisterCreateControl(CDUIContainerCtrl);
 	DUIInner_RegisterCreateControl(CDUIButtonCtrl);
 	DUIInner_RegisterCreateControl(CDUIComboxCtrl);
 	DUIInner_RegisterCreateControl(CDUIDateTimeCtrl);
-	DUIInner_RegisterCreateControl(CDUIEditCtrl);
 	DUIInner_RegisterCreateControl(CDUIAnimateCtrl);
 	DUIInner_RegisterCreateControl(CDUIIPAddressCtrl);
 	DUIInner_RegisterCreateControl(CDUICalendarCtrl);
@@ -26,7 +25,6 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateControl(CDUICheckBoxCtrl);
 	DUIInner_RegisterCreateControl(CDUIProgressCtrl);
 	DUIInner_RegisterCreateControl(CDUIProgressCircleCtrl);
-	DUIInner_RegisterCreateControl(CDUIRichEditCtrl);
 	DUIInner_RegisterCreateControl(CDUIScrollBarCtrl);
 	DUIInner_RegisterCreateControl(CDUISliderCtrl);
 	DUIInner_RegisterCreateControl(CDUITreeNodeCtrl);
@@ -34,21 +32,25 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateControl(CDUIHorizontalLayoutCtrl);
 	DUIInner_RegisterCreateControl(CDUITabLayoutCtrl);
 	DUIInner_RegisterCreateControl(CDUIVerticalLayoutCtrl);
-	DUIInner_RegisterCreateControl(CDUIHotKeyCtrl);
 	DUIInner_RegisterCreateControl(CDUIRadioBoxCtrl);
 	DUIInner_RegisterCreateControl(CDUIThinkEditCtrl);
 	DUIInner_RegisterCreateControl(CDUISpinCtrl);
 	DUIInner_RegisterCreateControl(CDUIClockCtrl);
 	DUIInner_RegisterCreateControl(CDUIGroupCtrl);
 	DUIInner_RegisterCreateControl(CDUIKLineChartCtrl);
+#ifndef DuiPlatform_SDL
+	DUIInner_RegisterCreateControl(CDUIEditCtrl);
+	DUIInner_RegisterCreateControl(CDUIRichEditCtrl);
+	DUIInner_RegisterCreateControl(CDUIHotKeyCtrl);
 	DUIInner_RegisterCreateControl(CDUIWebBrowserCtrl);
+#endif
 
-	//◊ ‘¥
+	//ËµÑÊ∫ê
 	DUIInner_RegisterCreateResource(CDUIFontBase);
 	DUIInner_RegisterCreateResource(CDUIImageBase);
 	DUIInner_RegisterCreateResource(CDUIColorBase);
 
-	// Ù–‘
+	//Â±ûÊÄß
 	DUIInner_RegisterCreateAttribute(CDUIAttributeGroup);
 	DUIInner_RegisterCreateAttribute(CDUIAttributePosition);
 	DUIInner_RegisterCreateAttribute(CDUIAttriImageSection);

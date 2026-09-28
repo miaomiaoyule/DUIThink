@@ -27,7 +27,7 @@ LPVOID CDUIAttributeTabSelect::QueryInterface(REFGUID Guid, DWORD dwQueryVer)
 
 void CDUIAttributeTabSelect::InitSelectItem()
 {
-	CDUIWnd *pWnd = GetOwnerWnd();
+	CDUIWndBase *pWnd = GetOwnerWnd();
 	if (NULL == pWnd) return;
 	
 	CMMString strDescribe = GetCurSelDescribe();

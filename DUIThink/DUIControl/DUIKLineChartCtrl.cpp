@@ -1,6 +1,5 @@
 #include "StdAfx.h"
 #include "DUIKLineChartCtrl.h"
-#include <atltime.h>
 
 #define Num_KLineChartCount				(80)
 #define Dui_Max_KLineChartItemWidth		(5)
@@ -16,8 +15,8 @@ CDUIKLineChartCtrl::CDUIKLineChartCtrl()
 	float fStart = 5.0f;
 	for (int n = 0; n < 100; n++)
 	{
-		CTime tDateCur(DateCur);
-		tDateCur -= CTimeSpan(n, 0, 0, 0);
+		CMMTime tDateCur(DateCur);
+		tDateCur -= CMMTimeSpan(n, 0, 0, 0);
 
 		tagDuiKLineChartItem KLineChartItem = {};
 		KLineChartItem.tDate.wYear = tDateCur.GetYear();

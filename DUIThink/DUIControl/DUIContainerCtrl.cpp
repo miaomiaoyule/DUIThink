@@ -333,17 +333,17 @@ void CDUIContainerCtrl::SetRangeInset(CDUIRect rcInset)
 
 bool CDUIContainerCtrl::SetTimer(UINT uTimerID, UINT nElapse)
 {
-	return CDUIControlBase::SetTimer(uTimerID, nElapse);
+	return __super::SetTimer(uTimerID, nElapse);
 }
 
 bool CDUIContainerCtrl::KillTimer(UINT uTimerID)
 {
-	return CDUIControlBase::KillTimer(uTimerID);
+	return __super::KillTimer(uTimerID);
 }
 
 bool CDUIContainerCtrl::KillTimer()
 {
-	return CDUIControlBase::KillTimer();
+	return __super::KillTimer();
 }
 
 bool CDUIContainerCtrl::IsAnimateDrag()
@@ -1228,7 +1228,7 @@ bool CDUIContainerCtrl::DoPaint(HDC hDC, bool bGenerateBmp)
 	for (int nIndex = 0; nIndex < GetChildCount(); nIndex++)
 	{
 		CDUIControlBase *pChild = GetChildAt(nIndex);
-		if (false == pChild || false == pChild->IsVisible()) continue;
+		if (NULL == pChild || false == pChild->IsVisible()) continue;
 
 		pChild->OnDraw(hDC, m_rcPaint, bGenerateBmp);
 	}

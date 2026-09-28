@@ -249,7 +249,7 @@ void CDUIAttributePosition::SetFixedHeight(int nHeight)
 
 bool CDUIAttributePosition::SetPositionFromAbsolute(const CDUIRect &rcAbsolute)
 {
-	if (NULL == m_pOwnerCtrl || (m_pOwnerCtrl->GetAbsoluteRect() == rcAbsolute)) return true;
+	if (NULL == m_pOwnerCtrl) return true;
 
 	CDUIContainerCtrl *pParentCtrl = m_pOwnerCtrl->GetParent();
 	CDUIRect rcModalParentAbs = pParentCtrl ? pParentCtrl->GetAbsoluteRect() : m_pOwnerCtrl->GetModalParentRect();

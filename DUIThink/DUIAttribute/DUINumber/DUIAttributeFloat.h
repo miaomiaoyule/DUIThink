@@ -10,6 +10,7 @@ static const GUID IID_CDUIAttributeFloat = { 0xAC3A2171,0xD7DB,0x4B3D,0xAC,0x54,
 class DUITHINK_API CDUIAttributeFloat
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttributeFloat)
 	MMDeclare_ClassName(CDUIAttributeFloat)
 

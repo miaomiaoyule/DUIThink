@@ -1,5 +1,7 @@
-#ifndef __MM_SHELLEXECUTE_H__
+﻿#ifndef __MM_SHELLEXECUTE_H__
 #define __MM_SHELLEXECUTE_H__
+
+#ifndef DuiPlatform_SDL
 
 #pragma once
 
@@ -8,6 +10,7 @@
 //////////////////////////////////////////////////////////////////////////
 class MMHELPER_API CMMShellExecute : public CMMServiceItem
 {
+	MMDeclare_Super(CMMServiceItem)
 private:
 	CMMShellExecute();
 	~CMMShellExecute();
@@ -39,6 +42,6 @@ protected:
 };
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif
 

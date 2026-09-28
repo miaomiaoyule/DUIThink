@@ -12,6 +12,7 @@ class DUITHINK_API CDUITreeNodeCtrl
 {
 	friend class CDUITreeViewCtrl;
 
+	MMDeclare_Super(CDUIListItemCtrl)
 	DuiDeclare_CreateControl(CDUITreeNodeCtrl)
 	MMDeclare_ClassName(CDUITreeNodeCtrl)
 
@@ -50,7 +51,7 @@ protected:
 	void SetOwner(CDUIListViewCtrl *pOwner) override;
 	
 	//diable method, because first child is checkicon, second child is edit, third is expandicon.
-	//traverse user custom child use GetChildCountUser()°¢GetChildAtUser()°¢RemoveAtUser().
+	//traverse user custom child use GetChildCountUser()„ÄÅGetChildAtUser()„ÄÅRemoveAtUser().
 protected:
 	bool RemoveAt(int nIndex) override;
 	

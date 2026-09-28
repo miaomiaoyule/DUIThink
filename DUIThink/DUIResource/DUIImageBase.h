@@ -15,6 +15,7 @@ class DUITHINK_API CDUIImageBase
 	friend class CImagePreviewWnd;
 	friend class CDUIGlobal;
 
+	MMDeclare_Super(CDUIResourceBase)
 	DuiDeclare_CreateResource(CDUIImageBase)
 	MMDeclare_ClassName(CDUIImageBase)
 

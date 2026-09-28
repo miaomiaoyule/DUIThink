@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MMReDirection.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 CMMReDirection::CMMReDirection()
 {
@@ -27,3 +29,5 @@ void CMMReDirection::PerformDisableReDirection()
 
 	return;
 }
+
+#endif

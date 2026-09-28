@@ -124,7 +124,7 @@ void CDlgQQFace::PerformAdjustPos()
 	::GetWindowRect(m_hWnd, &rcWnd);
 	rcWnd.Offset(m_rcEventCtrl.left - rcWnd.left, m_rcEventCtrl.top - rcWnd.top);
 	rcWnd.Offset(-(rcWnd.GetWidth() - m_rcEventCtrl.GetWidth()) / 2, -m_pListViewFaceCtrl->GetFixedHeight());
-	SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, NULL, NULL, SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+	::SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, NULL, NULL, SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
 
 	return;
 }

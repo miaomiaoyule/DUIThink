@@ -1,6 +1,8 @@
 #ifndef __MM_DEFINESHELLEXECUTE_H__
 #define __MM_DEFINESHELLEXECUTE_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
@@ -47,5 +49,5 @@ typedef std::shared_ptr<M_MMShellExecute_OpenPos> PtrMsgMMShellExecuteOpenPos;
 typedef std::shared_ptr<M_MMShellExecute_OpenMode> PtrMsgMMShellExecuteOpenMode;
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

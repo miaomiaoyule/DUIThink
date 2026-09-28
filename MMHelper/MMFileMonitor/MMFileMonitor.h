@@ -1,6 +1,8 @@
 #ifndef __MM_FILEMONITOR_H__
 #define __MM_FILEMONITOR_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 #include "Define.h"
@@ -8,6 +10,8 @@
 //////////////////////////////////////////////////////////////////////////
 class MMHELPER_API CMMFileMonitor : public CMMAsyncObject
 {
+	MMDeclare_Super(CMMAsyncObject)
+
 private:
 	CMMFileMonitor();
 	virtual ~CMMFileMonitor();
@@ -43,5 +47,5 @@ protected:
 };
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

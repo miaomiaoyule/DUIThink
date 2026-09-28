@@ -1,5 +1,7 @@
-#ifndef __MM_SOCKETCLIENTITEM_H__
+ï»¿#ifndef __MM_SOCKETCLIENTITEM_H__
 #define __MM_SOCKETCLIENTITEM_H__
+
+#ifndef DuiPlatform_SDL
 
 #pragma once
 
@@ -8,8 +10,8 @@ class CMMTCPSocketServer;
 //////////////////////////////////////////////////////////////////////////
 enum enOperationType
 {
-	OperationType_Send,					//·¢ËÍÀàĞÍ
-	OperationType_Recv,					//½ÓÊÕÀàĞÍ
+	OperationType_Send,					//å‘é€ç±»å‹
+	OperationType_Recv,					//æ¥æ”¶ç±»å‹
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -26,9 +28,9 @@ public:
 	const enOperationType				m_OperationType;
 	BYTE								m_cbBuffer[SOCKET_TCP_BUFFER] = {};
 
-	//ĞÅÏ¢º¯Êı
+	//ä¿¡æ¯å‡½æ•°
 public:
-	//»ñÈ¡ÀàĞÍ
+	//è·å–ç±»å‹
 	enOperationType GetOperationType() { return m_OperationType; }
 };
 
@@ -54,6 +56,8 @@ typedef std::vector<COverLappedRecv> VecOverLappedRecv;
 class MMHELPER_API CMMSocketClientItem
 	: public CMMServiceItem
 {
+	MMDeclare_Super(CMMServiceItem)
+
 public:
 	CMMSocketClientItem(SOCKET hSocket, DWORD dwClientAddr, CMMThreadPool *pOwnerPool, CMMTCPSocketServer *pTCPSocketServer, bool bEncrypt = false);
 	virtual ~CMMSocketClientItem(void);
@@ -73,7 +77,7 @@ protected:
 protected:
 	bool								m_bEncrypt = false;
 	bool								m_bAllowBatch = true;
-	bool								m_bWebsocketClient = false;				//websocketÁ´½Ó
+	bool								m_bWebsocketClient = false;				//websocketé“¾æ¥
 	BYTE								m_cbMaskBatch = MaskClient_All;
 	std::vector<BYTE>					m_vecBufferSend;
 	std::vector<BYTE>					m_vecBufferRecv;
@@ -122,14 +126,14 @@ protected:
 	void PerformSendCompleted(COverLappedSend *pOverLappedSend, DWORD dwThancferred);
 	void PerformRecvCompleted(COverLappedRecv *pOverLappedRecv, DWORD dwThancferred);
 
-	//ÄÚ²¿º¯Êı
+	//å†…éƒ¨å‡½æ•°
 private:
 	void EncryptBuffer(std::vector<BYTE> &vecBuffer);
 	void DecryptBuffer(std::vector<BYTE> &vecBuffer);
 	void EncryptBufferWS(std::vector<BYTE> &vecBuffer);
 	void DecryptBufferWS(std::vector<BYTE> &vecBuffer);
 
-	//ÄÚÁªº¯Êı
+	//å†…è”å‡½æ•°
 private:
 	COverLappedSend * ProductSendOverLapped();
 	bool PerformParseWSFrame(std::vector<BYTE> vecSrc, std::vector<BYTE> &vecBuffer);
@@ -140,5 +144,5 @@ private:
 typedef std::vector<CMMSocketClientItem *> VecSocketClientItem;
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

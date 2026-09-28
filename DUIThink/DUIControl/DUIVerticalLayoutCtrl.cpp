@@ -74,17 +74,32 @@ bool CDUIVerticalLayoutCtrl::IsAnimateDraging()
 
 void CDUIVerticalLayoutCtrl::OnDragMoveBegin(CDUIControlBase *pDragCtrl)
 {
-	return m_pAnimateDrag ? m_pAnimateDrag->OnDragMoveBegin(pDragCtrl) : NULL;
+	if (m_pAnimateDrag) 
+	{
+		m_pAnimateDrag->OnDragMoveBegin(pDragCtrl);
+	}
+
+	return;
 }
 
 void CDUIVerticalLayoutCtrl::OnDragMoving(CDUIControlBase *pDragCtrl)
 {
-	return m_pAnimateDrag ? m_pAnimateDrag->OnDragMoving(pDragCtrl) : NULL;
+	if (m_pAnimateDrag)
+	{
+		m_pAnimateDrag->OnDragMoving(pDragCtrl);
+	}
+
+	return;
 }
 
 void CDUIVerticalLayoutCtrl::OnDragMoveEnd(CDUIControlBase *pDragCtrl)
 {
-	return m_pAnimateDrag ? m_pAnimateDrag->OnDragMoveEnd(pDragCtrl) : NULL;
+	if (m_pAnimateDrag)
+	{
+		m_pAnimateDrag->OnDragMoveEnd(pDragCtrl);
+	}
+
+	return;
 }
 
 int CDUIVerticalLayoutCtrl::TranslateIndex(CDUIPoint pt)

@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 class CDlgDpi : public CDUIWnd
 {
+	MMDeclare_Super(CDUIWnd)
 	MMDeclare_ClassName()
 	DuiDeclare_Message_Map()
 

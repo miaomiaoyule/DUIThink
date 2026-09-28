@@ -1,5 +1,6 @@
 #ifndef __DUIHOTKEYCTRL_H__
 #define __DUIHOTKEYCTRL_H__
+#ifndef DuiPlatform_SDL
 
 #pragma once
 #pragma pack(1)
@@ -16,6 +17,7 @@ class DUITHINK_API CDUIHotKeyCtrl
 {
 	friend class CDUIHotKeyWnd;
 
+	MMDeclare_Super(CDUIButtonCtrl)
 	DuiDeclare_CreateControl(CDUIHotKeyCtrl)
 	MMDeclare_ClassName(CDUIHotKeyCtrl)
 
@@ -87,4 +89,5 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()
+#endif
 #endif

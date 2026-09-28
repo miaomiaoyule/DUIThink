@@ -83,7 +83,7 @@ HFONT CDUIIPAddressCtrl::GetFont()
 	return m_AttributeTextStyle.GetFont();
 }
 
-ARGB CDUIIPAddressCtrl::GetTextColor()
+Gdiplus::ARGB CDUIIPAddressCtrl::GetTextColor()
 {
 	return m_AttributeTextStyle.GetTextColor();
 }

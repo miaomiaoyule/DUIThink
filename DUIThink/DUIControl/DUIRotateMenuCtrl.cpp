@@ -131,7 +131,7 @@ void CDUIRotateMenuCtrl::RefreshView()
 
 		//size
 		CDUISize szItemMax = GetItemSizeMax(), szItemMin = GetItemSizeMin();
-		SizeF szSizeSpace = { (szItemMax.cx - szItemMin.cx) / (nAngleRange / 2.0f), (szItemMax.cy - szItemMin.cy) / (nAngleRange / 2.0f) };
+		Gdiplus::SizeF szSizeSpace = { (szItemMax.cx - szItemMin.cx) / (nAngleRange / 2.0f), (szItemMax.cy - szItemMin.cy) / (nAngleRange / 2.0f) };
 
 		//pos
 		for (int n = 0; n < GetChildCount(); n++)
@@ -149,7 +149,7 @@ void CDUIRotateMenuCtrl::RefreshView()
 			//point
 			CDUIPoint ptCenter(GetWidth() / 2, GetHeight() / 2);
 			float fArcLeft = (fAngle) / 180 * PI;
-			PointF ptItem;
+			Gdiplus::PointF ptItem;
 			ptItem.X = cos(fArcLeft) * m_szRadius.cx + ptCenter.x;
 			ptItem.Y = sin(fArcLeft) * m_szRadius.cy + ptCenter.y;
 			ptItem.X -= szItem.cx / 2;

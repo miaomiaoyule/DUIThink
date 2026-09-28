@@ -10,6 +10,7 @@ static const GUID IID_CDUIGroupCtrl = { 0x902AD2D4,0xBCE0,0x4337,0x8A,0x99,0xF3,
 class DUITHINK_API CDUIGroupCtrl
 	: public CDUIContainerCtrl
 {
+	MMDeclare_Super(CDUIContainerCtrl)
 	DuiDeclare_CreateControl(CDUIGroupCtrl)
 	MMDeclare_ClassName(CDUIGroupCtrl)
 
@@ -49,7 +50,7 @@ public:
 	virtual bool IsShadowText() override;
 	virtual void SetShadowText(bool bShadow);
 	virtual HFONT GetFont();
-	virtual ARGB GetTextColor();
+	virtual Gdiplus::ARGB GetTextColor();
 	virtual tagDuiTextStyle GetTextStyle();
 	virtual void SetTextStyle(const tagDuiTextStyle &TextStyle);
 

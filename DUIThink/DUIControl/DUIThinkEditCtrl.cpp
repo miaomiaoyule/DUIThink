@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "DUIThinkEditCtrl.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -141,18 +141,12 @@ LRESULT CDUIThinkEditCtrl::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, 
 	{
 		if (IsFocused())
 		{
+			m_pWndOwner->UpdateImeCompositionPos();
+
+#ifndef DuiPlatform_SDL
 			HIMC hImc = ::ImmGetContext(m_pWndOwner->GetWndHandle());
 			if (hImc)
 			{
-				//pos
-				POINT ptCaret;
-				::GetCaretPos(&ptCaret);
-				COMPOSITIONFORM Composition;
-				Composition.dwStyle = CFS_POINT;
-				Composition.ptCurrentPos.x = ptCaret.x;
-				Composition.ptCurrentPos.y = ptCaret.y;
-				ImmSetCompositionWindow(hImc, &Composition);
-
 				//font
 				do
 				{
@@ -173,6 +167,7 @@ LRESULT CDUIThinkEditCtrl::OnPreWndMessage(HWND hWnd, UINT uMsg, WPARAM wParam, 
 				
 				ImmReleaseContext(m_pWndOwner->GetWndHandle(), hImc);
 			}
+#endif
 
 			return 0;
 		}
@@ -313,13 +308,14 @@ CDUISize CDUIThinkEditCtrl::MeasureString(LPCTSTR lpszText)
 
 	tagDuiTextStyle TextStyle = GetTextStyleNormal();
 	CDUIRect rcMeasure;
+	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
 	if (false == MMInvalidString(lpszText))
 	{
-		PerformMeasureString(lpszText, TextStyle, MapLineVecDuiRichTextDraw(), rcMeasure);
+		PerformMeasureString(lpszText, TextStyle, mapLineVecRichTextDraw, rcMeasure);
 	}
 	else
 	{
-		PerformMeasureString(m_vecRichTextItem, TextStyle, MapLineVecDuiRichTextDraw(), rcMeasure);
+		PerformMeasureString(m_vecRichTextItem, TextStyle, mapLineVecRichTextDraw, rcMeasure);
 	}
 
 	return { rcMeasure.GetWidth(), rcMeasure.GetHeight() };
@@ -351,7 +347,8 @@ CDUISize CDUIThinkEditCtrl::MeasureString(VecDuiRichTextBase vecRichTextBase)
 	//measure
 	tagDuiTextStyle TextStyle = GetTextStyleNormal();
 	CDUIRect rcMeasure;
-	PerformMeasureString(vecRichTextItem, TextStyle, MapLineVecDuiRichTextDraw(), rcMeasure);
+	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
+	PerformMeasureString(vecRichTextItem, TextStyle, mapLineVecRichTextDraw, rcMeasure);
 
 	return { rcMeasure.GetWidth(), rcMeasure.GetHeight() };
 }
@@ -609,7 +606,7 @@ tagDuiTextStyle CDUIThinkEditCtrl::GetTextStyleTipTextNormal()
 	return m_AttributeTextStyleTipTextNormal.GetTextStyle();
 }
 
-ARGB CDUIThinkEditCtrl::GetTextColorTipTextNormal()
+Gdiplus::ARGB CDUIThinkEditCtrl::GetTextColorTipTextNormal()
 {
 	return m_AttributeTextStyleTipTextNormal.GetTextColor();
 }
@@ -656,7 +653,8 @@ CDUIRect CDUIThinkEditCtrl::GetCaretPos()
 	//pre measure
 	tagDuiTextStyle TextStyle = GetTextStyleActive();
 	CDUIRect rcMeasure;
-	PerformMeasureString(_T("°¡"), TextStyle, MapLineVecDuiRichTextDraw(), rcMeasure);
+	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
+	PerformMeasureString(_T("å•Š"), TextStyle, mapLineVecRichTextDraw, rcMeasure);
 
 	//none
 	if (m_nCaretRow < 0 || m_nCaretRow >= m_mapLineVecRichTextDraw.size())
@@ -977,6 +975,7 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName
 	//measure
 	tagDuiTextStyle TextStyle = GetTextStyleActive();
 	MapLineVecDuiRichTextDraw mapLineVecRichTextDraw;
+	CDUIRect rcMeasure;
 	if (MMInvalidString(lpszText))
 	{
 		VecDuiRichTextItem vecRichTextItem;
@@ -984,11 +983,11 @@ void CDUIThinkEditCtrl::SetReplaceSel(LPCTSTR lpszText, LPCTSTR lpszImageResName
 		RichTextItem.ItemType = RichTextItem_Image;
 		RichTextItem.strImageResName = lpszImageResName;
 		vecRichTextItem.push_back(RichTextItem);
-		PerformMeasureString(vecRichTextItem, TextStyle, mapLineVecRichTextDraw, CDUIRect());
+		PerformMeasureString(vecRichTextItem, TextStyle, mapLineVecRichTextDraw, rcMeasure);
 	}
 	else
 	{
-		PerformMeasureString(lpszText, TextStyle, mapLineVecRichTextDraw, CDUIRect());
+		PerformMeasureString(lpszText, TextStyle, mapLineVecRichTextDraw, rcMeasure);
 	}
 
 	//history
@@ -1297,6 +1296,8 @@ bool CDUIThinkEditCtrl::OnDuiSetFocus()
 			|| (CDUIWnd::MapKeyState() & MK_RBUTTON);
 	}
 
+	m_pWndOwner->UpdateImeCompositionPos();
+
 	return true;
 }
 
@@ -1341,6 +1342,14 @@ bool CDUIThinkEditCtrl::OnDuiKillFocus()
 	{
 		m_pWndOwner->SendNotify(this, DuiNotify_Edited);
 	}
+
+	//stop edit
+#if defined DuiPlatform_SDL
+	if (SDL_TextInputActive(m_pWndOwner->GetWndHandle()))
+	{
+		SDL_StopTextInput(m_pWndOwner->GetWndHandle());
+	}
+#endif
 
 	return true;
 }
@@ -1608,14 +1617,14 @@ LRESULT CDUIThinkEditCtrl::OnDuiChar(const DuiMessage &Msg)
 	TCHAR ch = (TCHAR)Msg.wParam;
 	if (ch >= 0xD800 && ch <= 0xDBFF)
 	{
-		// ÊÕµ½¸ß½×´úÀíÏî£¨EmojiÇ°°ë¶Î£©£¬ÔÝ´æ²¢µÈ´ýÏÂÒ»´Î WM_CHAR
+		// æ”¶åˆ°é«˜é˜¶ä»£ç†é¡¹ï¼ˆEmojiå‰åŠæ®µï¼‰ï¼Œæš‚å­˜å¹¶ç­‰å¾…ä¸‹ä¸€æ¬¡ WM_CHAR
 		m_chEmojiWait = ch;
 
 		return 0;
 	}
 	if (ch >= 0xDC00 && ch <= 0xDFFF)
 	{
-		// ÊÕµ½µÍ½×´úÀíÏî£¨Emojiºó°ë¶Î£©£¬½øÐÐ×éºÏ
+		// æ”¶åˆ°ä½Žé˜¶ä»£ç†é¡¹ï¼ˆEmojiåŽåŠæ®µï¼‰ï¼Œè¿›è¡Œç»„åˆ
 		if (m_chEmojiWait != 0)
 		{
 			strReplace += m_chEmojiWait;
@@ -1623,13 +1632,13 @@ LRESULT CDUIThinkEditCtrl::OnDuiChar(const DuiMessage &Msg)
 		}
 		else
 		{
-			// ³öÏÖÁËÃ»ÓÐ¸ß½×ÏîµÄ¹ÂÁ¢µÍ½×Ïî£¨ÊôÓÚÒì³£±àÂë£©£¬Ö±½Ó¶ªÆú
+			// å‡ºçŽ°äº†æ²¡æœ‰é«˜é˜¶é¡¹çš„å­¤ç«‹ä½Žé˜¶é¡¹ï¼ˆå±žäºŽå¼‚å¸¸ç¼–ç ï¼‰ï¼Œç›´æŽ¥ä¸¢å¼ƒ
 			return 0; 
 		}
 	}
 	else
 	{
-		// Õý³£BMPÃæ°åÄÚµÄ×Ö·û(°üÀ¨²¿·Ö1¸ö wchar_t µÄÀÏÊ½·ûºÅ)
+		// æ­£å¸¸BMPé¢æ¿å†…çš„å­—ç¬¦(åŒ…æ‹¬éƒ¨åˆ†1ä¸ª wchar_t çš„è€å¼ç¬¦å·)
 		strReplace = ch;
 	}
 
@@ -1648,33 +1657,135 @@ LRESULT CDUIThinkEditCtrl::OnDuiContextMenu(const DuiMessage &Msg)
 	__super::OnDuiContextMenu(Msg);
 
 	//menu
-	HMENU hPopMenu = CreatePopupMenu();
-	AppendMenu(hPopMenu, 0, ID_MENU_UNDO, _T("³·Ïú(&U)"));
-	AppendMenu(hPopMenu, 0, ID_MENU_REDO, _T("ÖØ×ö(&R)"));
-	AppendMenu(hPopMenu, MF_SEPARATOR, 0, _T(""));
-	AppendMenu(hPopMenu, 0, ID_MENU_CUT, _T("¼ôÇÐ(&X)"));
-	AppendMenu(hPopMenu, 0, ID_MENU_COPY, _T("¸´ÖÆ(&C)"));
-	AppendMenu(hPopMenu, 0, ID_MENU_PASTE, _T("Õ³Ìû(&V)"));
-	AppendMenu(hPopMenu, 0, ID_MENU_CLEAR, _T("Çå¿Õ(&L)"));
-	AppendMenu(hPopMenu, MF_SEPARATOR, 0, _T(""));
-	AppendMenu(hPopMenu, 0, ID_MENU_SELECTALL, _T("È«Ñ¡(&A)"));
+	CDUIMenu Menu;
+	Menu.LoadMenu(_T(""));
+	if (NULL == g_pDuiMenuWndRoot) return 0;
+
+	CDUIMenuCtrl *pMenuRoot = new CDUIMenuCtrl();
+	if (NULL == pMenuRoot) return 0;
+
+	tagDuiTextStyle TextStyleNormal = false == m_AttributeTextStyleNormal.IsEmpty() ? m_AttributeTextStyleNormal.GetTextStyle() : m_AttributeTextStyle.GetTextStyle();
+	tagDuiTextStyle TextStyleHot = false == m_AttributeTextStyleHot.IsEmpty() ? m_AttributeTextStyleHot.GetTextStyle() : TextStyleNormal;
+	tagDuiTextStyle TextStyleDisable = TextStyleNormal;
+	TextStyleDisable.vecColorResSwitch = { Name_ColorGray };
+	TextStyleNormal.dwTextStyle = (DT_LEFT | DT_VCENTER);
+	TextStyleHot.dwTextStyle = (DT_LEFT | DT_VCENTER);
+	TextStyleDisable.dwTextStyle = (DT_LEFT | DT_VCENTER);
+
+	pMenuRoot->Init();
+	pMenuRoot->SetBkColor({ Name_ColorDefault });
+	//pMenuRoot->SetRoundCorner({ 5,5,5,5 });
+	pMenuRoot->SetRangeInset({ 5,5,5,5 });
+	pMenuRoot->SetItemTextStyleNormal(TextStyleNormal);
+	pMenuRoot->SetItemTextStyleHot(TextStyleHot);
+	pMenuRoot->SetItemTextStyleSelNormal(TextStyleNormal);
+	pMenuRoot->SetItemTextStyleSelHot(TextStyleNormal);
+	pMenuRoot->SetItemTextStyleDisabled(TextStyleDisable);
+	pMenuRoot->SetItemStatusColorResSwitchNormal({ Name_ColorDefault });
+	pMenuRoot->SetItemStatusColorResSwitchHot({ Name_ColorDefault });
+	pMenuRoot->SetItemStatusColorResSwitchSelNormal({ Name_ColorSelBk });
+	pMenuRoot->SwitchListViewType(enDuiListViewType::ListView_List);
+	pMenuRoot->SetUseListHeader(false);
+	pMenuRoot->SetItemTextPadding({ 10,0,0,0 });
+	pMenuRoot->SetSwitchListItemHeight(25);
+	g_pDuiMenuWndRoot->SetMenuView(pMenuRoot);
+
+	//create item
+	auto GenerateItem = [](UINT uID, LPCTSTR lpszText) -> CDUIMenuItemCtrl *
+	{
+		CDUIMenuItemCtrl *pMenuItem = new CDUIMenuItemCtrl();
+		pMenuItem->Init();
+		pMenuItem->SetText(lpszText);
+		pMenuItem->SetCtrlID(uID);
+		pMenuItem->SetTag(uID);
+
+		if (MMInvalidString(lpszText))
+		{
+			pMenuItem->SetLineMenu(true);
+			pMenuItem->SetBkColor({ Name_ColorGray });
+		}
+
+		return pMenuItem;
+	};
+
+	//menu
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_UNDO, _T("æ’¤é”€(U)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_REDO, _T("é‡åš(R)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(0, _T("")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_CUT, _T("å‰ªåˆ‡(X)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_COPY, _T("å¤åˆ¶(C)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_PASTE, _T("ç²˜è´´(V)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_CLEAR, _T("æ¸…ç©º(L)")));
+	pMenuRoot->InsertMenuItem(GenerateItem(0, _T("")));
+	pMenuRoot->InsertMenuItem(GenerateItem(ID_MENU_SELECTALL, _T("å…¨é€‰(A)")));
 
 	//enable
-	UINT uUndo = (CanUndo() ? 0 : MF_GRAYED);
-	::EnableMenuItem(hPopMenu, ID_MENU_UNDO, MF_BYCOMMAND | uUndo);
-	UINT uRedo = (CanRedo() ? 0 : MF_GRAYED);
-	EnableMenuItem(hPopMenu, ID_MENU_REDO, MF_BYCOMMAND | uRedo);
-	UINT uSel = (GetSelectString().empty()) ? MF_GRAYED : 0;
-	UINT uReadonly = IsReadOnly() ? MF_GRAYED : 0;
-	EnableMenuItem(hPopMenu, ID_MENU_CUT, MF_BYCOMMAND | uSel | uReadonly);
-	EnableMenuItem(hPopMenu, ID_MENU_COPY, MF_BYCOMMAND | uSel);
-	EnableMenuItem(hPopMenu, ID_MENU_CLEAR, MF_BYCOMMAND | uSel | uReadonly);
-	EnableMenuItem(hPopMenu, ID_MENU_PASTE, MF_BYCOMMAND | uReadonly);
+	CDUIMenuItemCtrl *pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_UNDO);
+	if (pMenuItem) pMenuItem->SetEnabled(CanUndo());
+	pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_REDO);
+	if (pMenuItem) pMenuItem->SetEnabled(CanRedo());
+	bool bHasSel = false == GetSelectString().empty();
+	pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_CUT);
+	if (pMenuItem) pMenuItem->SetEnabled(bHasSel && false == IsReadOnly());
+	pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_COPY);
+	if (pMenuItem) pMenuItem->SetEnabled(bHasSel);
+	pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_CLEAR);
+	if (pMenuItem) pMenuItem->SetEnabled(bHasSel && false == IsReadOnly());
+	pMenuItem = pMenuRoot->FindMenuItem(ID_MENU_PASTE);
+	if (pMenuItem) pMenuItem->SetEnabled(false == IsReadOnly());
 
+	//size
+	pMenuRoot->RefreshView();
+	CDUISize szTotalRange = pMenuRoot->GetTotalRange();
+	szTotalRange.cy += pMenuRoot->GetRangeInset().top + pMenuRoot->GetRangeInset().bottom;
+	g_pDuiMenuWndRoot->SetGdiplusRenderText(true);
+	g_pDuiMenuWndRoot->SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
+	g_pDuiMenuWndRoot->SetWndInitSize(120, szTotalRange.cy);
+	g_pDuiMenuWndRoot->SetWndLayered(true);
+	g_pDuiMenuWndRoot->SetCaptionHeight(0);
+
+	//popup
 	CDUIPoint ptScreen = Msg.ptMouse;
 	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptScreen);
-	TrackPopupMenu(hPopMenu, TPM_RIGHTBUTTON, ptScreen.x, ptScreen.y, 0, m_pWndOwner->GetWndHandle(), NULL);
-	DestroyMenu(hPopMenu);
+	tagDuiMenuCmd MenuCmd = Menu.TrackPopupMenu(GetWndHandle(), ptScreen);
+	switch (MenuCmd.uMenuID)
+	{
+		case ID_MENU_UNDO:
+		{
+			Undo();
+			break;
+		}
+		case ID_MENU_REDO:
+		{
+			Redo();
+			break;
+		}
+		case ID_MENU_CUT:
+		{
+			Cut();
+			break;
+		}
+		case ID_MENU_COPY:
+		{
+			Copy();
+			break;
+		}
+		case ID_MENU_PASTE:
+		{
+			Paste();
+			break;
+		}
+		case ID_MENU_CLEAR:
+		{
+			Clear();
+			break;
+		}
+		case ID_MENU_SELECTALL:
+		{
+			SetSelAll();
+			break;
+		}
+	}
 
 	return 0;
 }
@@ -1743,6 +1854,7 @@ LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 
 	__super::OnDuiImeComPosition(Msg);
 
+#ifndef DuiPlatform_SDL
 	//emoji
 	CMMString strBuff;
 	HIMC hImc = ::ImmGetContext(m_pWndOwner->GetWndHandle());
@@ -1772,6 +1884,23 @@ LRESULT CDUIThinkEditCtrl::OnDuiImeComPosition(const DuiMessage &Msg)
 
 		ImmReleaseContext(m_pWndOwner->GetWndHandle(), hImc);
 	}
+#endif
+
+	return 0;
+}
+
+LRESULT CDUIThinkEditCtrl::OnDuiTextEditing(const DuiMessage &Msg)
+{
+	if (NULL == m_pWndOwner || Msg.strText.empty()) return 0;
+
+	return 0;
+}
+
+LRESULT CDUIThinkEditCtrl::OnDuiTextInput(const DuiMessage &Msg)
+{
+	if (NULL == m_pWndOwner || Msg.strText.empty()) return 0;
+
+	SetReplaceSel(Msg.strText);
 
 	return 0;
 }

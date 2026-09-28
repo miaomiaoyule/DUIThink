@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MMDataObject.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 IEnumFormatEtc::IEnumFormatEtc(const FormatEtcArray& ArrFE) 
 	: m_cRefCount(0)
@@ -377,3 +379,5 @@ HRESULT STDMETHODCALLTYPE CMMDataObject::EnumDAdvise(
 	//ATLTRACE ("CMMDataObject::EnumDAdvise\n");
 	return OLE_E_ADVISENOTSUPPORTED;
 }
+
+#endif

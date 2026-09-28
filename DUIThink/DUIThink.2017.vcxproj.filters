@@ -46,6 +46,12 @@
     <Filter Include="Define">
       <UniqueIdentifier>{b686be5d-09cb-4706-9a41-7fc8308b5d52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DUICore\DUIPlatform">
+      <UniqueIdentifier>{345d3b9f-a86b-46ed-9ffb-0305fa43b01b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DUICore\DUIRender">
+      <UniqueIdentifier>{b8751b5e-fc65-4467-b8a6-85a8447fcd0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -216,8 +222,8 @@
     <ClInclude Include="DUIControl\DUIRotateMenuCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>
-    <ClInclude Include="DUICore\DUIWnd.h">
-      <Filter>DUICore</Filter>
+    <ClInclude Include="DUICore\DUIPlatform\DUIWnd.h">
+      <Filter>DUICore\DUIPlatform</Filter>
     </ClInclude>
     <ClInclude Include="DUIExport\DefineResource.h">
       <Filter>DUIExport</Filter>
@@ -332,6 +338,36 @@
     </ClInclude>
     <ClInclude Include="DUIUtils\stb_image_write.h">
       <Filter>DUIUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndBase.h">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndVirtual.h">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndSDL.h">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndWin32.h">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIRender\DUICanvasRaster.h">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIRender\DUIMacFont.h">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIRender\DUIGdiplusPortable.h">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIRender\DUIGdiPortable.h">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIRender\DUIPaintSceneSDL.h">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClInclude>
+    <ClInclude Include="DUICore\DUIRender\IDuiCanvas.h">
+      <Filter>DUICore\DUIRender</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -461,8 +497,8 @@
     <ClCompile Include="DUIControl\DUIRotateMenuCtrl.cpp">
       <Filter>DUIControl</Filter>
     </ClCompile>
-    <ClCompile Include="DUICore\DUIWnd.cpp">
-      <Filter>DUICore</Filter>
+    <ClCompile Include="DUICore\DUIPlatform\DUIWnd.cpp">
+      <Filter>DUICore\DUIPlatform</Filter>
     </ClCompile>
     <ClCompile Include="DUIControl\DUIAnimateCtrl.cpp">
       <Filter>DUIControl</Filter>
@@ -574,6 +610,33 @@
     </ClCompile>
     <ClCompile Include="DUIExport\DUIStruct.cpp">
       <Filter>DUIExport</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndBase.cpp">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndVirtual.cpp">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndSDL.cpp">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndWin32.cpp">
+      <Filter>DUICore\DUIPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIRender\DUICanvasRaster.cpp">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIRender\DUIMacFont.cpp">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIRender\DUIGdiplusPortable.cpp">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIRender\DUIPaintSceneSDL.cpp">
+      <Filter>DUICore\DUIRender</Filter>
+    </ClCompile>
+    <ClCompile Include="DUICore\DUIRender\DUIGdiPortable.cpp">
+      <Filter>DUICore\DUIRender</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

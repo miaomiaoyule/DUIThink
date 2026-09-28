@@ -38,25 +38,28 @@ struct tagDuiTextStyle
 	}
 };
 
-template<> struct hash<tagDuiTextStyle>
+namespace std
 {
-	inline uint32_t operator()(const tagDuiTextStyle &TextStyle) const
+	template<> struct hash<tagDuiTextStyle>
 	{
-		CMMString strInfo;
-		for (auto &strFontRes : TextStyle.vecFontResSwitch)
+		inline uint32_t operator()(const tagDuiTextStyle &TextStyle) const
 		{
-			strInfo += strFontRes;
-		}
-		for (auto &strColorRes : TextStyle.vecColorResSwitch)
-		{
-			strInfo += strColorRes;
-		}
+			CMMString strInfo;
+			for (auto &strFontRes : TextStyle.vecFontResSwitch)
+			{
+				strInfo += strFontRes;
+			}
+			for (auto &strColorRes : TextStyle.vecColorResSwitch)
+			{
+				strInfo += strColorRes;
+			}
 
-		strInfo += CMMStrHelp::Format(_T("-%d"), (int)TextStyle.dwTextStyle);
+			strInfo += CMMStrHelp::Format(_T("-%d"), (int)TextStyle.dwTextStyle);
 
-		return CMMHash::GetHash(strInfo);
-	}
-};
+			return CMMHash::GetHash(strInfo);
+		}
+	};
+}
 
 inline uint32_t tagDuiTextStyle::GetID() const
 {
@@ -151,30 +154,33 @@ struct tagDuiRichText
 	}
 };
 
-template<> struct hash<tagDuiRichText>
+namespace std
 {
-	inline uint32_t operator()(const tagDuiRichText &RichText) const
+	template<> struct hash<tagDuiRichText>
 	{
-		CMMString strInfo;
-		for (auto &RichTextItem : RichText.vecRichTextItem)
+		inline uint32_t operator()(const tagDuiRichText &RichText) const
 		{
-			for (auto &strFontRes : RichTextItem.vecFontResSwitch)
+			CMMString strInfo;
+			for (auto &RichTextItem : RichText.vecRichTextItem)
 			{
-				strInfo += strFontRes;
-			}
-			for (auto &strColorRes : RichTextItem.vecColorResSwitch)
-			{
-				strInfo += strColorRes;
+				for (auto &strFontRes : RichTextItem.vecFontResSwitch)
+				{
+					strInfo += strFontRes;
+				}
+				for (auto &strColorRes : RichTextItem.vecColorResSwitch)
+				{
+					strInfo += strColorRes;
+				}
+
+				strInfo += CMMStrHelp::Format(_T("-%d-%s-%s"), (int)RichTextItem.ItemType, (LPCTSTR)RichTextItem.strText, (LPCTSTR)RichTextItem.strImageResName);
 			}
 
-			strInfo += CMMStrHelp::Format(_T("-%d-%s-%s"), (int)RichTextItem.ItemType, (LPCTSTR)RichTextItem.strText, (LPCTSTR)RichTextItem.strImageResName);
+			strInfo += CMMStrHelp::Format(_T("-%d-%d"), (int)RichText.dwTextStyle, RichText.nLineLimit);
+
+			return CMMHash::GetHash(strInfo);
 		}
-
-		strInfo += CMMStrHelp::Format(_T("-%d-%d"), (int)RichText.dwTextStyle, RichText.nLineLimit);
-
-		return CMMHash::GetHash(strInfo);
-	}
-};
+	};
+}
 
 inline uint32_t tagDuiRichText::GetID() const
 {
@@ -188,7 +194,7 @@ struct tagDuiRichTextDraw : public tagDuiRichTextItem
 
 	//text
 	CDUIFontBase *						pFontBase = NULL;
-	ARGB								dwColor = 0;
+	Gdiplus::ARGB						dwColor = 0;
 };
 
 typedef std::vector<tagDuiRichTextBase> VecDuiRichTextBase;
@@ -252,7 +258,7 @@ struct tagDuiImageSection
 	std::unordered_map<WORD, CDUIRect>	mapSourceCustomScale;
 
 	BYTE								cbAlpha = 255;
-	ARGB								dwMask = 0;
+	Gdiplus::ARGB						dwMask = 0;
 
 	//corner
 	CDUIRect							rcCorner;
@@ -278,10 +284,13 @@ struct tagDuiImageSection
 	}
 };
 
-template<> struct hash<tagDuiImageSection>
+namespace std
 {
-	uint32_t operator()(const tagDuiImageSection &ImageSection) const;
-};
+	template<> struct hash<tagDuiImageSection>
+	{
+		uint32_t operator()(const tagDuiImageSection &ImageSection) const;
+	};
+}
 
 inline uint32_t tagDuiImageSection::GetID() const
 {
@@ -312,20 +321,23 @@ struct tagDuiCombox
 	uint32_t GetID();
 };
 
-template<> struct hash<tagDuiCombox>
+namespace std
 {
-	inline uint32_t operator()(const tagDuiCombox &AttriCombox) const
+	template<> struct hash<tagDuiCombox>
 	{
-		CMMString strInfo;
-		for (auto &Item : AttriCombox.vecItem)
+		inline uint32_t operator()(const tagDuiCombox &AttriCombox) const
 		{
-			strInfo += CMMStrHelp::Format(_T("%d"), Item.nItem);
-			strInfo += Item.strDescribe;
-		}
+			CMMString strInfo;
+			for (auto &Item : AttriCombox.vecItem)
+			{
+				strInfo += CMMStrHelp::Format(_T("%d"), Item.nItem);
+				strInfo += Item.strDescribe;
+			}
 
-		return CMMHash::GetHash(strInfo);
-	}
-};
+			return CMMHash::GetHash(strInfo);
+		}
+	};
+}
 
 inline uint32_t tagDuiCombox::GetID()
 {
@@ -365,20 +377,23 @@ struct tagDuiPosition
 	uint32_t GetID() const;
 };
 
-template<> struct hash<tagDuiPosition>
+namespace std
 {
-	inline uint32_t operator()(const tagDuiPosition &Position) const
+	template<> struct hash<tagDuiPosition>
 	{
-		CMMString strInfo;
-		strInfo += CMMStrHelp::Format(_T("%d"), Position.bFloat);
-		strInfo += CMMStrHelp::Format(_T("-%d-%d-%d-%d"), Position.HorizPosition.HorizAlignType, Position.HorizPosition.nLeftAlignValue,
-			Position.HorizPosition.nRightAlignValue, Position.HorizPosition.nFixedWidth);
-		strInfo += CMMStrHelp::Format(_T("-%d-%d-%d-%d"), Position.VertPosition.VertAlignType, Position.VertPosition.nTopAlignValue,
-			Position.VertPosition.nBottomAlignValue, Position.VertPosition.nFixedHeight);
+		inline uint32_t operator()(const tagDuiPosition &Position) const
+		{
+			CMMString strInfo;
+			strInfo += CMMStrHelp::Format(_T("%d"), Position.bFloat);
+			strInfo += CMMStrHelp::Format(_T("-%d-%d-%d-%d"), Position.HorizPosition.HorizAlignType, Position.HorizPosition.nLeftAlignValue,
+				Position.HorizPosition.nRightAlignValue, Position.HorizPosition.nFixedWidth);
+			strInfo += CMMStrHelp::Format(_T("-%d-%d-%d-%d"), Position.VertPosition.VertAlignType, Position.VertPosition.nTopAlignValue,
+				Position.VertPosition.nBottomAlignValue, Position.VertPosition.nFixedHeight);
 
-		return CMMHash::GetHash(strInfo);
-	}
-};
+			return CMMHash::GetHash(strInfo);
+		}
+	};
+}
 
 inline uint32_t tagDuiPosition::GetID() const
 {
@@ -429,8 +444,8 @@ struct tagDuiRipple
 struct tagDuiRippleBitmap
 {
 	tagDuiRipple						Ripple;
-	std::vector<ARGB>					vecBmpSwap;
-	std::vector<ARGB>					vecBmpDest;
+	std::vector<Gdiplus::ARGB>			vecBmpSwap;
+	std::vector<Gdiplus::ARGB>			vecBmpDest;
 	HBITMAP								hBitmapSwap = NULL;
 };
 
@@ -461,6 +476,18 @@ typedef struct tagDuiTimerInfo
 	bool								bKilled = false;
 } DuiTimerInfo;
 
+typedef struct tagDuiTimerStore
+{
+	struct Item
+	{
+		std::function<void()>			pFunc = NULL;
+		bool							bRepeat = false;
+	};
+
+	UINT								uNextID = 0x80000000;
+	std::map<UINT_PTR, Item>			mapTimer;
+} DuiTimerStore;
+
 typedef struct tagDuiFindShortCut
 {
 	TCHAR								chChar = 0;
@@ -471,6 +498,7 @@ typedef std::vector<DuiTimerInfo> VecDuiTimerInfo;
 //////////////////////////////////////////////////////////////////////////
 struct tagDuiDropData
 {
+#ifndef DuiPlatform_SDL
 	DWORD								dwKeyState = 0;
 	DWORD								dwEffect = DROPEFFECT_COPY | DROPEFFECT_MOVE | DROPEFFECT_LINK;
 	CMMDragDrop *						pDragDropFrom = NULL;
@@ -483,6 +511,7 @@ struct tagDuiDropData
 	bool								bAsyncMode = true;
 	WPARAM								wParam = 0;
 	LPARAM								lParam = 0;
+#endif
 };
 
 //////////////////////////////////////////////////////////////////////////

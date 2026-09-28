@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "DUIGlobal.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -8,9 +8,11 @@
 CDUIGlobal::CDUIGlobal(void)
 	: CMMServiceItem(&m_ThreadPool)
 {
+#ifndef DuiPlatform_SDL
 	//Gdiplus
 	m_uToken = 0;
 	Gdiplus::GdiplusStartup(&m_uToken, &m_GdiplusInput, NULL);
+#endif
 
 	return;
 }
@@ -28,7 +30,7 @@ LRESULT CDUIGlobal::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool 
 	{
 	}
 
-	return __super::HandleMessage(uMsg, wParam, lParam, bHandled);
+	return CMMAsyncObject::HandleMessage(uMsg, wParam, lParam, bHandled);
 }
 
 void CDUIGlobal::OnMessage(PtrMMServiceMsg pMessage)
@@ -45,14 +47,32 @@ CDUIGlobal * CDUIGlobal::GetInstance()
 
 bool CDUIGlobal::Init(HINSTANCE hInstance)
 {
-	if (m_hInstance) return true;
+	if (m_bInited) return true;
 
 	UnInit();
 
-	CMMAsyncObject::Init();
+	// SDL VIDEO must be ready before any SDL_CreateWindow (incl. CMMAsyncObject).
+#if defined(DuiPlatform_SDL)
+	if (false == SDL_Init(SDL_INIT_VIDEO))
+	{
+		MMTRACE(_T("SDL_Init(VIDEO) failed: %s"), (LPCTSTR)CA2CT(SDL_GetError(), CP_ACP));
+		return false;
+	}
+#endif
+
+	if (false == CMMAsyncObject::Init())
+	{
+		MMTRACE(_T("CMMAsyncObject::Init failed"));
+#if defined(DuiPlatform_SDL)
+		SDL_Quit();
+#endif
+		return false;
+	}
+
 	CMMServiceItem::Init();
 
 	m_hInstance = hInstance;
+	m_bInited = true;
 	m_ThreadPool.Run(2);
 
 	//public res
@@ -69,7 +89,7 @@ bool CDUIGlobal::Init(HINSTANCE hInstance)
 //uninit
 bool CDUIGlobal::UnInit()
 {
-	if (NULL == m_hInstance) return true;
+	if (false == m_bInited) return true;
 	if (false == CMMAsyncObject::UnInit()) return false;
 	if (false == CMMServiceItem::UnInit()) return false;
 
@@ -79,6 +99,7 @@ bool CDUIGlobal::UnInit()
 	//instance res
 	m_DuiFileResType = DuiFileResType_File;
 	m_nIndexSwitchRes = 0;
+	m_bInited = false;
 	m_hInstance = NULL;
 	m_hInstanceResource = NULL;
 	m_vecZipData.clear();
@@ -92,8 +113,10 @@ bool CDUIGlobal::UnInit()
 	CloseProject();
 
 	//third
+#ifndef DuiPlatform_SDL
 #ifdef MMSvgEnable
 	CMMSvg::GetInstance()->UnInit();
+#endif
 #endif
 
 	//extend dll
@@ -105,6 +128,11 @@ bool CDUIGlobal::UnInit()
 	}
 	
 	m_vecModuleExtendDll.clear();
+
+	//platform
+#if defined(DuiPlatform_SDL)
+	SDL_Quit();
+#endif
 
 	return true;
 }
@@ -123,10 +151,19 @@ bool CDUIGlobal::LoadProjectFromFile(LPCTSTR lpszProjFile)
 	CMMString strProjFileFull = lpszProjFile;
 
 	//relative path
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+	if (strProjFileFull.empty() || _T('/') != strProjFileFull[0])
+	{
+		strProjFileFull = CMMService::GetWorkDirectory() + _T('/') + strProjFileFull;
+	}
+
+	strProjFileFull.Replace(_T('\\'), _T('/'));
+#else
 	if (-1 == strProjFileFull.find(_T(':')))
 	{
 		strProjFileFull = CMMService::GetWorkDirectory() + _T('\\') + strProjFileFull;
 	}
+#endif
 
 	//load
 	if (false == CDUIXmlPack::LoadProject(strProjFileFull)) return false;
@@ -185,10 +222,19 @@ bool CDUIGlobal::LoadProjectFromZip(LPCTSTR lpszZipFile, LPCTSTR lpszPassword, L
 	CMMString strZipFileFull = lpszZipFile;
 
 	//relative path
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+	if (strZipFileFull.empty() || _T('/') != strZipFileFull[0])
+	{
+		strZipFileFull = CMMService::GetWorkDirectory() + _T('/') + strZipFileFull;
+	}
+
+	strZipFileFull.Replace(_T('\\'), _T('/'));
+#else
 	if (-1 == strZipFileFull.find(_T(':')))
 	{
 		strZipFileFull = CMMService::GetWorkDirectory() + _T('\\') + strZipFileFull;
 	}
+#endif
 
 	//fileinfo
 	vector<BYTE> vecData;
@@ -230,6 +276,9 @@ bool CDUIGlobal::LoadProjectFromZip(void *pData, UINT uDataLen, LPCTSTR lpszPass
 
 bool CDUIGlobal::LoadProjectFromResZip(HINSTANCE hResModule, LPCTSTR lpszZipName, LPCTSTR lpszPassword, LPCTSTR lpszProjName, LPCTSTR lpszResType)
 {
+#if defined DuiPlatform_SDL
+	return false;
+#else
 	if (NULL == hResModule) return false;
 
 	m_hInstanceResource = hResModule;
@@ -261,6 +310,7 @@ bool CDUIGlobal::LoadProjectFromResZip(HINSTANCE hResModule, LPCTSTR lpszZipName
 	m_bProjectExist = true;
 
 	return true;
+#endif
 }
 
 CMMString CDUIGlobal::GetDuiLastError()
@@ -316,6 +366,39 @@ bool CDUIGlobal::TranslateMessage(const LPMSG pMsg)
 	}
 
 	return false;
+}
+
+MapWnd CDUIGlobal::GetWndAll()
+{
+	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+
+	return m_mapWnd;
+}
+
+tagDuiFile CDUIGlobal::GetWndInfo(CDUIWnd *pWnd)
+{
+	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+
+	auto FindIt = m_mapWnd.find(pWnd);
+	if (FindIt == m_mapWnd.end()) return {};
+
+	return FindIt->second;
+}
+
+CDUIWnd * CDUIGlobal::GetWndByHandle(HWND hWnd)
+{
+	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
+
+	auto FindIt = find_if(m_mapWnd.begin(), m_mapWnd.end(), [=](const std::pair<CDUIWnd *, tagDuiFile> &Wnd)
+	{
+		return Wnd.first->GetWndHandle() == hWnd;
+	});
+	if (FindIt != m_mapWnd.end())
+	{
+		return FindIt->first;
+	}
+
+	return NULL;
 }
 
 void CDUIGlobal::PerformSwitchRes(int nIndexRes)
@@ -378,7 +461,7 @@ void CDUIGlobal::LoadWnd(const CMMString &strName, CDUIWnd *pWnd)
 	});
 	if (FindIt == m_vecDui.end())
 	{
-		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]≤ª¥Ê‘⁄\n"), strName.c_str()));
+		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]‰∏çÂ≠òÂú®\n"), strName.c_str()));
 
 		return;
 	}
@@ -407,7 +490,7 @@ CDUIControlBase * CDUIGlobal::LoadDui(const CMMString &strName, CDUIWnd *pWnd)
 	});
 	if (FindIt == m_vecDui.end())
 	{
-		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]≤ª¥Ê‘⁄\n"), strName.c_str()));
+		SetDuiLastError(CMMStrHelp::Format(_T("duiname:[%s]‰∏çÂ≠òÂú®\n"), strName.c_str()));
 
 		return NULL;
 	}
@@ -516,7 +599,14 @@ bool CDUIGlobal::RemoveFontResource(const CMMString &strName)
 		m_strFontResDefault.clear();
 
 		CDUIFontBase *pFontBase = GetFontResource(0);
-		pFontBase ? m_strFontResDefault = pFontBase->GetResourceName() : m_strFontResDefault.clear();
+		if (pFontBase)
+		{
+			m_strFontResDefault = pFontBase->GetResourceName();
+		}
+		else
+		{
+			m_strFontResDefault.clear();
+		}
 	}
 
 	return true;
@@ -548,7 +638,7 @@ CDUIColorBase * CDUIGlobal::GetColorResource(int nIndex)
 	return NULL;
 }
 
-CDUIColorBase * CDUIGlobal::GetColorResource(ARGB dwColor)
+CDUIColorBase * CDUIGlobal::GetColorResource(Gdiplus::ARGB dwColor)
 {
 	for (auto Item : m_mapResourceColor)
 	{
@@ -743,7 +833,7 @@ bool CDUIGlobal::RemoveDui(const CMMString &strName)
 
 	//file
 	CMMString strFile = GetDuiFileFull(strName);
-	::DeleteFile(strFile);
+	DeleteFile(strFile);
 
 	m_vecDui.erase(FindIt);
 
@@ -810,18 +900,6 @@ CMMString CDUIGlobal::GetDuiPath(enDuiType DuiType)
 HINSTANCE CDUIGlobal::GetInstanceHandle()
 {
 	return m_hInstance;
-}
-
-CMMString CDUIGlobal::GetInstancePath()
-{
-	if (NULL == m_hInstance) return _T('\0');
-
-	TCHAR szModule[MAX_PATH + 1] = {};
-	::GetModuleFileName(m_hInstance, szModule, MAX_PATH);
-	CMMString strInstancePath = szModule;
-	int pos = strInstancePath.rfind(_T('\\'));
-	if (pos >= 0) strInstancePath = strInstancePath.Left(pos + 1);
-	return strInstancePath;
 }
 
 HINSTANCE CDUIGlobal::GetResourceDll()
@@ -1356,7 +1434,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 	if (false == bRes)
 	{
 		assert(false);
-		CMMString strWarning = CMMStrHelp::Format(_T("Failed of Load [%s]£¨Please Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
+		CMMString strWarning = CMMStrHelp::Format(_T("Failed of Load [%s]ÔºåPlease Pack Your Project From DUIThink"), (LPCTSTR)strConfigFile);
 		MessageBox(NULL, strWarning, NULL, NULL);
 
 		return;
@@ -1392,7 +1470,7 @@ void CDUIGlobal::LoadConfigCtrl(const CMMString &strConfigFile)
 				{
 					assert(false);
 					CMMString strWarning;
-					strWarning.Format(_T("Failed load extenddll°æ%s°ø, Make sure it in the running directory"), strDllName.c_str());
+					strWarning.Format(_T("Failed load extenddll„Äê%s„Äë, Make sure it in the running directory"), strDllName.c_str());
 					MessageBox(NULL, strWarning, NULL, NULL);
 
 					continue;
@@ -1475,10 +1553,25 @@ bool CDUIGlobal::AddResource(CDUIResourceBase *pResourceObj)
 
 bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
 {
+	bool bFullPath = true;
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+	if (strFile.empty() || _T('/') != strFile[0])
+	{
+		bFullPath = false;
+	}
+
+	strFile.Replace(_T('\\'), _T('/'));
+#else
+	if (-1 == strFile.find(_T(':')))
+	{
+		bFullPath = false;
+	}
+#endif
+
 	do
 	{
 		//full path
-		if (strFile.length() >= 2 && strFile[1] == _T(':')) break;
+		if (bFullPath) break;
 
 		//zip
 		if (DuiFileResType_Zip == GetDuiFileResType()
@@ -1511,25 +1604,12 @@ bool CDUIGlobal::ExtractResourceData(vector<BYTE> &vecData, CMMString strFile)
 	if (DuiFileResType_File == GetDuiFileResType() || vecData.empty())
 	{
 		//full path
-		if (strFile.length() < 2 || strFile[1] != _T(':'))
+		if (false == bFullPath)
 		{
 			strFile = GetProjectPath() + strFile;
 		}
 
-		HANDLE hFile = ::CreateFile(strFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (INVALID_HANDLE_VALUE == hFile) return false;
-
-		DWORD dwSize = ::GetFileSize(hFile, NULL);
-		DWORD dwRead = 0;
-		vecData.resize(dwSize);
-		::ReadFile(hFile, vecData.data(), dwSize, &dwRead, NULL);
-		::CloseHandle(hFile);
-
-		if (dwRead != dwSize)
-		{
-			vecData.clear();
-			return false;
-		}
+		return CMMFile::GetFileData(strFile, vecData);
 	}
 
 	return true;
@@ -1727,7 +1807,7 @@ bool CDUIGlobal::RenameDui(const CMMString &strNameOld, const CMMString &strName
 
 	if (false == MoveFile(strFileOld, strFileNew))
 	{
-		MessageBox(NULL, _T("Error Because Same Filename°£"), _T("Ã· æ"), MB_ICONINFORMATION);
+		MessageBox(NULL, _T("Error Because Same Filename„ÄÇ"), _T("ÊèêÁ§∫"), MB_ICONINFORMATION);
 		return false;
 	}
 
@@ -1876,7 +1956,7 @@ LPCTSTR CDUIGlobal::GetAttriName(uint32_t uValueID)
 	auto FindIt = m_mapAttriNameValue.find(uValueID);
 	if (FindIt == m_mapAttriNameValue.end()) return _T("");
 
-	return FindIt->second;
+	return FindIt->second.c_str();
 }
 
 uint32_t CDUIGlobal::SetAttriName(LPCTSTR lpszName)
@@ -2132,8 +2212,11 @@ LPCTSTR CDUIGlobal::GetAttriText(uint32_t uValueID)
 	if (uValueID <= 0) return _T("");
 
 	auto FindIt = m_mapAttriTextValue.find(uValueID);
+	if (FindIt == m_mapAttriTextValue.end()) return _T("");
 
-	return FindIt == m_mapAttriTextValue.end() ? _T("") : FindIt->second;
+	// Do NOT use ternary with CMMString here: GCC may materialize a temporary
+	// CMMString and return its dangling c_str() ‚Üí garbled CJK text on Linux.
+	return FindIt->second.c_str();
 }
 
 uint32_t CDUIGlobal::SetAttriText(LPCTSTR lpszText)
@@ -2292,7 +2375,7 @@ bool CDUIGlobal::SetAttriTextStyle(tinyxml2::XMLElement *pNode)
 			}
 			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriTextStyleColorRes))
 			{
-				TextStyle.vecColorResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), ";");
+				TextStyle.vecColorResSwitch = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), ";", CP_UTF8);
 
 				continue;
 			}
@@ -2409,7 +2492,7 @@ bool CDUIGlobal::SetAttriColorResSwitch(tinyxml2::XMLElement *pNode)
 			}
 			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriColorRes))
 			{
-				vecColorRes = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), ";");
+				vecColorRes = CMMStrHelp::ParseStrFromString(pNodeAttribute->Value(), ";", CP_UTF8);
 
 				continue;
 			}
@@ -2510,7 +2593,11 @@ bool CDUIGlobal::SetAttriCombox(tinyxml2::XMLElement *pNode)
 			{
 				int nItem = 0;
 				char szDescrib[MAX_PATH] = {};
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+				sscanf(pNodeAttribute->Value(), StrComboxItem, &nItem, szDescrib);
+#else
 				_snscanf_s(pNodeAttribute->Value(), -1, StrComboxItem, &nItem, szDescrib, MAX_PATH);
+#endif
 
 				AttriCombox.vecItem.push_back({ nItem, szDescrib });
 
@@ -2560,13 +2647,13 @@ bool CDUIGlobal::SaveAttriCombox(tinyxml2::XMLElement *pNode)
 		//item
 		for (auto &Item : AttriCombox.vecItem)
 		{
-			CStringA strKey;
-			strKey.Format(("%s%d"), Dui_Key_AttriComboxItem, Item.nItem);
+			CMMString strKey;
+			strKey.Format(_T("%s%d"), (LPCTSTR)CA2CT(Dui_Key_AttriComboxItem), Item.nItem);
 
-			CStringA strValue;
-			strValue.Format(StrComboxItem, Item.nItem, (LPCSTR)CT2CA(Item.strDescribe));
+			CMMString strValue;
+			strValue.Format((LPCTSTR)CA2CT(StrComboxItem), Item.nItem, Item.strDescribe.GetBuffer());
 
-			pValue->SetAttribute(strKey, strValue);
+			pValue->SetAttribute((LPCSTR)CT2CA(strKey), (LPCSTR)CT2CA(strValue));
 		}
 
 		pNode->LinkEndChild(pValue);
@@ -2614,9 +2701,15 @@ bool CDUIGlobal::SetAttriPosition(tinyxml2::XMLElement *pNode)
 			}
 			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriPosition))
 			{
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+				sscanf(pNodeAttribute->Value(), StrPosition, &Position.bFloat,
+					&Position.HorizPosition.HorizAlignType, &Position.HorizPosition.nLeftAlignValue, &Position.HorizPosition.nRightAlignValue, &Position.HorizPosition.nFixedWidth,
+					&Position.VertPosition.VertAlignType, &Position.VertPosition.nTopAlignValue, &Position.VertPosition.nBottomAlignValue, &Position.VertPosition.nFixedHeight);
+#else
 				_snscanf_s(pNodeAttribute->Value(), -1, StrPosition, &Position.bFloat,
 					&Position.HorizPosition.HorizAlignType, &Position.HorizPosition.nLeftAlignValue, &Position.HorizPosition.nRightAlignValue, &Position.HorizPosition.nFixedWidth,
 					&Position.VertPosition.VertAlignType, &Position.VertPosition.nTopAlignValue, &Position.VertPosition.nBottomAlignValue, &Position.VertPosition.nFixedHeight);
+#endif
 
 				continue;
 			}
@@ -2901,7 +2994,7 @@ bool CDUIGlobal::SetAttriImageSection(tinyxml2::XMLElement *pNode)
 			}
 			if (0 == strcmp(pNodeAttribute->Name(), Dui_Key_AttriImageSecMask))
 			{
-				ImageSection.dwMask = (ARGB)strtoul(pNodeAttribute->Value(), NULL, 10);
+				ImageSection.dwMask = (Gdiplus::ARGB)strtoul(pNodeAttribute->Value(), NULL, 10);
 
 				continue;
 			}
@@ -3194,23 +3287,6 @@ void CDUIGlobal::AddWnd(CDUIWnd *pWnd)
 	return;
 }
 
-MapWnd CDUIGlobal::GetWndAll()
-{
-	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
-
-	return m_mapWnd;
-}
-
-tagDuiFile CDUIGlobal::GetWndInfo(CDUIWnd *pWnd)
-{
-	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
-
-	auto FindIt = m_mapWnd.find(pWnd);
-	if (FindIt == m_mapWnd.end()) return {};
-
-	return FindIt->second;
-}
-
 void CDUIGlobal::RenameWnd(const CMMString &strNameOld, const CMMString &strNameNew)
 {
 	std::lock_guard<std::recursive_mutex> Lock(m_DataLock);
@@ -3297,9 +3373,9 @@ void CDUIGlobal::ReleaseFontResource()
 {
 	for (auto ResourceIt = m_mapResourceFont.begin(); ResourceIt != m_mapResourceFont.end();)
 	{
-		if (ResourceIt->second 
-			&& ResourceIt->second->IsDesign() 
-			&& m_hInstance)
+		if (ResourceIt->second
+			&& ResourceIt->second->IsDesign()
+			&& m_bInited)
 		{
 			++ResourceIt;
 
@@ -3320,9 +3396,9 @@ void CDUIGlobal::ReleaseImageResource()
 {
 	for (auto ResourceIt = m_mapResourceImage.begin(); ResourceIt != m_mapResourceImage.end();)
 	{
-		if (ResourceIt->second 
+		if (ResourceIt->second
 			&& ResourceIt->second->IsDesign()
-			&& m_hInstance)
+			&& m_bInited)
 		{
 			++ResourceIt;
 
@@ -3343,9 +3419,9 @@ void CDUIGlobal::ReleaseColorResource()
 {
 	for (auto ResourceIt = m_mapResourceColor.begin(); ResourceIt != m_mapResourceColor.end();)
 	{
-		if (ResourceIt->second 
+		if (ResourceIt->second
 			&& ResourceIt->second->IsDesign()
-			&& m_hInstance)
+			&& m_bInited)
 		{
 			++ResourceIt;
 
@@ -3380,6 +3456,29 @@ void CDUIGlobal::ReleaseDui()
 
 void CDUIGlobal::MessageLoop()
 {
+#if defined(DuiPlatform_SDL)
+	SDL_Event e = {};
+	while (true)
+	{
+		if (false == SDL_WaitEvent(&e))
+		{
+			assert(false);
+			MMTRACE(_T("EXCEPTION: SDL_WaitEvent failed\n"));
+			continue;
+		}
+
+		MSG Msg = {};
+		if (false == MMSdlEventToMsg(e, Msg) || false == CDUIGlobal::GetInstance()->TranslateMessage(&Msg))
+		{
+			MMSdlDispatchEvent(e);
+		}
+
+		if (SDL_EVENT_QUIT == e.type)
+		{
+			break;
+		}
+	}
+#else
 	BOOL bRet = 0;
 	MSG Msg = {};
 	while ((bRet = GetMessage(&Msg, NULL, 0, 0)) != 0)
@@ -3410,6 +3509,7 @@ void CDUIGlobal::MessageLoop()
 			}
 		}
 	}
+#endif
 
 	return;
 }
@@ -3488,7 +3588,8 @@ LPCTSTR DUI__TraceMsg(UINT uMsg)
 	MSGDEF(WM_GETICON);
 	MSGDEF(WM_GETTEXT);
 	MSGDEF(WM_GETTEXTLENGTH);
-	static TCHAR szMsg[10];
-	::wsprintf(szMsg, _T("0x%04X"), uMsg);
-	return szMsg;
+	
+	CMMString strMsg;
+	strMsg.Format(_T("0x%04X"), uMsg);
+	return strMsg;
 }

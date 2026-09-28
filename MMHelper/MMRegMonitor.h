@@ -1,6 +1,8 @@
 #ifndef __MM_REGMONITOR_H__
 #define __MM_REGMONITOR_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 //inner
@@ -21,6 +23,7 @@ typedef std::vector<IMMRegNotify*> VecMMRegNotify;
 class MMHELPER_API CMMRegMonitor
 	: public CMMServiceItem
 {
+	MMDeclare_Super(CMMServiceItem)
 public:
 	CMMRegMonitor(HKEY hKeyMain, CMMString strKeySub);
 	~CMMRegMonitor();
@@ -50,5 +53,5 @@ protected:
 };
 
 //////////////////////////////////////////////////////////////////////////
-
+#endif
 #endif

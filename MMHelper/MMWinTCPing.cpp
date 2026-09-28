@@ -1,5 +1,7 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "MMWinTCPing.h"
+
+#ifndef DuiPlatform_SDL
 
 //////////////////////////////////////////////////////////////////////////
 CMMWinTCPing::CMMWinTCPing()
@@ -8,7 +10,6 @@ CMMWinTCPing::CMMWinTCPing()
 	//WSAStartup(MAKEWORD(2, 2), &WSAData);
 	if (WSAStartup(MAKEWORD(1, 1), &WSAData) != 0)
 	{
-		/*Èç¹û³õÊ¼»¯²»³É¹¦Ôò±¨´í£¬GetLastError()·µ»Ø·¢ÉúµÄ´íÎóĞÅÏ¢*/
 		printf("WSAStartup() failed: %d\n", GetLastError());
 		
 		return;
@@ -56,8 +57,8 @@ bool CMMWinTCPing::Ping(DWORD dwServerIP, WORD wPort, DWORD dwTimeout)
 	try
 	{
 		//verify
-		if (INADDR_NONE == dwServerIP) throw _T("Ä¿±ê·şÎñÆ÷µØÖ·¸ñÊ½²»ÕıÈ·£¬Çë¼ì²éºóÔÙ´Î³¢ÊÔ£¡");
-		if (INVALID_SOCKET == m_hSocket) throw _T("SOCKET ´´½¨Ê§°Ü£¡");
+		if (INADDR_NONE == dwServerIP) throw _T("ç›®æ ‡æœåŠ¡å™¨åœ°å€æ ¼å¼ä¸æ­£ç¡®ï¼Œè¯·æ£€æŸ¥åå†æ¬¡å°è¯•ï¼");
+		if (INVALID_SOCKET == m_hSocket) throw _T("SOCKET åˆ›å»ºå¤±è´¥ï¼");
 
 		DWORD dwTickCount = GetTickCount();
 
@@ -69,7 +70,7 @@ bool CMMWinTCPing::Ping(DWORD dwServerIP, WORD wPort, DWORD dwTimeout)
 		SocketAddr.sin_addr.S_un.S_addr = dwServerIP;
 		int nAddrLen = sizeof(SocketAddr);
 
-		//·¢ËÍ±¨ÎÄ
+		//å‘é€æŠ¥æ–‡
 		if (SOCKET_ERROR == connect(m_hSocket, (SOCKADDR *)&SocketAddr, nAddrLen))
 		{
 			int nErrorCode = WSAGetLastError();
@@ -84,7 +85,7 @@ bool CMMWinTCPing::Ping(DWORD dwServerIP, WORD wPort, DWORD dwTimeout)
 		{
 			BYTE szBuffer[32] = {};
 
-			//½ÓÊÕÏìÓ¦±¨ÎÄ
+			//æ¥æ”¶å“åº”æŠ¥æ–‡
 			if (WSAWaitForMultipleEvents(1, &m_hEvent, FALSE, 100, FALSE) != WSA_WAIT_TIMEOUT)
 			{
 				WSANETWORKEVENTS netEvent;
@@ -119,3 +120,5 @@ bool CMMWinTCPing::Ping(DWORD dwServerIP, WORD wPort, DWORD dwTimeout)
 
 	return false;
 }
+
+#endif

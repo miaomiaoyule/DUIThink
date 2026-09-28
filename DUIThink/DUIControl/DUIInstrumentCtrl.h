@@ -10,6 +10,7 @@ static const GUID IID_CDUIInstrumentCtrl = { 0xBCD93816,0xCD80,0x4F2F,0xA5,0x83,
 class DUITHINK_API CDUIInstrumentCtrl
 	: public CDUIContainerCtrl
 {
+	MMDeclare_Super(CDUIContainerCtrl)
 	DuiDeclare_CreateControl(CDUIInstrumentCtrl)
 	MMDeclare_ClassName(CDUIInstrumentCtrl)
 

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MMRegMonitor.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 CMMRegMonitor::CMMRegMonitor(HKEY hKeyMain, CMMString strKeySub)
 	: CMMServiceItem(&m_ThreadPool)
@@ -112,3 +114,5 @@ void CMMRegMonitor::OnSubStart(std::shared_ptr<M_MMRegMonitor_Start> pRecvData)
 
 	return;
 }
+
+#endif

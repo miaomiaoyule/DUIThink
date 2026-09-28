@@ -14,6 +14,7 @@ static const GUID IID_CDUIAttributeRichText = { 0x5D1D263F,0x9051,0x4B64,0xAD,0x
 class DUITHINK_API CDUIAttributeRichText
 	: public CDUIAttributeObject
 {
+	MMDeclare_Super(CDUIAttributeObject)
 	DuiDeclare_CreateAttribute(CDUIAttributeRichText)
 	MMDeclare_ClassName(CDUIAttributeRichText)
 

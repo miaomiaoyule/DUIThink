@@ -1,6 +1,8 @@
 #ifndef __MM_DRAGDROP_H__
 #define __MM_DRAGDROP_H__
 
+#ifndef DuiPlatform_SDL
+
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
@@ -15,7 +17,7 @@ public:
 private:
 	CComPtr<IDropTargetHelper>			m_pIDropTargetHelper = nullptr;
 	CComPtr<IDataObject>				m_pIDataObject = nullptr;
-	HWND								m_hWnd = nullptr;
+	HWND								m_hWndListen = nullptr;
 	HRESULT								m_hResOleInit = E_FAIL;
 	long								m_cRef;
 
@@ -76,5 +78,6 @@ public:
 #endif
 //////////////////////////////////////////////////////////////////////////
 
+#endif
 #endif
 

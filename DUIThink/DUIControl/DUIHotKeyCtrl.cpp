@@ -1,9 +1,11 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "DUIHotKeyCtrl.h"
+#ifndef DuiPlatform_SDL
 
 //////////////////////////////////////////////////////////////////////////
 class CDUIHotKeyWnd : public CDUIWnd
 {
+	MMDeclare_Super(CDUIWnd)
 	MMDeclare_ClassName()
 
 public:
@@ -87,7 +89,7 @@ bool CDUIHotKeyWnd::Init()
 
 	//text
 	HFONT hFont = pAttribute ? pAttribute->GetFont() : NULL;
-	hFont ? SetWindowFont(m_hWnd, hFont, TRUE) : NULL;
+	if (hFont) SetWindowFont(m_hWnd, hFont, TRUE);
 	Edit_SetReadOnly(m_hWnd, true);
 	SetHotKey(m_pOwner->GetHotKey());
 	SendMessage(EM_SETMARGINS, EC_LEFTMARGIN | EC_RIGHTMARGIN, MAKELPARAM(0, 0));
@@ -140,7 +142,7 @@ void CDUIHotKeyWnd::AdjustWndSize(bool bCreate)
 		rcPos.Offset(rcWnd.left, rcWnd.top);
 	}
 
-	SetWindowPos(m_hWnd, NULL, rcPos.left, rcPos.top, rcPos.GetWidth(), rcPos.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
+	::SetWindowPos(m_hWnd, NULL, rcPos.left, rcPos.top, rcPos.GetWidth(), rcPos.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
 	CDUIRect rcClient;
 	::GetClientRect(m_hWnd, &rcClient);
@@ -233,11 +235,10 @@ LRESULT CDUIHotKeyWnd::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				HBITMAP hBmpBk = CDUIRenderEngine::GenerateBitmap(m_pWndOwner->GetRootCtrl(), rcWnd);
 				if (NULL == hBmpBk) break;
 
-				Bitmap *pBmp = CDUIRenderEngine::GetAlphaBitmap(hBmpBk);
+				Gdiplus::Bitmap *pBmp = CDUIRenderEngine::GetAlphaBitmap(hBmpBk);
 				if (NULL == pBmp) break;
 
-				CDUIRect rcClient;
-				GetClientRect(m_hWnd, &rcClient);
+				CDUIRect rcClient = GetClientRect();
 				Gp.DrawImage(pBmp, rcClient.left, rcClient.top, rcClient.GetWidth(), rcClient.GetHeight());
 
 				MMSafeDelete(pBmp);
@@ -475,7 +476,7 @@ CMMString CDUIHotKeyCtrl::GetHotKeyName()
 		return strKeyName;
 	}
 
-	return _T("ÎŞ");
+	return _T("æ— ");
 }
 
 bool CDUIHotKeyCtrl::IsAutoSelAll()
@@ -570,8 +571,8 @@ void CDUIHotKeyCtrl::SetInternVisible(bool bVisible, bool bTraversal)
 
 BYTE CDUIHotKeyCtrl::HotkeyToMod(BYTE cbModifierFlag)
 {
-	//Ä³Ğ©¿ì½İ¼üÀıÈçLeft Right Up DownµÈÉèÖÃºÃºó£¬GetHotKey 
-	//µÃµ½µÄcbModifierFlag»á¶àÒ»¸öHOTKEYF_EXT,RegisterHotKey²»ĞèÒª£¬ÕâÀïĞèÒªÈ¥µô
+	//æŸäº›å¿«æ·é”®ä¾‹å¦‚Left Right Up Downç­‰è®¾ç½®å¥½åï¼ŒGetHotKey 
+	//å¾—åˆ°çš„cbModifierFlagä¼šå¤šä¸€ä¸ªHOTKEYF_EXT,RegisterHotKeyä¸éœ€è¦ï¼Œè¿™é‡Œéœ€è¦å»æ‰
 	cbModifierFlag &= ~HOTKEYF_EXT;
 
 	//shift
@@ -623,3 +624,5 @@ BYTE CDUIHotKeyCtrl::ModToHotkey(BYTE cbModifierFlag)
 
 	return cbModifierFlag;
 }
+
+#endif

@@ -51,6 +51,16 @@ struct CMMTimerPower::tagData
 
 		ThreadPower = std::thread([&]()
 		{
+#ifdef DuiPlatform_SDL
+			uTimeCur = static_cast<uint32_t>(SDL_GetTicks());
+
+			while (false == bStop)
+			{
+				PowerTime();
+
+				SDL_Delay(1);
+			}
+#else
 			// Init Com
 			::CoInitialize(nullptr);
 			::OleInitialize(nullptr);
@@ -66,6 +76,7 @@ struct CMMTimerPower::tagData
 
 			::CoUninitialize();
 			::OleUninitialize();
+#endif
 		});
 
 		return;
@@ -152,7 +163,11 @@ struct CMMTimerPower::tagData
 	{
 		std::lock_guard<std::recursive_mutex> Lock(DataLock);
 
+#ifdef DuiPlatform_SDL
+		uTimeCur = static_cast<uint32_t>(SDL_GetTicks());
+#else
 		uTimeCur = GetTickCount();
+#endif
 
 		for (auto &TimerNode : queTimerTask)
 		{

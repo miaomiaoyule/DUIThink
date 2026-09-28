@@ -5,8 +5,9 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUICalendarWnd : public CDUIWnd
+class DUITHINK_API CDUICalendarWnd : public CDUIPopupWnd
 {
+	MMDeclare_Super(CDUIPopupWnd)
 	MMDeclare_ClassName()
 	DuiDeclare_Message_Map()
 
@@ -23,7 +24,7 @@ protected:
 public:
 	void Init(HWND hWndParent);
 	void Init(HWND hWndParent, CDUIPoint ptTrack);
-	void UnInit();
+	void Close(UINT nRet = IDOK) override;
 
 	CDUICalendarCtrl * GetCalendarCtrl();
 
@@ -51,6 +52,7 @@ class DUITHINK_API CDUICalendarCtrl
 	, public CDUINotifyPump
 	, public IDuiControlCallBack
 {
+	MMDeclare_Super(CDUIVerticalLayoutCtrl)
 	DuiDeclare_CreateControl(CDUICalendarCtrl)
 	MMDeclare_ClassName(CDUICalendarCtrl)
 	DuiDeclare_Message_Map()

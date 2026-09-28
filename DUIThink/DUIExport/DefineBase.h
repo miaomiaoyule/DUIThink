@@ -1,4 +1,4 @@
-#ifndef __DUIEXPORTDEFINEBASE_H__
+﻿#ifndef __DUIEXPORTDEFINEBASE_H__
 #define __DUIEXPORTDEFINEBASE_H__
 
 #pragma once
@@ -17,7 +17,10 @@ class CDUIAttributeCombox;
 class CDUIAttributeSize;
 class CDUIAttributeColor;
 class CDUIAttributeTextStyle;
+class CDUIWndBase;
 class CDUIWnd;
+class CDUIWndVirtual;
+class CDUIWndSDL;
 class CDUIResourceBase;
 class CDUIImageBase;
 class CDUIFontBase;
@@ -27,12 +30,16 @@ class CDUIControlBase;
 class CDUICheckBoxCtrl;
 class CDUIContainerCtrl;
 class CDUITabLayoutCtrl;
+class CDUIListHeaderItemCtrl;
+class CDUIListHeaderCtrl;
+class CDUIListViewCtrl;
 class CDUITreeNodeCtrl;
 class CDUITreeViewCtrl;
 class CDUIWkeBrowserCtrl;
 class CDUIComboxCtrl;
 class CDUIScrollBarCtrl;
 class CDUILayoutView;
+class CDUICalendarCtrl;
 
 //////////////////////////////////////////////////////////////////////////
 #define DUI_WNDSTYLE_CONTAINER			(0)
@@ -77,12 +84,14 @@ class CDUILayoutView;
 #define DuiFind_MeFirst					0x00000040
 
 //////////////////////////////////////////////////////////////////////////
-#define DuiDpiScaleCtrl(x)				(m_pWndOwner ? m_pWndOwner->GetDpiObj().Scale(x) : (x))
-#define DuiDpiScaleBackCtrl(x)			(m_pWndOwner ? m_pWndOwner->GetDpiObj().ScaleBack(x) : (x))
-#define DuiDpiScaleVerifyCtrl(xTarget, xScaleBack) (m_pWndOwner ? m_pWndOwner->GetDpiObj().ScaleVerify(xTarget, xScaleBack) : (xScaleBack))
-#define DuiDpiScaleWnd(x)				(GetDpiObj().Scale(x))
-#define DuiDpiScaleBackWnd(x)			(GetDpiObj().ScaleBack(x))
-#define DuiDpiScaleVerifyWnd(xTarget, xScaleBack) (GetDpiObj().ScaleVerify(xTarget, xScaleBack))
+#include <type_traits>
+#define DuiDpiScaleCtrl(x)				(m_pWndOwner ? static_cast<typename std::decay<decltype(x)>::type>(m_pWndOwner->GetDpiObj().Scale(x)) : (x))
+#define DuiDpiScaleBackCtrl(x)			(m_pWndOwner ? static_cast<typename std::decay<decltype(x)>::type>(m_pWndOwner->GetDpiObj().ScaleBack(x)) : (x))
+#define DuiDpiScaleVerifyCtrl(xTarget, xScaleBack) (m_pWndOwner ? static_cast<typename std::decay<decltype(xScaleBack)>::type>(m_pWndOwner->GetDpiObj().ScaleVerify(xTarget, xScaleBack)) : (xScaleBack))
+#define DuiDpiScaleWnd(x)				(static_cast<typename std::decay<decltype(x)>::type>(GetDpiObj().Scale(x)))
+#define DuiDpiScaleBackWnd(x)			(static_cast<typename std::decay<decltype(x)>::type>(GetDpiObj().ScaleBack(x)))
+#define DuiDpiScaleVerifyWnd(xTarget, xScaleBack) (static_cast<typename std::decay<decltype(xScaleBack)>::type>(GetDpiObj().ScaleVerify(xTarget, xScaleBack)))
+#define DuiDpiScaleAttri(x)				(m_pOwner ? static_cast<typename std::decay<decltype(x)>::type>(m_pOwner->GetDpiObj().Scale(x)) : (x))
 
 /////////////////////////////////////////////////////////////////////////////////////
 #define DUIBGR(b,g,r)					((DWORD)((((DWORD)(BYTE)(b))<<16) | (((WORD)((BYTE)(g))<<8) | (BYTE)(r))))

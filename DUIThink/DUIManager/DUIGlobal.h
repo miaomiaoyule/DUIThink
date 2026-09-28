@@ -8,7 +8,7 @@ typedef std::unordered_map<CMMString, CDUIControlBase*> MapDuiModelStore;
 typedef std::map<UINT, CMMString> MapDuiControlID;
 typedef std::map<uint32_t, uint32_t> MapValueIDSwitch;
 
-//Êä³ö
+//è¾“å‡º
 LPCTSTR DUITHINK_API DUI__TraceMsg(UINT uMsg);
 
 //////////////////////////////////////////////////////////////////////////
@@ -120,6 +120,7 @@ private:
 
 	//info
 	std::recursive_mutex				m_DataLock;
+	bool								m_bInited = false;
 	bool								m_bProjectExist = false;
 	CMMThreadPool						m_ThreadPool;
 	CMMDpi								m_DpiInfo;
@@ -138,8 +139,10 @@ private:
 	std::vector<BYTE>					m_vecZipData;
 
 	//gdiplus
-	ULONG_PTR							m_uToken;
+#ifndef DuiPlatform_SDL
+	ULONG_PTR							m_uToken = 0;
 	Gdiplus::GdiplusStartupInput		m_GdiplusInput;
+#endif
 
 	//override
 protected:	
@@ -167,6 +170,11 @@ public:
 	bool AddPreMessagePtr(IDuiPreMessage *pInterface);
 	bool RemovePreMessagePtr(IDuiPreMessage *pInterface);
 	bool TranslateMessage(const LPMSG pMsg);
+
+	//wnd
+	MapWnd GetWndAll();
+	tagDuiFile GetWndInfo(CDUIWnd *pWnd);
+	CDUIWnd * GetWndByHandle(HWND hWnd);
 
 	//switch skin
 	void PerformSwitchRes(int nIndexRes);
@@ -205,7 +213,7 @@ public:
 	int GetColorResourceCount();
 	CDUIColorBase * GetColorResource(const CMMString &strName);
 	CDUIColorBase * GetColorResource(int nIndex);
-	CDUIColorBase * GetColorResource(ARGB dwColor);
+	CDUIColorBase * GetColorResource(Gdiplus::ARGB dwColor);
 	MapDuiColorBase GetColorResourceAll();
 	bool RemoveColorResource(const CMMString &strName);
 
@@ -233,7 +241,6 @@ public:
 
 	//res info
 	HINSTANCE GetInstanceHandle();
-	CMMString GetInstancePath();
 	HINSTANCE GetResourceDll();
 	HZIPDT GetResourceZipHandle();
 	enDuiFileResType GetDuiFileResType();
@@ -332,8 +339,6 @@ protected:
 
 	//Wnd
 	void AddWnd(CDUIWnd *pWnd);
-	MapWnd GetWndAll();
-	tagDuiFile GetWndInfo(CDUIWnd *pWnd);
 	void RenameWnd(const CMMString &strNameOld, const CMMString &strNameNew);
 	void RenameWnd(CDUIWnd *pWnd, const CMMString &strNameNew);
 	void SetWndDuiType(CDUIWnd *pWnd, enDuiType DuiType);

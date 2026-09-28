@@ -371,7 +371,7 @@ CDUISize CDUIAttributeRichText::MeasureString()
 	MMInterfaceHelper(CDUIControlBase, m_pOwner, pOwnerCtrl);
 	if (NULL == pOwnerCtrl) return {};
 
-	CDUIWnd *pWndManager = m_pOwner->GetWndOwner();
+	CDUIWndBase *pWndManager = m_pOwner->GetWndOwner();
 	if (NULL == pWndManager) return {};
 
 	CDUIRect rcText = { 0, 0, 9999, 9999 };

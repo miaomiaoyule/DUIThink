@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "DUIXMLPack.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -19,39 +19,39 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	xmlDoc.LinkEndChild(pXmlVersionRes);
 
 	//image res file
-	CStringA strImageRes;
+	CMMStringA strImageRes;
 	strImageRes = strImageRes + Dui_Resource_ImageRes + (".xml");
 	tinyxml2::XMLElement *pXmlImageRes = xmlDoc.NewElement(Dui_Resource_ImageRes);
-	pXmlImageRes->SetAttribute(Dui_Resource_Key_ImageResFile, strImageRes);
+	pXmlImageRes->SetAttribute(Dui_Resource_Key_ImageResFile, (LPCSTR)strImageRes);
 	xmlDoc.LinkEndChild(pXmlImageRes);
 
 	//font res file
-	CStringA strFontRes;
+	CMMStringA strFontRes;
 	strFontRes = strFontRes + Dui_Resource_FontRes + (".xml");
 	tinyxml2::XMLElement *pXmlFontRes = xmlDoc.NewElement(Dui_Resource_FontRes);
-	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResFile, strFontRes);
+	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResFile, (LPCSTR)strFontRes);
 	pXmlFontRes->SetAttribute(Dui_Resource_Key_FontResDefault, (LPCSTR)CT2CA(strFontResDefault, CP_UTF8));
 	xmlDoc.LinkEndChild(pXmlFontRes);
 
 	//color res file
-	CStringA strColorRes;
+	CMMStringA strColorRes;
 	strColorRes = strColorRes + Dui_Resource_ColorRes + (".xml");
 	tinyxml2::XMLElement *pXmlColorRes = xmlDoc.NewElement(Dui_Resource_ColorRes);
-	pXmlColorRes->SetAttribute(Dui_Resource_Key_ColorResFile, strColorRes);
+	pXmlColorRes->SetAttribute(Dui_Resource_Key_ColorResFile, (LPCSTR)strColorRes);
 	xmlDoc.LinkEndChild(pXmlColorRes);
 
 	//attribute file
-	CStringA strAttribute;
+	CMMStringA strAttribute;
 	strAttribute = strAttribute + Dui_Resource_Attribute + (".xml");
 	tinyxml2::XMLElement *pXmlAttribute = xmlDoc.NewElement(Dui_Resource_Attribute);
-	pXmlAttribute->SetAttribute(Dui_Resource_Key_AttributeFile, strAttribute);
+	pXmlAttribute->SetAttribute(Dui_Resource_Key_AttributeFile, (LPCSTR)strAttribute);
 	xmlDoc.LinkEndChild(pXmlAttribute);
 
 	//ctrl id file
-	CStringA strCtrlID;
+	CMMStringA strCtrlID;
 	strCtrlID = strCtrlID + Dui_Resource_CtrlID + (".h");
 	tinyxml2::XMLElement *pXmlCtrlID = xmlDoc.NewElement(Dui_Resource_CtrlID);
-	pXmlCtrlID->SetAttribute(Dui_Resource_Key_CtrlIDFile, strCtrlID);
+	pXmlCtrlID->SetAttribute(Dui_Resource_Key_CtrlIDFile, (LPCSTR)strCtrlID);
 	xmlDoc.LinkEndChild(pXmlCtrlID);
 
 	//dui node
@@ -88,23 +88,23 @@ bool CDUIXmlPack::SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const 
 	VecDuiResourceBase vecResource;
 	vecResource.clear();
 	for (auto &ResImageItem : mapResImage) vecResource.push_back(ResImageItem.second);
-	CMMString strImageResFile = szPath + strImageRes;
+	CMMString strImageResFile = CMMString(szPath) + CA2CT(strImageRes);
 	SaveResource(strImageResFile.c_str(), vecResource);
 
 	//font res
 	vecResource.clear();
 	for (auto &ResFontItem : mapResFont) vecResource.push_back(ResFontItem.second);
-	CMMString strFontResFile = szPath + strFontRes;
+	CMMString strFontResFile = CMMString(szPath) + CA2CT(strFontRes);
 	SaveResource(strFontResFile.c_str(), vecResource);
 
 	//color res
 	vecResource.clear();
 	for (auto &ResColorItem : mapResColor) vecResource.push_back(ResColorItem.second);
-	CMMString strColorResFile = szPath + strColorRes;
+	CMMString strColorResFile = CMMString(szPath) + CA2CT(strColorRes);
 	SaveResource(strColorResFile.c_str(), vecResource);
 
 	//attribute
-	CMMString strAttributeFile = szPath + strAttribute;
+	CMMString strAttributeFile = CMMString(szPath) + CA2CT(strAttribute);
 	SaveAttribute(strAttributeFile.c_str());
 
 	return true;
@@ -116,28 +116,33 @@ bool CDUIXmlPack::LoadProject(LPCTSTR lpszProject)
 	strFile = lpszProject;
 
 	//parse path name
-	CMMFile::ParseFilePathName(strFile, strProjPath, CMMString());
-	CMMFile::ParseFileName(strFile, strProjName, CMMString());
+	CMMString strUnused;
+	CMMFile::ParseFilePathName(strFile, strProjPath, strUnused);
+	CMMFile::ParseFileName(strFile, strProjName, strUnused);
 
 	vector<BYTE> vecData;
 	tinyxml2::XMLDocument xmlDoc;
 	if (false == CDUIGlobal::GetInstance()->ExtractResourceData(vecData, strFile)
-		|| (/*vecData = CMMEncrypt::MapDecrypt(vecData, Key_ResourceEncrypt), */vecData.empty())
+		|| vecData.empty()
 		|| XML_SUCCESS != xmlDoc.Parse((const char*)vecData.data(), vecData.size()))
 	{
 		CMMString strError = xmlDoc.ErrorStr();
+		if (strError.empty())
+		{
+			strError = _T("read file failed");
+		}
 
 		CMMString strWarning;
-		strWarning.Format(_T("º”‘ÿDuiπ§≥Ã(%s)XMLŒƒº˛ ß∞‹, cause[%s]"), strFile.c_str(), strError.c_str());
+		strWarning.Format(_T("Âä†ËΩΩDuiÂ∑•Á®ã(%s)XMLÊñá‰ª∂Â§±Ë¥•, cause[%s]"), strFile.c_str(), strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 		return false;
 	}
 
-	//±£¥Ê¬∑æ∂
+	//‰øùÂ≠òË∑ØÂæÑ
 	CDUIGlobal::GetInstance()->SetProjectPath(strProjPath);
 	CDUIGlobal::GetInstance()->SetProjectName(strProjName);
 
-	//ø™ ºµº»Î
+	//ÂºÄÂßãÂØºÂÖ•
 	tinyxml2::XMLElement *pXmlElement = xmlDoc.RootElement();
 	if (NULL == pXmlElement) return false;
 
@@ -213,7 +218,7 @@ bool CDUIXmlPack::LoadProject(LPCTSTR lpszProject)
 		{
 			enDuiType DuiType = DuiType_Dlg;
 
-			//≤Œ ˝Ω⁄µ„
+			//ÂèÇÊï∞ËäÇÁÇπ
 			DuiType = (enDuiType)strtol(pXmlElement->Attribute(Dui_Resource_Key_DuiType), NULL, 10);
 			strFile = pXmlElement->Attribute(Dui_Resource_Key_DuiFile);
 
@@ -229,8 +234,8 @@ bool CDUIXmlPack::LoadProject(LPCTSTR lpszProject)
 	//none fontres
 	if (CDUIGlobal::GetInstance()->GetFontResourceCount() <= 0)
 	{
-		CMMString strResName = CDUIFontBase::FormatFontDescribe(_T("Œ¢»Ì—≈∫⁄"), 12, 400, false, false, false);
-		CDUIFontBase *pFontBase = new CDUIFontBase(strResName, _T("Œ¢»Ì—≈∫⁄"), 12, 400, false, false, false);
+		CMMString strResName = CDUIFontBase::FormatFontDescribe(_T("ÂæÆËΩØÈõÖÈªë"), 12, 400, false, false, false);
+		CDUIFontBase *pFontBase = new CDUIFontBase(strResName, _T("ÂæÆËΩØÈõÖÈªë"), 12, 400, false, false, false);
 
 		if (false == CDUIGlobal::GetInstance()->AddResource(pFontBase))
 		{
@@ -270,7 +275,7 @@ bool CDUIXmlPack::SaveResource(LPCTSTR lpszFile, VecDuiResourceBase &vecRes)
 		CMMString strError = xmlDoc.ErrorStr();
 
 		CMMString strWarning;
-		strWarning.Format(_T("±£¥Ê◊ ‘¥(%s)XMLŒƒº˛ ß∞‹, cause[%s]"), lpszFile, strError.c_str());
+		strWarning.Format(_T("‰øùÂ≠òËµÑÊ∫ê(%s)XMLÊñá‰ª∂Â§±Ë¥•, cause[%s]"), lpszFile, strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 		return false;
 	}
@@ -292,12 +297,12 @@ bool CDUIXmlPack::LoadResource(LPCTSTR lpszFile)
 		CMMString strError = xmlDoc.ErrorStr();
 
 		CMMString strWarning;
-		strWarning.Format(_T("º”‘ÿ◊ ‘¥(%s)XMLŒƒº˛ ß∞‹, cause[%s]"), lpszFile, strError.c_str());
+		strWarning.Format(_T("Âä†ËΩΩËµÑÊ∫ê(%s)XMLÊñá‰ª∂Â§±Ë¥•, cause[%s]"), lpszFile, strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 		return false;
 	}
 
-	//ø™ ºµº»Î
+	//ÂºÄÂßãÂØºÂÖ•
 	tinyxml2::XMLElement *pNodeXml = xmlDoc.RootElement();
 	if (NULL == pNodeXml) return false;
 
@@ -339,7 +344,7 @@ bool CDUIXmlPack::SaveAttribute(LPCTSTR lpszFile)
 		CMMString strError = xmlDoc.ErrorStr();
 
 		CMMString strWarning;
-		strWarning.Format(_T("±£¥Ê◊ ‘¥(%s)XMLŒƒº˛ ß∞‹, cause[%s]"), lpszFile, strError.c_str());
+		strWarning.Format(_T("‰øùÂ≠òËµÑÊ∫ê(%s)XMLÊñá‰ª∂Â§±Ë¥•, cause[%s]"), lpszFile, strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 		return false;
 	}
@@ -361,12 +366,12 @@ bool CDUIXmlPack::LoadAttribute(LPCTSTR lpszFile)
 		CMMString strError = xmlDoc.ErrorStr();
 
 		CMMString strWarning;
-		strWarning.Format(_T("º”‘ÿ◊ ‘¥(%s)XMLŒƒº˛ ß∞‹, cause[%s]"), lpszFile, strError.c_str());
+		strWarning.Format(_T("Âä†ËΩΩËµÑÊ∫ê(%s)XMLÊñá‰ª∂Â§±Ë¥•, cause[%s]"), lpszFile, strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 		return false;
 	}
 
-	//ø™ ºµº»Î
+	//ÂºÄÂßãÂØºÂÖ•
 	tinyxml2::XMLElement *pNodeXml = xmlDoc.RootElement();
 	if (NULL == pNodeXml) return false;
 
@@ -439,8 +444,8 @@ bool CDUIXmlPack::SaveCtrlID(const MapDuiControlID &mapCtrlID)
 	lstrcpyn(szPath, strProjectPath, MMCountString(szPath));
 	::PathAddBackslash(szPath);
 
-	CStringA strCtrlIDFile;
-	strCtrlIDFile = CStringA(szPath) + Dui_Resource_CtrlID + (".h");
+	CMMStringA strCtrlIDFile;
+	strCtrlIDFile = CMMStringA(szPath) + Dui_Resource_CtrlID + (".h");
 
 	FILE *pFile = fopen(strCtrlIDFile, "w+");
 	if (NULL == pFile)
@@ -450,17 +455,18 @@ bool CDUIXmlPack::SaveCtrlID(const MapDuiControlID &mapCtrlID)
 	}
 
 	//write
-	CStringA strTip = ("//you should not modify this\n");
-	fwrite(strTip.GetBuffer(), strTip.GetLength(), 1, pFile);
+	CMMStringA strTip = ("//you should not modify this\n");
+	fwrite(strTip.c_str(), strTip.length(), 1, pFile);
 
-	CStringA strInfo;
+	CMMString strInfo;
 	for (auto &Item : mapCtrlID)
 	{
 		if (Item.first < Dui_CtrlIDInner_Finish) continue;
 
-		strInfo.AppendFormat("#define %s \t\t\t\t(%u)\n", (LPCSTR)CT2CA(Item.second), Item.first);
+		strInfo.AppendFormat(_T("#define %s \t\t\t\t(%u)\n"), Item.second.c_str(), Item.first);
 	}
-	fwrite(strInfo.GetBuffer(), strInfo.GetLength(), 1, pFile);
+	std::string strInfoA = CT2CA(strInfo);
+	fwrite(strInfoA.c_str(), strInfoA.length(), 1, pFile);
 
 	//close
 	fclose(pFile);
@@ -488,7 +494,11 @@ bool CDUIXmlPack::LoadCtrlID(LPCTSTR lpszFile)
 
 		TCHAR szCtrlID[MAX_PATH] = {};
 		UINT uCtrlID = 0;
+#if defined(DuiPlatform_SDL) && !defined(WIN32)
+		int nScan = swscanf(strData.c_str() + nPosFrom, _T("\n#define %[^\(](%u)"), szCtrlID, &uCtrlID);
+#else
 		int nScan = swscanf_s(strData.c_str() + nPosFrom, _T("\n#define %[^\(](%u)"), szCtrlID, MAX_PATH, &uCtrlID);
+#endif
 		if (nScan <= 0) break;
 
 		CMMString strCtrlID = szCtrlID;
@@ -515,10 +525,10 @@ bool CDUIXmlPack::SaveXmlUI(LPCTSTR lpszFile, CDUIWnd *pWnd)
 		return false;
 	}
 
-	//¬∑æ∂
+	//Ë∑ØÂæÑ
 	std::string strPathA = (LPSTR)CT2CA(lpszFile);
 
-	//Ω⁄µ„
+	//ËäÇÁÇπ
 	tinyxml2::XMLDocument xmlDoc;
 	tinyxml2::XMLDeclaration *pDecl = xmlDoc.NewDeclaration();
 	xmlDoc.LinkEndChild(pDecl);
@@ -563,7 +573,7 @@ bool CDUIXmlPack::LoadDuiXml(LPCTSTR lpszFile, tinyxml2::XMLDocument &DuiXml)
 		CMMString strError = DuiXml.ErrorStr();
 
 		CMMString strWarning;
-		strWarning.Format(_T("Ω‚Œˆxml[%s] ß∞‹, cause[%s]"), lpszFile, strError.c_str());
+		strWarning.Format(_T("Ëß£Êûêxml[%s]Â§±Ë¥•, cause[%s]"), lpszFile, strError.c_str());
 		::MessageBox(NULL, strWarning, NULL, MB_OK);
 
 		return false;
@@ -576,7 +586,7 @@ void CDUIXmlPack::LoadWnd(LPCTSTR lpszFile, CDUIWnd *pWnd)
 {
 	if (MMInvalidString(lpszFile))
 	{
-		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("duifile:[%s]≤ª¥Ê‘⁄"), lpszFile));
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("duifile:[%s]‰∏çÂ≠òÂú®"), lpszFile));
 
 		return;
 	}
@@ -586,7 +596,7 @@ void CDUIXmlPack::LoadWnd(LPCTSTR lpszFile, CDUIWnd *pWnd)
 	tinyxml2::XMLDocument xmlDoc;
 	if (false == LoadDuiXml(lpszFile, xmlDoc))
 	{
-		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("duifile:[%s]Ã·»°xmlΩ‚Œˆ ß∞‹"), lpszFile));
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("duifile:[%s]ÊèêÂèñxmlËß£ÊûêÂ§±Ë¥•"), lpszFile));
 
 		return;
 	}
@@ -606,7 +616,7 @@ void CDUIXmlPack::LoadWnd(tinyxml2::XMLDocument &DuiXml, CDUIWnd *pWnd)
 	tinyxml2::XMLElement *pXMLRoot = DuiXml.RootElement();
 	if (NULL == pXMLRoot)
 	{
-		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("Ω‚ŒˆxmlŒ™ø’")));
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("Ëß£Êûêxml‰∏∫Á©∫")));
 
 		return;
 	}
@@ -615,7 +625,7 @@ void CDUIXmlPack::LoadWnd(tinyxml2::XMLDocument &DuiXml, CDUIWnd *pWnd)
 	tinyxml2::XMLElement *pNodeXml = pXMLRoot->FirstChildElement();
 	if (NULL == pNodeXml)
 	{
-		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("Ω‚ŒˆxmlΩ⁄µ„¥ÌŒÛ")));
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("Ëß£ÊûêxmlËäÇÁÇπÈîôËØØ")));
 
 		return;
 	}
@@ -663,7 +673,7 @@ CDUIControlBase * CDUIXmlPack::LoadDui(LPCTSTR lpszFile, CDUIWnd *pWnd)
 {
 	if (MMInvalidString(lpszFile))
 	{
-		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("duifile:[%s]≤ª¥Ê‘⁄"), lpszFile));
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("duifile:[%s]‰∏çÂ≠òÂú®"), lpszFile));
 
 		return NULL;
 	}
@@ -673,7 +683,7 @@ CDUIControlBase * CDUIXmlPack::LoadDui(LPCTSTR lpszFile, CDUIWnd *pWnd)
 	tinyxml2::XMLDocument xmlDoc;
 	if (false == LoadDuiXml(lpszFile, xmlDoc))
 	{
-		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("duifile:[%s]Ã·»°xmlΩ‚Œˆ ß∞‹"), lpszFile));
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("duifile:[%s]ÊèêÂèñxmlËß£ÊûêÂ§±Ë¥•"), lpszFile));
 
 		return NULL;
 	}
@@ -687,21 +697,21 @@ CDUIControlBase * CDUIXmlPack::LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWnd *p
 {
 	DWORD dwTickCount = GetTickCount();
 
-	//ø™ ºµº»Î
+	//ÂºÄÂßãÂØºÂÖ•
 	tinyxml2::XMLElement *pXMLRoot = DuiXml.RootElement();
 	if (NULL == pXMLRoot)
 	{
-		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("Ω‚ŒˆxmlŒ™ø’")));
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("Ëß£Êûêxml‰∏∫Á©∫")));
 
 		return NULL;
 	}
 
-	//¥¥Ω® Ù–‘
+	//ÂàõÂª∫Â±ûÊÄß
 	CDUIContainerCtrl *pRootCtrl = NULL;
 	tinyxml2::XMLElement *pNodeXml = pXMLRoot->FirstChildElement();
 	if (NULL == pNodeXml)
 	{
-		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("Ω‚ŒˆxmlΩ⁄µ„¥ÌŒÛ")));
+		CDUIGlobal::GetInstance()->SetDuiLastError(CMMStrHelp::Format(_T("Ëß£ÊûêxmlËäÇÁÇπÈîôËØØ")));
 
 		return NULL;
 	}
@@ -789,8 +799,8 @@ CDUIControlBase * CDUIXmlPack::ParseDui(LPCTSTR lpszXml)
 	if (NULL == lpszXml) return NULL;
 
 	tinyxml2::XMLDocument xmlDoc;
-	CStringA strXml = lpszXml;
-	xmlDoc.Parse(strXml, strXml.GetLength());
+	CMMStringA strXml = lpszXml;
+	xmlDoc.Parse(strXml, strXml.length());
 
 	return ParseDui(xmlDoc.RootElement());
 }
@@ -799,7 +809,7 @@ bool CDUIXmlPack::RefreshAttibute(tinyxml2::XMLElement *pNodeXml, CDUIPropertyOb
 {
 	if (NULL == pNodeXml || NULL == pPropObj) return false;
 
-	//≤Œ ˝Ω⁄µ„
+	//ÂèÇÊï∞ËäÇÁÇπ
 	tinyxml2::XMLElement *pNodeSub = pNodeXml->FirstChildElement();
 	if (NULL == pNodeSub) return false;
 
@@ -826,7 +836,7 @@ bool CDUIXmlPack::LoadResourceFromXML(tinyxml2::XMLElement *pNodeXml, CDUIResour
 
 	CMMString strName, strValue;
 
-	//≤Œ ˝Ω⁄µ„
+	//ÂèÇÊï∞ËäÇÁÇπ
 	const tinyxml2::XMLAttribute* pNodeAttribute = pNodeXml->FirstAttribute();
 	if (NULL == pNodeAttribute) return false;
 
@@ -911,7 +921,7 @@ bool CDUIXmlPack::LoadAtrributeFromXML(tinyxml2::XMLElement *pNodeXml, CDUIAttri
 
 	CMMString strName, strValue;
 
-	//≤Œ ˝Ω⁄µ„
+	//ÂèÇÊï∞ËäÇÁÇπ
 	const tinyxml2::XMLAttribute* pNodeAttribute = pNodeXml->FirstAttribute();
 	if (NULL == pNodeAttribute) return false;
 

@@ -114,6 +114,7 @@ class DUITHINK_API CDUIAnimationDrag
 	friend class CDUIHorizontalLayoutCtrl;
 	friend class CDUIVerticalLayoutCtrl;
 
+	MMDeclare_Super(CDUIAnimation)
 	DuiDeclare_Message_Map()
 
 public:
@@ -179,6 +180,8 @@ protected:
 class DUITHINK_API CDUIAnimationWnd
 	: public CDUIAnimation
 {
+	MMDeclare_Super(CDUIAnimation)
+	
 public:
 	CDUIAnimationWnd();
 	virtual ~CDUIAnimationWnd();

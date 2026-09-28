@@ -1,15 +1,15 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "DUIMenuCtrl.h"
 
 //////////////////////////////////////////////////////////////////////////
-#define Default_LineMenu_Height			(6)
+#define Default_LineMenu_Height			(1)
 #define	Default_LineMenu_Color			(0xffbcbfc4)	
 #define Size_MenuNormal					(150)
 
 //////////////////////////////////////////////////////////////////////////
 MMImplement_ClassName(CDUIMenuWnd)
 
-DuiBegin_Message_Map(CDUIMenuWnd, CDUIWnd)
+DuiBegin_Message_Map(CDUIMenuWnd, CDUIPopupWnd)
 	Dui_On_Notify(DuiNotify_WndInited, OnDuiWndInited)
 DuiEnd_Message_Map()
 
@@ -19,7 +19,7 @@ CDUIMenuWnd::CDUIMenuWnd()
 }
 
 CDUIMenuWnd::CDUIMenuWnd(CDUIMenuItemCtrl *pOwner, CMMString strDuiName)
-	: CDUIWnd(strDuiName)
+	: CDUIPopupWnd(strDuiName)
 	, m_pOwner(pOwner)
 {
 	CDUIControlBase *pRootCtrl = CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), this);
@@ -30,7 +30,7 @@ CDUIMenuWnd::CDUIMenuWnd(CDUIMenuItemCtrl *pOwner, CMMString strDuiName)
 
 CDUIMenuWnd::~CDUIMenuWnd()
 {
-	UnInit();
+	Close();
 
 	m_pOwner = NULL;
 	m_pWndOwner = NULL;
@@ -75,7 +75,7 @@ void CDUIMenuWnd::Init(HWND hWndParent, CDUIPoint ptTrack)
 	return;
 }
 
-void CDUIMenuWnd::UnInit()
+void CDUIMenuWnd::Close(UINT nRet)
 {
 	//save
 #ifdef DUI_DESIGN
@@ -98,7 +98,7 @@ void CDUIMenuWnd::UnInit()
 		}
 	}
 
-	Close();
+	__super::Close(nRet);
 
 	//detach view
 	if (NULL == m_pShowMenuView)
@@ -118,6 +118,7 @@ void CDUIMenuWnd::SetMenuView(CDUIMenuCtrl *pMenuView)
 {
 	if (NULL == pMenuView || pMenuView == GetMenuView()) return;
 
+	MMSafeDelete(m_pShowMenuView);
 	m_pShowMenuView = pMenuView;
 
 	return;
@@ -161,10 +162,10 @@ LRESULT CDUIMenuWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 		{
 			if (hWndFocus == g_pDuiMenuWndRoot->GetWndHandle()) return lRes;
 
-			hWndFocus = GetParent(hWndFocus);
+			hWndFocus = ::GetParent(hWndFocus);
 		}
 
-		g_pDuiMenuWndRoot->UnInit();
+		g_pDuiMenuWndRoot->Close();
 	}
 
 	return lRes;
@@ -218,8 +219,7 @@ LRESULT CDUIMenuWnd::OnWMDuiResizeMenu(WPARAM wParam, LPARAM lParam)
 	MMInterfaceHelper(CDUIRotateMenuCtrl, pRootMenuCtrl, pRotateMenu);
 
 	//wnd size
-	CDUIRect rcWnd;
-	::GetWindowRect(GetWndHandle(), &rcWnd);
+	CDUIRect rcWnd = GetWindowRect();
 	CDUISize szRange = pRootMenuCtrl->GetTotalRange();
 	CDUIRect rcInset = pRootMenuCtrl->GetRangeInset();
 	szRange.cx <= 0 ? szRange.cx = Size_MenuNormal : szRange.cx += rcInset.left + rcInset.right;
@@ -230,7 +230,7 @@ LRESULT CDUIMenuWnd::OnWMDuiResizeMenu(WPARAM wParam, LPARAM lParam)
 	if (rcWnd.GetWidth() != szRange.cx
 		|| rcWnd.GetHeight() != szRange.cy)
 	{
-		SetWindowPos(GetWndHandle(), NULL, 0, 0, szRange.cx, szRange.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+		::SetWindowPos(GetWndHandle(), NULL, 0, 0, szRange.cx, szRange.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
 	}
 
 	//wnd pos
@@ -258,8 +258,7 @@ void CDUIMenuWnd::OnDuiWndInited(const DuiNotify &Notify)
 
 void CDUIMenuWnd::ResizeMenu()
 {
-	CDUIRect rcWnd;
-	::GetWindowRect(m_hWnd, &rcWnd);
+	CDUIRect rcWnd = GetWindowRect();
 
 	MONITORINFO oMonitor = {};
 	oMonitor.cbSize = sizeof(oMonitor);
@@ -281,7 +280,7 @@ void CDUIMenuWnd::ResizeMenu()
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(-rcWnd.GetWidth(), 0);
 	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight());
 
-	SetWindowPos(m_hWnd, HWND_TOPMOST, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOACTIVATE);
+	::SetWindowPos(m_hWnd, HWND_TOPMOST, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOACTIVATE);
 
 #ifdef DUI_DESIGN
 	HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONULL);
@@ -315,9 +314,9 @@ void CDUIMenuWnd::ResizeSubMenu()
 
 	rcWnd.Offset(rcWndOwner.right - rcWnd.left, ptOwner.y - rcWnd.top);
 	if (rcWnd.right > rcWork.right) rcWnd.Offset(-(rcWndOwner.GetWidth() + rcWnd.GetWidth()), 0);
-	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight()+ rcOwner.GetHeight());
+	if (rcWnd.bottom > rcWork.bottom) rcWnd.Offset(0, -rcWnd.GetHeight() + rcOwner.GetHeight());
 	
-	SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
+	::SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE);
 
 #ifdef DUI_DESIGN
 	HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONULL);
@@ -674,7 +673,7 @@ bool CDUIMenuItemCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg
 
 		if (g_pDuiMenuWndRoot)
 		{
-			g_pDuiMenuWndRoot->UnInit();
+			g_pDuiMenuWndRoot->Close();
 		}
 	}
 
@@ -721,8 +720,8 @@ void CDUIMenuItemCtrl::InitProperty()
 	__super::InitProperty();
 
 	DuiCreateGroupAttribute(m_AttributeMenuGroup, _T("Menu"));
-	DuiCreateAttribute(m_AttributeLineMenu, _T("LineMenu"), _T("ÏßÐÍ²Ëµ¥"), m_AttributeMenuGroup);
-	DuiCreateAttribute(m_AttributeLineColor, _T("LineColor"), _T("ÏßÑÕÉ«"), m_AttributeMenuGroup);
+	DuiCreateAttribute(m_AttributeLineMenu, _T("LineMenu"), _T("çº¿åž‹èœå•"), m_AttributeMenuGroup);
+	DuiCreateAttribute(m_AttributeLineColor, _T("LineColor"), _T("çº¿é¢œè‰²"), m_AttributeMenuGroup);
 	DuiCreateAttribute(m_AttributeGroupID, _T("GroupID"), _T("Group ID"), m_AttributeMenuGroup);
 	DuiCreateAttribute(m_AttributeIconChecked, _T("IconChecked"), _T("IconChecked"), m_AttributeMenuGroup);
 	DuiCreateAttribute(m_AttributeIconCheckedLeftPadding, _T("IconCheckedLPadding"), _T("IconCheckedLPadding"), m_AttributeMenuGroup);
@@ -800,7 +799,7 @@ void CDUIMenuItemCtrl::UnActiveExpandMenu()
 {
 	if (NULL == m_pExpandMenuWnd || false == IsWindow(m_pExpandMenuWnd->GetWndHandle())) return;
 
-	m_pExpandMenuWnd->UnInit();
+	m_pExpandMenuWnd->Close();
 
 	return;
 }
@@ -831,7 +830,7 @@ void CDUIMenuItemCtrl::InitExpandMenu(bool bActive)
 
 	//new expand view
 	CDUIGlobal::GetInstance()->RemoveDui(strName);
-	strName = CDUIGlobal::GetInstance()->CreateMenu(GetWndOwner());
+	strName = CDUIGlobal::GetInstance()->CreateMenu(MMDynamicPtr(CDUIWnd, GetWndOwner()));
 	m_AttributeExpandViewDuiName.SetValue(strName);
 
 	LoadExpandMenu();
@@ -1018,7 +1017,7 @@ void CDUIMenuCtrl::RefreshView()
 
 	if (NULL == m_pWndOwner || false == IsWindow(m_pWndOwner->GetWndHandle())) return;
 
-	SendMessage(m_pWndOwner->GetWndHandle(), WM_DUIRESIZEMENU, NULL, NULL);
+	m_pWndOwner->SendMessage(WM_DUIRESIZEMENU, NULL, NULL);
 
 	return;
 }

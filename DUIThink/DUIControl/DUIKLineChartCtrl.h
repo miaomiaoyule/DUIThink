@@ -9,6 +9,7 @@ static const GUID IID_CDUIKLineChartCtrl = { 0xC88570C2,0x1D5F,0x461C,0x96,0xDE,
 class DUITHINK_API CDUIKLineChartCtrl
 	: public CDUIControlBase
 {
+	MMDeclare_Super(CDUIControlBase)
 	DuiDeclare_CreateControl(CDUIKLineChartCtrl)
 	MMDeclare_ClassName(CDUIKLineChartCtrl)
 

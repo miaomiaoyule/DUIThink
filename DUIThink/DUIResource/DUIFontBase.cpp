@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "DUIFontBase.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -254,7 +254,7 @@ bool CDUIFontBase::SaveAttribute(tinyxml2::XMLElement* pNode)
 
 	pNode->SetAttribute(Dui_Resource_Key_FontName, (LPSTR)CT2CA(m_strFontName, CP_UTF8));
 	pNode->SetAttribute(Dui_Resource_Key_FontSize, m_nSize);
-	pNode->SetAttribute(Dui_Resource_Key_FontBold, m_lWeight);
+	pNode->SetAttribute(Dui_Resource_Key_FontBold, (int)m_lWeight);
 	pNode->SetAttribute(Dui_Resource_Key_FontItalic, (int)m_bItalic);
 	pNode->SetAttribute(Dui_Resource_Key_FontUnderLine, (int)m_bUnderline);
 	pNode->SetAttribute(Dui_Resource_Key_FontStrikeOut, (int)m_bStrikeOut);
@@ -272,8 +272,8 @@ void CDUIFontBase::OnDpiChanged(int nScale)
 CMMString CDUIFontBase::FormatFontDescribe(CMMString strName, int nSize, LONG lWeight, bool bItalic, bool bUnderline, bool bStrikeOut)
 {
 	CMMString strResName;
-	strResName.Format(_T("%s-×ÖºÅ:%d-´ÖÏ¸:%d-%s-%s-%s"), strName.c_str(), nSize, lWeight, bItalic ? _T("Ğ±Ìå") : _T("·ÇĞ±Ìå"),\
-		bUnderline ? _T("ÏÂ»®Ïß") : _T("ÎŞÏÂ»®Ïß"), bStrikeOut ? _T("É¾³ıÏß") : _T("ÎŞÉ¾³ıÏß"));
+	strResName.Format(_T("%s-å­—å·:%d-ç²—ç»†:%d-%s-%s-%s"), strName.c_str(), nSize, (int)lWeight, bItalic ? _T("æ–œä½“") : _T("éæ–œä½“"),\
+		bUnderline ? _T("ä¸‹åˆ’çº¿") : _T("æ— ä¸‹åˆ’çº¿"), bStrikeOut ? _T("åˆ é™¤çº¿") : _T("æ— åˆ é™¤çº¿"));
 
 	return strResName;
 }

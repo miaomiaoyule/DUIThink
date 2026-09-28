@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "MMVersion.h"
 
+#ifndef DuiPlatform_SDL
+
 //////////////////////////////////////////////////////////////////////////
 #define _WIN32_WINNT_NT4                    0x0400
 #define _WIN32_WINNT_WIN2K                  0x0500
@@ -130,7 +132,7 @@ bool CMMVersion::IsWindows8OrGreater()
 	return IsWindowsVersionOrGreater(HIBYTE(_WIN32_WINNT_WIN8), LOBYTE(_WIN32_WINNT_WIN8), 0);
 }
 
-//8.1(6.3)���ϰ汾
+//8.1(6.3)以上版本
 bool CMMVersion::IsWindows8Point1OrGreater()
 {
 	DWORD dwOsMajorVer = 0, dwOsMinorVer = 0, dwOsBuild = 0;
@@ -200,3 +202,5 @@ bool CMMVersion::IsWindowsServer()
 	
 	return false == VerifyVersionInfoW(&osvi, VER_PRODUCT_TYPE, dwlConditionMask);
 }
+
+#endif

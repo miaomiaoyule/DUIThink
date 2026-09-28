@@ -11,8 +11,9 @@ class CDUIMenuItemCtrl;
 
 //////////////////////////////////////////////////////////////////////////
 class DUITHINK_API CDUIMenuWnd
-	: public CDUIWnd
+	: public CDUIPopupWnd
 {
+	MMDeclare_Super(CDUIPopupWnd)
 	MMDeclare_ClassName()
 	DuiDeclare_Message_Map()
 
@@ -31,7 +32,7 @@ protected:
 public:
 	void Init(HWND hWndParent);
 	void Init(HWND hWndParent, CDUIPoint ptTrack);
-	void UnInit();
+	void Close(UINT nRet = IDOK) override;
 	CDUIMenuCtrl * GetMenuView();
 	void SetMenuView(CDUIMenuCtrl *pMenuView);
 	CDUIMenuItemCtrl * GetOwner();
@@ -64,6 +65,7 @@ static const GUID IID_CDUIMenuItemCtrl = { 0x07174720,0xD8C2,0x4B3C,0x8C,0x9E,0x
 class DUITHINK_API CDUIMenuItemCtrl
 	: public CDUIListItemCtrl
 {
+	MMDeclare_Super(CDUIListItemCtrl)
 	DuiDeclare_CreateControl(CDUIMenuItemCtrl)
 	MMDeclare_ClassName(CDUIMenuItemCtrl)
 
@@ -175,6 +177,7 @@ static const GUID IID_CDUIMenuCtrl = { 0x98178BB2,0x30BC,0x4E93,0x95,0x58,0xB4,0
 class DUITHINK_API CDUIMenuCtrl
 	: public CDUIListViewCtrl
 {
+	MMDeclare_Super(CDUIListViewCtrl)
 	DuiDeclare_CreateControl(CDUIMenuCtrl)
 	MMDeclare_ClassName(CDUIMenuCtrl)
 

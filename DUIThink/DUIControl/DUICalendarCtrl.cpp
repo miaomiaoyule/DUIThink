@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "DUICalendarCtrl.h"
 
 #define CALENDAR_OFFSET_LRBTN			(15)
@@ -16,7 +16,7 @@ DuiBegin_Message_Map(CDUICalendarWnd, CDUINotifyPump)
 DuiEnd_Message_Map()
 
 CDUICalendarWnd::CDUICalendarWnd(CMMString strDuiName)
-	: CDUIWnd(strDuiName)
+	: CDUIPopupWnd(strDuiName)
 {
 	CDUIControlBase *pRootCtrl = CDUIGlobal::GetInstance()->LoadDui(GetDuiName(), this);
 	m_pShowCalendarView = MMInterfaceHelper(CDUICalendarCtrl, pRootCtrl);
@@ -26,7 +26,7 @@ CDUICalendarWnd::CDUICalendarWnd(CMMString strDuiName)
 
 CDUICalendarWnd::~CDUICalendarWnd()
 {
-	UnInit();
+	Close();
 
 	MMSafeDelete(m_pShowCalendarView);
 
@@ -60,7 +60,7 @@ void CDUICalendarWnd::Init(HWND hWndParent, CDUIPoint ptTrack)
 	return;
 }
 
-void CDUICalendarWnd::UnInit()
+void CDUICalendarWnd::Close(UINT nRet)
 {
 	//save
 #ifdef DUI_DESIGN
@@ -70,7 +70,7 @@ void CDUICalendarWnd::UnInit()
 	}
 #endif
 
-	Close();
+	__super::Close(nRet);
 
 	DetachRootCtrl();
 
@@ -112,10 +112,10 @@ LRESULT CDUICalendarWnd::OnKillFocus(WPARAM wParam, LPARAM lParam)
 		{
 			if (hWndFocus == g_pDuiCalendarWnd->GetWndHandle()) return 0;
 
-			hWndFocus = GetParent(hWndFocus);
+			hWndFocus = ::GetParent(hWndFocus);
 		}
 
-		g_pDuiCalendarWnd->UnInit();
+		g_pDuiCalendarWnd->Close();
 	}
 
 	return 0;
@@ -204,13 +204,13 @@ CDUICalendarCtrl::CDUICalendarCtrl(void)
 	m_AttributeWeekStyle.SetCombox(AttriCombox);
 	m_AttributeWeekStyle.SelectItem(CalendarWeek_FirstMonday);
 
-	m_AttributeTextWeekDay[0] = CDUIAttributeText(_T("ÐÇÆÚÒ»"));
-	m_AttributeTextWeekDay[1] = CDUIAttributeText(_T("ÐÇÆÚ¶þ"));
-	m_AttributeTextWeekDay[2] = CDUIAttributeText(_T("ÐÇÆÚÈý"));
-	m_AttributeTextWeekDay[3] = CDUIAttributeText(_T("ÐÇÆÚËÄ"));
-	m_AttributeTextWeekDay[4] = CDUIAttributeText(_T("ÐÇÆÚÎå"));
-	m_AttributeTextWeekDay[5] = CDUIAttributeText(_T("ÐÇÆÚÁù"));
-	m_AttributeTextWeekDay[6] = CDUIAttributeText(_T("ÐÇÆÚÌì"));
+	m_AttributeTextWeekDay[0].SetValue(_T("æ˜ŸæœŸä¸€"));
+	m_AttributeTextWeekDay[1].SetValue(_T("æ˜ŸæœŸäºŒ"));
+	m_AttributeTextWeekDay[2].SetValue(_T("æ˜ŸæœŸä¸‰"));
+	m_AttributeTextWeekDay[3].SetValue(_T("æ˜ŸæœŸå››"));
+	m_AttributeTextWeekDay[4].SetValue(_T("æ˜ŸæœŸäº”"));
+	m_AttributeTextWeekDay[5].SetValue(_T("æ˜ŸæœŸå…­"));
+	m_AttributeTextWeekDay[6].SetValue(_T("æ˜ŸæœŸå¤©"));
 
 	return;
 }
@@ -935,7 +935,7 @@ void CDUICalendarCtrl::OnDuiItemClick(const DuiNotify &Notify)
 
 	if (g_pDuiCalendarWnd)
 	{
-		g_pDuiCalendarWnd->UnInit();
+		g_pDuiCalendarWnd->Close();
 	}
 
 	return;
@@ -1222,9 +1222,9 @@ void CDUICalendarCtrl::ConstructHeader(int nYear, int nMonth)
 {
 	if (NULL == m_pBtnYearCtrl || NULL == m_pBtnMonthCtrl) return;
 
-	m_pBtnYearCtrl->SetText(CMMStrHelp::Format(_T("%dÄê"), nYear));
+	m_pBtnYearCtrl->SetText(CMMStrHelp::Format(_T("%då¹´"), nYear));
 	m_pBtnYearCtrl->SetTag(ConstructDate(nYear, nMonth, 1));
-	m_pBtnMonthCtrl->SetText(CMMStrHelp::Format(_T("%dÔÂ"), nMonth));
+	m_pBtnMonthCtrl->SetText(CMMStrHelp::Format(_T("%dæœˆ"), nMonth));
 	m_pBtnMonthCtrl->SetTag(ConstructDate(nYear, nMonth, 1));
 
 	return;
@@ -1245,7 +1245,7 @@ void CDUICalendarCtrl::ConstructDay(CDUIListItemCtrl *pDay, int nYear, int nMont
 	bCurMonth ? pAttributeTextStyle = &m_AttributeTextStyleCurMonthDay : pAttributeTextStyle;
 	bCurDay ? pAttributeTextStyle = &m_AttributeTextStyleToday : pAttributeTextStyle;
 
-	bCurDay ? pDay->SetBkColor(m_AttributeColorTodayBk.GetColorResSwitch()) : NULL;
+	if (bCurDay) pDay->SetBkColor(m_AttributeColorTodayBk.GetColorResSwitch());
 	pDay->SetTextStyle(pAttributeTextStyle->GetTextStyle());
 	pDay->SetText(CMMStrHelp::Format(_T("%d"), nDay));
 	pDay->SetTag(ConstructDate(nYear, nMonth, nDay));
@@ -1483,15 +1483,15 @@ void CDUICalendarCtrl::SwitchYearMonth(int nYear, int nMonth)
 
 void CDUICalendarCtrl::PopupYearMonthWnd(bool bYear)
 {
-	CDUIMenuWnd PopupWnd;
-	MMSafeDelete(g_pDuiMenuWndRoot);
-	g_pDuiMenuWndRoot = &PopupWnd;
-	g_DuiMenuCmd = {};
+	//menu
+	CDUIMenu Menu;
+	Menu.LoadMenu(_T(""));
+	if (NULL == g_pDuiMenuWndRoot) return;
 
 	SYSTEMTIME SysTime = {};
 	GetLocalTime(&SysTime);
 
-	CDUISize szItem = bYear ? m_AttributeTextStyleYearNormal.MeasureString(_T("9999")) : m_AttributeTextStyleMonthNormal.MeasureString(_T("9999"));
+	CDUISize szItem = bYear ? m_AttributeTextStyleYearNormal.MeasureString(_T("9999")) : m_AttributeTextStyleMonthNormal.MeasureString(_T("99"));
 	szItem.cx += 1;
 	tagDuiTextStyle TextStyleNormal = bYear ? m_AttributeTextStyleYearNormal.GetTextStyle() : m_AttributeTextStyleMonthNormal.GetTextStyle();
 	tagDuiTextStyle TextStyleHot = bYear ? m_AttributeTextStyleYearHot.GetTextStyle() : m_AttributeTextStyleMonthHot.GetTextStyle();
@@ -1510,7 +1510,7 @@ void CDUICalendarCtrl::PopupYearMonthWnd(bool bYear)
 	pPopupView->SetItemStatusColorResSwitchHot(bYear ? m_AttributeColorYearHot.GetColorResSwitch() : m_AttributeColorMonthHot.GetColorResSwitch());
 	pPopupView->SetItemStatusColorResSwitchSelNormal({ Name_ColorSelBk });
 	pPopupView->SetSwitchTileItemSize(szItem);
-	pPopupView->SetChildPadding(bYear ? 5 : 0, 5);
+	pPopupView->SetChildPadding(5, 5);
 	pPopupView->SwitchListViewType(enDuiListViewType::ListView_TileH);
 	pPopupView->SetUseListHeader(false);
 	if (bYear)
@@ -1546,34 +1546,42 @@ void CDUICalendarCtrl::PopupYearMonthWnd(bool bYear)
 
 	//size
 	CDUISize szWnd;
-	szWnd.cx = szItem.cx * sqrt(pPopupView->GetChildCount()) + pPopupView->GetChildPaddingH() * sqrt(pPopupView->GetChildCount());
-	szWnd.cy = szItem.cy * sqrt(pPopupView->GetChildCount()) + pPopupView->GetChildPaddingV() * sqrt(pPopupView->GetChildCount());
-	PopupWnd.SetGdiplusRenderText(true);
-	PopupWnd.SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
-	PopupWnd.SetWndInitSize(szWnd.cx, szWnd.cy);
-	PopupWnd.SetWndLayered(true);
-	PopupWnd.SetCaptionHeight(0);
+	const int nCount = max(1, pPopupView->GetChildCount());
+	const int nColumn = (int)ceil(sqrt((double)nCount));
+	const int nRow = (int)ceil(nCount / (double)nColumn);
+	szWnd.cx = (szItem.cx + pPopupView->GetChildPaddingH()) * nColumn;
+	szWnd.cy = (szItem.cy + pPopupView->GetChildPaddingV()) * nRow;
+	g_pDuiMenuWndRoot->SetGdiplusRenderText(true);
+	g_pDuiMenuWndRoot->SetGdiplusRenderTextType(Gdiplus::TextRenderingHint::TextRenderingHintAntiAliasGridFit);
+	g_pDuiMenuWndRoot->SetWndInitSize(szWnd.cx, szWnd.cy);
+	g_pDuiMenuWndRoot->SetWndLayered(true);
+	g_pDuiMenuWndRoot->SetCaptionHeight(0);
 
 	//pos
-	CDUIButtonCtrl *pBtnClickCtrl = bYear ? m_pBtnYearCtrl : m_pBtnMonthCtrl;
-	CDUIPoint ptTrack(pBtnClickCtrl->GetAbsoluteRect().left, pBtnClickCtrl->GetAbsoluteRect().top);
-	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptTrack);
-	ptTrack.Offset(-szWnd.cx, pBtnClickCtrl->GetHeight() / 2 - szWnd.cy / 2);
+	CDUIPoint ptTrack;
+	if (bYear)
+	{
+		ptTrack = CDUIPoint(m_pBtnYearCtrl->GetAbsoluteRect().left, m_pBtnYearCtrl->GetAbsoluteRect().top);
+		ptTrack.Offset(-szWnd.cx, m_pBtnYearCtrl->GetHeight() / 2 - szWnd.cy / 2);	
+	}
+	else
+	{
+		ptTrack = CDUIPoint(m_pBtnMonthCtrl->GetAbsoluteRect().right, m_pBtnMonthCtrl->GetAbsoluteRect().top);
+		ptTrack.Offset(0, m_pBtnMonthCtrl->GetHeight() / 2 - szWnd.cy / 2);
+	}
 
-	PopupWnd.SetMenuView(pPopupView);
-	PopupWnd.Init(m_pWndOwner->GetWndHandle(), ptTrack);
-	PopupWnd.DoBlock();
+	::ClientToScreen(m_pWndOwner->GetWndHandle(), &ptTrack);
+	g_pDuiMenuWndRoot->SetMenuView(pPopupView);
+	tagDuiMenuCmd MenuCmd = Menu.TrackPopupMenu(m_pWndOwner->GetWndHandle(), ptTrack);
 
 	//select
-	if (g_DuiMenuCmd.uMenuTag)
+	if (MenuCmd.uMenuTag)
 	{
-		SwitchYearMonth(ParseYear(g_DuiMenuCmd.uMenuTag), ParseMonth(g_DuiMenuCmd.uMenuTag));
+		SwitchYearMonth(ParseYear(MenuCmd.uMenuTag), ParseMonth(MenuCmd.uMenuTag));
 	}
 
 	//focus
 	SetFocus();
-
-	g_pDuiMenuWndRoot = NULL;
 
 	return;
 }

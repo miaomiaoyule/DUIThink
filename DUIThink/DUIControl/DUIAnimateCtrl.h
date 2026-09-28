@@ -10,6 +10,7 @@ static const GUID IID_CDUIAnimateCtrl = { 0x9EFF4728,0x7FBA,0x4923,0x95,0x0C,0x4
 class DUITHINK_API CDUIAnimateCtrl
 	: public CDUIStaticCtrl
 {
+	MMDeclare_Super(CDUIStaticCtrl)
 	DuiDeclare_CreateControl(CDUIAnimateCtrl)
 	MMDeclare_ClassName(CDUIAnimateCtrl)
 

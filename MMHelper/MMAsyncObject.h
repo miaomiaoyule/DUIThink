@@ -1,10 +1,14 @@
-#ifndef __MM_ASYNCOBJECT_H__
+﻿#ifndef __MM_ASYNCOBJECT_H__
 #define __MM_ASYNCOBJECT_H__
 
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
+class CMMAsyncObject;
+
+//////////////////////////////////////////////////////////////////////////
 class MMHELPER_API CMMAsyncObject
+	: public IMMWndInterface
 {
 	MMDeclare_ClassName(CMMAsyncObject)
 
@@ -18,17 +22,35 @@ public:
 	};
 	struct TimerInfo : public TaskBase
 	{
-		bool							repeat = false;
+		bool							bRepeat = false;
+#if defined(DuiPlatform_SDL)
+		Uint32							uTimerIDSdl = 0;
+		void *							sdlTimerParam = nullptr;
+#endif
 	};
 
 protected:
 	std::recursive_mutex				m_AsyncDataLock;
 	HWND								m_hWndAsync = NULL;
+	uint32_t							m_uWndID = 0;
 	const UINT							m_uMsgAsyncTask = WM_APP + 1;
-	
+
 	// Map timer id -> TimerInfo
 	std::map<UINT_PTR, TimerInfo>		m_TimerTasks;
 	std::atomic<UINT_PTR>				m_NextTimerId{ 1 };
+
+	//override
+public:
+	UINT GetWndID() override { return m_uWndID; };
+	HDC GetWndDC() override { return NULL; }
+	bool IsVirtualWnd() override { return 0 == m_uWndID && m_hWndAsync; }
+	bool IsWindowVisible() { return false; }
+	void SetWindowPos(HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags) {}
+	void ShowWindow(int nCmdShow) {}
+	void Invalidate() {}
+	HWND GetParent() { return NULL; }
+	CMMRect GetWindowRect() { return {}; }
+	CMMRect GetClientRect() { return {}; }
 
 public:
 	//you should call init and uninit on uithread
@@ -47,7 +69,13 @@ protected:
 	UINT_PTR StartTimerInternal(unsigned int ms, std::function<void()>&& fn, bool repeat);
 
 protected:
+#if defined(DuiPlatform_SDL)
+	void OnWndMessage(SDL_Event &e) override;
+	static bool SDLCALL SDLEventWatch(void *userdata, SDL_Event *e);
+	static Uint32 SDLCALL SDLTimerCallback(void *userdata, SDL_TimerID timerID, Uint32 interval);
+#else
 	static LRESULT CALLBACK OnWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+#endif
 };
 
 //////////////////////////////////////////////////////////////////////////
