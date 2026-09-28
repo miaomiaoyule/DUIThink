@@ -275,8 +275,11 @@ bool CDUIWndBase::AttachRootCtrl(CDUIContainerCtrl* pControl)
 
 	CDUIGlobal::PerformNotifyChildAdd(this, m_pRootCtrl);
 
-	NeedRefreshView();
-	Invalidate();
+	//refresh view
+	if (m_pRootCtrl)
+	{
+		m_pRootCtrl->NeedRefreshView();
+	}
 
 	return true;
 }
