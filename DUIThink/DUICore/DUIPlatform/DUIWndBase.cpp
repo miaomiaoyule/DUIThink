@@ -281,6 +281,8 @@ bool CDUIWndBase::AttachRootCtrl(CDUIContainerCtrl* pControl)
 		m_pRootCtrl->NeedRefreshView();
 	}
 
+	Invalidate();
+
 	return true;
 }
 
