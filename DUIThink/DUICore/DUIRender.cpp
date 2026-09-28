@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_STATIC
 #include "../DUIUtils/stb_image_write.h"
@@ -135,7 +135,7 @@ static BOOL WINAPI AlphaBitBlt(HDC hDC, int nDestX, int nDestY, int dwWidth, int
 
 static void ConstructRoundRectBezier(
 	const CDUIRect& rc,
-	const CDUIRect& rd,      // ∏˜∏ˆ‘≤Ω«∞Îæ∂
+	const CDUIRect& rd,      // ÂêÑ‰∏™ÂúÜËßíÂçäÂæÑ
 	Gdiplus::GraphicsPath& path)
 {
 	float left = (float)rc.left;
@@ -152,7 +152,7 @@ static void ConstructRoundRectBezier(
 	float h = bottom - top;
 	if (w <= 0 || h <= 0) return;
 
-	// –ﬁ’˝∞Îæ∂£®≤ªƒ‹≥¨π˝øÌ/∏ﬂµƒ“ª∞Î£©
+	// ‰øÆÊ≠£ÂçäÂæÑÔºà‰∏çËÉΩË∂ÖËøáÂÆΩ/È´òÁöÑ‰∏ÄÂçäÔºâ
 	rtl = min(rtl, h * 0.5f);
 	rtl = min(rtl, w * 0.5f);
 
@@ -165,12 +165,12 @@ static void ConstructRoundRectBezier(
 	rbl = min(rbl, h * 0.5f);
 	rbl = min(rbl, w * 0.5f);
 
-	// ‘≤–Œ±∆Ω¸œµ ˝
+	// ÂúÜÂΩ¢ÈÄºËøëÁ≥ªÊï∞
 	const float K = 0.5522847498f;
 
 	path.Reset();
 
-	// === ø™ º”⁄◊Û…œΩ«£®∂•±ﬂ÷–µ„£©===
+	// === ÂºÄÂßã‰∫éÂ∑¶‰∏äËßíÔºàÈ°∂Ëæπ‰∏≠ÁÇπÔºâ===
 	path.StartFigure();
 
 	// ---- top side ----
@@ -222,13 +222,13 @@ static void ConstructRoundPath(const CDUIRect &rcDraw, const CDUIRect &rcRound, 
 {
 	if (rcDraw.GetWidth() <= 0 || rcDraw.GetHeight() <= 0) return;
 
-	// –ﬁ’˝‘≤Ω«∞Îæ∂£®≤ªƒ‹≥¨π˝æÿ–Œ“ª∞Î£©
+	// ‰øÆÊ≠£ÂúÜËßíÂçäÂæÑÔºà‰∏çËÉΩË∂ÖËøáÁü©ÂΩ¢‰∏ÄÂçäÔºâ
 	int rt = max(0, min(rcRound.top, rcDraw.GetHeight() / 2));
 	int rr = max(0, min(rcRound.right, rcDraw.GetWidth() / 2));
 	int rb = max(0, min(rcRound.bottom, rcDraw.GetHeight() / 2));
 	int rl = max(0, min(rcRound.left, rcDraw.GetWidth() / 2));
 
-	// ø™ ºππ‘Ï¬∑æ∂
+	// ÂºÄÂßãÊûÑÈÄ†Ë∑ØÂæÑ
 	Path.Reset();
 
 	// top-right
@@ -295,47 +295,47 @@ static void ConstructRoundPath(const CDUIRect &rcDraw, const CDUIRect &rcRound, 
 		return;
 	}
 
-	// –ﬁ’˝‘≤Ω«∞Îæ∂±ﬂΩÁ
+	// ‰øÆÊ≠£ÂúÜËßíÂçäÂæÑËæπÁïå
 	int rt = max(0, min(rcRound.top, rcDraw.GetHeight() / 2));
 	int rr = max(0, min(rcRound.right, rcDraw.GetWidth() / 2));
 	int rb = max(0, min(rcRound.bottom, rcDraw.GetHeight() / 2));
 	int rl = max(0, min(rcRound.left, rcDraw.GetWidth() / 2));
 
-	// º∆À„»±ø⁄µƒ∆µ„∫Õ÷’µ„
+	// ËÆ°ÁÆóÁº∫Âè£ÁöÑËµ∑ÁÇπÂíåÁªàÁÇπ
 	int nBreakStart = rcDraw.left + rl + szBreakTop.cx;
 	int nBreakEnd = nBreakStart + szBreakTop.cy;
 	nBreakEnd = min(nBreakEnd, rcDraw.right - rt);
 
 	Path.Reset();
 
-	// 1. ¥”»±ø⁄”“≤‡∆µ„µΩ”“…œ‘≤Ω«ÀÆ∆Ωœﬂ÷’µ„
+	// 1. ‰ªéÁº∫Âè£Âè≥‰æßËµ∑ÁÇπÂà∞Âè≥‰∏äÂúÜËßíÊ∞¥Âπ≥Á∫øÁªàÁÇπ
 	Path.AddLine(nBreakEnd, rcDraw.top, rcDraw.right - rt * 2, rcDraw.top);
 
-	// 2. ”“…œ‘≤Ω«
+	// 2. Âè≥‰∏äÂúÜËßí
 	Path.AddArc(rcDraw.right - rt * 2 - nLineSize, rcDraw.top, rt * 2, rt * 2, 270, 90);
 
-	// 3. ”“±ﬂœﬂ
+	// 3. Âè≥ËæπÁ∫ø
 	Path.AddLine(rcDraw.right - nLineSize, rcDraw.top + rt, rcDraw.right - nLineSize, rcDraw.bottom - rr);
 
-	// 4. ”“œ¬‘≤Ω«
+	// 4. Âè≥‰∏ãÂúÜËßí
 	Path.AddArc(rcDraw.right - rr * 2 - nLineSize, rcDraw.bottom - rr * 2 - nLineSize, rr * 2, rr * 2, 0, 90);
 
-	// 5. µ◊≤ø±ﬂœﬂ
+	// 5. Â∫ïÈÉ®ËæπÁ∫ø
 	Path.AddLine(rcDraw.right - rr, rcDraw.bottom - nLineSize, rcDraw.left + rb, rcDraw.bottom - nLineSize);
 
-	// 6. ◊Ûœ¬‘≤Ω«
+	// 6. Â∑¶‰∏ãÂúÜËßí
 	Path.AddArc(rcDraw.left, rcDraw.bottom - rb * 2 - nLineSize, rb * 2, rb * 2, 90, 90);
 
-	// 7. ◊Û±ﬂœﬂ
+	// 7. Â∑¶ËæπÁ∫ø
 	Path.AddLine(rcDraw.left, rcDraw.bottom - rb, rcDraw.left, rcDraw.top + rl);
 
-	// 8. ◊Û…œ‘≤Ω«
+	// 8. Â∑¶‰∏äÂúÜËßí
 	Path.AddArc(rcDraw.left, rcDraw.top, rl * 2, rl * 2, 180, 90);
 
-	// 9. ◊Û…œ‘≤Ω«Ω· ¯µΩ»±ø⁄◊Û≤‡∆µ„
+	// 9. Â∑¶‰∏äÂúÜËßíÁªìÊùüÂà∞Áº∫Âè£Â∑¶‰æßËµ∑ÁÇπ
 	Path.AddLine(rcDraw.left + rl * 2, rcDraw.top, nBreakStart, rcDraw.top);
 
-	// »±ø⁄¥¶≤ª∑‚ø⁄£¨≤ªµ˜”√ Path.CloseFigure()
+	// Áº∫Âè£Â§Ñ‰∏çÂ∞ÅÂè£Ôºå‰∏çË∞ÉÁî® Path.CloseFigure()
 	return;
 }
 
@@ -384,18 +384,18 @@ static void ConstructTextureBrushMatrix(Gdiplus::TextureBrush &Brush, Gdiplus::G
 
 	UINT bmpW = pBmp->GetWidth();
 	UINT bmpH = pBmp->GetHeight();
-	if (bmpW == 0 || bmpH == 0) return;  // ±‹√‚≥˝¡„
+	if (bmpW == 0 || bmpH == 0) return;  // ÈÅøÂÖçÈô§Èõ∂
 
 	Gdiplus::RectF bounds;
 	Path.GetBounds(&bounds);
 
 	if (bounds.Width <= 0 || bounds.Height <= 0)
-		return;  // Œﬁ–ß¬∑æ∂£¨≤ª”¶”√Œ∆¿Ì
+		return;  // Êó†ÊïàË∑ØÂæÑÔºå‰∏çÂ∫îÁî®Á∫πÁêÜ
 
 	Gdiplus::REAL sx = bounds.Width / (Gdiplus::REAL)bmpW;
 	Gdiplus::REAL sy = bounds.Height / (Gdiplus::REAL)bmpH;
 
-	// ±‹√‚ 0£¨NaN£¨Inf
+	// ÈÅøÂÖç 0ÔºåNaNÔºåInf
 	const Gdiplus::REAL MIN_SCALE = 0.001f;
 	if (!std::isfinite(sx) || sx < MIN_SCALE) sx = MIN_SCALE;
 	if (!std::isfinite(sy) || sy < MIN_SCALE) sy = MIN_SCALE;
@@ -408,6 +408,105 @@ static void ConstructTextureBrushMatrix(Gdiplus::TextureBrush &Brush, Gdiplus::G
 	Brush.SetTransform(&matrix);
 
 	return;
+}
+
+// ‰∏é DrawShadowText / Ê°åÈù¢ÂõæÊ†áÂ≠ó‰∏ÄËá¥ÔºöÂØπÂ≠óÂΩ¢Ë¶ÜÁõñÁéáÂÅö‰∏ÄÊ¨°È´òÊñØÊ®°Á≥äÔºàsigma ‚âà 1.4Ôºâ„ÄÇ
+// Á¨îÁîªÂÜÖÈÉ®Ë¢´Ê†∏ÁõñÊª°ÔºåÈò¥ÂΩ±Êõ¥ÈáçÔºõÁ¶ªÂºÄÁ¨îÁîªÂêéÊåâË∑ùÁ¶ªË°∞Âáè„ÄÇÂÅèÁßªÂè™ÂÜ≥ÂÆöÊäïÂΩ±ÊñπÂêë„ÄÇ
+static const int c_nTextShadowRadius = 3;
+static const int c_nTextShadowOffsetX = 1;
+static const int c_nTextShadowOffsetY = 1;
+static void DuiBlurTextShadowAlpha(BYTE *pBits, int nWidth, int nHeight, int nStride, int nGain)
+{
+	// ÂΩí‰∏ÄÂåñÂà∞ 256 ÁöÑÂèØÂàÜÁ¶ªÈ´òÊñØÊ†∏ÔºåÂçäÂæÑ 3
+	static const int c_nKernel[7] = { 7, 27, 57, 74, 57, 27, 7 };
+	static const int c_nDiv = 256;
+	if (NULL == pBits || nWidth <= 0 || nHeight <= 0 || nStride < nWidth * 4 || nGain <= 0) return;
+
+	std::vector<BYTE> vecAlpha((size_t)nWidth * (size_t)nHeight);
+	for (int y = 0; y < nHeight; ++y)
+	{
+		const BYTE *pRow = pBits + (size_t)y * nStride;
+		BYTE *pOut = vecAlpha.data() + (size_t)y * nWidth;
+		for (int x = 0; x < nWidth; ++x)
+		{
+			int nSum = 0;
+			for (int k = -c_nTextShadowRadius; k <= c_nTextShadowRadius; ++k)
+			{
+				int sx = x + k;
+				if (sx < 0) sx = 0;
+				else if (sx >= nWidth) sx = nWidth - 1;
+				nSum += pRow[sx * 4 + 3] * c_nKernel[k + c_nTextShadowRadius];
+			}
+			pOut[x] = (BYTE)((nSum + c_nDiv / 2) / c_nDiv);
+		}
+	}
+
+	for (int y = 0; y < nHeight; ++y)
+	{
+		BYTE *pRow = pBits + (size_t)y * nStride;
+		for (int x = 0; x < nWidth; ++x)
+		{
+			int nSum = 0;
+			for (int k = -c_nTextShadowRadius; k <= c_nTextShadowRadius; ++k)
+			{
+				int sy = y + k;
+				if (sy < 0) sy = 0;
+				else if (sy >= nHeight) sy = nHeight - 1;
+				nSum += vecAlpha[(size_t)sy * nWidth + x] * c_nKernel[k + c_nTextShadowRadius];
+			}
+			int nAlpha = (nSum + c_nDiv / 2) / c_nDiv;
+			nAlpha = nAlpha * nGain / 255;
+			if (nAlpha > 255) nAlpha = 255;
+			pRow[x * 4 + 0] = 0;
+			pRow[x * 4 + 1] = 0;
+			pRow[x * 4 + 2] = 0;
+			pRow[x * 4 + 3] = (BYTE)nAlpha;
+		}
+	}
+}
+
+static void DuiDrawBlurredTextShadow(Gdiplus::Graphics &Gp, Gdiplus::Font &font, const Gdiplus::RectF &rectF,
+	LPCTSTR lpszText, Gdiplus::StringFormat &stringFormat, BYTE cbTextA)
+{
+	const int nTextW = (int)ceil(rectF.Width);
+	const int nTextH = (int)ceil(rectF.Height);
+	if (nTextW <= 0 || nTextH <= 0 || nTextW > 2048 || nTextH > 2048) return;
+
+	const int nPad = c_nTextShadowRadius + 3;
+	const int nBmpW = nTextW + nPad * 2;
+	const int nBmpH = nTextH + nPad * 2;
+	Gdiplus::Bitmap bmpShadow(nBmpW, nBmpH, PixelFormat32bppPARGB);
+	if (Gdiplus::Ok != bmpShadow.GetLastStatus()) return;
+
+	{
+		Gdiplus::Graphics gShadow(&bmpShadow);
+		gShadow.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAliasGridFit);
+		gShadow.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+		gShadow.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+		gShadow.SetCompositingQuality(Gdiplus::CompositingQuality::CompositingQualityHighQuality);
+
+		Gdiplus::RectF rcText((Gdiplus::REAL)nPad, (Gdiplus::REAL)nPad, rectF.Width, rectF.Height);
+		Gdiplus::SolidBrush brushMask(Gdiplus::Color(255, 0, 0, 0));
+		gShadow.DrawString(lpszText, -1, &font, rcText, &stringFormat, &brushMask);
+	}
+
+	Gdiplus::BitmapData data = {};
+	Gdiplus::Rect rcLock(0, 0, nBmpW, nBmpH);
+	if (Gdiplus::Ok != bmpShadow.LockBits(&rcLock, Gdiplus::ImageLockModeRead | Gdiplus::ImageLockModeWrite, PixelFormat32bppPARGB, &data)
+		|| NULL == data.Scan0
+		|| data.Stride < nBmpW * 4)
+	{
+		if (NULL != data.Scan0) bmpShadow.UnlockBits(&data);
+		return;
+	}
+
+	// Ê®°Á≥ä‰ºöÊëäËñÑÁªÜÁ¨îÁîªÁöÑË¶ÜÁõñÁéáÔºåÊãâÂõûÁ¨îÁîª‰∏≠ÂøÉÁöÑÊµìÂ∫¶ÔºåËæπÁºò‰ªçÊåâÈ´òÊñØË°∞Âáè
+	DuiBlurTextShadowAlpha((BYTE *)data.Scan0, nBmpW, nBmpH, data.Stride, (int)cbTextA * 5 / 2);
+	bmpShadow.UnlockBits(&data);
+
+	Gp.DrawImage(&bmpShadow,
+		Gdiplus::Rect((INT)rectF.X - nPad + c_nTextShadowOffsetX, (INT)rectF.Y - nPad + c_nTextShadowOffsetY, nBmpW, nBmpH),
+		0, 0, nBmpW, nBmpH, Gdiplus::UnitPixel);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -1253,10 +1352,10 @@ void CDUIRenderEngine::DrawRound(HDC hDC, const CDUIRect &rcItem, const CDUIRect
 	//left top right bottom
 	Gdiplus::Pen Pen(Gdiplus::Color(dwPenColor), nLineSize);
 	Pen.SetAlignment(Gdiplus::PenAlignmentInset);
-	Gp.DrawArc(&Pen, rcItem.left, rcItem.top, rcRound.left * 2, rcRound.left, 180, 90); // ◊Û…œ‘≤Ω«
-	Gp.DrawArc(&Pen, rcItem.right - rcRound.top * 2 - nLineSize, rcItem.top, rcRound.top * 2, rcRound.top * 2, 270, 90); // ”“…œ‘≤Ω«
-	Gp.DrawArc(&Pen, rcItem.right - rcRound.right * 2 - nLineSize, rcItem.bottom - rcRound.right * 2 - nLineSize, rcRound.right * 2, rcRound.right * 2, 0, 90); // ”“œ¬‘≤Ω«
-	Gp.DrawArc(&Pen, rcItem.left, rcItem.bottom - rcRound.bottom * 2 - nLineSize, rcRound.bottom * 2, rcRound.bottom * 2, 90, 90); // ◊Ûœ¬‘≤Ω«
+	Gp.DrawArc(&Pen, rcItem.left, rcItem.top, rcRound.left * 2, rcRound.left, 180, 90); // Â∑¶‰∏äÂúÜËßí
+	Gp.DrawArc(&Pen, rcItem.right - rcRound.top * 2 - nLineSize, rcItem.top, rcRound.top * 2, rcRound.top * 2, 270, 90); // Âè≥‰∏äÂúÜËßí
+	Gp.DrawArc(&Pen, rcItem.right - rcRound.right * 2 - nLineSize, rcItem.bottom - rcRound.right * 2 - nLineSize, rcRound.right * 2, rcRound.right * 2, 0, 90); // Âè≥‰∏ãÂúÜËßí
+	Gp.DrawArc(&Pen, rcItem.left, rcItem.bottom - rcRound.bottom * 2 - nLineSize, rcRound.bottom * 2, rcRound.bottom * 2, 90, 90); // Â∑¶‰∏ãÂúÜËßí
 
 	return;
 }
@@ -1526,14 +1625,14 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (MMInvalidString(lpszText) || NULL == hFont) return;
 
-	//gdiplus/“ı”∞–Ë“™’˝»∑ alpha£¨Õ≥“ª◊ﬂ GDI+£ªŒﬁ“ı”∞ ±»‘ø…∞¥≈‰÷√◊ﬂ GDI
+	//gdiplus/Èò¥ÂΩ±ÈúÄË¶ÅÊ≠£Á°Æ alphaÔºåÁªü‰∏ÄËµ∞ GDI+ÔºõÊó†Èò¥ÂΩ±Êó∂‰ªçÂèØÊåâÈÖçÁΩÆËµ∞ GDI
 	if (bGdiplusRender || bShadow)
 	{
 		Gdiplus::Graphics Gp(hDC);
 		Gdiplus::Font font(hDC, hFont);
 		Gdiplus::RectF rectF((Gdiplus::REAL)rcItem.left, (Gdiplus::REAL)rcItem.top, (Gdiplus::REAL)(rcItem.GetWidth()), (Gdiplus::REAL)(rcItem.GetHeight()));
 
-		// “ı”∞◊÷‘⁄Õ∏√˜µ◊…œ≤ªƒ‹”√ ClearType£¨∑Ò‘Úª·≥ˆ≤ ±ﬂ/ø≈¡£
+		// Èò¥ÂΩ±Â≠óÂú®ÈÄèÊòéÂ∫ï‰∏ä‰∏çËÉΩÁî® ClearTypeÔºåÂê¶Âàô‰ºöÂá∫ÂΩ©Ëæπ/È¢óÁ≤í
 		Gp.SetTextRenderingHint(bShadow ? Gdiplus::TextRenderingHintAntiAliasGridFit : RenderType);
 		Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 		Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
@@ -1624,8 +1723,8 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 			}
 			if (bShadow)
 			{
-				rcItem.right += 4;
-				rcItem.bottom += 4;
+				rcItem.right += c_nTextShadowRadius + c_nTextShadowOffsetX;
+				rcItem.bottom += c_nTextShadowRadius + c_nTextShadowOffsetY;
 			}
 		}
 		else
@@ -1635,19 +1734,7 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 
 			if (bShadow)
 			{
-				const int nShadowOffsetX = 2;
-				const int nShadowOffsetY = 2;
-				BYTE cbShadowA = (BYTE)((int)cbTextA * 115 / 255);
-				if (cbShadowA < 50) cbShadowA = 50;
-				if (cbShadowA > 160) cbShadowA = 160;
-
-				Gdiplus::RectF rectShadow(
-					(Gdiplus::REAL)(rcItem.left + nShadowOffsetX),
-					(Gdiplus::REAL)(rcItem.top + nShadowOffsetY),
-					(Gdiplus::REAL)rcItem.GetWidth(),
-					(Gdiplus::REAL)rcItem.GetHeight());
-				Gdiplus::SolidBrush brushShadow(Gdiplus::Color(cbShadowA, 0, 0, 0));
-				Gp.DrawString(lpszText, -1, &font, rectShadow, &stringFormat, &brushShadow);
+				DuiDrawBlurredTextShadow(Gp, font, rectF, lpszText, stringFormat, cbTextA);
 			}
 
 			Gdiplus::SolidBrush brush(Gdiplus::Color(cbTextA,
@@ -1658,6 +1745,18 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 		return;
 	}
 
+	{
+		int nSaveDC = SaveDC(hDC);
+		::SetBkMode(hDC, TRANSPARENT);
+		::SetTextColor(hDC, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)));
+		HFONT hFontOld = (HFONT)::SelectObject(hDC, hFont);
+		::DrawShadowText(hDC, lpszText, -1, &rcItem, dwTextStyle | DT_NOPREFIX, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)), RGB(0, 0, 0), 2, 2);
+
+		::SelectObject(hDC, hFontOld);
+		RestoreDC(hDC, nSaveDC);
+
+		return;
+	}
 	//gdi
 	int nSaveDC = SaveDC(hDC);
 	::SetBkMode(hDC, TRANSPARENT);
@@ -1925,7 +2024,7 @@ void CDUIRenderEngine::AdjustImage(HBITMAP hBitmap, Gdiplus::ARGB dwColorSrc, Gd
 		BYTE *pBits = (BYTE *)Bmp.bmBits + (Bmp.bmWidthBytes * nHeight);
 		for (int nWidth = 0; nWidth < Bmp.bmWidth; nWidth++)
 		{
-			// BGRA pixel is 32-bit. DWORD is unsigned long (8 bytes on LP64) °™ do not use DWORD*.
+			// BGRA pixel is 32-bit. DWORD is unsigned long (8 bytes on LP64) ‚Äî do not use DWORD*.
 			Gdiplus::ARGB &dwColor = *((Gdiplus::ARGB *)pBits + nWidth);
 			if (dwColor != dwColorSrc) continue;
 
@@ -2028,7 +2127,7 @@ Gdiplus::Bitmap * CDUIRenderEngine::GenerateEllipseBitmap(Gdiplus::Bitmap *pBmp,
 	Gdiplus::Bitmap *pBmpScaled = GenerateThumbnail(pBmp, szGenerate);
 	if (NULL == pBmpScaled) return NULL;
 
-	// ¡Ÿ ± DC/ŒªÕº”√”⁄Àı∑≈‘≠ÕºµΩ nScaleWidth x nScaleHeight
+	// ‰∏¥Êó∂ DC/‰ΩçÂõæÁî®‰∫éÁº©ÊîæÂéüÂõæÂà∞ nScaleWidth x nScaleHeight
 	HDC hDC = GetDC(NULL);
 	HDC hMemDC = CreateCompatibleDC(hDC);
 	HBITMAP hBitmap = CreateCompatibleBitmap(hDC, szGenerate.cx, szGenerate.cy);
@@ -2041,14 +2140,14 @@ Gdiplus::Bitmap * CDUIRenderEngine::GenerateEllipseBitmap(Gdiplus::Bitmap *pBmp,
 
 		Gdiplus::TextureBrush brush((Gdiplus::Image*)pBmpScaled, Gdiplus::WrapModeClamp);
 		
-		// ÃÓ≥‰Õ÷‘≤£®ºı1“‘±‹√‚±ﬂΩÁœÒÀÿ≤√«–£©
+		// Â°´ÂÖÖÊ§≠ÂúÜÔºàÂáè1‰ª•ÈÅøÂÖçËæπÁïåÂÉèÁ¥†Ë£ÅÂàáÔºâ
 		gp.FillEllipse(&brush, 0, 0, szGenerate.cx - 1, szGenerate.cy - 1);
 	}
 
-	// ¥” hBitmap3 ªÒ»°◊Ó÷’¥¯ alpha µƒ Bitmap
+	// ‰ªé hBitmap3 Ëé∑ÂèñÊúÄÁªàÂ∏¶ alpha ÁöÑ Bitmap
 	Gdiplus::Bitmap *pBmpFinal = GetAlphaBitmap(hBitmap);
 
-	// cleanup GDI objects + ÷–º‰ Gdiplus ŒªÕº
+	// cleanup GDI objects + ‰∏≠Èó¥ Gdiplus ‰ΩçÂõæ
 	SelectObject(hMemDC, hOldBmp);
 	DeleteObject(hBitmap);
 	DeleteDC(hMemDC);
@@ -2076,7 +2175,7 @@ Gdiplus::Bitmap * CDUIRenderEngine::GenerateThumbnail(Gdiplus::Bitmap *pBmp, con
 	const INT destH = static_cast<INT>(srcH * scale);
 	if (destW <= 0 || destH <= 0) return nullptr;
 
-	auto pBmpThumb = new Gdiplus::Bitmap(destW, destH, Gdiplus::PixelFormat32bppPARGB);
+	auto pBmpThumb = new Gdiplus::Bitmap(destW, destH, PixelFormat32bppPARGB);
 	if (pBmpThumb == nullptr || pBmpThumb->GetLastStatus() != Gdiplus::Ok)
 	{
 		delete pBmpThumb;
@@ -2177,7 +2276,7 @@ HBITMAP CDUIRenderEngine::CopyBitmap(HBITMAP hBitmap, Gdiplus::ARGB dwFilterColo
 		for (int nWidth = 0; nWidth < bmp.bmWidth; nWidth++)
 		{
 			BYTE *pPixel = pBitsLine + (nWidth * 4);
-			// BGRA pixel is 32-bit. DWORD is unsigned long (8 bytes on LP64) °™ do not use DWORD*.
+			// BGRA pixel is 32-bit. DWORD is unsigned long (8 bytes on LP64) ‚Äî do not use DWORD*.
 			Gdiplus::ARGB &dwColor = *(Gdiplus::ARGB *)pPixel;
 			if (dwColor == dwFilterColor)
 			{
@@ -2237,7 +2336,7 @@ Gdiplus::Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPreMul
 	int nLinesize = bmp.bmWidth * 4;
 	int nHeight = bmp.bmHeight;
 
-	Gdiplus::PixelFormat PixelFormat = bPreMultiplyArgb ? Gdiplus::PixelFormat32bppPARGB : Gdiplus::PixelFormat32bppARGB;
+	Gdiplus::PixelFormat PixelFormat = bPreMultiplyArgb ? PixelFormat32bppPARGB : PixelFormat32bppARGB;
 	Gdiplus::Bitmap *pBitmap = new Gdiplus::Bitmap(bmp.bmWidth, bmp.bmHeight, PixelFormat);
 	if (NULL == pBitmap) return NULL;
 
@@ -2253,7 +2352,7 @@ Gdiplus::Bitmap * CDUIRenderEngine::GetAlphaBitmap(HBITMAP hBitmap, bool bPreMul
 
 #if defined(DuiPlatform_SDL)
 	// SDL HBITMAPs are always top-down (stb / CreateARGB32Bitmap bPositive=true).
-	// Copy directly °™ avoid GetDIBits(+height) bottom-up + flip round-trip.
+	// Copy directly ‚Äî avoid GetDIBits(+height) bottom-up + flip round-trip.
 	LPBYTE pSrcBits = (LPBYTE)bmp.bmBits;
 	if (NULL == pSrcBits)
 	{
@@ -2325,7 +2424,7 @@ HBITMAP CDUIRenderEngine::GetHBITMAP(Gdiplus::Bitmap *pBmp, bool bKeepAlpha)
 
 	Gdiplus::BitmapData bmpData;
 	Gdiplus::Rect rect(0, 0, width, height);
-	if (pBmp->LockBits(&rect, Gdiplus::ImageLockModeRead, Gdiplus::PixelFormat32bppARGB, &bmpData) != Gdiplus::Ok)
+	if (pBmp->LockBits(&rect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bmpData) != Gdiplus::Ok)
 	{
 		MMSafeDeleteObject(hBitmap);
 		return nullptr;
@@ -2343,7 +2442,7 @@ HBITMAP CDUIRenderEngine::GetHBITMAP(Gdiplus::Bitmap *pBmp, bool bKeepAlpha)
 
 	if (false == bKeepAlpha)
 	{
-		// »Áπ˚≤ª±£¡Ù alpha£¨‘Ú∞— alpha Õ®µ¿…ËŒ™»´≤ªÕ∏√˜
+		// Â¶ÇÊûú‰∏ç‰øùÁïô alphaÔºåÂàôÊää alpha ÈÄöÈÅìËÆæ‰∏∫ÂÖ®‰∏çÈÄèÊòé
 		for (UINT i = 0; i < width * height; i++)
 		{
 			pBits[3] = 255; // alpha
@@ -2382,7 +2481,7 @@ bool CDUIRenderEngine::SaveImage(HBITMAP hBitmap, CMMString strFile)
 	ReleaseDC(NULL, hDC);
 	if (cbCopied == 0) return false;
 
-	//stb_image_write BGRA->RGBA£¨restore Alpha premultiply
+	//stb_image_write BGRA->RGBAÔºårestore Alpha premultiply
 	for (int i = 0; i < cbSize; i += 4)
 	{
 		BYTE b = vecPixel[i];
