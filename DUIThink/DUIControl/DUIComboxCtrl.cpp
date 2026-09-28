@@ -102,7 +102,7 @@ void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 	CDUIRect rcWnd;
 	::GetWindowRect(m_pWndOwner->GetWndHandle(), &rcWnd);
 	m_pComboxView->SetPadding(0, 0, 0, 0);
-	m_pComboxView->RefreshView();
+	RefreshLayout();
 	CDUISize szTotalRange = m_pComboxView->GetTotalRange();
 	CDUISize szDrop = m_pOwner->GetComboxSize();
 	CDUIRect rcOwner = m_pOwner->GetAbsoluteRect();
