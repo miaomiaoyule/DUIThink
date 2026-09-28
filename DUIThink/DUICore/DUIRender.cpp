@@ -507,6 +507,8 @@ static void DuiDrawBlurredTextShadow(Gdiplus::Graphics &Gp, Gdiplus::Font &font,
 	Gp.DrawImage(&bmpShadow,
 		Gdiplus::Rect((INT)rectF.X - nPad + c_nTextShadowOffsetX, (INT)rectF.Y - nPad + c_nTextShadowOffsetY, nBmpW, nBmpH),
 		0, 0, nBmpW, nBmpH, Gdiplus::UnitPixel);
+
+	return;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -1625,15 +1627,14 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 	ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 	if (MMInvalidString(lpszText) || NULL == hFont) return;
 
-	//gdiplus/阴影需要正确 alpha，统一走 GDI+；无阴影时仍可按配置走 GDI
-	if (bGdiplusRender || bShadow)
+	if (bGdiplusRender)
 	{
 		Gdiplus::Graphics Gp(hDC);
 		Gdiplus::Font font(hDC, hFont);
 		Gdiplus::RectF rectF((Gdiplus::REAL)rcItem.left, (Gdiplus::REAL)rcItem.top, (Gdiplus::REAL)(rcItem.GetWidth()), (Gdiplus::REAL)(rcItem.GetHeight()));
 
 		// 阴影字在透明底上不能用 ClearType，否则会出彩边/颗粒
-		Gp.SetTextRenderingHint(bShadow ? Gdiplus::TextRenderingHintAntiAliasGridFit : RenderType);
+		Gp.SetTextRenderingHint(RenderType);
 		Gp.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
 		Gp.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 		Gp.SetCompositingQuality(Gdiplus::CompositingQuality::CompositingQualityHighQuality);
@@ -1745,31 +1746,31 @@ void CDUIRenderEngine::DrawText(HDC hDC, HFONT hFont, CDUIRect &rcItem, LPCTSTR 
 		return;
 	}
 
-	{
-		int nSaveDC = SaveDC(hDC);
-		::SetBkMode(hDC, TRANSPARENT);
-		::SetTextColor(hDC, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)));
-		HFONT hFontOld = (HFONT)::SelectObject(hDC, hFont);
-		::DrawShadowText(hDC, lpszText, -1, &rcItem, dwTextStyle | DT_NOPREFIX, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)), RGB(0, 0, 0), 2, 2);
-
-		::SelectObject(hDC, hFontOld);
-		RestoreDC(hDC, nSaveDC);
-
-		return;
-	}
 	//gdi
 	int nSaveDC = SaveDC(hDC);
 	::SetBkMode(hDC, TRANSPARENT);
 	::SetTextColor(hDC, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)));
 	HFONT hFontOld = (HFONT)::SelectObject(hDC, hFont);
-	::DrawText(hDC, lpszText, -1, &rcItem, dwTextStyle | DT_NOPREFIX);
+	
+	if (bShadow)
+	{
+		::DrawShadowText(hDC, lpszText, -1, &rcItem, dwTextStyle | DT_NOPREFIX, RGB(DUIARGBGetR(dwTextColor), DUIARGBGetG(dwTextColor), DUIARGBGetB(dwTextColor)), RGB(0, 0, 0), 2, 2);
+	}
+	else
+	{
+		::DrawText(hDC, lpszText, -1, &rcItem, dwTextStyle | DT_NOPREFIX);
+	}
+
 	::SelectObject(hDC, hFontOld);
 	RestoreDC(hDC, nSaveDC);
 
 	//tab width
-	if (rcItem.GetWidth() < 1 && '\t' == *lpszText)
+	if ((dwTextStyle & DT_CALCRECT) != 0)
 	{
-		rcItem.right = rcItem.left + 60;
+		if (rcItem.GetWidth() < 1 && '\t' == *lpszText)
+		{
+			rcItem.right = rcItem.left + 60;
+		}
 	}
 
 	return;
