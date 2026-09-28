@@ -87,15 +87,20 @@ void CDUIComboxWnd::Init(CDUIListViewCtrl *pComboxView)
 
 	m_pComboxView = pComboxView;
 
+	// Must clear before Create: default WndInitSize is 500x500, and OnCreate's
+	// AdjustWndSize() would resize the popup to 500px tall. First open then
+	// shows a huge menu that macOS/SDL clamps upward; after Init later sets
+	// init size to 0, second open no longer hits that path.
+	SetCaptionHeight(0);
+	SetWndInitSize(0, 0);
+	SetWndMinSize(0, 0);
+	SetWndMaxSize(0, 0);
+
 	//create
 	Create(m_pWndOwner->GetWndHandle(), GetClass(), WS_POPUP, WS_EX_TOOLWINDOW);
 
 	//comboxview
 	AttachRootCtrl(m_pComboxView);
-	SetCaptionHeight(0);
-	SetWndInitSize(0, 0);
-	SetWndMinSize(0, 0);
-	SetWndMaxSize(0, 0);
 	m_pOwner->Select(true);
 
 	//dropsize

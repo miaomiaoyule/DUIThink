@@ -3,6 +3,11 @@
 
 #if defined(__APPLE__)
 
+// COM shim from MMPlatformTypes.h breaks IOKit/CoreGraphics field names.
+#ifdef interface
+#undef interface
+#endif
+
 #include <CoreText/CoreText.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreGraphics/CoreGraphics.h>
