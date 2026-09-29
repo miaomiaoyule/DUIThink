@@ -73,7 +73,7 @@ endif()
 
 include_directories(
 	${CMAKE_SOURCE_DIR}
-	${CMAKE_SOURCE_DIR}/DUIThink
+	${CMAKE_SOURCE_DIR}/XUI
 	${CMAKE_SOURCE_DIR}/MMHelper
 	${CMAKE_SOURCE_DIR}/ThirdDepend
 	${CMAKE_SOURCE_DIR}/ThirdDepend/tinyxml2

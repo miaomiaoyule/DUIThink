@@ -85,8 +85,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9540DC14-C8F1-4CD5-B25E-AFBF9567E11E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>DUIThinkShow</RootNamespace>
-    <ProjectName>DUIThink.2013</ProjectName>
+    <RootNamespace>XUIShow</RootNamespace>
+    <ProjectName>XUI.2013</ProjectName>
     <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -429,7 +429,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;DUITHINKSDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -447,7 +447,7 @@
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-if exist "../Demo/DUIThinkDemo_C++/Debug" copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"
+if exist "../Demo/XUIDemo_C++/Debug" copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Debug"
 if exist "../../DTDesigner\bin" copy $(Configuration)\$(TargetFileName) "../../DTDesigner\bin"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -457,7 +457,7 @@ if exist "../../DTDesigner\bin" copy $(Configuration)\$(TargetFileName) "../../D
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;DUITHINKSDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -475,7 +475,7 @@ if exist "../../DTDesigner\bin" copy $(Configuration)\$(TargetFileName) "../../D
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-if exist "../Demo/DUIThinkDemo_C++/Debug" copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Command>
+if exist "../Demo/XUIDemo_C++/Debug" copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_MT|Win32'">
@@ -484,7 +484,7 @@ if exist "../Demo/DUIThinkDemo_C++/Debug" copy $(Configuration)\$(TargetFileName
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;DUITHINKSDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -503,7 +503,7 @@ if exist "../Demo/DUIThinkDemo_C++/Debug" copy $(Configuration)\$(TargetFileName
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Command>
+copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_MT|x64'">
@@ -512,7 +512,7 @@ copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Comman
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;DUITHINKSDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -530,7 +530,7 @@ copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Comman
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Command>
+copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Design|Win32'">
@@ -539,7 +539,7 @@ copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Comman
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;DUITHINKSDK;DUI_DESIGN;DUITHINKWKE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;XUISDK;DUI_DESIGN;XUIWKE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -567,7 +567,7 @@ if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigne
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;DUITHINKSDK;DUI_DESIGN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;XUISDK;DUI_DESIGN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -593,7 +593,7 @@ copy $(Configuration)\$(TargetName).lib "../lib"</Command>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;MMHELPLIB;DUITHINKLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -618,7 +618,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;MMHELPLIB;DUITHINKLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -643,7 +643,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;MMHELPLIB;DUITHINKLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -667,7 +667,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;MMHELPLIB;DUITHINKLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -692,7 +692,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;DUITHINKSDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -706,7 +706,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-if exist "../Demo/DUIThinkDemo_C++/Release" copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Release"</Command>
+if exist "../Demo/XUIDemo_C++/Release" copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Release"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|x64'">
@@ -716,7 +716,7 @@ if exist "../Demo/DUIThinkDemo_C++/Release" copy $(Configuration)\$(TargetFileNa
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;DUITHINKSDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -731,7 +731,7 @@ if exist "../Demo/DUIThinkDemo_C++/Release" copy $(Configuration)\$(TargetFileNa
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-if exist "../Demo/DUIThinkDemo_C++/Release" copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Release"</Command>
+if exist "../Demo/XUIDemo_C++/Release" copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Release"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_MT|Win32'">
@@ -741,7 +741,7 @@ if exist "../Demo/DUIThinkDemo_C++/Release" copy $(Configuration)\$(TargetFileNa
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;DUITHINKSDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -757,7 +757,7 @@ if exist "../Demo/DUIThinkDemo_C++/Release" copy $(Configuration)\$(TargetFileNa
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Command>
+copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_MT|x64'">
@@ -767,7 +767,7 @@ copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Comman
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;DUITHINKSDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -783,7 +783,7 @@ copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Comman
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Command>
+copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">
@@ -793,7 +793,7 @@ copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Comman
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MMHELPLIB;DUITHINKLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -815,7 +815,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MMHELPLIB;DUITHINKLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -838,7 +838,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MMHELPLIB;DUITHINKLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -860,7 +860,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MMHELPLIB;DUITHINKLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -883,7 +883,7 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;DUITHINKSDK;DUI_DESIGN;DUITHINKWKE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XUISDK;DUI_DESIGN;XUIWKE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -907,7 +907,7 @@ copy $(Configuration)\$(TargetName).lib "../lib"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;DUITHINKSDK;DUI_DESIGN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XUISDK;DUI_DESIGN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -929,8 +929,8 @@ copy $(Configuration)\$(TargetName).lib "../lib"</Command>
       <PreprocessorDefinitions>DUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy "../Debug\DUIThink.lib" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkLib"
-copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
+      <Command>copy "../Debug\XUI.lib" "../../DemoTest\DemoFirst\DemoFirst\XUILib"
+copy "XUI.h" "../../DemoTest\DemoFirst\DemoFirst\XUIInclude"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -938,8 +938,8 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
       <PreprocessorDefinitions>DUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy "../Debug\DUIThink.lib" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkLib"
-copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
+      <Command>copy "../Debug\XUI.lib" "../../DemoTest\DemoFirst\DemoFirst\XUILib"
+copy "XUI.h" "../../DemoTest\DemoFirst\DemoFirst\XUIInclude"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -1001,7 +1001,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIControl\DUISpinCtrl.h" />
     <ClInclude Include="DUIControl\DUIStaticCtrl.h" />
     <ClInclude Include="DUIControl\DUITabLayoutCtrl.h" />
-    <ClInclude Include="DUIControl\DUIThinkEditCtrl.h" />
+    <ClInclude Include="DUIControl\XUIEditCtrl.h" />
     <ClInclude Include="DUIControl\DUITreeNodeCtrl.h" />
     <ClInclude Include="DUIControl\DUITreeViewCtrl.h" />
     <ClInclude Include="DUIControl\DUIVerticalLayoutCtrl.h" />
@@ -1028,7 +1028,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIResource\DUIImageBase.h" />
     <ClInclude Include="DUIResource\DUIResourceBase.h" />
     <ClInclude Include="DUIStruct.h" />
-    <ClInclude Include="DUIThinkHead.h" />
+    <ClInclude Include="XUIHead.h" />
     <ClInclude Include="DUIUtils\DUIPoint.h" />
     <ClInclude Include="DUIUtils\DUIRect.h" />
     <ClInclude Include="DUIUtils\DUISize.h" />
@@ -1092,7 +1092,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUIControl\DUISpinCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIStaticCtrl.cpp" />
     <ClCompile Include="DUIControl\DUITabLayoutCtrl.cpp" />
-    <ClCompile Include="DUIControl\DUIThinkEditCtrl.cpp" />
+    <ClCompile Include="DUIControl\XUIEditCtrl.cpp" />
     <ClCompile Include="DUIControl\DUITreeNodeCtrl.cpp" />
     <ClCompile Include="DUIControl\DUITreeViewCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIVerticalLayoutCtrl.cpp" />
@@ -1182,7 +1182,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DUIThink.rc" />
+    <ResourceCompile Include="XUI.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

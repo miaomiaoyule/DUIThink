@@ -285,7 +285,7 @@
     <ClInclude Include="DUIAttribute\DUIAttributeHotKey.h">
       <Filter>DUIAttribute</Filter>
     </ClInclude>
-    <ClInclude Include="DUIControl\DUIThinkEditCtrl.h">
+    <ClInclude Include="DUIControl\XUIEditCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>
     <ClInclude Include="DUIControl\DUISpinCtrl.h">
@@ -300,7 +300,7 @@
     <ClInclude Include="DUIUtils\XUnzip.h">
       <Filter>DUIUtils</Filter>
     </ClInclude>
-    <ClInclude Include="DUIThinkHead.h">
+    <ClInclude Include="XUIHead.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="DUIControl\DUIClockCtrl.h">
@@ -557,7 +557,7 @@
     <ClCompile Include="DUIAttribute\DUIAttributeHotKey.cpp">
       <Filter>DUIAttribute</Filter>
     </ClCompile>
-    <ClCompile Include="DUIControl\DUIThinkEditCtrl.cpp">
+    <ClCompile Include="DUIControl\XUIEditCtrl.cpp">
       <Filter>DUIControl</Filter>
     </ClCompile>
     <ClCompile Include="DUIControl\DUISpinCtrl.cpp">
@@ -640,7 +640,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DUIThink.rc">
+    <ResourceCompile Include="XUI.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
   </ItemGroup>

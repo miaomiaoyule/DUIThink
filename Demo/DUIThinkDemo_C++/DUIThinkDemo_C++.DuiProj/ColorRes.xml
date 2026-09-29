@@ -24,3 +24,13 @@
 <CDUIColorBase ResName="0xaaaaaaaa" Color="2863311530"/>
 
 <CDUIColorBase ResName="0xff0099ff" Color="4278229503"/>
+
+<CDUIColorBase ResName="0x11000000" Color="285212672"/>
+
+<CDUIColorBase ResName="0x22000000" Color="570425344"/>
+
+<CDUIColorBase ResName="0x33000000" Color="855638016"/>
+
+<CDUIColorBase ResName="0x44000000" Color="1140850688"/>
+
+<CDUIColorBase ResName="0x55000000" Color="1426063360"/>

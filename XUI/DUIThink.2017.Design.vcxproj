@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9540DC14-C8F1-4CD5-B25E-AFBF9567E11E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>DUIThinkShow</RootNamespace>
-    <ProjectName>DUIThink.2017</ProjectName>
+    <RootNamespace>XUIShow</RootNamespace>
+    <ProjectName>XUI.2017</ProjectName>
     <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(ProjectDir)..\MMHelper\DuiPlatformSDL.props" />
@@ -111,7 +111,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;DUITHINKSDK;DUI_DESIGN;DUITHINKWKE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;XUISDK;DUI_DESIGN;XUIWKE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -140,7 +140,7 @@ if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigne
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;DUITHINKSDK;DUI_DESIGN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;XUISDK;DUI_DESIGN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -167,7 +167,7 @@ copy $(Configuration)\$(TargetName).lib "../lib"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;DUITHINKSDK;DUI_DESIGN;DUITHINKWKE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XUISDK;DUI_DESIGN;XUIWKE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -192,7 +192,7 @@ if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigne
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;DUITHINKSDK;DUI_DESIGN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XUISDK;DUI_DESIGN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -214,8 +214,8 @@ copy $(Configuration)\$(TargetName).lib "../lib"</Command>
       <PreprocessorDefinitions>DUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy "../Debug\DUIThink.lib" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkLib"
-copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
+      <Command>copy "../Debug\XUI.lib" "../../DemoTest\DemoFirst\DemoFirst\XUILib"
+copy "XUI.h" "../../DemoTest\DemoFirst\DemoFirst\XUIInclude"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -223,8 +223,8 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
       <PreprocessorDefinitions>DUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy "../Debug\DUIThink.lib" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkLib"
-copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
+      <Command>copy "../Debug\XUI.lib" "../../DemoTest\DemoFirst\DemoFirst\XUILib"
+copy "XUI.h" "../../DemoTest\DemoFirst\DemoFirst\XUIInclude"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -286,7 +286,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIControl\DUISpinCtrl.h" />
     <ClInclude Include="DUIControl\DUIStaticCtrl.h" />
     <ClInclude Include="DUIControl\DUITabLayoutCtrl.h" />
-    <ClInclude Include="DUIControl\DUIThinkEditCtrl.h" />
+    <ClInclude Include="DUIControl\XUIEditCtrl.h" />
     <ClInclude Include="DUIControl\DUITreeNodeCtrl.h" />
     <ClInclude Include="DUIControl\DUITreeViewCtrl.h" />
     <ClInclude Include="DUIControl\DUIVerticalLayoutCtrl.h" />
@@ -321,7 +321,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClInclude Include="DUIResource\DUIFontBase.h" />
     <ClInclude Include="DUIResource\DUIImageBase.h" />
     <ClInclude Include="DUIResource\DUIResourceBase.h" />
-    <ClInclude Include="DUIThinkHead.h" />
+    <ClInclude Include="XUIHead.h" />
     <ClInclude Include="DUIUtils\DUIPoint.h" />
     <ClInclude Include="DUIUtils\DUIRect.h" />
     <ClInclude Include="DUIUtils\DUISize.h" />
@@ -388,7 +388,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     <ClCompile Include="DUIControl\DUISpinCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIStaticCtrl.cpp" />
     <ClCompile Include="DUIControl\DUITabLayoutCtrl.cpp" />
-    <ClCompile Include="DUIControl\DUIThinkEditCtrl.cpp" />
+    <ClCompile Include="DUIControl\XUIEditCtrl.cpp" />
     <ClCompile Include="DUIControl\DUITreeNodeCtrl.cpp" />
     <ClCompile Include="DUIControl\DUITreeViewCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIVerticalLayoutCtrl.cpp" />
@@ -457,7 +457,7 @@ copy "DUIThink.h" "../../DemoTest\DemoFirst\DemoFirst\DUIThinkInclude"</Command>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DUIThink.rc" />
+    <ResourceCompile Include="XUI.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
