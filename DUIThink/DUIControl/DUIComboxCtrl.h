@@ -10,7 +10,7 @@ class CDUIComboxWnd;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIComboxCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIComboxCtrl = { 0xA82E0774,0xAC2A,0x493E,0x81,0x23,0x51,0x1F,0x55,0x23,0xF3,0x9C };
-class DUITHINK_API CDUIComboxCtrl
+class XUI_API CDUIComboxCtrl
 	: public CDUICheckBoxCtrl
 {
 	MMDeclare_Super(CDUICheckBoxCtrl)

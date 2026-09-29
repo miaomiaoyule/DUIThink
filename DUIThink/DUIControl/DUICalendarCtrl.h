@@ -5,7 +5,7 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUICalendarWnd : public CDUIPopupWnd
+class XUI_API CDUICalendarWnd : public CDUIPopupWnd
 {
 	MMDeclare_Super(CDUIPopupWnd)
 	MMDeclare_ClassName()
@@ -47,7 +47,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUICalendarCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUICalendarCtrl = { 0xA6D76CAA,0xF4CD,0x47F1,0xAD,0x6E,0xB1,0xFF,0x9A,0xE0,0x8B,0xB9 };
-class DUITHINK_API CDUICalendarCtrl
+class XUI_API CDUICalendarCtrl
 	: public CDUIVerticalLayoutCtrl
 	, public CDUINotifyPump
 	, public IDuiControlCallBack
@@ -247,7 +247,7 @@ protected:
 };
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUICalendar
+class XUI_API CDUICalendar
 {
 public:
 	CDUICalendar();

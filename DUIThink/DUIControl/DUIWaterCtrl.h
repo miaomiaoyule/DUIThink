@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIWaterCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIWaterCtrl = { 0x5AC6F49B,0x9E94,0x48BB,0x9C,0x4F,0x53,0xAA,0xFA,0x80,0x6E,0xD8 }; 
-class DUITHINK_API CDUIWaterCtrl
+class XUI_API CDUIWaterCtrl
 	: public CDUIControlBase
 {
 	MMDeclare_Super(CDUIControlBase)

@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUICheckBoxCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUICheckBoxCtrl = { 0x9E913B03,0x3F46,0x497E,0x89,0xB6,0x4A,0x60,0x95,0x60,0x9E,0x7C };
-class DUITHINK_API CDUICheckBoxCtrl
+class XUI_API CDUICheckBoxCtrl
 	: public CDUIButtonCtrl
 {
 	MMDeclare_Super(CDUIButtonCtrl)

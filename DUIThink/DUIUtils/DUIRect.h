@@ -5,7 +5,7 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIRect : public CMMRect
+class XUI_API CDUIRect : public CMMRect
 {
 public:
 	CDUIRect();

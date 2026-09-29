@@ -11,7 +11,7 @@ typedef std::map<uint32_t, CMMString> MapDuiAttributeText;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeText INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeText = { 0xA51B0F6E,0xD653,0x4263,0x8E,0xF1,0x5D,0x0A,0x67,0x3C,0x43,0x71 };
-class DUITHINK_API CDUIAttributeText
+class XUI_API CDUIAttributeText
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)

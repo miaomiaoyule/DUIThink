@@ -8,7 +8,7 @@
 #ifdef DuiPlatform_SDL
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIImageRaster : public IDuiImage
+class XUI_API CDUIImageRaster : public IDuiImage
 {
 public:
 	CDUIImageRaster(int nWidth, int nHeight, bool bHasAlpha = true);
@@ -30,7 +30,7 @@ protected:
 };
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIFontRaster : public IDuiFont
+class XUI_API CDUIFontRaster : public IDuiFont
 {
 public:
 	static CDUIFontRaster * Create(LPCTSTR lpszFace, int nPixelSize, LONG lWeight, bool bItalic, bool bUnderline, bool bStrikeOut);
@@ -67,7 +67,7 @@ protected:
 };
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUICanvasRaster : public IDuiCanvas
+class XUI_API CDUICanvasRaster : public IDuiCanvas
 {
 protected:
 	int m_nWidth = 0;

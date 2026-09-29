@@ -11,7 +11,7 @@ class CDUIHotKeyWnd;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIHotKeyCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIHotKeyCtrl = { 0x899DE908,0x305F,0x49D6,0xB6,0xDD,0x6D,0x32,0x25,0x77,0xA4,0xBD };
-class DUITHINK_API CDUIHotKeyCtrl
+class XUI_API CDUIHotKeyCtrl
 	: public CDUIButtonCtrl
 	, public IDuiPreMessage
 {

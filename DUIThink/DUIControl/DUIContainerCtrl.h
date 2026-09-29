@@ -11,7 +11,7 @@ class CDUIGlobal;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIContainerCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIContainerCtrl = { 0x0A5001A1,0xE296,0x44B4,0xB9,0x5E,0xF7,0x11,0x8C,0x03,0x92,0x82 };
-class DUITHINK_API CDUIContainerCtrl
+class XUI_API CDUIContainerCtrl
 	: public CDUIControlBase
 {
 	friend class CDUIGlobal;

@@ -11,7 +11,7 @@ typedef std::map<uint32_t, tagDuiImageSection> MapDuiAttriImageSection;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttriImageSection INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttriImageSection = { 0xE656788D,0x3217,0x4F91,0xA7,0x21,0x29,0x5B,0x6D,0xAF,0x54,0xF9 };
-class DUITHINK_API CDUIAttriImageSection
+class XUI_API CDUIAttriImageSection
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)

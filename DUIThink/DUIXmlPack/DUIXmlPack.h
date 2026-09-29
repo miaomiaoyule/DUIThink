@@ -4,7 +4,7 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIXmlPack
+class XUI_API CDUIXmlPack
 {
 public:
 	static bool SaveProject(LPCTSTR lpszProjPath, LPCTSTR lpszProjName, const MapDuiFontBase &mapResFont, \

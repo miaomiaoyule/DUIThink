@@ -11,7 +11,7 @@ typedef std::map<uint32_t, std::vector<CMMString>> MapDuiAttributeColorRes;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeColorSwitch INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeColorSwitch = { 0x7C5B1872,0x6A2A,0x40EC,0x8C,0x28,0x8E,0x67,0x00,0xC8,0x5F,0x9C };
-class DUITHINK_API CDUIAttributeColorSwitch
+class XUI_API CDUIAttributeColorSwitch
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)

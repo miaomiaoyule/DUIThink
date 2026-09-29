@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIHorizontalLayoutCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIHorizontalLayoutCtrl = { 0xC8636BBC,0x7A02,0x4774,0xA4,0x1C,0xE8,0xE4,0x50,0xFD,0x82,0x95 };
-class DUITHINK_API CDUIHorizontalLayoutCtrl
+class XUI_API CDUIHorizontalLayoutCtrl
 	: public CDUIContainerCtrl
 {
 	MMDeclare_Super(CDUIContainerCtrl)

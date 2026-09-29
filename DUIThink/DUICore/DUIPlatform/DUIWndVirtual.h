@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIWndVirtual INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIWndVirtual = { 0x7c3a91e2, 0x4b5d, 0x4e18, 0x9a, 0x2c, 0x1d, 0x8f, 0x6b, 0x4e, 0x2a, 0x11 };
-class DUITHINK_API CDUIWndVirtual
+class XUI_API CDUIWndVirtual
 	: public CDUIWnd
 {
 	MMDeclare_Super(CDUIWnd)

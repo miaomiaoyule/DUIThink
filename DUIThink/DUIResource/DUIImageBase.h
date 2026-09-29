@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIImageBase INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIImageBase = { 0x9EE99C9B,0xD4F7,0x49ED,0x8B,0xB1,0x22,0x3A,0x51,0xA7,0xDE,0xE5 };
-class DUITHINK_API CDUIImageBase 
+class XUI_API CDUIImageBase 
 	: public CDUIResourceBase
 {
 	friend class CDUIRenderEngine;

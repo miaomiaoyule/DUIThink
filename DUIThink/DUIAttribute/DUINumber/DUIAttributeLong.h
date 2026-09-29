@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeLong INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeLong = { 0xA0350CF7,0x287E,0x4976,0xA4,0x38,0x30,0x44,0xAA,0xBD,0x38,0x0A };
-class DUITHINK_API CDUIAttributeLong
+class XUI_API CDUIAttributeLong
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)

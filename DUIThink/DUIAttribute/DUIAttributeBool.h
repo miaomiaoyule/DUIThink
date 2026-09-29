@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeBool INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeBool = { 0xF4C05510,0xB2C1,0x4FE9,0xA8,0x32,0x7B,0xA0,0x52,0x1F,0x7E,0x6E };
-class DUITHINK_API CDUIAttributeBool 
+class XUI_API CDUIAttributeBool 
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)

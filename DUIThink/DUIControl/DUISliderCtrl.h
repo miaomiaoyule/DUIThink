@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUISliderCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUISliderCtrl = { 0x7E46B557,0x965E,0x4C3F,0xAD,0xEA,0x11,0x86,0x34,0x7A,0x58,0x88 };
-class DUITHINK_API CDUISliderCtrl
+class XUI_API CDUISliderCtrl
 	: public CDUIProgressCtrl
 {
 	MMDeclare_Super(CDUIProgressCtrl)

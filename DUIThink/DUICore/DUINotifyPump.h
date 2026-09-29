@@ -1,6 +1,6 @@
 #pragma once
 
-class DUITHINK_API CDUINotifyPump : public IDuiNotify
+class XUI_API CDUINotifyPump : public IDuiNotify
 {
 	DuiDeclare_Message_Map()
 

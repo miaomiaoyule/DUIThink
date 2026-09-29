@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUITreeViewCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUITreeViewCtrl = { 0xECC674C4,0xCF39,0x4C5D,0xB4,0xB3,0xA1,0x0B,0x4E,0xF4,0xA2,0x09 };
-class DUITHINK_API CDUITreeViewCtrl
+class XUI_API CDUITreeViewCtrl
 	: public CDUIListViewCtrl
 	, public IDuiControlCallBack
 {

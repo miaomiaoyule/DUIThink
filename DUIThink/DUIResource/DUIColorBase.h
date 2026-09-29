@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIColorBase INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIColorBase = { 0x371BBE94,0xAB17,0x4F2E,0x91,0x94,0x64,0x6B,0xF0,0xE2,0x5A,0xF5 };
-class DUITHINK_API CDUIColorBase 
+class XUI_API CDUIColorBase 
 	: public CDUIResourceBase
 {
 	MMDeclare_Super(CDUIResourceBase)

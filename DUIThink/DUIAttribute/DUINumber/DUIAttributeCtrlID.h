@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeCtrlID INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeCtrlID = { 0xE7C01C0D,0x36F5,0x41A7,0xB9,0x10,0x94,0xBE,0x4C,0x4A,0x68,0xB0 };
-class DUITHINK_API CDUIAttributeCtrlID
+class XUI_API CDUIAttributeCtrlID
 	: public CDUIAttributeULong
 {
 	MMDeclare_Super(CDUIAttributeULong)

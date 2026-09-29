@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIListHeaderItemCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIListHeaderItemCtrl = { 0xFD6C81B4,0xCA0A,0x4176,0xA1,0xCD,0xB9,0xA9,0x0C,0x51,0x6E,0x15 };
-class DUITHINK_API CDUIListHeaderItemCtrl 
+class XUI_API CDUIListHeaderItemCtrl 
 	: public CDUIContainerCtrl
 {
 	friend class CDUIListHeaderCtrl;

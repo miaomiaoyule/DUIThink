@@ -5,7 +5,7 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIPoint : public CMMPoint
+class XUI_API CDUIPoint : public CMMPoint
 {
 public:
 	CDUIPoint();

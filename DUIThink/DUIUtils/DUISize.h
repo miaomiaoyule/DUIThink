@@ -5,7 +5,7 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUISize : public CMMSize
+class XUI_API CDUISize : public CMMSize
 {
 public:
 	CDUISize();

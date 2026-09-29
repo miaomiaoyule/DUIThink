@@ -11,7 +11,7 @@ typedef std::map<uint32_t, tagDuiTextStyle> MapDuiAttributeTextStyle;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeTextStyle INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeTextStyle = { 0x21E859BB,0x67D5,0x4A96,0x96,0x08,0x90,0xFA,0x32,0xA8,0x5E,0xC3 };
-class DUITHINK_API CDUIAttributeTextStyle
+class XUI_API CDUIAttributeTextStyle
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)

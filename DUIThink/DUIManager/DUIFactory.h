@@ -13,7 +13,7 @@ typedef std::unordered_map<std::string, DUICreateResourceObj> MapDuiCreateResour
 typedef std::unordered_map<std::string, DUICreateAttributeObj> MapDuiCreateAttribute;
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIFactory
+class XUI_API CDUIFactory
 {
 private:
 	CDUIFactory();

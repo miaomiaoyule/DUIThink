@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIDateTimeCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIDateTimeCtrl = { 0x5ACF56A6,0x9149,0x4C00,0xB6,0xA9,0x3D,0x52,0x41,0x50,0xED,0x06 };
-class DUITHINK_API CDUIDateTimeCtrl 
+class XUI_API CDUIDateTimeCtrl 
 	: public CDUIHorizontalLayoutCtrl
 	, public IDuiControlCallBack
 {

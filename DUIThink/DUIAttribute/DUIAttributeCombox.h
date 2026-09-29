@@ -11,7 +11,7 @@ typedef std::map<uint32_t, tagDuiCombox> MapDuiAttributeCombox;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeCombox INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeCombox = { 0xDA1F9EC1,0x02EF,0x4F42,0x83,0x12,0x23,0x1F,0xC6,0x03,0x3D,0xF6 };
-class DUITHINK_API CDUIAttributeCombox
+class XUI_API CDUIAttributeCombox
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)

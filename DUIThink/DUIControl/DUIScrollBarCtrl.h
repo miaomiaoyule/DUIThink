@@ -10,7 +10,7 @@ class CDUIContainerCtrl;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIScrollBarCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIScrollBarCtrl = { 0xE2E6839C,0xBEB5,0x4F40,0xAB,0x9F,0xF3,0xC0,0xD9,0xD1,0xFC,0x73 };
-class DUITHINK_API CDUIScrollBarCtrl
+class XUI_API CDUIScrollBarCtrl
 	: public CDUISliderCtrl
 {
 	friend class CDUIContainerCtrl;

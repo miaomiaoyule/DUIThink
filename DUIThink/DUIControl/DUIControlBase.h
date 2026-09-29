@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIControlBase INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIControlBase = { 0x001037EB,0x1B2F,0x4DDD,0x82,0x48,0xB0,0xB4,0xA3,0x95,0xD0,0xD4 };
-class DUITHINK_API CDUIControlBase
+class XUI_API CDUIControlBase
 	: public CDUIPropertyObject
 {
 	friend class CDUIXmlPack;
@@ -375,8 +375,8 @@ protected:
 	virtual void PerformBorderSeparateHit(const CDUIPoint& pt);
 };
 
-DUITHINK_API bool operator == (IDuiInterface *pLeft, const CDUIControlBase &pControl);
-DUITHINK_API bool operator != (IDuiInterface *pLeft, const CDUIControlBase &pControl);
+XUI_API bool operator == (IDuiInterface *pLeft, const CDUIControlBase &pControl);
+XUI_API bool operator != (IDuiInterface *pLeft, const CDUIControlBase &pControl);
 
 //////////////////////////////////////////////////////////////////////////
 #pragma pack()

@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIFontBase INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIFontBase = { 0x93B50FA6,0x3BAE,0x4138,0x85,0xBB,0x1C,0x1B,0x5F,0xD7,0x5F,0xDD };
-class DUITHINK_API CDUIFontBase
+class XUI_API CDUIFontBase
 	: public CDUIResourceBase
 {
 	friend class CDUIGlobal;

@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeColor INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeColor = { 0x1FB46B68,0x66AA,0x44B5,0x89,0xBE,0xCB,0x00,0x1C,0xF7,0x61,0xEE };
-class DUITHINK_API CDUIAttributeColor 
+class XUI_API CDUIAttributeColor 
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)

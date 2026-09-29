@@ -9,7 +9,7 @@
 // Phase 2: swap implementation to Skia GPU (GL / GLES / Metal).
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API IDuiNativeGdi
+class XUI_API IDuiNativeGdi
 {
 public:
 	enum enKind
@@ -31,7 +31,7 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API IDuiImage : public IDuiNativeGdi
+class XUI_API IDuiImage : public IDuiNativeGdi
 {
 public:
 	enKind GetNativeKind() const override { return Kind_Image; }
@@ -39,7 +39,7 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API IDuiFont : public IDuiNativeGdi
+class XUI_API IDuiFont : public IDuiNativeGdi
 {
 public:
 	enKind GetNativeKind() const override { return Kind_Font; }
@@ -50,7 +50,7 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API IDuiCanvas : public IDuiNativeGdi
+class XUI_API IDuiCanvas : public IDuiNativeGdi
 {
 public:
 	enKind GetNativeKind() const override { return Kind_Canvas; }
@@ -84,7 +84,7 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API IDuiPaintScene
+class XUI_API IDuiPaintScene
 {
 public:
 	virtual ~IDuiPaintScene() {}

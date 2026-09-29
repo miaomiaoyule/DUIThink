@@ -12,7 +12,7 @@ class CDUIWndBase;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIPropertyObject INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIPropertyObject = { 0x5BF13A7D,0xB9B7,0x4198,0xA3,0x98,0x88,0xF7,0x25,0xCF,0xC1,0x2E };
-class DUITHINK_API CDUIPropertyObject : public IDuiInterface
+class XUI_API CDUIPropertyObject : public IDuiInterface
 {
 	friend class CDUIGlobal;
 	friend class CUICommandElement;

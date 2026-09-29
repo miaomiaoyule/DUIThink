@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIIPAddressCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIIPAddressCtrl = { 0x2AFC97C0,0xE6FC,0x4AB1,0x9A,0x64,0x0C,0x86,0xD6,0xF2,0x60,0x81 };
-class DUITHINK_API CDUIIPAddressCtrl
+class XUI_API CDUIIPAddressCtrl
 	: public CDUIHorizontalLayoutCtrl
 {
 	MMDeclare_Super(CDUIHorizontalLayoutCtrl)

@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIWnd INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIWnd = { 0xD5D0FF1C,0x106B,0x48C7,0xAD,0xA9,0x8C,0xA3,0x43,0x80,0x1F,0x74 };
-class DUITHINK_API CDUIWnd
+class XUI_API CDUIWnd
 #if defined DuiPlatform_SDL
 	: public CDUIWndSDL
 #else

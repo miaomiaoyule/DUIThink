@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeSize INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeSize = { 0x6708342C,0x4E8B,0x40DB,0x96,0x30,0x2E,0x83,0x65,0x1E,0x5A,0xAB };
-class DUITHINK_API CDUIAttributeSize
+class XUI_API CDUIAttributeSize
 	: public CDUIAttributeObject
 	, public SIZE
 {

@@ -11,7 +11,7 @@ typedef std::map<uint32_t, tagDuiRichText> MapDuiAttributeRichText;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeRichText INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeRichText = { 0x5D1D263F,0x9051,0x4B64,0xAD,0x29,0x80,0xDB,0x7E,0x4B,0x1E,0x17 };
-class DUITHINK_API CDUIAttributeRichText
+class XUI_API CDUIAttributeRichText
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)

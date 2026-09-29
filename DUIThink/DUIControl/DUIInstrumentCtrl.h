@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIInstrumentCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIInstrumentCtrl = { 0xBCD93816,0xCD80,0x4F2F,0xA5,0x83,0xBE,0xC2,0x6C,0x23,0x22,0xB5 }; 
-class DUITHINK_API CDUIInstrumentCtrl
+class XUI_API CDUIInstrumentCtrl
 	: public CDUIContainerCtrl
 {
 	MMDeclare_Super(CDUIContainerCtrl)

@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIRotateMenuItemCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIRotateMenuItemCtrl = { 0xB413C6A8,0x0F06,0x4FF8,0x9C,0x8B,0xFF,0x5E,0xE5,0x7A,0xD0,0xAD };
-class DUITHINK_API CDUIRotateMenuItemCtrl : public CDUIMenuItemCtrl
+class XUI_API CDUIRotateMenuItemCtrl : public CDUIMenuItemCtrl
 {
 	MMDeclare_Super(CDUIMenuItemCtrl)
 	DuiDeclare_CreateControl(CDUIRotateMenuItemCtrl)
@@ -32,7 +32,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIRotateMenuCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIRotateMenuCtrl = { 0x46422DE5,0x3874,0x475E,0x92,0x64,0x32,0x2C,0x5C,0x7D,0xB1,0xE0 };
-class DUITHINK_API CDUIRotateMenuCtrl
+class XUI_API CDUIRotateMenuCtrl
 	: public CDUIMenuCtrl
 	, public CDUINotifyPump
 {

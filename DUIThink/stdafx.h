@@ -33,7 +33,7 @@
 
 // TODO: 在此处引用程序需要的其他头文件
 //////////////////////////////////////////////////////////////////////////
-#include "DUITHinkHead.h"
+#include "XUIHead.h"
 
 #define CLAMP(x,a,b) (min(b, max(a, x)))
 

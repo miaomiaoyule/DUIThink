@@ -7,7 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////
 #define VER_CDUIListViewCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIListViewCtrl = { 0xE4DE289D,0x472A,0x45C4,0xBA,0x8D,0xAB,0x2A,0xDA,0x58,0xEF,0x9D };
-class DUITHINK_API CDUIListViewCtrl
+class XUI_API CDUIListViewCtrl
 	: public CDUIVerticalLayoutCtrl
 {
 	friend class CDUIListHeaderCtrl;

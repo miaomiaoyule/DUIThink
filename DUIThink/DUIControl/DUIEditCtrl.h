@@ -11,7 +11,7 @@ class CDUIEditWnd;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIEditCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIEditCtrl = { 0x1ABA5E56,0x3740,0x457E,0xAE,0x24,0x91,0xE2,0x33,0xF9,0x3A,0x6B };
-class DUITHINK_API CDUIEditCtrl
+class XUI_API CDUIEditCtrl
 	: public CDUIButtonCtrl
 {
 	friend class CDUIEditWnd;

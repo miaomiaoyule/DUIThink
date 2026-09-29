@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIButtonCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIButtonCtrl = { 0xBC562FB6,0x4F45,0x4DA9,0xAA,0xCD,0x1C,0xE1,0xFD,0x44,0xDB,0x43 };
-class DUITHINK_API CDUIButtonCtrl
+class XUI_API CDUIButtonCtrl
 	: public CDUIStaticCtrl
 {
 	MMDeclare_Super(CDUIStaticCtrl)

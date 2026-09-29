@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIKLineChartCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIKLineChartCtrl = { 0xC88570C2,0x1D5F,0x461C,0x96,0xDE,0x73,0x38,0xAF,0xFD,0x2B,0xFC }; 
-class DUITHINK_API CDUIKLineChartCtrl
+class XUI_API CDUIKLineChartCtrl
 	: public CDUIControlBase
 {
 	MMDeclare_Super(CDUIControlBase)

@@ -121,8 +121,8 @@ class CDUICalendarCtrl;
 ///////////////////////////////////////////////////////////////////////////////////////
 #define OpenZip OpenZipU
 #define CloseZip(hz) CloseZipU(hz)
-extern DUITHINK_API HZIPDT OpenZipU(void *z, unsigned int len, DWORD flags, const LPCTSTR pPassword);
-extern DUITHINK_API ZRESULT CloseZipU(HZIPDT hz);
+extern XUI_API HZIPDT OpenZipU(void *z, unsigned int len, DWORD flags, const LPCTSTR pPassword);
+extern XUI_API ZRESULT CloseZipU(HZIPDT hz);
 #ifdef _UNICODE
 #define GetZipItem GetZipItemW
 #define FindZipItem FindZipItemW
@@ -130,11 +130,11 @@ extern DUITHINK_API ZRESULT CloseZipU(HZIPDT hz);
 #define GetZipItem GetZipItemA
 #define FindZipItem FindZipItemA
 #endif
-extern DUITHINK_API ZRESULT GetZipItemA(HZIPDT hz, int index, ZIPENTRYA *ze);
-extern DUITHINK_API ZRESULT GetZipItemW(HZIPDT hz, int index, ZIPENTRYW *ze);
-extern DUITHINK_API ZRESULT FindZipItemA(HZIPDT hz, const TCHAR *name, bool ic, int *index, ZIPENTRYA *ze);
-extern DUITHINK_API ZRESULT FindZipItemW(HZIPDT hz, const TCHAR *name, bool ic, int *index, ZIPENTRYW *ze);
-extern DUITHINK_API ZRESULT UnzipItem(HZIPDT hz, int index, void *dst, unsigned int len, DWORD flags);
+extern XUI_API ZRESULT GetZipItemA(HZIPDT hz, int index, ZIPENTRYA *ze);
+extern XUI_API ZRESULT GetZipItemW(HZIPDT hz, int index, ZIPENTRYW *ze);
+extern XUI_API ZRESULT FindZipItemA(HZIPDT hz, const TCHAR *name, bool ic, int *index, ZIPENTRYA *ze);
+extern XUI_API ZRESULT FindZipItemW(HZIPDT hz, const TCHAR *name, bool ic, int *index, ZIPENTRYW *ze);
+extern XUI_API ZRESULT UnzipItem(HZIPDT hz, int index, void *dst, unsigned int len, DWORD flags);
 
 /////////////////////////////////////////////////////////////////////////////////////
 //register create control

@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeFloat INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeFloat = { 0xAC3A2171,0xD7DB,0x4B3D,0xAC,0x54,0x5C,0xEA,0x8F,0x01,0xAA,0xB2 };
-class DUITHINK_API CDUIAttributeFloat
+class XUI_API CDUIAttributeFloat
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)

@@ -10,7 +10,7 @@ class CDUIMenuCtrl;
 class CDUIMenuItemCtrl;
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIMenuWnd
+class XUI_API CDUIMenuWnd
 	: public CDUIPopupWnd
 {
 	MMDeclare_Super(CDUIPopupWnd)
@@ -62,7 +62,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIMenuItemCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIMenuItemCtrl = { 0x07174720,0xD8C2,0x4B3C,0x8C,0x9E,0xA2,0x28,0x07,0xF1,0xD3,0xEF };
-class DUITHINK_API CDUIMenuItemCtrl
+class XUI_API CDUIMenuItemCtrl
 	: public CDUIListItemCtrl
 {
 	MMDeclare_Super(CDUIListItemCtrl)
@@ -174,7 +174,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIMenuCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIMenuCtrl = { 0x98178BB2,0x30BC,0x4E93,0x95,0x58,0xB4,0x6C,0x16,0xC4,0xA6,0x22 };
-class DUITHINK_API CDUIMenuCtrl
+class XUI_API CDUIMenuCtrl
 	: public CDUIListViewCtrl
 {
 	MMDeclare_Super(CDUIListViewCtrl)
@@ -230,7 +230,7 @@ protected:
 };
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIMenu
+class XUI_API CDUIMenu
 {
 public:
 	CDUIMenu();

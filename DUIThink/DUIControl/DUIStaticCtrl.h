@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIStaticCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIStaticCtrl = { 0x54F14AD6,0x882C,0x432C,0xB6,0x39,0xC5,0xA7,0x42,0x28,0xB4,0x3B };
-class DUITHINK_API CDUIStaticCtrl
+class XUI_API CDUIStaticCtrl
 	: public CDUIControlBase
 {
 	friend class CDUIListViewCtrl;

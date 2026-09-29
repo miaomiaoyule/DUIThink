@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIClockCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIClockCtrl = { 0x5C22007F,0x8A0B,0x44F2,0x9B,0x83,0x0B,0xDA,0x4A,0x80,0x5A,0x50 }; 
-class DUITHINK_API CDUIClockCtrl
+class XUI_API CDUIClockCtrl
 	: public CDUIContainerCtrl
 {
 	MMDeclare_Super(CDUIContainerCtrl)

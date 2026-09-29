@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIListHeaderCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIListHeaderCtrl = { 0x99FCAA5B,0xAD12,0x4A09,0xB6,0xF9,0x7B,0x95,0x10,0x45,0x35,0x4F };
-class DUITHINK_API CDUIListHeaderCtrl
+class XUI_API CDUIListHeaderCtrl
 	: public CDUIHorizontalLayoutCtrl
 	, public IDuiControlCallBack
 {

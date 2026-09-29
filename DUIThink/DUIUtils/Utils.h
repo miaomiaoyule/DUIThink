@@ -5,7 +5,7 @@
 #pragma pack(1)
 
 /////////////////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIRenderHelp
+class XUI_API CDUIRenderHelp
 {
 public:
 	static void MeasureRichText(IN HDC hDC, IN const tagDuiRichText &RichText, OUT MapLineVecDuiRichTextDraw &mapLineVecRichTextDraw, 

@@ -57,7 +57,7 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIAnimation : public IDUIAnimation
+class XUI_API CDUIAnimation : public IDUIAnimation
 {
 public:
 	CDUIAnimation();
@@ -107,7 +107,7 @@ struct tagDuiDragCtrl
 	int									nIndex = -1;
 };
 
-class DUITHINK_API CDUIAnimationDrag
+class XUI_API CDUIAnimationDrag
 	: public CDUIAnimation
 	, public CDUINotifyPump
 {
@@ -177,7 +177,7 @@ protected:
 };
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIAnimationWnd
+class XUI_API CDUIAnimationWnd
 	: public CDUIAnimation
 {
 	MMDeclare_Super(CDUIAnimation)

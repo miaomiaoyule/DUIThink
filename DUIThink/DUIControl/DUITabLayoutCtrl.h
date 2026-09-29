@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUITabLayoutCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUITabLayoutCtrl = { 0xF48C83D4,0xF08B,0x4DBB,0xA5,0x5F,0xB4,0x47,0x15,0x7C,0x5E,0xC4 };
-class DUITHINK_API CDUITabLayoutCtrl
+class XUI_API CDUITabLayoutCtrl
 	: public CDUIContainerCtrl
 	, public CDUIAnimation
 {

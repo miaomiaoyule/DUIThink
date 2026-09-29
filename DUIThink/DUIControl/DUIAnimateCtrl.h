@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAnimateCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAnimateCtrl = { 0x9EFF4728,0x7FBA,0x4923,0x95,0x0C,0x40,0xB0,0x4E,0x33,0x63,0x38 };
-class DUITHINK_API CDUIAnimateCtrl
+class XUI_API CDUIAnimateCtrl
 	: public CDUIStaticCtrl
 {
 	MMDeclare_Super(CDUIStaticCtrl)

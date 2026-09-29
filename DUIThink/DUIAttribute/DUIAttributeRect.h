@@ -11,7 +11,7 @@ typedef std::map<uint32_t, CDUIRect> MapDuiAttributeRect;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeRect INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeRect = { 0x8615897E,0x18FA,0x46AE,0xAD,0x57,0x40,0x75,0xBF,0xC1,0x1C,0x9E };
-class DUITHINK_API CDUIAttributeRect
+class XUI_API CDUIAttributeRect
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)

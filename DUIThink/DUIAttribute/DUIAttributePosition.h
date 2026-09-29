@@ -11,7 +11,7 @@ typedef std::map<uint32_t, tagDuiPosition> MapDuiAttributePosition;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributePosition INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributePosition = { 0xDAA5DB06,0x1862,0x4328,0x9B,0x29,0x13,0xE4,0xFA,0xB6,0x86,0x00 };
-class DUITHINK_API CDUIAttributePosition
+class XUI_API CDUIAttributePosition
 	: public CDUIAttributeObject
 {
 	friend class CMFCPropertyGridPositionProperty;

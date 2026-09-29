@@ -10,7 +10,7 @@ class CDUIThinkEditCtrl;
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUISpinCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUISpinCtrl = { 0xFD64C6EC,0xA2AC,0x4228,0xB2,0x02,0x3E,0xA7,0x72,0x42,0x97,0xF7 };
-class DUITHINK_API CDUISpinCtrl
+class XUI_API CDUISpinCtrl
 	: public CDUIHorizontalLayoutCtrl
 	, public IDuiControlCallBack
 {

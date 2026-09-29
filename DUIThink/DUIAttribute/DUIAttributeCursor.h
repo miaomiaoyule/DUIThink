@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeCursor INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeCursor = { 0x9B55FFA1,0xE9F2,0x4FCA,0xA3,0x52,0x9D,0xBE,0xA1,0xA5,0x74,0x62 };
-class DUITHINK_API CDUIAttributeCursor 
+class XUI_API CDUIAttributeCursor 
 	: public CDUIAttributeCombox
 {
 	MMDeclare_Super(CDUIAttributeCombox)

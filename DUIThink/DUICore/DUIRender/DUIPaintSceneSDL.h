@@ -10,7 +10,7 @@
 class CDUICanvasRaster;
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIPaintSceneSDL : public IDuiPaintScene
+class XUI_API CDUIPaintSceneSDL : public IDuiPaintScene
 {
 public:
 	CDUIPaintSceneSDL(HWND hWnd, int nWidth, int nHeight);

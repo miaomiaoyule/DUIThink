@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUITreeNodeCtrl INTERFACE_VERSION(1,1)
 static const GUID IID_CDUITreeNodeCtrl = { 0x6A8110CA,0xA91C,0x43A8,0x97,0x88,0xAF,0xE8,0xAB,0xD2,0x82,0x66 };
-class DUITHINK_API CDUITreeNodeCtrl 
+class XUI_API CDUITreeNodeCtrl 
 	: public CDUIListItemCtrl
 {
 	friend class CDUITreeViewCtrl;

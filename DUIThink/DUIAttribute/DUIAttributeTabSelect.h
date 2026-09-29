@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeTabSelect INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeTabSelect = { 0xB2B6A230,0xD8C7,0x4DA2,0x89,0x15,0x16,0x6A,0x85,0xAB,0x97,0x0E };
-class DUITHINK_API CDUIAttributeTabSelect 
+class XUI_API CDUIAttributeTabSelect 
 	: public CDUIAttributeCombox
 {
 	MMDeclare_Super(CDUIAttributeCombox)

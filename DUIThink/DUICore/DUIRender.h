@@ -8,7 +8,7 @@
 #endif
 
 /////////////////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIRenderClip
+class XUI_API CDUIRenderClip
 {
 public:
 	~CDUIRenderClip();
@@ -23,7 +23,7 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
-class DUITHINK_API CDUIRenderEngine
+class XUI_API CDUIRenderEngine
 {
 public:
 	//draw argb
@@ -78,7 +78,7 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIMemDC
+class XUI_API CDUIMemDC
 {
 public:
 	//************************************

@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeGroup INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeGroup = { 0xF1942C49,0xF9EE,0x4C7E,0xA2,0xBD,0xEF,0x2A,0x8D,0xEC,0xDC,0xF0 };
-class DUITHINK_API CDUIAttributeGroup 
+class XUI_API CDUIAttributeGroup 
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)

@@ -9,7 +9,7 @@ typedef std::map<UINT, CMMString> MapDuiControlID;
 typedef std::map<uint32_t, uint32_t> MapValueIDSwitch;
 
 //输出
-LPCTSTR DUITHINK_API DUI__TraceMsg(UINT uMsg);
+LPCTSTR XUI_API DUI__TraceMsg(UINT uMsg);
 
 //////////////////////////////////////////////////////////////////////////
 class CDTDesignerView;
@@ -20,7 +20,7 @@ class CFontResView;
 class CColorGridWnd;
 
 //////////////////////////////////////////////////////////////////////////
-class DUITHINK_API CDUIGlobal 
+class XUI_API CDUIGlobal 
 	: public CMMAsyncObject
 	, public CMMServiceItem
 {

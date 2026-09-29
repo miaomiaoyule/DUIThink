@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUIAttributeHotKey INTERFACE_VERSION(1,1)
 static const GUID IID_CDUIAttributeHotKey = { 0x10F8061D,0x177A,0x49E4,0xB2,0xA0,0x82,0x26,0xD1,0xA8,0x2C,0xD1 }; 
-class DUITHINK_API CDUIAttributeHotKey
+class XUI_API CDUIAttributeHotKey
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)
