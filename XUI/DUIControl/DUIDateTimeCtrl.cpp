@@ -62,10 +62,10 @@ void CDUIDateTimeCtrl::RefreshView()
 bool CDUIDateTimeCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 {
 	if (NULL == m_pEditDateTimeCtrl
-		&& MMInterfaceHelper(CDUIThinkEditCtrl, pChild)
+		&& MMInterfaceHelper(CDUIXEditCtrl, pChild)
 		&& __super::InsertChild(pChild, nPos))
 	{
-		m_pEditDateTimeCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, pChild);
+		m_pEditDateTimeCtrl = MMInterfaceHelper(CDUIXEditCtrl, pChild);
 
 		return true;
 	}
@@ -126,7 +126,7 @@ void CDUIDateTimeCtrl::RemoveAll()
 	return;
 }
 
-CDUIThinkEditCtrl * CDUIDateTimeCtrl::GetDataTimeEditCtrl()
+CDUIXEditCtrl * CDUIDateTimeCtrl::GetDataTimeEditCtrl()
 {
 	return m_pEditDateTimeCtrl;
 }
@@ -376,7 +376,7 @@ void CDUIDateTimeCtrl::InitComplete()
 	//control
 	if (NULL == m_pEditDateTimeCtrl)
 	{
-		CDUIThinkEditCtrl *pEditCtrl = new CDUIThinkEditCtrl();
+		CDUIXEditCtrl *pEditCtrl = new CDUIXEditCtrl();
 		pEditCtrl->Init();
 
 		InsertChild(pEditCtrl);

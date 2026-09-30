@@ -450,7 +450,7 @@ struct tagDuiRippleBitmap
 };
 
 //////////////////////////////////////////////////////////////////////////
-struct tagDuiThinkEditHistory
+struct tagDuiXEditHistory
 {
 	bool								bAdd = false;
 	enDuiRichTextItemType				ItemType = RichTextItem_Text;
@@ -462,8 +462,8 @@ struct tagDuiThinkEditHistory
 	CMMString							strImageResName;
 };
 
-typedef std::vector<tagDuiThinkEditHistory> VecDuiThinkEditHistory;
-typedef std::deque<tagDuiThinkEditHistory> QueDuiThinkEditHistory;
+typedef std::vector<tagDuiXEditHistory> VecDuiXEditHistory;
+typedef std::deque<tagDuiXEditHistory> QueDuiXEditHistory;
 
 //////////////////////////////////////////////////////////////////////////
 typedef struct tagDuiTimerInfo

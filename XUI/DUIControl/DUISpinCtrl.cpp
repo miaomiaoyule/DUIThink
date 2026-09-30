@@ -544,7 +544,7 @@ void CDUISpinCtrl::InitComplete()
 	//find
 	if (NULL == m_pEditValueCtrl)
 	{
-		m_pEditValueCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, FindSubControlThisView(Dui_CtrlIDInner_SpinEditValue));
+		m_pEditValueCtrl = MMInterfaceHelper(CDUIXEditCtrl, FindSubControlThisView(Dui_CtrlIDInner_SpinEditValue));
 	}
 	if (NULL == m_pVertRightCtrl)
 	{
@@ -562,7 +562,7 @@ void CDUISpinCtrl::InitComplete()
 	//create
 	if (NULL == m_pEditValueCtrl)
 	{
-		m_pEditValueCtrl = new CDUIThinkEditCtrl;
+		m_pEditValueCtrl = new CDUIXEditCtrl;
 		m_pEditValueCtrl->Init();
 		m_pEditValueCtrl->SetCtrlID(Dui_CtrlIDInner_SpinEditValue);
 		m_pEditValueCtrl->SetEditTextType(EditText_Number);

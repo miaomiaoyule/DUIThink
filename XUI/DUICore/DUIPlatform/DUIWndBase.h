@@ -11,7 +11,7 @@ class XUI_API CDUIWndBase
 	, public IMMWndInterface
 {
 	friend class CDUIContainerCtrl;
-	friend class CDUIThinkEditCtrl;
+	friend class CDUIXEditCtrl;
 	friend class CDUIRichEditCtrl;
 
 	MMDeclare_Super(CDUIPropertyObject)

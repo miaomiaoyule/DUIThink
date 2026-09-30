@@ -33,7 +33,7 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateControl(CDUITabLayoutCtrl);
 	DUIInner_RegisterCreateControl(CDUIVerticalLayoutCtrl);
 	DUIInner_RegisterCreateControl(CDUIRadioBoxCtrl);
-	DUIInner_RegisterCreateControl(CDUIThinkEditCtrl);
+	DUIInner_RegisterCreateControl(CDUIXEditCtrl);
 	DUIInner_RegisterCreateControl(CDUISpinCtrl);
 	DUIInner_RegisterCreateControl(CDUIClockCtrl);
 	DUIInner_RegisterCreateControl(CDUIGroupCtrl);

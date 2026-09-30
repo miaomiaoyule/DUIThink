@@ -67,121 +67,140 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D64EE06C-987D-493C-969A-CF1D8F4390A9}</ProjectGuid>
+    <ProjectGuid>{9540DC14-C8F1-4CD5-B25E-AFBF9567E11E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>MMHelper</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <RootNamespace>XUIShow</RootNamespace>
+    <ProjectName>XUI.2017</ProjectName>
+    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
-  <Import Project="$(ProjectDir)DuiPlatformSDL.props" />
+  <Import Project="$(ProjectDir)..\MMHelper\DuiPlatformSDL.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_MT|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_MT|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_MT|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_MT|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -207,7 +226,7 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|x64'" Label="PropertySheets">
@@ -233,111 +252,119 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
-    <LinkIncremental>true</LinkIncremental>
     <OutDir>$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)D</TargetName>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|x64'">
     <TargetName>$(ProjectName)64D</TargetName>
-    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.dll</TargetExt>
     <OutDir>$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_MT|Win32'">
-    <LinkIncremental>true</LinkIncremental>
     <OutDir>$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)_MT_D</TargetName>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_MT|x64'">
     <TargetName>$(ProjectName)64_MT_D</TargetName>
-    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.dll</TargetExt>
     <OutDir>$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">
-    <LinkIncremental>true</LinkIncremental>
     <OutDir>$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)_Static_D</TargetName>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">
-    <LinkIncremental>true</LinkIncremental>
     <OutDir>$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)_Static_MT_D</TargetName>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|x64'">
     <TargetName>$(ProjectName)64_Static_D</TargetName>
-    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.lib</TargetExt>
     <OutDir>$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'">
     <TargetName>$(ProjectName)64_Static_MT_D</TargetName>
-    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.lib</TargetExt>
     <OutDir>$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
-    <LinkIncremental>false</LinkIncremental>
     <OutDir>$(Configuration)\</OutDir>
+    <TargetExt>.dll</TargetExt>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|x64'">
+    <TargetExt>.dll</TargetExt>
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)64</TargetName>
     <OutDir>$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_MT|Win32'">
-    <LinkIncremental>false</LinkIncremental>
     <OutDir>$(Configuration)\</OutDir>
+    <TargetExt>.dll</TargetExt>
+    <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)_MT</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_MT|x64'">
-    <TargetName>$(ProjectName)64_MT</TargetName>
+    <TargetExt>.dll</TargetExt>
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)64_MT</TargetName>
     <OutDir>$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <TargetExt>.lib</TargetExt>
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)_Static</TargetName>
-    <TargetExt>.lib</TargetExt>
-    <OutDir>$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <TargetExt>.lib</TargetExt>
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)_Static_MT</TargetName>
-    <TargetExt>.lib</TargetExt>
-    <OutDir>$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|x64'">
+    <TargetExt>.lib</TargetExt>
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)64_Static</TargetName>
-    <TargetExt>.lib</TargetExt>
     <OutDir>$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|x64'">
+    <TargetExt>.lib</TargetExt>
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)64_Static_MT</TargetName>
-    <TargetExt>.lib</TargetExt>
     <OutDir>$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MMHELPER_DLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalOptions>/wd 4996 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>../ThirdDepend</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
+      <MinimumRequiredVersion />
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../bin" mkdir "../bin"
@@ -345,67 +372,83 @@ copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
 copy $(Configuration)\$(TargetName).pdb "../lib"
-if exist "../Demo/DUIThinkDemo_C++/Debug" copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"
-if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigner\bin"</Command>
+if exist "../Demo/XUIDemo_C++/Debug" copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Debug"
+if exist "../../DTDesigner\bin" copy $(Configuration)\$(TargetFileName) "../../DTDesigner\bin"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MMHELPER_DLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../bin" mkdir "../bin"
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-if exist "../Demo/DUIThinkDemo_C++/Debug" copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Command>
+if exist "../Demo/XUIDemo_C++/Debug" copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_MT|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MMHELPER_DLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../bin" mkdir "../bin"
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Debug"</Command>
+copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_MT|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MMHELPER_DLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../bin" mkdir "../bin"
@@ -417,16 +460,24 @@ copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Debug"</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;MMHELPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>../ThirdDepend</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../lib" mkdir "../lib"
@@ -435,16 +486,23 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;MMHELPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../lib" mkdir "../lib"
@@ -453,15 +511,22 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;MMHELPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../lib" mkdir "../lib"
@@ -470,16 +535,22 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;MMHELPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../lib" mkdir "../lib"
@@ -493,22 +564,21 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MMHELPER_DLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MinimumRequiredVersion />
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../bin" mkdir "../bin"
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-if exist "../Demo/DUIThinkDemo_C++/Release" copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Release"
+if exist "../Demo/XUIDemo_C++/Release" copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Release"
 if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigner\bin"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -519,22 +589,22 @@ if exist "../../DTDesigner\bin" copy "../bin\$(TargetFileName)" "../../DTDesigne
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MMHELPER_DLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../bin" mkdir "../bin"
 copy $(Configuration)\$(TargetFileName) "../bin"
 if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetName).lib "../lib"
-if exist "../Demo/DUIThinkDemo_C++/Release" copy $(Configuration)\$(TargetFileName) "../Demo/DUIThinkDemo_C++/Release"</Command>
+if exist "../Demo/XUIDemo_C++/Release" copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Release"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_MT|Win32'">
@@ -544,16 +614,16 @@ if exist "../Demo/DUIThinkDemo_C++/Release" copy $(Configuration)\$(TargetFileNa
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MMHELPER_DLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../bin" mkdir "../bin"
@@ -571,16 +641,16 @@ copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Debug"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MMHELPER_DLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XUISDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <ModuleDefinitionFile Condition="'$(DuiPlatformSDL)'=='true'">SDL3_exports.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../bin" mkdir "../bin"
@@ -597,14 +667,15 @@ copy $(Configuration)\$(TargetFileName) "../Demo/XUIDemo_C++/Debug"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;MMHELPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../lib" mkdir "../lib"
@@ -618,15 +689,16 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;MMHELPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../lib" mkdir "../lib"
@@ -640,14 +712,15 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;MMHELPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../lib" mkdir "../lib"
@@ -661,88 +734,233 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;MMHELPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MMHELPLIB;XUILIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "../lib" mkdir "../lib"
 copy $(Configuration)\$(TargetFileName) "../lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>DUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>copy "../Debug\XUI.lib" "../../DemoTest\DemoFirst\DemoFirst\XUILib"
+copy "XUI.h" "../../DemoTest\DemoFirst\DemoFirst\XUIInclude"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>DUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>copy "../Debug\XUI.lib" "../../DemoTest\DemoFirst\DemoFirst\XUILib"
+copy "XUI.h" "../../DemoTest\DemoFirst\DemoFirst\XUIInclude"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="MMAsyncObject.h" />
-    <ClInclude Include="MMDisplayer.h" />
-    <ClInclude Include="MMDpi.h" />
-    <ClInclude Include="MMDragDrop\Define.h" />
-    <ClInclude Include="MMDragDrop\MMDataObject.h" />
-    <ClInclude Include="MMDragDrop\MMDragDrop.h" />
-    <ClInclude Include="MMDragDrop\MMDropSource.h" />
-    <ClInclude Include="MMEncrypt.h" />
-    <ClInclude Include="MMFile.h" />
-    <ClInclude Include="MMFileMonitor\Define.h" />
-    <ClInclude Include="MMFileMonitor\MMFileMonitor.h" />
-    <ClInclude Include="MMDefine.h" />
-    <ClInclude Include="MMHash.h" />
-    <ClInclude Include="MMHelperHead.h" />
-    <ClInclude Include="MMMagnetBox.h" />
-    <ClInclude Include="MMCommandLine.h" />
-    <ClInclude Include="MMMD5CheckSum.h" />
-    <ClInclude Include="MMModule.h" />
-    <ClInclude Include="MMPlatformTypes.h" />
-    <ClInclude Include="MMProcess.h" />
-    <ClInclude Include="MMReDirection.h" />
-    <ClInclude Include="MMRegMonitor.h" />
-    <ClInclude Include="MMResource.h" />
-    <ClInclude Include="MMService.h" />
-    <ClInclude Include="MMServiceModel\MMServiceItem.h" />
-    <ClInclude Include="MMServiceModel\MMServiceMsg.h" />
-    <ClInclude Include="MMServiceModel\MMThreadPool.h" />
-    <ClInclude Include="MMServiceModel\MMTimerPower.h" />
-    <ClInclude Include="MMShellExecute\Define.h" />
-    <ClInclude Include="MMShellExecute\MMShellExecute.h" />
-    <ClInclude Include="MMSocket\Define.h" />
-    <ClInclude Include="MMSocket\SocketClient\Define.h" />
-    <ClInclude Include="MMSocket\SocketClient\IMMTCPSocketClient.h" />
-    <ClInclude Include="MMSocket\SocketClient\MMTCPSocketClient.h" />
-    <ClInclude Include="MMSocket\SocketServer\Define.h" />
-    <ClInclude Include="MMSocket\SocketServer\IMMTCPSocketServer.h" />
-    <ClInclude Include="MMSocket\SocketServer\MMSocketClientItem.h" />
-    <ClInclude Include="MMSocket\SocketServer\MMTCPSocketServer.h" />
-    <ClInclude Include="MMSocket\SocketServer\WebSocket\SHA1.h" />
-    <ClInclude Include="MMStrHelp.h" />
-    <ClInclude Include="MMString.h" />
-    <ClInclude Include="MMSvg.h" />
-    <ClInclude Include="MMTime.h" />
-    <ClInclude Include="MMTrayIcon.h" />
-    <ClInclude Include="MMUtils\MMPoint.h" />
-    <ClInclude Include="MMUtils\MMRect.h" />
-    <ClInclude Include="MMUtils\MMSize.h" />
-    <ClInclude Include="MMVersion.h" />
-    <ClInclude Include="MMWinTCPing.h" />
+    <ClInclude Include="Define\DefineAttribute.h" />
+    <ClInclude Include="Define\DefineBase.h" />
+    <ClInclude Include="Define\DefineControl.h" />
+    <ClInclude Include="Define\DefineMessage.h" />
+    <ClInclude Include="Define\DefineProp.h" />
+    <ClInclude Include="Define\DefineResource.h" />
+    <ClInclude Include="Define\DefineWndManager.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeBool.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeColor.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeColorSwitch.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeCombox.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeCursor.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeGroup.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeHotKey.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeObject.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributePosition.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeRect.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeSize.h" />
+    <ClInclude Include="DUIAttribute\DUIAttriImageSection.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeDuiSelect.h" />
+    <ClInclude Include="DUIAttribute\DUIAttributeTabSelect.h" />
+    <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeCtrlID.h" />
+    <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeFloat.h" />
+    <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeLong.h" />
+    <ClInclude Include="DUIAttribute\DUINumber\DUIAttributeULong.h" />
+    <ClInclude Include="DUIAttribute\DUIText\DUIAttributeRichText.h" />
+    <ClInclude Include="DUIAttribute\DUIText\DUIAttributeText.h" />
+    <ClInclude Include="DUIAttribute\DUIText\DUIAttributeTextStyle.h" />
+    <ClInclude Include="DUIControl\DUIClockCtrl.h" />
+    <ClInclude Include="DUIControl\DUIGroupCtrl.h" />
+    <ClInclude Include="DUIControl\DUIInstrumentCtrl.h" />
+    <ClInclude Include="DUIControl\DUIKLineChartCtrl.h" />
+    <ClInclude Include="DUIControl\DUIProgressCircleCtrl.h" />
+    <ClInclude Include="DUIControl\DUIRotateMenuCtrl.h" />
+    <ClInclude Include="DUIControl\DUIButtonCtrl.h" />
+    <ClInclude Include="DUIControl\DUICalendarCtrl.h" />
+    <ClInclude Include="DUIControl\DUICheckBoxCtrl.h" />
+    <ClInclude Include="DUIControl\DUIComboxCtrl.h" />
+    <ClInclude Include="DUIControl\DUIContainerCtrl.h" />
+    <ClInclude Include="DUIControl\DUIControlBase.h" />
+    <ClInclude Include="DUIControl\DUIDateTimeCtrl.h" />
+    <ClInclude Include="DUIControl\DUIEditCtrl.h" />
+    <ClInclude Include="DUIControl\DUIAnimateCtrl.h" />
+    <ClInclude Include="DUIControl\DUIHorizontalLayoutCtrl.h" />
+    <ClInclude Include="DUIControl\DUIHotKeyCtrl.h" />
+    <ClInclude Include="DUIControl\DUIIPAddressCtrl.h" />
+    <ClInclude Include="DUIControl\DUIListHeaderCtrl.h" />
+    <ClInclude Include="DUIControl\DUIListHeaderItemCtrl.h" />
+    <ClInclude Include="DUIControl\DUIListItemCtrl.h" />
+    <ClInclude Include="DUIControl\DUIListViewCtrl.h" />
+    <ClInclude Include="DUIControl\DUIMenuCtrl.h" />
+    <ClInclude Include="DUIControl\DUIProgressCtrl.h" />
+    <ClInclude Include="DUIControl\DUIRadioBoxCtrl.h" />
+    <ClInclude Include="DUIControl\DUIRichEditCtrl.h" />
+    <ClInclude Include="DUIControl\DUIScrollBarCtrl.h" />
+    <ClInclude Include="DUIControl\DUISliderCtrl.h" />
+    <ClInclude Include="DUIControl\DUISpinCtrl.h" />
+    <ClInclude Include="DUIControl\DUIStaticCtrl.h" />
+    <ClInclude Include="DUIControl\DUITabLayoutCtrl.h" />
+    <ClInclude Include="DUIControl\DUIXEditCtrl.h" />
+    <ClInclude Include="DUIControl\DUITreeNodeCtrl.h" />
+    <ClInclude Include="DUIControl\DUITreeViewCtrl.h" />
+    <ClInclude Include="DUIControl\DUIVerticalLayoutCtrl.h" />
+    <ClInclude Include="DUIControl\DUIWaterCtrl.h" />
+    <ClInclude Include="DUIControl\DUIWebBrowserCtrl.h" />
+    <ClInclude Include="DUICore\DUIAnimation.h" />
+    <ClInclude Include="DUICore\DUINotifyPump.h" />
+    <ClInclude Include="DUICore\DUIPropertyObject.h" />
+    <ClInclude Include="DUICore\DUIRender.h" />
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndBase.h" />
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndVirtual.h" />
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndSDL.h" />
+    <ClInclude Include="DUICore\DUIPlatform\DUIWndWin32.h" />
+    <ClInclude Include="DUICore\DUIRender\DUICanvasRaster.h" />
+    <ClInclude Include="DUICore\DUIRender\DUIMacFont.h" />
+    <ClInclude Include="DUICore\DUIRender\DUIGdiplusPortable.h" />
+    <ClInclude Include="DUICore\DUIRender\DUIGdiPortable.h" />
+    <ClInclude Include="DUICore\DUIRender\DUIPaintSceneSDL.h" />
+    <ClInclude Include="DUICore\DUIRender\IDuiCanvas.h" />
+    <ClInclude Include="DUICore\DUIPlatform\DUIWnd.h" />
+    <ClInclude Include="DUIExport\DefineAnimation.h" />
+    <ClInclude Include="DUIExport\DefineAttribute.h" />
+    <ClInclude Include="DUIExport\DefineBase.h" />
+    <ClInclude Include="DUIExport\DefineControl.h" />
+    <ClInclude Include="DUIExport\DefineMessage.h" />
+    <ClInclude Include="DUIExport\DefineResource.h" />
+    <ClInclude Include="DUIExport\DUIStruct.h" />
+    <ClInclude Include="DUIExport\IDUIInterface.h" />
+    <ClInclude Include="DUIManager\DUIFactory.h" />
+    <ClInclude Include="DUIManager\DUIGlobal.h" />
+    <ClInclude Include="DUIResource\DUIColorBase.h" />
+    <ClInclude Include="DUIResource\DUIFontBase.h" />
+    <ClInclude Include="DUIResource\DUIImageBase.h" />
+    <ClInclude Include="DUIResource\DUIResourceBase.h" />
+    <ClInclude Include="XUIHead.h" />
+    <ClInclude Include="DUIUtils\DUIPoint.h" />
+    <ClInclude Include="DUIUtils\DUIRect.h" />
+    <ClInclude Include="DUIUtils\DUISize.h" />
+    <ClInclude Include="DUIUtils\stb_image_write.h" />
+    <ClInclude Include="DUIUtils\Utils.h" />
+    <ClInclude Include="DUIUtils\XUnzip.h" />
+    <ClInclude Include="DUIXmlPack\DUIXmlPack.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MMAsyncObject.cpp" />
-    <ClCompile Include="dllmain.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_MT|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_MT|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'">false</CompileAsManaged>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeBool.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeColor.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeColorSwitch.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeCombox.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeCursor.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeGroup.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeHotKey.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeObject.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributePosition.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeRect.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeSize.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttriImageSection.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeDuiSelect.cpp" />
+    <ClCompile Include="DUIAttribute\DUIAttributeTabSelect.cpp" />
+    <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeCtrlID.cpp" />
+    <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeFloat.cpp" />
+    <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeLong.cpp" />
+    <ClCompile Include="DUIAttribute\DUINumber\DUIAttributeULong.cpp" />
+    <ClCompile Include="DUIAttribute\DUIText\DUIAttributeRichText.cpp" />
+    <ClCompile Include="DUIAttribute\DUIText\DUIAttributeText.cpp" />
+    <ClCompile Include="DUIAttribute\DUIText\DUIAttributeTextStyle.cpp" />
+    <ClCompile Include="DUIControl\DUIClockCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIGroupCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIInstrumentCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIKLineChartCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIProgressCircleCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIRotateMenuCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIButtonCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUICalendarCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUICheckBoxCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIComboxCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIContainerCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIControlBase.cpp" />
+    <ClCompile Include="DUIControl\DUIDateTimeCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIEditCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIAnimateCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIHorizontalLayoutCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIHotKeyCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIIPAddressCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIListHeaderCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIListHeaderItemCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIListItemCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIListViewCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIMenuCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIProgressCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIRadioBoxCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIRichEditCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIScrollBarCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUISliderCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUISpinCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIStaticCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUITabLayoutCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIXEditCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUITreeNodeCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUITreeViewCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIVerticalLayoutCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIWaterCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIWebBrowserCtrl.cpp" />
+    <ClCompile Include="DUICore\DUIAnimation.cpp" />
+    <ClCompile Include="DUICore\DUINotifyPump.cpp" />
+    <ClCompile Include="DUICore\DUIPropertyObject.cpp" />
+    <ClCompile Include="DUICore\DUIRender.cpp" />
+    <ClCompile Include="DUICore\DUIRender\DUICanvasRaster.cpp" />
+    <ClCompile Include="DUICore\DUIRender\DUIMacFont.cpp" />
+    <ClCompile Include="DUICore\DUIRender\DUIGdiplusPortable.cpp" />
+    <ClCompile Include="DUICore\DUIRender\DUIGdiPortable.cpp" />
+    <ClCompile Include="DUICore\DUIRender\DUIPaintSceneSDL.cpp" />
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndBase.cpp" />
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndVirtual.cpp" />
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndSDL.cpp" />
+    <ClCompile Include="DUICore\DUIPlatform\DUIWndWin32.cpp" />
+    <ClCompile Include="DUICore\DUIPlatform\DUIWnd.cpp" />
+    <ClCompile Include="DUIExport\DUIStruct.cpp" />
+    <ClCompile Include="DUIExport\IDUIInterface.cpp" />
+    <ClCompile Include="DUIManager\DUIFactory.cpp" />
+    <ClCompile Include="DUIManager\DUIGlobal.cpp" />
+    <ClCompile Include="DUIResource\DUIColorBase.cpp" />
+    <ClCompile Include="DUIResource\DUIFontBase.cpp" />
+    <ClCompile Include="DUIResource\DUIImageBase.cpp" />
+    <ClCompile Include="DUIResource\DUIResourceBase.cpp" />
+    <ClCompile Include="DUIUtils\DUIPoint.cpp" />
+    <ClCompile Include="DUIUtils\DUIRect.cpp" />
+    <ClCompile Include="DUIUtils\DUISize.cpp" />
+    <ClCompile Include="DUIUtils\stb_image.h">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|x64'">
@@ -759,14 +977,6 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_Static_MT|x64'">
       </PrecompiledHeader>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_MT|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_MT|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|x64'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode|x64'">
@@ -784,48 +994,9 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|x64'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="MMDisplayer.cpp" />
-    <ClCompile Include="MMDpi.cpp" />
-    <ClCompile Include="MMDragDrop\MMDataObject.cpp" />
-    <ClCompile Include="MMDragDrop\MMDragDrop.cpp" />
-    <ClCompile Include="MMDragDrop\MMDropSource.cpp" />
-    <ClCompile Include="MMEncrypt.cpp" />
-    <ClCompile Include="MMFileMonitor\MMFileMonitor.cpp" />
-    <ClCompile Include="MMHash.cpp" />
-    <ClCompile Include="MMMagnetBox.cpp" />
-    <ClCompile Include="MMCommandLine.cpp" />
-    <ClCompile Include="MMFile.cpp" />
-    <ClCompile Include="MMHelper.cpp" />
-    <ClCompile Include="MMMD5CheckSum.cpp" />
-    <ClCompile Include="MMModule.cpp" />
-    <ClCompile Include="MMProcess.cpp" />
-    <ClCompile Include="MMReDirection.cpp" />
-    <ClCompile Include="MMRegMonitor.cpp" />
-    <ClCompile Include="MMResource.cpp" />
-    <ClCompile Include="MMService.cpp" />
-    <ClCompile Include="MMServiceModel\MMServiceItem.cpp" />
-    <ClCompile Include="MMServiceModel\MMThreadPool.cpp" />
-    <ClCompile Include="MMServiceModel\MMTimerPower.cpp" />
-    <ClCompile Include="MMShellExecute\MMShellExecute.cpp" />
-    <ClCompile Include="MMSocket\SocketClient\MMTCPSocketClient.cpp" />
-    <ClCompile Include="MMSocket\SocketServer\MMSocketClientItem.cpp" />
-    <ClCompile Include="MMSocket\SocketServer\MMTCPSocketServer.cpp" />
-    <ClCompile Include="MMSocket\SocketServer\WebSocket\SHA1.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_MT|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode_MT|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="MMStrHelp.cpp" />
-    <ClCompile Include="MMString.cpp" />
-    <ClCompile Include="MMSvg.cpp" />
-    <ClCompile Include="MMTime.cpp" />
-    <ClCompile Include="MMTrayIcon.cpp" />
-    <ClCompile Include="MMUtils\MMPoint.cpp" />
-    <ClCompile Include="MMUtils\MMRect.cpp" />
-    <ClCompile Include="MMUtils\MMSize.cpp" />
-    <ClCompile Include="MMVersion.cpp" />
-    <ClCompile Include="MMWinTCPing.cpp" />
+    <ClCompile Include="DUIUtils\Utils.cpp" />
+    <ClCompile Include="DUIUtils\XUnzip.cpp" />
+    <ClCompile Include="DUIXmlPack\DUIXmlPack.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unicode|x64'">Create</PrecompiledHeader>
@@ -844,6 +1015,26 @@ copy $(Configuration)\$(TargetFileName) "../lib"</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Unicode_Static_MT|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MMHelper\MMHelper.2017.vcxproj">
+      <Project>{d64ee06c-987d-493c-969a-cf1d8f4390a9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdDepend\tinyxml2\vs\tinyxml2.2017.vcxproj">
+      <Project>{7c72653a-e6f8-4584-b553-de3a0aee4356}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdDepend\webp\vs\webp.vcxproj">
+      <Project>{0ef1f64a-3427-335c-b396-186b76d4b58f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdDepend\webp\vs\webpdecoder.vcxproj">
+      <Project>{fb573304-4a90-3c74-8ee3-492b0ee488bb}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdDepend\webp\vs\webpdemux.vcxproj">
+      <Project>{5015d271-c44c-3f3a-93b7-af7c7a4b8b86}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="XUI.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

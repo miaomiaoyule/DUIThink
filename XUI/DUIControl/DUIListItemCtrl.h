@@ -33,7 +33,7 @@ protected:
 protected:
 	CDUIListViewCtrl *					m_pOwner = NULL;
 	CDUICheckBoxCtrl *					m_pCheckSelectCtrl = NULL;
-	CDUIThinkEditCtrl *					m_pEditTextCtrl = NULL;
+	CDUIXEditCtrl *						m_pEditTextCtrl = NULL;
 	int									m_nIndex = -1;
 
 	//override
@@ -119,7 +119,7 @@ public:
 	virtual RECT GetTextPadding();
 	virtual void SetTextPadding(RECT rcPadding);
 	virtual void PerformEditText();
-	virtual CDUIThinkEditCtrl * GetEditTextCtrl();
+	virtual CDUIXEditCtrl * GetEditTextCtrl();
 
 	//message
 protected:

@@ -980,7 +980,7 @@ void CDUITreeNodeCtrl::InitComplete()
 	}
 	if (NULL == m_pEditTextCtrl && m_pHorizContainerCtrl)
 	{
-		m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, m_pHorizContainerCtrl->FindSubControlThisView(Dui_CtrlIDInner_ListItemEdit));
+		m_pEditTextCtrl = MMInterfaceHelper(CDUIXEditCtrl, m_pHorizContainerCtrl->FindSubControlThisView(Dui_CtrlIDInner_ListItemEdit));
 	}
 
 	//create
@@ -1060,10 +1060,10 @@ void CDUITreeNodeCtrl::InitComplete()
 			CDUITreeNodeCtrl *pParentNode = GetParentNode();
 			if (pParentNode)
 			{
-				CDUIThinkEditCtrl *pEditTextCtrl = pParentNode->GetEditTextCtrl();
+				CDUIXEditCtrl *pEditTextCtrl = pParentNode->GetEditTextCtrl();
 				if (NULL == pEditTextCtrl) break;
 
-				m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, pEditTextCtrl->Clone());
+				m_pEditTextCtrl = MMInterfaceHelper(CDUIXEditCtrl, pEditTextCtrl->Clone());
 				if (NULL == m_pEditTextCtrl) break;
 
 				m_pHorizContainerCtrl->InsertChild(m_pEditTextCtrl);
@@ -1072,7 +1072,7 @@ void CDUITreeNodeCtrl::InitComplete()
 			}
 
 			//new
-			m_pEditTextCtrl = new CDUIThinkEditCtrl;
+			m_pEditTextCtrl = new CDUIXEditCtrl;
 			m_pEditTextCtrl->Init();
 			m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
 			m_pEditTextCtrl->SetVisible(false);

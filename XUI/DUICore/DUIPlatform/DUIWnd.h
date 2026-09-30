@@ -16,7 +16,7 @@ class XUI_API CDUIWnd
 	friend class CDUIGlobal;
 	friend class CDUIXmlPack;
 	friend class CDUIContainerCtrl;
-	friend class CDUIThinkEditCtrl;
+	friend class CDUIXEditCtrl;
 	friend class CDUIRichEditCtrl;
 	friend class CDesignerView;
 	friend class CControlView;

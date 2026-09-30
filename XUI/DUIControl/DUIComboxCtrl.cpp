@@ -865,7 +865,7 @@ void CDUIComboxCtrl::InitComplete()
 	//header
 	if (NULL == m_pEditCtrl)
 	{
-		m_pEditCtrl = new CDUIThinkEditCtrl();
+		m_pEditCtrl = new CDUIXEditCtrl();
 		m_pEditCtrl->Init();
 		m_pEditCtrl->SetBindCtrl(this);
 		m_pEditCtrl->SetVisible(IsEditEnable());

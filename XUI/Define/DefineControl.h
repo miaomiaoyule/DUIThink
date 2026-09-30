@@ -28,7 +28,7 @@
 #define Dui_Ctrl_Static								(_T("StaticCtrl"))
 #define Dui_Ctrl_Edit								(_T("EditCtrl"))
 #define Dui_Ctrl_RichEdit							(_T("RichEditCtrl"))
-#define Dui_Ctrl_ThinkEdit							(_T("ThinkEditCtrl"))
+#define Dui_Ctrl_XEdit								(_T("XEditCtrl"))
 #define Dui_Ctrl_Button								(_T("ButtonCtrl"))
 #define Dui_Ctrl_CheckBox							(_T("CheckBoxCtrl"))
 #define Dui_Ctrl_RadioBox							(_T("RadioBoxCtrl"))

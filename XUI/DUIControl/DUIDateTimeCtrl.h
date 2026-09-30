@@ -26,7 +26,7 @@ protected:
 
 	//variant
 protected:
-	CDUIThinkEditCtrl *					m_pEditDateTimeCtrl = NULL;
+	CDUIXEditCtrl *						m_pEditDateTimeCtrl = NULL;
 	CDUIButtonCtrl *					m_pBtnDateTimeCtrl = NULL;
 	SYSTEMTIME							m_tDateTime = {};
 
@@ -59,7 +59,7 @@ public:
 	virtual void RemoveAll() override;
 
 	//date time
-	virtual CDUIThinkEditCtrl * GetDataTimeEditCtrl();
+	virtual CDUIXEditCtrl * GetDataTimeEditCtrl();
 	virtual CDUIButtonCtrl * GetDateTimeBtnCtrl();
 	virtual CMMString GetBindCalendarDui();
 	virtual void SetBindCalendarDui(CMMString strCalendarDui);

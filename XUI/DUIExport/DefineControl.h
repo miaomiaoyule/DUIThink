@@ -61,7 +61,7 @@ typedef CDUIControlBase* (CALLBACK* FindControlProc)(CDUIControlBase*, LPVOID pD
 #define Dui_TimerAnimate_Elapse						(15)
 #define Dui_TimerWkeRefresh_Elapse					(30)
 #define Dui_TimerDelayRefresh_Elapse				(50)
-#define Dui_TimerThinkEditAnimate_Elapse			(100)
+#define Dui_TimerXEditAnimate_Elapse				(100)
 #define Dui_TimerCaret_Elapse						(500)
 #define Dui_TimerClock_Elapse						(1000)
 #define Dui_TimerInputChar_Elapse					(30)

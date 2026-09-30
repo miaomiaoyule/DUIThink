@@ -5,7 +5,7 @@
 #pragma pack(1)
 
 //////////////////////////////////////////////////////////////////////////
-class CDUIThinkEditCtrl;
+class CDUIXEditCtrl;
 
 //////////////////////////////////////////////////////////////////////////
 #define VER_CDUISpinCtrl INTERFACE_VERSION(1,1)
@@ -42,7 +42,7 @@ protected:
 
 	//variant
 protected:
-	CDUIThinkEditCtrl *					m_pEditValueCtrl = NULL;
+	CDUIXEditCtrl *						m_pEditValueCtrl = NULL;
 	CDUIVerticalLayoutCtrl *			m_pVertRightCtrl = NULL;
 	CDUIButtonCtrl *					m_pBtnUpCtrl = NULL;
 	CDUIButtonCtrl *					m_pBtnDownCtrl = NULL;

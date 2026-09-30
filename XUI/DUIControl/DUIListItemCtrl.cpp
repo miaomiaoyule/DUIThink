@@ -600,7 +600,7 @@ void CDUIListItemCtrl::PerformEditText()
 	return;
 }
 
-CDUIThinkEditCtrl * CDUIListItemCtrl::GetEditTextCtrl()
+CDUIXEditCtrl * CDUIListItemCtrl::GetEditTextCtrl()
 {
 	return m_pEditTextCtrl;
 }
@@ -842,10 +842,10 @@ void CDUIListItemCtrl::InitComplete()
 	{
 		do
 		{
-			m_pEditTextCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, FindSubControlThisView(Dui_CtrlIDInner_ListItemEdit));
+			m_pEditTextCtrl = MMInterfaceHelper(CDUIXEditCtrl, FindSubControlThisView(Dui_CtrlIDInner_ListItemEdit));
 			if (m_pEditTextCtrl) break;
 
-			m_pEditTextCtrl = new CDUIThinkEditCtrl;
+			m_pEditTextCtrl = new CDUIXEditCtrl;
 			m_pEditTextCtrl->Init();
 			m_pEditTextCtrl->SetCtrlID(Dui_CtrlIDInner_ListItemEdit);
 			m_pEditTextCtrl->SetVisible(false);

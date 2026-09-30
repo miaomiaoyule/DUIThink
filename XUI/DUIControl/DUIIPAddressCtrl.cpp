@@ -65,8 +65,8 @@ void CDUIIPAddressCtrl::RefreshView()
 	m_vecIPDot.clear();
 	for (int n = 0; n < GetChildCount(); n++)
 	{
-		CDUIThinkEditCtrl *pEditCtrl = GetChildAt(n);
-		CDUIThinkEditCtrl *pEditNextCtrl = GetChildAt(n + 1);
+		CDUIXEditCtrl *pEditCtrl = GetChildAt(n);
+		CDUIXEditCtrl *pEditNextCtrl = GetChildAt(n + 1);
 		if (NULL == pEditCtrl || NULL == pEditNextCtrl) continue;
 
 		CDUIRect rcEdit = pEditCtrl->GetAbsoluteRect();
@@ -106,14 +106,14 @@ void CDUIIPAddressCtrl::SetTextStyle(const tagDuiTextStyle &TextStyle)
 
 bool CDUIIPAddressCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 {
-	if (GetChildCount() >= COUNT_IPVALUE || NULL == MMInterfaceHelper(CDUIThinkEditCtrl, pChild)) return false;
+	if (GetChildCount() >= COUNT_IPVALUE || NULL == MMInterfaceHelper(CDUIXEditCtrl, pChild)) return false;
 
 	return __super::InsertChild(pChild, nPos);
 }
 
-CDUIThinkEditCtrl * CDUIIPAddressCtrl::GetChildAt(int nIndex) const
+CDUIXEditCtrl * CDUIIPAddressCtrl::GetChildAt(int nIndex) const
 {
-	return MMInterfaceHelper(CDUIThinkEditCtrl, __super::GetChildAt(nIndex));
+	return MMInterfaceHelper(CDUIXEditCtrl, __super::GetChildAt(nIndex));
 }
 
 DWORD CDUIIPAddressCtrl::GetIPAddrValue()
@@ -129,7 +129,7 @@ void CDUIIPAddressCtrl::SetIPAddrValue(DWORD dwIPAddr)
 
 	for (int n = 0; n < GetChildCount(); n++)
 	{
-		CDUIThinkEditCtrl *pEditCtrl = GetChildAt(n);
+		CDUIXEditCtrl *pEditCtrl = GetChildAt(n);
 		if (NULL == pEditCtrl) continue;
 
 		pEditCtrl->SetText(CMMStrHelp::FormatW(_T("%d"), *((LPBYTE)&dwIPAddr + n)).c_str());
@@ -190,7 +190,7 @@ void CDUIIPAddressCtrl::InitComplete()
 	{
 		for (int n = 0; n < COUNT_IPVALUE; n++)
 		{
-			CDUIThinkEditCtrl *pEditCtrl = new CDUIThinkEditCtrl();
+			CDUIXEditCtrl *pEditCtrl = new CDUIXEditCtrl();
 			pEditCtrl->Init();
 			pEditCtrl->SetEditTextType(EditText_NumberInt);
 			pEditCtrl->SetNumberMinLimit(0);
@@ -227,7 +227,7 @@ void CDUIIPAddressCtrl::RefreshEditTextStyle()
 
 	for (int n = 0; n < GetChildCount(); n++)
 	{
-		CDUIThinkEditCtrl *pEditCtrl = GetChildAt(n);
+		CDUIXEditCtrl *pEditCtrl = GetChildAt(n);
 		if (NULL == pEditCtrl) continue;
 
 		pEditCtrl->SetTextStyle(m_AttributeTextStyle.GetTextStyle());

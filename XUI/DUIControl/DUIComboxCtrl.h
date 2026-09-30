@@ -33,7 +33,7 @@ protected:
 protected:
 	CDUIComboxWnd *						m_pComboxWindow = NULL;
 	CDUIListViewCtrl *					m_pShowListView = NULL;
-	CDUIThinkEditCtrl *					m_pEditCtrl = NULL;
+	CDUIXEditCtrl *						m_pEditCtrl = NULL;
 
 	//override
 protected:

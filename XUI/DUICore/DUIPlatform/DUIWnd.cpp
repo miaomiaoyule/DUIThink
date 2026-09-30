@@ -417,7 +417,7 @@ LRESULT CDUIWnd::OnMouseMove(WPARAM wParam, LPARAM lParam)
 					//model
 					DispatchModelMouseEvent(m_pCaptureCtrl, &CDUIControlBase::OnWinDragStart, pt, DuiMsg, false);
 				}
-				else if ((NULL == MMInterfaceHelper(CDUIThinkEditCtrl, m_pCaptureCtrl) || m_pFocusCtrl != m_pCaptureCtrl)
+				else if ((NULL == MMInterfaceHelper(CDUIXEditCtrl, m_pCaptureCtrl) || m_pFocusCtrl != m_pCaptureCtrl)
 #ifndef DuiPlatform_SDL
 					&& (NULL == MMInterfaceHelper(CDUIEditCtrl, m_pCaptureCtrl) || m_pFocusCtrl != m_pCaptureCtrl)
 					&& (NULL == MMInterfaceHelper(CDUIRichEditCtrl, m_pCaptureCtrl) || m_pFocusCtrl != m_pCaptureCtrl)
@@ -596,7 +596,7 @@ void CDUIWnd::DispatchModelMouseEvent(CDUIControlBase *pCtrl, MouseEventPtr pFun
 		&& pCtrl->GetOwnerModelCtrl()
 		&& pCtrl->GetOwnerModelCtrl()->IsEnabled()
 		&& false == pCtrl->GetOwnerModelCtrl()->IsMouseThrough()
-		&& (NULL == MMInterfaceHelper(CDUIThinkEditCtrl, pCtrl) || m_pFocusCtrl != pCtrl)
+		&& (NULL == MMInterfaceHelper(CDUIXEditCtrl, pCtrl) || m_pFocusCtrl != pCtrl)
 #if !defined(DuiPlatform_SDL)
 		&& (NULL == MMInterfaceHelper(CDUIEditCtrl, pCtrl) || m_pFocusCtrl != pCtrl)
 		&& (NULL == MMInterfaceHelper(CDUIRichEditCtrl, pCtrl) || m_pFocusCtrl != pCtrl)
@@ -626,7 +626,7 @@ void CDUIWnd::DispatchModelKeyboardEvent(CDUIControlBase *pCtrl, KeyboardEventPt
 	if (pCtrl
 		&& pCtrl->GetOwnerModelCtrl()
 		&& pCtrl->GetOwnerModelCtrl()->IsEnabled()
-		&& (NULL == MMInterfaceHelper(CDUIThinkEditCtrl, pCtrl) || m_pFocusCtrl != pCtrl)
+		&& (NULL == MMInterfaceHelper(CDUIXEditCtrl, pCtrl) || m_pFocusCtrl != pCtrl)
 #if !defined(DuiPlatform_SDL)
 		&& (NULL == MMInterfaceHelper(CDUIEditCtrl, pCtrl) || m_pFocusCtrl != pCtrl)
 		&& (NULL == MMInterfaceHelper(CDUIRichEditCtrl, pCtrl) || m_pFocusCtrl != pCtrl)

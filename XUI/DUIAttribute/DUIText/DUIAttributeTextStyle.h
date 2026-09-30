@@ -15,7 +15,7 @@ class XUI_API CDUIAttributeTextStyle
 	: public CDUIAttributeObject
 {
 	MMDeclare_Super(CDUIAttributeObject)
-	friend class CDUIThinkEditCtrl;
+	friend class CDUIXEditCtrl;
 	friend class CPropertyTextStyle;
 
 	DuiDeclare_CreateAttribute(CDUIAttributeTextStyle)

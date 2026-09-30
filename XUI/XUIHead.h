@@ -280,7 +280,7 @@ using namespace tinyxml2;
 #include "DUIControl/DUIContainerCtrl.h"
 #include "DUIControl/DUIVerticalLayoutCtrl.h"
 #include "DUIControl/DUIHorizontalLayoutCtrl.h"
-#include "DUIControl/DUIThinkEditCtrl.h"
+#include "DUIControl/DUIXEditCtrl.h"
 #include "DUIControl/DUIRichEditCtrl.h"
 #include "DUIControl/DUITabLayoutCtrl.h"
 #include "DUIControl/DUIIPAddressCtrl.h"

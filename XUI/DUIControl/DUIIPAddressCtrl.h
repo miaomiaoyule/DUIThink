@@ -49,7 +49,7 @@ public:
 
 	//child
 	bool InsertChild(CDUIControlBase *pChild, int nPos = -1) override;
-	CDUIThinkEditCtrl * GetChildAt(int nIndex) const override;
+	CDUIXEditCtrl * GetChildAt(int nIndex) const override;
 
 	virtual DWORD GetIPAddrValue();
 	virtual void SetIPAddrValue(DWORD dwIPAddr);
