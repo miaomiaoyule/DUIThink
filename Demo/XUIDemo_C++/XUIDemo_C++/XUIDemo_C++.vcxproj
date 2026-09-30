@@ -110,7 +110,7 @@
     </Manifest>
     <PreBuildEvent>
       <Command>if exist "../../../bin\MMHelper.2017D.dll" copy "../../../bin\MMHelper.2017D.dll" "../Debug"
-if exist "../../../bin\DUIThink.2017D.dll" copy "../../../bin\DUIThink.2017D.dll" "../Debug"</Command>
+if exist "../../../bin\XUI.2017D.dll" copy "../../../bin\XUI.2017D.dll" "../Debug"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -133,7 +133,7 @@ if exist "../../../bin\DUIThink.2017D.dll" copy "../../../bin\DUIThink.2017D.dll
     </Manifest>
     <PreBuildEvent>
       <Command>if exist "../../../bin\MMHelper.201764D.dll" copy "../../../bin\MMHelper.201764D.dll" "../Debug"
-if exist "../../../bin\DUIThink.201764D.dll" copy "../../../bin\DUIThink.201764D.dll" "../Debug"</Command>
+if exist "../../../bin\XUI.201764D.dll" copy "../../../bin\XUI.201764D.dll" "../Debug"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -160,7 +160,7 @@ if exist "../../../bin\DUIThink.201764D.dll" copy "../../../bin\DUIThink.201764D
     </Manifest>
     <PreBuildEvent>
       <Command>if exist "../../../bin\MMHelper.2017.dll" copy "../../../bin\MMHelper.2017.dll" "../Release"
-if exist "../../../bin\DUIThink.2017.dll" copy "../../../bin\DUIThink.2017.dll" "../Release"</Command>
+if exist "../../../bin\XUI.2017.dll" copy "../../../bin\XUI.2017.dll" "../Release"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -187,7 +187,7 @@ if exist "../../../bin\DUIThink.2017.dll" copy "../../../bin\DUIThink.2017.dll" 
     </Manifest>
     <PreBuildEvent>
       <Command>if exist "../../../bin\MMHelper.201764.dll" copy "../../../bin\MMHelper.201764.dll" "../Debug"
-if exist "../../../bin\DUIThink.201764.dll" copy "../../../bin\DUIThink.201764.dll" "../Debug"</Command>
+if exist "../../../bin\XUI.201764.dll" copy "../../../bin\XUI.201764.dll" "../Debug"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -465,6 +465,7 @@
     <a ValueID="1003955936" Text="电子邮件"/>
     <a ValueID="1012522780" Text="TreeHeader"/>
     <a ValueID="1019840300" Text="换刀"/>
+    <a ValueID="1039007762" Text="XUIDemo"/>
     <a ValueID="1063802492" Text="硬盘只能加速"/>
     <a ValueID="1074703578" Text="电脑管家"/>
     <a ValueID="1075228487" Text="TreeNode2_1"/>
@@ -488,6 +489,7 @@
     <a ValueID="1473856531" Text="TreeSelect"/>
     <a ValueID="1506883355" Text="DlgAnimate3DRotateTopBottom"/>
     <a ValueID="1522458394" Text="TreeNode1_1_1"/>
+    <a ValueID="1528198830" Text="XUI群： 978413588"/>
     <a ValueID="1598861573" Text="腾讯云"/>
     <a ValueID="1628072297" Text="普通文字、单行、水平靠左、垂直靠上"/>
     <a ValueID="1641517406" Text="苹果BootCamp"/>
@@ -539,7 +541,6 @@
     <a ValueID="2636933355" Text="10mb"/>
     <a ValueID="2642423244" Text="浏览器"/>
     <a ValueID="2657542565" Text="TreeNode3_2"/>
-    <a ValueID="2660513918" Text="DUITihnkDemo"/>
     <a ValueID="2691475092" Text="ComboxItem"/>
     <a ValueID="2715004334" Text="DlgAnimateBottom"/>
     <a ValueID="2715518584" Text="TreeNode3_2_2"/>
@@ -551,7 +552,6 @@
     <a ValueID="2816118553" Text="TabMain"/>
     <a ValueID="2842599350" Text="如果没有如果..."/>
     <a ValueID="2850572913" Text="Spin"/>
-    <a ValueID="2869473302" Text="DUIThinkDemo"/>
     <a ValueID="2886769345" Text="ThinkEdit"/>
     <a ValueID="2892870016" Text="ControlPreview"/>
     <a ValueID="2893759913" Text="Edit"/>
@@ -585,7 +585,6 @@
     <a ValueID="3324395409" Text="不定项高度的列表"/>
     <a ValueID="3370103814" Text="电子表格"/>
     <a ValueID="3372983966" Text="CheckBox"/>
-    <a ValueID="3378045114" Text="DUITihnk群： 978413588"/>
     <a ValueID="3423281098" Text="斜体阴影"/>
     <a ValueID="3433456945" Text="Email"/>
     <a ValueID="3454965027" Text="DlgAnimateTopBottomExpand"/>
@@ -845,7 +844,6 @@
     <a ValueID="2319213697" Position="0-0-0-0-386-10-0-0-0"/>
     <a ValueID="2341231180" Position="0-0-0-0-80-10-0-0-0"/>
     <a ValueID="2387639665" Position="0-0-100-0-80-10-20-0-24"/>
-    <a ValueID="2396299630" Position="0-0-20-0-88-10-0-0-0"/>
     <a ValueID="2458997639" Position="1-0-313-0-119-10-351-0-36"/>
     <a ValueID="2471594980" Position="1-2-0-0-131-10-0-0-0"/>
     <a ValueID="2486201753" Position="0-0-5-0-0-10-0-0-0"/>
@@ -865,6 +863,7 @@
     <a ValueID="2806444616" Position="0-0-0-0-128-10-62-0-128"/>
     <a ValueID="2829354335" Position="0-0-0-0-300-10-0-0-0"/>
     <a ValueID="2869680438" Position="0-0-0-0-17-12-0-0-17"/>
+    <a ValueID="2904591429" Position="0-0-20-0-56-10-0-0-0"/>
     <a ValueID="3028561321" Position="0-1-9-10-37-12-0-0-20"/>
     <a ValueID="3062189494" Position="0-0-0-0-20-12-0-0-20"/>
     <a ValueID="3086879907" Position="0-0-5-0-24-12-0-0-24"/>

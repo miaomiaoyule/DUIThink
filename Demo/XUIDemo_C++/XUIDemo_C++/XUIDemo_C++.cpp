@@ -1,8 +1,8 @@
-﻿// DUIThinkDemo_C++.cpp : 定义应用程序的入口点。
+﻿// XUIDemo_C++.cpp : 定义应用程序的入口点。
 //
 
 #include "StdAfx.h"
-#include "DUIThinkDemo_C++.h"
+#include "XUIDemo_C++.h"
 #if defined(__APPLE__)
 #include <SDL3/SDL_main.h>
 #endif
@@ -193,10 +193,10 @@ namespace
 			return false;
 		}
 
-		const std::string strDestRoot = std::string(pszInternal) + "/DUIThinkDemo_C++.DuiProj";
+		const std::string strDestRoot = std::string(pszInternal) + "/XUIDemo_C++.DuiProj";
 		RemoveTree(strDestRoot);
 
-		const bool bOk = CopyAssetDir(pEnv, jAssets, midList, pMgr, "DUIThinkDemo_C++.DuiProj", strDestRoot);
+		const bool bOk = CopyAssetDir(pEnv, jAssets, midList, pMgr, "XUIDemo_C++.DuiProj", strDestRoot);
 		pEnv->DeleteLocalRef(jAssets);
 		if (false == bOk)
 		{
@@ -204,7 +204,7 @@ namespace
 			return false;
 		}
 
-		const std::string strProjPath = strDestRoot + "/DUIThinkDemo_C++.DuiProj";
+		const std::string strProjPath = strDestRoot + "/XUIDemo_C++.DuiProj";
 		SDL_PathInfo info = {};
 		if (false == SDL_GetPathInfo(strProjPath.c_str(), &info)
 			|| SDL_PATHTYPE_FILE != info.type
@@ -254,7 +254,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	CDUIGlobal::GetInstance()->LoadProjectFromFile(strProjFile);
 #else
-	CDUIGlobal::GetInstance()->LoadProjectFromFile(_T("../DUIThinkDemo_C++.DuiProj/DUIThinkDemo_C++.DuiProj"));
+	CDUIGlobal::GetInstance()->LoadProjectFromFile(_T("../XUIDemo_C++.DuiProj/XUIDemo_C++.DuiProj"));
 #endif
 
 	CMMDpi::SetProcessDPIAwareness(enMMPROCESS_DPI_AWARENESS::MMPROCESS_PER_MONITOR_DPI_AWARE);
@@ -288,7 +288,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		//normal demo
 		CDlgDemo DlgDemo;
-		DlgDemo.Create(NULL, _T("DUIThinkDemo"), DUI_WNDSTYLE_FRAME, DUI_WNDSTYLE_EX_FRAME);
+		DlgDemo.Create(NULL, _T("XUIDemo"), DUI_WNDSTYLE_FRAME, DUI_WNDSTYLE_EX_FRAME);
 		DlgDemo.DoModal();
 
 	} while (false);

@@ -16,7 +16,7 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-#include "../../../DUIThink/DUIThinkHead.h"
+#include "../../../XUI/XUIHead.h"
 
 #ifndef DuiPlatform_SDL
 #include <CommDlg.h>
@@ -26,24 +26,24 @@
 #ifdef _WIN64
 #ifdef _DEBUG
 #pragma comment(lib, "../../../lib/MMHelper.201764D.lib")
-#pragma comment(lib, "../../../lib/DUIThink.201764D.lib")
+#pragma comment(lib, "../../../lib/XUI.201764D.lib")
 #else
 #pragma comment(lib, "../../../lib/MMHelper.201764.lib")
-#pragma comment(lib, "../../../lib/DUIThink.201764.lib")
+#pragma comment(lib, "../../../lib/XUI.201764.lib")
 #endif
 #else
 #ifdef _DEBUG
 #pragma comment(lib, "../../../lib/MMHelper.2017D.lib")
-#pragma comment(lib, "../../../lib/DUIThink.2017D.lib")
+#pragma comment(lib, "../../../lib/XUI.2017D.lib")
 #else
 #pragma comment(lib, "../../../lib/MMHelper.2017.lib")
-#pragma comment(lib, "../../../lib/DUIThink.2017.lib")
+#pragma comment(lib, "../../../lib/XUI.2017.lib")
 #endif
 #endif
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-#include "../DUIThinkDemo_C++.DuiProj/ResourceCtrlID.h"
+#include "../XUIDemo_C++.DuiProj/ResourceCtrlID.h"
 #include "Resource.h"
 #include "Define.h"
 #include "BaseControl/StaticView/StaticView.h"

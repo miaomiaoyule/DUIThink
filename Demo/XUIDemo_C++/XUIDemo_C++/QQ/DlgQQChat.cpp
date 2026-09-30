@@ -47,7 +47,7 @@ LRESULT CDlgQQChat::OnWndMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void CDlgQQChat::OnInitDialog()
 {
 	m_pListViewMessageCtrl = MMInterfaceHelper(CDUIListViewCtrl, FindControl(IDC_ListViewMessage));
-	m_pEditSendCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, FindControl(IDC_EditSend));
+	m_pEditSendCtrl = MMInterfaceHelper(CDUIXEditCtrl, FindControl(IDC_EditSend));
 	m_pBtnSendCtrl = MMInterfaceHelper(CDUIButtonCtrl, FindControl(IDC_BtnSend));
 	m_pBtnFaceCtrl = MMInterfaceHelper(CDUIButtonCtrl, FindControl(IDC_BtnFace));
 
@@ -160,7 +160,7 @@ void CDlgQQChat::ConstructMessageItem(CDUIListItemCtrl *pItem, VecDuiRichTextIte
 	//other
 	if (bOther)
 	{	
-		CDUIThinkEditCtrl *pEditMessageOtherCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, pVertOtherCtrl->FindSubControl(IDC_EditMessageOther));
+		CDUIXEditCtrl *pEditMessageOtherCtrl = MMInterfaceHelper(CDUIXEditCtrl, pVertOtherCtrl->FindSubControl(IDC_EditMessageOther));
 		if (NULL == pEditMessageOtherCtrl) return;
 
 		pEditMessageOtherCtrl->SetRichEdit(true);
@@ -171,7 +171,7 @@ void CDlgQQChat::ConstructMessageItem(CDUIListItemCtrl *pItem, VecDuiRichTextIte
 	}
 
 	//self
-	CDUIThinkEditCtrl *pEditMessageSelfCtrl = MMInterfaceHelper(CDUIThinkEditCtrl, pVertSelfCtrl->FindSubControl(IDC_EditMessageSelf));
+	CDUIXEditCtrl *pEditMessageSelfCtrl = MMInterfaceHelper(CDUIXEditCtrl, pVertSelfCtrl->FindSubControl(IDC_EditMessageSelf));
 	if (NULL == pEditMessageSelfCtrl) return;
 
 	pEditMessageSelfCtrl->SetRichEdit(true);

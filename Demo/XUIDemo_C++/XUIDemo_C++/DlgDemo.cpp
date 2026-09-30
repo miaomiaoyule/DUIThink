@@ -89,7 +89,7 @@ void CDlgDemo::OnInitDialog()
 	//tray
 	{
 #ifndef DuiPlatform_SDL
-		m_TrayIcon.CreateTrayIcon(m_hWnd, CDUIGlobal::GetInstance()->GetInstanceHandle(), IDI_DUITHINKDEMOC, _T("DUIThinkDemo"), WM_DEMO_TRAYICON);
+		m_TrayIcon.CreateTrayIcon(m_hWnd, CDUIGlobal::GetInstance()->GetInstanceHandle(), IDI_XUIDEMOC, _T("XUIDemo"), WM_DEMO_TRAYICON);
 		m_pTabViewControls->SetTimer(Time_TrayIcon_ID, Time_TrayIcon_Elapse);
 #endif
 	}

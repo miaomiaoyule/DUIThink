@@ -16,7 +16,7 @@ public:
 	//contorl
 protected:
 	CDUIListViewCtrl *					m_pListViewMessageCtrl = NULL;
-	CDUIThinkEditCtrl *					m_pEditSendCtrl = NULL;
+	CDUIXEditCtrl *						m_pEditSendCtrl = NULL;
 	CDUIButtonCtrl *					m_pBtnSendCtrl = NULL;
 	CDUIButtonCtrl *					m_pBtnFaceCtrl = NULL;
 

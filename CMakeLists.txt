@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
-project(DUIThinkCrossPlatform LANGUAGES C CXX)
+project(XUICrossPlatform LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-option(DUITHINK_PLATFORM_SDL "Build with SDL3 windowing backend" ON)
+option(XUI_PLATFORM_SDL "Build with SDL3 windowing backend" ON)
 
 # macOS (run on a Mac): brew install sdl3
-#   cmake -S . -B build-macos -DDUITHINK_PLATFORM_SDL=ON
+#   cmake -S . -B build-macos -DXUI_PLATFORM_SDL=ON
 #   cmake --build build-macos
 if(APPLE)
 	list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew" "/usr/local")
@@ -40,12 +40,12 @@ if(NOT SDL3_FOUND)
 	endif()
 endif()
 
-if(DUITHINK_PLATFORM_SDL AND NOT SDL3_FOUND)
+if(XUI_PLATFORM_SDL AND NOT SDL3_FOUND)
 	message(WARNING "SDL3 not found. Configure SDL3_LIBRARY / SDL3_INCLUDE_DIR, or install SDL3.")
 endif()
 
 add_compile_definitions(UNICODE _UNICODE)
-if(DUITHINK_PLATFORM_SDL)
+if(XUI_PLATFORM_SDL)
 	add_compile_definitions(DuiPlatform_SDL)
 endif()
 if(UNIX AND NOT APPLE AND NOT ANDROID)
@@ -170,7 +170,7 @@ list(FILTER SRC_MMHELPER EXCLUDE REGEX ".*_win32\\.cpp$")
 # Windows-only modules stay compiled but stubbed by #ifndef DuiPlatform_SDL
 add_library(MMHelper STATIC ${SRC_MMHELPER})
 target_compile_definitions(MMHelper PUBLIC MMHELPLIB)
-if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
+if(XUI_PLATFORM_SDL AND TARGET SDL3::SDL3)
 	target_link_libraries(MMHelper PUBLIC SDL3::SDL3)
 endif()
 if(APPLE)
@@ -196,59 +196,48 @@ elseif(UNIX AND NOT ANDROID)
 endif()
 
 # ---------------------------------------------------------------------------
-# DUIThink
+# XUI
 # ---------------------------------------------------------------------------
-file(GLOB_RECURSE SRC_DUITHINK CONFIGURE_DEPENDS "DUIThink/*.cpp")
+file(GLOB_RECURSE SRC_XUI CONFIGURE_DEPENDS "XUI/*.cpp")
 
 # Win32-only controls / platform
-if(DUITHINK_PLATFORM_SDL)
-	list(FILTER SRC_DUITHINK EXCLUDE REGEX ".*/DUIWndWin32\\.cpp$")
-	list(FILTER SRC_DUITHINK EXCLUDE REGEX ".*/DUIRichEditCtrl\\.cpp$")
-	list(FILTER SRC_DUITHINK EXCLUDE REGEX ".*/DUIWebBrowserCtrl\\.cpp$")
-	list(FILTER SRC_DUITHINK EXCLUDE REGEX ".*/DUIEditCtrl\\.cpp$")
-	list(FILTER SRC_DUITHINK EXCLUDE REGEX ".*/DUIHotKeyCtrl\\.cpp$")
-	list(FILTER SRC_DUITHINK EXCLUDE REGEX ".*/DUIWkeBrowserCtrl\\.cpp$")
+if(XUI_PLATFORM_SDL)
+	list(FILTER SRC_XUI EXCLUDE REGEX ".*/DUIWndWin32\\.cpp$")
+	list(FILTER SRC_XUI EXCLUDE REGEX ".*/DUIRichEditCtrl\\.cpp$")
+	list(FILTER SRC_XUI EXCLUDE REGEX ".*/DUIWebBrowserCtrl\\.cpp$")
+	list(FILTER SRC_XUI EXCLUDE REGEX ".*/DUIEditCtrl\\.cpp$")
+	list(FILTER SRC_XUI EXCLUDE REGEX ".*/DUIHotKeyCtrl\\.cpp$")
+	list(FILTER SRC_XUI EXCLUDE REGEX ".*/DUIWkeBrowserCtrl\\.cpp$")
 else()
-	list(FILTER SRC_DUITHINK EXCLUDE REGEX ".*/DUIWndSDL\\.cpp$")
-	list(FILTER SRC_DUITHINK EXCLUDE REGEX ".*/DUIWndVirtual\\.cpp$")
+	list(FILTER SRC_XUI EXCLUDE REGEX ".*/DUIWndSDL\\.cpp$")
+	list(FILTER SRC_XUI EXCLUDE REGEX ".*/DUIWndVirtual\\.cpp$")
 endif()
 
 if(ANDROID)
-	add_library(DUIThink STATIC ${SRC_DUITHINK})
-	target_compile_definitions(DUIThink PUBLIC DUITHINKLIB MMHELPLIB)
+	add_library(XUI STATIC ${SRC_XUI})
+	target_compile_definitions(XUI PUBLIC XUILIB MMHELPLIB)
 else()
-	add_library(DUIThink SHARED ${SRC_DUITHINK})
-	target_compile_definitions(DUIThink PRIVATE DUITHINKSDK MMHELPLIB)
+	add_library(XUI SHARED ${SRC_XUI})
+	target_compile_definitions(XUI PRIVATE XUISDK MMHELPLIB)
 endif()
-target_link_libraries(DUIThink PUBLIC MMHelper tinyxml2)
+target_link_libraries(XUI PUBLIC MMHelper tinyxml2)
 if(TARGET webpdemux)
-	target_link_libraries(DUIThink PUBLIC webpdemux)
+	target_link_libraries(XUI PUBLIC webpdemux)
 endif()
-if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
-	target_link_libraries(DUIThink PUBLIC SDL3::SDL3)
+if(XUI_PLATFORM_SDL AND TARGET SDL3::SDL3)
+	target_link_libraries(XUI PUBLIC SDL3::SDL3)
 endif()
 if(APPLE)
-	target_link_libraries(DUIThink PUBLIC "-framework CoreText" "-framework CoreFoundation" "-framework CoreGraphics")
+	target_link_libraries(XUI PUBLIC "-framework CoreText" "-framework CoreFoundation" "-framework CoreGraphics")
 endif()
 
 # ---------------------------------------------------------------------------
-# smoke test entry (optional; not required for Demo)
+# XUIDemo_C++
 # ---------------------------------------------------------------------------
-if(NOT ANDROID AND EXISTS "${CMAKE_SOURCE_DIR}/linux_main.cpp")
-	add_executable(DuiLinuxTest linux_main.cpp)
-	target_link_libraries(DuiLinuxTest PRIVATE DUIThink)
-	if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
-		target_link_libraries(DuiLinuxTest PRIVATE SDL3::SDL3)
-	endif()
-endif()
-
-# ---------------------------------------------------------------------------
-# DUIThinkDemo_C++ (Linux / SDL)
-# ---------------------------------------------------------------------------
-set(DEMO_ROOT "${CMAKE_SOURCE_DIR}/Demo/DUIThinkDemo_C++/DUIThinkDemo_C++")
-set(DEMO_PROJ_DIR "${CMAKE_SOURCE_DIR}/Demo/DUIThinkDemo_C++/DUIThinkDemo_C++.DuiProj")
+set(DEMO_ROOT "${CMAKE_SOURCE_DIR}/Demo/XUIDemo_C++/XUIDemo_C++")
+set(DEMO_PROJ_DIR "${CMAKE_SOURCE_DIR}/Demo/XUIDemo_C++/XUIDemo_C++.DuiProj")
 set(DEMO_SRCS
-	${DEMO_ROOT}/DUIThinkDemo_C++.cpp
+	${DEMO_ROOT}/XUIDemo_C++.cpp
 	${DEMO_ROOT}/StdAfx.cpp
 	${DEMO_ROOT}/DlgDemo.cpp
 	${DEMO_ROOT}/DlgDpi.cpp
@@ -276,33 +265,33 @@ if(ANDROID)
 	add_library(main SHARED ${DEMO_SRCS})
 	target_include_directories(main PRIVATE
 		${DEMO_ROOT}
-		"${CMAKE_SOURCE_DIR}/Demo/DUIThinkDemo_C++"
+		"${CMAKE_SOURCE_DIR}/Demo/XUIDemo_C++"
 	)
-	target_link_libraries(main PRIVATE DUIThink android log)
-	if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
+	target_link_libraries(main PRIVATE XUI android log)
+	if(XUI_PLATFORM_SDL AND TARGET SDL3::SDL3)
 		target_link_libraries(main PRIVATE SDL3::SDL3)
 	endif()
 else()
 	if(APPLE)
-		add_executable(DUIThinkDemo_C++ MACOSX_BUNDLE ${DEMO_SRCS})
+		add_executable(XUIDemo_C++ MACOSX_BUNDLE ${DEMO_SRCS})
 	elseif(WIN32)
-		add_executable(DUIThinkDemo_C++ WIN32 ${DEMO_SRCS})
+		add_executable(XUIDemo_C++ WIN32 ${DEMO_SRCS})
 	else()
-		add_executable(DUIThinkDemo_C++ ${DEMO_SRCS})
+		add_executable(XUIDemo_C++ ${DEMO_SRCS})
 	endif()
-	target_include_directories(DUIThinkDemo_C++ PRIVATE
+	target_include_directories(XUIDemo_C++ PRIVATE
 		${DEMO_ROOT}
-		"${CMAKE_SOURCE_DIR}/Demo/DUIThinkDemo_C++"
+		"${CMAKE_SOURCE_DIR}/Demo/XUIDemo_C++"
 	)
-	target_link_libraries(DUIThinkDemo_C++ PRIVATE DUIThink)
-	if(DUITHINK_PLATFORM_SDL AND TARGET SDL3::SDL3)
-		target_link_libraries(DUIThinkDemo_C++ PRIVATE SDL3::SDL3)
+	target_link_libraries(XUIDemo_C++ PRIVATE XUI)
+	if(XUI_PLATFORM_SDL AND TARGET SDL3::SDL3)
+		target_link_libraries(XUIDemo_C++ PRIVATE SDL3::SDL3)
 	endif()
 	if(APPLE)
-		set_target_properties(DUIThinkDemo_C++ PROPERTIES
+		set_target_properties(XUIDemo_C++ PROPERTIES
 			MACOSX_BUNDLE TRUE
-			MACOSX_BUNDLE_BUNDLE_NAME "DUIThinkDemo"
-			MACOSX_BUNDLE_GUI_IDENTIFIER "com.duitthink.demo"
+			MACOSX_BUNDLE_BUNDLE_NAME "XUIDemo"
+			MACOSX_BUNDLE_GUI_IDENTIFIER "com.xui.demo"
 			MACOSX_BUNDLE_BUNDLE_VERSION "1.0"
 			MACOSX_BUNDLE_SHORT_VERSION_STRING "1.0"
 			BUILD_RPATH "@executable_path"
@@ -310,7 +299,7 @@ else()
 			BUILD_WITH_INSTALL_RPATH TRUE
 			RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
 		)
-		set_target_properties(DUIThink PROPERTIES
+		set_target_properties(XUI PROPERTIES
 			MACOSX_RPATH TRUE
 			BUILD_RPATH "@loader_path"
 			INSTALL_RPATH "@loader_path"
@@ -319,45 +308,45 @@ else()
 			LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
 			RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
 		)
-		add_custom_command(TARGET DUIThinkDemo_C++ POST_BUILD
+		add_custom_command(TARGET XUIDemo_C++ POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E create_symlink
 				"${DEMO_PROJ_DIR}"
-				"${CMAKE_BINARY_DIR}/DUIThinkDemo_C++.DuiProj"
+				"${CMAKE_BINARY_DIR}/XUIDemo_C++.DuiProj"
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different
-				"$<TARGET_FILE:DUIThink>"
-				"$<TARGET_FILE_DIR:DUIThinkDemo_C++>"
+				"$<TARGET_FILE:XUI>"
+				"$<TARGET_FILE_DIR:XUIDemo_C++>"
 			COMMENT "Link Demo DuiProj as sibling of Debug/"
 		)
 		if(TARGET SDL3::SDL3)
-			get_target_property(_duithink_sdl3_type SDL3::SDL3 TYPE)
-			if(_duithink_sdl3_type MATCHES "SHARED_LIBRARY|UNKNOWN_LIBRARY|MODULE_LIBRARY")
-				add_custom_command(TARGET DUIThinkDemo_C++ POST_BUILD
+			get_target_property(_xui_sdl3_type  SDL3::SDL3 TYPE)
+			if(_xui_sdl3_type  MATCHES "SHARED_LIBRARY|UNKNOWN_LIBRARY|MODULE_LIBRARY")
+				add_custom_command(TARGET XUIDemo_C++ POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E copy_if_different
 						"$<TARGET_FILE:SDL3::SDL3>"
-						"$<TARGET_FILE_DIR:DUIThinkDemo_C++>"
+						"$<TARGET_FILE_DIR:XUIDemo_C++>"
 					COMMENT "Copy SDL3.dylib into Demo.app"
 				)
 			endif()
 		endif()
 	elseif(UNIX)
-		set_target_properties(DUIThinkDemo_C++ PROPERTIES
+		set_target_properties(XUIDemo_C++ PROPERTIES
 			BUILD_RPATH "$ORIGIN"
 			INSTALL_RPATH "$ORIGIN"
 			BUILD_WITH_INSTALL_RPATH TRUE
 		)
-		target_link_libraries(DUIThinkDemo_C++ PRIVATE dl)
-		target_link_options(DUIThinkDemo_C++ PRIVATE -rdynamic)
-		set_target_properties(DUIThinkDemo_C++ PROPERTIES
+		target_link_libraries(XUIDemo_C++ PRIVATE dl)
+		target_link_options(XUIDemo_C++ PRIVATE -rdynamic)
+		set_target_properties(XUIDemo_C++ PROPERTIES
 			RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
 		)
-		set_target_properties(DUIThink PROPERTIES
+		set_target_properties(XUI PROPERTIES
 			LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
 			RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
 		)
-		add_custom_command(TARGET DUIThinkDemo_C++ POST_BUILD
+		add_custom_command(TARGET XUIDemo_C++ POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E create_symlink
 				"${DEMO_PROJ_DIR}"
-				"${CMAKE_BINARY_DIR}/DUIThinkDemo_C++.DuiProj"
+				"${CMAKE_BINARY_DIR}/XUIDemo_C++.DuiProj"
 			COMMENT "Link Demo DuiProj as sibling of Debug/"
 		)
 	endif()
