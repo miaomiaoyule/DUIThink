@@ -38,6 +38,7 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateControl(CDUIClockCtrl);
 	DUIInner_RegisterCreateControl(CDUIGroupCtrl);
 	DUIInner_RegisterCreateControl(CDUIKLineChartCtrl);
+	RegistControlClass(("CDUIThinkEditCtrl"), (DUICreateControlObj)CDUIXEditCtrl::CreateControlObj);
 #ifndef DuiPlatform_SDL
 	DUIInner_RegisterCreateControl(CDUIEditCtrl);
 	DUIInner_RegisterCreateControl(CDUIRichEditCtrl);
