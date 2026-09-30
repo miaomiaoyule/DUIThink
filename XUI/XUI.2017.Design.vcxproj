@@ -286,7 +286,7 @@ copy "XUI.h" "../../DemoTest\DemoFirst\DemoFirst\XUIInclude"</Command>
     <ClInclude Include="DUIControl\DUISpinCtrl.h" />
     <ClInclude Include="DUIControl\DUIStaticCtrl.h" />
     <ClInclude Include="DUIControl\DUITabLayoutCtrl.h" />
-    <ClInclude Include="DUIControl\XUIEditCtrl.h" />
+    <ClInclude Include="DUIControl\DUIXEditCtrl.h" />
     <ClInclude Include="DUIControl\DUITreeNodeCtrl.h" />
     <ClInclude Include="DUIControl\DUITreeViewCtrl.h" />
     <ClInclude Include="DUIControl\DUIVerticalLayoutCtrl.h" />
@@ -388,7 +388,7 @@ copy "XUI.h" "../../DemoTest\DemoFirst\DemoFirst\XUIInclude"</Command>
     <ClCompile Include="DUIControl\DUISpinCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIStaticCtrl.cpp" />
     <ClCompile Include="DUIControl\DUITabLayoutCtrl.cpp" />
-    <ClCompile Include="DUIControl\XUIEditCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIXEditCtrl.cpp" />
     <ClCompile Include="DUIControl\DUITreeNodeCtrl.cpp" />
     <ClCompile Include="DUIControl\DUITreeViewCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIVerticalLayoutCtrl.cpp" />

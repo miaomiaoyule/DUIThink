@@ -285,7 +285,7 @@
     <ClInclude Include="DUIAttribute\DUIAttributeHotKey.h">
       <Filter>DUIAttribute</Filter>
     </ClInclude>
-    <ClInclude Include="DUIControl\XUIEditCtrl.h">
+    <ClInclude Include="DUIControl\DUIXEditCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>
     <ClInclude Include="DUIControl\DUISpinCtrl.h">
@@ -557,7 +557,7 @@
     <ClCompile Include="DUIAttribute\DUIAttributeHotKey.cpp">
       <Filter>DUIAttribute</Filter>
     </ClCompile>
-    <ClCompile Include="DUIControl\XUIEditCtrl.cpp">
+    <ClCompile Include="DUIControl\DUIXEditCtrl.cpp">
       <Filter>DUIControl</Filter>
     </ClCompile>
     <ClCompile Include="DUIControl\DUISpinCtrl.cpp">
