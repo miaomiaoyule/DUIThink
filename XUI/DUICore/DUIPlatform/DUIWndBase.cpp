@@ -587,7 +587,7 @@ void CDUIWndBase::RefreshToolTip(CMMString strToolTip)
 void CDUIWndBase::RefreshLayout()
 {
 	CDUIRect rcClient = GetClientRect();
-	if (false == IsRefreshViewNeeded() || NULL == m_pRootCtrl || rcClient.Empty() || IsMinimized()) return;
+	if (false == IsRefreshViewNeeded() || NULL == m_pRootCtrl || IsMinimized()) return;
 
 	//layout
 	bool bNeedLayoutMsg = false;
