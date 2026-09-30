@@ -493,6 +493,7 @@
     <a ValueID="1598861573" Text="腾讯云"/>
     <a ValueID="1628072297" Text="普通文字、单行、水平靠左、垂直靠上"/>
     <a ValueID="1641517406" Text="苹果BootCamp"/>
+    <a ValueID="1668790608" Text="这是XEdit，比微软Edit、RichEdit功能更强大，带透明通道，可做TextEditor，可插入图片"/>
     <a ValueID="1707432101" Text="DlgAnimateSizeSpring"/>
     <a ValueID="1714775084" Text="DlgAnimateTopDiffuse"/>
     <a ValueID="1715005191" Text="PDF文件"/>
@@ -552,7 +553,6 @@
     <a ValueID="2816118553" Text="TabMain"/>
     <a ValueID="2842599350" Text="如果没有如果..."/>
     <a ValueID="2850572913" Text="Spin"/>
-    <a ValueID="2886769345" Text="ThinkEdit"/>
     <a ValueID="2892870016" Text="ControlPreview"/>
     <a ValueID="2893759913" Text="Edit"/>
     <a ValueID="2900642705" Text="RichEdit"/>
@@ -579,6 +579,7 @@
     <a ValueID="3267464694" Text="窗体特效"/>
     <a ValueID="3287837828" Text="本地搜索"/>
     <a ValueID="3292746102" Text="DlgAnimateLeftRightCombin"/>
+    <a ValueID="3294875145" Text="XEdit"/>
     <a ValueID="3295239182" Text="TreeNode3_1"/>
     <a ValueID="3297362600" Text="确定"/>
     <a ValueID="3316322571" Text="XUI技术一般是指将所有的界面控件绘制在一个窗口上，这些控件的逻辑和绘图方式都必须自己进行编写和封装，而不是使用Windows控件，所以这些控件都是无句柄的"/>
@@ -613,7 +614,6 @@
     <a ValueID="4030990943" Text="时间"/>
     <a ValueID="4040247453" Text="刀具号"/>
     <a ValueID="4050006400" Text="Slider"/>
-    <a ValueID="4106925624" Text="这是ThinkEdit，比微软Edit、RichEdit功能更强大，带透明通道，可做TextEditor，可插入图片"/>
     <a ValueID="4108495249" Text="TreeNode2_1_1"/>
     <a ValueID="4135252756" Text="100"/>
     <a ValueID="4144605896" Text="TreeNode3"/>
