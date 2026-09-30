@@ -186,8 +186,8 @@ if exist "../../../bin\XUI.2017.dll" copy "../../../bin\XUI.2017.dll" "../Releas
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
     </Manifest>
     <PreBuildEvent>
-      <Command>if exist "../../../bin\MMHelper.201764.dll" copy "../../../bin\MMHelper.201764.dll" "../Debug"
-if exist "../../../bin\XUI.201764.dll" copy "../../../bin\XUI.201764.dll" "../Debug"</Command>
+      <Command>if exist "../../../bin\MMHelper.201764.dll" copy "../../../bin\MMHelper.201764.dll" "../Release"
+if exist "../../../bin\XUI.201764.dll" copy "../../../bin\XUI.201764.dll" "../Release"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
