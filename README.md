@@ -13,7 +13,7 @@ XUI（前身 [DUIThink](https://github.com/miaomiaoyule/XUI)）是带可视化�
 | macOS | SDL3 |
 | Android | SDL3 |
 
-- 官网：<http://49.235.209.245/DUIThink>
+- 官网：<http://49.235.209.245/XUI>
 - 源码：<https://github.com/miaomiaoyule/XUI>
 - QQ 群：885314879
 - 视频教程：<https://space.bilibili.com/322458488>
