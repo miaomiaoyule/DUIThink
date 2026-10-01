@@ -96,9 +96,9 @@ public:
 	void SetOwnerModelCtrl(CDUIControlBase *pOwnerModelCtrl) override;
 
 	//child
-	bool InsertChild(CDUIControlBase *pChild, int nPos = -1) override;
 	bool Remove(CDUIControlBase *pControl) override;
 	void RemoveAll() override;
+	virtual bool InsertChildAtUser(CDUIControlBase *pChild, int nPos = -1);
 	virtual bool RemoveAtUser(int nIndex);
 	virtual int GetChildCountUser() const;
 	virtual CDUIControlBase * GetChildAtUser(int nIndex) const;
@@ -162,6 +162,7 @@ protected:
 
 	//help
 protected:
+	bool InsertChild(CDUIControlBase *pChild, int nPos = -1) override;
 	virtual void SendNotify(enDuiNotifyType NotifyType, WPARAM wParam = 0, LPARAM lParam = 0, CMMString strTextOld = _T(""));
 	virtual void PerformItemMouseDown(bool bLeft, const CDUIPoint &pt);
 	virtual CDUIRect GetTextRange();

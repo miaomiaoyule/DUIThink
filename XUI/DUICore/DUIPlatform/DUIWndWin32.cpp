@@ -420,14 +420,14 @@ UINT CDUIWndWin32::DoModal()
 		Create(m_hWndParent, _T(""), DUI_WNDSTYLE_DIALOG, DUI_WNDSTYLE_EX_DIALOG);
 	}
 
+	//show
+	ShowWindow(true, false);
+
 	//disable parent
 	UINT nRet = 0;
 	HWND hWndParent = GetWindowOwner(m_hWnd);
 	bool bWndParentEnable = IsWindowEnabled(hWndParent);
 	::EnableWindow(hWndParent, false);
-
-	//show
-	ShowWindow(true, false);
 
 	//message
 	BOOL bRet = 0;

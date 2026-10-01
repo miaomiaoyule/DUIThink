@@ -401,18 +401,6 @@ void CDUIListItemCtrl::SetOwnerModelCtrl(CDUIControlBase *pOwnerModelCtrl)
 	return CDUIControlBase::SetOwnerModelCtrl(pOwnerModelCtrl);
 }
 
-bool CDUIListItemCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
-{
-	if (false == __super::InsertChild(pChild, nPos)) return false;
-
-	if (pChild)
-	{
-		pChild->SetOwnerModelCtrl(this);
-	}
-
-	return true;
-}
-
 bool CDUIListItemCtrl::Remove(CDUIControlBase *pControl)
 {
 	if (pControl == m_pCheckSelectCtrl || pControl == m_pEditTextCtrl) return false;
@@ -431,6 +419,11 @@ void CDUIListItemCtrl::RemoveAll()
 	}
 
 	return;
+}
+
+bool CDUIListItemCtrl::InsertChildAtUser(CDUIControlBase *pChild, int nPos)
+{
+	return InsertChild(pChild, nPos + 2);
 }
 
 bool CDUIListItemCtrl::RemoveAtUser(int nIndex)
@@ -1078,6 +1071,18 @@ void CDUIListItemCtrl::PaintLineOnTileType(HDC hDC)
 	ListInfo.pAttributeColorLine->DrawLine(hDC, rcColumn, 1);
 
 	return;
+}
+
+bool CDUIListItemCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
+{
+	if (false == __super::InsertChild(pChild, nPos)) return false;
+
+	if (pChild)
+	{
+		pChild->SetOwnerModelCtrl(this);
+	}
+
+	return true;
 }
 
 void CDUIListItemCtrl::SendNotify(enDuiNotifyType NotifyType, WPARAM wParam, LPARAM lParam, CMMString strTextOld)
