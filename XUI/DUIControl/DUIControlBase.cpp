@@ -133,6 +133,7 @@ CDUIControlBase * CDUIControlBase::Clone(bool bIncludeChild, bool bRefreshCtrlID
 
 	pControlClone->InitProperty();
 	(*pControlClone) = (*this);
+	pControlClone->m_bInternVisible = m_bInternVisible;
 	
 	if (NULL == MMInterfaceHelper(CDUIContainerCtrl, pControlClone))
 	{
