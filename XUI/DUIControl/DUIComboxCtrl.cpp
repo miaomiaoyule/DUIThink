@@ -968,9 +968,9 @@ LRESULT CDUIComboxCtrl::OnDuiKeyDown(const DuiMessage &Msg)
 	return 0;
 }
 
-void CDUIComboxCtrl::SetInternVisible(bool bVisible, bool bTraversal)
+void CDUIComboxCtrl::SetInternVisible(bool bVisible)
 {
-	__super::SetInternVisible(bVisible, bTraversal);
+	__super::SetInternVisible(bVisible);
 
 	if (false == IsVisible())
 	{
@@ -978,7 +978,7 @@ void CDUIComboxCtrl::SetInternVisible(bool bVisible, bool bTraversal)
 	}
 	if (m_pEditCtrl)
 	{
-		m_pEditCtrl->SetInternVisible(IsVisible(), bTraversal);
+		m_pEditCtrl->SetInternVisible(IsVisible());
 	}
 
 	return;

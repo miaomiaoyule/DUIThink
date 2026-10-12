@@ -364,7 +364,7 @@ protected:
 	//help
 	//** you can override if you need, but you'd better not do that **//
 protected:
-	virtual void SetInternVisible(bool bVisible = true, bool bTraversal = false);
+	virtual void SetInternVisible(bool bVisible = true);
 	virtual CDUIControlBase * FindControl(FindControlProc Proc, LPVOID pData, UINT uFlags);
 	virtual void ReapControl();
 	virtual CDUIAttributeColorSwitch * GetAttributeStatusColor();

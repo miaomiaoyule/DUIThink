@@ -250,9 +250,9 @@ void CDUIAnimateCtrl::PaintStatusImage(HDC hDC)
 	return;
 }
 
-void CDUIAnimateCtrl::SetInternVisible(bool bVisible, bool bTraversal)
+void CDUIAnimateCtrl::SetInternVisible(bool bVisible)
 {
-	__super::SetInternVisible(bVisible, bTraversal);
+	__super::SetInternVisible(bVisible);
 
 	if (IsVisible() && IsAutoPlay())
 	{

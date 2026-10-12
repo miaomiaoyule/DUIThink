@@ -70,7 +70,7 @@ protected:
 
 	//help
 protected:
-	void SetInternVisible(bool bVisible = true, bool bTraversal = false) override;
+	void SetInternVisible(bool bVisible = true) override;
 	void ConstructAnimateImageInfo();
 	void PlayCurFrame();
 };

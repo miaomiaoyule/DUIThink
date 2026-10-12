@@ -773,7 +773,7 @@ CDUIControlBase * CDUIXmlPack::LoadDui(tinyxml2::XMLDocument &DuiXml, CDUIWnd *p
 	}
 	if (pRootCtrl)
 	{
-		pRootCtrl->RefreshChildInternVisible(true);
+		pRootCtrl->RefreshChildInternVisible();
 	}
 
 	MMTRACE(_T("LoadDui:%s-Time:%u"), _T(""), GetTickCount() - dwTickCount);
