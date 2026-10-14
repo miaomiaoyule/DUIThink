@@ -12,6 +12,7 @@ CDUIFactory::CDUIFactory()
 	DUIInner_RegisterCreateControl(CDUIDateTimeCtrl);
 	DUIInner_RegisterCreateControl(CDUIAnimateCtrl);
 	DUIInner_RegisterCreateControl(CDUIIPAddressCtrl);
+	DUIInner_RegisterCreateControl(CDUIColorPaletteCtrl);
 	DUIInner_RegisterCreateControl(CDUICalendarCtrl);
 	DUIInner_RegisterCreateControl(CDUIRotateMenuItemCtrl);
 	DUIInner_RegisterCreateControl(CDUIRotateMenuCtrl);

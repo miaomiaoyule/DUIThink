@@ -95,6 +95,7 @@ enum enDuiNotifyType
 	DuiNotify_WinDragOver = 411,
 	DuiNotify_WinDragLeave = 412,
 	DuiNotify_WinDrop = 413,
+	DuiNotify_ColorPaletteChanged = 420,
 };
 
 //notify sig

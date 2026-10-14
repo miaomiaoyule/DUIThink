@@ -51,6 +51,7 @@
 #define Dui_Ctrl_ListItem							(_T("ListItemCtrl"))
 #define Dui_Ctrl_ListView							(_T("ListViewCtrl"))
 #define Dui_Ctrl_IPAddress							(_T("IPAddressCtrl"))
+#define Dui_Ctrl_ColorPalette						(_T("ColorPaletteCtrl"))
 #define Dui_Ctrl_Spin								(_T("SpinCtrl"))
 #define Dui_Ctrl_Calendar							(_T("CalendarCtrl"))
 #define Dui_Ctrl_RotateMenuItem						(_T("RotateMenuItemCtrl"))

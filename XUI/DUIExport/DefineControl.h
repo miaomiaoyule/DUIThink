@@ -98,6 +98,7 @@ typedef CDUIControlBase* (CALLBACK* FindControlProc)(CDUIControlBase*, LPVOID pD
 #define Dui_CtrlIDInner_CalendarBtnRight			(62)
 #define Dui_CtrlIDInner_CalendarBtnYear				(63)
 #define Dui_CtrlIDInner_CalendarBtnMonth			(64)
+#define Dui_CtrlIDInner_ColorPaletteEdit			(70)
 #define Dui_CtrlIDInner_DefaultBtn					(100)
 #define Dui_CtrlIDInner_DefaultHScrollBar			(101)
 #define Dui_CtrlIDInner_DefaultVScrollBar			(102)

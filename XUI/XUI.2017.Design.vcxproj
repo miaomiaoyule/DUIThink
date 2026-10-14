@@ -273,6 +273,7 @@ copy "XUI.h" "../../DemoTest\DemoFirst\DemoFirst\XUIInclude"</Command>
     <ClInclude Include="DUIControl\DUIHorizontalLayoutCtrl.h" />
     <ClInclude Include="DUIControl\DUIHotKeyCtrl.h" />
     <ClInclude Include="DUIControl\DUIIPAddressCtrl.h" />
+    <ClInclude Include="DUIControl\DUIColorPaletteCtrl.h" />
     <ClInclude Include="DUIControl\DUIListHeaderCtrl.h" />
     <ClInclude Include="DUIControl\DUIListHeaderItemCtrl.h" />
     <ClInclude Include="DUIControl\DUIListItemCtrl.h" />
@@ -375,6 +376,7 @@ copy "XUI.h" "../../DemoTest\DemoFirst\DemoFirst\XUIInclude"</Command>
     <ClCompile Include="DUIControl\DUIHorizontalLayoutCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIHotKeyCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIIPAddressCtrl.cpp" />
+    <ClCompile Include="DUIControl\DUIColorPaletteCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIListHeaderCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIListHeaderItemCtrl.cpp" />
     <ClCompile Include="DUIControl\DUIListItemCtrl.cpp" />

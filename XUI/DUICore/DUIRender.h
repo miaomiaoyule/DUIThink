@@ -55,10 +55,10 @@ public:
 	static SIZE GetTextSize(HDC hDC, HFONT hFont, LPCTSTR lpszText, UINT dwTextStyle);
 	
 	//help
-	static void RGBToHSL(IN Gdiplus::ARGB dwColor, OUT float *pH, OUT float *pS, OUT float *pL);
-	static Gdiplus::ARGB HSLToRGB(float H, float S, float L);
-	static Gdiplus::ARGB AdjustColor(Gdiplus::ARGB dwColor, short H, short S, short L);
-	static void AdjustImage(CDUIImageBase *pImageBase, short H, short S, short L);
+	static void RGBToHSV(IN Gdiplus::ARGB dwColor, OUT float *pH, OUT float *pS, OUT float *pV);
+	static Gdiplus::ARGB HSVToRGB(float H, float S, float V, BYTE cbAlpha = 255);
+	static Gdiplus::ARGB AdjustColor(Gdiplus::ARGB dwColor, short H, short S, short V);
+	static void AdjustImage(CDUIImageBase *pImageBase, short H, short S, short V);
 	static void AdjustImage(HBITMAP hBitmap, Gdiplus::ARGB dwColorSrc, Gdiplus::ARGB dwColorDest);
 	static HBITMAP CreateARGB32Bitmap(HDC hDC, int cx, int cy, BYTE** pBits, bool bPositive = true);
 	static HBITMAP GenerateBitmap(CDUIControlBase *pControl, const CDUIRect &rcItem, Gdiplus::ARGB dwFilterColor = 0);

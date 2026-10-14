@@ -284,6 +284,7 @@ using namespace tinyxml2;
 #include "DUIControl/DUIRichEditCtrl.h"
 #include "DUIControl/DUITabLayoutCtrl.h"
 #include "DUIControl/DUIIPAddressCtrl.h"
+#include "DUIControl/DUIColorPaletteCtrl.h"
 #include "DUIControl/DUISpinCtrl.h"
 #include "DUIControl/DUIListHeaderItemCtrl.h"
 #include "DUIControl/DUIListHeaderCtrl.h"

@@ -1935,106 +1935,94 @@ SIZE CDUIRenderEngine::GetTextSize(HDC hDC, HFONT hFont, LPCTSTR lpszText, UINT 
 	return size;
 }
 
-void CDUIRenderEngine::RGBToHSL(IN Gdiplus::ARGB dwColor, OUT float *pH, OUT float *pS, OUT float *pL)
+void CDUIRenderEngine::RGBToHSV(IN Gdiplus::ARGB dwColor, OUT float *pH, OUT float *pS, OUT float *pV)
 {
-	float R = (float)(DUIARGBGetR(dwColor) / 255.0f);  //RGB from 0 to 255
+	float R = (float)(DUIARGBGetR(dwColor) / 255.0f);
 	float G = (float)(DUIARGBGetG(dwColor) / 255.0f);
 	float B = (float)(DUIARGBGetB(dwColor) / 255.0f);
+	float fMin = min(R, min(G, B));
+	float fMax = max(R, max(G, B));
+	float fDelta = fMax - fMin;
+	float H = 0.0f;
+	float S = (fMax <= 0.0f) ? 0.0f : fDelta / fMax;
+	float V = fMax;
 
-	float fMin = min(R, min(G, B));		//Min. value of RGB
-	float fMax = max(R, max(G, B));		//Max. value of RGB
-	float fDelta = fMax - fMin;				//Delta RGB value
-
-	float H = 0.0f, S = 0.0f, L = (fMax + fMin) / 2.0f;
-
-	if (fDelta != 0)
+	if (fDelta > 0.0f)
 	{
-		//Chromatic data...
-		float del_R, del_G, del_B;
-
-		if (L < 0.5) S = fDelta / (fMax + fMin);
-		else S = fDelta / (2.0f - fMax - fMin);
-
-		del_R = (((fMax - R) / 6.0f) + (fDelta / 2.0f)) / fDelta;
-		del_G = (((fMax - G) / 6.0f) + (fDelta / 2.0f)) / fDelta;
-		del_B = (((fMax - B) / 6.0f) + (fDelta / 2.0f)) / fDelta;
-
-		if (R == fMax) H = del_B - del_G;
-		else if (G == fMax) H = (1.0f / 3.0f) + del_R - del_B;
-		else if (B == fMax) H = (2.0f / 3.0f) + del_G - del_R;
-
-		if (H < 0.0f) H += 1.0f;
-		if (H > 1.0f)  H -= 1.0f;
+		if (R >= fMax) H = 60.0f * fmodf((G - B) / fDelta, 6.0f);
+		else if (G >= fMax) H = 60.0f * (((B - R) / fDelta) + 2.0f);
+		else H = 60.0f * (((R - G) / fDelta) + 4.0f);
+		if (H < 0.0f) H += 360.0f;
 	}
 
 	*pH = H;
 	*pS = S;
-	*pL = L;
+	*pV = V;
 
 	return;
 }
 
-Gdiplus::ARGB CDUIRenderEngine::HSLToRGB(float H, float S, float L)
+Gdiplus::ARGB CDUIRenderEngine::HSVToRGB(float H, float S, float V, BYTE cbAlpha)
 {
-	static const float OneThird = 1.0f / 3;
+	H = fmodf(H, 360.0f);
+	if (H < 0.0f) H += 360.0f;
+	S = max(0.0f, min(1.0f, S));
+	V = max(0.0f, min(1.0f, V));
 
-	Gdiplus::ARGB dwColor = 0;
-	const float
-		q = 2 * L < 1 ? L * (1 + S) : (L + S - L * S),
-		p = 2 * L - q,
-		h = H / 360,
-		tr = h + OneThird,
-		tg = h,
-		tb = h - OneThird,
-		ntr = tr < 0 ? tr + 1 : (tr > 1 ? tr - 1 : tr),
-		ntg = tg < 0 ? tg + 1 : (tg > 1 ? tg - 1 : tg),
-		ntb = tb < 0 ? tb + 1 : (tb > 1 ? tb - 1 : tb),
-		R = 255 * (6 * ntr < 1 ? p + (q - p) * 6 * ntr : (2 * ntr < 1 ? q : (3 * ntr < 2 ? p + (q - p) * 6 * (2.0f * OneThird - ntr) : p))),
-		G = 255 * (6 * ntg < 1 ? p + (q - p) * 6 * ntg : (2 * ntg < 1 ? q : (3 * ntg < 2 ? p + (q - p) * 6 * (2.0f * OneThird - ntg) : p))),
-		B = 255 * (6 * ntb < 1 ? p + (q - p) * 6 * ntb : (2 * ntb < 1 ? q : (3 * ntb < 2 ? p + (q - p) * 6 * (2.0f * OneThird - ntb) : p)));
+	const float fC = V * S;
+	const float fX = fC * (1.0f - fabsf(fmodf(H / 60.0f, 2.0f) - 1.0f));
+	const float fM = V - fC;
+	float R = 0.0f, G = 0.0f, B = 0.0f;
+	if (H < 60.0f) { R = fC; G = fX; B = 0.0f; }
+	else if (H < 120.0f) { R = fX; G = fC; B = 0.0f; }
+	else if (H < 180.0f) { R = 0.0f; G = fC; B = fX; }
+	else if (H < 240.0f) { R = 0.0f; G = fX; B = fC; }
+	else if (H < 300.0f) { R = fX; G = 0.0f; B = fC; }
+	else { R = fC; G = 0.0f; B = fX; }
 
-	BYTE cbR = R < 0 ? 0 : (R > 255 ? 255 : R);
-	BYTE cbG = G < 0 ? 0 : (G > 255 ? 255 : G);
-	BYTE cbB = B < 0 ? 0 : (B > 255 ? 255 : B);
+	BYTE cbR = (BYTE)min(255.0f, max(0.0f, (R + fM) * 255.0f + 0.5f));
+	BYTE cbG = (BYTE)min(255.0f, max(0.0f, (G + fM) * 255.0f + 0.5f));
+	BYTE cbB = (BYTE)min(255.0f, max(0.0f, (B + fM) * 255.0f + 0.5f));
 
-	return DUIARGB(0xff, cbR, cbG, cbB);
+	return DUIARGB(cbAlpha, cbR, cbG, cbB);
 }
 
-Gdiplus::ARGB CDUIRenderEngine::AdjustColor(Gdiplus::ARGB dwColor, short H, short S, short L)
+Gdiplus::ARGB CDUIRenderEngine::AdjustColor(Gdiplus::ARGB dwColor, short H, short S, short V)
 {
-	if (H == 180 && S == 100 && L == 100) return dwColor;
-	float fH, fS, fL;
+	if (H == 180 && S == 100 && V == 100) return dwColor;
+	float fH, fS, fV;
 	float S1 = S / 100.0f;
-	float L1 = L / 100.0f;
-	RGBToHSL(dwColor, &fH, &fS, &fL);
+	float V1 = V / 100.0f;
+	RGBToHSV(dwColor, &fH, &fS, &fV);
 	fH += (H - 180);
 	fH = fH > 0 ? fH : fH + 360;
 	fS *= S1;
-	fL *= L1;
-	dwColor = HSLToRGB(fH, fS, fL);
+	fV *= V1;
+	dwColor = HSVToRGB(fH, fS, fV, DUIARGBGetA(dwColor));
 	return dwColor;
 }
 
-void CDUIRenderEngine::AdjustImage(CDUIImageBase *pImageBase, short H, short S, short L)
+void CDUIRenderEngine::AdjustImage(CDUIImageBase *pImageBase, short H, short S, short V)
 {
 	if (NULL == pImageBase || NULL == pImageBase->GetHandle()) return;
-	if (H == 180 && S == 100 && L == 100) return;
+	if (H == 180 && S == 100 && V == 100) return;
 
 	BITMAP Bmp = {};
 	GetObject(pImageBase->GetHandle(), sizeof(Bmp), &Bmp);
 	if (NULL == Bmp.bmBits || 32 != Bmp.bmBitsPixel) return;
 
-	float fH, fS, fL;
+	float fH, fS, fV;
 	float S1 = S / 100.0f;
-	float L1 = L / 100.0f;
+	float V1 = V / 100.0f;
 	for (int i = 0; i < Bmp.bmWidth * Bmp.bmHeight; i++)
 	{
-		RGBToHSL(*((Gdiplus::ARGB *)Bmp.bmBits + i), &fH, &fS, &fL);
+		Gdiplus::ARGB &dwColor = *((Gdiplus::ARGB *)Bmp.bmBits + i);
+		RGBToHSV(dwColor, &fH, &fS, &fV);
 		fH += (H - 180);
 		fH = fH > 0 ? fH : fH + 360;
 		fS *= S1;
-		fL *= L1;
-		*((Gdiplus::ARGB *)Bmp.bmBits + i) = HSLToRGB(fH, fS, fL);
+		fV *= V1;
+		dwColor = HSVToRGB(fH, fS, fV, DUIARGBGetA(dwColor));
 	}
 
 	return;

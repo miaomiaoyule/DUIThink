@@ -111,6 +111,9 @@
     <ClInclude Include="DUIControl\DUIIPAddressCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>
+    <ClInclude Include="DUIControl\DUIColorPalette.h">
+      <Filter>DUIControl</Filter>
+    </ClInclude>
     <ClInclude Include="DUIControl\DUIListHeaderCtrl.h">
       <Filter>DUIControl</Filter>
     </ClInclude>
@@ -369,6 +372,9 @@
       <Filter>DUIControl</Filter>
     </ClCompile>
     <ClCompile Include="DUIControl\DUIIPAddressCtrl.cpp">
+      <Filter>DUIControl</Filter>
+    </ClCompile>
+    <ClCompile Include="DUIControl\DUIColorPalette.cpp">
       <Filter>DUIControl</Filter>
     </ClCompile>
     <ClCompile Include="DUIControl\DUIListHeaderCtrl.cpp">
