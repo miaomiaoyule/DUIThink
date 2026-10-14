@@ -109,15 +109,35 @@ static bool SameBitmapSize(Gdiplus::Bitmap *pBmp, int nWidth, int nHeight)
 	return NULL != pBmp && (int)pBmp->GetWidth() == nWidth && (int)pBmp->GetHeight() == nHeight;
 }
 
+static void WritePremul(BYTE *pPixel, float fB, float fG, float fR, float fCov)
+{
+	const BYTE cbA = (BYTE)min(255.0f, max(0.0f, fCov * 255.0f + 0.5f));
+	pPixel[0] = (BYTE)min(255.0f, fB * cbA / 255.0f + 0.5f);
+	pPixel[1] = (BYTE)min(255.0f, fG * cbA / 255.0f + 0.5f);
+	pPixel[2] = (BYTE)min(255.0f, fR * cbA / 255.0f + 0.5f);
+	pPixel[3] = cbA;
+}
+
+static void DrawCachedBmp(HDC hDC, Gdiplus::Bitmap *pBmp, int nLeft, int nTop, int nWidth, int nHeight)
+{
+	if (NULL == hDC || NULL == pBmp || nWidth <= 0 || nHeight <= 0) return;
+
+	HBITMAP hBmp = CDUIRenderEngine::GetHBITMAP(pBmp, true);
+	if (NULL == hBmp) return;
+
+	CDUIRect rcDest(nLeft, nTop, nLeft + nWidth, nTop + nHeight);
+	CDUIRect rcSrc(0, 0, (int)pBmp->GetWidth(), (int)pBmp->GetHeight());
+	CDUIRenderEngine::DrawImage(hDC, hBmp, rcDest, rcDest, rcSrc, CDUIRect(), 255, true);
+	MMSafeDeleteObject(hBmp);
+}
+
 static void DrawMarkerBmp(HDC hDC, Gdiplus::Bitmap *pBmp, int nSize, float fX, float fY)
 {
 	if (NULL == pBmp || nSize <= 0) return;
 
 	const int nLeft = (int)floorf(fX - nSize * 0.5f + 0.5f);
 	const int nTop = (int)floorf(fY - nSize * 0.5f + 0.5f);
-	Gdiplus::Graphics Gp(hDC);
-	Gp.SetInterpolationMode(Gdiplus::InterpolationModeNearestNeighbor);
-	Gp.DrawImage(pBmp, Gdiplus::Rect(nLeft, nTop, nSize, nSize), 0, 0, nSize, nSize, Gdiplus::UnitPixel);
+	DrawCachedBmp(hDC, pBmp, nLeft, nTop, nSize, nSize);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -215,32 +235,15 @@ CMMString CDUIColorPaletteCtrl::GetDescribe() const
 
 void CDUIColorPaletteCtrl::RefreshView()
 {
+	if (m_pEditColorCtrl)
+	{
+		m_pEditColorCtrl->SetFixedHeight(max(1, GetEditHeight()));
+		m_pEditColorCtrl->SetVertAlignType(VertAlign_Bottom);
+	}
+
 	__super::RefreshView();
 
-	CDUIRect rcRange = GetLayoutRangeOfItem();
-	if (m_pEditColorCtrl && m_pEditColorCtrl->IsVisible())
-	{
-		rcRange.bottom = m_pEditColorCtrl->GetAbsoluteRect().top;
-	}
-	if (rcRange.GetWidth() <= 0 || rcRange.GetHeight() <= 0)
-	{
-		m_rcPalette.Clear();
-		LayoutWheel();
-		return;
-	}
-
-	const int nInset = 4;
-	rcRange.left += nInset;
-	rcRange.top += nInset;
-	rcRange.right -= nInset;
-	rcRange.bottom -= nInset;
-	m_rcPalette = rcRange;
-	if (m_rcPalette.GetWidth() <= 0 || m_rcPalette.GetHeight() <= 0)
-	{
-		m_rcPalette.Clear();
-	}
-
-	LayoutWheel();
+	SyncPaletteRect();
 
 	return;
 }
@@ -317,9 +320,6 @@ void CDUIColorPaletteCtrl::SetEditHeight(int nHeight)
 	{
 		m_pEditColorCtrl->SetFixedHeight(nHeight);
 	}
-
-	NeedRefreshView();
-	Invalidate();
 
 	return;
 }
@@ -418,22 +418,16 @@ void CDUIColorPaletteCtrl::PaintBkImage(HDC hDC)
 {
 	__super::PaintBkImage(hDC);
 
+	if (m_nWheelSize < 16 || m_fOuter <= 1.0f || NULL == m_pBmpWheel)
+	{
+		SyncPaletteRect();
+	}
 	if (m_nWheelSize < 16 || m_fOuter <= 1.0f) return;
 
-	Gdiplus::Graphics Gp(hDC);
-	Gp.SetInterpolationMode(Gdiplus::InterpolationModeNearestNeighbor);
-	if (m_pBmpWheel)
-	{
-		Gp.DrawImage(m_pBmpWheel, Gdiplus::Rect(m_nWheelLeft, m_nWheelTop, m_nWheelSize, m_nWheelSize),
-			0, 0, m_nWheelSize, m_nWheelSize, Gdiplus::UnitPixel);
-	}
+	DrawCachedBmp(hDC, m_pBmpWheel, m_nWheelLeft, m_nWheelTop, m_nWheelSize, m_nWheelSize);
 
 	EnsureTriangleBitmap();
-	if (m_pBmpTri)
-	{
-		Gp.DrawImage(m_pBmpTri, Gdiplus::Rect(m_nWheelLeft, m_nWheelTop, m_nWheelSize, m_nWheelSize),
-			0, 0, m_nWheelSize, m_nWheelSize, Gdiplus::UnitPixel);
-	}
+	DrawCachedBmp(hDC, m_pBmpTri, m_nWheelLeft, m_nWheelTop, m_nWheelSize, m_nWheelSize);
 
 	EnsureMarker();
 	const float fTheta = (m_fHue - 90.0f) * 0.0174532925f;
@@ -465,6 +459,37 @@ void CDUIColorPaletteCtrl::ApplyColor(Gdiplus::ARGB dwColor)
 	m_pEditColorCtrl->SetText(strColor);
 
 	Invalidate();
+
+	return;
+}
+
+void CDUIColorPaletteCtrl::SyncPaletteRect()
+{
+	CDUIRect rcRange = GetLayoutRangeOfItem();
+	if (m_pEditColorCtrl && m_pEditColorCtrl->IsVisible())
+	{
+		const CDUIRect rcEdit = m_pEditColorCtrl->GetAbsoluteRect();
+		if (rcEdit.top > rcRange.top && rcEdit.top < rcRange.bottom)
+		{
+			rcRange.bottom = rcEdit.top;
+		}
+	}
+
+	const int nInset = 4;
+	rcRange.left += nInset;
+	rcRange.top += nInset;
+	rcRange.right -= nInset;
+	rcRange.bottom -= nInset;
+	if (rcRange.GetWidth() <= 0 || rcRange.GetHeight() <= 0)
+	{
+		m_rcPalette.Clear();
+	}
+	else
+	{
+		m_rcPalette = rcRange;
+	}
+
+	LayoutWheel();
 
 	return;
 }
@@ -583,10 +608,7 @@ void CDUIColorPaletteCtrl::EnsureRingBitmap()
 			float fCov = fAccA * 0.25f;
 			if (fCov < 1.0f) fCov = powf(fCov, 1.0f / 2.2f);
 			BYTE *pPixel = pRow + x * 4;
-			pPixel[0] = (BYTE)min(255.0f, fAccB / fAccA + 0.5f);
-			pPixel[1] = (BYTE)min(255.0f, fAccG / fAccA + 0.5f);
-			pPixel[2] = (BYTE)min(255.0f, fAccR / fAccA + 0.5f);
-			pPixel[3] = (BYTE)min(255.0f, fCov * 255.0f + 0.5f);
+			WritePremul(pPixel, fAccB / fAccA, fAccG / fAccA, fAccR / fAccA, fCov);
 		}
 	}
 	pBmp->UnlockBits(&data);
@@ -654,10 +676,7 @@ void CDUIColorPaletteCtrl::EnsureTriangleBitmap()
 			float fCov = fAccA * 0.25f;
 			if (fCov < 1.0f) fCov = powf(fCov, 1.0f / 2.2f);
 			BYTE *pPixel = pRow + x * 4;
-			pPixel[0] = (BYTE)min(255.0f, fAccB / fAccA + 0.5f);
-			pPixel[1] = (BYTE)min(255.0f, fAccG / fAccA + 0.5f);
-			pPixel[2] = (BYTE)min(255.0f, fAccR / fAccA + 0.5f);
-			pPixel[3] = (BYTE)min(255.0f, fCov * 255.0f + 0.5f);
+			WritePremul(pPixel, fAccB / fAccA, fAccG / fAccA, fAccR / fAccA, fCov);
 		}
 	}
 	pBmp->UnlockBits(&data);
@@ -738,10 +757,7 @@ void CDUIColorPaletteCtrl::EnsureMarker()
 			}
 			float fCov = fAccA * 0.25f;
 			if (fCov < 1.0f) fCov = powf(max(0.0f, fCov), 1.0f / 2.2f);
-			pPixel[0] = (BYTE)min(255.0f, fAccB / fAccA + 0.5f);
-			pPixel[1] = (BYTE)min(255.0f, fAccG / fAccA + 0.5f);
-			pPixel[2] = (BYTE)min(255.0f, fAccR / fAccA + 0.5f);
-			pPixel[3] = (BYTE)min(255.0f, fCov * 255.0f + 0.5f);
+			WritePremul(pPixel, fAccB / fAccA, fAccG / fAccA, fAccR / fAccA, fCov);
 		}
 	}
 	pBmp->UnlockBits(&data);

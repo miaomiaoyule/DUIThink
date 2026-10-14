@@ -100,6 +100,7 @@ protected:
 	//help
 protected:
 	void ApplyColor(Gdiplus::ARGB dwColor);
+	void SyncPaletteRect();
 	void LayoutWheel();
 	void UpdateColorFromPoint(const CDUIPoint &pt);
 	void EnsureRingBitmap();
