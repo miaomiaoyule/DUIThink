@@ -48,7 +48,6 @@ protected:
 	int									m_nWheelSize = 0;
 	int									m_nMarkSize = 0;
 	int									m_nDragPart = 0;
-	bool								m_bSyncEdit = false;
 
 	//override
 protected:
@@ -100,7 +99,6 @@ protected:
 	//help
 protected:
 	void ApplyColor(Gdiplus::ARGB dwColor);
-	void SyncEditText();
 	void SyncPaletteRect();
 	void LayoutWheel();
 	void UpdateColorFromPoint(const CDUIPoint &pt);

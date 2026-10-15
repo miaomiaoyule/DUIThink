@@ -1403,6 +1403,7 @@ void CDUIGlobal::LoadPublicResource()
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_CalendarBtnRight);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_CalendarBtnYear);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_CalendarBtnMonth);
+	DuiInitCtrlIDItem(Dui_CtrlIDInner_ColorPaletteEdit);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_DefaultBtn);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_DefaultHScrollBar);
 	DuiInitCtrlIDItem(Dui_CtrlIDInner_DefaultVScrollBar);

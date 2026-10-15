@@ -401,11 +401,6 @@ void CDUIColorPaletteCtrl::PaintBkImage(HDC hDC)
 		DrawMarkerBmp(hDC, m_pBmpMark, m_nMarkSize, fX, fY);
 	}
 
-	if (DragPart_None != m_nDragPart)
-	{
-		SyncEditText();
-	}
-
 	return;
 }
 
@@ -419,22 +414,15 @@ void CDUIColorPaletteCtrl::ApplyColor(Gdiplus::ARGB dwColor)
 		m_fSat = fS;
 		m_fVal = fV;
 	}
+
 	m_cbAlpha = DUIARGBGetA(dwColor);
-	SyncEditText();
-	Invalidate();
+	
+	if (NULL == m_pEditColorCtrl) return;
 
-	return;
-}
-
-void CDUIColorPaletteCtrl::SyncEditText()
-{
-	if (m_bSyncEdit || NULL == m_pEditColorCtrl) return;
-
-	m_bSyncEdit = true;
 	CMMString strColor = CMMStrHelp::Format(_T("%08x"), MakeColor());
 	m_pEditColorCtrl->SetText(strColor.c_str());
-	m_pEditColorCtrl->RefreshView();
-	m_bSyncEdit = false;
+
+	Invalidate();
 
 	return;
 }
@@ -545,10 +533,6 @@ void CDUIColorPaletteCtrl::UpdateColorFromPoint(const CDUIPoint &pt)
 	}
 
 	SetPaletteColor(MakeColor());
-	if ((m_cbControlStatus & ControlStatus_Pushed) && m_pWndOwner)
-	{
-		UpdateWindow(m_pWndOwner->GetWndHandle());
-	}
 
 	return;
 }
