@@ -23,7 +23,7 @@ public:
 protected:
 	CDUIAttributeGroup					m_AttributeGroupPalette;
 	CDUIAttributeColor					m_AttributeColor = DUIARGB(255, 170, 85, 85);
-	CDUIAttributeTextStyle				m_AttributeTextStyle;
+	CDUIAttributeTextStyle				m_AttributeTextStyle = DT_CENTER | DT_VCENTER;
 	CDUIAttributeLong					m_AttributeEditHeight = 28;
 
 	//variant

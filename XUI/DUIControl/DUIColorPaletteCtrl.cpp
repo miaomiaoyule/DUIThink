@@ -356,8 +356,6 @@ void CDUIColorPaletteCtrl::InitComplete()
 	}
 	if (m_pEditColorCtrl)
 	{
-		tagDuiTextStyle TextStyle = {};
-		TextStyle.dwTextStyle = DT_CENTER | DT_VCENTER;
 		m_pEditColorCtrl->SetEditTextType(EditText_None);
 		m_pEditColorCtrl->SetMaxChar(9);
 		m_pEditColorCtrl->SetAutoSelAll(true);
@@ -365,7 +363,7 @@ void CDUIColorPaletteCtrl::InitComplete()
 		m_pEditColorCtrl->SetVertAlignType(VertAlign_Bottom);
 		m_pEditColorCtrl->SetPaddingT(6);
 		m_pEditColorCtrl->SetFixedHeight(max(1, GetEditHeight()));
-		m_pEditColorCtrl->SetTextStyle(TextStyle);
+		m_pEditColorCtrl->SetTextStyle(GetTextStyle());
 		m_pEditColorCtrl->RegisterControlCallBack(this);
 	}
 
