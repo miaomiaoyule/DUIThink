@@ -3,53 +3,13 @@
 
 //////////////////////////////////////////////////////////////////////////
 #define DragPart_None						(0)
-#define DragPart_Ring						(1)
-#define DragPart_Triangle					(2)
+#define DragPart_Hex						(1)
+#define DragPart_Value						(2)
 
 //////////////////////////////////////////////////////////////////////////
-static bool BaryOf(float fX, float fY, float fAx, float fAy, float fBx, float fBy, float fCx, float fCy, float &fA, float &fB, float &fC)
-{
-	const float fDen = (fBy - fCy) * (fAx - fCx) + (fCx - fBx) * (fAy - fCy);
-	if (fabsf(fDen) < 0.001f) return false;
-
-	fA = ((fBy - fCy) * (fX - fCx) + (fCx - fBx) * (fY - fCy)) / fDen;
-	fB = ((fCy - fAy) * (fX - fCx) + (fAx - fCx) * (fY - fCy)) / fDen;
-	fC = 1.0f - fA - fB;
-	return true;
-}
-
-static void ClampBary(float &fA, float &fB, float &fC)
-{
-	if (fA >= 0.0f && fB >= 0.0f && fC >= 0.0f) return;
-	if (fA < 0.0f && fB < 0.0f) { fA = 0.0f; fB = 0.0f; fC = 1.0f; return; }
-	if (fA < 0.0f && fC < 0.0f) { fA = 0.0f; fC = 0.0f; fB = 1.0f; return; }
-	if (fB < 0.0f && fC < 0.0f) { fB = 0.0f; fC = 0.0f; fA = 1.0f; return; }
-	if (fA < 0.0f)
-	{
-		fA = 0.0f;
-		const float fSum = fB + fC;
-		if (fSum <= 0.0001f) { fB = 1.0f; fC = 0.0f; }
-		else { fB /= fSum; fC /= fSum; }
-		return;
-	}
-	if (fB < 0.0f)
-	{
-		fB = 0.0f;
-		const float fSum = fA + fC;
-		if (fSum <= 0.0001f) { fA = 1.0f; fC = 0.0f; }
-		else { fA /= fSum; fC /= fSum; }
-		return;
-	}
-
-	fC = 0.0f;
-	const float fSum = fA + fB;
-	if (fSum <= 0.0001f) { fA = 1.0f; fB = 0.0f; }
-	else { fA /= fSum; fB /= fSum; }
-}
-
 static float HueFromOffset(float fDx, float fDy)
 {
-	float fHue = atan2f(fDy, fDx) * 57.2957795f + 90.0f;
+	float fHue = atan2f(-fDy, fDx) * 57.2957795f;
 	if (fHue < 0.0f) fHue += 360.0f;
 	if (fHue >= 360.0f) fHue -= 360.0f;
 	return fHue;
@@ -64,44 +24,37 @@ static float EdgeCover(float fInside)
 	return fU * fU * (3.0f - 2.0f * fU);
 }
 
-static void SampleWheel(float fSx, float fSy, float fDx, float fDy,
-	float fAx, float fAy, float fBx, float fBy, float fCx, float fCy,
-	float fAlt, float fInner, float fOuter, float fHue, bool bRing,
-	float &fR, float &fG, float &fB, float &fCover)
+static float HexEdgeRadius(float fHue, float fOuter)
 {
-	fR = 0.0f;
-	fG = 0.0f;
-	fB = 0.0f;
-	fCover = 0.0f;
+	float fMod = fmodf(fHue, 60.0f);
+	if (fMod < 0.0f) fMod += 60.0f;
+	const float fCos = cosf((fMod - 30.0f) * 0.0174532925f);
+	if (fCos < 0.001f) return fOuter;
 
-	if (false == bRing)
+	return fOuter * 0.8660254f / fCos;
+}
+
+static void SampleHex(float fDx, float fDy, float fOuter, float &fR, float &fG, float &fB, float &fCover)
+{
+	const float fDist = sqrtf(fDx * fDx + fDy * fDy);
+	float fHue = 0.0f;
+	if (fDist > 0.001f) fHue = HueFromOffset(fDx, fDy);
+	const float fEdge = HexEdgeRadius(fHue, fOuter);
+	fCover = EdgeCover(fEdge - fDist);
+	if (fCover <= 0.0f)
 	{
-		float fWa = 0.0f, fWb = 0.0f, fWc = 0.0f;
-		if (false == BaryOf(fSx, fSy, fAx, fAy, fBx, fBy, fCx, fCy, fWa, fWb, fWc)) return;
-
-		const float fTri = EdgeCover(fWa * fAlt) * EdgeCover(fWb * fAlt) * EdgeCover(fWc * fAlt);
-		if (fTri <= 0.0f) return;
-
-		ClampBary(fWa, fWb, fWc);
-		const float fVal = max(0.0f, min(1.0f, fWa + fWb));
-		const float fSat = (fVal > 0.001f) ? max(0.0f, min(1.0f, fWa / fVal)) : 0.0f;
-		const Gdiplus::ARGB dwColor = CDUIRenderEngine::HSVToRGB(fHue, fSat, fVal);
-		fR = DUIARGBGetR(dwColor);
-		fG = DUIARGBGetG(dwColor);
-		fB = DUIARGBGetB(dwColor);
-		fCover = fTri;
+		fR = 0.0f;
+		fG = 0.0f;
+		fB = 0.0f;
 		return;
 	}
 
-	const float fDist = sqrtf(fDx * fDx + fDy * fDy);
-	const float fRing = EdgeCover(fOuter - fDist) * EdgeCover(fDist - fInner);
-	if (fRing <= 0.0f) return;
-
-	const Gdiplus::ARGB dwColor = CDUIRenderEngine::HSVToRGB(HueFromOffset(fDx, fDy), 1.0f, 1.0f);
+	float fSat = 0.0f;
+	if (fEdge > 0.001f) fSat = min(1.0f, fDist / fEdge);
+	const Gdiplus::ARGB dwColor = CDUIRenderEngine::HSVToRGB(fHue, fSat, 1.0f);
 	fR = DUIARGBGetR(dwColor);
 	fG = DUIARGBGetG(dwColor);
 	fB = DUIARGBGetB(dwColor);
-	fCover = fRing;
 }
 
 static bool SameBitmapSize(Gdiplus::Bitmap *pBmp, int nWidth, int nHeight)
@@ -158,7 +111,7 @@ CDUIColorPaletteCtrl::~CDUIColorPaletteCtrl(void)
 	}
 
 	MMSafeDelete(m_pBmpWheel);
-	MMSafeDelete(m_pBmpTri);
+	MMSafeDelete(m_pBmpValue);
 	MMSafeDelete(m_pBmpMark);
 
 	return;
@@ -192,14 +145,13 @@ bool CDUIColorPaletteCtrl::OnAttributeChange(CDUIAttributeObject *pAttributeObj)
 
 void CDUIColorPaletteCtrl::OnNotify(CDUIControlBase *pControl, const DuiNotify &Notify)
 {
-	if (pControl == m_pEditColorCtrl && DuiNotify_TextChanged == Notify.NotifyType)
+	if (pControl == m_pEditColorCtrl && DuiNotify_Edited == Notify.NotifyType)
 	{
 		CMMString strText = m_pEditColorCtrl->GetText();
 		strText.Trim(_T("0x"));
 		strText.Trim(_T("0X"));
 		strText.Trim(_T("#"));
 		Gdiplus::ARGB dwColor = _tcstoul(strText.c_str(), NULL, 16);
-
 		SetPaletteColor(dwColor);
 
 		return;
@@ -340,10 +292,16 @@ bool CDUIColorPaletteCtrl::OnDuiLButtonDown(const CDUIPoint &pt, const DuiMessag
 bool CDUIColorPaletteCtrl::OnDuiLButtonUp(const CDUIPoint &pt, const DuiMessage &Msg)
 {
 	const int nDragPart = m_nDragPart;
+	const float fHue = m_fHue;
+	const float fSat = m_fSat;
+	const float fVal = m_fVal;
 	m_nDragPart = DragPart_None;
 	if (DragPart_None != nDragPart)
 	{
 		SetPaletteColor(MakeColor());
+		m_fHue = fHue;
+		m_fSat = fSat;
+		m_fVal = fVal;
 	}
 
 	return __super::OnDuiLButtonUp(pt, Msg);
@@ -398,6 +356,8 @@ void CDUIColorPaletteCtrl::InitComplete()
 	}
 	if (m_pEditColorCtrl)
 	{
+		tagDuiTextStyle TextStyle = {};
+		TextStyle.dwTextStyle = DT_CENTER | DT_VCENTER;
 		m_pEditColorCtrl->SetEditTextType(EditText_None);
 		m_pEditColorCtrl->SetMaxChar(9);
 		m_pEditColorCtrl->SetAutoSelAll(true);
@@ -405,6 +365,7 @@ void CDUIColorPaletteCtrl::InitComplete()
 		m_pEditColorCtrl->SetVertAlignType(VertAlign_Bottom);
 		m_pEditColorCtrl->SetPaddingT(6);
 		m_pEditColorCtrl->SetFixedHeight(max(1, GetEditHeight()));
+		m_pEditColorCtrl->SetTextStyle(TextStyle);
 		m_pEditColorCtrl->RegisterControlCallBack(this);
 	}
 
@@ -426,20 +387,24 @@ void CDUIColorPaletteCtrl::PaintBkImage(HDC hDC)
 
 	DrawCachedBmp(hDC, m_pBmpWheel, m_nWheelLeft, m_nWheelTop, m_nWheelSize, m_nWheelSize);
 
-	EnsureTriangleBitmap();
-	DrawCachedBmp(hDC, m_pBmpTri, m_nWheelLeft, m_nWheelTop, m_nWheelSize, m_nWheelSize);
-
 	EnsureMarker();
-	const float fTheta = (m_fHue - 90.0f) * 0.0174532925f;
-	const float fMid = (m_fInner + m_fOuter) * 0.5f;
-	DrawMarkerBmp(hDC, m_pBmpMark, m_nMarkSize, m_fCx + cosf(fTheta) * fMid, m_fCy + sinf(fTheta) * fMid);
+	const float fTheta = -m_fHue * 0.0174532925f;
+	const float fRad = max(0.0f, min(1.0f, m_fSat)) * HexEdgeRadius(m_fHue, m_fOuter);
+	DrawMarkerBmp(hDC, m_pBmpMark, m_nMarkSize, m_fCx + cosf(fTheta) * fRad, m_fCy + sinf(fTheta) * fRad);
 
-	float fAx = 0.0f, fAy = 0.0f, fBx = 0.0f, fBy = 0.0f, fCx = 0.0f, fCy = 0.0f;
-	TriangleVertex(fAx, fAy, fBx, fBy, fCx, fCy);
-	const float fA = m_fSat * m_fVal;
-	const float fB = m_fVal * (1.0f - m_fSat);
-	const float fC = 1.0f - m_fVal;
-	DrawMarkerBmp(hDC, m_pBmpMark, m_nMarkSize, fA * fAx + fB * fBx + fC * fCx, fA * fAy + fB * fBy + fC * fCy);
+	EnsureValueBitmap();
+	if (m_pBmpValue && m_rcValue.GetWidth() > 0 && m_rcValue.GetHeight() > 0)
+	{
+		DrawCachedBmp(hDC, m_pBmpValue, m_rcValue.left, m_rcValue.top, m_rcValue.GetWidth(), m_rcValue.GetHeight());
+		const float fX = (m_rcValue.left + m_rcValue.right) * 0.5f;
+		const float fY = m_rcValue.top + (1.0f - max(0.0f, min(1.0f, m_fVal))) * m_rcValue.GetHeight();
+		DrawMarkerBmp(hDC, m_pBmpMark, m_nMarkSize, fX, fY);
+	}
+
+	if (DragPart_None != m_nDragPart)
+	{
+		SyncEditText();
+	}
 
 	return;
 }
@@ -448,17 +413,28 @@ void CDUIColorPaletteCtrl::ApplyColor(Gdiplus::ARGB dwColor)
 {
 	float fH = 0.0f, fS = 0.0f, fV = 0.0f;
 	CDUIRenderEngine::RGBToHSV(dwColor, &fH, &fS, &fV);
-	if (fS > 0.001f) m_fHue = fH;
-	m_fSat = fS;
-	m_fVal = fV;
+	if (DragPart_None == m_nDragPart)
+	{
+		if (fS > 0.001f) m_fHue = fH;
+		m_fSat = fS;
+		m_fVal = fV;
+	}
 	m_cbAlpha = DUIARGBGetA(dwColor);
-
-	CMMString strColor = CMMStrHelp::Format(_T("%08x"), MakeColor());
-	if (strColor == m_pEditColorCtrl->GetText()) return;
-
-	m_pEditColorCtrl->SetText(strColor);
-
+	SyncEditText();
 	Invalidate();
+
+	return;
+}
+
+void CDUIColorPaletteCtrl::SyncEditText()
+{
+	if (m_bSyncEdit || NULL == m_pEditColorCtrl) return;
+
+	m_bSyncEdit = true;
+	CMMString strColor = CMMStrHelp::Format(_T("%08x"), MakeColor());
+	m_pEditColorCtrl->SetText(strColor.c_str());
+	m_pEditColorCtrl->RefreshView();
+	m_bSyncEdit = false;
 
 	return;
 }
@@ -497,65 +473,92 @@ void CDUIColorPaletteCtrl::SyncPaletteRect()
 void CDUIColorPaletteCtrl::LayoutWheel()
 {
 	m_fOuter = 0.0f;
-	m_fInner = 0.0f;
-	m_fTriR = 0.0f;
 	m_nWheelSize = 0;
-	if (m_rcPalette.GetWidth() < 16 || m_rcPalette.GetHeight() < 16) 
+	m_rcValue.Clear();
+	if (m_rcPalette.GetWidth() < 16 || m_rcPalette.GetHeight() < 16)
 	{
 		MMSafeDelete(m_pBmpWheel);
-		MMSafeDelete(m_pBmpTri);
-		m_fBmpHue = -1.0f;
+		MMSafeDelete(m_pBmpValue);
+		m_dwValueTop = 0;
 		return;
 	}
 
 	const int nMargin = 3;
-	m_nWheelSize = min(m_rcPalette.GetWidth(), m_rcPalette.GetHeight()) - nMargin * 2;
-	if (m_nWheelSize < 16) { m_nWheelSize = 0; MMSafeDelete(m_pBmpWheel); MMSafeDelete(m_pBmpTri); m_fBmpHue = -1.0f; return; }
-	m_nWheelLeft = m_rcPalette.left + (m_rcPalette.GetWidth() - m_nWheelSize) / 2;
-	m_nWheelTop = m_rcPalette.top + (m_rcPalette.GetHeight() - m_nWheelSize) / 2;
+	const int nGap = 10;
+	const int nSlider = 18;
+	const int nAvailW = m_rcPalette.GetWidth() - nMargin * 2;
+	const int nAvailH = m_rcPalette.GetHeight() - nMargin * 2;
+	m_nWheelSize = min(nAvailH, nAvailW - nGap - nSlider);
+	if (m_nWheelSize < 16)
+	{
+		m_nWheelSize = 0;
+		MMSafeDelete(m_pBmpWheel);
+		MMSafeDelete(m_pBmpValue);
+		m_dwValueTop = 0;
+		return;
+	}
+
+	const int nGroupW = m_nWheelSize + nGap + nSlider;
+	const int nGroupLeft = m_rcPalette.left + (m_rcPalette.GetWidth() - nGroupW) / 2;
+	const int nGroupTop = m_rcPalette.top + (m_rcPalette.GetHeight() - m_nWheelSize) / 2;
+	m_nWheelLeft = nGroupLeft;
+	m_nWheelTop = nGroupTop;
 	m_fCx = m_nWheelLeft + m_nWheelSize * 0.5f;
 	m_fCy = m_nWheelTop + m_nWheelSize * 0.5f;
 	m_fOuter = m_nWheelSize * 0.5f - 2.0f;
-	m_fInner = m_fOuter * 0.76f;
-	m_fTriR = m_fInner * 0.78f;
-	EnsureRingBitmap();
+
+	int nThumbPad = 8;
+	if (m_nWheelSize - nThumbPad * 2 < 8) nThumbPad = 2;
+	m_rcValue.left = m_nWheelLeft + m_nWheelSize + nGap;
+	m_rcValue.right = m_rcValue.left + nSlider;
+	m_rcValue.top = m_nWheelTop + nThumbPad;
+	m_rcValue.bottom = m_nWheelTop + m_nWheelSize - nThumbPad;
+	EnsureWheelBitmap();
 
 	return;
 }
 
 void CDUIColorPaletteCtrl::UpdateColorFromPoint(const CDUIPoint &pt)
 {
-	if (DragPart_Ring == m_nDragPart)
+	if (DragPart_Hex == m_nDragPart)
 	{
-		m_fHue = HueFromOffset(pt.x - m_fCx, pt.y - m_fCy);
+		if (m_fOuter <= 1.0f) return;
+
+		const float fDx = pt.x - m_fCx;
+		const float fDy = pt.y - m_fCy;
+		const float fDist = sqrtf(fDx * fDx + fDy * fDy);
+		if (fDist > 0.001f) m_fHue = HueFromOffset(fDx, fDy);
+		const float fEdge = HexEdgeRadius(m_fHue, m_fOuter);
+		m_fSat = (fEdge > 0.001f) ? max(0.0f, min(1.0f, fDist / fEdge)) : 0.0f;
 	}
-	else if (DragPart_Triangle == m_nDragPart)
+	else if (DragPart_Value == m_nDragPart)
 	{
-		float fA = 0.0f, fB = 0.0f, fC = 0.0f;
-		if (false == Barycentric((float)pt.x, (float)pt.y, fA, fB, fC)) return;
-		ClampBary(fA, fB, fC);
-		m_fVal = max(0.0f, min(1.0f, fA + fB));
-		if (m_fVal > 0.001f) m_fSat = max(0.0f, min(1.0f, fA / m_fVal));
+		const int nHeight = m_rcValue.GetHeight();
+		if (nHeight <= 0) return;
+
+		const float fT = (pt.y - m_rcValue.top) / (float)nHeight;
+		m_fVal = max(0.0f, min(1.0f, 1.0f - fT));
 	}
 	else
 	{
 		return;
 	}
 
-	const Gdiplus::ARGB dwColor = MakeColor();
-	SetPaletteColor(dwColor);
+	SetPaletteColor(MakeColor());
+	if ((m_cbControlStatus & ControlStatus_Pushed) && m_pWndOwner)
+	{
+		UpdateWindow(m_pWndOwner->GetWndHandle());
+	}
 
 	return;
 }
 
-void CDUIColorPaletteCtrl::EnsureRingBitmap()
+void CDUIColorPaletteCtrl::EnsureWheelBitmap()
 {
 	if (m_nWheelSize < 16) return;
 	if (SameBitmapSize(m_pBmpWheel, m_nWheelSize, m_nWheelSize)) return;
 
 	MMSafeDelete(m_pBmpWheel);
-	MMSafeDelete(m_pBmpTri);
-	m_fBmpHue = -1.0f;
 
 	const int nSize = m_nWheelSize;
 	Gdiplus::Bitmap *pBmp = new Gdiplus::Bitmap(nSize, nSize, PixelFormat32bppARGB);
@@ -569,10 +572,8 @@ void CDUIColorPaletteCtrl::EnsureRingBitmap()
 	}
 
 	const float fBmpMid = nSize * 0.5f;
-	const float fIn2 = max(0.0f, m_fInner - 2.0f);
-	const float fOut2 = m_fOuter + 2.0f;
-	const float fInSq = fIn2 * fIn2;
-	const float fOutSq = fOut2 * fOut2;
+	const float fInside = m_fOuter * 0.8660254f - 1.5f;
+	const float fOutside = m_fOuter + 1.5f;
 	static const float fSub[2] = { 0.25f, 0.75f };
 
 	for (int y = 0; y < nSize; ++y)
@@ -581,22 +582,26 @@ void CDUIColorPaletteCtrl::EnsureRingBitmap()
 		memset(pRow, 0, (size_t)nSize * 4);
 		for (int x = 0; x < nSize; ++x)
 		{
-			const float fDx0 = (x + 0.5f) - fBmpMid;
-			const float fDy0 = (y + 0.5f) - fBmpMid;
-			const float fDist2 = fDx0 * fDx0 + fDy0 * fDy0;
-			if (fDist2 < fInSq || fDist2 > fOutSq) continue;
+			const float fDx = (x + 0.5f) - fBmpMid;
+			const float fDy = (y + 0.5f) - fBmpMid;
+			const float fDist = sqrtf(fDx * fDx + fDy * fDy);
+			BYTE *pPixel = pRow + x * 4;
+			if (fDist < fInside)
+			{
+				float fR = 0.0f, fG = 0.0f, fB = 0.0f, fCover = 0.0f;
+				SampleHex(fDx, fDy, m_fOuter, fR, fG, fB, fCover);
+				WritePremul(pPixel, fB, fG, fR, fCover);
+				continue;
+			}
+			if (fDist > fOutside) continue;
 
 			float fAccR = 0.0f, fAccG = 0.0f, fAccB = 0.0f, fAccA = 0.0f;
 			for (int nY = 0; nY < 2; ++nY)
 			{
-				const float fOy = fSub[nY];
-				const float fDy = (y + fOy) - fBmpMid;
 				for (int nX = 0; nX < 2; ++nX)
 				{
-					const float fOx = fSub[nX];
 					float fR = 0.0f, fG = 0.0f, fB = 0.0f, fCover = 0.0f;
-					SampleWheel(m_nWheelLeft + x + fOx, m_nWheelTop + y + fOy, (x + fOx) - fBmpMid, fDy,
-						0, 0, 0, 0, 0, 0, 0, m_fInner, m_fOuter, 0, true, fR, fG, fB, fCover);
+					SampleHex((x + fSub[nX]) - fBmpMid, (y + fSub[nY]) - fBmpMid, m_fOuter, fR, fG, fB, fCover);
 					fAccA += fCover;
 					fAccR += fR * fCover;
 					fAccG += fG * fCover;
@@ -607,7 +612,6 @@ void CDUIColorPaletteCtrl::EnsureRingBitmap()
 
 			float fCov = fAccA * 0.25f;
 			if (fCov < 1.0f) fCov = powf(fCov, 1.0f / 2.2f);
-			BYTE *pPixel = pRow + x * 4;
 			WritePremul(pPixel, fAccB / fAccA, fAccG / fAccA, fAccR / fAccA, fCov);
 		}
 	}
@@ -618,85 +622,66 @@ void CDUIColorPaletteCtrl::EnsureRingBitmap()
 	return;
 }
 
-void CDUIColorPaletteCtrl::EnsureTriangleBitmap()
+void CDUIColorPaletteCtrl::EnsureValueBitmap()
 {
-	if (m_nWheelSize < 16) return;
-	if (DragPart_Ring == m_nDragPart && NULL != m_pBmpTri) return;
-	if (SameBitmapSize(m_pBmpTri, m_nWheelSize, m_nWheelSize) && fabsf(m_fBmpHue - m_fHue) < 0.05f) return;
+	const int nW = m_rcValue.GetWidth();
+	const int nH = m_rcValue.GetHeight();
+	if (nW < 4 || nH < 8)
+	{
+		MMSafeDelete(m_pBmpValue);
+		m_dwValueTop = 0;
+		return;
+	}
 
-	MMSafeDelete(m_pBmpTri);
+	const Gdiplus::ARGB dwTop = CDUIRenderEngine::HSVToRGB(m_fHue, m_fSat, 1.0f, 255);
+	if (SameBitmapSize(m_pBmpValue, nW, nH) && dwTop == m_dwValueTop) return;
 
-	const int nSize = m_nWheelSize;
-	Gdiplus::Bitmap *pBmp = new Gdiplus::Bitmap(nSize, nSize, PixelFormat32bppARGB);
+	MMSafeDelete(m_pBmpValue);
+	m_dwValueTop = dwTop;
+
+	Gdiplus::Bitmap *pBmp = new Gdiplus::Bitmap(nW, nH, PixelFormat32bppARGB);
 	Gdiplus::BitmapData data = {};
-	Gdiplus::Rect rcLock(0, 0, nSize, nSize);
+	Gdiplus::Rect rcLock(0, 0, nW, nH);
 	if (Gdiplus::Ok != pBmp->LockBits(&rcLock, Gdiplus::ImageLockModeWrite, PixelFormat32bppARGB, &data) || NULL == data.Scan0)
 	{
 		if (NULL != data.Scan0) pBmp->UnlockBits(&data);
 		MMSafeDelete(pBmp);
+		m_dwValueTop = 0;
 		return;
 	}
 
-	float fAx = 0.0f, fAy = 0.0f, fBx = 0.0f, fBy = 0.0f, fCx = 0.0f, fCy = 0.0f;
-	TriangleVertex(fAx, fAy, fBx, fBy, fCx, fCy);
-	const float fAlt = m_fTriR * 1.5f;
-	const float fBmpMid = nSize * 0.5f;
-	int nLeft = max(0, (int)floorf(min(fAx, min(fBx, fCx)) - m_nWheelLeft - 2.0f));
-	int nTop = max(0, (int)floorf(min(fAy, min(fBy, fCy)) - m_nWheelTop - 2.0f));
-	int nRight = min(nSize, (int)ceilf(max(fAx, max(fBx, fCx)) - m_nWheelLeft + 2.0f));
-	int nBottom = min(nSize, (int)ceilf(max(fAy, max(fBy, fCy)) - m_nWheelTop + 2.0f));
-	static const float fSub[2] = { 0.25f, 0.75f };
-
-	for (int y = 0; y < nSize; ++y)
+	const float fR = DUIARGBGetR(dwTop);
+	const float fG = DUIARGBGetG(dwTop);
+	const float fB = DUIARGBGetB(dwTop);
+	for (int y = 0; y < nH; ++y)
 	{
 		BYTE *pRow = (BYTE *)data.Scan0 + y * data.Stride;
-		memset(pRow, 0, (size_t)nSize * 4);
-		if (y < nTop || y >= nBottom) continue;
-		for (int x = nLeft; x < nRight; ++x)
+		const float fV = 1.0f - (y + 0.5f) / (float)nH;
+		BYTE *pPixel = pRow;
+		WritePremul(pPixel, fB * fV, fG * fV, fR * fV, 1.0f);
+		for (int x = 1; x < nW; ++x)
 		{
-			float fAccR = 0.0f, fAccG = 0.0f, fAccB = 0.0f, fAccA = 0.0f;
-			for (int nY = 0; nY < 2; ++nY)
-			{
-				const float fOy = fSub[nY];
-				const float fDy = (y + fOy) - fBmpMid;
-				for (int nX = 0; nX < 2; ++nX)
-				{
-					const float fOx = fSub[nX];
-					float fR = 0.0f, fG = 0.0f, fB = 0.0f, fCover = 0.0f;
-					SampleWheel(m_nWheelLeft + x + fOx, m_nWheelTop + y + fOy, (x + fOx) - fBmpMid, fDy,
-						fAx, fAy, fBx, fBy, fCx, fCy, fAlt, m_fInner, m_fOuter, m_fHue, false, fR, fG, fB, fCover);
-					fAccA += fCover;
-					fAccR += fR * fCover;
-					fAccG += fG * fCover;
-					fAccB += fB * fCover;
-				}
-			}
-			if (fAccA <= 0.004f) continue;
-
-			float fCov = fAccA * 0.25f;
-			if (fCov < 1.0f) fCov = powf(fCov, 1.0f / 2.2f);
-			BYTE *pPixel = pRow + x * 4;
-			WritePremul(pPixel, fAccB / fAccA, fAccG / fAccA, fAccR / fAccA, fCov);
+			BYTE *pNext = pRow + x * 4;
+			pNext[0] = pPixel[0];
+			pNext[1] = pPixel[1];
+			pNext[2] = pPixel[2];
+			pNext[3] = pPixel[3];
 		}
 	}
 	pBmp->UnlockBits(&data);
-
-	m_pBmpTri = pBmp;
-	m_fBmpHue = m_fHue;
+	m_pBmpValue = pBmp;
 
 	return;
 }
 
 void CDUIColorPaletteCtrl::EnsureMarker()
 {
-	const float fRing = m_fOuter - m_fInner;
-	float fR = 2.5f;
-	if (fRing > 1.0f && m_fTriR > 1.0f)
+	float fR = 4.0f;
+	if (m_fOuter > 1.0f)
 	{
-		const float fFit = (m_fOuter - m_fInner) * 0.5f - 1.2f;
-		fR = min(fRing * 0.46f, m_fTriR * 0.20f);
-		if (fFit > 2.0f) fR = min(fR, fFit);
-		if (fR < 2.5f) fR = 2.5f;
+		fR = m_fOuter * 0.045f;
+		if (fR < 3.0f) fR = 3.0f;
+		if (fR > 7.0f) fR = 7.0f;
 	}
 	const int nMark = max(8, (int)ceilf((fR + 2.0f) * 2.0f));
 	if (SameBitmapSize(m_pBmpMark, nMark, nMark))
@@ -766,43 +751,25 @@ void CDUIColorPaletteCtrl::EnsureMarker()
 	return;
 }
 
-void CDUIColorPaletteCtrl::TriangleVertex(float &fAx, float &fAy, float &fBx, float &fBy, float &fCx, float &fCy) const
-{
-	const float fTheta = (m_fHue - 90.0f) * 0.0174532925f;
-	fAx = m_fCx + cosf(fTheta) * m_fTriR;
-	fAy = m_fCy + sinf(fTheta) * m_fTriR;
-	fBx = m_fCx + cosf(fTheta + 4.1887902f) * m_fTriR;
-	fBy = m_fCy + sinf(fTheta + 4.1887902f) * m_fTriR;
-	fCx = m_fCx + cosf(fTheta + 2.0943951f) * m_fTriR;
-	fCy = m_fCy + sinf(fTheta + 2.0943951f) * m_fTriR;
-
-	return;
-}
-
-bool CDUIColorPaletteCtrl::Barycentric(float fX, float fY, float &fA, float &fB, float &fC) const
-{
-	float fAx = 0.0f, fAy = 0.0f, fBx = 0.0f, fBy = 0.0f, fCx = 0.0f, fCy = 0.0f;
-	TriangleVertex(fAx, fAy, fBx, fBy, fCx, fCy);
-
-	return BaryOf(fX, fY, fAx, fAy, fBx, fBy, fCx, fCy, fA, fB, fC);
-}
-
 int CDUIColorPaletteCtrl::HitPart(const CDUIPoint &pt) const
 {
-	if (m_fOuter <= 1.0f) return DragPart_None;
-
-	float fA = 0.0f, fB = 0.0f, fC = 0.0f;
-	if (Barycentric((float)pt.x, (float)pt.y, fA, fB, fC) && fA >= -0.02f && fB >= -0.02f && fC >= -0.02f)
+	if (m_rcValue.GetWidth() > 0 && m_rcValue.GetHeight() > 0)
 	{
-		return DragPart_Triangle;
+		CDUIRect rcHit = m_rcValue;
+		rcHit.left -= 6;
+		rcHit.right += 6;
+		rcHit.top -= 8;
+		rcHit.bottom += 8;
+		if (rcHit.PtInRect(pt)) return DragPart_Value;
 	}
+
+	if (m_fOuter <= 1.0f) return DragPart_None;
 
 	const float fDx = pt.x - m_fCx;
 	const float fDy = pt.y - m_fCy;
-	const float fDist2 = fDx * fDx + fDy * fDy;
-	const float fIn = m_fInner - 1.5f;
-	const float fOut = m_fOuter + 2.0f;
-	if (fDist2 >= fIn * fIn && fDist2 <= fOut * fOut) return DragPart_Ring;
+	const float fDist = sqrtf(fDx * fDx + fDy * fDy);
+	const float fHue = (fDist > 0.001f) ? HueFromOffset(fDx, fDy) : m_fHue;
+	if (fDist <= HexEdgeRadius(fHue, m_fOuter) + 1.5f) return DragPart_Hex;
 
 	return DragPart_None;
 }

@@ -30,25 +30,25 @@ protected:
 protected:
 	CDUIXEditCtrl *						m_pEditColorCtrl = NULL;
 	Gdiplus::Bitmap *					m_pBmpWheel = NULL;
-	Gdiplus::Bitmap *					m_pBmpTri = NULL;
+	Gdiplus::Bitmap *					m_pBmpValue = NULL;
 	Gdiplus::Bitmap *					m_pBmpMark = NULL;
 	CDUIRect							m_rcPalette;
+	CDUIRect							m_rcValue;
+	Gdiplus::ARGB						m_dwValueTop = 0;
 	float								m_fCx = 0.0f;
 	float								m_fCy = 0.0f;
 	float								m_fOuter = 0.0f;
-	float								m_fInner = 0.0f;
-	float								m_fTriR = 0.0f;
 	float								m_fHue = 0.0f;
 	float								m_fSat = 0.5f;
-	float								m_fVal = 0.6666667f;
+	float								m_fVal = 1.0f;
 	float								m_fMarkR = 0.0f;
-	float								m_fBmpHue = -1.0f;
 	BYTE								m_cbAlpha = 255;
 	int									m_nWheelLeft = 0;
 	int									m_nWheelTop = 0;
 	int									m_nWheelSize = 0;
 	int									m_nMarkSize = 0;
 	int									m_nDragPart = 0;
+	bool								m_bSyncEdit = false;
 
 	//override
 protected:
@@ -100,14 +100,13 @@ protected:
 	//help
 protected:
 	void ApplyColor(Gdiplus::ARGB dwColor);
+	void SyncEditText();
 	void SyncPaletteRect();
 	void LayoutWheel();
 	void UpdateColorFromPoint(const CDUIPoint &pt);
-	void EnsureRingBitmap();
-	void EnsureTriangleBitmap();
+	void EnsureWheelBitmap();
+	void EnsureValueBitmap();
 	void EnsureMarker();
-	void TriangleVertex(float &fAx, float &fAy, float &fBx, float &fBy, float &fCx, float &fCy) const;
-	bool Barycentric(float fX, float fY, float &fA, float &fB, float &fC) const;
 	int HitPart(const CDUIPoint &pt) const;
 	Gdiplus::ARGB MakeColor() const;
 };
