@@ -1137,6 +1137,41 @@ bool CDUITreeNodeCtrl::SaveAttribute(tinyxml2::XMLElement *pNode, bool bIncludeC
 
 void CDUITreeNodeCtrl::PaintLine(HDC hDC)
 {
+	if (NULL == m_pCheckExpandCtrl
+		|| false == m_pCheckExpandCtrl->IsVisible()
+		|| false == m_pCheckExpandCtrl->IsSelected()) return;
+
+	CDUITreeViewCtrl *pRootView = GetRootView();
+	if (NULL == pRootView) return;
+
+	CDUIRect rcLayoutRootView = pRootView->GetLayoutRangeOfItem();
+	CDUIRect rcTemp;
+	for (int n = 0; n < GetChildNodeCount(); n++)
+	{
+		CDUITreeNodeCtrl *pTreeNode = GetChildNode(n);
+		if (NULL == pTreeNode || false == pTreeNode->IsVisible()) continue;
+
+		CDUIRect rcNode = pTreeNode->GetAbsoluteRect();
+		if (false == IntersectRect(&rcTemp, &rcNode, &rcLayoutRootView)) continue;
+
+		CDUIRect rcExpandThis = m_pCheckExpandCtrl->GetAbsoluteRect();
+
+		CDUICheckBoxCtrl *pCheckExpandCtrl = pTreeNode->GetExpandIconCtrl();
+		CDUIRect rcExpandChild = pTreeNode->GetBackRange();
+		CDUIRect rcLine = rcExpandThis;
+		rcLine.left += rcLine.GetWidth() / 2;
+		rcLine.top = rcLine.bottom;
+		rcLine.right = rcLine.left;
+		rcLine.bottom = rcExpandChild.top + rcExpandChild.GetHeight() / 2;
+		CDUIRenderEngine::DrawLine(hDC, rcLine, 1, 0xffaaaaaa, LineStyle_Dot);
+
+		rcLine.left = rcLine.right;
+		rcLine.top = rcLine.bottom;
+		rcLine.right = rcExpandChild.left - 2;
+		rcLine.bottom = rcLine.top;
+		CDUIRenderEngine::DrawLine(hDC, rcLine, 1, 0xffaaaaaa, LineStyle_Dot);
+	}
+
 	return;
 }
 
