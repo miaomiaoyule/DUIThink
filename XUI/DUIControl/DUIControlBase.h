@@ -46,7 +46,7 @@ protected:
 	CDUIAttributeBool					m_AttributeEnable = true;
 	CDUIAttributeBool					m_AttributeVisible = true;
 	CDUIAttributeText					m_AttributeUserData;
-	CDUIAttributeLong					m_AttributeUserTag;
+	CDUIAttributeULong					m_AttributeUserTag;
 	CDUIAttributeBool					m_AttributeWinDragEnable;
 	CDUIAttributeBool					m_AttributeWinDropEnable;
 

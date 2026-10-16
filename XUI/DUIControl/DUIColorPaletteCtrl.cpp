@@ -247,9 +247,15 @@ Gdiplus::ARGB CDUIColorPaletteCtrl::GetPaletteColor()
 
 void CDUIColorPaletteCtrl::SetPaletteColor(Gdiplus::ARGB dwColor)
 {
+	bool bChanged = GetPaletteColor() != dwColor;
 	m_AttributeColor.SetColor(dwColor);
 	
 	ApplyColor(dwColor);
+
+	if (bChanged && GetWndOwner())
+	{
+		GetWndOwner()->SendNotify(this, DuiNotify_ColorPaletteChanged);
+	}
 
 	return;
 }
