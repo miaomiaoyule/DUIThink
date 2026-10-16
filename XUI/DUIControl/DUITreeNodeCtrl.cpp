@@ -1142,7 +1142,7 @@ void CDUITreeNodeCtrl::PaintLine(HDC hDC)
 		|| false == m_pCheckExpandCtrl->IsSelected()) return;
 
 	CDUITreeViewCtrl *pRootView = GetRootView();
-	if (NULL == pRootView) return;
+	if (NULL == pRootView || false == pRootView->IsShowTreeLine()) return;
 
 	CDUIRect rcLayoutRootView = pRootView->GetLayoutRangeOfItem();
 	CDUIRect rcTemp;
@@ -1155,8 +1155,6 @@ void CDUITreeNodeCtrl::PaintLine(HDC hDC)
 		if (false == IntersectRect(&rcTemp, &rcNode, &rcLayoutRootView)) continue;
 
 		CDUIRect rcExpandThis = m_pCheckExpandCtrl->GetAbsoluteRect();
-
-		CDUICheckBoxCtrl *pCheckExpandCtrl = pTreeNode->GetExpandIconCtrl();
 		CDUIRect rcExpandChild = pTreeNode->GetBackRange();
 		CDUIRect rcLine = rcExpandThis;
 		rcLine.left += rcLine.GetWidth() / 2;

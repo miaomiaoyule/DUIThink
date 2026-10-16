@@ -407,7 +407,7 @@ void CDUIWndWin32::ShowWindow(bool bShow /*= true*/, bool bTakeFocus /*= false*/
 {
 	ASSERT(::IsWindow(m_hWnd));
 	if (!::IsWindow(m_hWnd)) return;
-	::ShowWindow(m_hWnd, bShow ? (bTakeFocus ? SW_SHOW : SW_SHOWNOACTIVATE) : SW_HIDE);
+	::ShowWindow(m_hWnd, bShow ? (bTakeFocus ? SW_SHOW : SW_SHOWNA) : SW_HIDE);
 
 	return;
 }

@@ -440,6 +440,22 @@ void CDUITreeViewCtrl::SetSelectSingle(bool bSingle)
 	return;
 }
 
+bool CDUITreeViewCtrl::IsShowTreeLine()
+{
+	return m_AttributeShowTreeLine.GetValue();
+}
+
+void CDUITreeViewCtrl::SetShowTreeLine(bool bShow)
+{
+	if (bShow == IsShowTreeLine()) return;
+
+	m_AttributeShowTreeLine.SetValue(bShow);
+
+	Invalidate();
+
+	return;
+}
+
 int CDUITreeViewCtrl::GetExpandIconLeftPadding()
 {
 	return m_AttributeExpandIconLeftPadding.GetValue();
@@ -860,6 +876,7 @@ void CDUITreeViewCtrl::InitProperty()
 	DuiCreateAttribute(m_AttributeExpandDbClick, _T("ExpandDbClick"), _T(""), m_AttributeGroupTreeNode);
 	DuiCreateAttribute(m_AttributeExpandIconVisible, _T("ExpandIconVisible"), _T(""), m_AttributeGroupTreeNode);
 	DuiCreateAttribute(m_AttributeSelectSingle, _T("SelectSingle"), _T(""), m_AttributeGroupTreeNode);
+	DuiCreateAttribute(m_AttributeShowTreeLine, _T("ShowTreeLine"), _T(""), m_AttributeGroupTreeNode);
 	DuiCreateAttribute(m_AttributeExpandIconLeftPadding, _T("ExpandIconLeftPadding"), _T(""), m_AttributeGroupTreeNode);
 	DuiCreateAttribute(m_AttributeExpandIconFixedWidth, _T("ExpandIconFixedWidth"), _T(""), m_AttributeGroupTreeNode);
 	DuiCreateAttribute(m_AttributeExpandIconFixedHeight, _T("ExpandIconFixedHeight"), _T(""), m_AttributeGroupTreeNode);

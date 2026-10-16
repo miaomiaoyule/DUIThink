@@ -29,6 +29,7 @@ protected:
 	CDUIAttributeBool					m_AttributeExpandDbClick = true;
 	CDUIAttributeBool					m_AttributeExpandIconVisible = true;
 	CDUIAttributeBool					m_AttributeSelectSingle;
+	CDUIAttributeBool					m_AttributeShowTreeLine = true;
 	CDUIAttributeLong					m_AttributeExpandIconLeftPadding;
 	CDUIAttributeLong					m_AttributeExpandIconFixedWidth = 30;
 	CDUIAttributeLong					m_AttributeExpandIconFixedHeight = 30;
@@ -92,6 +93,8 @@ public:
 	virtual void SetExpandIconVisible(bool bVisible);
 	virtual bool IsSelectSingle();
 	virtual void SetSelectSingle(bool bSingle);
+	virtual bool IsShowTreeLine();
+	virtual void SetShowTreeLine(bool bShow);
 	virtual int GetExpandIconLeftPadding();
 	virtual void SetExpandIconLeftPadding(int nLeft);
 	virtual int GetExpandIconFixedWidth();
