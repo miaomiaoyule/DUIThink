@@ -907,13 +907,13 @@ bool CDUIContainerCtrl::InsertChild(CDUIControlBase *pChild, int nPos)
 	{
 		m_pWndOwner->InitControls(pChild);
 	}
+	if (IsInitComplete())
+	{
+		pChild->SetInternVisible(IsVisible());
+	}
 	if (IsVisible())
 	{
 		NeedRefreshView();
-	}
-	else if (IsInitComplete())
-	{
-		pChild->SetInternVisible(false);
 	}
 
 	//control notify
